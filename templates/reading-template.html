@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS MOCK X - Reading Practice</title>
+    <link rel="stylesheet" href="../../assets/css/base.css">
+    <!-- Reading-specific CSS modules will be loaded dynamically -->
+</head>
+<body data-test-version="X" data-skill="reading" data-mock="X">
+    <div class="header">
+        <div class="timer-container">
+            <span class="timer-display">60:00</span>
+            <div class="timer-controls">
+                <button id="timer-toggle-btn" title="Pause/Resume Timer">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
+                        <path d="M0 0h24v24H0V0z" fill="none"/>
+                        <path d="M8 5v14l11-7L8 5z"/>
+                    </svg>
+                </button>
+                <button id="timer-reset-btn" title="Reset Timer">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
+                        <path d="M0 0h24v24H0V0z" fill="none"/>
+                        <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="deliver-container">
+            <button id="deliver-button" class="deliver-button">Submit Test</button>
+        </div>
+    </div>
+
+    <div class="main-container" id="main-container">
+        <!-- Reading passages and questions will go here -->
+        
+        <!-- Example True/False/Not Given Questions -->
+        <div class="question-section">
+            <h3>Questions 1-5</h3>
+            <p class="instructions">Do the following statements agree with the information given in the passage? Write:</p>
+            <ul class="instructions-list">
+                <li><strong>TRUE</strong> if the statement agrees with the information</li>
+                <li><strong>FALSE</strong> if the statement contradicts the information</li>
+                <li><strong>NOT GIVEN</strong> if there is no information on this</li>
+            </ul>
+
+            <div class="tfng-question" data-q-start="1">
+                <p><strong>1.</strong> [Your statement here]</p>
+                <div class="tfng-options">
+                    <label class="true-option">
+                        <input type="radio" name="q1" value="TRUE">
+                        <span>TRUE</span>
+                    </label>
+                    <label class="false-option">
+                        <input type="radio" name="q1" value="FALSE">
+                        <span>FALSE</span>
+                    </label>
+                    <label class="not-given-option">
+                        <input type="radio" name="q1" value="NOT GIVEN">
+                        <span>NOT GIVEN</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Repeat for questions 2-5 -->
+        </div>
+
+        <!-- Example Multiple Choice Questions -->
+        <div class="question-section">
+            <h3>Questions 6-10</h3>
+            <p class="instructions">Choose the correct letter, A, B, C, or D.</p>
+
+            <div class="multiple-choice-single" data-q-start="6">
+                <p><strong>6.</strong> [Your question here]</p>
+                <div class="multiple-choice-options">
+                    <label>
+                        <input type="radio" name="q6" value="A">
+                        <span><strong>A</strong> [Option A]</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="q6" value="B">
+                        <span><strong>B</strong> [Option B]</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="q6" value="C">
+                        <span><strong>C</strong> [Option C]</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="q6" value="D">
+                        <span><strong>D</strong> [Option D]</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Repeat for questions 7-10 -->
+        </div>
+
+        <!-- Example Sentence Completion -->
+        <div class="question-section">
+            <h3>Questions 11-15</h3>
+            <p class="instructions">Complete the sentences below. Choose NO MORE THAN TWO WORDS from the passage for each answer.</p>
+
+            <div class="sentence-completion" data-word-limit="2">
+                <p><strong>11.</strong> The [some context] <input type="text" id="q11"> [more context].</p>
+            </div>
+
+            <!-- Repeat for questions 12-15 -->
+        </div>
+    </div>
+
+    <!-- Load core functionality -->
+    <script src="../../assets/js/core.js"></script>
+    <script src="../../assets/js/answer-loader.js"></script>
+</body>
+</html>

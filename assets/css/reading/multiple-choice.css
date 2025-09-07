@@ -1,0 +1,35 @@
+/* Multiple Choice Questions - Reading */
+.multiple-choice-question {
+    margin-bottom: 20px;
+}
+
+.multiple-choice-options {
+    margin-left: 20px;
+}
+
+.multiple-choice-options input[type="radio"] {
+    margin-right: 8px;
+}
+
+.multiple-choice-options label {
+    display: block;
+    margin-bottom: 8px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.multiple-choice-options label:hover {
+    background-color: #f0f8ff;
+}
+
+.multiple-choice-options input[type="radio"]:checked + span {
+    font-weight: bold;
+    color: #2c5aa0;
+}
+
+/* Multi-select variant */
+.multiple-choice-multi input[type="checkbox"] {
+    margin-right: 8px;
+}

@@ -39,27 +39,28 @@ let correctAnswers = {};
 
 // Function to get test version from HTML page
 function getTestVersion() {
-    // Check for data attribute on body
-    const version = document.body.getAttribute('data-test-version');
-    if (version) {
-        return `mock${version}`; // Return format: mock1, mock2, etc.
+    // Get mock number and skill from data attributes
+    const mockNumber = document.body.getAttribute('data-mock');
+    const skill = document.body.getAttribute('data-skill');
+    
+    if (mockNumber && skill) {
+        return { mock: mockNumber, skill: skill };
     }
     
-    // Fallback: extract from filename if available
-    const path = window.location.pathname;
-    const match = path.match(/MOCK(\d+)\.html/);
-    if (match) {
-        return `mock${match[1]}`;
+    // Fallback: check legacy data-test-version
+    const version = document.body.getAttribute('data-test-version');
+    if (version) {
+        return { mock: version, skill: 'reading' }; // Default to reading
     }
     
     // Default fallback
-    return 'mock1';
+    return { mock: '1', skill: 'reading' };
 }
 
 // Function to load answers for the current test version
 async function loadAnswers() {
-    const version = getTestVersion();
-    const answersPath = `./answers/${version}-answers.js`;
+    const testInfo = getTestVersion();
+    const answersPath = `./answers/${testInfo.skill}-answers.js`;
     
     try {
         // Create script element to load answers
@@ -68,7 +69,7 @@ async function loadAnswers() {
         script.onload = () => {
             if (window.testAnswers) {
                 correctAnswers = window.testAnswers;
-                console.log(`✅ Loaded answers for ${version.toUpperCase()}`);
+                console.log(`✅ Loaded answers for MOCK ${testInfo.mock} - ${testInfo.skill.toUpperCase()}`);
                 // Clean up global variable
                 delete window.testAnswers;
             } else {

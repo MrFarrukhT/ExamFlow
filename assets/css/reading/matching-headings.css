@@ -1,0 +1,50 @@
+/* Matching Headings - Reading */
+.matching-headings {
+    margin-bottom: 30px;
+}
+
+.headings-list {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.headings-list h4 {
+    margin-bottom: 15px;
+    color: #2c5aa0;
+}
+
+.heading-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.heading-item:hover {
+    background-color: #e3f2fd;
+}
+
+.heading-letter {
+    font-weight: bold;
+    margin-right: 10px;
+    color: #2c5aa0;
+    min-width: 20px;
+}
+
+.paragraph-question {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+}
+
+.paragraph-question select {
+    padding: 8px;
+    border: 2px solid #2c5aa0;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+}

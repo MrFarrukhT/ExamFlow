@@ -1,0 +1,39 @@
+/* Sentence Completion Questions - Reading */
+.sentence-completion-question {
+    margin-bottom: 20px;
+}
+
+.sentence-completion input[type="text"] {
+    display: inline-block;
+    min-width: 100px;
+    max-width: 200px;
+    padding: 4px 8px;
+    border: none;
+    border-bottom: 2px solid #2c5aa0;
+    background-color: transparent;
+    font-size: inherit;
+    font-family: inherit;
+    text-align: center;
+    margin: 0 4px;
+}
+
+.sentence-completion input[type="text"]:focus {
+    outline: none;
+    border-bottom-color: #1a4480;
+    background-color: #f8f9fa;
+}
+
+.sentence-completion .word-limit {
+    font-size: 0.9em;
+    color: #666;
+    font-style: italic;
+    margin-top: 5px;
+}
+
+.sentence-completion .gap-number {
+    display: inline-block;
+    min-width: 25px;
+    text-align: center;
+    font-weight: bold;
+    margin-right: 5px;
+}

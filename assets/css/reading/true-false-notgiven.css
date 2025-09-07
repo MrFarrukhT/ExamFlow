@@ -1,0 +1,46 @@
+/* True/False/Not Given Questions - Reading */
+.tfng-question {
+    margin-bottom: 20px;
+}
+
+.tfng-options {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.tfng-options label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    background-color: white;
+    transition: all 0.2s;
+}
+
+.tfng-options label:hover {
+    border-color: #2c5aa0;
+    background-color: #f0f8ff;
+}
+
+.tfng-options input[type="radio"] {
+    margin-right: 6px;
+}
+
+.tfng-options input[type="radio"]:checked + span {
+    font-weight: bold;
+}
+
+.tfng-options label.true-option input:checked + span {
+    color: #28a745;
+}
+
+.tfng-options label.false-option input:checked + span {
+    color: #dc3545;
+}
+
+.tfng-options label.not-given-option input:checked + span {
+    color: #ffc107;
+}

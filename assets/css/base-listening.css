@@ -1,0 +1,339 @@
+/* IELTS Listening - Base Layout */
+/* Form-based layout with audio controls */
+
+.main-container {
+    margin-top: 60px;
+    background: #ffffff;
+    min-height: calc(100vh - 60px);
+    padding: 20px;
+}
+
+/* AUDIO CONTROLS SECTION */
+.audio-section {
+    background-color: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.audio-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background-color: #2c5aa0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.audio-icon svg {
+    width: 40px;
+    height: 40px;
+    fill: white;
+}
+
+.audio-instructions {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.audio-sub-instructions {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.play-button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.play-button:hover {
+    background-color: #555;
+}
+
+.play-button svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+/* AUDIO PLAYER CONTROLS */
+.audio-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.audio-controls button {
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.audio-controls button:hover {
+    background-color: #f0f0f0;
+    border-color: #2c5aa0;
+}
+
+.audio-controls button.active {
+    background-color: #2c5aa0;
+    border-color: #2c5aa0;
+    color: white;
+}
+
+.audio-progress {
+    flex: 1;
+    height: 6px;
+    background-color: #e0e0e0;
+    border-radius: 3px;
+    position: relative;
+    cursor: pointer;
+}
+
+.audio-progress-bar {
+    height: 100%;
+    background-color: #2c5aa0;
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.1s;
+}
+
+.audio-time {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: #666;
+    min-width: 60px;
+    text-align: center;
+}
+
+/* LISTENING CONTENT LAYOUT */
+.listening-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.section-header {
+    background-color: #e3f2fd;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border-left: 4px solid #2c5aa0;
+}
+
+.section-header h2 {
+    color: #2c5aa0;
+    margin-bottom: 8px;
+    font-size: 22px;
+}
+
+.section-header p {
+    color: #666;
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+/* FORM-BASED QUESTION LAYOUT */
+.listening-form {
+    background-color: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.form-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-section {
+    margin-bottom: 25px;
+}
+
+.form-section h4 {
+    color: #2c5aa0;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.form-label {
+    font-weight: normal;
+    color: #333;
+    min-width: 120px;
+}
+
+.form-input {
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    min-width: 120px;
+    background-color: white;
+    transition: border-color 0.2s;
+}
+
+.form-input:focus {
+    border-color: #2c5aa0;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
+}
+
+.form-input.answered {
+    border-color: #28a745;
+    background-color: #f8fff8;
+}
+
+/* QUESTION NUMBERING */
+.question-number {
+    display: inline-block;
+    min-width: 30px;
+    padding: 4px 8px;
+    background-color: #2c5aa0;
+    color: white;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: center;
+    margin-right: 10px;
+}
+
+/* SECTION NAVIGATION */
+.section-navigation {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 25px;
+    padding: 10px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.section-nav-item {
+    padding: 8px 16px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.section-nav-item.active {
+    background-color: #2c5aa0;
+    color: white;
+}
+
+.section-nav-item:not(.active) {
+    color: #666;
+}
+
+.section-nav-item:not(.active):hover {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    .main-container {
+        padding: 15px;
+    }
+    
+    .audio-section {
+        padding: 20px 15px;
+    }
+    
+    .audio-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .audio-icon svg {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .listening-form {
+        padding: 20px 15px;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .form-label {
+        min-width: unset;
+    }
+    
+    .section-navigation {
+        bottom: 15px;
+        padding: 8px 15px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .section-nav-item {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .audio-controls {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .audio-progress {
+        order: 1;
+        width: 100%;
+        margin: 10px 0;
+    }
+    
+    .form-input {
+        min-width: 100px;
+    }
+}

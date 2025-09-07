@@ -1,0 +1,243 @@
+/* IELTS Test System - Core Styles (Universal) */
+/* Used by all skills: Reading, Listening, Writing */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    line-height: 1.4;
+    font-size: 16px;
+}
+
+/* HEADER - Universal across all skills */
+.header {
+    background-color: #ffffff;
+    padding: 12px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    height: 60px;
+}
+
+.ielts-logo {
+    display: none;
+}
+
+.test-info {
+    display: flex;  
+    align-items: center;
+    gap: 30px;
+    font-size: 14px;
+    color: #333;
+}
+
+/* TIMER - Universal */
+.timer-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border: 2px solid #3e3e3e;
+    border-radius: 9999px;
+    background-color: #ffffff;
+    line-height: 1;
+}
+
+.timer-display {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    min-width: 60px;
+    text-align: center;
+}
+
+.timer-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.timer-controls button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.timer-controls button:hover {
+    background-color: #f0f0f0;
+}
+
+.timer-controls svg {
+    width: 16px;
+    height: 16px;
+    fill: #333;
+}
+
+/* SUBMIT/DELIVER BUTTON - Universal */
+.deliver-container {
+    display: flex;
+    align-items: center;
+}
+
+.deliver-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.deliver-button:hover {
+    background-color: #218838;
+}
+
+.deliver-button:active {
+    background-color: #1e7e34;
+}
+
+/* QUESTION INDICATORS - Universal */
+.question-indicator {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    text-align: center;
+    font-size: 10px;
+    line-height: 16px;
+    margin-right: 5px;
+    background-color: white;
+    font-weight: bold;
+}
+
+.question-indicator.answered {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+.question-indicator.current {
+    border-color: #007bff;
+    background-color: #e3f2fd;
+}
+
+/* SCROLLBARS - Universal */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* BUTTONS - Universal */
+button {
+    font-family: inherit;
+}
+
+button:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* TEXT INPUTS - Universal */
+input[type="text"], input[type="number"], textarea, select {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 1px;
+}
+
+/* UTILITY CLASSES - Universal */
+.hidden {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+/* RESPONSIVE BASE */
+@media (max-width: 768px) {
+    .header {
+        padding: 8px 12px;
+        height: 50px;
+    }
+    
+    .timer-display {
+        font-size: 16px;
+        min-width: 50px;
+    }
+    
+    .deliver-button {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        flex-direction: column;
+        height: auto;
+        padding: 8px;
+    }
+    
+    .timer-container {
+        margin-bottom: 8px;
+    }
+}

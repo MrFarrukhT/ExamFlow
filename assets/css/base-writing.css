@@ -1,0 +1,368 @@
+/* IELTS Writing - Base Layout */
+/* Split layout with chart/task content on left, writing area on right */
+
+.main-container {
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    height: calc(100vh - 60px);
+    position: relative;
+}
+
+.panels-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* LEFT PANEL - Task Content (Chart, Graph, etc.) */
+.task-panel {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    min-width: 300px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+.task-panel::-webkit-scrollbar {
+    width: 8px;
+    background: transparent;
+}
+
+.task-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.task-panel::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.task-panel:hover::-webkit-scrollbar-thumb {
+    opacity: 1;
+}
+
+/* RIGHT PANEL - Writing Area */
+.writing-panel {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    min-width: 350px;
+    border-left: 1px solid #e0e0e0;
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+}
+
+.writing-panel::-webkit-scrollbar {
+    width: 8px;
+    background: transparent;
+}
+
+.writing-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.writing-panel::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.writing-panel:hover::-webkit-scrollbar-thumb {
+    opacity: 1;
+}
+
+/* RESIZER - Between task and writing panels */
+.resizer {
+    width: 4px;
+    background-color: #e0e0e0;
+    cursor: col-resize;
+    position: relative;
+    transition: background-color 0.2s;
+}
+
+.resizer:hover {
+    background-color: #2c5aa0;
+}
+
+.resizer::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -2px;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 40px;
+    background-color: #2c5aa0;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.resizer:hover::before {
+    opacity: 1;
+}
+
+.resizer::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -6px;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 60px;
+    cursor: col-resize;
+}
+
+/* TASK CONTENT STYLES */
+.task-header {
+    background-color: #f8f9fa;
+    padding: 15px 20px;
+    border-left: 4px solid #2c5aa0;
+    margin-bottom: 20px;
+    border-radius: 0 4px 4px 0;
+}
+
+.task-header h2 {
+    color: #2c5aa0;
+    margin: 0 0 8px 0;
+    font-size: 20px;
+}
+
+.task-header p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.task-instructions {
+    background-color: #e3f2fd;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #1565c0;
+}
+
+.task-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Chart/Graph Container */
+.chart-container {
+    background-color: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    max-width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chart-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* WRITING AREA STYLES */
+.writing-header {
+    background-color: #e8f5e8;
+    padding: 15px 20px;
+    border-left: 4px solid #28a745;
+    margin-bottom: 20px;
+    border-radius: 0 4px 4px 0;
+}
+
+.writing-header h3 {
+    color: #28a745;
+    margin: 0 0 8px 0;
+    font-size: 18px;
+}
+
+.writing-header p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.writing-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.writing-textarea {
+    flex: 1;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    padding: 15px;
+    font-size: 16px;
+    line-height: 1.6;
+    resize: none;
+    background-color: white;
+    font-family: 'Times New Roman', serif;
+    transition: border-color 0.2s;
+}
+
+.writing-textarea:focus {
+    border-color: #28a745;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+}
+
+/* WORD COUNTER */
+.word-counter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    font-size: 14px;
+}
+
+.word-count {
+    font-weight: bold;
+    color: #333;
+}
+
+.word-count.insufficient {
+    color: #dc3545;
+}
+
+.word-count.sufficient {
+    color: #28a745;
+}
+
+.word-requirement {
+    color: #666;
+    font-size: 12px;
+}
+
+/* TASK NAVIGATION */
+.task-navigation {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 25px;
+    padding: 10px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.task-nav-item {
+    padding: 8px 16px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.task-nav-item.active {
+    background-color: #28a745;
+    color: white;
+}
+
+.task-nav-item:not(.active) {
+    color: #666;
+}
+
+.task-nav-item:not(.active):hover {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    .panels-container {
+        flex-direction: column;
+    }
+    
+    .task-panel,
+    .writing-panel {
+        min-width: unset;
+        min-height: 300px;
+    }
+    
+    .writing-panel {
+        border-left: none;
+        border-top: 1px solid #e0e0e0;
+    }
+    
+    .resizer {
+        width: 100%;
+        height: 4px;
+        cursor: row-resize;
+    }
+    
+    .resizer::before {
+        left: 50%;
+        top: -2px;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 8px;
+    }
+    
+    .resizer::after {
+        left: 50%;
+        top: -6px;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 16px;
+        cursor: row-resize;
+    }
+}
+
+@media (max-width: 480px) {
+    .task-panel,
+    .writing-panel {
+        padding: 15px;
+    }
+    
+    .task-header,
+    .writing-header {
+        padding: 12px 15px;
+    }
+    
+    .chart-container {
+        padding: 15px;
+    }
+    
+    .writing-textarea {
+        font-size: 14px;
+        padding: 12px;
+    }
+    
+    .task-navigation {
+        bottom: 15px;
+        padding: 8px 15px;
+        gap: 10px;
+    }
+    
+    .task-nav-item {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+}

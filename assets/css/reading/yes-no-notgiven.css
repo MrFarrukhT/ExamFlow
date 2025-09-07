@@ -1,0 +1,46 @@
+/* Yes/No/Not Given Questions - Reading */
+.ynng-question {
+    margin-bottom: 20px;
+}
+
+.ynng-options {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.ynng-options label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    background-color: white;
+    transition: all 0.2s;
+}
+
+.ynng-options label:hover {
+    border-color: #2c5aa0;
+    background-color: #f0f8ff;
+}
+
+.ynng-options input[type="radio"] {
+    margin-right: 6px;
+}
+
+.ynng-options input[type="radio"]:checked + span {
+    font-weight: bold;
+}
+
+.ynng-options label.yes-option input:checked + span {
+    color: #28a745;
+}
+
+.ynng-options label.no-option input:checked + span {
+    color: #dc3545;
+}
+
+.ynng-options label.not-given-option input:checked + span {
+    color: #ffc107;
+}
