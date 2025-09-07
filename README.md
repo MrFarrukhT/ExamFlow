@@ -1,7 +1,7 @@
 # Official IELTS Modular Test System
 
 ## Overview
-A scalable, modular IELTS practice test system with separate CSS/JS modules for each official IELTS question type. Each MOCK test is organized in its own folder and supports Reading, Listening, and Writing sections.
+A scalable, modular IELTS practice test system with consolidated CSS architecture and separate modules for each official IELTS question type. Each MOCK test is organized in its own folder and supports Reading, Listening, and Writing sections.
 
 ## 🏗️ Project Structure
 ```
@@ -19,7 +19,9 @@ Test System(v2)/
 │
 ├── assets/                         # Shared modular resources
 │   ├── css/
-│   │   ├── base.css               # Core styling, layout, timer
+│   │   ├── reading.css            # Complete reading test styles
+│   │   ├── listening.css          # Complete listening test styles  
+│   │   ├── writing.css            # Complete writing test styles
 │   │   ├── reading/               # Reading question modules
 │   │   │   ├── multiple-choice.css
 │   │   │   ├── true-false-notgiven.css
@@ -49,6 +51,30 @@ Test System(v2)/
     └── reading-template.html      # Reading test template
 ```
 
+## 🎨 CSS Architecture
+
+### **Consolidated Skill-Based Stylesheets:**
+- **`reading.css`** - Complete reading interface (split panels, resizer, timer, approved design)
+- **`listening.css`** - Complete listening interface (audio controls, form layout, section navigation)  
+- **`writing.css`** - Complete writing interface (task content, writing area, word counter)
+
+### **Question Type Modules:**
+- **`css/reading/`** - Specific styling for reading question types
+- **`css/listening/`** - Specific styling for listening question types
+- **`css/writing/`** - Specific styling for writing tasks
+
+### **Usage Pattern:**
+```html
+<!-- Reading tests load complete reading styles -->
+<link rel="stylesheet" href="../../assets/css/reading.css">
+
+<!-- Listening tests (future) -->
+<link rel="stylesheet" href="../../assets/css/listening.css">
+
+<!-- Writing tests (future) -->  
+<link rel="stylesheet" href="../../assets/css/writing.css">
+```
+
 ## 🧩 Official IELTS Question Types Supported
 
 ### Reading Section:
@@ -64,33 +90,63 @@ Test System(v2)/
 - 🔄 **Diagram Labelling** (planned)
 - 🔄 **Short Answer Questions** (planned)
 
-### Listening Section (Future):
-- 🔄 **Multiple Choice**
-- 🔄 **Form/Note/Table Completion**
-- 🔄 **Map/Plan Labelling**
-- 🔄 **Sentence Completion**
-- 🔄 **Short Answer Questions**
+### Listening Section:
+- 🎨 **Base Layout Ready** - Audio controls, form-based interface, section navigation
+- 🔄 **Multiple Choice** (planned)
+- 🔄 **Form/Note/Table Completion** (planned)
+- 🔄 **Map/Plan Labelling** (planned)
+- 🔄 **Sentence Completion** (planned)
+- 🔄 **Short Answer Questions** (planned)
 
-### Writing Section (Future):
+### Writing Section:
+- 🎨 **Base Layout Ready** - Split layout, word counter, task-specific interface
 - 🔄 **Task 1** (Academic: graphs/charts, General: letters)
 - 🔄 **Task 2** (Essay writing)
 
 ## 🚀 How It Works
 
-### 1. **Automatic Module Detection**
-Each HTML file automatically detects which question types are present and loads only the necessary CSS/JS modules.
+### 1. **Skill-Based CSS Loading**
+Each HTML file loads a complete stylesheet for its skill:
+```html
+<!-- Reading tests -->
+<link rel="stylesheet" href="../../assets/css/reading.css">
+```
 
-### 2. **Dynamic Answer Loading**  
+### 2. **Dynamic Module Loading**  
+Question-specific modules are loaded automatically based on question types detected in the HTML.
+
+### 3. **Dynamic Answer Loading**  
 Answers are loaded dynamically based on the MOCK test and section:
 - `MOCK 1/reading.html` → loads `MOCK 1/answers/reading-answers.js`
 - `MOCK 1/listening.html` → loads `MOCK 1/answers/listening-answers.js`
 
-### 3. **Modular Question Handlers**
+### 4. **Modular Question Handlers**
 Each question type has its own JavaScript handler with specific functionality:
 - Input validation
 - Visual feedback
 - Answer collection
 - Scoring integration
+
+## 🎯 Current Implementation Status
+
+### ✅ **Completed:**
+- **MOCK Structure**: 10 MOCK tests with organized folder structure
+- **Reading System**: Complete reading interface with approved design
+- **Dynamic Loading**: Automatic answer and module loading system
+- **Question Types**: 4 core reading question type modules
+- **CSS Architecture**: Consolidated skill-based stylesheets
+- **Templates**: Reading template available
+
+### 🎨 **Layout Systems Ready:**
+- **Reading**: Split panel layout with resizable divider (approved design)
+- **Listening**: Form-based layout with audio controls and section navigation
+- **Writing**: Split layout with task content and writing area with word counter
+
+### 🔄 **Next Steps:**
+- Create listening and writing HTML templates
+- Implement additional reading question types
+- Add listening and writing question type modules
+- Audio integration for listening tests
 
 ## 📝 Creating New Tests
 
@@ -122,29 +178,47 @@ Each question type has its own JavaScript handler with specific functionality:
 3. Create answer files in `answers/` subdirectory
 4. Add audio files if needed: `assets/audio/MOCK X/`
 
+### Creating Listening/Writing Templates:
+1. Copy base layout from CSS file
+2. Integrate with `core.js` functionality
+3. Add skill-specific question modules
+4. Test with sample content
+
 ## 🎯 Benefits
 
 ✅ **Official IELTS Compliance**: Matches real test question types exactly
-✅ **Modular Architecture**: Easy to maintain and extend
-✅ **Dynamic Loading**: Only loads necessary resources
+✅ **Consolidated Architecture**: Clean, maintainable skill-based CSS structure
+✅ **No Confusion**: One CSS file per skill - simple and clear
+✅ **Dynamic Loading**: Only loads necessary question modules
 ✅ **Scalable**: Easy to add new MOCKs and question types  
 ✅ **Clean Organization**: Each MOCK test is self-contained
-✅ **Future-Ready**: Prepared for Listening and Writing expansion
+✅ **Future-Ready**: Layout systems prepared for all three skills
 ✅ **Template-Based**: Quick test creation using templates
+✅ **Approved Design**: Reading interface preserves exact approved styling
 
 ## 🧪 Testing
 
 ### Current Status:
-- **MOCK 1-10**: Reading sections created and functional
-- **Answer Loading**: Dynamic answer system working
-- **Question Modules**: Core question types implemented
-- **Templates**: Reading template available
+- **MOCK 1-10**: ✅ Reading sections created and functional
+- **CSS Architecture**: ✅ Consolidated skill-based stylesheets
+- **Answer Loading**: ✅ Dynamic answer system working
+- **Question Modules**: ✅ Core question types implemented
+- **Layout Systems**: ✅ Reading (approved), Listening (ready), Writing (ready)
+- **Templates**: ✅ Reading template available
 
-### To Test:
+### To Test Reading:
 1. Open any `MOCKs/MOCK X/reading.html` file
-2. Check browser console for successful module loading
-3. Test question interactions and answer submission
-4. Verify unique answers load for each MOCK
+2. Verify approved design loads correctly
+3. Check browser console for successful module loading
+4. Test question interactions and answer submission
+5. Verify unique answers load for each MOCK
+6. Test resizable panel functionality
+
+### To Test CSS Architecture:
+1. Check that only `reading.css` loads for reading tests
+2. Verify no console errors or missing styles
+3. Confirm responsive design works on mobile
+4. Test that all MOCK tests have consistent styling
 
 ## 🔧 Configuration
 
@@ -155,6 +229,18 @@ Each question type has its own JavaScript handler with specific functionality:
 - `data-test-version`: Question numbering reference
 - `data-skill`: Section type (reading/listening/writing)  
 - `data-mock`: MOCK test number
+
+### CSS Loading Pattern:
+```html
+<!-- Reading Test -->
+<link rel="stylesheet" href="../../assets/css/reading.css">
+
+<!-- Listening Test (Future) -->
+<link rel="stylesheet" href="../../assets/css/listening.css">
+
+<!-- Writing Test (Future) -->
+<link rel="stylesheet" href="../../assets/css/writing.css">
+```
 
 ### Answer File Format:
 ```javascript
@@ -169,17 +255,44 @@ window.testAnswers = {
 
 ## 🚨 Troubleshooting
 
-**Modules not loading?**
-- Check file paths are correct
-- Verify question type classes exist in HTML
-- Check browser console for errors
+**Reading tests not loading correctly?**
+- Ensure `reading.css` exists and loads without errors
+- Check file paths are correct relative to HTML location
+- Verify browser console for CSS loading errors
+
+**Question modules not working?**
+- Check if question type classes exist in HTML
+- Verify question-specific CSS modules in `css/reading/`
+- Check browser console for JavaScript errors
 
 **Answers not loading?**
 - Ensure answer file exists: `MOCK X/answers/reading-answers.js`
-- Check data attributes on body element
-- Verify answer file format
+- Check data attributes on body element match answer path
+- Verify answer file format and variable names
 
-**Styling issues?**
-- Ensure base.css loads first
-- Check if question-specific CSS modules load
+**Styling inconsistencies?**
+- Ensure only one skill CSS file loads per page
+- Check if specific question CSS modules conflict
 - Verify CSS class names match JavaScript selectors
+
+**Performance issues?**
+- Check if unnecessary CSS files are loading
+- Verify dynamic loading is working correctly
+- Monitor browser network tab for excessive requests
+
+## 📋 File Checklist
+
+### For Each MOCK Test:
+- [ ] `MOCKs/MOCK X/reading.html` exists
+- [ ] HTML loads `../../assets/css/reading.css`
+- [ ] Data attributes set correctly on body tag
+- [ ] `MOCKs/MOCK X/answers/reading-answers.js` exists
+- [ ] Answer file has correct format and question numbers
+- [ ] Questions use proper CSS classes for module detection
+
+### CSS Architecture:
+- [ ] `assets/css/reading.css` - Complete reading styles
+- [ ] `assets/css/listening.css` - Complete listening styles
+- [ ] `assets/css/writing.css` - Complete writing styles
+- [ ] Question modules in respective skill folders
+- [ ] No duplicate or conflicting CSS files
