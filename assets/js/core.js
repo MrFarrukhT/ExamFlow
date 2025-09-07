@@ -34,62 +34,71 @@
         const pauseIcon = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
 
       
-// --- ANSWERS (IELTS Academic Reading Practice) ---
-const correctAnswers = {
-  // Passage 1 – Fishbourne Roman Palace (Q1–13)
-  '1':  'FALSE',
-  '2':  'TRUE',
-  '3':  'FALSE',
-  '4':  'TRUE',
-  '5':  'FALSE',
-  '6':  'NOT GIVEN',
-  '7':  'army',
-  '8':  'gardens',
-  '9':  'floors',
-  '10': 'wall',
-  '11': '93',
-  '12': 'ring',
-  '13': 'museum',
+// --- DYNAMIC ANSWER LOADING SYSTEM ---
+let correctAnswers = {};
 
-  // Passage 2 – Emotionally Complex Video Games (Q14–26)
-  '14': 'B',
-  '15': 'C',
-  '16': 'F',
-  '17': 'A',
-  '18': 'C',
-  '19': 'change',
-  '20': 'reflection',
-  '21': 'literature',
-  '22': 'choices',
-  // A Jesse Schell, B Nick Bowman, C Daniel Possler, D David Ciccoricco,
-  // E Kelli Dunlap, F Paul Formosa, G April Welch
-  '23': 'B',
-  '24': 'G',
-  '25': 'A',
-  '26': 'F',
+// Function to get test version from HTML page
+function getTestVersion() {
+    // Check for data attribute on body
+    const version = document.body.getAttribute('data-test-version');
+    if (version) {
+        return `mock${version}`; // Return format: mock1, mock2, etc.
+    }
+    
+    // Fallback: extract from filename if available
+    const path = window.location.pathname;
+    const match = path.match(/MOCK(\d+)\.html/);
+    if (match) {
+        return `mock${match[1]}`;
+    }
+    
+    // Default fallback
+    return 'mock1';
+}
 
-  // Passage 3 – Communicating Science to the Public (Q27–40)
-  // 27–30: multiple choice
-  '27': 'B',
-  '28': 'A',
-  '29': 'A',
-  '30': 'D',
-  '31': 'E',
-  '32': 'A',
-  '33': 'C',
-  '34': 'D',
-  '35': 'NO',
-  '36': 'NOT GIVEN',
-  '37': 'YES',
-  '38': 'NO',
-  '39': 'NOT GIVEN',
-  '40': 'YES'
-};
+// Function to load answers for the current test version
+async function loadAnswers() {
+    const version = getTestVersion();
+    const answersPath = `./answers/${version}-answers.js`;
+    
+    try {
+        // Create script element to load answers
+        const script = document.createElement('script');
+        script.src = answersPath;
+        script.onload = () => {
+            if (window.testAnswers) {
+                correctAnswers = window.testAnswers;
+                console.log(`✅ Loaded answers for ${version.toUpperCase()}`);
+                // Clean up global variable
+                delete window.testAnswers;
+            } else {
+                console.error('❌ Failed to load test answers');
+                // Fallback to empty object
+                correctAnswers = {};
+            }
+        };
+        script.onerror = () => {
+            console.error(`❌ Failed to load answers file: ${answersPath}`);
+            correctAnswers = {};
+        };
+        
+        document.head.appendChild(script);
+        
+    } catch (error) {
+        console.error('❌ Error loading answers:', error);
+        correctAnswers = {};
+    }
+}
 
 
         // --- INITIALIZATION ---
         function initialize() {
             console.log(`🚀 Initializing application...`);
+            
+            // Load answers first, then continue initialization
+            loadAnswers();
+            
+            // Continue with rest of initialization
             startTimer();
             initializeDragAndDrop();
             setupCheckboxLimits();
