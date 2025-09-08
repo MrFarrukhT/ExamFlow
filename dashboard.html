@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Test Dashboard</title>
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="student-info">
+                <h2 id="welcomeText">Welcome, Student</h2>
+                <p id="studentDetails">ID: Loading...</p>
+            </div>
+            <div class="test-info">
+                <p id="mockInfo">Mock Test: Loading...</p>
+            </div>
+        </div>
+        
+        <div class="modules-container">
+            <h3>Select a Module to Begin</h3>
+            <div class="modules-grid">
+                <div class="module-card" id="listeningCard" data-module="listening">
+                    <div class="module-icon">🎧</div>
+                    <h4>Listening</h4>
+                    <p class="duration">~30 minutes</p>
+                    <div class="status" id="listeningStatus">Not Started</div>
+                    <button class="module-button" id="listeningButton">Start Listening</button>
+                </div>
+                
+                <div class="module-card" id="readingCard" data-module="reading">
+                    <div class="module-icon">📖</div>
+                    <h4>Reading</h4>
+                    <p class="duration">60 minutes</p>
+                    <div class="status" id="readingStatus">Not Started</div>
+                    <button class="module-button" id="readingButton">Start Reading</button>
+                </div>
+                
+                <div class="module-card" id="writingCard" data-module="writing">
+                    <div class="module-icon">✍️</div>
+                    <h4>Writing</h4>
+                    <p class="duration">60 minutes</p>
+                    <div class="status" id="writingStatus">Not Started</div>
+                    <button class="module-button" id="writingButton">Start Writing</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="progress-section">
+            <h4>Test Progress</h4>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="progressText">0 of 3 modules completed</p>
+        </div>
+    </div>
+
+    <script>
+        // Load student information and test state
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStudentInfo();
+            loadTestState();
+            updateUI();
+        });
+
+        function loadStudentInfo() {
+            const studentId = localStorage.getItem('studentId');
+            const studentName = localStorage.getItem('studentName');
+            const selectedMock = localStorage.getItem('selectedMock') || '1';
+            
+            if (!studentId || !studentName) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            document.getElementById('welcomeText').textContent = `Welcome, ${studentName}`;
+            document.getElementById('studentDetails').textContent = `ID: ${studentId}`;
+            document.getElementById('mockInfo').textContent = `Mock Test: ${selectedMock}`;
+        }
+
+        function loadTestState() {
+            const modules = ['listening', 'reading', 'writing'];
+            modules.forEach(module => {
+                const status = localStorage.getItem(`${module}Status`) || 'not-started';
+                const card = document.getElementById(`${module}Card`);
+                const statusEl = document.getElementById(`${module}Status`);
+                const button = document.getElementById(`${module}Button`);
+                
+                if (status === 'completed') {
+                    card.classList.add('completed');
+                    statusEl.textContent = 'Completed';
+                    statusEl.className = 'status completed';
+                    button.textContent = 'Completed ✓';
+                    button.disabled = true;
+                } else if (status === 'in-progress') {
+                    card.classList.add('in-progress');
+                    statusEl.textContent = 'In Progress';
+                    statusEl.className = 'status in-progress';
+                    button.textContent = `Continue ${module.charAt(0).toUpperCase() + module.slice(1)}`;
+                }
+            });
+        }
+
+        function updateUI() {
+            const completed = ['listening', 'reading', 'writing'].filter(module => 
+                localStorage.getItem(`${module}Status`) === 'completed'
+            ).length;
+            
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            const percentage = (completed / 3) * 100;
+            progressFill.style.width = `${percentage}%`;
+            progressText.textContent = `${completed} of 3 modules completed`;
+        }
+
+        // Module button handlers
+        document.getElementById('listeningButton').addEventListener('click', function() {
+            if (localStorage.getItem('listeningStatus') === 'completed') return;
+            startModule('listening');
+        });
+
+        document.getElementById('readingButton').addEventListener('click', function() {
+            if (localStorage.getItem('readingStatus') === 'completed') return;
+            startModule('reading');
+        });
+
+        document.getElementById('writingButton').addEventListener('click', function() {
+            if (localStorage.getItem('writingStatus') === 'completed') return;
+            startModule('writing');
+        });
+
+        function startModule(module) {
+            const selectedMock = localStorage.getItem('selectedMock') || '1';
+            localStorage.setItem(`${module}Status`, 'in-progress');
+            localStorage.setItem(`${module}StartTime`, new Date().toISOString());
+            
+            // Navigate to the module
+            window.location.href = `MOCKs/MOCK ${selectedMock}/${module}.html`;
+        }
+    </script>
+</body>
+</html>

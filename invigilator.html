@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invigilator Panel</title>
+    <link rel="stylesheet" href="assets/css/invigilator.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Invigilator Control Panel</h1>
+            <p>Configure and manage IELTS tests</p>
+        </div>
+        
+        <div class="panel-section">
+            <h3>Mock Test Configuration</h3>
+            <div class="mock-selection">
+                <label for="mockSelect">Select Mock Test:</label>
+                <select id="mockSelect">
+                    <option value="1">Mock Test 1</option>
+                    <option value="2">Mock Test 2</option>
+                    <option value="3">Mock Test 3</option>
+                    <option value="4">Mock Test 4</option>
+                    <option value="5">Mock Test 5</option>
+                    <option value="6">Mock Test 6</option>
+                    <option value="7">Mock Test 7</option>
+                    <option value="8">Mock Test 8</option>
+                    <option value="9">Mock Test 9</option>
+                    <option value="10">Mock Test 10</option>
+                </select>
+                <button id="setMockButton">Set Mock Test</button>
+            </div>
+            <p id="currentMock">Currently Selected: Mock Test 1</p>
+        </div>
+        
+        <div class="panel-section">
+            <h3>Data Management</h3>
+            <div class="data-controls">
+                <button id="exportButton" class="export-btn">Export Test Results</button>
+                <button id="resetButton" class="reset-btn">Reset All Data</button>
+            </div>
+        </div>
+        
+        <div class="panel-section">
+            <h3>Current Session</h3>
+            <div id="sessionInfo">
+                <p>No active session</p>
+            </div>
+        </div>
+        
+        <!-- Password Modal -->
+        <div id="passwordModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h4>Enter Invigilator Password</h4>
+                <input type="password" id="passwordInput" placeholder="Enter password">
+                <div class="modal-buttons">
+                    <button id="confirmPassword">Confirm</button>
+                    <button id="cancelPassword">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const INVIGILATOR_PASSWORD = "ielts2025"; // Change this to your desired password
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentMock();
+            updateSessionInfo();
+        });
+
+        function updateCurrentMock() {
+            const selectedMock = localStorage.getItem('selectedMock') || '1';
+            document.getElementById('mockSelect').value = selectedMock;
+            document.getElementById('currentMock').textContent = `Currently Selected: Mock Test ${selectedMock}`;
+        }
+
+        function updateSessionInfo() {
+            const studentId = localStorage.getItem('studentId');
+            const studentName = localStorage.getItem('studentName');
+            const sessionInfo = document.getElementById('sessionInfo');
+            
+            if (studentId && studentName) {
+                const modules = ['listening', 'reading', 'writing'];
+                const completed = modules.filter(module => 
+                    localStorage.getItem(`${module}Status`) === 'completed'
+                ).length;
+                
+                sessionInfo.innerHTML = `
+                    <p><strong>Student:</strong> ${studentName}</p>
+                    <p><strong>ID:</strong> ${studentId}</p>
+                    <p><strong>Progress:</strong> ${completed}/3 modules completed</p>
+                `;
+            } else {
+                sessionInfo.innerHTML = '<p>No active session</p>';
+            }
+        }
+
+        document.getElementById('setMockButton').addEventListener('click', function() {
+            const selectedMock = document.getElementById('mockSelect').value;
+            localStorage.setItem('selectedMock', selectedMock);
+            updateCurrentMock();
+            alert(`Mock Test ${selectedMock} has been set successfully!`);
+        });
+
+        document.getElementById('exportButton').addEventListener('click', function() {
+            showPasswordModal('export');
+        });
+
+        document.getElementById('resetButton').addEventListener('click', function() {
+            showPasswordModal('reset');
+        });
+
+        function showPasswordModal(action) {
+            const modal = document.getElementById('passwordModal');
+            modal.style.display = 'flex';
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('passwordInput').focus();
+            
+            document.getElementById('confirmPassword').onclick = function() {
+                const password = document.getElementById('passwordInput').value;
+                if (password === INVIGILATOR_PASSWORD) {
+                    modal.style.display = 'none';
+                    if (action === 'export') {
+                        exportData();
+                    } else if (action === 'reset') {
+                        resetData();
+                    }
+                } else {
+                    alert('Incorrect password!');
+                }
+            };
+            
+            document.getElementById('cancelPassword').onclick = function() {
+                modal.style.display = 'none';
+            };
+        }
+
+        function exportData() {
+            const studentId = localStorage.getItem('studentId');
+            const studentName = localStorage.getItem('studentName');
+            const selectedMock = localStorage.getItem('selectedMock');
+            
+            if (!studentId || !studentName) {
+                alert('No test data to export!');
+                return;
+            }
+            
+            const exportData = {
+                studentInfo: {
+                    id: studentId,
+                    name: studentName,
+                    mockTest: selectedMock,
+                    testStartTime: localStorage.getItem('testStartTime')
+                },
+                modules: {
+                    listening: {
+                        status: localStorage.getItem('listeningStatus'),
+                        startTime: localStorage.getItem('listeningStartTime'),
+                        answers: JSON.parse(localStorage.getItem('listeningAnswers') || '{}')
+                    },
+                    reading: {
+                        status: localStorage.getItem('readingStatus'),
+                        startTime: localStorage.getItem('readingStartTime'),
+                        answers: JSON.parse(localStorage.getItem('readingAnswers') || '{}')
+                    },
+                    writing: {
+                        status: localStorage.getItem('writingStatus'),
+                        startTime: localStorage.getItem('writingStartTime'),
+                        answers: JSON.parse(localStorage.getItem('writingAnswers') || '{}')
+                    }
+                },
+                exportTime: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `IELTS_Test_${studentId}_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('Test results exported successfully!');
+        }
+
+        function resetData() {
+            if (confirm('Are you sure you want to reset ALL test data? This action cannot be undone.')) {
+                // Clear all localStorage except the selected mock
+                const keysToKeep = ['selectedMock'];
+                const keysToRemove = [];
+                
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (!keysToKeep.includes(key)) {
+                        keysToRemove.push(key);
+                    }
+                }
+                
+                keysToRemove.forEach(key => localStorage.removeItem(key));
+                updateSessionInfo();
+                alert('All test data has been reset successfully!');
+            }
+        }
+
+        // Enter key support in password modal
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('confirmPassword').click();
+            }
+        });
+    </script>
+</body>
+</html>
