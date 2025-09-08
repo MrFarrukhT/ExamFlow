@@ -48,8 +48,25 @@ Test System(v2)/
 │       └── ... (MOCK 2-10)
 │
 └── templates/                     # Templates for creating new tests
-    └── reading-template.html      # Reading test template
+    ├── reading-template.html      # Reading test template  
+    └── writing-template.html      # Writing test template
 ```
+
+## 🚀 Quick Start
+
+### Testing the Writing System:
+1. Open `MOCKs/MOCK 1/writing.html` in your browser
+2. Experience the full IELTS Writing test interface:
+   - **Split Panel Layout**: Instructions on left, writing area on right
+   - **Task Switching**: Click "Task 1" or "Task 2" tabs to switch
+   - **Word Counter**: See real-time word count for each task
+   - **Timer**: 60-minute countdown with visual alerts
+   - **Auto-save**: Your work is automatically saved
+   - **Resizable Panels**: Drag the divider to adjust panel sizes
+
+### Testing the Reading System:
+1. Open any `MOCKs/MOCK X/reading.html` file
+2. Try different question types and see dynamic loading in action
 
 ## 🎨 CSS Architecture
 
@@ -90,6 +107,19 @@ Test System(v2)/
 - 🔄 **Diagram Labelling** (planned)
 - 🔄 **Short Answer Questions** (planned)
 
+### Writing Section:
+- ✅ **Task 1** (Academic) - Data description, charts, graphs (150+ words)
+- ✅ **Task 2** (Academic) - Essay writing (250+ words)
+- ✅ **Split Panel Interface** - Task instructions and writing area side-by-side
+- ✅ **Task Switching** - Easy navigation between Task 1 and Task 2
+- ✅ **Word Counter** - Real-time word count for both tasks
+- ✅ **Auto-save** - Automatic saving of work in progress
+- ✅ **Timer Integration** - 60-minute countdown with visual alerts
+- ✅ **Resizable Panels** - Adjustable instruction/writing area split
+- ✅ **Sample Answers** - High-quality model responses and scoring rubrics
+- ✅ **Text Highlighting** - Highlight instructions, charts, and task content
+- ✅ **Note Taking** - Add notes to highlighted text with tooltips
+
 ### Listening Section:
 - 🎨 **Base Layout Ready** - Audio controls, form-based interface, section navigation
 - 🔄 **Multiple Choice** (planned)
@@ -99,9 +129,14 @@ Test System(v2)/
 - 🔄 **Short Answer Questions** (planned)
 
 ### Writing Section:
-- 🎨 **Base Layout Ready** - Split layout, word counter, task-specific interface
-- 🔄 **Task 1** (Academic: graphs/charts, General: letters)
-- 🔄 **Task 2** (Essay writing)
+- ✅ **Complete Writing Interface** - Split layout, task switching, resizable panels
+- ✅ **Task 1** - Chart/graph/table analysis (150+ words)
+- ✅ **Task 2** - Essay writing (250+ words)
+- ✅ **Professional Features** - Timer, word counter, auto-save, dark mode
+- ✅ **Task Navigation** - Seamless switching between tasks
+- ✅ **Word Count Tracking** - Color-coded feedback (warning/good)
+- ✅ **Auto-save Functionality** - Saves progress every 30 seconds
+- ✅ **Sample Answers** - High-quality reference responses
 
 ## 🚀 How It Works
 
@@ -132,27 +167,28 @@ Each question type has its own JavaScript handler with specific functionality:
 ### ✅ **Completed:**
 - **MOCK Structure**: 10 MOCK tests with organized folder structure
 - **Reading System**: Complete reading interface with approved design
+- **Writing System**: Complete writing interface with professional features
 - **Dynamic Loading**: Automatic answer and module loading system
-- **Question Types**: 4 core reading question type modules
+- **Question Types**: 4 core reading question type modules + writing handler
 - **CSS Architecture**: Consolidated skill-based stylesheets
-- **Templates**: Reading template available
+- **Templates**: Reading and writing templates available
 
 ### 🎨 **Layout Systems Ready:**
-- **Reading**: Split panel layout with resizable divider (approved design)
+- **Reading**: Split panel layout with resizable divider (approved design) ✅
+- **Writing**: Split layout with task switching, timer, and word counter (approved design) ✅
 - **Listening**: Form-based layout with audio controls and section navigation
-- **Writing**: Split layout with task content and writing area with word counter
 
 ### 🔄 **Next Steps:**
-- Create listening and writing HTML templates
+- Create listening HTML templates and modules
 - Implement additional reading question types
-- Add listening and writing question type modules
 - Audio integration for listening tests
+- Advanced writing assessment features
 
 ## 📝 Creating New Tests
 
 ### Option 1: Use Templates
-1. Copy `templates/reading-template.html`
-2. Place in `MOCKs/MOCK X/reading.html`
+1. Copy `templates/reading-template.html` or `templates/writing-template.html`
+2. Place in `MOCKs/MOCK X/reading.html` or `MOCKs/MOCK X/writing.html`
 3. Update data attributes: `data-mock="X"`
 4. Add your content and questions
 5. Create corresponding answer file
@@ -178,7 +214,15 @@ Each question type has its own JavaScript handler with specific functionality:
 3. Create answer files in `answers/` subdirectory
 4. Add audio files if needed: `assets/audio/MOCK X/`
 
-### Creating Listening/Writing Templates:
+### Creating New Writing Tests:
+1. Use `templates/writing-template.html` as base
+2. Replace placeholder content with new tasks:
+   - Task 1: Chart/graph description (150+ words)
+   - Task 2: Essay response (250+ words)
+3. Create corresponding `writing-answers.js` with sample responses
+4. Test functionality: task switching, word count, timer
+
+### Creating Listening Templates:
 1. Copy base layout from CSS file
 2. Integrate with `core.js` functionality
 3. Add skill-specific question modules

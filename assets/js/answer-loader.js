@@ -33,6 +33,11 @@ class AnswerLoader {
             questionTypes.push({ skill: 'reading', type: 'matching-info' });
         }
 
+        // Writing section detection
+        if (document.querySelector('.writing-area, .task-panel')) {
+            questionTypes.push({ skill: 'writing', type: 'writing-handler' });
+        }
+
         // Future: Listening question types detection
         // if (document.querySelector('.listening-multiple-choice')) {
         //     questionTypes.push({ skill: 'listening', type: 'multiple-choice' });

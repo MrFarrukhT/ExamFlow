@@ -184,13 +184,11 @@ class IELTSUniversalFunctions {
                 <div class="contrast-options">
                     <div class="contrast-option ${this.currentTheme === 'light' ? 'active' : ''}" 
                          onclick="ieltsUniversal.setTheme('light')">
-                        <div style="font-weight: bold; margin-bottom: 5px;">Light</div>
-                        <div style="font-size: 12px; color: #666;">Default appearance</div>
+                        <div style="font-weight: bold;">Light</div>
                     </div>
                     <div class="contrast-option ${this.currentTheme === 'dark' ? 'active' : ''}" 
                          onclick="ieltsUniversal.setTheme('dark')">
-                        <div style="font-weight: bold; margin-bottom: 5px;">Dark</div>
-                        <div style="font-size: 12px; color: #666;">Easier on the eyes</div>
+                        <div style="font-weight: bold;">Dark</div>
                     </div>
                 </div>
             </div>

@@ -25,8 +25,19 @@
         const timerResetButton = document.getElementById('timer-reset-btn');
         const deliverButton = document.getElementById('deliver-button');
         const resizer = document.getElementById('resizer');
-        const passagePanel = document.getElementById('passage-panel');
-        const questionsPanel = document.getElementById('questions-panel');
+        
+        // Detect test type and get appropriate panels
+        const testSkill = document.body.dataset.skill;
+        let passagePanel, questionsPanel;
+        
+        if (testSkill === 'reading') {
+            passagePanel = document.getElementById('passage-panel');
+            questionsPanel = document.getElementById('questions-panel');
+        } else if (testSkill === 'writing') {
+            passagePanel = document.querySelector('.task-panel');
+            questionsPanel = document.querySelector('.writing-panel');
+        }
+        
         const contextMenu = document.getElementById('contextMenu');
 
         // --- ICON SVGs ---
@@ -211,7 +222,11 @@ async function loadAnswers() {
             });
 
             resizer.addEventListener('mousedown', initResize, false);
-            initializeContextMenu();
+            
+            // Initialize context menu only if it exists
+            if (contextMenu) {
+                initializeContextMenu();
+            }
         }
 
         // --- CORE TEST LOGIC ---
@@ -1358,8 +1373,14 @@ async function loadAnswers() {
         // --- CONTEXT MENU (Highlighting) ---
         
         function initializeContextMenu() {
-            const panels = [passagePanel, questionsPanel];
+            const panels = [passagePanel, questionsPanel].filter(panel => panel !== null && panel !== undefined);
             let targetElementForClear = null;
+
+            // Only initialize if we have valid panels
+            if (panels.length === 0) {
+                console.log('No valid panels found for context menu initialization');
+                return;
+            }
 
             // This listener simply tracks the last valid text selection in either panel.
             document.addEventListener('selectionchange', () => {
