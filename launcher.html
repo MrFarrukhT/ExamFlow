@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovative Centre - IELTS Test System</title>
+    <link rel="stylesheet" href="assets/css/launcher.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%234a90e2'/><text x='50' y='60' text-anchor='middle' fill='white' font-size='40' font-weight='bold'>IC</text></svg>">
+</head>
+<body>
+    <div class="launcher-container">
+        <div class="launcher-header">
+            <div class="logo-container">
+                <div class="app-icon">
+                    <svg viewBox="0 0 100 100" width="80" height="80">
+                        <circle cx="50" cy="50" r="45" fill="#4a90e2"/>
+                        <text x="50" y="60" text-anchor="middle" fill="white" font-size="32" font-weight="bold">IC</text>
+                    </svg>
+                </div>
+                <h1>Innovative Centre</h1>
+                <p>IELTS Test System</p>
+            </div>
+        </div>
+        
+        <div class="launcher-content">
+            <div class="system-info">
+                <div class="info-item">
+                    <span class="info-label">Version:</span>
+                    <span class="info-value">2.0.0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Build:</span>
+                    <span class="info-value">September 2025</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Status:</span>
+                    <span class="info-value status-ready">Ready</span>
+                </div>
+            </div>
+            
+            <button class="launch-button" onclick="launchApp()">
+                <div class="launch-icon">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5,3 19,12 5,21 12,12"/>
+                    </svg>
+                </div>
+                Launch Test System
+            </button>
+            
+            <div class="features-list">
+                <div class="feature-item">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22,4 12,14.01 9,11.01"/>
+                    </svg>
+                    <span>Distraction-Free Environment</span>
+                </div>
+                <div class="feature-item">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                    </svg>
+                    <span>Fullscreen Mode</span>
+                </div>
+                <div class="feature-item">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <span>Secure Test Environment</span>
+                </div>
+                <div class="feature-item">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12,6 12,12 16,14"/>
+                    </svg>
+                    <span>Auto-Save & Session Management</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="launcher-footer">
+            <p>&copy; 2025 Innovative Centre. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        function launchApp() {
+            // Launch in fullscreen distraction-free mode
+            enterFullscreenMode();
+        }
+
+        function enterFullscreenMode() {
+            // Request fullscreen
+            const docElement = document.documentElement;
+            if (docElement.requestFullscreen) {
+                docElement.requestFullscreen();
+            } else if (docElement.webkitRequestFullscreen) {
+                docElement.webkitRequestFullscreen();
+            } else if (docElement.mozRequestFullScreen) {
+                docElement.mozRequestFullScreen();
+            } else if (docElement.msRequestFullscreen) {
+                docElement.msRequestFullscreen();
+            }
+
+            // Wait a moment for fullscreen, then navigate
+            setTimeout(() => {
+                // Enable distraction-free mode
+                sessionStorage.setItem('distractionFreeMode', 'true');
+                
+                // Navigate to the main app
+                window.location.href = 'index.html';
+            }, 500);
+        }
+
+        // Prevent refresh and context menu
+        document.addEventListener('keydown', function(e) {
+            // Prevent F5, Ctrl+R, F12
+            if (e.key === 'F5' || 
+                (e.ctrlKey && e.key === 'r') || 
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                e.preventDefault();
+            }
+        });
+
+        // Prevent right-click
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Auto-launch on Enter key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                launchApp();
+            }
+        });
+    </script>
+</body>
+</html>

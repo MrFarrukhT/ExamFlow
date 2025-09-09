@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IELTS MOCK 1 - Writing Practice</title>
+    <title>IELTS MOCK 5 - Writing Practice</title>
     <link rel="stylesheet" href="../../assets/css/writing.css">
     <!-- Writing-specific CSS modules will be loaded here -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%234a90e2'/><text x='50' y='60' text-anchor='middle' fill='white' font-size='40' font-weight='bold'>IC</text></svg>">
-</head>
-<body data-test-version="1" data-skill="writing" data-mock="1">
+
+
+    </head>
+<body data-test-version="1" data-skill="writing" data-mock="5">
     <script src="../../assets/js/distraction-free.js"></script>
     <div class="header">
         <div class="header-left">
@@ -47,11 +49,6 @@
                         <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
                     </svg>
                 </div>
-            </div>
-            <div class="invigilator-access" title="Invigilator Access" onclick="showInvigilatorLogin()" style="margin-left: 10px; cursor: pointer; opacity: 0.3; transition: opacity 0.3s;">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                    <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
-                </svg>
             </div>
         </div>
     </div>
@@ -236,56 +233,6 @@
             <!-- Popup content will be inserted here -->
         </div>
     </div>
-
-    <!-- Invigilator Access Modal -->
-    <div id="invigilator-modal" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width: 400px;">
-            <button class="modal-close-btn" onclick="closeInvigilatorModal()">&times;</button>
-            <h2>Invigilator Access</h2>
-            <div style="padding: 20px;">
-                <label for="invigilator-password" style="display: block; margin-bottom: 10px; font-weight: bold;">Enter Password:</label>
-                <input type="password" id="invigilator-password" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px;">
-                <button onclick="verifyInvigilatorPassword()" style="width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Access Invigilator Page</button>
-                <p id="password-error" style="color: red; margin-top: 10px; display: none;">Incorrect password. Please try again.</p>
-            </div>
-        </div>
-    </div>
-
-    <script>
-    // Invigilator Access Functions
-    function showInvigilatorLogin() {
-        document.getElementById('invigilator-modal').classList.remove('hidden');
-        document.getElementById('invigilator-password').focus();
-    }
-
-    function closeInvigilatorModal() {
-        document.getElementById('invigilator-modal').classList.add('hidden');
-        document.getElementById('invigilator-password').value = '';
-        document.getElementById('password-error').style.display = 'none';
-    }
-
-    function verifyInvigilatorPassword() {
-        const password = document.getElementById('invigilator-password').value;
-        const correctPassword = 'admin123'; // You can change this password
-        
-        if (password === correctPassword) {
-            // Correct password - redirect to invigilator page
-            window.location.href = '../../invigilator.html';
-        } else {
-            // Wrong password
-            document.getElementById('password-error').style.display = 'block';
-            document.getElementById('invigilator-password').value = '';
-            document.getElementById('invigilator-password').focus();
-        }
-    }
-
-    // Allow Enter key to submit password
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && document.getElementById('invigilator-modal').classList.contains('hidden') === false) {
-            verifyInvigilatorPassword();
-        }
-    });
-    </script>
 
     <!-- Load JavaScript modules -->
     <script src="../../assets/js/core.js"></script>

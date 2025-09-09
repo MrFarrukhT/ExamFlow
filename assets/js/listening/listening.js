@@ -94,10 +94,17 @@
         function goToSubmission() {
             // Close the modal first
             closeModal('options-modal');
-            // Scroll to the bottom navigation where the submit button is
-            const submitButton = document.querySelector('.footer__deliverButton___3FM07');
-            if (submitButton) {
-                submitButton.scrollIntoView({ behavior: 'smooth' });
+            
+            if (confirm('Are you sure you want to go to the dashboard? This will end your current session.')) {
+                // Save current session data before redirecting
+                const currentModule = 'listening'; // We know this is listening.js
+                localStorage.setItem(`${currentModule}Status`, 'completed');
+                localStorage.setItem(`${currentModule}EndTime`, new Date().toISOString());
+                
+                // Redirect to dashboard
+                setTimeout(() => {
+                    window.location.href = '../../dashboard.html';
+                }, 500);
             }
         }
 

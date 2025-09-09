@@ -253,16 +253,36 @@ class IELTSUniversalFunctions {
     }
 
     goToSubmission() {
-        if (confirm('Are you sure you want to go to the submission page? This will end your current session.')) {
-            // In a real implementation, this would redirect to submission page
-            this.showToast('Redirecting to submission page...', 'info');
+        if (confirm('Are you sure you want to go to the dashboard? This will end your current session.')) {
+            // Save current session data before redirecting
+            const currentModule = this.getCurrentModule();
+            if (currentModule) {
+                localStorage.setItem(`${currentModule}Status`, 'completed');
+                localStorage.setItem(`${currentModule}EndTime`, new Date().toISOString());
+            }
+            
+            this.showToast('Redirecting to dashboard...', 'info');
             this.closePopup();
             
-            // Simulate redirect (replace with actual URL)
+            // Redirect to dashboard
             setTimeout(() => {
-                alert('This would redirect to the submission page in a real implementation.');
+                window.location.href = '../../dashboard.html';
             }, 1000);
         }
+    }
+
+    getCurrentModule() {
+        // Try to get from body dataset
+        const skill = document.body.dataset.skill;
+        if (skill) return skill;
+        
+        // Try to get from URL
+        const path = window.location.pathname;
+        if (path.includes('reading.html')) return 'reading';
+        if (path.includes('listening.html')) return 'listening';
+        if (path.includes('writing.html')) return 'writing';
+        
+        return null;
     }
 
     showPopup(content, additionalClass = '') {

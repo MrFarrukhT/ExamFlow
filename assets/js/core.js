@@ -1,3 +1,6 @@
+    // Flag to indicate core.js has loaded (for distraction-free.js)
+    window.coreJSLoaded = true;
+    
     document.addEventListener('DOMContentLoaded', () => {
         // --- STATE VARIABLES ---
         let currentPassage = 1;
@@ -264,6 +267,26 @@ async function loadAnswers() {
                 el.classList.remove('correct', 'incorrect', 'correct-answer-highlight');
             });
             document.querySelectorAll('.correct-answer-display').forEach(el => el.remove());
+            
+            // Re-enable all inputs when results are cleared
+            document.querySelectorAll('input, select, textarea').forEach(input => {
+                input.disabled = false;
+            });
+            
+            // Re-enable drag and drop functionality when results are cleared
+            document.querySelectorAll('.drag-item').forEach(item => {
+                item.setAttribute('draggable', 'true');
+                item.style.cursor = 'grab';
+                item.style.pointerEvents = 'auto';
+            });
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.style.pointerEvents = 'auto';
+                zone.classList.remove('disabled');
+            });
+
+            // Re-enable submit button
+            deliverButton.disabled = false;
+            deliverButton.style.cursor = 'pointer';
 
             // Helper to evaluate the special TWO-answers checkbox group (Q20 & Q21) - only if present
             const hasQ20to21Group = document.querySelectorAll('input[name="q20-21"]').length > 0;
@@ -1414,6 +1437,19 @@ async function loadAnswers() {
                     document.getElementById('menu-clear').style.display = 'none';
                     document.getElementById('menu-clear-all').style.display = 'block'; // Always show clear all
                     showMenu = true;
+                } else {
+                    // No highlight menu needed - check if we should block right-click entirely
+                    if (window.distractionFreeMode && window.distractionFreeMode.isEnabled) {
+                        const currentSkill = window.distractionFreeMode.getCurrentSkill();
+                        if (currentSkill !== 'reading' && currentSkill !== 'listening') {
+                            // Block context menu for non-reading/listening sections
+                            e.preventDefault();
+                            window.distractionFreeMode.showActionBlockedMessage('Right-click menu is disabled during the test');
+                            return false;
+                        }
+                    }
+                    // In reading/listening sections, allow default context menu if no highlights
+                    return true;
                 }
 
                 if (showMenu) {
