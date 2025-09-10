@@ -251,22 +251,21 @@ class DistractionFreeMode {
         // This avoids conflicts with the highlight system
         // Fallback for pages without core.js (dashboard, index, etc.)
         
-        // Wait a moment to see if core.js loads, then add fallback if needed
-        setTimeout(() => {
-            if (!window.coreJSLoaded) {
-                console.log('Core.js not detected, adding fallback context menu handler');
-                this.addFallbackContextMenuHandler();
-            } else {
-                console.log('Core.js detected, skipping fallback context menu handler');
-            }
-        }, 1500); // Increased timeout to give more time for core.js to load
+        // Set up context menu handling based on page type
+        this.setupContextMenuHandling();
 
         // Prevent external drag and drop (but allow internal question drag and drop)
         document.addEventListener('dragstart', (e) => {
+            // Check if target and classList exist to prevent errors
+            if (!e.target || !e.target.classList) {
+                e.preventDefault();
+                return false;
+            }
+            
             // Allow drag and drop for IELTS question elements
             const isDragItem = e.target.classList.contains('drag-item');
             const isPillElement = e.target.classList.contains('pill');
-            const isInsideTestArea = e.target.closest('.test-content, .question-container, .question, .drag-options-container, .drop-zone, .dd-questions');
+            const isInsideTestArea = e.target.closest && e.target.closest('.test-content, .question-container, .question, .drag-options-container, .drop-zone, .dd-questions');
             
             if ((isDragItem || isPillElement) && isInsideTestArea) {
                 // Allow drag for test questions
@@ -280,7 +279,7 @@ class DistractionFreeMode {
 
         // Prevent text selection in certain areas (optional)
         document.addEventListener('selectstart', (e) => {
-            if (e.target.classList.contains('no-select')) {
+            if (e.target && e.target.classList && e.target.classList.contains('no-select')) {
                 e.preventDefault();
                 return false;
             }
@@ -302,12 +301,61 @@ class DistractionFreeMode {
         });
     }
 
-    getCurrentSkill() {
-        // Try to get from body dataset
-        const skill = document.body.dataset.skill;
-        if (skill) return skill;
+    setupContextMenuHandling() {
+        // Check if we're on a page that should have highlighting (reading/listening)
+        const currentSkill = this.getCurrentSkill();
+        const needsHighlighting = currentSkill === 'reading' || currentSkill === 'listening';
         
-        // Try to get from URL
+        if (needsHighlighting) {
+            // For pages that need highlighting, wait for core.js and check multiple times
+            this.waitForCoreJS();
+        } else {
+            // For pages that don't need highlighting (dashboard, writing, etc.), add fallback immediately
+            console.log(`Page skill: ${currentSkill} - Adding fallback context menu handler`);
+            this.addFallbackContextMenuHandler();
+        }
+    }
+
+    waitForCoreJS() {
+        let attempts = 0;
+        const maxAttempts = 20; // Check for 10 seconds (20 attempts * 500ms)
+        
+        const checkCoreJS = () => {
+            attempts++;
+            
+            if (window.coreJSLoaded) {
+                console.log('Core.js detected - highlighting functionality will be handled by core.js');
+                return; // Core.js is loaded, let it handle context menus
+            }
+            
+            if (attempts >= maxAttempts) {
+                // After 10 seconds, if core.js still hasn't loaded on a reading/listening page,
+                // something is wrong, but we'll log it and not add conflicting handlers
+                console.warn('Core.js not detected after 10 seconds on reading/listening page - this may indicate a loading issue');
+                return;
+            }
+            
+            // Continue checking
+            setTimeout(checkCoreJS, 500);
+        };
+        
+        // Start checking after DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(checkCoreJS, 100); // Small delay to let core.js initialize
+            });
+        } else {
+            setTimeout(checkCoreJS, 100);
+        }
+    }
+
+    getCurrentSkill() {
+        // Try to get from body dataset first (most reliable)
+        if (document.body && document.body.dataset && document.body.dataset.skill) {
+            return document.body.dataset.skill;
+        }
+        
+        // Fallback: Try to get from URL
         const path = window.location.pathname;
         if (path.includes('reading.html')) return 'reading';
         if (path.includes('listening.html')) return 'listening';
@@ -318,9 +366,11 @@ class DistractionFreeMode {
     }
 
     addFallbackContextMenuHandler() {
-        // This should only run on pages that DON'T have core.js (like dashboard)
-        // For reading/listening pages with core.js, the context menu is handled by core.js
-        document.addEventListener('contextmenu', (e) => {
+        // This should only run on pages that DON'T need highlighting (dashboard, writing, etc.)
+        // For reading/listening pages, the context menu is handled by core.js
+        
+        // Store reference to the handler for potential cleanup
+        this.contextMenuHandler = (e) => {
             const currentSkill = this.getCurrentSkill();
             
             // For writing, dashboard, and other sections, block right-click
@@ -330,9 +380,22 @@ class DistractionFreeMode {
                 return false;
             }
             
-            // For reading/listening without core.js, allow (but this shouldn't happen normally)
+            // For reading/listening, this handler should not have been added
+            // But if it was added by mistake, don't block and warn
+            console.warn('Fallback context menu handler should not be active on reading/listening pages');
             return true;
-        });
+        };
+        
+        document.addEventListener('contextmenu', this.contextMenuHandler);
+    }
+
+    // Method to remove fallback handler if needed
+    removeFallbackContextMenuHandler() {
+        if (this.contextMenuHandler) {
+            document.removeEventListener('contextmenu', this.contextMenuHandler);
+            this.contextMenuHandler = null;
+            console.log('Removed fallback context menu handler');
+        }
     }
 
     showActionBlockedMessage(message) {

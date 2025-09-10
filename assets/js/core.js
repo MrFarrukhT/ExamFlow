@@ -114,18 +114,31 @@ async function loadAnswers() {
             loadAnswers();
             
             // Continue with rest of initialization
+            console.log('🔄 Starting timer...');
             startTimer();
+            console.log('🔄 Initializing drag and drop...');
             initializeDragAndDrop();
+            console.log('🔄 Setting up checkbox limits...');
             setupCheckboxLimits();
+            console.log('🔄 Setting up example heading...');
             setupExampleHeading();
             console.log(`📋 Setting up initial state - switching to part 1`);
             switchToPart(1); // Also calls goToQuestion(1) and updateNavigation
             
+            console.log('🔄 Adding event listeners...');
             document.body.addEventListener('input', updateAllIndicators);
             document.body.addEventListener('change', updateAllIndicators);
-            deliverButton.addEventListener('click', checkAnswers);
-            timerToggleButton.addEventListener('click', toggleTimer);
-            timerResetButton.addEventListener('click', resetTimer);
+            console.log('🔄 Adding deliver button listener...');
+            if (deliverButton) {
+                deliverButton.addEventListener('click', checkAnswers);
+            }
+            console.log('🔄 Adding timer button listeners...');
+            if (timerToggleButton) {
+                timerToggleButton.addEventListener('click', toggleTimer);
+            }
+            if (timerResetButton) {
+                timerResetButton.addEventListener('click', resetTimer);
+            }
 
             // Auto-close dropdowns for Questions 20-23 on selection
             ['q20','q21','q22','q23'].forEach(id => {
@@ -224,7 +237,9 @@ async function loadAnswers() {
                 });
             });
 
-            resizer.addEventListener('mousedown', initResize, false);
+            if (resizer) {
+                resizer.addEventListener('mousedown', initResize, false);
+            }
             
             // Initialize context menu only if it exists
             if (contextMenu) {
@@ -1313,24 +1328,32 @@ async function loadAnswers() {
                 timeInSeconds--;
                 const minutes = Math.floor(timeInSeconds / 60);
                 const seconds = timeInSeconds % 60;
-                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                if (timerDisplay) {
+                    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
                 if (timeInSeconds <= 0) {
                     clearInterval(timerInterval);
-                    timerDisplay.textContent = "Time's up!";
+                    if (timerDisplay) {
+                        timerDisplay.textContent = "Time's up!";
+                    }
                     // checkAnswers(); // Disabled to prevent modal from opening automatically.
                 }
             }, 1000);
-            timerToggleButton.innerHTML = pauseIcon;
+            if (timerToggleButton) {
+                timerToggleButton.innerHTML = pauseIcon;
+            }
         }
 
         function pauseTimer() {
             clearInterval(timerInterval);
-            timerToggleButton.innerHTML = playIcon;
+            if (timerToggleButton) {
+                timerToggleButton.innerHTML = playIcon;
+            }
         }
 
         function toggleTimer() {
             // Check based on the icon currently displayed
-            if (timerToggleButton.innerHTML.includes('M6 19h4V5H6v14z')) { // Check for pause icon shape
+            if (timerToggleButton && timerToggleButton.innerHTML.includes('M6 19h4V5H6v14z')) { // Check for pause icon shape
                 pauseTimer();
             } else {
                 startTimer();
@@ -1341,9 +1364,13 @@ async function loadAnswers() {
             timeInSeconds = 3600;
             const minutes = Math.floor(timeInSeconds / 60);
             const seconds = timeInSeconds % 60;
-            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            if (timerDisplay) {
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
             startTimer();
-            timerToggleButton.innerHTML = pauseIcon;
+            if (timerToggleButton) {
+                timerToggleButton.innerHTML = pauseIcon;
+            }
         }
         
         function setupCheckboxLimits() {
