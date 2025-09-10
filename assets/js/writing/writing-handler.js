@@ -333,22 +333,34 @@ class WritingHandler {
             if (!proceed) return;
         }
         
-        // Calculate basic score
-        let score = this.calculateScore(task1Text, task1Words, task2Text, task2Words);
-        
         // Stop timer and auto-save
         this.pauseTimer();
         clearInterval(this.autosaveInterval);
+        
+        // Save answers to session manager before completing
+        if (typeof saveAnswersToSession === 'function') {
+            saveAnswersToSession();
+        }
+        
+        // Mark as completed and redirect to dashboard
+        const currentModule = 'writing';
+        localStorage.setItem(`${currentModule}Status`, 'completed');
+        localStorage.setItem(`${currentModule}EndTime`, new Date().toISOString());
+        
+        // Save to history if answer manager is available
+        if (window.answerManager) {
+            window.answerManager.saveCurrentTestToHistory();
+        }
         
         // Clear saved content
         localStorage.removeItem('ielts-writing-mock1-task1');
         localStorage.removeItem('ielts-writing-mock1-task2');
         localStorage.removeItem('ielts-writing-mock1-time');
         
-        // Submit to backend or show results
-        this.showResults(score, task1Words, task2Words);
+        alert('Writing section completed successfully!');
+        window.location.href = '../../dashboard.html';
         
-        console.log('Writing submitted:', { score, task1Words, task2Words });
+        console.log('Writing submitted:', { task1Words, task2Words });
     }
 
     calculateScore(task1Text, task1Words, task2Text, task2Words) {

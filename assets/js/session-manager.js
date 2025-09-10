@@ -147,14 +147,20 @@ function saveAnswersToSession() {
         });
         
     } else if (currentModule === 'listening') {
-        // Collect listening answers (similar to reading)
-        const inputs = document.querySelectorAll('input[type="text"], input[type="radio"]:checked, select');
-        inputs.forEach(input => {
-            if (input.name && input.value.trim()) {
-                if (input.type === 'radio') {
+        // Collect listening answers - all input types with answer-input class
+        const allInputs = document.querySelectorAll('.answer-input');
+        allInputs.forEach(input => {
+            const questionId = input.id || input.name;
+            
+            if (input.type === 'radio') {
+                // Only collect checked radio buttons
+                if (input.checked && input.value) {
                     answers[input.name] = input.value;
-                } else {
-                    answers[input.id || input.name] = input.value.trim();
+                }
+            } else if (input.type === 'text' || input.tagName.toLowerCase() === 'select') {
+                // Collect text inputs and select elements
+                if (questionId && input.value && input.value.trim()) {
+                    answers[questionId] = input.value.trim();
                 }
             }
         });

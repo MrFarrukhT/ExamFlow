@@ -269,7 +269,7 @@
         let selectedRange = null;
         let draggedElement = null;
         let testStarted = false;
-        let timeInSeconds = 3600;
+        let timeInSeconds = 2400; // 40 minutes for listening test
         let isHovering = false;
         let timerInterval;
         let contextElement = null;
@@ -704,7 +704,7 @@
         function updateAttemptedCount(partNumber) {
             const partContainer = document.getElementById(`part-${partNumber}`);
             if (!partContainer) return;
-            const inputs = partContainer.querySelectorAll('input.answer-input:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled])');
+            const inputs = partContainer.querySelectorAll('input.answer-input:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select.answer-input:not([disabled])');
             let answeredCount = 0;
             const answeredGroups = {};
             inputs.forEach(input => {
@@ -712,6 +712,10 @@
                     if (input.checked && !answeredGroups[input.name]) {
                         answeredCount++;
                         answeredGroups[input.name] = true;
+                    }
+                } else if (input.tagName.toLowerCase() === 'select') {
+                    if (input.value && input.value.trim() !== '') {
+                        answeredCount++;
                     }
                 } else {
                     if (input.value.trim() !== '') answeredCount++;
@@ -722,6 +726,11 @@
         }
 
         function checkAnswers() {
+            // Save answers to session before checking
+            if (typeof saveAnswersToSession === 'function') {
+                saveAnswersToSession();
+            }
+            
             let score = 0;
             let resultsData = [];
             document.querySelectorAll('.correct, .incorrect, .correct-answer-text').forEach(el => el.classList.contains('correct-answer-text') ? el.remove() : el.classList.remove('correct', 'incorrect'));
@@ -933,7 +942,7 @@
             })(score);
 
             // Disable all inputs after grading
-            document.querySelectorAll('.answer-input, input[type="radio"], input[type="checkbox"]').forEach(input => {
+            document.querySelectorAll('.answer-input, input[type="radio"], input[type="checkbox"], select.answer-input').forEach(input => {
                 input.disabled = true;
             });
             document.querySelectorAll('.drag-item').forEach(item => {
@@ -1353,7 +1362,7 @@
             });
         });
 
-        document.querySelectorAll('.answer-input, input[type="radio"], input[type="checkbox"]').forEach(input => {
+        document.querySelectorAll('.answer-input, input[type="radio"], input[type="checkbox"], select.answer-input').forEach(input => {
             input.addEventListener('input', updateAnsweredIndicators);
             input.addEventListener('change', updateAnsweredIndicators);
         });
@@ -1917,6 +1926,7 @@
             if (playPromise !== undefined) {
                 playPromise.then(() => {
                     console.log('🎵 Audio started successfully');
+                    startTimer(); // Start the timer when audio begins
                 }).catch(error => {
                     console.error('❌ Error starting audio:', error);
                     
@@ -1941,3 +1951,6 @@
                 alert('Audio file could not be loaded. Please contact support.');
             });
         }
+
+        // Make function globally accessible
+        window.startListeningTest = startListeningTest;
