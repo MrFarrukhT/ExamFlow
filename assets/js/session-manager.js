@@ -117,13 +117,14 @@ function saveAnswersToSession() {
     // Collect answers based on module type
     if (currentModule === 'reading') {
         // Collect reading answers
-        const inputs = document.querySelectorAll('input[type="text"], input[type="radio"]:checked, select, textarea');
+        const inputs = document.querySelectorAll('input[type="text"], input[type="hidden"], input[type="radio"]:checked, select, textarea');
         inputs.forEach(input => {
-            if (input.name && input.value.trim()) {
+            const questionId = input.id || input.name;
+            if (questionId && input.value && input.value.trim()) {
                 if (input.type === 'radio') {
                     answers[input.name] = input.value;
                 } else {
-                    answers[input.id || input.name] = input.value.trim();
+                    answers[questionId] = input.value.trim();
                 }
             }
         });

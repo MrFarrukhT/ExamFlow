@@ -266,7 +266,7 @@ class DistractionFreeMode {
             // Allow drag and drop for IELTS question elements
             const isDragItem = e.target.classList.contains('drag-item');
             const isPillElement = e.target.classList.contains('pill');
-            const isInsideTestArea = e.target.closest('.test-content, .question-container, .drag-options-container, .drop-zone, .dd-questions');
+            const isInsideTestArea = e.target.closest('.test-content, .question-container, .question, .drag-options-container, .drop-zone, .dd-questions');
             
             if ((isDragItem || isPillElement) && isInsideTestArea) {
                 // Allow drag for test questions
