@@ -33,6 +33,14 @@
         
         <div class="footer">
             <p>Make sure you have a stable internet connection</p>
+            <div style="margin-top: 20px; text-align: center;">
+                <button onclick="showInvigilatorLogin()" style="background: none; border: 1px solid #ccc; color: #666; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; opacity: 0.6; transition: opacity 0.3s;">
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="vertical-align: middle; margin-right: 3px;">
+                        <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
+                    </svg>
+                    Admin Access
+                </button>
+            </div>
         </div>
     </div>
 
@@ -61,6 +69,70 @@
                 document.getElementById('startTest').click();
             }
         });
+
+        // Invigilator Access Functions
+        function showInvigilatorLogin() {
+            const modal = document.getElementById('invigilator-modal');
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            document.getElementById('invigilator-password').focus();
+        }
+
+        function closeInvigilatorModal() {
+            const modal = document.getElementById('invigilator-modal');
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+            document.getElementById('invigilator-password').value = '';
+            document.getElementById('password-error').style.display = 'none';
+        }
+
+        function verifyInvigilatorPassword() {
+            const password = document.getElementById('invigilator-password').value;
+            const correctPassword = 'admin123'; // You can change this password
+            
+            if (password === correctPassword) {
+                // Correct password - redirect to invigilator page
+                window.location.href = 'invigilator.html';
+            } else {
+                // Wrong password
+                document.getElementById('password-error').style.display = 'block';
+                document.getElementById('invigilator-password').value = '';
+                document.getElementById('invigilator-password').focus();
+            }
+        }
+
+        // Allow Enter key to submit password in invigilator modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.getElementById('invigilator-modal') && !document.getElementById('invigilator-modal').classList.contains('hidden')) {
+                verifyInvigilatorPassword();
+            }
+        });
     </script>
+
+    <!-- Invigilator Access Modal -->
+    <div id="invigilator-modal" class="modal-overlay hidden" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+        <div class="modal-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 0; border-radius: 8px; max-width: 400px; width: 90%;">
+            <button class="modal-close-btn" onclick="closeInvigilatorModal()" style="position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
+            <h2 style="margin: 0; padding: 20px 20px 10px; font-size: 20px;">Invigilator Access</h2>
+            <div style="padding: 20px;">
+                <label for="invigilator-password" style="display: block; margin-bottom: 10px; font-weight: bold;">Enter Password:</label>
+                <input type="password" id="invigilator-password" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+                <button onclick="verifyInvigilatorPassword()" style="width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Access Invigilator Page</button>
+                <p id="password-error" style="color: red; margin-top: 10px; display: none;">Incorrect password. Please try again.</p>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .modal-overlay.hidden {
+            display: none !important;
+        }
+        
+        .invigilator-access:hover {
+            opacity: 1 !important;
+        }
+    </style>
 </body>
 </html>

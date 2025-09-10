@@ -10,6 +10,7 @@
 <body>
     <!-- Load distraction-free mode first -->
     <script src="assets/js/distraction-free.js"></script>
+    <script src="assets/js/answer-manager.js"></script>
     
     <div class="container">
         <div class="header">
@@ -152,12 +153,18 @@
 
         // Invigilator Access Functions
         function showInvigilatorLogin() {
-            document.getElementById('invigilator-modal').classList.remove('hidden');
+            const modal = document.getElementById('invigilator-modal');
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
             document.getElementById('invigilator-password').focus();
         }
 
         function closeInvigilatorModal() {
-            document.getElementById('invigilator-modal').classList.add('hidden');
+            const modal = document.getElementById('invigilator-modal');
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
             document.getElementById('invigilator-password').value = '';
             document.getElementById('password-error').style.display = 'none';
         }

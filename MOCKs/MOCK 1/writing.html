@@ -48,11 +48,6 @@
                     </svg>
                 </div>
             </div>
-            <div class="invigilator-access" title="Invigilator Access" onclick="showInvigilatorLogin()" style="margin-left: 10px; cursor: pointer; opacity: 0.3; transition: opacity 0.3s;">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                    <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
-                </svg>
-            </div>
         </div>
     </div>
 
@@ -237,60 +232,11 @@
         </div>
     </div>
 
-    <!-- Invigilator Access Modal -->
-    <div id="invigilator-modal" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width: 400px;">
-            <button class="modal-close-btn" onclick="closeInvigilatorModal()">&times;</button>
-            <h2>Invigilator Access</h2>
-            <div style="padding: 20px;">
-                <label for="invigilator-password" style="display: block; margin-bottom: 10px; font-weight: bold;">Enter Password:</label>
-                <input type="password" id="invigilator-password" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px;">
-                <button onclick="verifyInvigilatorPassword()" style="width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Access Invigilator Page</button>
-                <p id="password-error" style="color: red; margin-top: 10px; display: none;">Incorrect password. Please try again.</p>
-            </div>
-        </div>
-    </div>
-
-    <script>
-    // Invigilator Access Functions
-    function showInvigilatorLogin() {
-        document.getElementById('invigilator-modal').classList.remove('hidden');
-        document.getElementById('invigilator-password').focus();
-    }
-
-    function closeInvigilatorModal() {
-        document.getElementById('invigilator-modal').classList.add('hidden');
-        document.getElementById('invigilator-password').value = '';
-        document.getElementById('password-error').style.display = 'none';
-    }
-
-    function verifyInvigilatorPassword() {
-        const password = document.getElementById('invigilator-password').value;
-        const correctPassword = 'admin123'; // You can change this password
-        
-        if (password === correctPassword) {
-            // Correct password - redirect to invigilator page
-            window.location.href = '../../invigilator.html';
-        } else {
-            // Wrong password
-            document.getElementById('password-error').style.display = 'block';
-            document.getElementById('invigilator-password').value = '';
-            document.getElementById('invigilator-password').focus();
-        }
-    }
-
-    // Allow Enter key to submit password
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && document.getElementById('invigilator-modal').classList.contains('hidden') === false) {
-            verifyInvigilatorPassword();
-        }
-    });
-    </script>
-
     <!-- Load JavaScript modules -->
     <script src="../../assets/js/core.js"></script>
 <script src="../../assets/js/session-manager.js"></script>
     <script src="../../assets/js/answer-loader.js"></script>
+    <script src="../../assets/js/answer-manager.js"></script>
     <script src="../../assets/js/universal-functions.js"></script>
     <script src="../../assets/js/writing/writing-handler.js"></script>
 </body>

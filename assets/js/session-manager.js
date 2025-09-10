@@ -55,6 +55,10 @@ function setupSessionHandlers() {
     if (deliverButton) {
         // Remove existing event listeners by cloning the button
         const newDeliverButton = deliverButton.cloneNode(true);
+        
+        // Remove the onclick attribute to prevent double submission
+        newDeliverButton.removeAttribute('onclick');
+        
         deliverButton.parentNode.replaceChild(newDeliverButton, deliverButton);
         
         // Add our new event listener
@@ -76,6 +80,13 @@ function handleTestCompletion() {
     const currentModule = getCurrentModule();
     if (!currentModule) return;
     
+    // Special handling for writing test - use the writing handler
+    if (currentModule === 'writing' && window.writingHandler) {
+        // Call the writing handler's submission directly
+        window.writingHandler.submitWriting();
+        return;
+    }
+    
     if (confirm('Are you sure you want to submit this section? You will not be able to return to it.')) {
         // Save final answers
         saveAnswersToSession();
@@ -83,6 +94,11 @@ function handleTestCompletion() {
         // Mark as completed
         localStorage.setItem(`${currentModule}Status`, 'completed');
         localStorage.setItem(`${currentModule}EndTime`, new Date().toISOString());
+        
+        // Save to history if answer manager is available
+        if (window.answerManager) {
+            window.answerManager.saveCurrentTestToHistory();
+        }
         
         // Show completion message
         alert(`${currentModule.charAt(0).toUpperCase() + currentModule.slice(1)} section completed successfully!`);

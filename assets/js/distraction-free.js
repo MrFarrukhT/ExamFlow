@@ -15,12 +15,7 @@ class DistractionFreeMode {
     }
 
     enableDistractionFreeMode() {
-        // Request fullscreen if not already
-        if (!document.fullscreenElement) {
-            this.requestFullscreen();
-        }
-        
-        // Add visual indicators
+        // Add visual indicators first
         this.addDistractionFreeIndicators();
         
         // Hide browser UI elements
@@ -28,21 +23,59 @@ class DistractionFreeMode {
         
         // Monitor fullscreen state
         this.monitorFullscreen();
+        
+        // Try to enter fullscreen immediately if possible
+        if (!document.fullscreenElement && !document.webkitFullscreenElement && 
+            !document.mozFullScreenElement && !document.msFullscreenElement) {
+            this.requestFullscreen();
+        }
+        
+        // Also set up a user interaction listener as backup
+        this.setupUserInteractionFullscreen();
+    }
+    
+    setupUserInteractionFullscreen() {
+        const ensureFullscreenOnInteraction = () => {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && 
+                !document.mozFullScreenElement && !document.msFullscreenElement) {
+                this.requestFullscreen();
+            }
+            // Remove the listener after first successful attempt
+            document.removeEventListener('click', ensureFullscreenOnInteraction);
+            document.removeEventListener('keydown', ensureFullscreenOnInteraction);
+        };
+        
+        document.addEventListener('click', ensureFullscreenOnInteraction);
+        document.addEventListener('keydown', ensureFullscreenOnInteraction);
     }
 
     requestFullscreen() {
         const docElement = document.documentElement;
-        if (docElement.requestFullscreen) {
-            docElement.requestFullscreen().catch(err => {
-                console.log(`Error attempting to enable fullscreen: ${err.message}`);
-            });
-        } else if (docElement.webkitRequestFullscreen) {
-            docElement.webkitRequestFullscreen();
-        } else if (docElement.mozRequestFullScreen) {
-            docElement.mozRequestFullScreen();
-        } else if (docElement.msRequestFullscreen) {
-            docElement.msRequestFullscreen();
+        
+        // Check if already in fullscreen
+        if (document.fullscreenElement || document.webkitFullscreenElement || 
+            document.mozFullScreenElement || document.msFullscreenElement) {
+            return Promise.resolve();
         }
+        
+        let fullscreenPromise;
+        
+        if (docElement.requestFullscreen) {
+            fullscreenPromise = docElement.requestFullscreen();
+        } else if (docElement.webkitRequestFullscreen) {
+            fullscreenPromise = docElement.webkitRequestFullscreen();
+        } else if (docElement.mozRequestFullScreen) {
+            fullscreenPromise = docElement.mozRequestFullScreen();
+        } else if (docElement.msRequestFullscreen) {
+            fullscreenPromise = docElement.msRequestFullscreen();
+        } else {
+            return Promise.reject('Fullscreen not supported');
+        }
+        
+        return Promise.resolve(fullscreenPromise).catch(err => {
+            console.log(`Fullscreen request failed: ${err.message || err}`);
+            // Don't throw the error, just log it
+        });
     }
 
     addDistractionFreeIndicators() {

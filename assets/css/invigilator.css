@@ -245,3 +245,109 @@ body {
         padding: 1.5rem;
     }
 }
+
+/* Enhanced Answer Management Styles */
+.history-btn {
+    background: #17a2b8;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 5px;
+    transition: all 0.3s;
+}
+
+.history-btn:hover {
+    background: #138496;
+    transform: translateY(-1px);
+}
+
+.danger-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 5px;
+    transition: all 0.3s;
+}
+
+.danger-btn:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+}
+
+.history-panel {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.history-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.history-info {
+    flex: 1;
+    font-size: 14px;
+    color: #495057;
+}
+
+.history-info strong {
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.history-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.small-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.3s;
+}
+
+.small-btn:hover {
+    background: #0056b3;
+}
+
+.data-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+.export-btn {
+    background: #28a745;
+}
+
+.export-btn:hover {
+    background: #218838;
+}

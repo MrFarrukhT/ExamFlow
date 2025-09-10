@@ -10,10 +10,19 @@
 <body>
     <!-- Load distraction-free mode first -->
     <script src="assets/js/distraction-free.js"></script>
+    <script src="assets/js/answer-manager.js"></script>
     <div class="container">
         <div class="header">
             <h1>Invigilator Control Panel</h1>
             <p>Configure and manage IELTS tests</p>
+            <div style="margin-top: 15px;">
+                <button onclick="goBackToTest()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px; margin-right: 10px;">
+                    ← Back to Test
+                </button>
+                <button onclick="goToIndex()" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px;">
+                    ← Back to Index
+                </button>
+            </div>
         </div>
         
         <div class="panel-section">
@@ -38,10 +47,21 @@
         </div>
         
         <div class="panel-section">
-            <h3>Data Management</h3>
+            <h3>Test Results & Data Management</h3>
             <div class="data-controls">
-                <button id="exportButton" class="export-btn">Export Test Results</button>
-                <button id="resetButton" class="reset-btn">Reset All Data</button>
+                <button id="downloadCurrentTxt" class="export-btn">📄 Download Current Test (TXT)</button>
+                <button id="downloadCurrentJson" class="export-btn">📋 Export Current Test (JSON)</button>
+                <button id="viewHistory" class="history-btn">🗂️ View Test History</button>
+                <button id="resetSession" class="reset-btn">🔄 Reset Current Session</button>
+                <button id="resetAllData" class="danger-btn">⚠️ Clear All Data</button>
+            </div>
+            
+            <!-- Test History Panel -->
+            <div id="historyPanel" class="history-panel" style="display: none;">
+                <h4>Test History (Last 3 Tests)</h4>
+                <div id="historyList" class="history-list">
+                    <!-- History items will be populated here -->
+                </div>
             </div>
         </div>
         
@@ -71,7 +91,122 @@
         document.addEventListener('DOMContentLoaded', function() {
             updateCurrentMock();
             updateSessionInfo();
+            
+            // Initialize all event listeners
+            initializeEventListeners();
         });
+        
+        function initializeEventListeners() {
+            // Mock test selection
+            const setMockButton = document.getElementById('setMockButton');
+            if (setMockButton) {
+                setMockButton.addEventListener('click', function() {
+                    const selectedMock = document.getElementById('mockSelect').value;
+                    localStorage.setItem('selectedMock', selectedMock);
+                    updateCurrentMock();
+                    alert(`Mock Test ${selectedMock} has been set successfully!`);
+                });
+            }
+
+            // New answer management buttons
+            const downloadCurrentTxt = document.getElementById('downloadCurrentTxt');
+            if (downloadCurrentTxt) {
+                downloadCurrentTxt.addEventListener('click', function() {
+                    if (!window.answerManager) {
+                        alert('Answer management system not loaded!');
+                        return;
+                    }
+                    
+                    const studentId = localStorage.getItem('studentId');
+                    if (!studentId) {
+                        alert('No current test data to download!');
+                        return;
+                    }
+                    
+                    window.answerManager.downloadCurrentTestTxt();
+                    alert('Test results downloaded as TXT file!');
+                });
+            } else {
+                console.error('downloadCurrentTxt button not found!');
+            }
+
+            const downloadCurrentJson = document.getElementById('downloadCurrentJson');
+            if (downloadCurrentJson) {
+                downloadCurrentJson.addEventListener('click', function() {
+                    exportDataAsJson();
+                });
+            } else {
+                console.error('downloadCurrentJson button not found!');
+            }
+
+            const viewHistory = document.getElementById('viewHistory');
+            if (viewHistory) {
+                viewHistory.addEventListener('click', function() {
+                    toggleHistoryPanel();
+                });
+            } else {
+                console.error('viewHistory button not found!');
+            }
+
+            const resetSession = document.getElementById('resetSession');
+            if (resetSession) {
+                resetSession.addEventListener('click', function() {
+                    if (confirm('Reset current session? This will clear the current test data but keep historical records.')) {
+                        if (window.answerManager) {
+                            // Save current session to history before clearing
+                            if (localStorage.getItem('studentId')) {
+                                window.answerManager.saveCurrentTestToHistory();
+                            }
+                            window.answerManager.clearCurrentTestSession();
+                        } else {
+                            // Fallback if answer manager isn't loaded
+                            const keysToRemove = [
+                                'studentId', 'studentName', 'selectedMock', 'testStartTime',
+                                'listeningStatus', 'listeningStartTime', 'listeningEndTime', 'listeningAnswers',
+                                'readingStatus', 'readingStartTime', 'readingEndTime', 'readingAnswers',
+                                'writingStatus', 'writingStartTime', 'writingEndTime', 'writingAnswers',
+                                'distractionFreeMode'
+                            ];
+                            keysToRemove.forEach(key => localStorage.removeItem(key));
+                        }
+                        
+                        alert('Current session reset successfully!');
+                        updateSessionInfo();
+                        // Hide history panel if it's open
+                        const panel = document.getElementById('historyPanel');
+                        if (panel && panel.style.display !== 'none') {
+                            toggleHistoryPanel();
+                        }
+                    }
+                });
+            } else {
+                console.error('resetSession button not found!');
+            }
+
+            const resetAllData = document.getElementById('resetAllData');
+            if (resetAllData) {
+                resetAllData.addEventListener('click', function() {
+                    showPasswordModal('reset_all');
+                });
+            } else {
+                console.error('resetAllData button not found!');
+            }
+            
+            // Legacy button support (if they exist)
+            const exportButton = document.getElementById('exportButton');
+            if (exportButton) {
+                exportButton.addEventListener('click', function() {
+                    showPasswordModal('export');
+                });
+            }
+            
+            const resetButton = document.getElementById('resetButton');
+            if (resetButton) {
+                resetButton.addEventListener('click', function() {
+                    showPasswordModal('reset');
+                });
+            }
+        }
 
         function updateCurrentMock() {
             const selectedMock = localStorage.getItem('selectedMock') || '1';
@@ -100,21 +235,6 @@
             }
         }
 
-        document.getElementById('setMockButton').addEventListener('click', function() {
-            const selectedMock = document.getElementById('mockSelect').value;
-            localStorage.setItem('selectedMock', selectedMock);
-            updateCurrentMock();
-            alert(`Mock Test ${selectedMock} has been set successfully!`);
-        });
-
-        document.getElementById('exportButton').addEventListener('click', function() {
-            showPasswordModal('export');
-        });
-
-        document.getElementById('resetButton').addEventListener('click', function() {
-            showPasswordModal('reset');
-        });
-
         function showPasswordModal(action) {
             const modal = document.getElementById('passwordModal');
             modal.style.display = 'flex';
@@ -126,8 +246,10 @@
                 if (password === INVIGILATOR_PASSWORD) {
                     modal.style.display = 'none';
                     if (action === 'export') {
-                        exportData();
+                        exportDataAsJson();
                     } else if (action === 'reset') {
+                        resetData();
+                    } else if (action === 'reset_all') {
                         resetData();
                     }
                 } else {
@@ -140,7 +262,59 @@
             };
         }
 
-        function exportData() {
+        function toggleHistoryPanel() {
+            const panel = document.getElementById('historyPanel');
+            if (panel.style.display === 'none') {
+                panel.style.display = 'block';
+                loadTestHistory();
+                document.getElementById('viewHistory').textContent = '🔼 Hide History';
+            } else {
+                panel.style.display = 'none';
+                document.getElementById('viewHistory').textContent = '🗂️ View Test History';
+            }
+        }
+
+        function loadTestHistory() {
+            if (!window.answerManager) {
+                document.getElementById('historyList').innerHTML = '<p>Answer management system not available</p>';
+                return;
+            }
+
+            const history = window.answerManager.getTestSummary();
+            const historyList = document.getElementById('historyList');
+            
+            if (history.length === 0) {
+                historyList.innerHTML = '<p>No test history available</p>';
+                return;
+            }
+
+            let historyHTML = '';
+            history.forEach((test, index) => {
+                historyHTML += `
+                    <div class="history-item">
+                        <div class="history-info">
+                            <strong>${test.studentName}</strong> (ID: ${test.studentId})
+                            <br>Mock Test ${test.mockTest} | ${test.completionDate} ${test.completionTime}
+                            <br>Modules Completed: ${test.modulesCompleted}/3
+                        </div>
+                        <div class="history-actions">
+                            <button onclick="downloadHistoricalTest('${test.id}')" class="small-btn">📄 Download TXT</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            historyList.innerHTML = historyHTML;
+        }
+
+        function downloadHistoricalTest(testId) {
+            if (window.answerManager) {
+                window.answerManager.downloadHistoricalTestTxt(testId);
+                alert('Historical test downloaded!');
+            }
+        }
+
+        function exportDataAsJson() {
             const studentId = localStorage.getItem('studentId');
             const studentName = localStorage.getItem('studentName');
             const selectedMock = localStorage.getItem('selectedMock');
@@ -191,21 +365,15 @@
         }
 
         function resetData() {
-            if (confirm('Are you sure you want to reset ALL test data? This action cannot be undone.')) {
-                // Clear all localStorage except the selected mock
-                const keysToKeep = ['selectedMock'];
-                const keysToRemove = [];
-                
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (!keysToKeep.includes(key)) {
-                        keysToRemove.push(key);
-                    }
+            if (confirm('Are you sure you want to CLEAR ALL DATA including test history? This action cannot be undone.')) {
+                if (window.answerManager) {
+                    window.answerManager.clearAllData();
+                } else {
+                    // Fallback - clear everything
+                    localStorage.clear();
                 }
-                
-                keysToRemove.forEach(key => localStorage.removeItem(key));
                 updateSessionInfo();
-                alert('All test data has been reset successfully!');
+                alert('All data including test history has been cleared successfully!');
             }
         }
 
@@ -215,6 +383,22 @@
                 document.getElementById('confirmPassword').click();
             }
         });
+
+        // Navigation functions
+        function goBackToTest() {
+            // Check if there's an active session and redirect to dashboard, otherwise go to index
+            const studentId = localStorage.getItem('studentId');
+            if (studentId) {
+                window.location.href = 'dashboard.html';
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function goToIndex() {
+            // Always go to the main index page
+            window.location.href = 'index.html';
+        }
     </script>
 </body>
 </html>
