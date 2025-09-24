@@ -1,0 +1,18 @@
+{
+  "allowedTools": {
+    "Edit": true,
+    "Create": true,
+    "Bash": {
+      "npm *": true,
+      "git *": true,
+      "cd *": true,
+      "ls *": true,
+      "cat *": true,
+      "head *": true,
+      "tail *": true,
+      "find *": true,
+      "grep *": true,
+      "pm2 *": true
+    }
+  }
+}

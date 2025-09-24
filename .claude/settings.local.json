@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__ide__getDiagnostics",
+      "Bash(npm test:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Read(//c/Users/**)",
+      "Bash(npm run lint)",
+      "Bash(find:*)",
+      "Bash(npm run lint:*)",
+      "Bash(curl:*)",
+      "Bash(cd:*)",
+      "Bash(npm run logs:*)",
+      "Bash(npm run:*)",
+      "Bash(npx tsc:*)",
+      "Bash(NODE_ENV=test npm test -- --testNamePattern=\"should handle preflight\" --verbose)",
+      "Bash(cat:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm audit:*)",
+      "Bash(npx eslint:*)",
+      "Bash(timeout 30 npm test --bail --maxWorkers=2)",
+      "Bash(timeout 5 npm test --bail --maxWorkers=1 --reporter=verbose)",
+      "Bash(npm init:*)",
+      "Bash(npm ls:*)",
+      "Bash(findstr:*)",
+      "Bash(netstat:*)",
+      "Bash(taskkill:*)",
+      "Bash(npx kill-port:*)",
+      "Bash(node:*)",
+      "Bash(python:*)",
+      "Bash(ssh:*)",
+      "Bash(scp:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(npm start)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
