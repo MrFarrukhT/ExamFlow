@@ -12,22 +12,7 @@
             padding-bottom: 90px; /* nav-row height (80px) + some extra spacing */
         }
 
-        /* Page watermark */
-        body::after {
-            content: "Diagnostic Centre";
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%) rotate(-20deg);
-            font-size: 72px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            color: #000000;
-            opacity: 0.04; /* subtle */
-            pointer-events: none;
-            z-index: 0;
-            white-space: nowrap;
-        }
+        /* Watermark removed */
 
         .header {
             background-color: #ffffff;

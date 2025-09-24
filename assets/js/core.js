@@ -1523,10 +1523,30 @@ async function loadAnswers() {
 
         window.highlightText = () => {
             if (selectedRange && !selectedRange.collapsed) {
-                const span = document.createElement('span');
-                span.className = 'highlight';
-                span.appendChild(selectedRange.extractContents());
-                selectedRange.insertNode(span);
+                try {
+                    const span = document.createElement('span');
+                    span.className = 'highlight';
+
+                    // Use surroundContents instead of extractContents + insertNode
+                    // This preserves the text structure better across elements
+                    if (selectedRange.commonAncestorContainer.nodeType === Node.TEXT_NODE ||
+                        selectedRange.toString().indexOf('\n') === -1) {
+                        selectedRange.surroundContents(span);
+                    } else {
+                        // Fallback for complex selections spanning multiple elements
+                        const contents = selectedRange.extractContents();
+                        span.appendChild(contents);
+                        selectedRange.insertNode(span);
+                    }
+                } catch (e) {
+                    // Fallback for selections that can't be surrounded
+                    console.warn('Could not highlight selection:', e);
+                    const span = document.createElement('span');
+                    span.className = 'highlight';
+                    const contents = selectedRange.extractContents();
+                    span.appendChild(contents);
+                    selectedRange.insertNode(span);
+                }
             }
             closeContextMenu();
             window.getSelection().removeAllRanges();
@@ -1535,14 +1555,38 @@ async function loadAnswers() {
         window.addNote = () => {
             const note = prompt('Enter your note:');
             if (note && selectedRange && !selectedRange.collapsed) {
-                const span = document.createElement('span');
-                span.className = 'comment-highlight';
-                const tooltip = document.createElement('span');
-                tooltip.className = 'comment-tooltip';
-                tooltip.textContent = note;
-                span.appendChild(selectedRange.extractContents());
-                span.appendChild(tooltip);
-                selectedRange.insertNode(span);
+                try {
+                    const span = document.createElement('span');
+                    span.className = 'comment-highlight';
+                    const tooltip = document.createElement('span');
+                    tooltip.className = 'comment-tooltip';
+                    tooltip.textContent = note;
+
+                    // Use surroundContents for better structure preservation
+                    if (selectedRange.commonAncestorContainer.nodeType === Node.TEXT_NODE ||
+                        selectedRange.toString().indexOf('\n') === -1) {
+                        selectedRange.surroundContents(span);
+                        span.appendChild(tooltip);
+                    } else {
+                        // Fallback for complex selections
+                        const contents = selectedRange.extractContents();
+                        span.appendChild(contents);
+                        span.appendChild(tooltip);
+                        selectedRange.insertNode(span);
+                    }
+                } catch (e) {
+                    // Fallback for selections that can't be surrounded
+                    console.warn('Could not add note to selection:', e);
+                    const span = document.createElement('span');
+                    span.className = 'comment-highlight';
+                    const tooltip = document.createElement('span');
+                    tooltip.className = 'comment-tooltip';
+                    tooltip.textContent = note;
+                    const contents = selectedRange.extractContents();
+                    span.appendChild(contents);
+                    span.appendChild(tooltip);
+                    selectedRange.insertNode(span);
+                }
             }
             closeContextMenu();
             window.getSelection().removeAllRanges();

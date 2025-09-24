@@ -76,35 +76,177 @@ function setupSessionHandlers() {
     setInterval(saveAnswersToSession, 30000); // Every 30 seconds
 }
 
-function handleTestCompletion() {
+async function handleTestCompletion() {
     const currentModule = getCurrentModule();
     if (!currentModule) return;
-    
+
     // Special handling for writing test - use the writing handler
     if (currentModule === 'writing' && window.writingHandler) {
         // Call the writing handler's submission directly
         window.writingHandler.submitWriting();
         return;
     }
-    
+
     if (confirm('Are you sure you want to submit this section? You will not be able to return to it.')) {
-        // Save final answers
-        saveAnswersToSession();
-        
-        // Mark as completed
-        localStorage.setItem(`${currentModule}Status`, 'completed');
-        localStorage.setItem(`${currentModule}EndTime`, new Date().toISOString());
-        
-        // Save to history if answer manager is available
-        if (window.answerManager) {
-            window.answerManager.saveCurrentTestToHistory();
+        try {
+            // Save final answers
+            saveAnswersToSession();
+
+            // Get test data for submission
+            const testData = await collectTestData(currentModule);
+
+            // Save to database
+            await saveTestToDatabase(testData);
+
+            // Mark as completed
+            localStorage.setItem(`${currentModule}Status`, 'completed');
+            localStorage.setItem(`${currentModule}EndTime`, new Date().toISOString());
+
+            // Save to history if answer manager is available
+            if (window.answerManager) {
+                window.answerManager.saveCurrentTestToHistory();
+            }
+
+            // Show completion message
+            alert(`${currentModule.charAt(0).toUpperCase() + currentModule.slice(1)} section completed successfully!`);
+
+            // Return to dashboard
+            window.location.href = '../../dashboard.html';
+
+        } catch (error) {
+            console.error('Error submitting test:', error);
+            // Still allow completion even if database save fails
+            localStorage.setItem(`${currentModule}Status`, 'completed');
+            localStorage.setItem(`${currentModule}EndTime`, new Date().toISOString());
+            alert(`${currentModule.charAt(0).toUpperCase() + currentModule.slice(1)} section completed successfully!\nNote: There was an issue saving to the database, but your answers are saved locally.`);
+            window.location.href = '../../dashboard.html';
         }
-        
-        // Show completion message
-        alert(`${currentModule.charAt(0).toUpperCase() + currentModule.slice(1)} section completed successfully!`);
-        
-        // Return to dashboard
-        window.location.href = '../../dashboard.html';
+    }
+}
+
+// Collect test data for database submission
+async function collectTestData(currentModule) {
+    const studentId = localStorage.getItem('studentId');
+    const studentName = localStorage.getItem('studentName');
+    const selectedMock = localStorage.getItem('selectedMock') || '1';
+    const startTime = localStorage.getItem(`${currentModule}StartTime`);
+    const endTime = new Date().toISOString();
+
+    // Get answers
+    const answersString = localStorage.getItem(`${currentModule}Answers`);
+    const answers = answersString ? JSON.parse(answersString) : {};
+
+    // Calculate score if possible (for reading/listening tests)
+    let score = null;
+    let bandScore = null;
+
+    if (currentModule === 'reading' && window.correctAnswers) {
+        score = calculateScore(answers, window.correctAnswers);
+        bandScore = calculateBandScore(score);
+    }
+
+    return {
+        studentId,
+        studentName,
+        mockNumber: parseInt(selectedMock),
+        skill: currentModule,
+        answers,
+        score,
+        bandScore,
+        startTime,
+        endTime
+    };
+}
+
+// Calculate score for reading/listening tests
+function calculateScore(userAnswers, correctAnswers) {
+    let score = 0;
+
+    for (const [questionId, correctAnswer] of Object.entries(correctAnswers)) {
+        const userAnswer = userAnswers[questionId] || userAnswers[`q${questionId}`];
+
+        if (userAnswer && typeof userAnswer === 'string') {
+            const normalizedUser = userAnswer.toLowerCase().trim();
+            const normalizedCorrect = Array.isArray(correctAnswer)
+                ? correctAnswer.map(ans => ans.toLowerCase().trim())
+                : [correctAnswer.toLowerCase().trim()];
+
+            if (normalizedCorrect.includes(normalizedUser)) {
+                score++;
+            }
+        }
+    }
+
+    return score;
+}
+
+// Calculate band score based on raw score
+function calculateBandScore(score) {
+    if (!score) return null;
+
+    const bandMapping = {
+        40: '9.0', 39: '9.0', 38: '8.5', 37: '8.5', 36: '8.0', 35: '8.0', 34: '7.5',
+        33: '7.5', 32: '7.0', 31: '7.0', 30: '7.0', 29: '6.5', 28: '6.5', 27: '6.5',
+        26: '6.0', 25: '6.0', 24: '6.0', 23: '5.5', 22: '5.5', 21: '5.5', 20: '5.5',
+        19: '5.0', 18: '5.0', 17: '5.0', 16: '5.0', 15: '5.0', 14: '4.5', 13: '4.5',
+        12: '4.0', 11: '4.0', 10: '4.0', 9: '3.5', 8: '3.5', 7: '3.0', 6: '3.0',
+        5: '2.5', 4: '2.5'
+    };
+
+    if (score <= 0) return '0.0';
+    if (score === 1) return '1.0';
+    if (score <= 3) return '2.0';
+
+    return bandMapping[score] || '0.0';
+}
+
+// Save test data to database
+async function saveTestToDatabase(testData) {
+    try {
+        const ADMIN_API_BASE = 'https://innovative-centre-admin.vercel.app/api'; // Update this URL when deployed
+
+        const response = await fetch(`${ADMIN_API_BASE}/submissions`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(testData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+            console.log('✅ Test data saved to database:', result.id);
+        } else {
+            throw new Error(result.message || 'Failed to save test data');
+        }
+
+    } catch (error) {
+        console.error('❌ Database save error:', error);
+
+        // Fallback: try to save to local API if available
+        try {
+            const response = await fetch('/api/submissions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(testData)
+            });
+
+            if (response.ok) {
+                console.log('✅ Test data saved to local database');
+                return;
+            }
+        } catch (localError) {
+            console.error('Local API also failed:', localError);
+        }
+
+        throw error; // Re-throw to handle in calling function
     }
 }
 

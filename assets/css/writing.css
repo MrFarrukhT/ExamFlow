@@ -41,8 +41,8 @@ body {
     gap: 20px;
 }
 
-.ielts-logo {
-    background-color: #e53935;
+.innovative-centre-logo {
+    background-color: #2196f3;
     color: white;
     padding: 6px 12px;
     font-weight: bold;
@@ -224,22 +224,7 @@ body {
     position: relative;
 }
 
-/* Page watermark */
-body::after {
-    content: "IELTS Writing";
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%) rotate(-20deg);
-    font-size: 72px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    color: #000000;
-    opacity: 0.04;
-    pointer-events: none;
-    z-index: 0;
-    white-space: nowrap;
-}
+/* Watermark removed */
 
 /* === PANELS LAYOUT === */
 .panels-container {
@@ -1076,9 +1061,7 @@ body.dark-mode .submit-button:hover {
         display: none;
     }
     
-    body::after {
-        display: none;
-    }
+    /* Watermark removed for mobile */
     
     .writing-area {
         border: 1px solid #000;

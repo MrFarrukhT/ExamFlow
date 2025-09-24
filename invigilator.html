@@ -14,7 +14,7 @@
     <div class="container">
         <div class="header">
             <h1>Invigilator Control Panel</h1>
-            <p>Configure and manage IELTS tests</p>
+            <p>Configure and manage tests</p>
             <div style="margin-top: 15px;">
                 <button onclick="goBackToTest()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px; margin-right: 10px;">
                     ← Back to Test
@@ -86,7 +86,7 @@
     </div>
 
     <script>
-        const INVIGILATOR_PASSWORD = "ielts2025"; // Change this to your desired password
+        const INVIGILATOR_PASSWORD = "admin123"; // Change this to your desired password
         
         document.addEventListener('DOMContentLoaded', function() {
             updateCurrentMock();
@@ -355,7 +355,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `IELTS_Test_${studentId}_${new Date().toISOString().split('T')[0]}.json`;
+            a.download = `Test_${studentId}_${new Date().toISOString().split('T')[0]}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
