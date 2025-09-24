@@ -181,8 +181,19 @@
             showStatus('loading', '🔍 Testing database connection...');
 
             try {
+                console.log('Making request to /api/test');
                 const response = await fetch('/api/test');
-                const data = await response.json();
+                console.log('Response status:', response.status);
+
+                const responseText = await response.text();
+                console.log('Raw response:', responseText);
+
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch (parseError) {
+                    throw new Error(`Invalid JSON response: ${responseText.substring(0, 200)}...`);
+                }
 
                 if (data.success) {
                     showStatus('success', `✅ Database connection successful!
@@ -216,6 +227,7 @@ Connection Details:
             showStatus('loading', '🚀 Initializing database tables and data...');
 
             try {
+                console.log('Making request to /api/init-database');
                 const response = await fetch('/api/init-database', {
                     method: 'POST',
                     headers: {
@@ -223,7 +235,18 @@ Connection Details:
                     }
                 });
 
-                const data = await response.json();
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+
+                const responseText = await response.text();
+                console.log('Raw response:', responseText);
+
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch (parseError) {
+                    throw new Error(`Invalid JSON response: ${responseText.substring(0, 200)}...`);
+                }
 
                 if (data.success) {
                     showStatus('success', `🎉 Database initialized successfully!

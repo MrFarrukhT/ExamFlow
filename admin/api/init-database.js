@@ -10,17 +10,19 @@ const pool = new Pool({
 });
 
 export default async function handler(req, res) {
-  // Enable CORS
+  // Enable CORS and ensure JSON response
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Content-Type', 'application/json');
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
+    res.status(200).json({ message: 'CORS preflight' });
     return;
   }
 
-  if (req.method === 'POST') {
+  // Allow both GET and POST for easier testing
+  if (req.method === 'GET' || req.method === 'POST') {
     try {
       const client = await pool.connect();
 
@@ -117,18 +119,23 @@ export default async function handler(req, res) {
 
     } catch (error) {
       console.error('Database initialization error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to initialize database',
         error: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
         details: {
           code: error.code,
           constraint: error.constraint,
-          detail: error.detail
+          detail: error.detail,
+          routine: error.routine
         }
       });
     }
   } else {
-    res.status(405).json({ message: 'Method not allowed' });
+    return res.status(405).json({
+      success: false,
+      message: `Method ${req.method} not allowed. Use GET or POST.`
+    });
   }
 }
