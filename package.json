@@ -1,0 +1,16 @@
+{
+  "name": "innovative-centre-local-server",
+  "version": "1.0.0",
+  "description": "Local database server for Innovative Centre Test System",
+  "type": "module",
+  "main": "local-database-server.js",
+  "scripts": {
+    "start": "node local-database-server.js",
+    "test": "curl http://localhost:3001/test"
+  },
+  "dependencies": {
+    "pg": "^8.11.0",
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  }
+}

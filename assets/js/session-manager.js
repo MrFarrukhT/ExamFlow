@@ -203,9 +203,10 @@ function calculateBandScore(score) {
 // Save test data to database
 async function saveTestToDatabase(testData) {
     try {
-        const ADMIN_API_BASE = 'https://innovative-centre-admin.vercel.app/api'; // Update this URL when deployed
+        // Try local database server first (preferred method)
+        console.log('🔄 Attempting to save to local database server...');
 
-        const response = await fetch(`${ADMIN_API_BASE}/submissions`, {
+        const response = await fetch('http://localhost:3002/submissions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -213,24 +214,23 @@ async function saveTestToDatabase(testData) {
             body: JSON.stringify(testData)
         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
-
-        if (result.success) {
-            console.log('✅ Test data saved to database:', result.id);
+        if (response.ok) {
+            const result = await response.json();
+            console.log('✅ Test data saved to local database server:', result.id);
+            return result;
         } else {
-            throw new Error(result.message || 'Failed to save test data');
+            throw new Error(`Local server responded with status: ${response.status}`);
         }
 
     } catch (error) {
-        console.error('❌ Database save error:', error);
+        console.warn('⚠️ Local database server not available:', error.message);
 
-        // Fallback: try to save to local API if available
+        // Fallback 1: Try Vercel API if available
         try {
-            const response = await fetch('/api/submissions', {
+            console.log('🔄 Trying Vercel API as fallback...');
+            const VERCEL_API = 'https://innovative-centre-admin.vercel.app/api'; // Update with actual URL when deployed
+
+            const response = await fetch(`${VERCEL_API}/submissions`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -239,14 +239,113 @@ async function saveTestToDatabase(testData) {
             });
 
             if (response.ok) {
-                console.log('✅ Test data saved to local database');
-                return;
+                const result = await response.json();
+                console.log('✅ Test data saved to Vercel database');
+                return result;
             }
-        } catch (localError) {
-            console.error('Local API also failed:', localError);
+        } catch (vercelError) {
+            console.warn('⚠️ Vercel API also failed:', vercelError.message);
         }
 
-        throw error; // Re-throw to handle in calling function
+        // Fallback 2: Enhanced local storage (database format)
+        console.log('🔄 Using enhanced local storage as final fallback...');
+        return await saveToEnhancedLocalStorage(testData);
+    }
+}
+
+// Enhanced local storage that mimics database structure
+async function saveToEnhancedLocalStorage(testData) {
+    try {
+        // Get existing submissions
+        const existingData = localStorage.getItem('test_submissions_database') || '[]';
+        const submissions = JSON.parse(existingData);
+
+        // Add new submission with database-like structure
+        const newSubmission = {
+            id: Date.now(),
+            student_id: testData.studentId,
+            student_name: testData.studentName,
+            mock_number: testData.mockNumber,
+            skill: testData.skill,
+            answers: testData.answers,
+            score: testData.score,
+            band_score: testData.bandScore,
+            start_time: testData.startTime,
+            end_time: testData.endTime,
+            created_at: new Date().toISOString(),
+            saved_locally: true
+        };
+
+        submissions.push(newSubmission);
+
+        // Save back to localStorage
+        localStorage.setItem('test_submissions_database', JSON.stringify(submissions));
+
+        console.log('✅ Test data saved to enhanced local storage (database format)');
+
+        // Also trigger a sync attempt in the background
+        setTimeout(() => syncLocalDataToDatabase(), 5000);
+
+        return {
+            success: true,
+            message: 'Saved to local storage (will sync when database is available)',
+            id: newSubmission.id
+        };
+
+    } catch (error) {
+        console.error('❌ Enhanced local storage failed:', error);
+        throw error;
+    }
+}
+
+// Background sync function
+async function syncLocalDataToDatabase() {
+    try {
+        const localData = localStorage.getItem('test_submissions_database');
+        if (!localData) return;
+
+        const submissions = JSON.parse(localData);
+        const unsynced = submissions.filter(sub => sub.saved_locally);
+
+        if (unsynced.length === 0) return;
+
+        console.log(`🔄 Attempting to sync ${unsynced.length} local submissions...`);
+
+        // Try to sync each submission
+        for (const submission of unsynced) {
+            try {
+                const response = await fetch('http://localhost:3002/submissions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        studentId: submission.student_id,
+                        studentName: submission.student_name,
+                        mockNumber: submission.mock_number,
+                        skill: submission.skill,
+                        answers: submission.answers,
+                        score: submission.score,
+                        bandScore: submission.band_score,
+                        startTime: submission.start_time,
+                        endTime: submission.end_time
+                    })
+                });
+
+                if (response.ok) {
+                    // Mark as synced
+                    submission.saved_locally = false;
+                    submission.synced_at = new Date().toISOString();
+                    console.log(`✅ Synced submission ${submission.id}`);
+                }
+            } catch (syncError) {
+                console.warn(`⚠️ Failed to sync submission ${submission.id}`);
+            }
+        }
+
+        // Update localStorage
+        localStorage.setItem('test_submissions_database', JSON.stringify(submissions));
+
+    } catch (error) {
+        console.warn('Background sync failed:', error);
     }
 }
 

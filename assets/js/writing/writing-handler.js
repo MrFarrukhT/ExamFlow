@@ -310,57 +310,151 @@ class WritingHandler {
         }
     }
 
-    submitWriting() {
+    async submitWriting() {
         const task1Text = document.getElementById('task1-textarea')?.value.trim() || '';
         const task2Text = document.getElementById('task2-textarea')?.value.trim() || '';
-        
+
         const task1Words = task1Text ? task1Text.split(/\s+/).length : 0;
         const task2Words = task2Text ? task2Text.split(/\s+/).length : 0;
-        
+
         // Validation
         let warnings = [];
-        
+
         if (task1Words < 150) {
             warnings.push(`Task 1 has only ${task1Words} words (minimum 150 required)`);
         }
-        
+
         if (task2Words < 250) {
             warnings.push(`Task 2 has only ${task2Words} words (minimum 250 required)`);
         }
-        
+
         if (warnings.length > 0) {
             const proceed = confirm(`Warning:\n${warnings.join('\n')}\n\nDo you want to submit anyway?`);
             if (!proceed) return;
         }
-        
+
         // Stop timer and auto-save
         this.pauseTimer();
         clearInterval(this.autosaveInterval);
-        
-        // Save answers to session manager before completing
-        if (typeof saveAnswersToSession === 'function') {
-            saveAnswersToSession();
+
+        try {
+            // Prepare writing data for database submission
+            const writingData = await this.prepareWritingData(task1Text, task1Words, task2Text, task2Words);
+
+            // Save to database using session manager
+            if (typeof saveTestToDatabase === 'function') {
+                console.log('🔄 Saving writing test to database...');
+                await saveTestToDatabase(writingData);
+            }
+
+            // Save answers to session manager for local backup
+            if (typeof saveAnswersToSession === 'function') {
+                saveAnswersToSession();
+            }
+
+            // Mark as completed
+            const currentModule = 'writing';
+            localStorage.setItem(`${currentModule}Status`, 'completed');
+            localStorage.setItem(`${currentModule}EndTime`, new Date().toISOString());
+
+            // Save to history if answer manager is available
+            if (window.answerManager) {
+                window.answerManager.saveCurrentTestToHistory();
+            }
+
+            // Clear saved content
+            localStorage.removeItem('ielts-writing-mock1-task1');
+            localStorage.removeItem('ielts-writing-mock1-task2');
+            localStorage.removeItem('ielts-writing-mock1-time');
+
+            alert('Writing section completed successfully!');
+            window.location.href = '../../dashboard.html';
+
+            console.log('✅ Writing submitted successfully:', { task1Words, task2Words });
+
+        } catch (error) {
+            console.error('❌ Error submitting writing test:', error);
+
+            // Still save locally and continue
+            if (typeof saveAnswersToSession === 'function') {
+                saveAnswersToSession();
+            }
+
+            localStorage.setItem('writingStatus', 'completed');
+            localStorage.setItem('writingEndTime', new Date().toISOString());
+
+            alert('Writing section completed successfully!\nNote: There was an issue saving to the database, but your answers are saved locally.');
+            window.location.href = '../../dashboard.html';
         }
-        
-        // Mark as completed and redirect to dashboard
-        const currentModule = 'writing';
-        localStorage.setItem(`${currentModule}Status`, 'completed');
-        localStorage.setItem(`${currentModule}EndTime`, new Date().toISOString());
-        
-        // Save to history if answer manager is available
-        if (window.answerManager) {
-            window.answerManager.saveCurrentTestToHistory();
+    }
+
+    async prepareWritingData(task1Text, task1Words, task2Text, task2Words) {
+        const studentId = localStorage.getItem('studentId');
+        const studentName = localStorage.getItem('studentName');
+        const selectedMock = localStorage.getItem('selectedMock') || '1';
+        const startTime = localStorage.getItem('writingStartTime');
+        const endTime = new Date().toISOString();
+
+        // Format answers with word counts for admin panel display
+        const answers = {
+            task_1: {
+                text: task1Text,
+                word_count: task1Words,
+                display: `Task 1 { ${task1Text.substring(0, 100)}${task1Text.length > 100 ? '...' : ''} - ${task1Words} words}`
+            },
+            task_2: {
+                text: task2Text,
+                word_count: task2Words,
+                display: `Task 2 { ${task2Text.substring(0, 100)}${task2Text.length > 100 ? '...' : ''} - ${task2Words} words}`
+            },
+            summary: {
+                task1_words: task1Words,
+                task2_words: task2Words,
+                total_words: task1Words + task2Words,
+                time_used_minutes: Math.floor((3600 - this.timeRemaining) / 60)
+            }
+        };
+
+        // Calculate a basic score (for display purposes)
+        const score = this.calculateScore(task1Text, task1Words, task2Text, task2Words);
+        const bandScore = this.calculateWritingBandScore(score, task1Words, task2Words);
+
+        return {
+            studentId,
+            studentName,
+            mockNumber: parseInt(selectedMock),
+            skill: 'writing',
+            answers,
+            score,
+            bandScore,
+            startTime,
+            endTime
+        };
+    }
+
+    calculateWritingBandScore(score, task1Words, task2Words) {
+        // Basic band score calculation for writing
+        let band = 0;
+
+        // Word count requirements
+        if (task1Words >= 150 && task2Words >= 250) {
+            band += 2;
+        } else if (task1Words >= 120 && task2Words >= 200) {
+            band += 1.5;
+        } else if (task1Words >= 100 && task2Words >= 150) {
+            band += 1;
         }
-        
-        // Clear saved content
-        localStorage.removeItem('ielts-writing-mock1-task1');
-        localStorage.removeItem('ielts-writing-mock1-task2');
-        localStorage.removeItem('ielts-writing-mock1-time');
-        
-        alert('Writing section completed successfully!');
-        window.location.href = '../../dashboard.html';
-        
-        console.log('Writing submitted:', { task1Words, task2Words });
+
+        // Content completeness (basic scoring)
+        if (score >= 35) band += 6;
+        else if (score >= 30) band += 5.5;
+        else if (score >= 25) band += 5;
+        else if (score >= 20) band += 4.5;
+        else if (score >= 15) band += 4;
+        else if (score >= 10) band += 3.5;
+        else band += 3;
+
+        return Math.min(9, band).toFixed(1);
     }
 
     calculateScore(task1Text, task1Words, task2Text, task2Words) {

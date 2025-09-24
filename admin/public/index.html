@@ -371,6 +371,9 @@
         function displaySubmissions(submissions) {
             const container = document.getElementById('submissionsContainer');
 
+            // Store submissions globally for viewSubmission function
+            currentSubmissions = submissions;
+
             if (submissions.length === 0) {
                 container.innerHTML = '<div class="no-submissions">No test submissions found.</div>';
                 return;
@@ -443,9 +446,52 @@
         }
 
         function viewSubmission(id) {
-            // TODO: Implement detailed view modal
-            alert(`Viewing submission ${id} - detailed view coming soon!`);
+            const submission = currentSubmissions.find(s => s.id == id);
+            if (!submission) {
+                alert('Submission not found');
+                return;
+            }
+
+            let content = `SUBMISSION DETAILS\n\n`;
+            content += `Student: ${submission.student_name} (${submission.student_id})\n`;
+            content += `Mock: ${submission.mock_number} | Skill: ${submission.skill.toUpperCase()}\n`;
+            content += `Score: ${submission.score || 'N/A'}/40 | Band: ${submission.band_score || 'N/A'}\n`;
+            content += `Date: ${formatDate(submission.created_at)}\n\n`;
+
+            if (submission.skill === 'writing') {
+                content += `WRITING ANSWERS:\n\n`;
+
+                const answers = submission.answers;
+                if (answers.task_1) {
+                    content += `Task 1 {${answers.task_1.text} - ${answers.task_1.word_count} words}\n\n`;
+                }
+                if (answers.task_2) {
+                    content += `Task 2 {${answers.task_2.text} - ${answers.task_2.word_count} words}\n\n`;
+                }
+                if (answers.summary) {
+                    content += `Summary: Task 1: ${answers.summary.task1_words} words, Task 2: ${answers.summary.task2_words} words\n`;
+                    content += `Total words: ${answers.summary.total_words} | Time used: ${answers.summary.time_used_minutes} minutes`;
+                }
+            } else if (submission.skill === 'reading' || submission.skill === 'listening') {
+                content += `${submission.skill.toUpperCase()} ANSWERS:\n\n`;
+
+                const answers = submission.answers;
+                let questionCount = 0;
+                for (const [key, value] of Object.entries(answers)) {
+                    questionCount++;
+                    if (questionCount <= 10) { // Show first 10 answers
+                        content += `${key}: ${Array.isArray(value) ? value.join(', ') : value}\n`;
+                    }
+                }
+                if (questionCount > 10) {
+                    content += `\n... and ${questionCount - 10} more answers`;
+                }
+            }
+
+            alert(content);
         }
+
+        let currentSubmissions = [];
 
         function logout() {
             localStorage.removeItem('adminToken');
