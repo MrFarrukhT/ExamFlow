@@ -1,26 +1,25 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
+  "functions": {
+    "api/submissions.js": {
+      "runtime": "nodejs18.x"
     },
-    {
-      "src": "public/**/*",
-      "use": "@vercel/static"
+    "api/hello.js": {
+      "runtime": "nodejs18.x"
     }
-  ],
+  },
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "src": "/api/submissions",
+      "dest": "/api/submissions.js"
+    },
+    {
+      "src": "/api/hello",
+      "dest": "/api/hello.js"
     },
     {
       "src": "/(.*)",
       "dest": "/public/$1"
     }
-  ],
-  "env": {
-    "DATABASE_URL": "postgresql://neondb_owner:npg_2yHMSvBcN6rI@ep-old-tooth-agav7q24-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
-  }
+  ]
 }
