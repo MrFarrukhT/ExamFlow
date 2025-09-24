@@ -1,10 +1,8 @@
-const bcrypt = require('bcryptjs');
-
 // Simple authentication for admin panel
 const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD_HASH = bcrypt.hashSync('admin123', 10);
+const ADMIN_PASSWORD = 'admin123'; // Using plain text for simplicity
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -27,7 +25,7 @@ module.exports = async (req, res) => {
       }
 
       // Check credentials
-      if (username === ADMIN_USERNAME && bcrypt.compareSync(password, ADMIN_PASSWORD_HASH)) {
+      if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
         return res.status(200).json({
           success: true,
           message: 'Login successful',
@@ -49,4 +47,4 @@ module.exports = async (req, res) => {
   }
 
   res.status(405).json({ message: 'Method not allowed' });
-};
+}

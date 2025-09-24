@@ -1,6 +1,45 @@
-const { pool, initializeDatabase } = require('./db');
+import { Pool } from 'pg';
 
-module.exports = async (req, res) => {
+// Database connection using Neon PostgreSQL
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    require: true,
+    rejectUnauthorized: false
+  }
+});
+
+// Initialize database tables
+async function initializeDatabase() {
+  const client = await pool.connect();
+  try {
+    // Create test_submissions table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS test_submissions (
+        id SERIAL PRIMARY KEY,
+        student_id VARCHAR(100) NOT NULL,
+        student_name VARCHAR(200) NOT NULL,
+        mock_number INTEGER NOT NULL,
+        skill VARCHAR(50) NOT NULL,
+        answers JSONB NOT NULL,
+        score INTEGER,
+        band_score VARCHAR(10),
+        start_time TIMESTAMP,
+        end_time TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    console.log('✅ Database tables initialized');
+  } catch (error) {
+    console.error('❌ Database initialization failed:', error);
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
+export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
