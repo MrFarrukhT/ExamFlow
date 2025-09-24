@@ -152,6 +152,53 @@ app.get('/submissions', async (req, res) => {
     }
 });
 
+// Update score for a submission
+app.post('/update-score', async (req, res) => {
+    try {
+        const { submissionId, score, bandScore } = req.body;
+
+        if (!submissionId) {
+            return res.status(400).json({
+                success: false,
+                message: 'Submission ID is required'
+            });
+        }
+
+        console.log(`📊 Updating score for submission ${submissionId}: ${score}/40, Band: ${bandScore}`);
+
+        const dbClient = await ensureConnection();
+        const result = await dbClient.query(`
+            UPDATE test_submissions
+            SET score = $1, band_score = $2
+            WHERE id = $3
+            RETURNING id, score, band_score
+        `, [score, bandScore, submissionId]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Submission not found'
+            });
+        }
+
+        console.log(`✅ Score updated for submission ${submissionId}`);
+
+        res.json({
+            success: true,
+            message: 'Score updated successfully',
+            submission: result.rows[0]
+        });
+
+    } catch (error) {
+        console.error('❌ Score update failed:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to update score',
+            error: error.message
+        });
+    }
+});
+
 // Initialize and start server
 async function startServer() {
     try {

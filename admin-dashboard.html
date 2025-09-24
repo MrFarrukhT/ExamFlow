@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovative Centre - Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .login-form, .admin-content {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            margin-top: 10px;
+            padding: 10px;
+            background: #ffeaea;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .success-message {
+            color: #27ae60;
+            margin-top: 10px;
+            padding: 10px;
+            background: #eafaf1;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .admin-content {
+            display: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .submissions-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .submissions-table th,
+        .submissions-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .submissions-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .submissions-table tr:hover {
+            background: #f8f9fa;
+            cursor: pointer;
+        }
+
+        .skill-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .skill-reading { background: #e3f2fd; color: #1976d2; }
+        .skill-writing { background: #f3e5f5; color: #7b1fa2; }
+        .skill-listening { background: #e8f5e8; color: #388e3c; }
+
+        .score-good { color: #27ae60; font-weight: bold; }
+        .score-average { color: #f39c12; font-weight: bold; }
+        .score-poor { color: #e74c3c; font-weight: bold; }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .no-submissions {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .refresh-btn {
+            margin-bottom: 20px;
+            background: #28a745;
+        }
+
+        .refresh-btn:hover {
+            background: #218838;
+        }
+
+        .connection-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .connected {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .disconnected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        @media (max-width: 768px) {
+            .submissions-table {
+                font-size: 14px;
+            }
+
+            .submissions-table th,
+            .submissions-table td {
+                padding: 8px 4px;
+            }
+
+            .container {
+                margin: 10px;
+                border-radius: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="logout-btn" onclick="logout()" style="display: none;" id="logoutBtn">Logout</button>
+            <h1>🎓 Innovative Centre</h1>
+            <p>Local Admin Dashboard <span id="connectionStatus" class="connection-status disconnected">Database Offline</span></p>
+        </div>
+
+        <!-- Login Form -->
+        <div class="login-form" id="loginForm">
+            <form onsubmit="login(event)">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" required value="admin">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" required value="admin123">
+                </div>
+                <button type="submit" class="btn" id="loginBtn">Login</button>
+                <div class="error-message" id="errorMessage"></div>
+                <div class="success-message" id="successMessage"></div>
+            </form>
+        </div>
+
+        <!-- Admin Content -->
+        <div class="admin-content" id="adminContent">
+            <button class="btn refresh-btn" onclick="loadSubmissions()">🔄 Refresh Data</button>
+
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalSubmissions">0</div>
+                    <div class="stat-label">Total Submissions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="averageScore">0</div>
+                    <div class="stat-label">Average Score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalStudents">0</div>
+                    <div class="stat-label">Unique Students</div>
+                </div>
+            </div>
+
+            <h2>Test Submissions</h2>
+            <div id="submissionsContainer">
+                <div class="loading">Loading submissions...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3002';
+        let authToken = localStorage.getItem('adminToken');
+        let currentSubmissions = [];
+
+        // Check database connection on load
+        checkDatabaseConnection();
+
+        // Check if already logged in
+        if (authToken) {
+            showAdminPanel();
+        }
+
+        async function checkDatabaseConnection() {
+            try {
+                const response = await fetch(`${API_BASE}/test`);
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('connectionStatus').textContent = 'Database Online';
+                    document.getElementById('connectionStatus').className = 'connection-status connected';
+                } else {
+                    throw new Error('Database not responding');
+                }
+            } catch (error) {
+                document.getElementById('connectionStatus').textContent = 'Database Offline';
+                document.getElementById('connectionStatus').className = 'connection-status disconnected';
+            }
+        }
+
+        function login(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Logging in...';
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+
+            // Simple local authentication
+            if (username === 'admin' && password === 'admin123') {
+                localStorage.setItem('adminToken', 'local-admin-token');
+                authToken = 'local-admin-token';
+                successMessage.textContent = 'Login successful!';
+                successMessage.style.display = 'block';
+                setTimeout(showAdminPanel, 1000);
+            } else {
+                errorMessage.textContent = 'Invalid credentials. Use admin/admin123';
+                errorMessage.style.display = 'block';
+            }
+
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Login';
+        }
+
+        function showAdminPanel() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('adminContent').style.display = 'block';
+            document.getElementById('logoutBtn').style.display = 'block';
+            loadSubmissions();
+        }
+
+        async function loadSubmissions() {
+            const container = document.getElementById('submissionsContainer');
+            container.innerHTML = '<div class="loading">Loading submissions...</div>';
+
+            try {
+                // Check connection first
+                await checkDatabaseConnection();
+
+                const response = await fetch(`${API_BASE}/submissions`);
+                const data = await response.json();
+
+                if (data.success) {
+                    displaySubmissions(data.submissions);
+                    updateStats(data.submissions);
+                } else {
+                    container.innerHTML = `<div class="error-message" style="display: block;">Failed to load submissions: ${data.message}</div>`;
+                }
+            } catch (error) {
+                console.error('Load submissions error:', error);
+                container.innerHTML = `
+                    <div class="error-message" style="display: block;">
+                        Failed to load submissions. Please ensure the database server is running.<br>
+                        <strong>Start it with:</strong> <code>node local-database-server.js</code>
+                    </div>`;
+            }
+        }
+
+        function displaySubmissions(submissions) {
+            const container = document.getElementById('submissionsContainer');
+            currentSubmissions = submissions;
+
+            if (submissions.length === 0) {
+                container.innerHTML = '<div class="no-submissions">No test submissions found.</div>';
+                return;
+            }
+
+            const table = `
+                <table class="submissions-table">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Mock</th>
+                            <th>Skill</th>
+                            <th>Score</th>
+                            <th>Band</th>
+                            <th>Date</th>
+                            <th>Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${submissions.map(submission => `
+                            <tr onclick="viewSubmission('${submission.id}')">
+                                <td>${submission.student_id}</td>
+                                <td>${submission.student_name}</td>
+                                <td>Mock ${submission.mock_number}</td>
+                                <td><span class="skill-badge skill-${submission.skill}">${submission.skill}</span></td>
+                                <td class="${getScoreClass(submission.score)}">${submission.score || 'N/A'}/40</td>
+                                <td>${submission.band_score || 'N/A'}</td>
+                                <td>${formatDate(submission.created_at)}</td>
+                                <td>${calculateDuration(submission.start_time, submission.end_time)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            container.innerHTML = table;
+        }
+
+        function updateStats(submissions) {
+            const totalSubmissions = submissions.length;
+            const scores = submissions.filter(s => s.score).map(s => s.score);
+            const averageScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+            const uniqueStudents = new Set(submissions.map(s => s.student_id)).size;
+
+            document.getElementById('totalSubmissions').textContent = totalSubmissions;
+            document.getElementById('averageScore').textContent = averageScore;
+            document.getElementById('totalStudents').textContent = uniqueStudents;
+        }
+
+        function getScoreClass(score) {
+            if (!score) return '';
+            if (score >= 30) return 'score-good';
+            if (score >= 20) return 'score-average';
+            return 'score-poor';
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        }
+
+        function calculateDuration(startTime, endTime) {
+            if (!startTime || !endTime) return 'N/A';
+            const start = new Date(startTime);
+            const end = new Date(endTime);
+            const durationMs = end - start;
+            const minutes = Math.round(durationMs / (1000 * 60));
+            return `${minutes}m`;
+        }
+
+        function viewSubmission(id) {
+            const submission = currentSubmissions.find(s => s.id == id);
+            if (!submission) {
+                alert('Submission not found');
+                return;
+            }
+
+            let content = `SUBMISSION DETAILS\\n\\n`;
+            content += `Student: ${submission.student_name} (${submission.student_id})\\n`;
+            content += `Mock: ${submission.mock_number} | Skill: ${submission.skill.toUpperCase()}\\n`;
+            content += `Score: ${submission.score || 'N/A'}/40 | Band: ${submission.band_score || 'N/A'}\\n`;
+            content += `Date: ${formatDate(submission.created_at)}\\n\\n`;
+
+            if (submission.skill === 'writing') {
+                content += `WRITING ANSWERS:\\n\\n`;
+
+                const answers = submission.answers;
+                if (answers.task_1) {
+                    content += `Task 1 {${answers.task_1.text || answers.task_1} - ${answers.task_1.word_count || 'word count not available'} words}\\n\\n`;
+                }
+                if (answers.task_2) {
+                    content += `Task 2 {${answers.task_2.text || answers.task_2} - ${answers.task_2.word_count || 'word count not available'} words}\\n\\n`;
+                }
+                if (answers.summary) {
+                    content += `Summary: Task 1: ${answers.summary.task1_words} words, Task 2: ${answers.summary.task2_words} words\\n`;
+                    content += `Total words: ${answers.summary.total_words} | Time used: ${answers.summary.time_used_minutes} minutes`;
+                }
+            } else if (submission.skill === 'reading' || submission.skill === 'listening') {
+                content += `${submission.skill.toUpperCase()} ANSWERS:\\n\\n`;
+
+                const answers = submission.answers;
+                let questionCount = 0;
+                for (const [key, value] of Object.entries(answers)) {
+                    questionCount++;
+                    if (questionCount <= 10) {
+                        content += `${key}: ${Array.isArray(value) ? value.join(', ') : value}\\n`;
+                    }
+                }
+                if (questionCount > 10) {
+                    content += `\\n... and ${questionCount - 10} more answers`;
+                }
+            }
+
+            alert(content);
+        }
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            authToken = null;
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('adminContent').style.display = 'none';
+            document.getElementById('logoutBtn').style.display = 'none';
+            document.getElementById('username').value = 'admin';
+            document.getElementById('password').value = 'admin123';
+        }
+
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            if (authToken && document.getElementById('adminContent').style.display !== 'none') {
+                loadSubmissions();
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
