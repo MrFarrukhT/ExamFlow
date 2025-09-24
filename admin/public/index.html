@@ -284,7 +284,7 @@
     </div>
 
     <script>
-        const API_BASE = '/api';
+        const API_BASE = 'http://localhost:3002';
         let authToken = localStorage.getItem('adminToken');
 
         // Check if already logged in
@@ -306,35 +306,20 @@
             errorMessage.style.display = 'none';
             successMessage.style.display = 'none';
 
-            try {
-                const response = await fetch(`${API_BASE}/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ username, password })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    localStorage.setItem('adminToken', data.token);
-                    authToken = data.token;
-                    successMessage.textContent = 'Login successful!';
-                    successMessage.style.display = 'block';
-                    setTimeout(showAdminPanel, 1000);
-                } else {
-                    errorMessage.textContent = data.message || 'Login failed';
-                    errorMessage.style.display = 'block';
-                }
-            } catch (error) {
-                console.error('Login error:', error);
-                errorMessage.textContent = 'Connection error. Please try again.';
+            // Simple local authentication
+            if (username === 'admin' && password === 'admin123') {
+                localStorage.setItem('adminToken', 'local-admin-token');
+                authToken = 'local-admin-token';
+                successMessage.textContent = 'Login successful!';
+                successMessage.style.display = 'block';
+                setTimeout(showAdminPanel, 1000);
+            } else {
+                errorMessage.textContent = 'Invalid credentials. Use admin/admin123';
                 errorMessage.style.display = 'block';
-            } finally {
-                loginBtn.disabled = false;
-                loginBtn.textContent = 'Login';
             }
+
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Login';
         }
 
         function showAdminPanel() {
@@ -348,11 +333,7 @@
             const container = document.getElementById('submissionsContainer');
 
             try {
-                const response = await fetch(`${API_BASE}/submissions`, {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
-                });
+                const response = await fetch(`${API_BASE}/submissions`);
 
                 const data = await response.json();
 

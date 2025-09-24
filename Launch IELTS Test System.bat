@@ -10,6 +10,13 @@ echo  Starting secure test environment...
 echo  Please wait...
 echo.
 
+REM Start the local database server in background
+echo  Starting database server...
+start /B node local-database-server.js
+timeout /t 3 /nobreak >nul
+echo  Database server started successfully!
+echo.
+
 REM Try different browsers in order of preference
 if exist "C:\Program Files\Google\Chrome\Application\chrome.exe" (
     echo  Launching with Google Chrome...

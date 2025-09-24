@@ -8,14 +8,59 @@ import cors from 'cors';
 const app = express();
 const PORT = 3002; // Using 3002 to avoid conflicts
 
-// Database connection
-const client = new Client({
+// Database connection with auto-reconnect
+let client;
+let isConnecting = false;
+
+const DATABASE_CONFIG = {
     connectionString: 'postgresql://neondb_owner:npg_2yHMSvBcN6rI@ep-old-tooth-agav7q24-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
     ssl: {
         require: true,
         rejectUnauthorized: false
     }
-});
+};
+
+async function createDatabaseConnection() {
+    if (isConnecting) {
+        return;
+    }
+
+    isConnecting = true;
+
+    try {
+        if (client) {
+            try {
+                await client.end();
+            } catch (e) {
+                // Ignore errors when ending old connection
+            }
+        }
+
+        client = new Client(DATABASE_CONFIG);
+
+        client.on('error', (err) => {
+            console.error('🔄 Database connection lost, will reconnect on next request...', err.message);
+            client = null;
+        });
+
+        await client.connect();
+        console.log('✅ Database connected successfully');
+
+    } catch (error) {
+        console.error('❌ Database connection failed:', error.message);
+        client = null;
+        throw error;
+    } finally {
+        isConnecting = false;
+    }
+}
+
+async function ensureConnection() {
+    if (!client || client._ending) {
+        await createDatabaseConnection();
+    }
+    return client;
+}
 
 // Middleware
 app.use(cors());
@@ -24,7 +69,8 @@ app.use(express.json());
 // Test endpoint
 app.get('/test', async (req, res) => {
     try {
-        const result = await client.query('SELECT NOW() as current_time');
+        const dbClient = await ensureConnection();
+        const result = await dbClient.query('SELECT NOW() as current_time');
         res.json({
             success: true,
             message: 'Database connected successfully',
@@ -57,7 +103,8 @@ app.post('/submissions', async (req, res) => {
 
         console.log(`📝 Saving ${skill} test for ${studentName} (${studentId})`);
 
-        const result = await client.query(`
+        const dbClient = await ensureConnection();
+        const result = await dbClient.query(`
             INSERT INTO test_submissions
             (student_id, student_name, mock_number, skill, answers, score, band_score, start_time, end_time)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
@@ -85,7 +132,8 @@ app.post('/submissions', async (req, res) => {
 // Get all submissions
 app.get('/submissions', async (req, res) => {
     try {
-        const result = await client.query(`
+        const dbClient = await ensureConnection();
+        const result = await dbClient.query(`
             SELECT * FROM test_submissions
             ORDER BY created_at DESC
         `);
@@ -109,9 +157,8 @@ async function startServer() {
     try {
         console.log('🚀 Starting local database server...');
 
-        // Connect to database
-        await client.connect();
-        console.log('✅ Connected to Neon database');
+        // Initialize database connection
+        await createDatabaseConnection();
 
         // Start server
         app.listen(PORT, () => {
@@ -123,6 +170,7 @@ async function startServer() {
 📊 View submissions: http://localhost:${PORT}/submissions
 
 💡 Your tests will now save to the database automatically!
+🔄 Database connection will auto-recover if lost!
 
 To test manually:
 curl http://localhost:${PORT}/test
@@ -131,14 +179,31 @@ curl http://localhost:${PORT}/test
 
     } catch (error) {
         console.error('❌ Failed to start server:', error);
-        process.exit(1);
+        console.log('⚠️ Server will start anyway, database will connect on first request');
+
+        // Start server even if database connection fails
+        app.listen(PORT, () => {
+            console.log(`
+🎉 Local Database Server running! (Database will connect on first request)
+
+📍 Server: http://localhost:${PORT}
+🔗 Test connection: http://localhost:${PORT}/test
+📊 View submissions: http://localhost:${PORT}/submissions
+            `);
+        });
     }
 }
 
 // Handle shutdown
 process.on('SIGINT', async () => {
     console.log('\n🛑 Shutting down server...');
-    await client.end();
+    if (client) {
+        try {
+            await client.end();
+        } catch (e) {
+            // Ignore errors during shutdown
+        }
+    }
     process.exit(0);
 });
 
