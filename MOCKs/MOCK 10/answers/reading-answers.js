@@ -1,10 +1,10 @@
-// Answer key for MOCK TEST 10 - TEMPLATE (Customize these answers)
+// Answer key for MOCK TEST 5
 window.testAnswers = {
-  '1': 'TRUE', '2': 'NOT GIVEN', '3': 'FALSE', '4': 'TRUE', '5': 'NOT GIVEN', '6': 'FALSE', 
-  '7': 'regiment', '8': 'estate', '9': 'paintings', '10': 'arch', '11': '113', '12': 'symbol', '13': 'center',
-  '14': 'C', '15': 'D', '16': 'A', '17': 'F', '18': 'B', '19': 'effect', '20': 'connection', 
-  '21': 'storytelling', '22': 'variations', '23': 'B', '24': 'G', '25': 'C', '26': 'F',
-  '27': 'B', '28': 'A', '29': 'D', '30': 'C', '31': 'B', '32': 'A', '33': 'D', '34': 'E',
-  '35': 'YES', '36': 'NOT GIVEN', '37': 'NO', '38': 'YES', '39': 'NOT GIVEN', '40': 'NO'
+  '1': 'FALSE', '2': 'TRUE', '3': 'NOT GIVEN', '4': 'FALSE', '5': 'TRUE', '6': 'NOT GIVEN', 
+  '7': 'troops', '8': 'structure', '9': 'patterns', '10': 'entrance', '11': '68', '12': 'artifact', '13': 'display',
+  '14': 'E', '15': 'F', '16': 'A', '17': 'D', '18': 'B', '19': 'feeling', '20': 'interaction', 
+  '21': 'medium', '22': 'routes', '23': 'D', '24': 'B', '25': 'F', '26': 'E',
+  '27': 'A', '28': 'D', '29': 'B', '30': 'A', '31': 'B', '32': 'C', '33': 'D', '34': 'E',
+  '35': 'NO', '36': 'YES', '37': 'NOT GIVEN', '38': 'NO', '39': 'YES', '40': 'NOT GIVEN'
 };
 

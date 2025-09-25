@@ -1,8 +1,8 @@
-// IELTS MOCK 10 - Writing Answers and Sample Responses
+// IELTS MOCK 5 - Writing Answers and Sample Responses
 // This file contains sample answers and scoring criteria
 
 window.writingAnswers = {
-    mock: 10,
+    mock: 5,
     skill: 'writing',
     
     // Task 1 Sample Answer (150+ words)
