@@ -566,6 +566,25 @@
             .submissions-table td {
                 padding: 6px 4px;
             }
+
+            /* Mobile pagination adjustments */
+            .pagination-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .page-jump-input {
+                margin: 5px 0;
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .pagination-buttons button {
+                font-size: 12px;
+                padding: 6px 8px !important;
+                min-width: 60px !important;
+            }
         }
 
         /* Collapsible Answer Management Styles */
@@ -607,6 +626,194 @@
         .answer-management-header.open .toggle-icon {
             transform: rotate(180deg);
         }
+
+        /* Pagination Styles */
+        .pagination-controls {
+            user-select: none;
+        }
+
+        .pagination-buttons button:disabled {
+            background: #e9ecef !important;
+            color: #6c757d !important;
+            cursor: not-allowed !important;
+            transform: none !important;
+        }
+
+        .pagination-info {
+            font-size: 14px;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        .pagination-buttons button {
+            min-width: 70px;
+            font-size: 14px;
+        }
+
+        .page-jump-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 15px;
+        }
+
+        .page-jump-input input {
+            width: 60px;
+            padding: 6px 8px;
+            border: 2px solid #ced4da;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .page-jump-input input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .page-jump-input label {
+            font-size: 13px;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        .page-jump-btn {
+            padding: 6px 12px !important;
+            font-size: 12px !important;
+            min-width: auto !important;
+        }
+
+        /* Date-based filtering styles */
+        .date-filter-section {
+            background: #e8f4fd;
+            border: 1px solid #b8daff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .date-filter-header {
+            font-weight: 600;
+            color: #004085;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .auto-filter-info {
+            font-size: 13px;
+            color: #495057;
+            font-style: italic;
+        }
+
+        /* Date Group View Styles */
+        .date-group-container {
+            margin-bottom: 20px;
+        }
+
+        .date-group {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .date-group-header {
+            background: #e9ecef;
+            padding: 12px 20px;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            user-select: none;
+        }
+
+        .date-group-header:hover {
+            background: #dee2e6;
+        }
+
+        .date-group-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .date-group-toggle {
+            font-size: 14px;
+            transition: transform 0.3s;
+        }
+
+        .date-group.collapsed .date-group-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .date-group-submissions {
+            padding: 15px;
+            display: block;
+        }
+
+        .date-group.collapsed .date-group-submissions {
+            display: none;
+        }
+
+        .date-group-count {
+            background: #007bff;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .date-group-submissions {
+            padding: 15px;
+        }
+
+        .date-group-submission {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+
+        .date-group-submission:hover {
+            border-color: #007bff;
+            box-shadow: 0 2px 8px rgba(0,123,255,0.1);
+        }
+
+        .date-group-submission:last-child {
+            margin-bottom: 0;
+        }
+
+        .submission-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .submission-name {
+            font-weight: 600;
+            color: #2c3e50;
+            min-width: 150px;
+        }
+
+        .submission-details {
+            display: flex;
+            gap: 10px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -643,6 +850,17 @@
         <div class="admin-content" id="adminContent">
             <!-- Search and Filter Controls -->
             <div class="controls-section">
+                <!-- Automatic Date-based Filtering Info -->
+                <div class="date-filter-section">
+                    <div class="date-filter-header">
+                        📅 Automatic Date-based Organization
+                    </div>
+                    <div class="auto-filter-info">
+                        Submissions are automatically organized by date. Today's submissions: <span id="todayDate"></span>
+                        <br>Use the date filters below to view submissions from specific dates or ranges.
+                    </div>
+                </div>
+                
                 <div class="controls-grid">
                     <div class="control-group">
                         <label for="searchStudent">Search Student:</label>
@@ -688,6 +906,8 @@
                     <button class="btn btn-warning" onclick="clearFilters()">🔄 Clear Filters</button>
                     <button class="btn btn-success" onclick="loadSubmissions()">📊 Refresh Data</button>
                     <button class="btn" onclick="exportData()">📤 Export CSV</button>
+                    <button class="btn" onclick="toggleDateGroupView()" id="dateGroupToggle">📅 View by Date</button>
+                    <button class="btn btn-success" onclick="filterTodaySubmissions()">📅 Today's Submissions</button>
                 </div>
             </div>
 
@@ -767,6 +987,30 @@
             </div>
 
             <h2>Test Submissions</h2>
+            
+            <!-- Pagination Info and Controls -->
+            <div class="pagination-controls" id="paginationControls" style="display: none; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                    <div class="pagination-info">
+                        <span id="paginationInfo">Showing 1-15 of 0 submissions</span>
+                    </div>
+                    <div class="pagination-buttons" style="display: flex; gap: 10px; align-items: center;">
+                        <button class="btn" onclick="goToPage(1)" id="firstPageBtn" style="padding: 8px 12px;">First</button>
+                        <button class="btn" onclick="goToPage(currentPage - 1)" id="prevPageBtn" style="padding: 8px 12px;">Previous</button>
+                        <span style="margin: 0 10px; font-weight: 600;">
+                            Page <span id="currentPageSpan">1</span> of <span id="totalPagesSpan">1</span>
+                        </span>
+                        <div class="page-jump-input">
+                            <label for="pageJumpInput">Go to:</label>
+                            <input type="number" id="pageJumpInput" min="1" placeholder="1" onkeypress="handlePageJumpEnter(event)">
+                            <button class="btn page-jump-btn" onclick="jumpToPage()">Go</button>
+                        </div>
+                        <button class="btn" onclick="goToPage(currentPage + 1)" id="nextPageBtn" style="padding: 8px 12px;">Next</button>
+                        <button class="btn" onclick="goToPage(totalPages)" id="lastPageBtn" style="padding: 8px 12px;">Last</button>
+                    </div>
+                </div>
+            </div>
+            
             <div id="submissionsContainer">
                 <div class="loading">Loading submissions...</div>
             </div>
@@ -794,6 +1038,12 @@
         let currentSubmissions = [];
         let filteredSubmissions = [];
         let correctAnswers = {};
+        
+        // Pagination variables
+        let currentPage = 1;
+        let itemsPerPage = 15;
+        let totalPages = 0;
+        let isDateGroupView = false;
 
         // Check database connection on load
         checkDatabaseConnection();
@@ -857,6 +1107,9 @@
             document.getElementById('adminContent').style.display = 'block';
             document.getElementById('logoutBtn').style.display = 'block';
 
+            // Set up automatic date-based filtering
+            initializeDateBasedFiltering();
+
             // Set default date range (last 30 days)
             const today = new Date();
             const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
@@ -870,6 +1123,47 @@
             loadCorrectAnswers();
 
             loadSubmissions();
+        }
+
+        function initializeDateBasedFiltering() {
+            const today = new Date();
+            const todayString = today.toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: '2-digit', 
+                year: 'numeric'
+            });
+            
+            document.getElementById('todayDate').textContent = todayString;
+            
+            // Auto-set today's date as the default "To" date for filtering
+            const todayISO = today.toISOString().split('T')[0];
+            document.getElementById('dateTo').value = todayISO;
+        }
+
+        // Function to get submissions organized by date
+        function getSubmissionsByDate(submissions) {
+            const submissionsByDate = {};
+            
+            submissions.forEach(submission => {
+                const submissionDate = new Date(submission.created_at);
+                const dateKey = submissionDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+                const displayDate = submissionDate.toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: '2-digit', 
+                    year: 'numeric'
+                });
+                
+                if (!submissionsByDate[dateKey]) {
+                    submissionsByDate[dateKey] = {
+                        displayDate: displayDate,
+                        submissions: []
+                    };
+                }
+                
+                submissionsByDate[dateKey].submissions.push(submission);
+            });
+            
+            return submissionsByDate;
         }
 
         async function loadCorrectAnswers() {
@@ -1054,6 +1348,7 @@
                 return true;
             });
 
+            resetPagination(); // Reset to page 1 when applying new filters
             displaySubmissions(filteredSubmissions);
             updateStats(currentSubmissions, filteredSubmissions);
         }
@@ -1071,11 +1366,34 @@
 
         function displaySubmissions(submissions) {
             const container = document.getElementById('submissionsContainer');
+            const paginationControls = document.getElementById('paginationControls');
 
             if (submissions.length === 0) {
                 container.innerHTML = '<div class="no-submissions">No submissions match your filters.</div>';
+                paginationControls.style.display = 'none';
                 return;
             }
+
+            if (isDateGroupView) {
+                displaySubmissionsByDate(submissions);
+                paginationControls.style.display = 'none';
+                return;
+            }
+
+            // Calculate pagination
+            totalPages = Math.ceil(submissions.length / itemsPerPage);
+            
+            // Ensure currentPage is within bounds
+            if (currentPage > totalPages) currentPage = 1;
+            if (currentPage < 1) currentPage = 1;
+            
+            // Get submissions for current page
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedSubmissions = submissions.slice(startIndex, endIndex);
+
+            // Update pagination info
+            updatePaginationControls(submissions.length, startIndex, Math.min(endIndex, submissions.length));
 
             const table = `
                 <table class="submissions-table">
@@ -1093,7 +1411,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        ${submissions.map(submission => `
+                        ${paginatedSubmissions.map(submission => `
                             <tr>
                                 <td>${submission.student_id}</td>
                                 <td>${submission.student_name}</td>
@@ -1116,6 +1434,163 @@
             `;
 
             container.innerHTML = table;
+            paginationControls.style.display = 'block';
+        }
+
+        function displaySubmissionsByDate(submissions) {
+            const container = document.getElementById('submissionsContainer');
+            const submissionsByDate = getSubmissionsByDate(submissions);
+            
+            // Sort dates in descending order (most recent first)
+            const sortedDates = Object.keys(submissionsByDate).sort((a, b) => new Date(b) - new Date(a));
+            
+            let html = '<div class="date-group-container">';
+            
+            if (sortedDates.length === 0) {
+                html += '<div class="no-submissions">No submissions found for the selected date range.</div>';
+            } else {
+                sortedDates.forEach((dateKey, index) => {
+                    const dateInfo = submissionsByDate[dateKey];
+                    const submissionCount = dateInfo.submissions.length;
+                    const isCollapsed = index > 0; // Collapse all except the first (most recent) date
+                    
+                    html += `
+                        <div class="date-group ${isCollapsed ? 'collapsed' : ''}" id="dateGroup_${dateKey}">
+                            <div class="date-group-header" onclick="toggleDateGroup('${dateKey}')">
+                                <div class="date-group-header-left">
+                                    <span class="date-group-toggle">▼</span>
+                                    <span>📅 ${dateInfo.displayDate}</span>
+                                </div>
+                                <span class="date-group-count">${submissionCount} submission${submissionCount !== 1 ? 's' : ''}</span>
+                            </div>
+                            <div class="date-group-submissions">
+                    `;
+                    
+                    dateInfo.submissions.forEach(submission => {
+                        html += `
+                            <div class="date-group-submission" onclick="openAnswerComparison('${submission.id}')" style="cursor: pointer;">
+                                <div class="submission-info">
+                                    <div class="submission-name">${submission.student_name} (${submission.student_id})</div>
+                                    <div class="submission-details">
+                                        <span class="skill-badge skill-${submission.skill}">${submission.skill}</span>
+                                        <span>Mock ${submission.mock_number}</span>
+                                        <span class="${getScoreClass(submission.score)}">${getScoreDisplay(submission)}</span>
+                                        <span style="color: #6c757d; font-size: 13px;">${formatDate(submission.created_at).split(' ')[1]}</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-info" style="padding: 4px 8px; font-size: 11px;" 
+                                        onclick="event.stopPropagation(); openAnswerComparison('${submission.id}')">
+                                    View
+                                </button>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function toggleDateGroupView() {
+            isDateGroupView = !isDateGroupView;
+            const button = document.getElementById('dateGroupToggle');
+            
+            if (isDateGroupView) {
+                button.textContent = '📋 View as Table';
+                button.style.background = '#28a745';
+            } else {
+                button.textContent = '📅 View by Date';
+                button.style.background = '#667eea';
+            }
+            
+            displaySubmissions(filteredSubmissions);
+        }
+
+        function filterTodaySubmissions() {
+            const today = new Date();
+            const todayISO = today.toISOString().split('T')[0];
+            
+            // Set both date fields to today
+            document.getElementById('dateFrom').value = todayISO;
+            document.getElementById('dateTo').value = todayISO;
+            
+            // Clear other filters
+            document.getElementById('searchStudent').value = '';
+            document.getElementById('filterSkill').value = '';
+            document.getElementById('filterMock').value = '';
+            document.getElementById('filterScored').value = '';
+            
+            // Apply filters
+            applyFilters();
+        }
+
+        function updatePaginationControls(totalItems, startIndex, endIndex) {
+            // Update pagination info
+            document.getElementById('paginationInfo').textContent = 
+                `Showing ${startIndex + 1}-${endIndex} of ${totalItems} submissions`;
+            document.getElementById('currentPageSpan').textContent = currentPage;
+            document.getElementById('totalPagesSpan').textContent = totalPages;
+
+            // Update button states
+            const firstBtn = document.getElementById('firstPageBtn');
+            const prevBtn = document.getElementById('prevPageBtn');
+            const nextBtn = document.getElementById('nextPageBtn');
+            const lastBtn = document.getElementById('lastPageBtn');
+
+            firstBtn.disabled = currentPage === 1;
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+            lastBtn.disabled = currentPage === totalPages;
+
+            // Update page jump input max value
+            const pageJumpInput = document.getElementById('pageJumpInput');
+            if (pageJumpInput) {
+                pageJumpInput.max = totalPages;
+                pageJumpInput.placeholder = currentPage.toString();
+            }
+        }
+
+        function jumpToPage() {
+            const pageInput = document.getElementById('pageJumpInput');
+            const pageNumber = parseInt(pageInput.value);
+            
+            if (pageNumber && pageNumber >= 1 && pageNumber <= totalPages) {
+                goToPage(pageNumber);
+                pageInput.value = ''; // Clear input after successful jump
+            } else {
+                alert(`Please enter a valid page number between 1 and ${totalPages}`);
+                pageInput.focus();
+            }
+        }
+
+        function handlePageJumpEnter(event) {
+            if (event.key === 'Enter') {
+                jumpToPage();
+            }
+        }
+
+        function toggleDateGroup(dateKey) {
+            const dateGroup = document.getElementById(`dateGroup_${dateKey}`);
+            if (dateGroup) {
+                dateGroup.classList.toggle('collapsed');
+            }
+        }
+
+        function goToPage(pageNumber) {
+            if (pageNumber >= 1 && pageNumber <= totalPages) {
+                currentPage = pageNumber;
+                displaySubmissions(filteredSubmissions);
+            }
+        }
+
+        function resetPagination() {
+            currentPage = 1;
         }
 
         function updateStats(allSubmissions, filteredSubs) {
