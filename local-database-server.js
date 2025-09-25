@@ -199,6 +199,174 @@ app.post('/update-score', async (req, res) => {
     }
 });
 
+// Mock Answers API endpoints
+
+// GET /mock-answers?mock=1&skill=reading - Get answers for specific mock and skill
+app.get('/mock-answers', async (req, res) => {
+    try {
+        const { mock, skill } = req.query;
+
+        if (!mock || !skill) {
+            return res.status(400).json({
+                success: false,
+                message: 'Mock number and skill are required'
+            });
+        }
+
+        const dbClient = await ensureConnection();
+        const result = await dbClient.query(
+            'SELECT * FROM mock_answers WHERE mock_number = $1 AND skill = $2 ORDER BY question_number',
+            [parseInt(mock), skill]
+        );
+
+        // Convert to the format expected by the frontend
+        const answers = {};
+        result.rows.forEach(row => {
+            const questionKey = skill === 'listening' ? `q${row.question_number}` : `${row.question_number}`;
+            
+            // Handle alternative answers
+            let answerValue = row.correct_answer;
+            if (row.alternative_answers && row.alternative_answers.length > 0) {
+                answerValue = [row.correct_answer, ...row.alternative_answers];
+            }
+            
+            answers[questionKey] = answerValue;
+        });
+
+        console.log(`📚 Retrieved ${result.rows.length} answers for Mock ${mock} - ${skill.toUpperCase()}`);
+
+        res.json({
+            success: true,
+            answers: answers,
+            count: result.rows.length
+        });
+
+    } catch (error) {
+        console.error('❌ Failed to get mock answers:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to retrieve answers',
+            error: error.message
+        });
+    }
+});
+
+// POST /mock-answers - Save answers for specific mock and skill
+app.post('/mock-answers', async (req, res) => {
+    try {
+        const { mock, skill, answers } = req.body;
+
+        if (!mock || !skill || !answers) {
+            return res.status(400).json({
+                success: false,
+                message: 'Mock number, skill, and answers are required'
+            });
+        }
+
+        const dbClient = await ensureConnection();
+
+        // Begin transaction
+        await dbClient.query('BEGIN');
+
+        try {
+            // Clear existing answers for this mock/skill combination
+            await dbClient.query(
+                'DELETE FROM mock_answers WHERE mock_number = $1 AND skill = $2',
+                [parseInt(mock), skill]
+            );
+
+            // Insert new answers
+            let insertedCount = 0;
+            for (const [questionKey, answerValue] of Object.entries(answers)) {
+                // Extract question number from key (remove 'q' prefix if present)
+                const questionNumber = parseInt(questionKey.replace(/^q/, ''));
+                
+                if (isNaN(questionNumber)) continue;
+
+                let correctAnswer;
+                let alternativeAnswers = null;
+
+                if (Array.isArray(answerValue)) {
+                    correctAnswer = answerValue[0];
+                    if (answerValue.length > 1) {
+                        alternativeAnswers = JSON.stringify(answerValue.slice(1));
+                    }
+                } else {
+                    correctAnswer = answerValue;
+                }
+
+                await dbClient.query(
+                    `INSERT INTO mock_answers 
+                     (mock_number, skill, question_number, correct_answer, alternative_answers, updated_at) 
+                     VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP)`,
+                    [parseInt(mock), skill, questionNumber, correctAnswer, alternativeAnswers]
+                );
+                
+                insertedCount++;
+            }
+
+            // Commit transaction
+            await dbClient.query('COMMIT');
+
+            console.log(`💾 Saved ${insertedCount} answers for Mock ${mock} - ${skill.toUpperCase()}`);
+
+            res.json({
+                success: true,
+                message: `Saved ${insertedCount} answers for Mock ${mock} - ${skill.toUpperCase()}`,
+                count: insertedCount
+            });
+
+        } catch (error) {
+            await dbClient.query('ROLLBACK');
+            throw error;
+        }
+
+    } catch (error) {
+        console.error('❌ Failed to save mock answers:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to save answers',
+            error: error.message
+        });
+    }
+});
+
+// DELETE /mock-answers?mock=1&skill=reading - Delete answers for specific mock and skill
+app.delete('/mock-answers', async (req, res) => {
+    try {
+        const { mock, skill } = req.query;
+
+        if (!mock || !skill) {
+            return res.status(400).json({
+                success: false,
+                message: 'Mock number and skill are required'
+            });
+        }
+
+        const dbClient = await ensureConnection();
+        const result = await dbClient.query(
+            'DELETE FROM mock_answers WHERE mock_number = $1 AND skill = $2',
+            [parseInt(mock), skill]
+        );
+
+        console.log(`🗑️ Deleted ${result.rowCount} answers for Mock ${mock} - ${skill.toUpperCase()}`);
+
+        res.json({
+            success: true,
+            message: `Deleted ${result.rowCount} answers for Mock ${mock} - ${skill.toUpperCase()}`,
+            count: result.rowCount
+        });
+
+    } catch (error) {
+        console.error('❌ Failed to delete mock answers:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to delete answers',
+            error: error.message
+        });
+    }
+});
+
 // Initialize and start server
 async function startServer() {
     try {

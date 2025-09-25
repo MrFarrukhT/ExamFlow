@@ -438,6 +438,98 @@
             border-radius: 4px;
         }
 
+        /* Answer Management Styles */
+        .answer-management {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .answer-management h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .mock-skill-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .answer-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .answer-input-group label {
+            font-weight: 600;
+            min-width: 40px;
+            color: #495057;
+        }
+
+        .answer-input-group input {
+            flex: 1;
+            padding: 6px 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .answer-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-answer {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-save-answers {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-load-answers {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-clear-answers {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-answer:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .mock-skill-selector {
+                grid-template-columns: 1fr;
+            }
+            
+            .answer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 1024px) {
             .answer-comparison {
                 grid-template-columns: 1fr;
@@ -474,6 +566,46 @@
             .submissions-table td {
                 padding: 6px 4px;
             }
+        }
+
+        /* Collapsible Answer Management Styles */
+        .answer-management-header {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px 8px 0 0;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: background-color 0.3s;
+        }
+
+        .answer-management-header:hover {
+            background: #e9ecef;
+        }
+
+        .answer-management-header .toggle-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .answer-management-content {
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 20px;
+            display: none;
+        }
+
+        .answer-management-content.open {
+            display: block;
+        }
+
+        .answer-management-header.open .toggle-icon {
+            transform: rotate(180deg);
         }
     </style>
 </head>
@@ -583,6 +715,57 @@
                 </div>
             </div>
 
+            <!-- Answer Management Section -->
+            <div class="answer-management">
+                <div class="answer-management-header" onclick="toggleAnswerManagement()">
+                    <span>📝 Manage Answer Keys</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                
+                <div class="answer-management-content" id="answerManagementContent">
+                    <div class="mock-skill-selector">
+                        <div class="control-group">
+                            <label for="answerMockSelect">Mock Test:</label>
+                            <select id="answerMockSelect" onchange="loadAnswerSet()">
+                                <option value="1">Mock Test 1</option>
+                                <option value="2">Mock Test 2</option>
+                                <option value="3">Mock Test 3</option>
+                                <option value="4">Mock Test 4</option>
+                                <option value="5">Mock Test 5</option>
+                                <option value="6">Mock Test 6</option>
+                                <option value="7">Mock Test 7</option>
+                                <option value="8">Mock Test 8</option>
+                                <option value="9">Mock Test 9</option>
+                                <option value="10">Mock Test 10</option>
+                            </select>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="answerSkillSelect">Skill:</label>
+                            <select id="answerSkillSelect" onchange="loadAnswerSet()">
+                                <option value="reading">Reading</option>
+                                <option value="listening">Listening</option>
+                            </select>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label>&nbsp;</label>
+                            <div class="answer-actions">
+                                <button class="btn-answer btn-load-answers" onclick="loadAnswerSet()">📥 Load</button>
+                                <button class="btn-answer btn-save-answers" onclick="saveAnswerSet()">💾 Save</button>
+                                <button class="btn-answer btn-clear-answers" onclick="clearAnswerSet()">🗑️ Clear</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="answerStatus" style="margin-bottom: 15px; font-weight: 600;"></div>
+
+                    <div class="answer-grid" id="answerGrid">
+                        <!-- Answer inputs will be generated here -->
+                    </div>
+                </div>
+            </div>
+
             <h2>Test Submissions</h2>
             <div id="submissionsContainer">
                 <div class="loading">Loading submissions...</div>
@@ -680,12 +863,65 @@
             document.getElementById('dateTo').value = today.toISOString().split('T')[0];
             document.getElementById('dateFrom').value = thirtyDaysAgo.toISOString().split('T')[0];
 
+            // Initialize answer management interface
+            initializeAnswerManagement();
+
+            // Load all saved answers from localStorage
+            loadCorrectAnswers();
+
             loadSubmissions();
         }
 
         async function loadCorrectAnswers() {
             try {
-                // Load answer files dynamically
+                // First priority: Load from database API
+                console.log('Loading answers from database...');
+                for (let mockNum = 1; mockNum <= 10; mockNum++) {
+                    for (const skill of ['reading', 'listening']) {
+                        try {
+                            const response = await fetch(`${API_BASE}/mock-answers?mock=${mockNum}&skill=${skill}`);
+                            const data = await response.json();
+                            
+                            if (data.success && data.answers && Object.keys(data.answers).length > 0) {
+                                if (!correctAnswers[`mock${mockNum}`]) {
+                                    correctAnswers[`mock${mockNum}`] = {};
+                                }
+                                correctAnswers[`mock${mockNum}`][skill] = data.answers;
+                                console.log(`Loaded ${skill} answers for Mock ${mockNum} from database (${data.count} answers)`);
+                            }
+                        } catch (error) {
+                            console.warn(`Could not load Mock ${mockNum} ${skill} from database:`, error.message);
+                        }
+                    }
+                }
+
+                // Second priority: Load from localStorage (for any missing answers)
+                console.log('Loading missing answers from localStorage...');
+                for (let mockNum = 1; mockNum <= 10; mockNum++) {
+                    for (const skill of ['reading', 'listening']) {
+                        // Only load from localStorage if not already loaded from database
+                        if (!correctAnswers[`mock${mockNum}`] || !correctAnswers[`mock${mockNum}`][skill]) {
+                            const key = `answers_mock${mockNum}_${skill}`;
+                            const savedAnswers = localStorage.getItem(key);
+                            
+                            if (savedAnswers) {
+                                try {
+                                    const answers = JSON.parse(savedAnswers);
+                                    if (!correctAnswers[`mock${mockNum}`]) {
+                                        correctAnswers[`mock${mockNum}`] = {};
+                                    }
+                                    correctAnswers[`mock${mockNum}`][skill] = answers;
+                                    console.log(`Loaded ${skill} answers for Mock ${mockNum} from localStorage`);
+                                } catch (error) {
+                                    console.warn(`Error parsing stored answers for Mock ${mockNum} ${skill}:`, error);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Third priority: Load from JavaScript files as fallback (only for Mock 1)
+                console.log('Loading fallback answers from JavaScript files...');
                 const scripts = [
                     'MOCKs/MOCK 1/answers/reading-answers.js',
                     'MOCKs/MOCK 1/answers/writing-answers.js',
@@ -700,12 +936,20 @@
                         // Extract skill type from path
                         const skill = scriptPath.split('/').pop().split('-')[0];
 
-                        // Execute the script in a safe context
-                        const tempWindow = {};
-                        eval(`(function(window) { ${scriptText} })(tempWindow)`);
+                        // Only load from file if not already loaded from database or localStorage
+                        const mockKey = 'mock1';
+                        if (!correctAnswers[mockKey] || !correctAnswers[mockKey][skill]) {
+                            // Execute the script in a safe context
+                            const tempWindow = {};
+                            eval(`(function(window) { ${scriptText} })(tempWindow)`);
 
-                        if (tempWindow.testAnswers) {
-                            correctAnswers[skill] = tempWindow.testAnswers;
+                            if (tempWindow.testAnswers) {
+                                if (!correctAnswers[mockKey]) {
+                                    correctAnswers[mockKey] = {};
+                                }
+                                correctAnswers[mockKey][skill] = tempWindow.testAnswers;
+                                console.log(`Loaded ${skill} answers for Mock 1 from file`);
+                            }
                         }
                     } catch (error) {
                         console.warn(`Could not load answers for ${scriptPath}:`, error);
@@ -780,11 +1024,31 @@
                 }
 
                 // Scored filter
-                if (filterScored === 'scored' && !submission.score) {
-                    return false;
+                if (filterScored === 'scored') {
+                    if (submission.skill === 'writing') {
+                        // For writing, check if band_score exists
+                        if (!submission.band_score) {
+                            return false;
+                        }
+                    } else {
+                        // For reading/listening, check if score exists
+                        if (!submission.score) {
+                            return false;
+                        }
+                    }
                 }
-                if (filterScored === 'unscored' && submission.score) {
-                    return false;
+                if (filterScored === 'unscored') {
+                    if (submission.skill === 'writing') {
+                        // For writing, check if band_score is missing
+                        if (submission.band_score) {
+                            return false;
+                        }
+                    } else {
+                        // For reading/listening, check if score is missing
+                        if (submission.score) {
+                            return false;
+                        }
+                    }
                 }
 
                 return true;
@@ -835,7 +1099,7 @@
                                 <td>${submission.student_name}</td>
                                 <td>Mock ${submission.mock_number}</td>
                                 <td><span class="skill-badge skill-${submission.skill}">${submission.skill}</span></td>
-                                <td class="${getScoreClass(submission.score)}">${submission.score || 'Unscored'}/40</td>
+                                <td class="${getScoreClass(submission.score)}">${getScoreDisplay(submission)}</td>
                                 <td>${submission.band_score || 'N/A'}</td>
                                 <td>${formatDate(submission.created_at)}</td>
                                 <td>${calculateDuration(submission.start_time, submission.end_time)}</td>
@@ -857,10 +1121,22 @@
         function updateStats(allSubmissions, filteredSubs) {
             const totalSubmissions = allSubmissions.length;
             const filteredCount = filteredSubs.length;
-            const scores = filteredSubs.filter(s => s.score).map(s => s.score);
+            
+            // Only calculate average for reading/listening tests with scores
+            const scoredTests = filteredSubs.filter(s => s.skill !== 'writing' && s.score);
+            const scores = scoredTests.map(s => s.score);
             const averageScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+            
             const uniqueStudents = new Set(filteredSubs.map(s => s.student_id)).size;
-            const unscoredCount = filteredSubs.filter(s => !s.score).length;
+            
+            // Count unscored submissions properly for each skill type
+            const unscoredCount = filteredSubs.filter(s => {
+                if (s.skill === 'writing') {
+                    return !s.band_score;
+                } else {
+                    return !s.score;
+                }
+            }).length;
 
             document.getElementById('totalSubmissions').textContent = totalSubmissions;
             document.getElementById('filteredSubmissions').textContent = filteredCount;
@@ -874,6 +1150,16 @@
             if (score >= 30) return 'score-good';
             if (score >= 20) return 'score-average';
             return 'score-poor';
+        }
+
+        function getScoreDisplay(submission) {
+            if (submission.skill === 'writing') {
+                // Writing tests don't have numerical scores, only band scores
+                return submission.band_score || 'Not Graded';
+            } else {
+                // Reading and Listening have numerical scores out of 40
+                return submission.score ? `${submission.score}/40` : 'Unscored/40';
+            }
         }
 
         function formatDate(dateString) {
@@ -898,7 +1184,13 @@
             }
 
             const skill = submission.skill;
-            const correctAnswersForSkill = correctAnswers[skill] || {};
+            const mockNumber = submission.mock_number;
+            
+            // Load correct answers from the new structure: correctAnswers[mockX][skill]
+            const mockKey = `mock${mockNumber}`;
+            const correctAnswersForSkill = (correctAnswers[mockKey] && correctAnswers[mockKey][skill]) ? 
+                correctAnswers[mockKey][skill] : {};
+            
             const studentAnswers = submission.answers || {};
 
             document.getElementById('modalTitle').textContent =
@@ -907,7 +1199,7 @@
             let modalContent = '';
 
             if (skill === 'writing') {
-                modalContent = generateWritingComparison(studentAnswers);
+                modalContent = generateWritingComparison(studentAnswers, correctAnswersForSkill, submission);
             } else {
                 modalContent = generateAnswerComparison(studentAnswers, correctAnswersForSkill, submission);
             }
@@ -920,25 +1212,56 @@
             let correctCount = 0;
             let totalQuestions = 0;
 
-            const comparisonRows = [];
-            const allQuestions = new Set([...Object.keys(studentAnswers), ...Object.keys(correctAnswers)]);
+            // Improved answer matching function
+            function isAnswerCorrect(studentAnswer, correctAnswer) {
+                if (!studentAnswer || !correctAnswer || studentAnswer === 'No Answer' || correctAnswer === 'N/A') {
+                    return false;
+                }
 
-            for (const questionId of Array.from(allQuestions).sort()) {
-                const studentAnswer = studentAnswers[questionId] || studentAnswers[`q${questionId}`] || 'No Answer';
-                const correctAnswer = correctAnswers[questionId] || correctAnswers[`q${questionId}`] || 'N/A';
+                // Normalize answers: case-insensitive, trim spaces
+                const normalizeAnswer = (answer) => {
+                    return answer.toString().toLowerCase().trim()
+                        // Remove content in parentheses (optional parts)
+                        .replace(/\([^)]*\)/g, '')
+                        .trim();
+                };
+
+                const normalizedStudent = normalizeAnswer(studentAnswer);
+
+                if (Array.isArray(correctAnswer)) {
+                    return correctAnswer.some(ans => {
+                        const normalizedCorrect = normalizeAnswer(ans);
+                        return normalizedStudent === normalizedCorrect;
+                    });
+                } else {
+                    const normalizedCorrect = normalizeAnswer(correctAnswer);
+                    return normalizedStudent === normalizedCorrect;
+                }
+            }
+
+            const comparisonRows = [];
+            
+            // Get all unique question numbers, avoiding duplicates
+            const studentQuestions = Object.keys(studentAnswers).map(key => key.replace(/^q/, ''));
+            const correctQuestions = Object.keys(correctAnswers).map(key => key.replace(/^q/, ''));
+            const allQuestions = [...new Set([...studentQuestions, ...correctQuestions])].sort((a, b) => {
+                return parseInt(a) - parseInt(b);
+            });
+
+            for (const questionNum of allQuestions) {
+                // Try different key formats to find answers
+                const studentAnswer = studentAnswers[questionNum] || 
+                                    studentAnswers[`q${questionNum}`] || 
+                                    studentAnswers[`${questionNum}`] || 'No Answer';
+                
+                const correctAnswer = correctAnswers[questionNum] || 
+                                    correctAnswers[`q${questionNum}`] || 
+                                    correctAnswers[`${questionNum}`] || 'N/A';
 
                 let isCorrect = false;
                 if (correctAnswer !== 'N/A' && studentAnswer !== 'No Answer') {
                     totalQuestions++;
-
-                    if (Array.isArray(correctAnswer)) {
-                        isCorrect = correctAnswer.some(ans =>
-                            ans.toLowerCase().trim() === studentAnswer.toLowerCase().trim()
-                        );
-                    } else {
-                        isCorrect = correctAnswer.toLowerCase().trim() === studentAnswer.toLowerCase().trim();
-                    }
-
+                    isCorrect = isAnswerCorrect(studentAnswer, correctAnswer);
                     if (isCorrect) correctCount++;
                 }
 
@@ -947,7 +1270,7 @@
 
                 comparisonRows.push(`
                     <div class="answer-row ${rowClass}">
-                        <div class="question-id">Q${questionId}:</div>
+                        <div class="question-id">Q${questionNum}:</div>
                         <div style="display: flex; gap: 20px; flex: 1;">
                             <div style="flex: 1;"><strong>Student:</strong> ${studentAnswer}</div>
                             <div style="flex: 1;"><strong>Correct:</strong> ${displayCorrect}</div>
@@ -981,14 +1304,14 @@
             `;
         }
 
-        function generateWritingComparison(studentAnswers) {
+        function generateWritingComparison(studentAnswers, correctAnswers, submission) {
             const task1 = studentAnswers.task_1 || studentAnswers.task1 || 'No answer provided';
             const task2 = studentAnswers.task_2 || studentAnswers.task2 || 'No answer provided';
 
             const task1Words = studentAnswers.task_1?.word_count ||
-                               (typeof task1 === 'string' ? task1.split(/\s+/).length : 0);
+                               (typeof task1 === 'string' ? task1.split(/\s+/).filter(word => word.length > 0).length : 0);
             const task2Words = studentAnswers.task_2?.word_count ||
-                               (typeof task2 === 'string' ? task2.split(/\s+/).length : 0);
+                               (typeof task2 === 'string' ? task2.split(/\s+/).filter(word => word.length > 0).length : 0);
 
             const task1Text = typeof task1 === 'object' ? task1.text || task1 : task1;
             const task2Text = typeof task2 === 'object' ? task2.text || task2 : task2;
@@ -996,40 +1319,61 @@
             return `
                 <div style="display: grid; gap: 20px;">
                     <div class="score-section">
-                        <h3>Writing Scores</h3>
+                        <h3>Writing Assessment</h3>
                         <div class="score-input">
-                            <label><strong>Task 1 Score (0-9):</strong></label>
-                            <input type="number" id="task1Score" min="0" max="9" step="0.5" />
-                            <label><strong>Task 2 Score (0-9):</strong></label>
-                            <input type="number" id="task2Score" min="0" max="9" step="0.5" />
-                            <label><strong>Overall Band:</strong></label>
-                            <input type="text" id="bandScore" placeholder="e.g. 6.5" />
-                            <button class="btn btn-success" onclick="saveWritingScore('${submission.id}')">Save Score</button>
+                            <label><strong>Overall Band Score (0-9):</strong></label>
+                            <input type="text" id="writingBandScore" value="${submission.band_score || ''}" placeholder="e.g. 6.5" />
+                            <button class="btn btn-success" onclick="saveWritingScore('${submission.id}')">Save Band Score</button>
                         </div>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                         <div class="student-answers">
-                            <div class="answers-header">Task 1 (${task1Words} words)</div>
+                            <div class="answers-header">
+                                Task 1 - ${task1Words} words
+                                <span style="color: ${task1Words >= 150 ? '#28a745' : '#dc3545'}; font-size: 0.9em;">
+                                    (${task1Words >= 150 ? '✓' : '⚠'} Min: 150)
+                                </span>
+                            </div>
                             <div class="answers-content">
-                                <div style="white-space: pre-wrap; line-height: 1.6;">${task1Text}</div>
+                                <div style="white-space: pre-wrap; line-height: 1.6; font-family: 'Times New Roman', serif; font-size: 14px;">${task1Text}</div>
                             </div>
                         </div>
                         <div class="student-answers">
-                            <div class="answers-header">Task 2 (${task2Words} words)</div>
+                            <div class="answers-header">
+                                Task 2 - ${task2Words} words
+                                <span style="color: ${task2Words >= 250 ? '#28a745' : '#dc3545'}; font-size: 0.9em;">
+                                    (${task2Words >= 250 ? '✓' : '⚠'} Min: 250)
+                                </span>
+                            </div>
                             <div class="answers-content">
-                                <div style="white-space: pre-wrap; line-height: 1.6;">${task2Text}</div>
+                                <div style="white-space: pre-wrap; line-height: 1.6; font-family: 'Times New Roman', serif; font-size: 14px;">${task2Text}</div>
                             </div>
                         </div>
                     </div>
 
                     <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
                         <h4>Writing Assessment Criteria:</h4>
-                        <ul style="margin: 10px 0 0 20px;">
-                            <li><strong>Task 1:</strong> Task Achievement, Coherence & Cohesion, Lexical Resource, Grammatical Range & Accuracy</li>
-                            <li><strong>Task 2:</strong> Task Response, Coherence & Cohesion, Lexical Resource, Grammatical Range & Accuracy</li>
-                            <li><strong>Word Count:</strong> Task 1 minimum 150 words, Task 2 minimum 250 words</li>
-                        </ul>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
+                            <div>
+                                <strong>Task 1 (Academic):</strong>
+                                <ul style="margin: 5px 0 0 20px; font-size: 0.9em;">
+                                    <li>Task Achievement</li>
+                                    <li>Coherence & Cohesion</li>
+                                    <li>Lexical Resource</li>
+                                    <li>Grammatical Range & Accuracy</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <strong>Task 2 (Essay):</strong>
+                                <ul style="margin: 5px 0 0 20px; font-size: 0.9em;">
+                                    <li>Task Response</li>
+                                    <li>Coherence & Cohesion</li>
+                                    <li>Lexical Resource</li>
+                                    <li>Grammatical Range & Accuracy</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -1066,6 +1410,40 @@
             } catch (error) {
                 console.error('Error saving score:', error);
                 alert('Error saving score. Please try again.');
+            }
+        }
+
+        async function saveWritingScore(submissionId) {
+            const bandScore = document.getElementById('writingBandScore').value;
+
+            if (!bandScore || isNaN(parseFloat(bandScore)) || parseFloat(bandScore) < 0 || parseFloat(bandScore) > 9) {
+                alert('Please enter a valid band score between 0 and 9 (e.g., 6.5)');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/update-score`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        submissionId: submissionId,
+                        score: null, // Writing tests don't have numerical scores
+                        bandScore: bandScore
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Band score saved successfully!');
+                    closeModal();
+                    loadSubmissions(); // Refresh the data
+                } else {
+                    alert('Failed to save band score. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error saving band score:', error);
+                alert('Error saving band score. Please try again.');
             }
         }
 
@@ -1120,6 +1498,270 @@
             const modal = document.getElementById('answerModal');
             if (event.target === modal) {
                 closeModal();
+            }
+        }
+
+        // Answer Management Functions
+        let currentAnswerData = {};
+
+        function initializeAnswerGrid() {
+            const grid = document.getElementById('answerGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 1; i <= 40; i++) {
+                const inputGroup = document.createElement('div');
+                inputGroup.className = 'answer-input-group';
+                inputGroup.innerHTML = `
+                    <label>Q${i}:</label>
+                    <input type="text" id="answer_${i}" placeholder="Enter answer ${i}" />
+                `;
+                grid.appendChild(inputGroup);
+            }
+            
+            updateAnswerStatus('Ready to input answers');
+        }
+
+        async function loadAnswerSet() {
+            const mockNum = document.getElementById('answerMockSelect').value;
+            const skill = document.getElementById('answerSkillSelect').value;
+            
+            // Clear current inputs
+            for (let i = 1; i <= 40; i++) {
+                const input = document.getElementById(`answer_${i}`);
+                if (input) input.value = '';
+            }
+            
+            try {
+                updateAnswerStatus('⏳ Loading answers from database...');
+                
+                // Load from database API
+                const response = await fetch(`${API_BASE}/mock-answers?mock=${mockNum}&skill=${skill}`);
+                const data = await response.json();
+                
+                if (data.success && data.answers) {
+                    // Fill the input fields
+                    for (let i = 1; i <= 40; i++) {
+                        const input = document.getElementById(`answer_${i}`);
+                        const answerKey = skill === 'listening' ? `q${i}` : `${i}`;
+                        
+                        if (input && data.answers[answerKey]) {
+                            // Handle both array and string answers
+                            const answerValue = Array.isArray(data.answers[answerKey]) ? 
+                                data.answers[answerKey].join(', ') : data.answers[answerKey];
+                            input.value = answerValue;
+                        }
+                    }
+                    
+                    // Update global correctAnswers object
+                    if (!correctAnswers[`mock${mockNum}`]) {
+                        correctAnswers[`mock${mockNum}`] = {};
+                    }
+                    correctAnswers[`mock${mockNum}`][skill] = data.answers;
+                    
+                    updateAnswerStatus(`✅ Loaded ${data.count}/40 answers for Mock ${mockNum} - ${skill.toUpperCase()}`);
+                } else {
+                    updateAnswerStatus(`📝 No saved answers found for Mock ${mockNum} - ${skill.toUpperCase()}`);
+                }
+            } catch (error) {
+                console.error('Error loading answers:', error);
+                updateAnswerStatus(`❌ Error loading answers: ${error.message}`);
+                
+                // Fallback to localStorage
+                try {
+                    const key = `answers_mock${mockNum}_${skill}`;
+                    const savedAnswers = localStorage.getItem(key);
+                    if (savedAnswers) {
+                        const answers = JSON.parse(savedAnswers);
+                        for (let i = 1; i <= 40; i++) {
+                            const input = document.getElementById(`answer_${i}`);
+                            const answerKey = skill === 'listening' ? `q${i}` : `${i}`;
+                            if (input && answers[answerKey]) {
+                                const answerValue = Array.isArray(answers[answerKey]) ? 
+                                    answers[answerKey].join(', ') : answers[answerKey];
+                                input.value = answerValue;
+                            }
+                        }
+                        updateAnswerStatus(`� Loaded answers from local storage for Mock ${mockNum} - ${skill.toUpperCase()}`);
+                    }
+                } catch (fallbackError) {
+                    console.error('Fallback to localStorage also failed:', fallbackError);
+                }
+            }
+        }
+
+        async function saveAnswerSet() {
+            const mockNum = document.getElementById('answerMockSelect').value;
+            const skill = document.getElementById('answerSkillSelect').value;
+            
+            const answers = {};
+            let filledCount = 0;
+            
+            for (let i = 1; i <= 40; i++) {
+                const input = document.getElementById(`answer_${i}`);
+                if (input && input.value.trim()) {
+                    const answerKey = skill === 'listening' ? `q${i}` : `${i}`;
+                    let answerValue = input.value.trim();
+                    
+                    // For listening, wrap single answers in array for consistency
+                    if (skill === 'listening' && !answerValue.includes(',')) {
+                        // Check if it's a multiple choice (single letter) or text answer
+                        if (answerValue.length === 1 && /[A-J]/i.test(answerValue)) {
+                            answers[answerKey] = answerValue.toUpperCase();
+                        } else {
+                            answers[answerKey] = [answerValue.toLowerCase()];
+                        }
+                    } else if (skill === 'listening' && answerValue.includes(',')) {
+                        // Multiple acceptable answers
+                        answers[answerKey] = answerValue.split(',').map(a => a.trim().toLowerCase());
+                    } else {
+                        answers[answerKey] = answerValue;
+                    }
+                    filledCount++;
+                }
+            }
+            
+            if (filledCount === 0) {
+                updateAnswerStatus('❌ No answers to save');
+                return;
+            }
+            
+            try {
+                updateAnswerStatus('⏳ Saving answers to database...');
+                
+                // Save to database API
+                const response = await fetch(`${API_BASE}/mock-answers`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        mock: mockNum,
+                        skill: skill,
+                        answers: answers
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update the global correctAnswers object
+                    if (!correctAnswers[`mock${mockNum}`]) {
+                        correctAnswers[`mock${mockNum}`] = {};
+                    }
+                    correctAnswers[`mock${mockNum}`][skill] = answers;
+                    
+                    // Also save to localStorage as backup
+                    const key = `answers_mock${mockNum}_${skill}`;
+                    localStorage.setItem(key, JSON.stringify(answers));
+                    
+                    updateAnswerStatus(`✅ ${data.message}`);
+                } else {
+                    updateAnswerStatus(`❌ Failed to save: ${data.message}`);
+                }
+                
+            } catch (error) {
+                console.error('Error saving answers:', error);
+                updateAnswerStatus(`❌ Error saving answers: ${error.message}`);
+                
+                // Fallback to localStorage
+                try {
+                    const key = `answers_mock${mockNum}_${skill}`;
+                    localStorage.setItem(key, JSON.stringify(answers));
+                    
+                    if (!correctAnswers[`mock${mockNum}`]) {
+                        correctAnswers[`mock${mockNum}`] = {};
+                    }
+                    correctAnswers[`mock${mockNum}`][skill] = answers;
+                    
+                    updateAnswerStatus(`📋 Saved ${filledCount}/40 answers locally for Mock ${mockNum} - ${skill.toUpperCase()}`);
+                } catch (fallbackError) {
+                    console.error('Fallback to localStorage also failed:', fallbackError);
+                    updateAnswerStatus(`❌ Failed to save answers both online and locally`);
+                }
+            }
+        }
+
+        async function clearAnswerSet() {
+            if (confirm('Are you sure you want to clear all answers? This action will delete them from the database and cannot be undone.')) {
+                const mockNum = document.getElementById('answerMockSelect').value;
+                const skill = document.getElementById('answerSkillSelect').value;
+                
+                try {
+                    updateAnswerStatus('⏳ Clearing answers from database...');
+                    
+                    // Clear from database
+                    const response = await fetch(`${API_BASE}/mock-answers?mock=${mockNum}&skill=${skill}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Clear input fields
+                        for (let i = 1; i <= 40; i++) {
+                            const input = document.getElementById(`answer_${i}`);
+                            if (input) input.value = '';
+                        }
+                        
+                        // Clear from global correctAnswers
+                        if (correctAnswers[`mock${mockNum}`] && correctAnswers[`mock${mockNum}`][skill]) {
+                            delete correctAnswers[`mock${mockNum}`][skill];
+                        }
+                        
+                        // Clear from localStorage backup
+                        const key = `answers_mock${mockNum}_${skill}`;
+                        localStorage.removeItem(key);
+                        
+                        updateAnswerStatus(`✅ ${data.message}`);
+                    } else {
+                        updateAnswerStatus(`❌ Failed to clear: ${data.message}`);
+                    }
+                    
+                } catch (error) {
+                    console.error('Error clearing answers:', error);
+                    updateAnswerStatus(`❌ Error clearing answers: ${error.message}`);
+                    
+                    // Still clear the local fields
+                    for (let i = 1; i <= 40; i++) {
+                        const input = document.getElementById(`answer_${i}`);
+                        if (input) input.value = '';
+                    }
+                    updateAnswerStatus('🗑️ Cleared local fields (database may still contain data)');
+                }
+            }
+        }
+
+        function updateAnswerStatus(message) {
+            const status = document.getElementById('answerStatus');
+            if (status) {
+                status.textContent = message;
+                status.style.color = message.includes('✅') ? '#28a745' : 
+                                   message.includes('❌') ? '#dc3545' : '#007bff';
+            }
+        }
+
+        // Initialize answer management when admin panel loads
+        function initializeAnswerManagement() {
+            initializeAnswerGrid();
+            
+            // Add event listeners for dropdown changes
+            document.getElementById('answerMockSelect').addEventListener('change', loadAnswerSet);
+            document.getElementById('answerSkillSelect').addEventListener('change', loadAnswerSet);
+            
+            loadAnswerSet(); // Load default (Mock 1, Reading)
+        }
+
+        // Toggle Answer Management Section
+        function toggleAnswerManagement() {
+            const header = document.querySelector('.answer-management-header');
+            const content = document.getElementById('answerManagementContent');
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                header.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                header.classList.add('open');
             }
         }
 

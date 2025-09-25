@@ -15,9 +15,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 // API routes (these will be handled by Vercel serverless functions in production)
 const loginHandler = require('./api/login');
 const submissionsHandler = require('./api/submissions');
+const mockAnswersHandler = require('./api/mock-answers');
 
 app.use('/api/login', loginHandler);
 app.use('/api/submissions', submissionsHandler);
+app.use('/api/mock-answers', mockAnswersHandler);
 
 // Serve index.html for root route
 app.get('/', (req, res) => {
