@@ -440,10 +440,11 @@
 
         /* Answer Management Styles */
         .answer-management {
-            background: #f8f9fa;
+            background: white;
+            border: 1px solid #dee2e6;
             border-radius: 8px;
-            padding: 20px;
             margin-bottom: 30px;
+            overflow: hidden;
         }
 
         .answer-management h3 {
@@ -460,29 +461,51 @@
 
         .answer-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
             margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
         }
 
         .answer-input-group {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            margin-bottom: 8px;
         }
 
         .answer-input-group label {
             font-weight: 600;
-            min-width: 40px;
+            min-width: 35px;
             color: #495057;
+            font-size: 13px;
+            text-align: right;
         }
 
         .answer-input-group input {
             flex: 1;
-            padding: 6px 10px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
+            padding: 8px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
             font-size: 14px;
+            transition: all 0.3s;
+            background: white;
+            max-width: 200px;
+            min-width: 120px;
+        }
+
+        .answer-input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .answer-input-group input::placeholder {
+            color: #adb5bd;
+            font-style: italic;
         }
 
         .answer-actions {
@@ -612,11 +635,12 @@
         }
 
         .answer-management-content {
-            border: 1px solid #dee2e6;
-            border-top: none;
-            border-radius: 0 0 8px 8px;
-            padding: 20px;
+            border: none;
+            border-top: 1px solid #dee2e6;
+            border-radius: 0;
+            padding: 25px;
             display: none;
+            background: #f8f9fa;
         }
 
         .answer-management-content.open {
@@ -648,6 +672,11 @@
         .pagination-buttons button {
             min-width: 70px;
             font-size: 14px;
+        }
+
+        /* Date Group View Styles */
+        .date-group-container {
+            margin-bottom: 20px;
         }
 
         .page-jump-input {
@@ -684,31 +713,12 @@
             min-width: auto !important;
         }
 
-        /* Date-based filtering styles */
-        .date-filter-section {
-            background: #e8f4fd;
-            border: 1px solid #b8daff;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
+        .pagination-buttons button {
+            min-width: 70px;
+            font-size: 14px;
         }
 
-        .date-filter-header {
-            font-weight: 600;
-            color: #004085;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .auto-filter-info {
-            font-size: 13px;
-            color: #495057;
-            font-style: italic;
-        }
-
-        /* Date Group View Styles */
+        .page-jump-input {
         .date-group-container {
             margin-bottom: 20px;
         }
@@ -820,7 +830,7 @@
     <div class="container">
         <div class="header">
             <div class="header-left">
-                <h1>🎓 Innovative Centre</h1>
+                <h1>Innovative Centre</h1>
                 <p>Enhanced Admin Dashboard</p>
             </div>
             <div class="header-right">
@@ -850,17 +860,6 @@
         <div class="admin-content" id="adminContent">
             <!-- Search and Filter Controls -->
             <div class="controls-section">
-                <!-- Automatic Date-based Filtering Info -->
-                <div class="date-filter-section">
-                    <div class="date-filter-header">
-                        📅 Automatic Date-based Organization
-                    </div>
-                    <div class="auto-filter-info">
-                        Submissions are automatically organized by date. Today's submissions: <span id="todayDate"></span>
-                        <br>Use the date filters below to view submissions from specific dates or ranges.
-                    </div>
-                </div>
-                
                 <div class="controls-grid">
                     <div class="control-group">
                         <label for="searchStudent">Search Student:</label>
@@ -1127,13 +1126,6 @@
 
         function initializeDateBasedFiltering() {
             const today = new Date();
-            const todayString = today.toLocaleDateString('en-GB', {
-                day: '2-digit',
-                month: '2-digit', 
-                year: 'numeric'
-            });
-            
-            document.getElementById('todayDate').textContent = todayString;
             
             // Auto-set today's date as the default "To" date for filtering
             const todayISO = today.toISOString().split('T')[0];
