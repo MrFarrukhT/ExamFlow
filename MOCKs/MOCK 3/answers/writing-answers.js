@@ -6,28 +6,30 @@ window.writingAnswers = {
     skill: 'writing',
     
     // Task 1 Sample Answer (150+ words)
-    task1_sample: `The table illustrates the consumption of five different food types in Brazil, India, and Australia, comparing data from 1961 and 2011.
+    task1_sample: `The graph illustrates the number of new businesses established in four different industries in Singapore between 2011 and 2021.
 
-Overall, all three countries experienced increases in most food categories over the 50-year period, with Brazil showing the most dramatic changes across all food types.
+Overall, the technology sector experienced the most dramatic growth throughout the period, while manufacturing showed a declining trend. The retail and finance industries demonstrated moderate but steady increases.
 
-In Brazil, the consumption of dairy and eggs more than doubled from 185g to 446g, while meat consumption more than tripled from 92g to 290g. Fruit and vegetables also increased substantially from 515g to 706g. Grain consumption rose moderately from 262g to 315g, and sugar and fat intake increased from 147g to 260g.
+In 2011, all four sectors started at relatively similar levels, with technology businesses numbering approximately 120, retail 100, finance 90, and manufacturing 110. However, their trajectories diverged significantly over the following decade.
 
-India showed significant increases in fruit and vegetables (from 199g to 450g) and dairy and eggs (from 108g to 235g). Grain consumption rose from 378g to 416g, and sugar and fat intake increased slightly from 108g to 129g. Notably, meat consumption remained extremely low, rising only from 17g to 29g.
+The technology sector showed consistent and substantial growth, reaching its peak of around 400 new businesses by 2021, representing more than a threefold increase. Retail businesses also grew steadily, rising to approximately 180 by 2021. Similarly, the finance sector expanded gradually, reaching about 160 new businesses by the end of the period.
 
-Australia was the only country to show a decrease in any category, with grain consumption falling from 283g to 239g. However, meat consumption increased from 343g to 423g, and fruit and vegetables rose from 480g to 661g. Dairy and eggs consumption decreased slightly from 742g to 670g, while sugar and fat intake increased from 173g to 208g.
+In contrast, manufacturing experienced a continuous decline after 2013, falling from its initial 110 businesses to just 60 by 2021, making it the only sector to show negative growth throughout most of the period.
 
-(Word count: 203)`,
+The data clearly demonstrates Singapore's shift toward a technology-driven economy, with traditional manufacturing giving way to more innovative industries.
+
+(Word count: 178)`,
 
     // Task 2 Sample Answer (250+ words)
-    task2_sample: `The question of whether running one's own business is preferable to working for someone else is complex, with valid arguments on both sides. While entrepreneurship offers certain advantages, I believe that for most people, traditional employment provides greater security and work-life balance.
+    task2_sample: `The debate over whether students should work part-time while studying or focus exclusively on their education is ongoing, with valid arguments supporting both perspectives. While part-time work can provide valuable benefits, I believe students should primarily concentrate on their studies during their academic years.
 
-Proponents of entrepreneurship argue that business ownership offers unlimited earning potential and complete control over one's professional destiny. Successful entrepreneurs like Steve Jobs and Elon Musk demonstrate how innovative thinking and risk-taking can lead to extraordinary wealth and influence. Additionally, business owners can make decisions quickly without bureaucratic constraints and have the flexibility to pursue their vision without compromise.
+Proponents of part-time work argue that it provides essential real-world experience and financial independence. Students who work develop crucial life skills such as time management, responsibility, and professional communication. Additionally, part-time employment can help students graduate debt-free or with reduced financial burden, particularly important in countries with high education costs. Work experience also enhances CVs and can provide valuable networking opportunities that may lead to future career prospects.
 
-However, the reality for most entrepreneurs is far more challenging. Statistics show that approximately 90% of startups fail within the first five years, often leaving founders with significant debt and financial stress. Unlike employees who receive regular salaries, entrepreneurs face unpredictable income streams and must handle all aspects of business operations, from marketing to accounting. This often results in 60-80 hour work weeks and constant stress about cash flow and competition.
+However, the primary purpose of higher education is academic achievement and intellectual development. Students who focus solely on their studies typically achieve better grades and have more time for research, extracurricular activities, and building relationships with professors. These activities often provide greater long-term benefits than part-time employment. Furthermore, the modern job market increasingly values specialized knowledge and skills, which require dedicated study time to develop properly.
 
-Traditional employment, conversely, offers predictable income, structured career progression, and valuable benefits such as health insurance and retirement plans. Employees can focus on their expertise rather than worrying about administrative tasks and can typically maintain better work-life balance. Many large corporations also provide opportunities for professional development and innovation within a supportive framework.
+The financial argument for part-time work, while understandable, may be shortsighted. Students who achieve excellent academic results are more likely to secure well-paying graduate positions and scholarships, potentially earning significantly more over their careers than those who sacrificed study time for immediate income.
 
-In conclusion, while entrepreneurship may suit certain personality types and circumstances, the security, structure, and balanced lifestyle offered by traditional employment make it the better choice for most individuals.
+In conclusion, while part-time work offers certain advantages, the long-term benefits of focusing entirely on academic excellence outweigh the short-term gains of employment. Students should prioritize their education to maximize their future potential.
 
 (Word count: 267)`,
     

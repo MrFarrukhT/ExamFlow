@@ -6,7 +6,16 @@
         let currentPassage = 1;
         let currentQuestion = 1;
         let selectedRange = null;
-        let timeInSeconds = 3600;
+        
+        // Set timer duration based on test skill type
+        const skill = document.body.getAttribute('data-skill');
+        let timeInSeconds;
+        if (skill === 'listening') {
+            timeInSeconds = 2400; // 40 minutes for listening test
+        } else {
+            timeInSeconds = 3600; // 60 minutes for reading/writing tests
+        }
+        
         let timerInterval;
         let draggedItem = null;
         let activeQuestionElement = null;
@@ -1361,7 +1370,13 @@ async function loadAnswers() {
         }
 
         function resetTimer() {
-            timeInSeconds = 3600;
+            // Reset timer to appropriate duration based on skill type
+            const skill = document.body.getAttribute('data-skill');
+            if (skill === 'listening') {
+                timeInSeconds = 2400; // 40 minutes for listening test
+            } else {
+                timeInSeconds = 3600; // 60 minutes for reading/writing tests
+            }
             const minutes = Math.floor(timeInSeconds / 60);
             const seconds = timeInSeconds % 60;
             if (timerDisplay) {
