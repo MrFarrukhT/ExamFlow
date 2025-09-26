@@ -6,7 +6,7 @@
   "main": "local-database-server.js",
   "scripts": {
     "start": "node local-database-server.js",
-    "test": "curl http://localhost:3001/test"
+    "test": "curl http://localhost:3002/test"
   },
   "dependencies": {
     "pg": "^8.11.0",

@@ -65,6 +65,12 @@ async function ensureConnection() {
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.static('./')); // Serve static files from current directory
+
+// Root redirect to launcher
+app.get('/', (req, res) => {
+    res.redirect('/launcher.html');
+});
 
 // Test endpoint
 app.get('/test', async (req, res) => {
@@ -86,45 +92,103 @@ app.get('/test', async (req, res) => {
     }
 });
 
+// Queue for failed submissions
+const failedSubmissions = [];
+
+// Background retry system - runs every 90 seconds
+async function backgroundRetrySystem() {
+    if (failedSubmissions.length === 0) {
+        return; // No failed submissions to retry
+    }
+
+    console.log(`🔄 Background retry: ${failedSubmissions.length} submissions pending...`);
+
+    const toRetry = [...failedSubmissions]; // Copy the array
+    failedSubmissions.length = 0; // Clear original array
+
+    for (const submission of toRetry) {
+        try {
+            console.log(`📝 Retrying: ${submission.data.skill} test for ${submission.data.studentName}`);
+            
+            const dbClient = await ensureConnection();
+            const result = await dbClient.query(`
+                INSERT INTO test_submissions
+                (student_id, student_name, mock_number, skill, answers, score, band_score, start_time, end_time)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                RETURNING id
+            `, [submission.data.studentId, submission.data.studentName, submission.data.mockNumber, 
+                submission.data.skill, JSON.stringify(submission.data.answers), submission.data.score, 
+                submission.data.bandScore, submission.data.startTime, submission.data.endTime]);
+
+            console.log(`✅ Background retry success! ID: ${result.rows[0].id}`);
+
+        } catch (error) {
+            console.log(`❌ Background retry failed, will try again in 90s`);
+            failedSubmissions.push(submission); // Put it back in queue
+        }
+    }
+}
+
+// Start background retry system (runs every 90 seconds)
+setInterval(backgroundRetrySystem, 90000);
+
+// Simple immediate retry function (3 quick attempts)
+async function saveWithRetry(data, maxRetries = 3) {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+            console.log(`📝 Attempt ${attempt}: Saving ${data.skill} test for ${data.studentName}`);
+            
+            const dbClient = await ensureConnection();
+            const result = await dbClient.query(`
+                INSERT INTO test_submissions
+                (student_id, student_name, mock_number, skill, answers, score, band_score, start_time, end_time)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                RETURNING id
+            `, [data.studentId, data.studentName, data.mockNumber, data.skill, 
+                JSON.stringify(data.answers), data.score, data.bandScore, data.startTime, data.endTime]);
+
+            console.log(`✅ Saved with ID: ${result.rows[0].id}`);
+            return result.rows[0].id;
+
+        } catch (error) {
+            console.error(`❌ Attempt ${attempt} failed:`, error.message);
+            
+            if (attempt < maxRetries) {
+                console.log(`🔄 Retrying in 2 seconds...`);
+                await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
+            }
+        }
+    }
+    
+    // If all immediate retries failed, add to background queue
+    console.log(`📋 Adding to background retry queue (will retry every 90s)`);
+    failedSubmissions.push({ 
+        data: data, 
+        timestamp: new Date().toISOString() 
+    });
+    
+    throw new Error('Immediate save failed - added to background retry queue');
+}
+
 // Save test submission
 app.post('/submissions', async (req, res) => {
     try {
-        const {
-            studentId,
-            studentName,
-            mockNumber,
-            skill,
-            answers,
-            score,
-            bandScore,
-            startTime,
-            endTime
-        } = req.body;
-
-        console.log(`📝 Saving ${skill} test for ${studentName} (${studentId})`);
-
-        const dbClient = await ensureConnection();
-        const result = await dbClient.query(`
-            INSERT INTO test_submissions
-            (student_id, student_name, mock_number, skill, answers, score, band_score, start_time, end_time)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-            RETURNING id
-        `, [studentId, studentName, mockNumber, skill, JSON.stringify(answers), score, bandScore, startTime, endTime]);
-
-        console.log(`✅ Saved with ID: ${result.rows[0].id}`);
+        const submissionData = req.body;
+        const savedId = await saveWithRetry(submissionData);
 
         res.json({
             success: true,
             message: 'Test submission saved successfully',
-            id: result.rows[0].id
+            id: savedId
         });
 
     } catch (error) {
-        console.error('❌ Database save failed:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to save test submission',
-            error: error.message
+        // Even if immediate save failed, we queued it for background retry
+        console.log('⏰ Submission queued for background retry');
+        res.json({
+            success: true,
+            message: 'Test submission queued - will retry until successful',
+            queued: true
         });
     }
 });
