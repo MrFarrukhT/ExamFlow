@@ -46,7 +46,7 @@ class DatabaseConnector {
     async tryLocalAPI(testData) {
         try {
             // Try to connect to a local API server
-            const response = await fetch('http://localhost:3000/api/submissions', {
+            const response = await fetch('http://localhost:3002/submissions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
