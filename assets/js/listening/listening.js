@@ -477,6 +477,19 @@
             }
         }
 
+        // Make navigation functions globally accessible immediately
+        window.goToQuestion = goToQuestion;
+        window.switchToPart = switchToPart;
+        window.nextPart = nextPart;
+        window.previousPart = previousPart;
+        
+        console.log('Navigation functions assigned to window:', {
+            goToQuestion: typeof window.goToQuestion,
+            switchToPart: typeof window.switchToPart,
+            nextPart: typeof window.nextPart,
+            previousPart: typeof window.previousPart
+        });
+
         function highlightText() {
             if (!selectedRange || selectedRange.collapsed) {
                 closeContextMenu();
@@ -1954,3 +1967,7 @@
 
         // Make function globally accessible
         window.startListeningTest = startListeningTest;
+        window.goToQuestion = goToQuestion;
+        window.switchToPart = switchToPart;
+        window.nextPart = nextPart;
+        window.previousPart = previousPart;

@@ -29,6 +29,118 @@
             height: 60px;
         }
 
+        /* IELTS Branding - Added to existing header */
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .ielts-logo {
+            color: #333;
+            font-weight: 900;
+            font-size: 16px;
+            display: inline-block;
+        }
+
+        .test-taker-info {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .test-taker-id {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* Universal Icons - Made bigger and black like official exam */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .wifi-indicator {
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding: 5px;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .bell-notification,
+        .options-menu {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            padding: 5px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .bell-notification:hover,
+        .options-menu:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .wifi-icon,
+        .bell-icon,
+        .options-icon {
+            width: 32px;
+            height: 32px;
+            color: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Font Awesome icon sizing */
+        .wifi-indicator .fa,
+        .bell-notification .fa,
+        .options-menu .fa {
+            font-size: 24px;
+            color: #000000;
+        }
+
+        .wifi-icon.connected {
+            color: #374151;
+        }
+
+        .wifi-icon.disconnected {
+            color: #6b7280;
+        }
+
+        .wifi-icon svg,
+        .bell-icon svg,
+        .options-icon svg {
+            width: 28px;
+            height: 28px;
+            fill: currentColor;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #e53935;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Legacy support for old styles */
         .logo {
             font-weight: 700;
             font-size: 18px;
@@ -70,26 +182,6 @@
         
         .header-icon:hover {
             opacity: 1;
-        }
-
-        .wifi-icon {
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>') no-repeat center;
-            background-size: contain;
-        }
-
-        .bell-icon {
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>') no-repeat center;
-            background-size: contain;
-        }
-
-        .options-icon {
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.78 18.65l.28-4.23l7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3L3.64 12c-.88-.25-.89-1.37.2-1.64l16.56-6.4c.75-.29 1.4.22 1.2.94l-2.67 12.61c-.22.95-1.13 1.18-1.78.73l-4.5-3.32l-2.23 2.15c-.47.44-1.29.21-1.48-.37z"/></svg>') no-repeat center;
-            background-size: contain;
-        }
-
-        .notes-icon {
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>') no-repeat center;
-            background-size: contain;
         }
 
         /* Modal styles for header icons */
@@ -771,18 +863,23 @@
             background-color: #f0f0f0;
             color: #333;
             border: 1px solid #ccc;
-            padding: 12px 20px;
+            padding: 10px 12px;
             border-radius: 4px;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 22px;
+            font-weight: 900;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
             transition: background-color 0.2s, border-color 0.2s;
-            min-width: 170px;
+            min-width: 48px;
             justify-content: center;
             flex-shrink: 0;
+        }
+
+        .footer__deliverButton___3FM07 .fa {
+            font-weight: 900;
+            font-size: 24px;
         }
 
         .footer__deliverButton___3FM07:hover {
@@ -1712,84 +1809,552 @@
             opacity: 0.7;
         }
 
-        /* Dark mode styles */
+        /* Dark mode styles - Updated to match reading.css */
         body.dark-mode {
-            background-color: #1a1a1a !important;
-            color: #ffffff !important;
+            background-color: #000000;
+            color: #ffffff;
         }
 
         body.dark-mode .header {
-            background-color: #2d2d2d !important;
-            border-bottom: 1px solid #404040 !important;
-        }
-
-        body.dark-mode .header-modal {
-            background-color: #1a1a1a !important;
-        }
-
-        body.dark-mode .header-modal-content {
-            background-color: #2d2d2d !important;
-            color: #ffffff !important;
-        }
-
-        body.dark-mode .fullscreen-option:hover {
-            background-color: #404040 !important;
-        }
-
-        body.dark-mode .fullscreen-option.primary {
-            background-color: #007bff !important;
-        }
-
-        body.dark-mode .fullscreen-option.primary:hover {
-            background-color: #0056b3 !important;
+            background-color: #000000;
+            color: #ffffff;
+            border-bottom-color: #333333;
         }
 
         body.dark-mode .main-container {
-            background-color: #1a1a1a !important;
-            color: #ffffff !important;
+            background-color: #000000;
         }
 
-        body.dark-mode .left-panel {
-            background-color: #2d2d2d !important;
-            color: #ffffff !important;
-        }
-
+        body.dark-mode .left-panel,
         body.dark-mode .right-panel {
-            background-color: #2d2d2d !important;
-            color: #ffffff !important;
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        body.dark-mode .question-part {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        body.dark-mode .part-header {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        body.dark-mode .part-header p,
+        body.dark-mode .part-header strong {
+            color: #ffffff;
         }
 
         body.dark-mode .question {
-            background-color: #404040 !important;
-            color: #ffffff !important;
+            background-color: #000000;
+            color: #ffffff;
         }
 
-        body.dark-mode .question-prompt {
-            background-color: #404040 !important;
-            color: #ffffff !important;
+        body.dark-mode .question-prompt,
+        body.dark-mode .question-prompt p,
+        body.dark-mode .question-prompt strong {
+            color: #ffffff;
+        }
+
+        body.dark-mode .question p,
+        body.dark-mode .question div,
+        body.dark-mode .question span,
+        body.dark-mode .question li {
+            color: #ffffff;
+        }
+
+        body.dark-mode .centered-title {
+            color: #ffffff;
+        }
+
+        body.dark-mode table,
+        body.dark-mode th,
+        body.dark-mode td {
+            color: #ffffff;
+            border-color: #333333;
         }
 
         body.dark-mode .answer-input {
-            background-color: #555555 !important;
-            color: #ffffff !important;
-            border-color: #777777 !important;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            border-color: #333333;
         }
 
-        body.dark-mode .timer-container {
-            background-color: #2d2d2d !important;
-            color: #ffffff !important;
+        body.dark-mode .timer-container,
+        body.dark-mode .timer-display {
+            color: #ffffff;
         }
 
-        body.dark-mode .footer {
-            background-color: #2d2d2d !important;
-            border-top: 1px solid #404040 !important;
+        body.dark-mode .ielts-logo,
+        body.dark-mode .test-taker-info,
+        body.dark-mode .test-taker-id {
+            color: #ffffff;
+        }
+
+        body.dark-mode .wifi-indicator .fa,
+        body.dark-mode .bell-notification .fa,
+        body.dark-mode .options-menu .fa {
+            color: #ffffff;
+        }
+
+        body.dark-mode .nav-row {
+            background-color: #000000;
+            border-top: 1px solid #333333;
+        }
+
+        body.dark-mode .footer__questionWrapper___1tZ46 {
+            color: #ffffff;
+        }
+
+        body.dark-mode .footer__questionNo___3WNct {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            border-color: #333333;
+        }
+
+        body.dark-mode .footer__questionNo___3WNct:hover {
+            background-color: #2a2a2a;
+        }
+
+        body.dark-mode .subQuestion {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            border-color: #333333;
+        }
+
+        body.dark-mode .subQuestion:hover {
+            background-color: #2a2a2a;
+            border-color: #555555;
+        }
+
+        body.dark-mode .subQuestion.answered {
+            background-color: #2a2a2a;
+            border-color: #555555;
+        }
+
+        body.dark-mode .subQuestion.active {
+            background-color: #003366;
+            color: #ffffff;
+            border-color: #0066cc;
         }
 
         body.dark-mode .footer__deliverButton___3FM07 {
-            background-color: #007bff !important;
-            color: #ffffff !important;
+            background-color: #003366;
+            color: #ffffff;
+            border-color: #0066cc;
         }
 
         body.dark-mode .footer__deliverButton___3FM07:hover {
-            background-color: #0056b3 !important;
+            background-color: #004d99;
+        }
+
+        body.dark-mode #transcription-container {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        body.dark-mode #transcription-container h2 {
+            color: #ffffff;
+        }
+
+        body.dark-mode #transcription-text {
+            color: #ffffff;
+        }
+
+        /* UNIVERSAL POPUP STYLES - Copied from reading.css */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #f5f5f5;
+            z-index: 2000;
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 80px;
+        }
+
+        .popup-overlay.show {
+            display: flex;
+        }
+
+        .popup-content {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            max-width: 720px;
+            width: 90%;
+            max-height: 60vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .popup-header {
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .popup-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .popup-back {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #666;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .popup-back:hover {
+            color: #333;
+            background-color: #f3f4f6;
+        }
+
+        .popup-back .fa {
+            font-size: 18px;
+        }
+
+        .popup-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #666;
+            padding: 8px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .popup-close:hover {
+            color: #333;
+            background-color: #f3f4f6;
+        }
+
+        .popup-body {
+            padding: 32px;
+            flex: 1;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 20px 32px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.2s;
+        }
+
+        .option-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .option-item.submit-option {
+            background-color: #e53935;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .option-item.submit-option:hover {
+            background-color: #d32f2f;
+        }
+
+        .option-icon {
+            width: 28px;
+            height: 28px;
+            margin-right: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .option-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .option-icon .fa {
+            font-size: 20px;
+        }
+
+        .option-text {
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .option-arrow {
+            margin-left: auto;
+            width: 20px;
+            height: 20px;
+            opacity: 0.5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .option-arrow .fa {
+            font-size: 16px;
+        }
+
+        .contrast-options,
+        .text-size-options {
+            display: flex;
+            gap: 16px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .contrast-option,
+        .text-size-option {
+            flex: 1;
+            padding: 28px 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+            font-weight: 400;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+        }
+
+        .contrast-option:hover,
+        .text-size-option:hover {
+            border-color: #9ca3af;
+        }
+
+        .contrast-option.dark-preview {
+            background-color: #000000;
+            color: #ffffff;
+            border-color: #000000;
+        }
+
+        .contrast-option.dark-preview:hover {
+            border-color: #374151;
+        }
+
+        .contrast-option.dark-preview.active {
+            border-color: #3b82f6;
+            background-color: #000000;
+        }
+
+        .contrast-option.active,
+        .text-size-option.active {
+            border-color: #3b82f6;
+            background-color: #dbeafe;
+        }
+
+        .notification-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .notification-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .notification-message {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .notification-time {
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* Dark mode popup styles */
+        body.dark-mode .popup-overlay {
+            background-color: #000000;
+        }
+
+        body.dark-mode .popup-content {
+            background-color: #000000;
+            color: #ffffff;
+            border: 1px solid #333333;
+        }
+
+        body.dark-mode .popup-header {
+            border-bottom-color: #333333;
+        }
+
+        body.dark-mode .popup-title {
+            color: #ffffff;
+        }
+
+        body.dark-mode .popup-back {
+            color: #cccccc;
+        }
+
+        body.dark-mode .popup-back:hover {
+            color: #ffffff;
+            background-color: #1a1a1a;
+        }
+
+        body.dark-mode .popup-close {
+            color: #cccccc;
+        }
+
+        body.dark-mode .popup-close:hover {
+            color: #ffffff;
+            background-color: #1a1a1a;
+        }
+
+        body.dark-mode .option-item {
+            background-color: #000000;
+            color: #ffffff;
+            border-color: #333333;
+        }
+
+        body.dark-mode .option-item:hover {
+            background-color: #1a1a1a;
+        }
+
+        body.dark-mode .option-item.submit-option {
+            background-color: #e53935;
+            color: #ffffff;
+        }
+
+        body.dark-mode .option-text {
+            color: #ffffff;
+        }
+
+        body.dark-mode .contrast-option {
+            background-color: #2a2a2a;
+            color: #ffffff;
+            border-color: #555555;
+        }
+
+        body.dark-mode .contrast-option:hover {
+            background-color: #333333;
+            border-color: #666666;
+        }
+
+        body.dark-mode .contrast-option.active {
+            border-color: #87ceeb;
+            background-color: #003366;
+        }
+
+        body.dark-mode .text-size-option {
+            background-color: #2a2a2a;
+            color: #ffffff;
+            border-color: #555555;
+        }
+
+        body.dark-mode .text-size-option:hover {
+            background-color: #333333;
+            border-color: #666666;
+        }
+
+        body.dark-mode .text-size-option.active {
+            border-color: #87ceeb;
+            background-color: #003366;
+        }
+
+        body.dark-mode .notification-item {
+            border-bottom-color: #333333;
+        }
+
+        body.dark-mode .notification-title {
+            color: #ffffff;
+        }
+
+        body.dark-mode .notification-message {
+            color: #cccccc;
+        }
+
+        body.dark-mode .notification-time {
+            color: #999999;
+        }
+
+        /* Dark mode highlight styles */
+        body.dark-mode .highlight {
+            background-color: #87CEEB;
+            color: #000000;
+        }
+
+        body.dark-mode .comment-highlight {
+            background-color: #90EE90;
+            color: #000000;
+        }
+
+        body.dark-mode .comment-tooltip {
+            background: #ffffff;
+            color: #000000;
+            border: 1px solid #333333;
+        }
+
+        /* Dark mode context menu styles */
+        body.dark-mode .context-menu {
+            background: #1a1a1a;
+            border-color: #333333;
+            box-shadow: 0 4px 12px rgba(255,255,255,0.15);
+        }
+
+        body.dark-mode .context-menu-item {
+            color: #ffffff;
+            border-bottom-color: #333333;
+        }
+
+        body.dark-mode .context-menu-item:hover {
+            background-color: #2a2a2a;
+        }
+
+        /* TEXT SIZE STYLES */
+        body.text-small {
+            font-size: 14px;
+        }
+
+        body.text-medium {
+            font-size: 16px;
+        }
+
+        body.text-large {
+            font-size: 18px;
+        }
+
+        body.text-small .question-prompt,
+        body.text-small .question,
+        body.text-small .summary-text {
+            font-size: 14px;
+        }
+
+        body.text-medium .question-prompt,
+        body.text-medium .question,
+        body.text-medium .summary-text {
+            font-size: 16px;
+        }
+
+        body.text-large .question-prompt,
+        body.text-large .question,
+        body.text-large .summary-text {
+            font-size: 18px;
         }
