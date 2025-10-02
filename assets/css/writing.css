@@ -34,41 +34,122 @@ body {
     height: 60px;
 }
 
-/* IELTS Branding - Updated for writing */
+/* IELTS Branding - Added to existing header */
 .header-left {
     display: flex;
     align-items: center;
     gap: 20px;
 }
 
-.innovative-centre-logo {
-    background-color: #2196f3;
-    color: white;
-    padding: 6px 12px;
-    font-weight: bold;
-    font-size: 14px;
-    border-radius: 4px;
+.ielts-logo {
+    color: #333333;
+    font-weight: 900;
+    font-size: 16px;
     display: inline-block;
 }
 
 .test-taker-info {
-    font-size: 16px;
-    font-weight: 500;
-    color: #333;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333333;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
-.logo {
-    font-weight: 700;
-    font-size: 18px;
-    color: #333;
-    text-decoration: none;
-    pointer-events: none;
+.test-taker-id {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Universal Icons - Made bigger and black like official exam */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.wifi-indicator {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.bell-notification,
+.options-menu {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.bell-notification:hover,
+.options-menu:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.wifi-icon,
+.bell-icon,
+.options-icon {
+    width: 32px;
+    height: 32px;
+    color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Font Awesome icon sizing */
+.wifi-indicator .fa,
+.bell-notification .fa,
+.options-menu .fa {
+    font-size: 24px;
+    color: #000000;
+}
+
+.wifi-icon.connected {
+    color: #374151;
+}
+
+.wifi-icon.disconnected {
+    color: #6b7280;
+}
+
+.wifi-icon svg,
+.bell-icon svg,
+.options-icon svg {
+    width: 28px;
+    height: 28px;
+    fill: currentColor;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #e53935;
+    color: white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
 }
 
 /* === TIMER STYLES === */
 .timer-container {
     display: flex;
-    position: relative;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     cursor: default;
     color: #333;
     font-size: 16px;
@@ -208,6 +289,187 @@ body {
     width: 16px;
     height: 16px;
     font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* === UNIVERSAL POPUP STYLES === */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #f5f5f5;
+    z-index: 2000;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 80px;
+}
+
+.popup-overlay.show {
+    display: flex;
+}
+
+.popup-content {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    max-width: 720px;
+    width: 90%;
+    max-height: 60vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-header {
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.popup-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+}
+
+.popup-back {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #666;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.popup-back:hover {
+    color: #333;
+    background-color: #f3f4f6;
+}
+
+.popup-back .fa {
+    font-size: 18px;
+}
+
+.popup-close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #666;
+    padding: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+.popup-close:hover {
+    color: #333;
+    background-color: #f3f4f6;
+}
+
+.popup-body {
+    padding: 32px;
+    flex: 1;
+}
+
+.option-item {
+    display: flex;
+    align-items: center;
+    padding: 20px 32px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s;
+}
+
+.option-item:hover {
+    background-color: #f8f9fa;
+}
+
+.option-item.submit-option {
+    background-color: #e53935;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.option-item.submit-option:hover {
+    background-color: #d32f2f;
+}
+
+.option-icon {
+    width: 28px;
+    height: 28px;
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.option-icon svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+}
+
+.option-icon .fa {
+    font-size: 20px;
+}
+
+.option-text {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.option-arrow {
+    margin-left: auto;
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.option-arrow .fa {
+    font-size: 16px;
+}
+
+.contrast-options,
+.text-size-options {
+    display: flex;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+.contrast-option,
+.text-size-option {
+    flex: 1;
+    padding: 28px 20px;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 16px;
+    font-weight: 400;
+    min-height: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -827,21 +1089,22 @@ body {
 
 /* === DARK MODE STYLES === */
 body.dark-mode {
-    background-color: #1a1a1a !important;
+    background-color: #000000 !important;
     color: #ffffff !important;
 }
 
 body.dark-mode .header {
-    background-color: #2d2d2d !important;
-    border-bottom: 1px solid #404040 !important;
+    background-color: #000000;
+    color: #ffffff;
+    border-bottom-color: #333333;
 }
 
 body.dark-mode .header-modal {
-    background-color: #1a1a1a !important;
+    background-color: #000000 !important;
 }
 
 body.dark-mode .header-modal-content {
-    background-color: #2d2d2d !important;
+    background-color: #000000 !important;
     color: #ffffff !important;
 }
 
@@ -859,7 +1122,7 @@ body.dark-mode .fullscreen-option.primary:hover {
 
 body.dark-mode .task-panel,
 body.dark-mode .writing-panel {
-    background-color: #2d2d2d !important;
+    background-color: #000000 !important;
     color: #ffffff !important;
 }
 
@@ -884,7 +1147,7 @@ body.dark-mode .chart-container {
 }
 
 body.dark-mode .chart-table {
-    background-color: #2d2d2d !important;
+    background-color: #000000 !important;
     color: #ffffff !important;
 }
 
@@ -899,7 +1162,7 @@ body.dark-mode .chart-table th {
 }
 
 body.dark-mode .writing-area {
-    background-color: #2d2d2d !important;
+    background-color: #000000 !important;
     color: #ffffff !important;
     border-color: #555555 !important;
 }
@@ -913,8 +1176,74 @@ body.dark-mode .timer-display {
     color: #ffffff !important;
 }
 
+/* Dark mode for logo and test taker info */
+body.dark-mode .ielts-logo,
+body.dark-mode .test-taker-info,
+body.dark-mode .test-taker-id {
+    color: #ffffff;
+}
+
+/* Dark mode for icons */
+body.dark-mode .wifi-indicator .fa,
+body.dark-mode .bell-notification .fa,
+body.dark-mode .options-menu .fa {
+    color: #ffffff;
+}
+
+/* Dark mode popup styles */
+body.dark-mode .popup-overlay {
+    background-color: #000000;
+}
+
+body.dark-mode .popup-content {
+    background-color: #000000;
+    color: #ffffff;
+    border: 1px solid #333333;
+}
+
+body.dark-mode .popup-header {
+    border-bottom-color: #333333;
+}
+
+body.dark-mode .popup-title {
+    color: #ffffff;
+}
+
+body.dark-mode .popup-back {
+    color: #cccccc;
+}
+
+body.dark-mode .popup-back:hover {
+    color: #ffffff;
+    background-color: #000000;
+}
+
+body.dark-mode .popup-close {
+    color: #cccccc;
+}
+
+body.dark-mode .popup-close:hover {
+    color: #ffffff;
+    background-color: #000000;
+}
+
+body.dark-mode .option-item {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+body.dark-mode .option-item:hover {
+    background-color: #000000;
+}
+
+body.dark-mode .option-item.submit-option {
+    background-color: #e53935;
+    color: #ffffff;
+}
+
 body.dark-mode .bottom-nav {
-    background-color: #2d2d2d !important;
+    background-color: #000000 !important;
     border-top: 1px solid #404040 !important;
 }
 
@@ -1095,88 +1424,6 @@ body.dark-mode .submit-button:hover {
     .instructions {
         border: 2px solid #000;
     }
-}
-
-/* === UNIVERSAL POPUP STYLES === */
-.popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 2000;
-    display: none;
-    align-items: center;
-    justify-content: center;
-}
-
-.popup-overlay.show {
-    display: flex;
-}
-
-.popup-content {
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    max-width: 500px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-}
-
-.popup-header {
-    padding: 40px 40px 20px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.popup-title {
-    font-size: 28px;
-    font-weight: bold;
-    color: #333;
-}
-
-.popup-close {
-    background: none;
-    border: none;
-    font-size: 32px;
-    cursor: pointer;
-    color: #666;
-    padding: 10px;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-}
-
-.popup-close:hover {
-    color: #333;
-    background-color: #f3f4f6;
-}
-
-.popup-body {
-    padding: 40px;
-    flex: 1;
-}
-
-.option-item {
-    display: flex;
-    align-items: center;
-    padding: 30px 40px;
-    cursor: pointer;
-    border-bottom: 1px solid #f0f0f0;
-    transition: background-color 0.2s;
-}
-
-.option-item:hover {
-    background-color: #f8f9fa;
 }
 
 .option-item.submit-option {

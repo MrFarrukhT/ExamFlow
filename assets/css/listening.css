@@ -37,7 +37,7 @@
         }
 
         .ielts-logo {
-            color: #333;
+            color: #333333;
             font-weight: 900;
             font-size: 16px;
             display: inline-block;
@@ -46,7 +46,7 @@
         .test-taker-info {
             font-size: 14px;
             font-weight: bold;
-            color: #333;
+            color: #333333;
             display: flex;
             flex-direction: column;
             gap: 2px;
@@ -144,7 +144,7 @@
         .logo {
             font-weight: 700;
             font-size: 18px;
-            color: #333;
+            color: #333333;
             text-decoration: none;
             pointer-events: none;
         }
@@ -1182,42 +1182,70 @@
         }
 
         .audio-popup-content {
-            background: white;
+            background: transparent;
             padding: 40px;
-            border-radius: 12px;
             text-align: center;
             max-width: 500px;
             width: 90%;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .audio-popup-content h2 {
             margin: 0 0 20px 0;
-            color: #333;
-            font-size: 24px;
+            color: white;
+            font-size: 28px;
+            font-weight: 600;
         }
 
         .audio-popup-content p {
             margin: 0 0 30px 0;
-            color: #666;
+            color: rgba(255, 255, 255, 0.9);
             font-size: 16px;
             line-height: 1.5;
+        }
+
+        .headphones-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 30px auto;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .headphones-icon svg {
+            width: 50px;
+            height: 50px;
+            fill: #333;
         }
 
         .start-listening-btn {
             background: #4a90e2;
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
+            padding: 15px 40px;
+            border-radius: 25px;
             cursor: pointer;
             font-size: 18px;
             font-weight: 600;
             transition: background-color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .start-listening-btn:hover {
             background: #357abd;
+        }
+
+        .start-listening-btn .play-icon {
+            width: 0;
+            height: 0;
+            border-left: 10px solid white;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            margin-left: 2px;
         }
         #goto-widget {
             display: flex;
@@ -1876,7 +1904,7 @@
         }
 
         body.dark-mode .answer-input {
-            background-color: #1a1a1a;
+            background-color: #000000;
             color: #ffffff;
             border-color: #333333;
         }
@@ -1888,7 +1916,8 @@
 
         body.dark-mode .ielts-logo,
         body.dark-mode .test-taker-info,
-        body.dark-mode .test-taker-id {
+        body.dark-mode .test-taker-id,
+        body.dark-mode .logo {
             color: #ffffff;
         }
 
@@ -1908,7 +1937,7 @@
         }
 
         body.dark-mode .footer__questionNo___3WNct {
-            background-color: #1a1a1a;
+            background-color: #000000;
             color: #ffffff;
             border-color: #333333;
         }
@@ -1918,7 +1947,7 @@
         }
 
         body.dark-mode .subQuestion {
-            background-color: #1a1a1a;
+            background-color: #000000;
             color: #ffffff;
             border-color: #333333;
         }
@@ -2216,7 +2245,7 @@
 
         body.dark-mode .popup-back:hover {
             color: #ffffff;
-            background-color: #1a1a1a;
+            background-color: #000000;
         }
 
         body.dark-mode .popup-close {
@@ -2225,7 +2254,7 @@
 
         body.dark-mode .popup-close:hover {
             color: #ffffff;
-            background-color: #1a1a1a;
+            background-color: #000000;
         }
 
         body.dark-mode .option-item {
@@ -2235,7 +2264,7 @@
         }
 
         body.dark-mode .option-item:hover {
-            background-color: #1a1a1a;
+            background-color: #000000;
         }
 
         body.dark-mode .option-item.submit-option {
@@ -2314,7 +2343,7 @@
 
         /* Dark mode context menu styles */
         body.dark-mode .context-menu {
-            background: #1a1a1a;
+            background: #000000;
             border-color: #333333;
             box-shadow: 0 4px 12px rgba(255,255,255,0.15);
         }

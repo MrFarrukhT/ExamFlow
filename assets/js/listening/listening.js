@@ -1917,8 +1917,13 @@
         
         // Start listening test - simplified approach
         function startListeningTest() {
+            console.log('🎵 startListeningTest function called');
+            
             const audioPlayer = document.getElementById('global-audio-player');
             const popup = document.getElementById('audio-popup');
+            
+            console.log('🎵 Audio player found:', !!audioPlayer);
+            console.log('🎵 Popup found:', !!popup);
             
             if (!audioPlayer) {
                 console.error('❌ Audio player not found');
@@ -1928,11 +1933,18 @@
             
             // Hide the popup first
             if (popup) {
+                console.log('🎵 Hiding popup...');
+                popup.style.display = 'none';
                 popup.classList.add('hidden');
             }
             
+            // Reset and load the audio
+            audioPlayer.currentTime = 0;
+            audioPlayer.load();
+            
             // Try to play the audio with error handling
             console.log('🎵 Attempting to start audio...');
+            console.log('🎵 Audio src:', audioPlayer.src);
             
             const playPromise = audioPlayer.play();
             

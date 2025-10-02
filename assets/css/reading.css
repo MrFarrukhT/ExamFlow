@@ -36,7 +36,7 @@
         }
 
         .ielts-logo {
-            color: #333;
+            color: #333333;
             font-weight: 900;
             font-size: 16px;
             display: inline-block;
@@ -45,7 +45,7 @@
         .test-taker-info {
             font-size: 14px;
             font-weight: bold;
-            color: #333;
+            color: #333333;
             display: flex;
             flex-direction: column;
             gap: 2px;
@@ -2215,7 +2215,7 @@
         }
 
         body.dark-mode .part-header {
-            background-color: #1a1a1a;
+            background-color: #000000;
             color: #ffffff;
         }
 
@@ -2240,7 +2240,7 @@
         }
 
         body.dark-mode .option-item:hover {
-            background-color: #1a1a1a;
+            background-color: #000000;
         }
 
         body.dark-mode .option-item.submit-option {
@@ -2250,7 +2250,7 @@
 
         body.dark-mode .answer-input,
         body.dark-mode .drop-zone {
-            background-color: #1a1a1a;
+            background-color: #000000;
             color: #ffffff;
             border-color: #333333;
         }
@@ -2262,7 +2262,7 @@
 
         body.dark-mode .footer__questionNo___3WNct,
         body.dark-mode .subQuestion {
-            background-color: #1a1a1a;
+            background-color: #000000;
             color: #ffffff;
             border-color: #333333;
         }
@@ -2320,7 +2320,7 @@
 
         /* Dark mode for TRUE/FALSE/NOT GIVEN options */
         body.dark-mode .tf-option {
-            background-color: #1a1a1a;
+            background-color: #000000;
             color: #ffffff;
             border-color: #333333;
         }
@@ -2352,14 +2352,14 @@
         }
 
         body.dark-mode .matching-table th {
-            background-color: #1a1a1a;
+            background-color: #000000;
         }
 
         /* Dark mode for drag and drop items */
         body.dark-mode .drag-item,
         body.dark-mode .responsibility-item,
         body.dark-mode .room-label {
-            background-color: #1a1a1a;
+            background-color: #000000;
             color: #ffffff;
             border-color: #333333;
         }
@@ -2403,7 +2403,7 @@
 
         /* Dark mode for context menu (highlight/clear/note) */
         body.dark-mode .context-menu {
-            background: #1a1a1a;
+            background: #000000;
             border-color: #333333;
             box-shadow: 0 4px 12px rgba(255,255,255,0.15);
         }
@@ -2444,7 +2444,7 @@
 
         body.dark-mode .footer__questionNo___3WNct {
             color: #ffffff;
-            background-color: #1a1a1a;
+            background-color: #000000;
             border: 1px solid #333333;
         }
 
@@ -2464,7 +2464,7 @@
         }
 
         body.dark-mode .question-button {
-            background-color: #1a1a1a;
+            background-color: #000000;
             color: #ffffff;
             border-color: #333333;
         }
@@ -2572,7 +2572,7 @@
 
         /* Dark mode for help button */
         body.dark-mode .help-button {
-            background-color: #1a1a1a;
+            background-color: #000000;
             color: #ffffff;
             border-color: #333333;
         }
