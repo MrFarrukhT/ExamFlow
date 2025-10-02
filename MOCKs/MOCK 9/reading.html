@@ -1,4 +1,8 @@
-<!DOCTYPE html>
+<!DOC    <title>Innovative Centre MOCK 9 - Reading Practice</title>
+    <link rel="stylesheet" href="../../assets/css/reading.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Reading-specific CSS modules will be loaded here -->
+    <link rel="icon" href="../../assets/icons/innovativecentre.png"> html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,31 +18,26 @@
     <script src="../../assets/js/distraction-free.js"></script>
     <div class="header">
         <div class="header-left">
-            <div class="ielts-logo">IELTS</div>
-            <div class="test-taker-info">Test taker ID</div>
+            <div class="ielts-logo">Innovative Centre</div>
+            <div class="test-taker-info">
+                <span class="test-taker-id">Test taker ID: IC-XXXXX</span>
+            </div>
         </div>
         <div class="timer-container">
             <span class="timer-display">60:00</span>
         </div>
         <div class="header-right">
             <div class="wifi-indicator" title="WiFi Status">
-                <div class="wifi-icon connected">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.07 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>
-                    </svg>
-                </div>
+                <i class="fa fa-wifi" aria-hidden="true"></i>
             </div>
             <div class="bell-notification" title="Notifications">
-                <div class="bell-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
-                    </svg>
-                </div>
+                <i class="fa fa-bell-o" aria-hidden="true"></i>
             </div>
-            <div class="options-menu" title="Options">
-                <div class="options-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+            <div class="options-menu" title="Options" onclick="toggleOptionsMenu()">
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </div>
+        </div>
+    </div>
                     </svg>
                 </div>
             </div>
@@ -862,7 +861,6 @@
         
         <button id="deliver-button" aria-label="Review your answers" class="footer__deliverButton___3FM07">
             <i class="fa fa fa-check" aria-hidden="true"></i>
-            <span>Check Answers</span>
         </button>
     </nav>
 

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Innovative Centre MOCK 4 - Reading Practice</title>
     <link rel="stylesheet" href="../../assets/css/reading.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Reading-specific CSS modules will be loaded here -->
     <link rel="icon" href="../../assets/icons/innovativecentre.png">
 
@@ -13,19 +14,26 @@
 <body data-test-version="1" data-skill="reading" data-mock="4">
     <script src="../../assets/js/distraction-free.js"></script>
     <div class="header">
-        <div class="timer-container">
-            <span class="timer-display">60:00</span>
-            <div class="timer-controls">
-                <button id="timer-toggle-btn" title="Pause/Resume Timer">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8 5v14l11-7L8 5z"/></svg>
-                </button>
-                <button id="timer-reset-btn" title="Reset Timer">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
-                </button>
+        <div class="header-left">
+            <div class="ielts-logo">Innovative Centre</div>
+            <div class="test-taker-info">
+                <span class="test-taker-id">Test taker ID: IC-XXXXX</span>
             </div>
         </div>
-</a>
-        </a>
+        <div class="timer-container">
+            <span class="timer-display">60:00</span>
+        </div>
+        <div class="header-right">
+            <div class="wifi-indicator" title="WiFi Status">
+                <i class="fa fa-wifi" aria-hidden="true"></i>
+            </div>
+            <div class="bell-notification" title="Notifications">
+                <i class="fa fa-bell-o" aria-hidden="true"></i>
+            </div>
+            <div class="options-menu" title="Options" onclick="toggleOptionsMenu()">
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </div>
+        </div>
     </div>
 
     <div class="main-container" id="main-container">
@@ -729,7 +737,6 @@
         
         <button id="deliver-button" aria-label="Review your answers" class="footer__deliverButton___3FM07">
             <i class="fa fa fa-check" aria-hidden="true"></i>
-            <span>Check Answers</span>
         </button>
     </nav>
 

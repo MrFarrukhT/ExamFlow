@@ -21,7 +21,10 @@ function initializeSession() {
     // Update student info in header if element exists
     const testTakerInfo = document.querySelector('.test-taker-info');
     if (testTakerInfo) {
-        testTakerInfo.textContent = `${studentName} (${studentId})`;
+        testTakerInfo.innerHTML = `
+            <div>Test taker ID</div>
+            <div class="test-taker-id"><strong>${studentId}</strong></div>
+        `;
     }
     
     // Get current module from URL or body dataset

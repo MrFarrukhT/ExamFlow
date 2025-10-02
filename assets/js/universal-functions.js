@@ -42,12 +42,8 @@ class IELTSUniversalFunctions {
             `;
             document.body.appendChild(overlay);
 
-            // Close popup when clicking overlay
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) {
-                    this.closePopup();
-                }
-            });
+            // Popup can only be closed with X button
+            // No click-outside or Escape key closing
         }
     }
 
@@ -67,12 +63,7 @@ class IELTSUniversalFunctions {
             optionsMenu.addEventListener('click', () => this.showOptionsMenu());
         }
 
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.closePopup();
-            }
-        });
+        // Keyboard shortcuts removed - popup only closes with X button
     }
 
     toggleWifi() {
@@ -132,41 +123,29 @@ class IELTSUniversalFunctions {
             <div class="popup-body options-popup">
                 <div class="option-item submit-option" onclick="ieltsUniversal.goToSubmission()">
                     <div class="option-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                        </svg>
+                        <i class="fa fa-send" aria-hidden="true"></i>
                     </div>
                     <div class="option-text">Go to submission page</div>
                     <div class="option-arrow">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-                        </svg>
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
                     </div>
                 </div>
                 <div class="option-item" onclick="ieltsUniversal.showContrastOptions()">
                     <div class="option-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6V6z"/>
-                        </svg>
+                        <i class="fa fa-info-circle" aria-hidden="true"></i>
                     </div>
                     <div class="option-text">Contrast</div>
                     <div class="option-arrow">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-                        </svg>
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
                     </div>
                 </div>
                 <div class="option-item" onclick="ieltsUniversal.showTextSizeOptions()">
                     <div class="option-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M9 4v3h5v12h3V7h5V4H9zm-6 8h3v7h3v-7h3V9H3v3z"/>
-                        </svg>
+                        <i class="fa fa-search" aria-hidden="true"></i>
                     </div>
                     <div class="option-text">Text size</div>
                     <div class="option-arrow">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-                        </svg>
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
                     </div>
                 </div>
             </div>
@@ -177,18 +156,22 @@ class IELTSUniversalFunctions {
     showContrastOptions() {
         const content = `
             <div class="popup-header">
+                <button class="popup-back" onclick="ieltsUniversal.showOptionsMenu()">
+                    <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                    <span>Options</span>
+                </button>
                 <div class="popup-title">Display Contrast</div>
-                <button class="popup-close" onclick="ieltsUniversal.closePopup()">&times;</button>
+                <div style="width: 40px;"></div>
             </div>
             <div class="popup-body">
                 <div class="contrast-options">
                     <div class="contrast-option ${this.currentTheme === 'light' ? 'active' : ''}" 
                          onclick="ieltsUniversal.setTheme('light')">
-                        <div style="font-weight: bold;">Light</div>
+                        <div>Black on white</div>
                     </div>
-                    <div class="contrast-option ${this.currentTheme === 'dark' ? 'active' : ''}" 
+                    <div class="contrast-option dark-preview ${this.currentTheme === 'dark' ? 'active' : ''}" 
                          onclick="ieltsUniversal.setTheme('dark')">
-                        <div style="font-weight: bold;">Dark</div>
+                        <div>White on black</div>
                     </div>
                 </div>
             </div>
@@ -199,8 +182,12 @@ class IELTSUniversalFunctions {
     showTextSizeOptions() {
         const content = `
             <div class="popup-header">
+                <button class="popup-back" onclick="ieltsUniversal.showOptionsMenu()">
+                    <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                    <span>Options</span>
+                </button>
                 <div class="popup-title">Text Size</div>
-                <button class="popup-close" onclick="ieltsUniversal.closePopup()">&times;</button>
+                <div style="width: 40px;"></div>
             </div>
             <div class="popup-body">
                 <div class="text-size-options">
