@@ -168,6 +168,7 @@
         }
         #volume-slider {
             -webkit-appearance: none;
+            appearance: none;
             width: 80px;
             height: 4px;
             background: #ddd;
@@ -956,17 +957,11 @@
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
             height: 28px;
             min-width: 150px;
-            -webkit-autocomplete: none;
-            -moz-autocomplete: none;
-            autocomplete: none;
         }
         
-        /* Disable autocomplete suggestions for all input fields */
-        input[type="text"], input[type="email"], input[type="password"], input[type="search"], input[type="url"], input[type="tel"], input[type="number"] {
-            -webkit-autocomplete: none;
-            -moz-autocomplete: none;
-            autocomplete: none;
-        }
+        
+        /* Note: autocomplete should be set as an HTML attribute, not CSS property */
+        
         .answer-input.active-input,
         .answer-input:focus {
             border-color: #3581d8;
@@ -1872,9 +1867,6 @@
             border-radius: 50%;
             background-color: transparent;
             transition: background-color 0.2s ease;
-        }
-        
-        .matching-table .clickable-cell.selected::after {
         }
         
         /* Explanation Section Styles */
