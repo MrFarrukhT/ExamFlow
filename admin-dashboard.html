@@ -281,7 +281,7 @@
                 </div>
                 <div class="form-group">
                     <label for="password">Password:</label>
-                    <input type="password" id="password" required value="admin123">
+                    <input type="password" id="password" required value="Adm!n#2025$SecureP@ss">
                 </div>
                 <button type="submit" class="btn" id="loginBtn">Login</button>
                 <div class="error-message" id="errorMessage"></div>
@@ -360,7 +360,7 @@
             successMessage.style.display = 'none';
 
             // Simple local authentication
-            if (username === 'admin' && password === 'admin123') {
+            if (username === 'admin' && password === 'Adm!n#2025$SecureP@ss') {
                 localStorage.setItem('adminToken', 'local-admin-token');
                 authToken = 'local-admin-token';
                 successMessage.textContent = 'Login successful!';
@@ -537,7 +537,7 @@
             document.getElementById('adminContent').style.display = 'none';
             document.getElementById('logoutBtn').style.display = 'none';
             document.getElementById('username').value = 'admin';
-            document.getElementById('password').value = 'admin123';
+            document.getElementById('password').value = 'Adm!n#2025$SecureP@ss';
         }
 
         // Auto-refresh every 30 seconds

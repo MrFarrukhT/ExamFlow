@@ -1,6 +1,6 @@
 // Simple authentication for admin panel
 const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = 'admin123'; // Using plain text for simplicity
+const ADMIN_PASSWORD = 'Adm!n#2025$SecureP@ss'; // Strong password - change this for production
 
 export default async function handler(req, res) {
   // Enable CORS
