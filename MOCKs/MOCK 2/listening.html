@@ -542,190 +542,6 @@ Therefore, patients who have received treatment will receive an email link to a 
 That is the end of the listening test. In the test, you will now have 10 minutes to transfer your answers to the answer sheet.</div>
     </div>
 
-    <!-- Audio Placeholder -->
-    <audio id="old-audio-player" preload="auto" style="display: none;">
-        <source src="IC002 Listening.mp3" type="audio/mpeg">
-        <source src="./IC002 Listening.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-
-    <!-- Navigation Arrows -->
-    <div class="nav-arrows">
-        <button class="nav-arrow" onclick="previousPart()" id="prevBtn">‹</button>
-        <button class="nav-arrow" onclick="nextPart()" id="nextBtn">›</button>
-    </div>
-
-    <!-- Bottom Navigation -->
-    <nav class="nav-row perScorableItem" aria-label="Questions">
-        <div class="footer__questionWrapper___1tZ46 multiple" role="tablist">
-            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(1)">
-                <span>
-                    <span aria-hidden="true" class="section-prefix">Part </span>
-                    <span class="sectionNr" aria-hidden="true">1</span>
-                    <span class="attemptedCount" aria-hidden="true">0 of 10</span>
-                </span>
-            </button>
-            <div class="footer__subquestionWrapper___9GgoP">
-                <button class="subQuestion scorable-item" onclick="goToQuestion(1)"><span class="sr-only">Question 1</span><span aria-hidden="true">1</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(2)"><span class="sr-only">Question 2</span><span aria-hidden="true">2</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(3)"><span class="sr-only">Question 3</span><span aria-hidden="true">3</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(4)"><span class="sr-only">Question 4</span><span aria-hidden="true">4</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(5)"><span class="sr-only">Question 5</span><span aria-hidden="true">5</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(6)"><span class="sr-only">Question 6</span><span aria-hidden="true">6</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(7)"><span class="sr-only">Question 7</span><span aria-hidden="true">7</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(8)"><span class="sr-only">Question 8</span><span aria-hidden="true">8</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(9)"><span class="sr-only">Question 9</span><span aria-hidden="true">9</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(10)"><span class="sr-only">Question 10</span><span aria-hidden="true">10</span></button>
-            </div>
-        </div>
-        
-        <div class="footer__questionWrapper___1tZ46 selected multiple" role="tablist">
-            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(2)">
-                <span>
-                    <span aria-hidden="true" class="section-prefix">Part </span>
-                    <span class="sectionNr" aria-hidden="true">2</span>
-                    <span class="attemptedCount" aria-hidden="true">0 of 10</span>
-                </span>
-            </button>
-            <div class="footer__subquestionWrapper___9GgoP">
-                <button class="subQuestion scorable-item" onclick="goToQuestion(11)"><span class="sr-only">Question 11</span><span aria-hidden="true">11</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(12)">
-                    <span class="sr-only">Question 12</span>
-                    <span aria-hidden="true">12</span>
-                </button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(13)">
-                    <span class="sr-only">Question 13</span>
-                    <span aria-hidden="true">13</span>
-                </button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(14)">
-                    <span class="sr-only">Question 14</span>
-                    <span aria-hidden="true">14</span>
-                </button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(15)">
-                    <span class="sr-only">Question 15</span>
-                    <span aria-hidden="true">15</span>
-                </button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(16)">
-                    <span class="sr-only">Question 16</span>
-                    <span aria-hidden="true">16</span>
-                </button>
-                <button class="subQuestion active scorable-item" onclick="goToQuestion(17)">
-                    <span class="sr-only">Question 17</span>
-                    <span aria-hidden="true">17</span>
-                </button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(18)">
-                    <span class="sr-only">Question 18</span>
-                    <span aria-hidden="true">18</span>
-                </button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(19)">
-                    <span class="sr-only">Question 19</span>
-                    <span aria-hidden="true">19</span>
-                </button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(20)">
-                    <span class="sr-only">Question 20</span>
-                    <span aria-hidden="true">20</span>
-                </button>
-            </div>
-        </div>
-        
-        <div class="footer__questionWrapper___1tZ46 multiple" role="tablist">
-            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(3)">
-                <span>
-                    <span aria-hidden="true" class="section-prefix">Part </span>
-                    <span class="sectionNr" aria-hidden="true">3</span>
-                    <span class="attemptedCount" aria-hidden="true">0 of 10</span>
-                </span>
-            </button>
-            <div class="footer__subquestionWrapper___9GgoP">
-                <button class="subQuestion scorable-item" onclick="goToQuestion(21)"><span class="sr-only">Question 21</span><span aria-hidden="true">21</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(22)"><span class="sr-only">Question 22</span><span aria-hidden="true">22</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(23)"><span class="sr-only">Question 23</span><span aria-hidden="true">23</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(24)"><span class="sr-only">Question 24</span><span aria-hidden="true">24</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(25)"><span class="sr-only">Question 25</span><span aria-hidden="true">25</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(26)"><span class="sr-only">Question 26</span><span aria-hidden="true">26</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(27)"><span class="sr-only">Question 27</span><span aria-hidden="true">27</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(28)"><span class="sr-only">Question 28</span><span aria-hidden="true">28</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(29)"><span class="sr-only">Question 29</span><span aria-hidden="true">29</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(30)"><span class="sr-only">Question 30</span><span aria-hidden="true">30</span></button>
-            </div>
-        </div>
-        
-        <div class="footer__questionWrapper___1tZ46 multiple" role="tablist">
-            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(4)">
-                <span>
-                    <span aria-hidden="true" class="section-prefix">Part </span>
-                    <span class="sectionNr" aria-hidden="true">4</span>
-                    <span class="attemptedCount" aria-hidden="true">0 of 10</span>
-                </span>
-            </button>
-            <div class="footer__subquestionWrapper___9GgoP">
-                <button class="subQuestion scorable-item" onclick="goToQuestion(31)"><span class="sr-only">Question 31</span><span aria-hidden="true">31</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(32)"><span class="sr-only">Question 32</span><span aria-hidden="true">32</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(33)"><span class="sr-only">Question 33</span><span aria-hidden="true">33</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(34)"><span class="sr-only">Question 34</span><span aria-hidden="true">34</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(35)"><span class="sr-only">Question 35</span><span aria-hidden="true">35</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(36)"><span class="sr-only">Question 36</span><span aria-hidden="true">36</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(37)"><span class="sr-only">Question 37</span><span aria-hidden="true">37</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(38)"><span class="sr-only">Question 38</span><span aria-hidden="true">38</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(39)"><span class="sr-only">Question 39</span><span aria-hidden="true">39</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(40)"><span class="sr-only">Question 40</span><span aria-hidden="true">40</span></button>
-            </div>
-        </div>
-        
-        <button id="deliver-button" aria-label="Submit your test" class="footer__deliverButton___3FM07">
-            <i class="fa fa-paper-plane" aria-hidden="true"></i>
-            <span>Submit Test</span>
-        </button>
-    </nav>
-
-    <!-- Context Menu -->
-    <div id="contextMenu" class="context-menu">
-        <div class="context-menu-item" id="highlight-item" onclick="highlightText()">
-            <span class="context-menu-icon">
-                <svg viewBox="0 0 24 24" fill="black"><path d="M15.24 12.32L12.28 9.36l-1.04 1.04-1.04-1.04-1.04 1.04-1.04-1.04-1.04 1.04-1.04-1.04-3.12 3.12c-.59.58-1.54.58-2.12 0l-1.04-1.04c-.58-.59-.58-1.54 0-2.12L7.88.88c.59-.58 1.54-.58 2.12 0l1.04 1.04 1.04-1.04 1.04 1.04 1.04-1.04 1.04 1.04 1.04-1.04 3.12 3.12c.58.59.58 1.54 0 2.12l-1.04 1.04c-.58.59-1.54.59-2.12 0zM12 15l-3 3-7-7 3-3 7 7zm-9-5l-2.29 2.29c-.39.39-.39 1.02 0 1.41l8.29 8.29c.39.39 1.02.39 1.41 0L22.7 8.41c.39-.39.39-1.02 0-1.41L14.42.29c-.39-.39-1.02-.39-1.41 0L3 10z"/></svg>
-            </span>
-            <span>Highlight</span>
-        </div>
-        <div class="context-menu-item" id="comment-item" onclick="addComment()">
-            <span class="context-menu-icon">
-                <svg viewBox="0 0 24 24" fill="black"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 12H5.17L4 15.17V4h16v10z"/></svg>
-            </span>
-            <span>Comment</span>
-        </div>
-        <div class="context-menu-item" id="clear-item" onclick="clearHighlight()" style="display:none;">
-            <span class="context-menu-icon">
-                <svg viewBox="0 0 24 24" fill="black"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-            </span>
-            <span>Clear</span>
-        </div>
-        <div class="context-menu-item" onclick="clearAllHighlights()">
-            <span class="context-menu-icon">
-                <svg viewBox="0 0 24 24" fill="black"><path d="M16 9h-2.29l3-3-1.42-1.42-3 3V5h-2v2.29l-3-3-1.42 1.42 3 3H5v2h2.29l-3 3 1.42 1.42 3-3V17h2v-2.29l3 3 1.42-1.42-3-3H17V9h-2zm-4 4h-2v-2h2v2z"/></svg>
-            </span>
-            <span>Clear All</span>
-        </div>
-    </div>
-
-    <!-- Mobile highlight/comment toolbar -->
-    <div id="mobile-selection-menu" class="mobile-selection-menu hidden">
-        <button onclick="highlightText()">Highlight</button>
-        <button onclick="addComment()">Comment</button>
-    </div>
-
-    <!-- Result Modal -->
-    <div id="result-modal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Your Results</h2>
-                <button id="modal-close-button" class="modal-close-btn">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p id="score-summary"></p>
-                <div id="result-details"></div>
-            </div>
-        </div>
-    </div>
-
     <!-- Audio Start Popup -->
     <div id="audio-popup" class="audio-popup-overlay">
         <div class="audio-popup-content">
@@ -877,6 +693,54 @@ That is the end of the listening test. In the test, you will now have 10 minutes
             <i class="fa fa-check" aria-hidden="true"></i>
         </button>
     </nav>
+
+    <!-- Context Menu -->
+    <div id="contextMenu" class="context-menu">
+        <div class="context-menu-item" id="highlight-item" onclick="highlightText()">
+            <span class="context-menu-icon">
+                <svg viewBox="0 0 24 24" fill="black"><path d="M15.24 12.32L12.28 9.36l-1.04 1.04-1.04-1.04-1.04 1.04-1.04-1.04-1.04 1.04-1.04-1.04-3.12 3.12c-.59.58-1.54.58-2.12 0l-1.04-1.04c-.58-.59-.58-1.54 0-2.12L7.88.88c.59-.58 1.54-.58 2.12 0l1.04 1.04 1.04-1.04 1.04 1.04 1.04-1.04 1.04 1.04 1.04-1.04 3.12 3.12c.58.59.58 1.54 0 2.12l-1.04 1.04c-.58.59-1.54.59-2.12 0zM12 15l-3 3-7-7 3-3 7 7zm-9-5l-2.29 2.29c-.39.39-.39 1.02 0 1.41l8.29 8.29c.39.39 1.02.39 1.41 0L22.7 8.41c.39-.39.39-1.02 0-1.41L14.42.29c-.39-.39-1.02-.39-1.41 0L3 10z"/></svg>
+            </span>
+            <span>Highlight</span>
+        </div>
+        <div class="context-menu-item" id="comment-item" onclick="addComment()">
+            <span class="context-menu-icon">
+                <svg viewBox="0 0 24 24" fill="black"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 12H5.17L4 15.17V4h16v10z"/></svg>
+            </span>
+            <span>Comment</span>
+        </div>
+        <div class="context-menu-item" id="clear-item" onclick="clearHighlight()" style="display:none;">
+            <span class="context-menu-icon">
+                <svg viewBox="0 0 24 24" fill="black"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            </span>
+            <span>Clear</span>
+        </div>
+        <div class="context-menu-item" onclick="clearAllHighlights()">
+            <span class="context-menu-icon">
+                <svg viewBox="0 0 24 24" fill="black"><path d="M16 9h-2.29l3-3-1.42-1.42-3 3V5h-2v2.29l-3-3-1.42 1.42 3 3H5v2h2.29l-3 3 1.42 1.42 3-3V17h2v-2.29l3 3 1.42-1.42-3-3H17V9h-2zm-4 4h-2v-2h2v2z"/></svg>
+            </span>
+            <span>Clear All</span>
+        </div>
+    </div>
+
+    <!-- Mobile highlight/comment toolbar -->
+    <div id="mobile-selection-menu" class="mobile-selection-menu hidden">
+        <button onclick="highlightText()">Highlight</button>
+        <button onclick="addComment()">Comment</button>
+    </div>
+
+    <!-- Result Modal -->
+    <div id="result-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Your Results</h2>
+                <button id="modal-close-button" class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="score-summary"></p>
+                <div id="result-details"></div>
+            </div>
+        </div>
+    </div>
 
     <!-- Context Menu -->
     <div id="contextMenu" class="context-menu">

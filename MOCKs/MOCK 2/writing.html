@@ -4,51 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Innovative Centre MOCK 2 - Writing Practice</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../assets/css/writing.css">
     <!-- Writing-specific CSS modules will be loaded here -->
     <link rel="icon" href="../../assets/icons/innovativecentre.png">
-
-
-    </head>
+</head>
 <body data-test-version="1" data-skill="writing" data-mock="2">
-    <script src="../../assets/js/distraction-free.js"></script>
     <div class="header">
+        <!-- Left side - IELTS Logo and Test Taker Info -->
         <div class="header-left">
-            <div class="innovative-centre-logo">Innovative Centre</div>
-            <div class="test-taker-info">Test taker ID</div>
+            <div class="ielts-logo">Innovative Centre</div>
+            <div class="test-taker-info">
+                <div>Test Taker ID: 123456789</div>
+                <div>INNOVATIVE CENTRE</div>
+            </div>
         </div>
+
+        <!-- Center - Timer -->
         <div class="timer-container">
-            <span class="timer-display">60:00</span>
-            <div class="timer-controls">
-                <button id="timer-toggle-btn" title="Pause/Resume Timer">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8 5v14l11-7L8 5z"/></svg>
-                </button>
-                <button id="timer-reset-btn" title="Reset Timer">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
-                </button>
+            <div class="timer-display" onclick="showTimerTooltip()">60:00</div>
+            <div class="timer-tooltip" id="timerTooltip">
+                <p>You have 60 minutes to complete both Writing Task 1 and Task 2</p>
+                <div class="timer-controls">
+                    <button onclick="startTimer()">Start Timer</button>
+                    <button onclick="pauseTimer()">Pause</button>
+                    <button onclick="resumeTimer()">Resume</button>
+                    <button onclick="resetTimer()">Reset</button>
+                </div>
             </div>
         </div>
+
+        <!-- Right side - Icons -->
         <div class="header-right">
-            <div class="wifi-indicator" title="WiFi Status">
-                <div class="wifi-icon connected">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.07 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>
-                    </svg>
-                </div>
+            <div class="wifi-indicator">
+                <i class="fa fa-wifi"></i>
             </div>
-            <div class="bell-notification" title="Notifications">
-                <div class="bell-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
-                    </svg>
-                </div>
+            <div class="bell-notification" onclick="showNotifications()">
+                <i class="fa fa-bell-o"></i>
             </div>
-            <div class="options-menu" title="Options">
-                <div class="options-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </div>
+            <div class="options-menu" onclick="toggleOptionsMenu()">
+                <i class="fa fa-bars"></i>
             </div>
         </div>
     </div>
@@ -172,11 +167,10 @@
     </div>
 
     <!-- Load JavaScript modules -->
-    <script src="../../assets/js/core.js"></script>
-<script src="../../assets/js/session-manager.js"></script>
-    <script src="../../assets/js/answer-loader.js"></script>
+    <script src="../../assets/js/writing/writing-handler.js"></script>
     <script src="../../assets/js/answer-manager.js"></script>
     <script src="../../assets/js/universal-functions.js"></script>
-    <script src="../../assets/js/writing/writing-handler.js"></script>
+    <script src="../../assets/js/distraction-free.js"></script>
+    <script src="../../assets/js/session-manager.js"></script>
 </body>
 </html>

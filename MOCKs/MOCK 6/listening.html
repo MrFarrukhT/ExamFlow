@@ -4,23 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Innovative Centre MOCK 6 - Listening Practice</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../assets/css/listening.css">
     <link rel="icon" href="../../assets/icons/innovativecentre.png">
-
-<link rel="stylesheet" href="../../assets/css/listening.css">
 
     </head>
 <body data-test-version="1" data-skill="listening" data-mock="6">
-    <script src="../../assets/js/distraction-free.js"></script>
     <div class="header">
-        <div class="logo">Innovative Centre</div>
-        <div class="timer-container">
-            <span class="timer-display">60:00</span>
+        <div class="header-left">
+            <div class="ielts-logo">Innovative Centre</div>
+            <div class="test-taker-info">
+                <div>Test taker ID</div>
+                <div class="test-taker-id"><strong>005</strong></div>
+            </div>
         </div>
-        <div class="header-icons">
-            <div class="header-icon wifi-icon" title="WiFi Connection" onclick="showWifiModal()"></div>
-            <div class="header-icon bell-icon" title="Messages/Errors" onclick="showBellModal()"></div>
-            <div class="header-icon options-icon" title="Options" onclick="showOptionsModal()"></div>
-            <div class="header-icon notes-icon" title="Notes" onclick="showNotesModal()"></div>
+        <div class="timer-container">
+            <span class="timer-display">40:00</span>
+        </div>
+        <div class="header-right">
+            <div class="wifi-indicator" title="WiFi Status">
+                <i class="fa fa-wifi" aria-hidden="true"></i>
+            </div>
+            <div class="bell-notification" title="Notifications">
+                <i class="fa fa-bell-o" aria-hidden="true"></i>
+            </div>
+            <div class="options-menu" title="Options" onclick="toggleOptionsMenu()">
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </div>
         </div>
     </div>
 
@@ -594,18 +604,24 @@ That is the end of the listening test. In the test, you will now have 10 minutes
     <!-- Audio Start Popup -->
     <div id="audio-popup" class="audio-popup-overlay">
         <div class="audio-popup-content">
+            <div class="headphones-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h2v-5H6v-5c0-3.87 3.13-7 7-7s7 3.13 7 7v5h-2v5h2c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"/>
+                </svg>
+            </div>
             <h2>Listening Test</h2>
-            <p>You are about to start the listening test. The audio will play automatically and cannot be paused or replayed. Make sure your volume is at a comfortable level.</p>
+            <p>You will be listening to an audio clip during this test. You will <strong>not</strong> be permitted to pause or rewind the audio while answering the questions.</p>
+            <p>To continue, click Play.</p>
             <button id="start-listening-btn" class="start-listening-btn" onclick="startListeningTest()">
-                Start Listening Test
+                <div class="play-icon"></div>
+                Play
             </button>
         </div>
     </div>
 
     <audio id="global-audio-player" preload="auto" style="display: none;">
-        <source src="IC006.mp3" type="audio/mpeg">
         <source src="./IC006.mp3" type="audio/mpeg">
-        <source src="/MOCKs/MOCK 6/IC006.mp3" type="audio/mpeg">
+        <source src="IC006.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
@@ -733,8 +749,7 @@ That is the end of the listening test. In the test, you will now have 10 minutes
         </div>
         
         <button id="deliver-button" aria-label="Submit your test" class="footer__deliverButton___3FM07">
-            <i class="fa fa-paper-plane" aria-hidden="true"></i>
-            <span>Submit Test</span>
+            <i class="fa fa-check" aria-hidden="true"></i>
         </button>
     </nav>
 
@@ -787,216 +802,10 @@ That is the end of the listening test. In the test, you will now have 10 minutes
     </div>
 
 <script src="../../assets/js/listening/listening.js"></script>
+<script src="../../assets/js/answer-manager.js"></script>
+<script src="../../assets/js/universal-functions.js"></script>
+<script src="../../assets/js/distraction-free.js"></script>
 <script src="../../assets/js/session-manager.js"></script>
-
-    <!-- Header Icon Modals -->
-    <div id="wifi-modal" class="header-modal">
-        <div class="header-modal-content">
-            <button class="header-modal-close" onclick="closeModal('wifi-modal')">&times;</button>
-            <h2>WiFi Connection</h2>
-            <div class="wifi-status">
-                <div class="wifi-indicator" id="wifi-indicator"></div>
-                <span id="wifi-status-text">Connected</span>
-            </div>
-            <p>Network: <strong id="network-name">Test_Network</strong></p>
-            <p>Signal Strength: <strong id="signal-strength">Excellent</strong></p>
-            <p>Connection Type: <strong>WiFi 6</strong></p>
-        </div>
-    </div>
-
-    <div id="bell-modal" class="header-modal">
-        <div class="header-modal-content">
-            <button class="header-modal-close" onclick="closeModal('bell-modal')">&times;</button>
-            <h2>Notifications</h2>
-            <div id="notifications-list">
-                <div class="notification-item">
-                    <strong>Test Started</strong>
-                    <p>Your Listening test has begun. Good luck!</p>
-                    <div class="notification-time">2 minutes ago</div>
-                </div>
-                <div class="notification-item">
-                    <strong>System Check</strong>
-                    <p>Audio system is working properly.</p>
-                    <div class="notification-time">5 minutes ago</div>
-                </div>
-                <div class="notification-item">
-                    <strong>Welcome</strong>
-                    <p>Welcome to Innovative Centre.</p>
-                    <div class="notification-time">10 minutes ago</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="options-modal" class="header-modal fullscreen">
-        <div class="header-modal-content">
-            <button class="header-modal-close" onclick="closeModal('options-modal')">&times;</button>
-            <div class="fullscreen-options-container">
-                <button class="fullscreen-option primary" onclick="goToSubmission()">
-                    <div class="fullscreen-option-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9.78 18.65l.28-4.23l7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3L3.64 12c-.88-.25-.89-1.37.2-1.64l16.56-6.4c.75-.29 1.4.22 1.2.94l-2.67 12.61c-.22.95-1.13 1.18-1.78.73l-4.5-3.32l-2.23 2.15c-.47.44-1.29.21-1.48-.37z"/>
-                        </svg>
-                    </div>
-                    <span class="fullscreen-option-text">Go to submission page</span>
-                    <svg class="fullscreen-option-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 18l6-6-6-6"/>
-                    </svg>
-                </button>
-                
-                <button class="fullscreen-option" onclick="showDarkModeOptions()">
-                    <div class="fullscreen-option-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M12 2a10 10 0 0 1 0 20" fill="currentColor"/>
-                        </svg>
-                    </div>
-                    <span class="fullscreen-option-text" id="dark-mode-text">Dark mode</span>
-                    <svg class="fullscreen-option-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 18l6-6-6-6"/>
-                    </svg>
-                </button>
-                
-                <button class="fullscreen-option" onclick="showTextSizeOptions()">
-                    <div class="fullscreen-option-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="11" cy="11" r="8"/>
-                            <path d="M21 21l-4.35-4.35"/>
-                            <path d="M11 7v8"/>
-                            <path d="M7 11h8"/>
-                        </svg>
-                    </div>
-                    <span class="fullscreen-option-text" id="text-size-text">Text size</span>
-                    <svg class="fullscreen-option-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 18l6-6-6-6"/>
-                    </svg>
-                </button>
-                
-                <button class="fullscreen-option" onclick="toggleTimerVisibility()">
-                    <div class="fullscreen-option-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                            <circle cx="12" cy="12" r="3"/>
-                            <line x1="1" y1="1" x2="23" y2="23"/>
-                        </svg>
-                    </div>
-                    <span class="fullscreen-option-text" id="timer-visibility-text">Hide or show remaining time</span>
-                    <svg class="fullscreen-option-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 18l6-6-6-6"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="dark-mode-modal" class="header-modal fullscreen">
-        <div class="header-modal-content">
-            <button class="header-modal-close" onclick="closeModal('dark-mode-modal')">&times;</button>
-            <div class="fullscreen-options-container">
-                <h2 style="text-align: center; margin-bottom: 30px; color: #333;">Choose Dark Mode</h2>
-                <button class="fullscreen-option" onclick="setDarkMode('off')">
-                    <div class="fullscreen-option-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="5"/>
-                            <line x1="12" y1="1" x2="12" y2="3"/>
-                            <line x1="12" y1="21" x2="12" y2="23"/>
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                            <line x1="1" y1="12" x2="3" y2="12"/>
-                            <line x1="21" y1="12" x2="23" y2="12"/>
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                        </svg>
-                    </div>
-                    <span class="fullscreen-option-text">Light Mode</span>
-                    <svg class="fullscreen-option-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 18l6-6-6-6"/>
-                    </svg>
-                </button>
-                
-                <button class="fullscreen-option" onclick="setDarkMode('dark')">
-                    <div class="fullscreen-option-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                        </svg>
-                    </div>
-                    <span class="fullscreen-option-text">Dark Mode</span>
-                    <svg class="fullscreen-option-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 18l6-6-6-6"/>
-                    </svg>
-                </button>
-                
-                <button class="fullscreen-option" onclick="setDarkMode('auto')">
-                    <div class="fullscreen-option-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M12 2v20"/>
-                            <path d="M12 2a10 10 0 0 1 0 20" fill="currentColor"/>
-                        </svg>
-                    </div>
-                    <span class="fullscreen-option-text">Auto (System)</span>
-                    <svg class="fullscreen-option-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 18l6-6-6-6"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="text-size-modal" class="header-modal fullscreen">
-        <div class="header-modal-content">
-            <button class="header-modal-close" onclick="closeModal('text-size-modal')">&times;</button>
-            <div class="fullscreen-options-container">
-                <h2 style="text-align: center; margin-bottom: 30px; color: #333;">Choose Text Size</h2>
-                <button class="fullscreen-option" onclick="setTextSize('small')">
-                    <div class="fullscreen-option-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <text x="12" y="16" text-anchor="middle" font-size="12" fill="currentColor">A</text>
-                        </svg>
-                    </div>
-                    <span class="fullscreen-option-text">Small</span>
-                    <svg class="fullscreen-option-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 18l6-6-6-6"/>
-                    </svg>
-                </button>
-                
-                <button class="fullscreen-option" onclick="setTextSize('medium')">
-                    <div class="fullscreen-option-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <text x="12" y="16" text-anchor="middle" font-size="14" fill="currentColor">A</text>
-                        </svg>
-                    </div>
-                    <span class="fullscreen-option-text">Medium</span>
-                    <svg class="fullscreen-option-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 18l6-6-6-6"/>
-                    </svg>
-                </button>
-                
-                <button class="fullscreen-option" onclick="setTextSize('large')">
-                    <div class="fullscreen-option-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <text x="12" y="16" text-anchor="middle" font-size="16" fill="currentColor">A</text>
-                        </svg>
-                    </div>
-                    <span class="fullscreen-option-text">Large</span>
-                    <svg class="fullscreen-option-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 18l6-6-6-6"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="notes-modal" class="header-modal">
-        <div class="header-modal-content">
-            <button class="header-modal-close" onclick="closeModal('notes-modal')">&times;</button>
-            <h2>My Notes</h2>
-            <div class="notes-panel">
-                <textarea id="notes-textarea" class="notes-textarea" placeholder="Write your notes here..."></textarea>
-                <button class="notes-save-btn" onclick="saveNotes()">Save Notes</button>
-            </div>
-        </div>
-    </div>
 
 </body>
 </html>
