@@ -66,6 +66,3 @@ C:\IELTS-Test-System\
 - Default login: admin/admin123
 - Export/import test data
 - Monitor student submissions
-
-## 📞 Support
-For technical issues, contact: [Your contact info]
