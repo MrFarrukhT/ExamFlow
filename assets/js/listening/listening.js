@@ -1339,6 +1339,48 @@
             });
         })();
 
+        // --- PREVENT BROWSER AUTOCOMPLETE ---
+        
+        function preventAutocomplete() {
+            // Generate a unique session ID to make field names unique
+            const sessionId = Date.now().toString(36) + Math.random().toString(36).substr(2);
+            
+            // Select all answer input fields
+            const answerInputs = document.querySelectorAll('.answer-input');
+            
+            console.log(`🔒 Applying autocomplete prevention to ${answerInputs.length} input fields`);
+            
+            answerInputs.forEach((input, index) => {
+                // Add autocomplete attribute to prevent browser suggestions
+                input.setAttribute('autocomplete', 'one-time-code');
+                
+                // Add a unique name attribute with session ID to prevent cross-session matching
+                const uniqueName = `answer_${sessionId}_${input.id || index}`;
+                input.setAttribute('name', uniqueName);
+                
+                // Make input readonly initially to prevent autocomplete dropdown
+                input.setAttribute('readonly', true);
+                
+                // Remove readonly when user focuses on the field
+                input.addEventListener('focus', function() {
+                    this.removeAttribute('readonly');
+                });
+                
+                // Re-add readonly when user leaves the field (optional, helps prevent suggestions)
+                input.addEventListener('blur', function() {
+                    // Only add readonly back if the field is empty
+                    // This prevents issues with navigation between fields
+                    if (!this.value) {
+                        this.setAttribute('readonly', true);
+                    }
+                });
+            });
+            
+            console.log(`✅ Autocomplete prevention applied successfully`);
+        }
+
+        // --- PAGE INITIALIZATION ---
+
 
         document.addEventListener('DOMContentLoaded', () => {
             // Scroll to top on page load
@@ -1349,6 +1391,9 @@
             if (leftPanel) {
                 leftPanel.scrollTo(0, 0);
             }
+            
+            // Prevent browser autocomplete
+            preventAutocomplete();
             
             switchToPart(1);
             goToQuestion(1);

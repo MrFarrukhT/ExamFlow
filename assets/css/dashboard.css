@@ -5,202 +5,310 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: #f5f7fa;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background: #f5f5f5;
     min-height: 100vh;
-    color: #2c3e50;
+    color: #333333;
 }
 
-.container {
-    max-width: 1200px;
+.dashboard-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Styles */
+.dashboard-header {
+    background: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.header-content {
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 2rem;
-}
-
-.header {
-    background: white;
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
+    padding: 0 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.student-info h2 {
-    color: #2c3e50;
-    font-size: 1.8rem;
-    margin-bottom: 0.5rem;
+.header-logo {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
 }
 
-.student-info p, .test-info p {
-    color: #7f8c8d;
-    font-size: 1.1rem;
-}
-
-.modules-container {
-    background: white;
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
-}
-
-.modules-container h3 {
-    text-align: center;
-    margin-bottom: 2rem;
-    color: #2c3e50;
-    font-size: 1.5rem;
-}
-
-.modules-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+.header-right {
+    display: flex;
+    align-items: center;
     gap: 2rem;
-    margin-bottom: 2rem;
 }
 
-.module-card {
-    background: #f8f9fa;
-    border: 2px solid #e9ecef;
-    border-radius: 12px;
-    padding: 2rem;
-    text-align: center;
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-.module-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    border-color: #667eea;
-}
-
-.module-card.in-progress {
-    border-color: #f39c12;
-    background: linear-gradient(135deg, #fef9e7 0%, #fcf3cf 100%);
-}
-
-.module-card.completed {
-    border-color: #27ae60;
-    background: linear-gradient(135deg, #eafaf1 0%, #d5f4e6 100%);
-}
-
-.module-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-}
-
-.module-card h4 {
-    font-size: 1.4rem;
-    margin-bottom: 0.5rem;
-    color: #2c3e50;
-}
-
-.module-card .duration {
-    color: #7f8c8d;
-    font-size: 1rem;
-    margin-bottom: 1rem;
-}
-
-.status {
+.mock-badge {
+    background: #e3f2fd;
+    color: #1976d2;
     padding: 0.5rem 1rem;
     border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 600;
-    margin-bottom: 1.5rem;
+}
+
+.admin-link-header {
+    color: #1976d2;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    cursor: pointer;
+}
+
+.admin-link-header:hover {
+    color: #1565c0;
+    text-decoration: underline;
+}
+
+/* Main Content */
+.dashboard-main {
+    flex: 1;
+    padding: 2rem 0;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Welcome Section */
+.welcome-section {
+    background: #ffffff;
+    padding: 1.5rem 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.welcome-title {
+    font-size: 1.75rem;
+    font-weight: 400;
+    color: #333333;
+    margin-bottom: 0.35rem;
+}
+
+.student-id {
+    font-size: 0.95rem;
+    color: #666666;
+}
+
+/* Modules Section */
+.modules-section {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Module Cards */
+.module-card {
+    background: #fffef5;
+    border: 2px solid #f9a825;
+    border-radius: 8px;
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.module-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.module-card.in-progress {
+    border-color: #f9a825;
+    background: #fffef5;
+}
+
+.module-card.completed {
+    border-color: #4caf50;
+    background: #f1f8f4;
+    opacity: 0.8;
+}
+
+.module-title {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.35rem;
+}
+
+.module-duration {
+    color: #757575;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+/* Status Badge */
+.status-badge {
     display: inline-block;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
 }
 
-.status:not(.in-progress):not(.completed) {
-    background: #ecf0f1;
-    color: #7f8c8d;
+.status-badge.not-started {
+    background: #e0e0e0;
+    color: #666666;
 }
 
-.status.in-progress {
-    background: #f39c12;
-    color: white;
+.status-badge.in-progress {
+    background: #f9a825;
+    color: #ffffff;
 }
 
-.status.completed {
-    background: #27ae60;
-    color: white;
+.status-badge.completed {
+    background: #4caf50;
+    color: #ffffff;
 }
 
+/* Module Button */
 .module-button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #5c6bc0;
     color: white;
     border: none;
-    padding: 0.875rem 2rem;
-    border-radius: 8px;
-    font-size: 1rem;
+    padding: 0.75rem 2rem;
+    border-radius: 4px;
+    font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     width: 100%;
+    max-width: 260px;
 }
 
 .module-button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+    background: #3949ab;
+    box-shadow: 0 4px 12px rgba(92, 107, 192, 0.3);
+}
+
+.module-button:active:not(:disabled) {
+    transform: translateY(1px);
 }
 
 .module-button:disabled {
-    background: #95a5a6;
+    background: #9e9e9e;
     cursor: not-allowed;
+    opacity: 0.6;
 }
 
-.progress-section {
-    background: white;
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.progress-section h4 {
-    margin-bottom: 1rem;
-    color: #2c3e50;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 12px;
-    background: #ecf0f1;
-    border-radius: 6px;
-    overflow: hidden;
-    margin-bottom: 1rem;
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    transition: width 0.3s ease;
-    width: 0%;
-}
-
-#progressText {
-    color: #7f8c8d;
-    font-size: 1rem;
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .modules-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
 }
 
 @media (max-width: 768px) {
     .container {
-        padding: 1rem;
+        padding: 0 1.5rem;
     }
     
-    .header {
+    .header-content {
+        padding: 0 1.5rem;
         flex-direction: column;
-        text-align: center;
-        gap: 1rem;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+    
+    .header-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .header-logo {
+        height: 35px;
+    }
+    
+    .dashboard-main {
+        padding: 1.5rem 0;
+    }
+    
+    .welcome-section {
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .welcome-title {
+        font-size: 1.5rem;
+    }
+    
+    .modules-section {
+        padding: 1.5rem;
+    }
+    
+    .section-title {
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
     }
     
     .modules-grid {
         grid-template-columns: 1fr;
-        gap: 1rem;
+        gap: 1.25rem;
     }
     
     .module-card {
-        padding: 1.5rem;
+        padding: 1.25rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-content {
+        padding: 0 1rem;
+    }
+    
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .welcome-section {
+        padding: 1rem;
+    }
+    
+    .welcome-title {
+        font-size: 1.35rem;
+    }
+    
+    .modules-section {
+        padding: 1.25rem 1rem;
+    }
+    
+    .module-title {
+        font-size: 1.2rem;
     }
 }

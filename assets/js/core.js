@@ -125,6 +125,8 @@ async function loadAnswers() {
             // Continue with rest of initialization
             console.log('🔄 Starting timer...');
             startTimer();
+            console.log('🔄 Preventing browser autocomplete...');
+            preventAutocomplete();
             console.log('🔄 Initializing drag and drop...');
             initializeDragAndDrop();
             console.log('🔄 Setting up checkbox limits...');
@@ -254,6 +256,46 @@ async function loadAnswers() {
             if (contextMenu) {
                 initializeContextMenu();
             }
+        }
+
+        // --- PREVENT BROWSER AUTOCOMPLETE ---
+        
+        function preventAutocomplete() {
+            // Generate a unique session ID to make field names unique
+            const sessionId = Date.now().toString(36) + Math.random().toString(36).substr(2);
+            
+            // Select all answer input fields and textareas
+            const answerInputs = document.querySelectorAll('.answer-input, textarea');
+            
+            console.log(`🔒 Applying autocomplete prevention to ${answerInputs.length} input fields and textareas`);
+            
+            answerInputs.forEach((input, index) => {
+                // Add autocomplete attribute to prevent browser suggestions
+                input.setAttribute('autocomplete', 'one-time-code');
+                
+                // Add a unique name attribute with session ID to prevent cross-session matching
+                const uniqueName = `answer_${sessionId}_${input.id || index}`;
+                input.setAttribute('name', uniqueName);
+                
+                // Make input readonly initially to prevent autocomplete dropdown
+                input.setAttribute('readonly', true);
+                
+                // Remove readonly when user focuses on the field
+                input.addEventListener('focus', function() {
+                    this.removeAttribute('readonly');
+                });
+                
+                // Re-add readonly when user leaves the field (optional, helps prevent suggestions)
+                input.addEventListener('blur', function() {
+                    // Only add readonly back if the field is empty
+                    // This prevents issues with navigation between fields
+                    if (!this.value) {
+                        this.setAttribute('readonly', true);
+                    }
+                });
+            });
+            
+            console.log(`✅ Autocomplete prevention applied successfully`);
         }
 
         // --- CORE TEST LOGIC ---
@@ -1539,6 +1581,38 @@ async function loadAnswers() {
         window.highlightText = () => {
             if (selectedRange && !selectedRange.collapsed) {
                 try {
+                    // Check if selection spans multiple paragraphs
+                    const startContainer = selectedRange.startContainer;
+                    const endContainer = selectedRange.endContainer;
+                    
+                    // Find parent paragraph elements
+                    const startParagraph = startContainer.nodeType === Node.TEXT_NODE 
+                        ? startContainer.parentElement.closest('p') 
+                        : startContainer.closest('p');
+                    const endParagraph = endContainer.nodeType === Node.TEXT_NODE 
+                        ? endContainer.parentElement.closest('p') 
+                        : endContainer.closest('p');
+                    
+                    // If selection spans multiple paragraphs, restrict to first paragraph only
+                    if (startParagraph && endParagraph && startParagraph !== endParagraph) {
+                        console.log('Multi-paragraph selection detected. Restricting to first paragraph only.');
+                        
+                        // Create a new range that ends at the end of the first paragraph
+                        const restrictedRange = document.createRange();
+                        restrictedRange.setStart(selectedRange.startContainer, selectedRange.startOffset);
+                        
+                        // Set end to the last text node in the start paragraph
+                        const lastTextNode = getLastTextNode(startParagraph);
+                        if (lastTextNode) {
+                            restrictedRange.setEnd(lastTextNode, lastTextNode.length);
+                        } else {
+                            restrictedRange.setEndAfter(startParagraph.lastChild || startParagraph);
+                        }
+                        
+                        // Use the restricted range
+                        selectedRange = restrictedRange;
+                    }
+                    
                     const span = document.createElement('span');
                     span.className = 'highlight';
 
@@ -1566,6 +1640,30 @@ async function loadAnswers() {
             closeContextMenu();
             window.getSelection().removeAllRanges();
         };
+        
+        // Helper function to get the last text node in an element
+        function getLastTextNode(element) {
+            let lastText = null;
+            const walker = document.createTreeWalker(
+                element,
+                NodeFilter.SHOW_TEXT,
+                {
+                    acceptNode: function(node) {
+                        // Skip empty or whitespace-only text nodes
+                        if (node.textContent.trim().length > 0) {
+                            return NodeFilter.FILTER_ACCEPT;
+                        }
+                        return NodeFilter.FILTER_SKIP;
+                    }
+                }
+            );
+            
+            while (walker.nextNode()) {
+                lastText = walker.currentNode;
+            }
+            
+            return lastText;
+        }
 
         window.addNote = () => {
             const note = prompt('Enter your note:');

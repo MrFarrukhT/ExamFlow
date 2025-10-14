@@ -40,7 +40,24 @@
             color: #333333;
             font-weight: 900;
             font-size: 16px;
-            display: inline-block;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ielts-logo img {
+            height: 32px;
+            width: auto;
+            display: block;
+        }
+
+        /* Show black logo in light mode, white logo in dark mode */
+        .ielts-logo .logo-black {
+            display: block;
+        }
+
+        .ielts-logo .logo-white {
+            display: none;
         }
 
         .test-taker-info {
@@ -1919,6 +1936,15 @@
         body.dark-mode .test-taker-id,
         body.dark-mode .logo {
             color: #ffffff;
+        }
+
+        /* Switch logos in dark mode */
+        body.dark-mode .ielts-logo .logo-black {
+            display: none;
+        }
+
+        body.dark-mode .ielts-logo .logo-white {
+            display: block;
         }
 
         body.dark-mode .wifi-indicator .fa,

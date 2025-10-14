@@ -12,59 +12,60 @@
     <script src="assets/js/distraction-free.js"></script>
     <script src="assets/js/answer-manager.js"></script>
     
-    <div class="container">
-        <div class="header">
-            <div class="student-info">
-                <h2 id="welcomeText">Welcome, Student</h2>
-                <p id="studentDetails">ID: Loading...</p>
-            </div>
-            <div class="test-info">
-                <p id="mockInfo">Mock Test: Loading...</p>
-                <div class="invigilator-access" title="Invigilator Access" onclick="showInvigilatorLogin()" style="margin-top: 10px; cursor: pointer; opacity: 0.3; transition: opacity 0.3s; font-size: 12px; color: #666;">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="vertical-align: middle; margin-right: 4px;">
-                        <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
-                    </svg>
-                    Admin
+    <div class="dashboard-wrapper">
+        <!-- Header Section -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <img src="assets/icons/Logo Big.png" alt="Innovative Centre" class="header-logo">
+                <div class="header-right">
+                    <div class="test-info">
+                        <span id="mockInfo" class="mock-badge">Mock Test: 1</span>
+                    </div>
+                    <a href="#" onclick="showInvigilatorLogin(); return false;" class="admin-link-header">Admin</a>
                 </div>
             </div>
-        </div>
-        
-        <div class="modules-container">
-            <h3>Select a Module to Begin</h3>
-            <div class="modules-grid">
-                <div class="module-card" id="listeningCard" data-module="listening">
-                    <div class="module-icon">🎧</div>
-                    <h4>Listening</h4>
-                    <p class="duration">~30 minutes</p>
-                    <div class="status" id="listeningStatus">Not Started</div>
-                    <button class="module-button" id="listeningButton">Start Listening</button>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <div class="container">
+                <!-- Welcome Section -->
+                <div class="welcome-section">
+                    <h1 id="welcomeText" class="welcome-title">Welcome, f a</h1>
+                    <p id="studentDetails" class="student-id">ID: 21</p>
                 </div>
                 
-                <div class="module-card" id="readingCard" data-module="reading">
-                    <div class="module-icon">📖</div>
-                    <h4>Reading</h4>
-                    <p class="duration">60 minutes</p>
-                    <div class="status" id="readingStatus">Not Started</div>
-                    <button class="module-button" id="readingButton">Start Reading</button>
-                </div>
-                
-                <div class="module-card" id="writingCard" data-module="writing">
-                    <div class="module-icon">✍️</div>
-                    <h4>Writing</h4>
-                    <p class="duration">60 minutes</p>
-                    <div class="status" id="writingStatus">Not Started</div>
-                    <button class="module-button" id="writingButton">Start Writing</button>
+                <!-- Modules Section -->
+                <div class="modules-section">
+                    <h2 class="section-title">Select a Module to Begin</h2>
+                    <div class="modules-grid">
+                        <!-- Listening Module -->
+                        <div class="module-card" id="listeningCard" data-module="listening">
+                            <h3 class="module-title">Listening</h3>
+                            <p class="module-duration">~30 minutes</p>
+                            <span class="status-badge" id="listeningStatus">In Progress</span>
+                            <button class="module-button" id="listeningButton">Continue Listening</button>
+                        </div>
+                        
+                        <!-- Reading Module -->
+                        <div class="module-card" id="readingCard" data-module="reading">
+                            <h3 class="module-title">Reading</h3>
+                            <p class="module-duration">60 minutes</p>
+                            <span class="status-badge" id="readingStatus">In Progress</span>
+                            <button class="module-button" id="readingButton">Continue Reading</button>
+                        </div>
+                        
+                        <!-- Writing Module -->
+                        <div class="module-card" id="writingCard" data-module="writing">
+                            <h3 class="module-title">Writing</h3>
+                            <p class="module-duration">60 minutes</p>
+                            <span class="status-badge" id="writingStatus">In Progress</span>
+                            <button class="module-button" id="writingButton">Continue Writing</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="progress-section">
-            <h4>Test Progress</h4>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <p id="progressText">0 of 3 modules completed</p>
-        </div>
+        </main>
     </div>
 
     <script>
@@ -95,20 +96,24 @@
             modules.forEach(module => {
                 const status = localStorage.getItem(`${module}Status`) || 'not-started';
                 const card = document.getElementById(`${module}Card`);
-                const statusEl = document.getElementById(`${module}Status`);
+            const statusEl = document.getElementById(`${module}Status`);
                 const button = document.getElementById(`${module}Button`);
                 
                 if (status === 'completed') {
                     card.classList.add('completed');
                     statusEl.textContent = 'Completed';
-                    statusEl.className = 'status completed';
+                    statusEl.className = 'status-badge completed';
                     button.textContent = 'Completed ✓';
                     button.disabled = true;
                 } else if (status === 'in-progress') {
                     card.classList.add('in-progress');
                     statusEl.textContent = 'In Progress';
-                    statusEl.className = 'status in-progress';
+                    statusEl.className = 'status-badge in-progress';
                     button.textContent = `Continue ${module.charAt(0).toUpperCase() + module.slice(1)}`;
+                } else {
+                    statusEl.textContent = 'Not Started';
+                    statusEl.className = 'status-badge not-started';
+                    button.textContent = `Start ${module.charAt(0).toUpperCase() + module.slice(1)}`;
                 }
             });
         }
@@ -117,13 +122,6 @@
             const completed = ['listening', 'reading', 'writing'].filter(module => 
                 localStorage.getItem(`${module}Status`) === 'completed'
             ).length;
-            
-            const progressFill = document.getElementById('progressFill');
-            const progressText = document.getElementById('progressText');
-            
-            const percentage = (completed / 3) * 100;
-            progressFill.style.width = `${percentage}%`;
-            progressText.textContent = `${completed} of 3 modules completed`;
         }
 
         // Module button handlers

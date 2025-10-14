@@ -11,37 +11,37 @@
     <!-- Load distraction-free mode first -->
     <script src="assets/js/distraction-free.js"></script>
     
-    <div class="container">
-        <div class="innovative-centre-header">
-            <h1>Innovative Centre Test System</h1>
-            <p>Please enter your details to begin the test</p>
+    <div class="main-container">
+        <!-- Left Side - Background Image -->
+        <div class="left-panel">
+            <div class="background-image"></div>
         </div>
         
-        <div class="entry-form">
-            <div class="form-group">
-                <label for="studentId">Student ID</label>
-                <input type="text" id="studentId" placeholder="Enter your student ID (4 digits max)" required maxlength="4" pattern="[0-9]{1,4}" inputmode="numeric">
-                <small id="studentIdError" style="color: red; display: none;">Student ID must be numbers only (max 4 digits)</small>
+        <!-- Right Side - Login Form -->
+        <div class="right-panel">
+            <div class="header-section">
+                <img src="/assets/icons/Logo Big.png" alt="Innovative Centre" class="logo">
+                <a href="#" onclick="showInvigilatorLogin(); return false;" class="admin-link">Go to Admin Login →</a>
             </div>
             
-            <div class="form-group">
-                <label for="studentName">Full Name</label>
-                <input type="text" id="studentName" placeholder="Enter your full name (First Last)" required pattern="[A-Za-z]+\s+[A-Za-z]+.*" maxlength="50">
-                <small id="studentNameError" style="color: red; display: none;">Please enter at least first name and surname (letters only, max 50 characters)</small>
-            </div>
-            
-            <button id="startTest" class="start-button">Start Test</button>
-        </div>
-        
-        <div class="footer">
-            <p>Make sure you have a stable internet connection</p>
-            <div style="margin-top: 20px; text-align: center;">
-                <button onclick="showInvigilatorLogin()" style="background: none; border: 1px solid #ccc; color: #666; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; opacity: 0.6; transition: opacity 0.3s;">
-                    <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="vertical-align: middle; margin-right: 3px;">
-                        <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
-                    </svg>
-                    Admin Access
-                </button>
+            <div class="login-container">
+                <h1 class="welcome-title">Welcome to Candidate login!</h1>
+                
+                <div class="entry-form">
+                    <div class="form-group">
+                        <input type="text" id="studentId" placeholder="Enter your student ID" required maxlength="4" pattern="[0-9]{1,4}" inputmode="numeric">
+                        <small id="studentIdError" style="color: #d32f2f; display: none; font-size: 0.875rem; margin-top: 4px;">Student ID must be numbers only (max 4 digits)</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="text" id="studentName" placeholder="Full Name" required pattern="[A-Za-z]+\s+[A-Za-z]+.*" maxlength="50">
+                        <small id="studentNameError" style="color: #d32f2f; display: none; font-size: 0.875rem; margin-top: 4px;">Please enter at least first name and surname (letters only, max 50 characters)</small>
+                    </div>
+                    
+                    <button id="startTest" class="login-button">Login</button>
+                </div>
+                
+                <p class="footer-text">Trouble logging in? Contact your invigilator.</p>
             </div>
         </div>
     </div>

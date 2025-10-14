@@ -42,10 +42,25 @@ body {
 }
 
 .ielts-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     color: #333333;
     font-weight: 900;
     font-size: 16px;
-    display: inline-block;
+}
+
+.ielts-logo img {
+    height: 32px;
+    width: auto;
+}
+
+.ielts-logo .logo-black {
+    display: block;
+}
+
+.ielts-logo .logo-white {
+    display: none;
 }
 
 .test-taker-info {
@@ -1181,6 +1196,14 @@ body.dark-mode .ielts-logo,
 body.dark-mode .test-taker-info,
 body.dark-mode .test-taker-id {
     color: #ffffff;
+}
+
+body.dark-mode .ielts-logo .logo-black {
+    display: none;
+}
+
+body.dark-mode .ielts-logo .logo-white {
+    display: block;
 }
 
 /* Dark mode for icons */
