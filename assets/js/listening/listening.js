@@ -411,6 +411,15 @@
                 }
             }
 
+            // Scroll to the top of the page when switching parts
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Also scroll the left-panel to top (in case it has its own scroll)
+            const leftPanel = document.querySelector('.left-panel');
+            if (leftPanel) {
+                leftPanel.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
             updateNavigation();
         }
 
@@ -1332,6 +1341,15 @@
 
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Scroll to top on page load
+            window.scrollTo(0, 0);
+            
+            // Also scroll the left-panel to top
+            const leftPanel = document.querySelector('.left-panel');
+            if (leftPanel) {
+                leftPanel.scrollTo(0, 0);
+            }
+            
             switchToPart(1);
             goToQuestion(1);
             setupCheckboxLimits();
@@ -1936,6 +1954,15 @@
                 console.log('🎵 Hiding popup...');
                 popup.style.display = 'none';
                 popup.classList.add('hidden');
+            }
+            
+            // Scroll to top when test starts
+            window.scrollTo(0, 0);
+            
+            // Also scroll the left-panel to top
+            const leftPanel = document.querySelector('.left-panel');
+            if (leftPanel) {
+                leftPanel.scrollTo(0, 0);
             }
             
             // Reset and load the audio

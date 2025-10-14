@@ -417,7 +417,7 @@
         /* Left Panel */
         .left-panel {
             width: 100%;
-            padding: 20px;
+            padding: 15px;
             transition: width 0.4s ease;
         }
 
@@ -984,7 +984,7 @@
             margin-top: 0;
         }
         .question-prompt {
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
         .question ul {
             list-style: none;
@@ -1119,13 +1119,13 @@
         }
         .part-header {
             background-color: #f1f2ec;
-            padding: 15px;
+            padding: 10px 15px;
             border-radius: 5px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border: 1px solid #e0e0e0;
         }
         .part-header p {
-            margin: 0;
+            margin: 2px 0;
         }
 
         .question li.correct {
