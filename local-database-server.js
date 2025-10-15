@@ -431,6 +431,82 @@ app.delete('/mock-answers', async (req, res) => {
     }
 });
 
+// ============================================
+// CAMBRIDGE TEST SYSTEM ENDPOINTS
+// ============================================
+
+// Save Cambridge test submission
+app.post('/api/cambridge-submissions', async (req, res) => {
+    try {
+        const data = req.body;
+        console.log(`📝 Cambridge: Saving ${data.module} for ${data.studentName} (${data.level})`);
+
+        const dbClient = await ensureConnection();
+        const result = await dbClient.query(`
+            INSERT INTO cambridge_submissions
+            (student_id, student_name, level, module, answers, score, start_time, end_time)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            RETURNING id
+        `, [data.studentId, data.studentName, data.level, data.module,
+            JSON.stringify(data.answers), data.score || 0, data.startTime, data.endTime]);
+
+        console.log(`✅ Cambridge submission saved with ID: ${result.rows[0].id}`);
+
+        res.json({
+            success: true,
+            message: 'Cambridge test saved successfully',
+            id: result.rows[0].id
+        });
+
+    } catch (error) {
+        console.error('❌ Cambridge save failed:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to save Cambridge submission',
+            error: error.message
+        });
+    }
+});
+
+// Get all Cambridge submissions
+app.get('/api/cambridge-submissions', async (req, res) => {
+    try {
+        const { level, module } = req.query;
+        let query = 'SELECT * FROM cambridge_submissions';
+        const params = [];
+        const conditions = [];
+
+        if (level) {
+            params.push(level);
+            conditions.push(`level = $${params.length}`);
+        }
+        if (module) {
+            params.push(module);
+            conditions.push(`module = $${params.length}`);
+        }
+        if (conditions.length > 0) {
+            query += ' WHERE ' + conditions.join(' AND ');
+        }
+        query += ' ORDER BY submission_time DESC';
+
+        const dbClient = await ensureConnection();
+        const result = await dbClient.query(query, params);
+
+        res.json({
+            success: true,
+            submissions: result.rows,
+            count: result.rows.length
+        });
+    } catch (error) {
+        console.error('Failed to fetch Cambridge submissions:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch submissions',
+            error: error.message
+        });
+    }
+});
+
 // Initialize and start server
 async function startServer() {
     try {

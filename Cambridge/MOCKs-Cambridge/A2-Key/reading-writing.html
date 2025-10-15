@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambridge A2 Key - Reading & Writing Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../../assets/css/reading.css">
+    <link rel="icon" href="../../../assets/icons/innovativecentre.png">
+    <style>
+        .header {
+            background: linear-gradient(135deg, #0066cc, #0052a3);
+        }
+        .level-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 15px;
+        }
+        .content-placeholder {
+            background: #f0f8ff;
+            border: 2px dashed #0066cc;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body data-test-version="Cambridge-A2" data-skill="reading-writing" data-level="A2-Key">
+    <div class="header">
+        <div class="header-left">
+            <div class="ielts-logo">
+                <img src="../../../assets/icons/Logo white.png" alt="Innovative Centre Logo" class="logo-white">
+                <span>Cambridge A2 Key</span>
+                <span class="level-badge">Reading & Writing</span>
+            </div>
+            <div class="test-taker-info">
+                <div>Test taker ID</div>
+                <div class="test-taker-id"><strong id="student-id-display">000</strong></div>
+            </div>
+        </div>
+        <div class="timer-container">
+            <span class="timer-display">60:00</span>
+        </div>
+        <div class="header-right">
+            <div class="wifi-indicator" title="WiFi Status">
+                <i class="fa fa-wifi connected" aria-hidden="true"></i>
+            </div>
+            <div class="bell-notification" title="Notifications">
+                <i class="fa fa-bell-o" aria-hidden="true"></i>
+            </div>
+            <div class="options-menu" title="Options" onclick="toggleOptionsMenu()">
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container" id="main-container">
+        <div id="passage-header-container">
+            <div id="part-header-1" class="part-header">
+                <p><strong>Reading Part 1</strong></p>
+                <p>Look and read. Choose the correct words.</p>
+            </div>
+            <div id="part-header-2" class="part-header hidden">
+                <p><strong>Reading Part 2</strong></p>
+                <p>Read the text and choose the correct answer.</p>
+            </div>
+            <div id="part-header-3" class="part-header hidden">
+                <p><strong>Writing Part 1</strong></p>
+                <p>Look at the pictures and complete the sentences.</p>
+            </div>
+            <div id="part-header-4" class="part-header hidden">
+                <p><strong>Writing Part 2</strong></p>
+                <p>Write about the picture.</p>
+            </div>
+        </div>
+
+        <div class="panels-container">
+            <div class="passage-panel" id="passage-panel">
+                <!-- READING PART 1 -->
+                <div id="passage-text-1" class="reading-passage">
+                    <h4 class="text-center">Part 1 - Vocabulary Matching</h4>
+                    <div class="content-placeholder">
+                        <p><strong>📝 CONTENT PLACEHOLDER</strong></p>
+                        <p>Add vocabulary matching questions here</p>
+                        <p>Example: Match words to pictures (5-6 items)</p>
+                        <p>Words like: ball, book, cat, dog, tree, car, etc.</p>
+                    </div>
+                </div>
+
+                <!-- READING PART 2 -->
+                <div id="passage-text-2" class="reading-passage hidden">
+                    <h4 class="text-center">Part 2 - Short Text Comprehension</h4>
+                    <div class="content-placeholder">
+                        <p><strong>📝 CONTENT PLACEHOLDER</strong></p>
+                        <p>Add a short story or text (50-80 words)</p>
+                        <p>Followed by 3-4 multiple choice questions</p>
+                        <p>Example: Story about a child's day at school</p>
+                    </div>
+                </div>
+
+                <!-- WRITING PART 1 -->
+                <div id="passage-text-3" class="reading-passage hidden">
+                    <h4 class="text-center">Part 3 - Sentence Completion</h4>
+                    <div class="content-placeholder">
+                        <p><strong>📝 CONTENT PLACEHOLDER</strong></p>
+                        <p>Add pictures with incomplete sentences</p>
+                        <p>Students fill in missing words (5-6 sentences)</p>
+                        <p>Example: "The cat is _____ the table." (under/on)</p>
+                    </div>
+                </div>
+
+                <!-- WRITING PART 2 -->
+                <div id="passage-text-4" class="reading-passage hidden">
+                    <h4 class="text-center">Part 4 - Picture Description</h4>
+                    <div class="content-placeholder">
+                        <p><strong>📝 CONTENT PLACEHOLDER</strong></p>
+                        <p>Add a picture scene</p>
+                        <p>Students write 2-3 simple sentences</p>
+                        <p>Example: Picture of a park with children playing</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="resizer" id="resizer"></div>
+
+            <div class="questions-panel" id="questions-panel">
+                <!-- READING PART 1 QUESTIONS -->
+                <div id="questions-1" class="question-set">
+                    <div class="questions-container">
+                        <div class="question">
+                            <div class="question-prompt">
+                                <p><strong>Questions 1–5</strong></p>
+                                <p>Look at the pictures and choose the correct word.</p>
+                            </div>
+                            <p>1. <input type="text" id="q1" class="answer-input" placeholder="Answer" autocomplete="off"></p>
+                            <p>2. <input type="text" id="q2" class="answer-input" placeholder="Answer" autocomplete="off"></p>
+                            <p>3. <input type="text" id="q3" class="answer-input" placeholder="Answer" autocomplete="off"></p>
+                            <p>4. <input type="text" id="q4" class="answer-input" placeholder="Answer" autocomplete="off"></p>
+                            <p>5. <input type="text" id="q5" class="answer-input" placeholder="Answer" autocomplete="off"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- READING PART 2 QUESTIONS -->
+                <div id="questions-2" class="question-set hidden">
+                    <div class="questions-container">
+                        <div class="question">
+                            <div class="question-prompt">
+                                <p><strong>Questions 6–10</strong></p>
+                                <p>Read the text and choose the correct answer.</p>
+                            </div>
+                            <div class="single-choice-container">
+                                <div class="single-choice">
+                                    <p><strong>6</strong> Question text here</p>
+                                    <label><input type="radio" name="q6" value="A"> A option</label>
+                                    <label><input type="radio" name="q6" value="B"> B option</label>
+                                    <label><input type="radio" name="q6" value="C"> C option</label>
+                                </div>
+                                <div class="single-choice">
+                                    <p><strong>7</strong> Question text here</p>
+                                    <label><input type="radio" name="q7" value="A"> A option</label>
+                                    <label><input type="radio" name="q7" value="B"> B option</label>
+                                    <label><input type="radio" name="q7" value="C"> C option</label>
+                                </div>
+                                <div class="single-choice">
+                                    <p><strong>8</strong> Question text here</p>
+                                    <label><input type="radio" name="q8" value="A"> A option</label>
+                                    <label><input type="radio" name="q8" value="B"> B option</label>
+                                    <label><input type="radio" name="q8" value="C"> C option</label>
+                                </div>
+                                <div class="single-choice">
+                                    <p><strong>9</strong> Question text here</p>
+                                    <label><input type="radio" name="q9" value="A"> A option</label>
+                                    <label><input type="radio" name="q9" value="B"> B option</label>
+                                    <label><input type="radio" name="q9" value="C"> C option</label>
+                                </div>
+                                <div class="single-choice">
+                                    <p><strong>10</strong> Question text here</p>
+                                    <label><input type="radio" name="q10" value="A"> A option</label>
+                                    <label><input type="radio" name="q10" value="B"> B option</label>
+                                    <label><input type="radio" name="q10" value="C"> C option</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WRITING PART 1 QUESTIONS -->
+                <div id="questions-3" class="question-set hidden">
+                    <div class="questions-container">
+                        <div class="question">
+                            <div class="question-prompt">
+                                <p><strong>Questions 11–15</strong></p>
+                                <p>Look at the pictures and complete the sentences.</p>
+                            </div>
+                            <p>11. <input type="text" id="q11" class="answer-input" placeholder="Complete the sentence" autocomplete="off" style="width: 300px;"></p>
+                            <p>12. <input type="text" id="q12" class="answer-input" placeholder="Complete the sentence" autocomplete="off" style="width: 300px;"></p>
+                            <p>13. <input type="text" id="q13" class="answer-input" placeholder="Complete the sentence" autocomplete="off" style="width: 300px;"></p>
+                            <p>14. <input type="text" id="q14" class="answer-input" placeholder="Complete the sentence" autocomplete="off" style="width: 300px;"></p>
+                            <p>15. <input type="text" id="q15" class="answer-input" placeholder="Complete the sentence" autocomplete="off" style="width: 300px;"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WRITING PART 2 QUESTIONS -->
+                <div id="questions-4" class="question-set hidden">
+                    <div class="questions-container">
+                        <div class="question">
+                            <div class="question-prompt">
+                                <p><strong>Question 16</strong></p>
+                                <p>Write about the picture. Write 20-30 words.</p>
+                            </div>
+                            <textarea id="q16" class="writing-textarea" rows="8" placeholder="Write your answer here..." autocomplete="off"></textarea>
+                            <p style="font-size: 0.9rem; color: #666; margin-top: 5px;">Word count: <span id="word-count-16">0</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Arrows -->
+    <div class="nav-arrows">
+        <button class="nav-arrow prev" onclick="previousQuestion()" id="prevBtn">‹</button>
+        <button class="nav-arrow next" onclick="nextQuestion()" id="nextBtn">›</button>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="nav-row perScorableItem" aria-label="Questions">
+        <div class="footer__questionWrapper___1tZ46 multiple" role="tablist">
+            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(1)">
+                <span>
+                    <span aria-hidden="true" class="section-prefix">Part </span>
+                    <span class="sectionNr" aria-hidden="true">1</span>
+                    <span class="attemptedCount" aria-hidden="true">0 of 5</span>
+                </span>
+            </button>
+            <div class="footer__subquestionWrapper___9GgoP">
+                <button class="subQuestion scorable-item" onclick="goToQuestion(1)"><span class="sr-only">Question 1</span><span aria-hidden="true">1</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(2)"><span class="sr-only">Question 2</span><span aria-hidden="true">2</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(3)"><span class="sr-only">Question 3</span><span aria-hidden="true">3</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(4)"><span class="sr-only">Question 4</span><span aria-hidden="true">4</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(5)"><span class="sr-only">Question 5</span><span aria-hidden="true">5</span></button>
+            </div>
+        </div>
+
+        <div class="footer__questionWrapper___1tZ46 multiple" role="tablist">
+            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(2)">
+                <span>
+                    <span aria-hidden="true" class="section-prefix">Part </span>
+                    <span class="sectionNr" aria-hidden="true">2</span>
+                    <span class="attemptedCount" aria-hidden="true">0 of 5</span>
+                </span>
+            </button>
+            <div class="footer__subquestionWrapper___9GgoP">
+                <button class="subQuestion scorable-item" onclick="goToQuestion(6)"><span class="sr-only">Question 6</span><span aria-hidden="true">6</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(7)"><span class="sr-only">Question 7</span><span aria-hidden="true">7</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(8)"><span class="sr-only">Question 8</span><span aria-hidden="true">8</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(9)"><span class="sr-only">Question 9</span><span aria-hidden="true">9</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(10)"><span class="sr-only">Question 10</span><span aria-hidden="true">10</span></button>
+            </div>
+        </div>
+
+        <div class="footer__questionWrapper___1tZ46 multiple" role="tablist">
+            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(3)">
+                <span>
+                    <span aria-hidden="true" class="section-prefix">Part </span>
+                    <span class="sectionNr" aria-hidden="true">3</span>
+                    <span class="attemptedCount" aria-hidden="true">0 of 5</span>
+                </span>
+            </button>
+            <div class="footer__subquestionWrapper___9GgoP">
+                <button class="subQuestion scorable-item" onclick="goToQuestion(11)"><span class="sr-only">Question 11</span><span aria-hidden="true">11</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(12)"><span class="sr-only">Question 12</span><span aria-hidden="true">12</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(13)"><span class="sr-only">Question 13</span><span aria-hidden="true">13</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(14)"><span class="sr-only">Question 14</span><span aria-hidden="true">14</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(15)"><span class="sr-only">Question 15</span><span aria-hidden="true">15</span></button>
+            </div>
+        </div>
+
+        <div class="footer__questionWrapper___1tZ46 multiple" role="tablist">
+            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(4)">
+                <span>
+                    <span aria-hidden="true" class="section-prefix">Part </span>
+                    <span class="sectionNr" aria-hidden="true">4</span>
+                    <span class="attemptedCount" aria-hidden="true">0 of 1</span>
+                </span>
+            </button>
+            <div class="footer__subquestionWrapper___9GgoP">
+                <button class="subQuestion scorable-item" onclick="goToQuestion(16)"><span class="sr-only">Question 16</span><span aria-hidden="true">16</span></button>
+            </div>
+        </div>
+
+        <button id="deliver-button" aria-label="Submit your test" class="footer__deliverButton___3FM07">
+            <i class="fa fa-check" aria-hidden="true"></i>
+        </button>
+    </nav>
+
+<script src="../../../assets/js/universal-functions.js"></script>
+<script src="../../../assets/js/core.js"></script>
+<script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
+<script src="../../../assets/js/distraction-free.js"></script>
+<script>
+    // Override for Cambridge
+    document.addEventListener('DOMContentLoaded', function() {
+        const studentId = localStorage.getItem('studentId');
+        if (studentId) {
+            document.getElementById('student-id-display').textContent = studentId;
+        }
+
+        // Word count for writing section
+        const textarea = document.getElementById('q16');
+        if (textarea) {
+            textarea.addEventListener('input', function() {
+                const words = this.value.trim().split(/\s+/).filter(w => w.length > 0);
+                document.getElementById('word-count-16').textContent = words.length;
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

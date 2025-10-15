@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambridge A1 Movers - Listening Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../../assets/css/listening.css">
+    <link rel="icon" href="../../../assets/icons/innovativecentre.png">
+    <style>
+        .header {
+            background: linear-gradient(135deg, #0066cc, #0052a3);
+        }
+        .level-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 15px;
+        }
+    </style>
+</head>
+<body data-test-version="Cambridge-A1" data-skill="listening" data-level="A1-Movers">
+    <div class="header">
+        <div class="header-left">
+            <div class="ielts-logo">
+                <img src="../../../assets/icons/Logo white.png" alt="Innovative Centre Logo" class="logo-white">
+                <span>Cambridge A1 Movers</span>
+                <span class="level-badge">Listening</span>
+            </div>
+            <div class="test-taker-info">
+                <div>Test taker ID</div>
+                <div class="test-taker-id"><strong id="student-id-display">000</strong></div>
+            </div>
+        </div>
+        <div class="timer-container">
+            <span class="timer-display">25:00</span>
+        </div>
+        <div class="header-right">
+            <div class="wifi-indicator" title="WiFi Status">
+                <i class="fa fa-wifi" aria-hidden="true"></i>
+            </div>
+            <div class="bell-notification" title="Notifications">
+                <i class="fa fa-bell-o" aria-hidden="true"></i>
+            </div>
+            <div class="options-menu" title="Options" onclick="toggleOptionsMenu()">
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Left Panel -->
+        <div class="left-panel">
+
+            <div id="part-1" class="question-part">
+                <div class="part-header">
+                    <p><strong>Part 1</strong></p>
+                    <p>Listen and draw lines. There is one example.</p>
+                </div>
+                <div class="questions-container">
+                    <div class="question">
+                        <div class="question-prompt">
+                            <p><strong>Questions 1–5</strong></p>
+                            <p>Listen and draw a line from each name to their favorite activity.</p>
+                            <p><em>Simple matching exercise - students match names to activities</em></p>
+                        </div>
+                        <div style="border: 1px solid #000000; padding: 20px; margin: 10px 0;">
+                            <p style="margin: 8px 0;"><strong>Example:</strong> Tom - Swimming</p>
+                            <p style="margin: 8px 0;">1. Mary - <input type="text" id="q1" class="answer-input" placeholder="Activity"></p>
+                            <p style="margin: 8px 0;">2. Peter - <input type="text" id="q2" class="answer-input" placeholder="Activity"></p>
+                            <p style="margin: 8px 0;">3. Lucy - <input type="text" id="q3" class="answer-input" placeholder="Activity"></p>
+                            <p style="margin: 8px 0;">4. John - <input type="text" id="q4" class="answer-input" placeholder="Activity"></p>
+                            <p style="margin: 8px 0;">5. Sarah - <input type="text" id="q5" class="answer-input" placeholder="Activity"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="part-2" class="question-part hidden">
+                <div class="part-header">
+                    <p><strong>Part 2</strong></p>
+                    <p>Listen and write. There is one example.</p>
+                </div>
+                <div class="questions-container">
+                    <div class="question">
+                        <div class="question-prompt">
+                            <p><strong>Questions 6–10</strong></p>
+                            <p>Listen and write a name or a number.</p>
+                        </div>
+                        <div style="border: 1px solid #000000; padding: 20px; margin: 10px 0;">
+                            <p class="centered-title" style="font-weight: bold; margin-bottom: 20px;">Birthday Party Information</p>
+
+                            <p style="margin: 8px 0;"><strong>Example:</strong> Name: Emma</p>
+                            <p style="margin: 8px 0;">6. Age: <input type="text" id="q6" class="answer-input" placeholder="6"></p>
+                            <p style="margin: 8px 0;">7. Day: <input type="text" id="q7" class="answer-input" placeholder="7"></p>
+                            <p style="margin: 8px 0;">8. Time: <input type="text" id="q8" class="answer-input" placeholder="8"></p>
+                            <p style="margin: 8px 0;">9. Number of friends: <input type="text" id="q9" class="answer-input" placeholder="9"></p>
+                            <p style="margin: 8px 0;">10. Cake flavor: <input type="text" id="q10" class="answer-input" placeholder="10"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="part-3" class="question-part hidden">
+                <div class="part-header">
+                    <p><strong>Part 3</strong></p>
+                    <p>Listen and tick the box. There is one example.</p>
+                </div>
+                <div class="questions-container">
+                    <div class="question">
+                        <div class="question-prompt">
+                            <p><strong>Questions 11–15</strong></p>
+                            <p>Where did each person go? Listen and choose the correct answer.</p>
+                        </div>
+                        <div class="single-choice-container">
+                            <div class="single-choice">
+                                <p><strong>11</strong> Where is the library?</p>
+                                <label><input type="radio" name="q11" value="A">&nbsp;&nbsp; A next to the park</label>
+                                <label><input type="radio" name="q11" value="B">&nbsp;&nbsp; B opposite the school</label>
+                                <label><input type="radio" name="q11" value="C">&nbsp;&nbsp; C behind the shop</label>
+                            </div>
+                            <div class="single-choice">
+                                <p><strong>12</strong> What is Tom wearing today?</p>
+                                <label><input type="radio" name="q12" value="A">&nbsp;&nbsp; A a blue shirt</label>
+                                <label><input type="radio" name="q12" value="B">&nbsp;&nbsp; B a red jacket</label>
+                                <label><input type="radio" name="q12" value="C">&nbsp;&nbsp; C a green sweater</label>
+                            </div>
+                            <div class="single-choice">
+                                <p><strong>13</strong> What is the weather like today?</p>
+                                <label><input type="radio" name="q13" value="A">&nbsp;&nbsp; A sunny</label>
+                                <label><input type="radio" name="q13" value="B">&nbsp;&nbsp; B rainy</label>
+                                <label><input type="radio" name="q13" value="C">&nbsp;&nbsp; C cloudy</label>
+                            </div>
+                            <div class="single-choice">
+                                <p><strong>14</strong> What did Sally eat for lunch?</p>
+                                <label><input type="radio" name="q14" value="A">&nbsp;&nbsp; A pizza</label>
+                                <label><input type="radio" name="q14" value="B">&nbsp;&nbsp; B sandwich</label>
+                                <label><input type="radio" name="q14" value="C">&nbsp;&nbsp; C salad</label>
+                            </div>
+                            <div class="single-choice">
+                                <p><strong>15</strong> What pet does Ben have?</p>
+                                <label><input type="radio" name="q15" value="A">&nbsp;&nbsp; A a cat</label>
+                                <label><input type="radio" name="q15" value="B">&nbsp;&nbsp; B a dog</label>
+                                <label><input type="radio" name="q15" value="C">&nbsp;&nbsp; C a rabbit</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="part-4" class="question-part hidden">
+                <div class="part-header">
+                    <p><strong>Part 4</strong></p>
+                    <p>Listen and color and write. There is one example.</p>
+                </div>
+                <div class="questions-container">
+                    <div class="question">
+                        <div class="question-prompt">
+                            <p><strong>Questions 16–20</strong></p>
+                            <p>Listen and answer the questions about the picture.</p>
+                        </div>
+                        <div style="border: 1px solid #000000; padding: 20px; margin: 10px 0;">
+                            <p style="margin: 8px 0;"><strong>Example:</strong> Color the sun yellow.</p>
+                            <p style="margin: 8px 0;">16. What color is the house? <input type="text" id="q16" class="answer-input" placeholder="16"></p>
+                            <p style="margin: 8px 0;">17. How many trees are there? <input type="text" id="q17" class="answer-input" placeholder="17"></p>
+                            <p style="margin: 8px 0;">18. What is the girl holding? <input type="text" id="q18" class="answer-input" placeholder="18"></p>
+                            <p style="margin: 8px 0;">19. Where is the cat? <input type="text" id="q19" class="answer-input" placeholder="19"></p>
+                            <p style="margin: 8px 0;">20. What color is the door? <input type="text" id="q20" class="answer-input" placeholder="20"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <div id="transcription-container">
+                <h2>Instructions</h2>
+                <pre id="transcription-text">This is the Cambridge A1 Movers Listening Test.
+
+For this test, you will listen to simple conversations and instructions.
+
+The test has 4 parts with 20 questions total.
+
+You will hear each recording twice.
+
+Good luck!</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Start Popup -->
+    <div id="audio-popup" class="audio-popup-overlay">
+        <div class="audio-popup-content">
+            <div class="headphones-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h2v-5H6v-5c0-3.87 3.13-7 7-7s7 3.13 7 7v5h-2v5h2c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"/>
+                </svg>
+            </div>
+            <h2>Cambridge A1 Movers Listening Test</h2>
+            <p>You will be listening to an audio clip during this test. The audio will play twice for each part.</p>
+            <p>To continue, click Play.</p>
+            <button id="start-listening-btn" class="start-listening-btn" onclick="startListeningTest()">
+                <div class="play-icon"></div>
+                Play
+            </button>
+        </div>
+    </div>
+
+    <!-- <audio id="global-audio-player" preload="auto" style="display: none;">
+        <source src="./A1-Movers-Listening.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio> -->
+
+    <!-- Navigation Arrows -->
+    <div class="nav-arrows">
+        <button class="nav-arrow" onclick="previousPart()" id="prevBtn">‹</button>
+        <button class="nav-arrow" onclick="nextPart()" id="nextBtn">›</button>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="nav-row perScorableItem" aria-label="Questions">
+        <div class="footer__questionWrapper___1tZ46 multiple" role="tablist">
+            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(1)">
+                <span>
+                    <span aria-hidden="true" class="section-prefix">Part </span>
+                    <span class="sectionNr" aria-hidden="true">1</span>
+                    <span class="attemptedCount" aria-hidden="true">0 of 5</span>
+                </span>
+            </button>
+            <div class="footer__subquestionWrapper___9GgoP">
+                <button class="subQuestion scorable-item" onclick="goToQuestion(1)"><span class="sr-only">Question 1</span><span aria-hidden="true">1</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(2)"><span class="sr-only">Question 2</span><span aria-hidden="true">2</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(3)"><span class="sr-only">Question 3</span><span aria-hidden="true">3</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(4)"><span class="sr-only">Question 4</span><span aria-hidden="true">4</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(5)"><span class="sr-only">Question 5</span><span aria-hidden="true">5</span></button>
+            </div>
+        </div>
+
+        <div class="footer__questionWrapper___1tZ46 multiple" role="tablist">
+            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(2)">
+                <span>
+                    <span aria-hidden="true" class="section-prefix">Part </span>
+                    <span class="sectionNr" aria-hidden="true">2</span>
+                    <span class="attemptedCount" aria-hidden="true">0 of 5</span>
+                </span>
+            </button>
+            <div class="footer__subquestionWrapper___9GgoP">
+                <button class="subQuestion scorable-item" onclick="goToQuestion(6)"><span class="sr-only">Question 6</span><span aria-hidden="true">6</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(7)"><span class="sr-only">Question 7</span><span aria-hidden="true">7</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(8)"><span class="sr-only">Question 8</span><span aria-hidden="true">8</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(9)"><span class="sr-only">Question 9</span><span aria-hidden="true">9</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(10)"><span class="sr-only">Question 10</span><span aria-hidden="true">10</span></button>
+            </div>
+        </div>
+
+        <div class="footer__questionWrapper___1tZ46 multiple" role="tablist">
+            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(3)">
+                <span>
+                    <span aria-hidden="true" class="section-prefix">Part </span>
+                    <span class="sectionNr" aria-hidden="true">3</span>
+                    <span class="attemptedCount" aria-hidden="true">0 of 5</span>
+                </span>
+            </button>
+            <div class="footer__subquestionWrapper___9GgoP">
+                <button class="subQuestion scorable-item" onclick="goToQuestion(11)"><span class="sr-only">Question 11</span><span aria-hidden="true">11</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(12)"><span class="sr-only">Question 12</span><span aria-hidden="true">12</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(13)"><span class="sr-only">Question 13</span><span aria-hidden="true">13</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(14)"><span class="sr-only">Question 14</span><span aria-hidden="true">14</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(15)"><span class="sr-only">Question 15</span><span aria-hidden="true">15</span></button>
+            </div>
+        </div>
+
+        <div class="footer__questionWrapper___1tZ46 multiple" role="tablist">
+            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(4)">
+                <span>
+                    <span aria-hidden="true" class="section-prefix">Part </span>
+                    <span class="sectionNr" aria-hidden="true">4</span>
+                    <span class="attemptedCount" aria-hidden="true">0 of 5</span>
+                </span>
+            </button>
+            <div class="footer__subquestionWrapper___9GgoP">
+                <button class="subQuestion scorable-item" onclick="goToQuestion(16)"><span class="sr-only">Question 16</span><span aria-hidden="true">16</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(17)"><span class="sr-only">Question 17</span><span aria-hidden="true">17</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(18)"><span class="sr-only">Question 18</span><span aria-hidden="true">18</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(19)"><span class="sr-only">Question 19</span><span aria-hidden="true">19</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(20)"><span class="sr-only">Question 20</span><span aria-hidden="true">20</span></button>
+            </div>
+        </div>
+
+        <button id="deliver-button" aria-label="Submit your test" class="footer__deliverButton___3FM07">
+            <i class="fa fa-check" aria-hidden="true"></i>
+        </button>
+    </nav>
+
+<script src="../../../assets/js/listening/listening.js"></script>
+<script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
+<script src="../../../assets/js/universal-functions.js"></script>
+<script src="../../../assets/js/distraction-free.js"></script>
+<script>
+    // Override for Cambridge
+    document.addEventListener('DOMContentLoaded', function() {
+        const studentId = localStorage.getItem('studentId');
+        if (studentId) {
+            document.getElementById('student-id-display').textContent = studentId;
+        }
+    });
+</script>
+
+</body>
+</html>

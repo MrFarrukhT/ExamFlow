@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovative Centre - Cambridge Test System</title>
+    <link rel="stylesheet" href="../assets/css/launcher.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%230066cc'/><text x='50' y='60' text-anchor='middle' fill='white' font-size='40' font-weight='bold'>IC</text></svg>">
+</head>
+<body>
+    <div class="launcher-container" style="background: linear-gradient(135deg, #0066cc, #0052a3);">
+        <div class="launcher-header">
+            <div class="logo-container">
+                <div class="app-icon">
+                    <svg viewBox="0 0 100 100" width="80" height="80">
+                        <circle cx="50" cy="50" r="45" fill="#ffffff"/>
+                        <text x="50" y="60" text-anchor="middle" fill="#0066cc" font-size="32" font-weight="bold">IC</text>
+                    </svg>
+                </div>
+                <h1>Innovative Centre</h1>
+                <p>Cambridge General English Test System</p>
+            </div>
+        </div>
+
+        <div class="launcher-content">
+            <div class="system-info">
+                <div class="info-item">
+                    <span class="info-label">Version:</span>
+                    <span class="info-value">1.0.0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Build:</span>
+                    <span class="info-value">October 2025</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Status:</span>
+                    <span class="info-value status-ready">Ready</span>
+                </div>
+            </div>
+
+            <button class="launch-button" onclick="launchApp()">
+                <div class="launch-icon">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5,3 19,12 5,21 12,12"/>
+                    </svg>
+                </div>
+                Launch Cambridge Test System
+            </button>
+
+            <div class="features-list">
+                <div class="feature-item">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22,4 12,14.01 9,11.01"/>
+                    </svg>
+                    <span>4 Levels: A1, A2, B1, B2</span>
+                </div>
+                <div class="feature-item">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                    </svg>
+                    <span>Fullscreen Mode</span>
+                </div>
+                <div class="feature-item">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <span>Secure Test Environment</span>
+                </div>
+                <div class="feature-item">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12,6 12,12 16,14"/>
+                    </svg>
+                    <span>Auto-Save & Session Management</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="launcher-footer">
+            <p>&copy; 2025 Innovative Centre. All rights reserved.</p>
+            <div style="margin-top: 10px;">
+                <button onclick="showInvigilatorLogin()" style="background: none; border: 1px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.9); padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; transition: all 0.3s;">
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="vertical-align: middle; margin-right: 3px;">
+                        <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
+                    </svg>
+                    Admin Access
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function launchApp() {
+            // Launch in fullscreen distraction-free mode
+            enterFullscreenMode();
+        }
+
+        function enterFullscreenMode() {
+            // Request fullscreen first
+            const docElement = document.documentElement;
+            const fullscreenPromise = docElement.requestFullscreen ? docElement.requestFullscreen() :
+                                    docElement.webkitRequestFullscreen ? docElement.webkitRequestFullscreen() :
+                                    docElement.mozRequestFullScreen ? docElement.mozRequestFullScreen() :
+                                    docElement.msRequestFullscreen ? docElement.msRequestFullscreen() : Promise.resolve();
+
+            // Wait for fullscreen to be established, then navigate
+            Promise.resolve(fullscreenPromise).then(() => {
+                // Small delay to ensure fullscreen is established
+                setTimeout(() => {
+                    // Enable distraction-free mode
+                    sessionStorage.setItem('distractionFreeMode', 'true');
+
+                    // Navigate to Cambridge entry page
+                    window.location.href = 'index-cambridge.html';
+                }, 100);
+            }).catch(err => {
+                console.log('Fullscreen request failed:', err);
+                // Still navigate even if fullscreen fails
+                sessionStorage.setItem('distractionFreeMode', 'true');
+                window.location.href = 'index-cambridge.html';
+            });
+        }
+
+        // Prevent refresh and context menu
+        document.addEventListener('keydown', function(e) {
+            // Prevent F5, Ctrl+R, F12
+            if (e.key === 'F5' ||
+                (e.ctrlKey && e.key === 'r') ||
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                e.preventDefault();
+            }
+        });
+
+        // Prevent right-click
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Auto-launch on Enter key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                launchApp();
+            }
+        });
+
+        // Invigilator Access Functions
+        function showInvigilatorLogin() {
+            const modal = document.getElementById('invigilator-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.style.display = 'flex';
+                modal.style.alignItems = 'center';
+                modal.style.justifyContent = 'center';
+                document.getElementById('invigilator-password').focus();
+            }
+        }
+
+        function closeInvigilatorModal() {
+            const modal = document.getElementById('invigilator-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.style.display = 'none';
+                document.getElementById('invigilator-password').value = '';
+                document.getElementById('password-error').style.display = 'none';
+            }
+        }
+
+        function verifyInvigilatorPassword() {
+            const password = document.getElementById('invigilator-password').value;
+            const correctPassword = 'InV!#2025$SecurePass';
+
+            if (password === correctPassword) {
+                // Correct password - redirect to invigilator page
+                window.location.href = '../invigilator.html';
+            } else {
+                // Wrong password
+                document.getElementById('password-error').style.display = 'block';
+                document.getElementById('invigilator-password').value = '';
+                document.getElementById('invigilator-password').focus();
+            }
+        }
+
+        // Allow Enter key to submit password in invigilator modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.getElementById('invigilator-modal') && !document.getElementById('invigilator-modal').classList.contains('hidden')) {
+                e.stopPropagation();
+                verifyInvigilatorPassword();
+            }
+        });
+    </script>
+
+    <!-- Invigilator Access Modal -->
+    <div id="invigilator-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeInvigilatorModal()">&times;</button>
+            <h2 style="margin: 0; padding: 20px 20px 10px; font-size: 20px; color: #333;">Invigilator Access</h2>
+            <div style="padding: 20px;">
+                <label for="invigilator-password" style="display: block; margin-bottom: 10px; font-weight: bold; color: #333;">Enter Password:</label>
+                <input type="password" id="invigilator-password" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;" autocomplete="off">
+                <button onclick="verifyInvigilatorPassword()" style="width: 100%; padding: 12px; background: #0066cc; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Access Invigilator Page</button>
+                <p id="password-error" style="color: red; margin-top: 10px; display: none;">Incorrect password. Please try again.</p>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-close-btn:hover {
+            color: #333;
+        }
+    </style>
+</body>
+</html>

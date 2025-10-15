@@ -33,7 +33,8 @@
       "Bash(scp:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(npm start)"
+      "Bash(npm start)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []
