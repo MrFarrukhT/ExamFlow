@@ -1387,7 +1387,7 @@ async function loadAnswers() {
                     if (timerDisplay) {
                         timerDisplay.textContent = "Time's up!";
                     }
-                    // checkAnswers(); // Disabled to prevent modal from opening automatically.
+                    checkAnswers(); // Auto-submit when time runs out
                 }
             }, 1000);
             if (timerToggleButton) {

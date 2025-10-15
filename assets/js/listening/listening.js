@@ -269,7 +269,19 @@
         let selectedRange = null;
         let draggedElement = null;
         let testStarted = false;
-        let timeInSeconds = 2400; // 40 minutes for listening test
+        
+        // Read timer from HTML display and convert to seconds
+        function getInitialTimeInSeconds() {
+            const timerDisplay = document.querySelector('.timer-display');
+            if (timerDisplay) {
+                const timeText = timerDisplay.textContent.trim();
+                const [minutes, seconds] = timeText.split(':').map(num => parseInt(num, 10));
+                return (minutes * 60) + seconds;
+            }
+            return 1920; // Default fallback to 32 minutes (32 * 60 = 1920)
+        }
+        
+        let timeInSeconds = 1920; // 32 minutes for listening test - will be updated from HTML
         let isHovering = false;
         let timerInterval;
         let contextElement = null;
@@ -1012,14 +1024,27 @@
         }
         
         function startTimer() {
+            // Re-read the timer value from HTML in case it was updated
+            timeInSeconds = getInitialTimeInSeconds();
+            
+            console.log('🔄 Starting timer with', timeInSeconds, 'seconds');
+            
             timerInterval = setInterval(() => {
                 timeInSeconds--;
                 const minutes = Math.floor(timeInSeconds / 60);
                 const seconds = timeInSeconds % 60;
-                timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                
+                // Get timer display element each time to ensure it exists
+                const timerDisplayEl = document.querySelector('.timer-display');
+                if (timerDisplayEl) {
+                    timerDisplayEl.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                }
+                
                 if (timeInSeconds <= 0) {
                     clearInterval(timerInterval);
-                    timerDisplay.textContent = "Time's up!";
+                    if (timerDisplayEl) {
+                        timerDisplayEl.textContent = "Time's up!";
+                    }
                     checkAnswers();
                 }
             }, 1000);
@@ -1383,6 +1408,13 @@
 
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Initialize timer value from HTML
+            timeInSeconds = getInitialTimeInSeconds();
+            
+            // Auto-start the timer for listening test
+            startTimer();
+            console.log('⏱️ Timer auto-started on page load');
+            
             // Scroll to top on page load
             window.scrollTo(0, 0);
             
