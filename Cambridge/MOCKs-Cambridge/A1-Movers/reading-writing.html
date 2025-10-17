@@ -8,9 +8,6 @@
     <link rel="stylesheet" href="../../../assets/css/reading.css">
     <link rel="icon" href="../../../assets/icons/innovativecentre.png">
     <style>
-        .header {
-            background: linear-gradient(135deg, #0066cc, #0052a3);
-        }
         .level-badge {
             background: rgba(255, 255, 255, 0.2);
             color: white;
@@ -20,14 +17,341 @@
             font-weight: 600;
             margin-left: 15px;
         }
-        .content-placeholder {
-            background: #f0f8ff;
-            border: 2px dashed #0066cc;
-            padding: 20px;
-            margin: 10px 0;
-            border-radius: 8px;
+        
+        /* Single unified layout - override split panel */
+        .main-container {
+            height: calc(100vh - 60px - 70px) !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            background: rgba(247, 250, 250, 1);
+        }
+        
+        .panels-container {
+            display: block !important;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 40px 80px 40px;
+            height: auto !important;
+            overflow: visible !important;
+        }
+        
+        .passage-panel {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+            height: auto !important;
+            overflow: visible !important;
+        }
+        
+        .resizer {
+            display: none !important;
+        }
+        
+        .questions-panel {
+            display: none !important;
+        }
+        
+        /* Ensure all reading passages are scrollable */
+        .reading-passage {
+            height: auto !important;
+            overflow: visible !important;
+        }
+        
+        /* Content container for each part */
+        .reading-passage {
+            background: transparent;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: none;
+        }
+        
+        /* Part header */
+        .part-header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        /* Part 1 - Picture grid with questions */
+        .part1-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+        
+        .part1-container > div:last-child {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .picture-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .picture-item {
             text-align: center;
-            color: #666;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+        }
+        
+        .picture-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        
+        .picture-label {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #333;
+        }
+        
+        /* Part 2 - Dialogue with questions */
+        .part2-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        .dialogue-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .dialogue-section img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        /* Part 3 - Story with word bank */
+        .part3-container {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 30px;
+        }
+        
+        .story-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .wordbank {
+            background: white;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 20px;
+            position: sticky;
+            top: 20px;
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+        }
+        
+        .wordbank h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #856404;
+            text-align: center;
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .wordbank-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        
+        .wordbank-item {
+            background: white;
+            border: 1px solid #ffc107;
+            padding: 10px 8px;
+            text-align: center;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .wordbank-item:hover {
+            background: #fff3cd;
+            transform: translateY(-2px);
+        }
+        
+        /* Part 4 - Grammar cloze */
+        #passage-text-4 .reading-passage {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .inline-choices {
+            display: inline-flex;
+            gap: 10px;
+            margin: 0 5px;
+            vertical-align: middle;
+        }
+        
+        .inline-choices label {
+            background: #e9ecef;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .inline-choices label:has(input:checked) {
+            background: #0d6efd;
+            color: white;
+        }
+        
+        /* Part 5 - Story with images */
+        .story-image {
+            max-width: 600px;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px auto;
+            display: block;
+            border: 2px solid #dee2e6;
+        }
+        
+        .part5-container {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 40px;
+        }
+        
+        .part5-container > div {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        /* Part 6 - Picture description */
+        #passage-text-6 .reading-passage,
+        #questions-6 {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .main-picture {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto 30px;
+            display: block;
+            border: 3px solid #dee2e6;
+            border-radius: 12px;
+        }
+        
+        /* Common question styling */
+        .question-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .question-list li {
+            margin-bottom: 20px;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+        
+        .question-number {
+            display: inline-block;
+            background: #0d6efd;
+            color: white;
+            width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        /* Input styling */
+        .gap-input, .answer-input {
+            border: none;
+            border-bottom: 2px solid #0d6efd;
+            padding: 4px 8px;
+            min-width: 180px;
+            font-size: 1rem;
+            background: transparent;
+            transition: border-color 0.2s;
+        }
+        
+        .gap-input:focus, .answer-input:focus {
+            outline: none;
+            border-bottom-color: #0a58ca;
+            background: #f8f9fa;
+        }
+        
+        /* Example box styling */
+        .example-box {
+            background: white;
+            border: 2px solid #0dcaf0;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .example-box h4 {
+            margin-top: 0;
+            color: #055160;
+        }
+        
+        /* MCQ styling */
+        .single-choice {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+        
+        .single-choice label {
+            display: block;
+            padding: 10px 15px;
+            margin: 5px 0;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .single-choice label:hover {
+            border-color: #0d6efd;
+            background: #f0f7ff;
+        }
+        
+        .single-choice label:has(input:checked) {
+            border-color: #0d6efd;
+            background: #cfe2ff;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -35,6 +359,7 @@
     <div class="header">
         <div class="header-left">
             <div class="ielts-logo">
+                <img src="../../../assets/icons/Black Logo.png" alt="Innovative Centre Logo" class="logo-black">
                 <img src="../../../assets/icons/Logo white.png" alt="Innovative Centre Logo" class="logo-white">
                 <span>Cambridge A1 Movers</span>
                 <span class="level-badge">Reading & Writing</span>
@@ -63,66 +388,266 @@
     <div class="main-container" id="main-container">
         <div id="passage-header-container">
             <div id="part-header-1" class="part-header">
-                <p><strong>Reading Part 1</strong></p>
-                <p>Look and read. Choose the correct words.</p>
+                <p><strong>Part 1</strong></p>
+                <p>Look and read. Choose the correct words and write them on the lines. There is one example.</p>
             </div>
             <div id="part-header-2" class="part-header hidden">
-                <p><strong>Reading Part 2</strong></p>
-                <p>Read the text and choose the correct answer.</p>
+                <p><strong>Part 2</strong></p>
+                <p>Read the text and choose the best answer.</p>
             </div>
             <div id="part-header-3" class="part-header hidden">
-                <p><strong>Writing Part 1</strong></p>
-                <p>Look at the pictures and complete the sentences.</p>
+                <p><strong>Part 3</strong></p>
+                <p>Read the story. Choose a word from the box. Write the correct word next to numbers 1-5.</p>
             </div>
             <div id="part-header-4" class="part-header hidden">
-                <p><strong>Writing Part 2</strong></p>
-                <p>Write about the picture.</p>
+                <p><strong>Part 4</strong></p>
+                <p>Read the text. Choose the right words and write them on the lines.</p>
+            </div>
+            <div id="part-header-5" class="part-header hidden">
+                <p><strong>Part 5</strong></p>
+                <p>Look at the pictures and read the story. Write some words to complete the sentences about the story. You can use 1, 2 or 3 words.</p>
+            </div>
+            <div id="part-header-6" class="part-header hidden">
+                <p><strong>Part 6</strong></p>
+                <p>Look and read and write.</p>
             </div>
         </div>
 
         <div class="panels-container">
             <div class="passage-panel" id="passage-panel">
-                <!-- READING PART 1 -->
+                <!-- PART 1 - VOCABULARY MATCHING -->
                 <div id="passage-text-1" class="reading-passage">
-                    <h4 class="text-center">Part 1 - Vocabulary Matching</h4>
-                    <div class="content-placeholder">
-                        <p><strong>📝 CONTENT PLACEHOLDER</strong></p>
-                        <p>Add vocabulary matching questions here</p>
-                        <p>Example: Match words to pictures (5-6 items)</p>
-                        <p>Words like: ball, book, cat, dog, tree, car, etc.</p>
+                    <div class="part1-container">
+                        <!-- Pictures on the left -->
+                        <div class="picture-grid">
+                            <div class="picture-item">
+                                <img src="../../../assets/cambridge/a1-movers/forest.jpg" alt="Forest">
+                                <div class="picture-label">a forest</div>
+                            </div>
+                            <div class="picture-item">
+                                <img src="../../../assets/cambridge/a1-movers/beard.jpg" alt="Beard">
+                                <div class="picture-label">a beard</div>
+                            </div>
+                            <div class="picture-item">
+                                <img src="../../../assets/cambridge/a1-movers/islands.jpg" alt="Islands">
+                                <div class="picture-label">islands</div>
+                            </div>
+                            <div class="picture-item">
+                                <img src="../../../assets/cambridge/a1-movers/eyes.jpg" alt="Eyes">
+                                <div class="picture-label">eyes</div>
+                            </div>
+                            <div class="picture-item">
+                                <img src="../../../assets/cambridge/a1-movers/stomach.jpg" alt="Stomach">
+                                <div class="picture-label">a stomach</div>
+                            </div>
+                            <div class="picture-item">
+                                <img src="../../../assets/cambridge/a1-movers/mountains.jpg" alt="Mountains">
+                                <div class="picture-label">mountains</div>
+                            </div>
+                            <div class="picture-item">
+                                <img src="../../../assets/cambridge/a1-movers/shoulders.jpg" alt="Shoulders">
+                                <div class="picture-label">shoulders</div>
+                            </div>
+                            <div class="picture-item">
+                                <img src="../../../assets/cambridge/a1-movers/waterfall.jpg" alt="Waterfall">
+                                <div class="picture-label">a waterfall</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Questions on the right -->
+                        <div>
+                            <div class="example-box">
+                                <h4><strong>Example</strong></h4>
+                                <p style="line-height: 1.8; margin: 0;">There are often lots of different kinds of trees in this place.<br>
+                                    <input type="text" class="answer-input" value="a forest" readonly style="width: 200px; background: #d1ecf1; margin-top: 10px;"></p>
+                            </div>
+                            
+                            <h4 style="margin-bottom: 20px;"><strong>Questions</strong></h4>
+                            <ul class="question-list">
+                                <li><span class="question-number">1</span>Some men have this on their face below their mouth.<br>
+                                    <input type="text" id="q1" class="answer-input" placeholder="................................" autocomplete="off"></li>
+                                <li><span class="question-number">2</span>This is part of a river that drops down quickly.<br>
+                                    <input type="text" id="q2" class="answer-input" placeholder="................................" autocomplete="off"></li>
+                                <li><span class="question-number">3</span>These are at the top of your arms. You have two of them.<br>
+                                    <input type="text" id="q3" class="answer-input" placeholder="................................" autocomplete="off"></li>
+                                <li><span class="question-number">4</span>When you eat, all the food goes into this part of your body.<br>
+                                    <input type="text" id="q4" class="answer-input" placeholder="................................" autocomplete="off"></li>
+                                <li><span class="question-number">5</span>These are very big, and some people like climbing them.<br>
+                                    <input type="text" id="q5" class="answer-input" placeholder="................................" autocomplete="off"></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
-                <!-- READING PART 2 -->
+                <!-- PART 2 - READING COMPREHENSION -->
                 <div id="passage-text-2" class="reading-passage hidden">
-                    <h4 class="text-center">Part 2 - Short Text Comprehension</h4>
-                    <div class="content-placeholder">
-                        <p><strong>📝 CONTENT PLACEHOLDER</strong></p>
-                        <p>Add a short story or text (50-80 words)</p>
-                        <p>Followed by 3-4 multiple choice questions</p>
-                        <p>Example: Story about a child's day at school</p>
+                    <div class="part2-container">
+                        <!-- Dialogue section on the left -->
+                        <div class="dialogue-section">
+                            <img src="../../../assets/cambridge/a1-movers/ice-skating.jpg" alt="Ice Skating">
+                            
+                            <div class="example-box">
+                                <h4><strong>Example</strong></h4>
+                                <p style="margin: 5px 0;"><strong>Nick:</strong> Are you ok, Zoe?</p>
+                                <p style="margin: 5px 0;"><strong>Zoe:</strong></p>
+                                <label style="display: block; margin: 5px 0; padding: 8px; background: #d1ecf1; border-radius: 4px;">
+                                    <input type="radio" name="q-example" value="A" checked disabled> <strong>A</strong> My leg hurts.
+                                </label>
+                                <label style="display: block; margin: 5px 0; padding: 8px; background: white; border-radius: 4px;">
+                                    <input type="radio" name="q-example" value="B" disabled> <strong>B</strong> Is yours ok?
+                                </label>
+                                <label style="display: block; margin: 5px 0; padding: 8px; background: white; border-radius: 4px;">
+                                    <input type="radio" name="q-example" value="C" disabled> <strong>C</strong> Mine's ok.
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Questions on the right -->
+                        <div id="questions-2-inline">
+                            <h4 style="margin-bottom: 20px;"><strong>Questions</strong></h4>
+                            
+                            <div class="single-choice">
+                                <p style="font-weight: 600; margin-bottom: 10px;"><strong>Zoe:</strong> I can't skate very well!</p>
+                                <p style="margin-bottom: 10px;"><strong>Nick:</strong></p>
+                                <label><input type="radio" name="q6" value="A"> <strong>A</strong> Yes, you can.</label>
+                                <label><input type="radio" name="q6" value="B"> <strong>B</strong> Yes, you skate.</label>
+                                <label><input type="radio" name="q6" value="C"> <strong>C</strong> Yes, you are.</label>
+                            </div>
+
+                            <div class="single-choice">
+                                <p style="font-weight: 600;"><span class="question-number">1</span></p>
+                                <p style="font-weight: 600; margin-bottom: 10px;"><strong>Zoe:</strong> You're very good at skating, Nick.</p>
+                                <p style="margin-bottom: 10px;"><strong>Nick:</strong></p>
+                                <label><input type="radio" name="q7" value="A"> <strong>A</strong> So do I.</label>
+                                <label><input type="radio" name="q7" value="B"> <strong>B</strong> You like doing it.</label>
+                                <label><input type="radio" name="q7" value="C"> <strong>C</strong> Thanks, Zoe.</label>
+                            </div>
+
+                            <div class="single-choice">
+                                <p style="font-weight: 600;"><span class="question-number">2</span></p>
+                                <p style="font-weight: 600; margin-bottom: 10px;"><strong>Zoe:</strong> How often do you come here?</p>
+                                <p style="margin-bottom: 10px;"><strong>Nick:</strong></p>
+                                <label><input type="radio" name="q8" value="A"> <strong>A</strong> I walk sometimes.</label>
+                                <label><input type="radio" name="q8" value="B"> <strong>B</strong> Most weekends.</label>
+                                <label><input type="radio" name="q8" value="C"> <strong>C</strong> You do it every day.</label>
+                            </div>
+
+                            <div class="single-choice">
+                                <p style="font-weight: 600;"><span class="question-number">3</span></p>
+                                <p style="font-weight: 600; margin-bottom: 10px;"><strong>Zoe:</strong> How about helping me?</p>
+                                <p style="margin-bottom: 10px;"><strong>Nick:</strong></p>
+                                <label><input type="radio" name="q9" value="A"> <strong>A</strong> All right.</label>
+                                <label><input type="radio" name="q9" value="B"> <strong>B</strong> Let's go there.</label>
+                                <label><input type="radio" name="q9" value="C"> <strong>C</strong> I liked doing that.</label>
+                            </div>
+
+                            <div class="single-choice">
+                                <p style="font-weight: 600;"><span class="question-number">4</span></p>
+                                <p style="font-weight: 600; margin-bottom: 10px;"><strong>Zoe:</strong> My leg's better now.</p>
+                                <p style="margin-bottom: 10px;"><strong>Nick:</strong></p>
+                                <label><input type="radio" name="q10" value="A"> <strong>A</strong> I don't know!</label>
+                                <label><input type="radio" name="q10" value="B"> <strong>B</strong> Here it is!</label>
+                                <label><input type="radio" name="q10" value="C"> <strong>C</strong> Brilliant!</label>
+                            </div>
+
+                            <div class="single-choice">
+                                <p style="font-weight: 600;"><span class="question-number">5</span></p>
+                                <p style="font-weight: 600; margin-bottom: 10px;"><strong>Nick:</strong> Let's practise some more!</p>
+                                <p style="margin-bottom: 10px;"><strong>Zoe:</strong></p>
+                                <label><input type="radio" name="q11" value="A"> <strong>A</strong> Sometimes it's slower.</label>
+                                <label><input type="radio" name="q11" value="B"> <strong>B</strong> Good idea, come on.</label>
+                                <label><input type="radio" name="q11" value="C"> <strong>C</strong> We aren't going.</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- WRITING PART 1 -->
+                <!-- PART 3 - STORY WITH WORD BANK -->
                 <div id="passage-text-3" class="reading-passage hidden">
-                    <h4 class="text-center">Part 3 - Sentence Completion</h4>
-                    <div class="content-placeholder">
-                        <p><strong>📝 CONTENT PLACEHOLDER</strong></p>
-                        <p>Add pictures with incomplete sentences</p>
-                        <p>Students fill in missing words (5-6 sentences)</p>
-                        <p>Example: "The cat is _____ the table." (under/on)</p>
+                    <div class="part3-container">
+                        <div class="story-content">
+                            <div class="example-box">
+                                <h4><strong>Example</strong></h4>
+                                <p style="margin: 10px 0 0 0; line-height: 1.8;">It was Jane's birthday. She opened Grandma's 
+                                    <input type="text" class="gap-input" value="present" readonly style="background: #d1ecf1; min-width: 120px;">.</p>
+                                <p style="margin: 10px 0 0 0; font-size: 0.95rem; color: #055160;">It was a ticket to ride a horse at a farm.</p>
+                            </div>
+                            
+                            <div style="line-height: 2.2; font-size: 1.05rem;">
+                                <p>'I'm <input type="text" id="q12" class="gap-input" placeholder="1"> of horses. I don't want to go. It's difficult to ride them and they are very big.' She started to <input type="text" id="q13" class="gap-input" placeholder="2">.</p>
+                                
+                                <p>Mum said, 'It's exciting, not difficult or dangerous, and horses are beautiful. But you don't have to do it.'</p>
+                                
+                                <p>'But I've got to because Grandma wants me to do it,' said Jane.</p>
+                                
+                                <p>On Saturday, Jane's dad <input type="text" id="q14" class="gap-input" placeholder="3"> her to her first lesson. A woman, Alice, showed Jane the horse. 'This horse is called Star,' she said. Dad and Alice helped Jane to get on Star's <input type="text" id="q15" class="gap-input" placeholder="4">, and they all walked slowly down a quiet road. When they came back Jane <input type="text" id="q16" class="gap-input" placeholder="5"> and said, 'Dad, that was so cool!'</p>
+                                
+                                <p>At home Jane phoned Grandma. 'I had a riding lesson today on a horse who was called Star and I loved it, thank you.'</p>
+                            </div>
+                        </div>
+                        
+                        <div class="wordbank">
+                            <h4><strong>Word Bank</strong></h4>
+                            <div class="wordbank-grid">
+                                <div class="wordbank-item">present</div>
+                                <div class="wordbank-item">dream</div>
+                                <div class="wordbank-item">happy</div>
+                                <div class="wordbank-item">afraid</div>
+                                <div class="wordbank-item">farm</div>
+                                <div class="wordbank-item">cry</div>
+                                <div class="wordbank-item">smiled</div>
+                                <div class="wordbank-item">drove</div>
+                                <div class="wordbank-item">back</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- WRITING PART 2 -->
+                <!-- PART 4 - GRAMMAR CLOZE -->
                 <div id="passage-text-4" class="reading-passage hidden">
-                    <h4 class="text-center">Part 4 - Picture Description</h4>
-                    <div class="content-placeholder">
-                        <p><strong>📝 CONTENT PLACEHOLDER</strong></p>
-                        <p>Add a picture scene</p>
-                        <p>Students write 2-3 simple sentences</p>
-                        <p>Example: Picture of a park with children playing</p>
+                    <h3 style="text-align: center; margin-bottom: 20px;">The Countryside</h3>
+                    
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <p style="margin: 0; line-height: 2;"><strong>Example</strong><br>
+                        All countries in the world have countryside and cities. Cities are busy and 
+                        <span style="display: inline-flex; gap: 12px; vertical-align: middle; margin: 0 5px;">
+                            <label style="background: #e9ecef; padding: 4px 8px; border-radius: 4px;"><input type="radio" name="q-ex" value="Any" disabled> <strong>Any</strong></label>
+                            <label style="background: #d4edda; padding: 4px 8px; border-radius: 4px; border: 2px solid #28a745;"><input type="radio" name="q-ex" value="All" checked disabled> <strong>All</strong></label>
+                            <label style="background: #e9ecef; padding: 4px 8px; border-radius: 4px;"><input type="radio" name="q-ex" value="Every" disabled> <strong>Every</strong></label>
+                        </span> people live there.</p>
+                    </div>
+                    
+                    <div style="line-height: 2.2; font-size: 1.05rem;">
+                        <p>The countryside is different. You find small villages and the roads 
+                        <span class="inline-choices">
+                            <label><input type="radio" name="q17" value="doesn't"> <strong>doesn't</strong></label>
+                            <label><input type="radio" name="q17" value="don't"> <strong>don't</strong></label>
+                            <label><input type="radio" name="q17" value="didn't"> <strong>didn't</strong></label>
+                        </span> have many cars on them.</p>
+                        
+                        <p>There are a lot 
+                        <span class="inline-choices">
+                            <label><input type="radio" name="q18" value="of"> <strong>of</strong></label>
+                            <label><input type="radio" name="q18" value="on"> <strong>on</strong></label>
+                            <label><input type="radio" name="q18" value="in"> <strong>in</strong></label>
+                        </span> plants and flowers in the countryside. Farmers grow different kinds of food in the fields. People in villages stop to talk, and enjoy going 
+                        <span class="inline-choices">
+                            <label><input type="radio" name="q19" value="at"> <strong>at</strong></label>
+                            <label><input type="radio" name="q19" value="to"> <strong>to</strong></label>
+                            <label><input type="radio" name="q19" value="for"> <strong>for</strong></label>
+                        </span> long walks.</p>
+                        
+                        <p>Some people 
+                        <span class="inline-choices">
+                            <label><input type="radio" name="q20" value="thinks"> <strong>thinks</strong></label>
+                            <label><input type="radio" name="q20" value="thinking"> <strong>thinking</strong></label>
+                            <label><input type="radio" name="q20" value="think"> <strong>think</strong></label>
+                        </span> living in the countryside is boring because there aren't many things to do, 
+                        <span class="inline-choices">
+                            <label><input type="radio" name="q21" value="but"> <strong>but</strong></label>
+                            <label><input type="radio" name="q21" value="or"> <strong>or</strong></label>
+                            <label><input type="radio" name="q21" value="when"> <strong>when</strong></label>
+                        </span> some people love it because it is pretty and very quiet.</p>
                     </div>
                 </div>
             </div>
@@ -147,77 +672,131 @@
                     </div>
                 </div>
 
-                <!-- READING PART 2 QUESTIONS -->
+                <!-- PART 2 QUESTIONS (now inline in passage-text-2) -->
                 <div id="questions-2" class="question-set hidden">
-                    <div class="questions-container">
-                        <div class="question">
-                            <div class="question-prompt">
-                                <p><strong>Questions 6–10</strong></p>
-                                <p>Read the text and choose the correct answer.</p>
-                            </div>
-                            <div class="single-choice-container">
-                                <div class="single-choice">
-                                    <p><strong>6</strong> Question text here</p>
-                                    <label><input type="radio" name="q6" value="A"> A option</label>
-                                    <label><input type="radio" name="q6" value="B"> B option</label>
-                                    <label><input type="radio" name="q6" value="C"> C option</label>
-                                </div>
-                                <div class="single-choice">
-                                    <p><strong>7</strong> Question text here</p>
-                                    <label><input type="radio" name="q7" value="A"> A option</label>
-                                    <label><input type="radio" name="q7" value="B"> B option</label>
-                                    <label><input type="radio" name="q7" value="C"> C option</label>
-                                </div>
-                                <div class="single-choice">
-                                    <p><strong>8</strong> Question text here</p>
-                                    <label><input type="radio" name="q8" value="A"> A option</label>
-                                    <label><input type="radio" name="q8" value="B"> B option</label>
-                                    <label><input type="radio" name="q8" value="C"> C option</label>
-                                </div>
-                                <div class="single-choice">
-                                    <p><strong>9</strong> Question text here</p>
-                                    <label><input type="radio" name="q9" value="A"> A option</label>
-                                    <label><input type="radio" name="q9" value="B"> B option</label>
-                                    <label><input type="radio" name="q9" value="C"> C option</label>
-                                </div>
-                                <div class="single-choice">
-                                    <p><strong>10</strong> Question text here</p>
-                                    <label><input type="radio" name="q10" value="A"> A option</label>
-                                    <label><input type="radio" name="q10" value="B"> B option</label>
-                                    <label><input type="radio" name="q10" value="C"> C option</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Questions are now inline in the dialogue section -->
                 </div>
 
-                <!-- WRITING PART 1 QUESTIONS -->
+                <!-- PART 3 QUESTIONS (inline in passage) -->
                 <div id="questions-3" class="question-set hidden">
-                    <div class="questions-container">
-                        <div class="question">
-                            <div class="question-prompt">
-                                <p><strong>Questions 11–15</strong></p>
-                                <p>Look at the pictures and complete the sentences.</p>
+                    <!-- Questions are inline in the story text -->
+                </div>
+
+                <!-- PART 4 QUESTIONS (inline in passage) -->
+                <div id="questions-4" class="question-set hidden">
+                    <!-- Questions are inline in the text -->
+                </div>
+
+                <!-- PART 5 - STORY WITH PICTURES -->
+                <div id="passage-text-5" class="reading-passage hidden">
+                    <h3 style="text-align: center; margin-bottom: 30px; color: #0d6efd;">Lucy and Hugo's mum</h3>
+                    
+                    <div class="part5-container">
+                        <!-- Story with images on the left -->
+                        <div>
+                            <img src="../../../assets/cambridge/a1-movers/story-scene1.jpg" alt="Cold and windy day" class="story-image">
+                            
+                            <p style="font-size: 1.05rem; line-height: 1.8;">Last Thursday was a cold and windy day. Lucy and Hugo were at home in their flat on the tenth floor. Their mum was a teacher at a music school. That day Mum had to go to the library after work.</p>
+                            
+                            <p style="font-size: 1.05rem; line-height: 1.8;">Lucy said, 'Let's do something nice for Mum.' 'That's a good idea,' said Hugo. 'She cooks for us every day, let's cook for her today,' Hugo said.</p>
+                            
+                            <img src="../../../assets/cambridge/a1-movers/story-scene2.jpg" alt="Shopping at supermarket" class="story-image">
+                            
+                            <p style="font-size: 1.05rem; line-height: 1.8;">The children put their jackets on and went to the supermarket to buy the food they needed. They ran home to the flat and washed all the vegetables and started to cook.</p>
+                            
+                            <img src="../../../assets/cambridge/a1-movers/story-scene3.jpg" alt="Mum with books" class="story-image">
+                            
+                            <p style="font-size: 1.05rem; line-height: 1.8;">Mum carried lots of books in her bag. She wasn't very strong and she had to walk slowly.</p>
+                            
+                            <img src="../../../assets/cambridge/a1-movers/story-scene4.jpg" alt="Lift not working" class="story-image">
+                            
+                            <p style="font-size: 1.05rem; line-height: 1.8;">At the flat Mum walked into the hall and waited for the lift. It didn't come. 'It's not working,' she thought. 'I have to walk up the stairs to the flat!' It wasn't easy.</p>
+                            
+                            <img src="../../../assets/cambridge/a1-movers/story-scene5.jpg" alt="Family dinner" class="story-image">
+                            
+                            <p style="font-size: 1.05rem; line-height: 1.8;">When Mum opened the door of the flat, she was very surprised. Lucy and Hugo, who were near the table, said to her, 'Come and have dinner. It's sausages, potatoes and peas. Sit down and enjoy it, Mum!' 'This is great. Thank you,' she said. She was very happy.</p>
+                        </div>
+                        
+                        <!-- Questions on the right -->
+                        <div>
+                            <div class="example-box">
+                                <h4><strong>Examples</strong></h4>
+                                <p style="margin: 5px 0;">Last Thursday was a <input type="text" value="cold" readonly style="background: #d1ecf1; border: none; border-bottom: 2px solid #0dcaf0; padding: 2px 8px; min-width: 100px;"> and windy day.</p>
+                                <p style="margin: 5px 0;">Lucy and Hugo lived in a <input type="text" value="flat" readonly style="background: #d1ecf1; border: none; border-bottom: 2px solid #0dcaf0; padding: 2px 8px; min-width: 100px;">.</p>
                             </div>
-                            <p>11. <input type="text" id="q11" class="answer-input" placeholder="Complete the sentence" autocomplete="off" style="width: 300px;"></p>
-                            <p>12. <input type="text" id="q12" class="answer-input" placeholder="Complete the sentence" autocomplete="off" style="width: 300px;"></p>
-                            <p>13. <input type="text" id="q13" class="answer-input" placeholder="Complete the sentence" autocomplete="off" style="width: 300px;"></p>
-                            <p>14. <input type="text" id="q14" class="answer-input" placeholder="Complete the sentence" autocomplete="off" style="width: 300px;"></p>
-                            <p>15. <input type="text" id="q15" class="answer-input" placeholder="Complete the sentence" autocomplete="off" style="width: 300px;"></p>
+                            
+                            <h4 style="margin-bottom: 20px;"><strong>Questions</strong></h4>
+                            <ul class="question-list">
+                                <li><span class="question-number">1</span>Their mum worked at a<br>
+                                    <input type="text" id="q22" class="gap-input" placeholder="..............................." autocomplete="off">.</li>
+                                <li><span class="question-number">2</span>Lucy and Hugo wanted to do something<br>
+                                    <input type="text" id="q23" class="gap-input" placeholder="..............................." autocomplete="off"> for Mum.</li>
+                                <li><span class="question-number">3</span>Lucy and Hugo bought some food, then they<br>
+                                    <input type="text" id="q24" class="gap-input" placeholder="..............................." autocomplete="off"> the vegetables and started cooking.</li>
+                                <li><span class="question-number">4</span>There were some<br>
+                                    <input type="text" id="q25" class="gap-input" placeholder="..............................." autocomplete="off"> in Mum's bag which were difficult to carry.</li>
+                                <li><span class="question-number">5</span>Mum had to walk up the stairs because<br>
+                                    <input type="text" id="q26" class="gap-input" placeholder="..............................." autocomplete="off"> didn't work.</li>
+                                <li><span class="question-number">6</span>Mum was<br>
+                                    <input type="text" id="q27" class="gap-input" placeholder="..............................." autocomplete="off"> when she opened the door.</li>
+                                <li><span class="question-number">7</span>The family ate<br>
+                                    <input type="text" id="q28" class="gap-input" placeholder="..............................." autocomplete="off"> and potatoes and Mum said, 'This is great! Thank you!'</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
 
-                <!-- WRITING PART 2 QUESTIONS -->
-                <div id="questions-4" class="question-set hidden">
+                <div id="questions-5" class="question-set hidden">
+                    <!-- Questions are now inline in passage-text-5 -->
+                </div>
+
+                <!-- PART 6 - PICTURE DESCRIPTION -->
+                <div id="passage-text-6" class="reading-passage hidden">
+                    <img src="../../../assets/cambridge/a1-movers/main-picture.jpg" alt="Family scene with rain" class="main-picture">
+                    
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                        <p style="margin: 0 0 15px 0;"><strong>Examples</strong></p>
+                        <p style="margin: 5px 0;">There is a lot of rain falling from those 
+                            <input type="text" value="grey clouds" readonly style="background: #e9ecef; border: none; border-bottom: 2px solid #666; padding: 2px 8px; min-width: 150px;">.</p>
+                        <p style="margin: 5px 0;"><strong>Where's the woman?</strong> 
+                            <input type="text" value="In the house" readonly style="background: #e9ecef; border: none; border-bottom: 2px solid #666; padding: 2px 8px; min-width: 150px;"></p>
+                    </div>
+                </div>
+
+                <div id="questions-6" class="question-set hidden">
                     <div class="questions-container">
                         <div class="question">
                             <div class="question-prompt">
-                                <p><strong>Question 16</strong></p>
-                                <p>Write about the picture. Write 20-30 words.</p>
+                                <p><strong>Questions</strong></p>
+                                <p><strong>Complete the sentences.</strong></p>
                             </div>
-                            <textarea id="q16" class="writing-textarea" rows="8" placeholder="Write your answer here..." autocomplete="off"></textarea>
-                            <p style="font-size: 0.9rem; color: #666; margin-top: 5px;">Word count: <span id="word-count-16">0</span></p>
+                            
+                            <ul class="question-list">
+                                <li><span class="question-number">1</span>On their feet, all the children are wearing 
+                                    <input type="text" id="q29" class="gap-input" placeholder="..............................." autocomplete="off" style="min-width: 200px;">.</li>
+                                <li><span class="question-number">2</span>The cat in the tree is 
+                                    <input type="text" id="q30" class="gap-input" placeholder="..............................." autocomplete="off" style="min-width: 200px;">.</li>
+                            </ul>
+                            
+                            <div class="question-prompt" style="margin-top: 25px;">
+                                <p><strong>Answer the questions.</strong></p>
+                            </div>
+                            
+                            <ul class="question-list">
+                                <li><span class="question-number">3</span>What are the two biggest children doing?<br>
+                                    <input type="text" id="q31" class="gap-input" placeholder="................................................................." autocomplete="off" style="min-width: 300px; margin-top: 8px;"></li>
+                                <li><span class="question-number">4</span>Where is the snail?<br>
+                                    <input type="text" id="q32" class="gap-input" placeholder="................................................................." autocomplete="off" style="min-width: 300px; margin-top: 8px;"></li>
+                            </ul>
+                            
+                            <div class="question-prompt" style="margin-top: 25px;">
+                                <p><strong>Now write two sentences about the picture.</strong></p>
+                            </div>
+                            
+                            <ul class="question-list">
+                                <li><span class="question-number">5</span><input type="text" id="q33" class="gap-input" placeholder="................................................................." autocomplete="off" style="min-width: 400px;"></li>
+                                <li><span class="question-number">6</span><input type="text" id="q34" class="gap-input" placeholder="................................................................." autocomplete="off" style="min-width: 400px;"></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -227,8 +806,18 @@
 
     <!-- Navigation Arrows -->
     <div class="nav-arrows">
-        <button class="nav-arrow prev" onclick="previousQuestion()" id="prevBtn">‹</button>
-        <button class="nav-arrow next" onclick="nextQuestion()" id="nextBtn">›</button>
+        <button class="nav-arrow prev" onclick="previousQuestion()" id="prevBtn" aria-label="Previous question">
+            <!-- Left arrow icon -->
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+        <button class="nav-arrow next" onclick="nextQuestion()" id="nextBtn" aria-label="Next question">
+            <!-- Right arrow icon -->
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
     </div>
 
     <!-- Bottom Navigation -->
@@ -255,15 +844,16 @@
                 <span>
                     <span aria-hidden="true" class="section-prefix">Part </span>
                     <span class="sectionNr" aria-hidden="true">2</span>
-                    <span class="attemptedCount" aria-hidden="true">0 of 5</span>
+                    <span class="attemptedCount" aria-hidden="true">0 of 6</span>
                 </span>
             </button>
             <div class="footer__subquestionWrapper___9GgoP">
-                <button class="subQuestion scorable-item" onclick="goToQuestion(6)"><span class="sr-only">Question 6</span><span aria-hidden="true">6</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(7)"><span class="sr-only">Question 7</span><span aria-hidden="true">7</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(8)"><span class="sr-only">Question 8</span><span aria-hidden="true">8</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(9)"><span class="sr-only">Question 9</span><span aria-hidden="true">9</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(10)"><span class="sr-only">Question 10</span><span aria-hidden="true">10</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(6)"><span class="sr-only">Question 6</span><span aria-hidden="true">Ex</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(7)"><span class="sr-only">Question 7</span><span aria-hidden="true">1</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(8)"><span class="sr-only">Question 8</span><span aria-hidden="true">2</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(9)"><span class="sr-only">Question 9</span><span aria-hidden="true">3</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(10)"><span class="sr-only">Question 10</span><span aria-hidden="true">4</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(11)"><span class="sr-only">Question 11</span><span aria-hidden="true">5</span></button>
             </div>
         </div>
 
@@ -276,11 +866,11 @@
                 </span>
             </button>
             <div class="footer__subquestionWrapper___9GgoP">
-                <button class="subQuestion scorable-item" onclick="goToQuestion(11)"><span class="sr-only">Question 11</span><span aria-hidden="true">11</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(12)"><span class="sr-only">Question 12</span><span aria-hidden="true">12</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(13)"><span class="sr-only">Question 13</span><span aria-hidden="true">13</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(14)"><span class="sr-only">Question 14</span><span aria-hidden="true">14</span></button>
-                <button class="subQuestion scorable-item" onclick="goToQuestion(15)"><span class="sr-only">Question 15</span><span aria-hidden="true">15</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(12)"><span class="sr-only">Question 12</span><span aria-hidden="true">1</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(13)"><span class="sr-only">Question 13</span><span aria-hidden="true">2</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(14)"><span class="sr-only">Question 14</span><span aria-hidden="true">3</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(15)"><span class="sr-only">Question 15</span><span aria-hidden="true">4</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(16)"><span class="sr-only">Question 16</span><span aria-hidden="true">5</span></button>
             </div>
         </div>
 
@@ -289,11 +879,52 @@
                 <span>
                     <span aria-hidden="true" class="section-prefix">Part </span>
                     <span class="sectionNr" aria-hidden="true">4</span>
-                    <span class="attemptedCount" aria-hidden="true">0 of 1</span>
+                    <span class="attemptedCount" aria-hidden="true">0 of 5</span>
                 </span>
             </button>
             <div class="footer__subquestionWrapper___9GgoP">
-                <button class="subQuestion scorable-item" onclick="goToQuestion(16)"><span class="sr-only">Question 16</span><span aria-hidden="true">16</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(17)"><span class="sr-only">Question 17</span><span aria-hidden="true">1</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(18)"><span class="sr-only">Question 18</span><span aria-hidden="true">2</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(19)"><span class="sr-only">Question 19</span><span aria-hidden="true">3</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(20)"><span class="sr-only">Question 20</span><span aria-hidden="true">4</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(21)"><span class="sr-only">Question 21</span><span aria-hidden="true">5</span></button>
+            </div>
+        </div>
+
+        <div class="footer__questionWrapper___1tZ46 multiple" role="tablist">
+            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(5)">
+                <span>
+                    <span aria-hidden="true" class="section-prefix">Part </span>
+                    <span class="sectionNr" aria-hidden="true">5</span>
+                    <span class="attemptedCount" aria-hidden="true">0 of 7</span>
+                </span>
+            </button>
+            <div class="footer__subquestionWrapper___9GgoP">
+                <button class="subQuestion scorable-item" onclick="goToQuestion(22)"><span class="sr-only">Question 22</span><span aria-hidden="true">1</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(23)"><span class="sr-only">Question 23</span><span aria-hidden="true">2</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(24)"><span class="sr-only">Question 24</span><span aria-hidden="true">3</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(25)"><span class="sr-only">Question 25</span><span aria-hidden="true">4</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(26)"><span class="sr-only">Question 26</span><span aria-hidden="true">5</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(27)"><span class="sr-only">Question 27</span><span aria-hidden="true">6</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(28)"><span class="sr-only">Question 28</span><span aria-hidden="true">7</span></button>
+            </div>
+        </div>
+
+        <div class="footer__questionWrapper___1tZ46 multiple" role="tablist">
+            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(6)">
+                <span>
+                    <span aria-hidden="true" class="section-prefix">Part </span>
+                    <span class="sectionNr" aria-hidden="true">6</span>
+                    <span class="attemptedCount" aria-hidden="true">0 of 6</span>
+                </span>
+            </button>
+            <div class="footer__subquestionWrapper___9GgoP">
+                <button class="subQuestion scorable-item" onclick="goToQuestion(29)"><span class="sr-only">Question 29</span><span aria-hidden="true">1</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(30)"><span class="sr-only">Question 30</span><span aria-hidden="true">2</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(31)"><span class="sr-only">Question 31</span><span aria-hidden="true">3</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(32)"><span class="sr-only">Question 32</span><span aria-hidden="true">4</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(33)"><span class="sr-only">Question 33</span><span aria-hidden="true">5</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(34)"><span class="sr-only">Question 34</span><span aria-hidden="true">6</span></button>
             </div>
         </div>
 
@@ -302,26 +933,63 @@
         </button>
     </nav>
 
+    <!-- Context Menu -->
+    <div id="contextMenu" class="context-menu">
+        <div id="menu-highlight" class="context-menu-item" onclick="highlightText()">
+            Highlight
+        </div>
+        <div id="menu-note" class="context-menu-item" onclick="addNote()">
+            Note
+        </div>
+        <div id="menu-clear" class="context-menu-item" onclick="clearHighlight()">
+            Clear
+        </div>
+        <div id="menu-clear-all" class="context-menu-item" onclick="clearAllHighlights()">
+            Clear All
+        </div>
+    </div>
+
+    <div id="results-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeResultsModal()">&times;</button>
+            <h2>Results</h2>
+            <div class="results-summary">
+                <p>Score: <span id="results-score"></span> / 16</p>
+                <p>Band Score: <span id="results-band"></span></p>
+            </div>
+            <div id="results-details" class="results-details-container">
+                <!-- Results for each question will be injected here -->
+            </div>
+        </div>
+    </div>
+
 <script src="../../../assets/js/universal-functions.js"></script>
 <script src="../../../assets/js/core.js"></script>
 <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
 <script src="../../../assets/js/distraction-free.js"></script>
+<script src="../../../assets/js/session-manager.js"></script>
 <script>
-    // Override for Cambridge
+    // Cambridge A1 Movers - Unified Layout System
     document.addEventListener('DOMContentLoaded', function() {
         const studentId = localStorage.getItem('studentId');
         if (studentId) {
             document.getElementById('student-id-display').textContent = studentId;
         }
 
-        // Word count for writing section
-        const textarea = document.getElementById('q16');
-        if (textarea) {
-            textarea.addEventListener('input', function() {
-                const words = this.value.trim().split(/\s+/).filter(w => w.length > 0);
-                document.getElementById('word-count-16').textContent = words.length;
+        // Add hover effect to word bank items
+        const wordbankItems = document.querySelectorAll('.wordbank-item');
+        wordbankItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // Optional: Copy word to clipboard for easier pasting
+                const word = this.textContent;
+                navigator.clipboard.writeText(word).then(() => {
+                    this.style.background = '#d4edda';
+                    setTimeout(() => {
+                        this.style.background = 'white';
+                    }, 300);
+                });
             });
-        }
+        });
     });
 </script>
 
