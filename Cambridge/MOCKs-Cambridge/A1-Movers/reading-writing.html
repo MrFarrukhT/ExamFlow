@@ -8,6 +8,31 @@
     <link rel="stylesheet" href="../../../assets/css/reading.css">
     <link rel="icon" href="../../../assets/icons/innovativecentre.png">
     <style>
+        /* Hidden class for navigation */
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Question container display */
+        .question-container {
+            display: none;
+        }
+        
+        .question-container:first-of-type {
+            display: block;
+        }
+        
+        /* Active navigation buttons */
+        .footer__questionNo___3WNct.active {
+            background: #0d6efd !important;
+            color: white !important;
+        }
+        
+        .subQuestion.active {
+            background: #0d6efd !important;
+            color: white !important;
+        }
+        
         .level-badge {
             background: rgba(255, 255, 255, 0.2);
             color: white;
@@ -23,7 +48,7 @@
             height: calc(100vh - 60px - 70px) !important;
             overflow-y: auto !important;
             overflow-x: hidden !important;
-            background: rgba(247, 250, 250, 1);
+            background: #f5f5f5;
         }
         
         .panels-container {
@@ -140,59 +165,7 @@
         
         /* Part 3 - Story with word bank */
         .part3-container {
-            display: grid;
-            grid-template-columns: 1fr 280px;
-            gap: 30px;
-        }
-        
-        .story-content {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-        
-        .wordbank {
-            background: white;
-            border: 2px solid #ffc107;
-            border-radius: 12px;
-            padding: 20px;
-            position: sticky;
-            top: 20px;
-            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
-        }
-        
-        .wordbank h4 {
-            margin-top: 0;
-            margin-bottom: 15px;
-            color: #856404;
-            text-align: center;
-            background: #fff3cd;
-            padding: 10px;
-            border-radius: 8px;
-        }
-        
-        .wordbank-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
-        
-        .wordbank-item {
-            background: white;
-            border: 1px solid #ffc107;
-            padding: 10px 8px;
-            text-align: center;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .wordbank-item:hover {
-            background: #fff3cd;
-            transform: translateY(-2px);
+            display: block;
         }
         
         /* Part 4 - Grammar cloze */
@@ -279,33 +252,34 @@
         
         .question-number {
             display: inline-block;
-            background: #0d6efd;
-            color: white;
-            width: 28px;
-            height: 28px;
-            line-height: 28px;
-            text-align: center;
-            border-radius: 50%;
-            margin-right: 10px;
-            font-weight: 600;
-            font-size: 0.9rem;
+            background: transparent;
+            color: #333;
+            width: auto;
+            height: auto;
+            line-height: normal;
+            text-align: left;
+            border-radius: 0;
+            margin-right: 5px;
+            font-weight: 700;
+            font-size: 1.1rem;
         }
         
-        /* Input styling */
+        /* Input styling - Cambridge official style */
         .gap-input, .answer-input {
             border: none;
-            border-bottom: 2px solid #0d6efd;
-            padding: 4px 8px;
+            border-bottom: 2px solid #3498db;
+            padding: 6px 10px;
             min-width: 180px;
             font-size: 1rem;
-            background: transparent;
-            transition: border-color 0.2s;
+            background: white;
+            transition: all 0.2s;
+            font-family: inherit;
         }
         
         .gap-input:focus, .answer-input:focus {
             outline: none;
-            border-bottom-color: #0a58ca;
-            background: #f8f9fa;
+            border-bottom-color: #2980b9;
+            background: #ffffff;
         }
         
         /* Example box styling */
@@ -417,39 +391,44 @@
             <div class="passage-panel" id="passage-panel">
                 <!-- PART 1 - VOCABULARY MATCHING -->
                 <div id="passage-text-1" class="reading-passage">
+                    <div class="part-header">
+                        <h3 style="text-align: center; margin: 0; color: #0d6efd;">Part 1 - 5 questions</h3>
+                        <p style="text-align: center; margin: 10px 0 0 0; font-size: 1.05rem;">Look and read. Choose the correct words and write them on the lines.</p>
+                    </div>
+                    
                     <div class="part1-container">
                         <!-- Pictures on the left -->
                         <div class="picture-grid">
                             <div class="picture-item">
-                                <img src="../../../assets/cambridge/a1-movers/forest.jpg" alt="Forest">
+                                <img src="images/part 1/forest.png" alt="Forest">
                                 <div class="picture-label">a forest</div>
                             </div>
                             <div class="picture-item">
-                                <img src="../../../assets/cambridge/a1-movers/beard.jpg" alt="Beard">
+                                <img src="images/part 1/a beard.png" alt="Beard">
                                 <div class="picture-label">a beard</div>
                             </div>
                             <div class="picture-item">
-                                <img src="../../../assets/cambridge/a1-movers/islands.jpg" alt="Islands">
+                                <img src="images/part 1/islands.png" alt="Islands">
                                 <div class="picture-label">islands</div>
                             </div>
                             <div class="picture-item">
-                                <img src="../../../assets/cambridge/a1-movers/eyes.jpg" alt="Eyes">
+                                <img src="images/part 1/eyes.png" alt="Eyes">
                                 <div class="picture-label">eyes</div>
                             </div>
                             <div class="picture-item">
-                                <img src="../../../assets/cambridge/a1-movers/stomach.jpg" alt="Stomach">
+                                <img src="images/part 1/a stomach.png" alt="Stomach">
                                 <div class="picture-label">a stomach</div>
                             </div>
                             <div class="picture-item">
-                                <img src="../../../assets/cambridge/a1-movers/mountains.jpg" alt="Mountains">
+                                <img src="images/part 1/mountains.png" alt="Mountains">
                                 <div class="picture-label">mountains</div>
                             </div>
                             <div class="picture-item">
-                                <img src="../../../assets/cambridge/a1-movers/shoulders.jpg" alt="Shoulders">
+                                <img src="images/part 1/shoulders.png" alt="Shoulders">
                                 <div class="picture-label">shoulders</div>
                             </div>
                             <div class="picture-item">
-                                <img src="../../../assets/cambridge/a1-movers/waterfall.jpg" alt="Waterfall">
+                                <img src="images/part 1/a waterfall.png" alt="Waterfall">
                                 <div class="picture-label">a waterfall</div>
                             </div>
                         </div>
@@ -481,10 +460,15 @@
 
                 <!-- PART 2 - READING COMPREHENSION -->
                 <div id="passage-text-2" class="reading-passage hidden">
+                    <div class="part-header">
+                        <h3 style="text-align: center; margin: 0; color: #0d6efd;">Part 2 - 6 questions</h3>
+                        <p style="text-align: center; margin: 10px 0 0 0; font-size: 1.05rem;">Read the text and choose the best answer.</p>
+                    </div>
+                    
                     <div class="part2-container">
                         <!-- Dialogue section on the left -->
                         <div class="dialogue-section">
-                            <img src="../../../assets/cambridge/a1-movers/ice-skating.jpg" alt="Ice Skating">
+                            <img src="images/part 2/skating image.png" alt="Ice Skating">
                             
                             <div class="example-box">
                                 <h4><strong>Example</strong></h4>
@@ -564,50 +548,50 @@
 
                 <!-- PART 3 - STORY WITH WORD BANK -->
                 <div id="passage-text-3" class="reading-passage hidden">
-                    <div class="part3-container">
-                        <div class="story-content">
-                            <div class="example-box">
-                                <h4><strong>Example</strong></h4>
-                                <p style="margin: 10px 0 0 0; line-height: 1.8;">It was Jane's birthday. She opened Grandma's 
-                                    <input type="text" class="gap-input" value="present" readonly style="background: #d1ecf1; min-width: 120px;">.</p>
-                                <p style="margin: 10px 0 0 0; font-size: 0.95rem; color: #055160;">It was a ticket to ride a horse at a farm.</p>
-                            </div>
-                            
-                            <div style="line-height: 2.2; font-size: 1.05rem;">
-                                <p>'I'm <input type="text" id="q12" class="gap-input" placeholder="1"> of horses. I don't want to go. It's difficult to ride them and they are very big.' She started to <input type="text" id="q13" class="gap-input" placeholder="2">.</p>
-                                
-                                <p>Mum said, 'It's exciting, not difficult or dangerous, and horses are beautiful. But you don't have to do it.'</p>
-                                
-                                <p>'But I've got to because Grandma wants me to do it,' said Jane.</p>
-                                
-                                <p>On Saturday, Jane's dad <input type="text" id="q14" class="gap-input" placeholder="3"> her to her first lesson. A woman, Alice, showed Jane the horse. 'This horse is called Star,' she said. Dad and Alice helped Jane to get on Star's <input type="text" id="q15" class="gap-input" placeholder="4">, and they all walked slowly down a quiet road. When they came back Jane <input type="text" id="q16" class="gap-input" placeholder="5"> and said, 'Dad, that was so cool!'</p>
-                                
-                                <p>At home Jane phoned Grandma. 'I had a riding lesson today on a horse who was called Star and I loved it, thank you.'</p>
-                            </div>
+                    <div class="part-header">
+                        <h3 style="text-align: center; margin: 0; color: #0d6efd;">Part 3 - 5 questions</h3>
+                        <p style="text-align: center; margin: 10px 0 0 0; font-size: 1.05rem;">Read the story. Choose a word from the box. Write the correct word next to numbers 1-5.</p>
+                    </div>
+                    
+                    <div style="background: white; padding: 40px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                        <div class="example-box" style="margin-bottom: 30px;">
+                            <h4><strong>Example</strong></h4>
+                            <p style="margin: 10px 0 0 0; line-height: 1.8;">It was Jane's birthday. She opened Grandma's 
+                                <input type="text" class="gap-input" value="present" readonly style="background: #d1ecf1; min-width: 120px;">.</p>
+                            <p style="margin: 10px 0 0 0; font-size: 0.95rem; color: #055160;">It was a ticket to ride a horse at a farm.</p>
                         </div>
                         
-                        <div class="wordbank">
-                            <h4><strong>Word Bank</strong></h4>
-                            <div class="wordbank-grid">
-                                <div class="wordbank-item">present</div>
-                                <div class="wordbank-item">dream</div>
-                                <div class="wordbank-item">happy</div>
-                                <div class="wordbank-item">afraid</div>
-                                <div class="wordbank-item">farm</div>
-                                <div class="wordbank-item">cry</div>
-                                <div class="wordbank-item">smiled</div>
-                                <div class="wordbank-item">drove</div>
-                                <div class="wordbank-item">back</div>
-                            </div>
+                        <div style="line-height: 2.2; font-size: 1.05rem; margin-bottom: 30px;">
+                            <p>'I'm <input type="text" id="q12" class="gap-input" placeholder="1" style="min-width: 150px;"> of horses. I don't want to go. It's difficult to ride them and they are very big.' She started to <input type="text" id="q13" class="gap-input" placeholder="2" style="min-width: 150px;">.</p>
+                            
+                            <p>Mum said, 'It's exciting, not difficult or dangerous, and horses are beautiful. But you don't have to do it.'</p>
+                            
+                            <p>'But I've got to because Grandma wants me to do it,' said Jane.</p>
+                            
+                            <p>On Saturday, Jane's dad <input type="text" id="q14" class="gap-input" placeholder="3" style="min-width: 150px;"> her to her first lesson. A woman, Alice, showed Jane the horse. 'This horse is called Star,' she said. Dad and Alice helped Jane to get on Star's <input type="text" id="q15" class="gap-input" placeholder="4" style="min-width: 150px;">, and they all walked slowly down a quiet road. When they came back Jane <input type="text" id="q16" class="gap-input" placeholder="5" style="min-width: 150px;"> and said, 'Dad, that was so cool!'</p>
+                            
+                            <p>At home Jane phoned Grandma. 'I had a riding lesson today on a horse who was called Star and I loved it, thank you.'</p>
+                        </div>
+                        
+                        <div style="margin-top: 30px;">
+                            <img src="images/part 3/word bank.png" alt="Word Bank" style="max-width: 500px; width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
                         </div>
                     </div>
                 </div>
 
                 <!-- PART 4 - GRAMMAR CLOZE -->
                 <div id="passage-text-4" class="reading-passage hidden">
-                    <h3 style="text-align: center; margin-bottom: 20px;">The Countryside</h3>
+                    <div class="part-header">
+                        <h3 style="text-align: center; margin: 0; color: #0d6efd;">Part 4 - 5 questions</h3>
+                        <p style="text-align: center; margin: 10px 0 0 0; font-size: 1.05rem;">Read the text. Choose the right words and write them on the lines.</p>
+                    </div>
                     
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <div style="background: white; padding: 40px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                        <h3 style="text-align: center; margin-bottom: 20px;">The Countryside</h3>
+                        
+                        <img src="images/part 4/countryside.png" alt="Countryside" style="max-width: 700px; margin: 20px auto; display: block; border-radius: 8px;">
+                    
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                         <p style="margin: 0; line-height: 2;"><strong>Example</strong><br>
                         All countries in the world have countryside and cities. Cities are busy and 
                         <span style="display: inline-flex; gap: 12px; vertical-align: middle; margin: 0 5px;">
@@ -649,154 +633,229 @@
                             <label><input type="radio" name="q21" value="when"> <strong>when</strong></label>
                         </span> some people love it because it is pretty and very quiet.</p>
                     </div>
-                </div>
-            </div>
-
-            <div class="resizer" id="resizer"></div>
-
-            <div class="questions-panel" id="questions-panel">
-                <!-- READING PART 1 QUESTIONS -->
-                <div id="questions-1" class="question-set">
-                    <div class="questions-container">
-                        <div class="question">
-                            <div class="question-prompt">
-                                <p><strong>Questions 1–5</strong></p>
-                                <p>Look at the pictures and choose the correct word.</p>
-                            </div>
-                            <p>1. <input type="text" id="q1" class="answer-input" placeholder="Answer" autocomplete="off"></p>
-                            <p>2. <input type="text" id="q2" class="answer-input" placeholder="Answer" autocomplete="off"></p>
-                            <p>3. <input type="text" id="q3" class="answer-input" placeholder="Answer" autocomplete="off"></p>
-                            <p>4. <input type="text" id="q4" class="answer-input" placeholder="Answer" autocomplete="off"></p>
-                            <p>5. <input type="text" id="q5" class="answer-input" placeholder="Answer" autocomplete="off"></p>
-                        </div>
                     </div>
-                </div>
-
-                <!-- PART 2 QUESTIONS (now inline in passage-text-2) -->
-                <div id="questions-2" class="question-set hidden">
-                    <!-- Questions are now inline in the dialogue section -->
-                </div>
-
-                <!-- PART 3 QUESTIONS (inline in passage) -->
-                <div id="questions-3" class="question-set hidden">
-                    <!-- Questions are inline in the story text -->
-                </div>
-
-                <!-- PART 4 QUESTIONS (inline in passage) -->
-                <div id="questions-4" class="question-set hidden">
-                    <!-- Questions are inline in the text -->
                 </div>
 
                 <!-- PART 5 - STORY WITH PICTURES -->
                 <div id="passage-text-5" class="reading-passage hidden">
-                    <h3 style="text-align: center; margin-bottom: 30px; color: #0d6efd;">Lucy and Hugo's mum</h3>
+                    <div class="part-header">
+                        <h3 style="text-align: center; margin: 0; color: #0d6efd;">Part 5 - 7 questions</h3>
+                        <p style="text-align: center; margin: 10px 0 0 0; font-size: 1.05rem;">Look at the pictures and read the story. Write some words to complete the sentences about the story. You can use 1, 2 or 3 words.</p>
+                    </div>
                     
-                    <div class="part5-container">
-                        <!-- Story with images on the left -->
-                        <div>
-                            <img src="../../../assets/cambridge/a1-movers/story-scene1.jpg" alt="Cold and windy day" class="story-image">
-                            
-                            <p style="font-size: 1.05rem; line-height: 1.8;">Last Thursday was a cold and windy day. Lucy and Hugo were at home in their flat on the tenth floor. Their mum was a teacher at a music school. That day Mum had to go to the library after work.</p>
-                            
-                            <p style="font-size: 1.05rem; line-height: 1.8;">Lucy said, 'Let's do something nice for Mum.' 'That's a good idea,' said Hugo. 'She cooks for us every day, let's cook for her today,' Hugo said.</p>
-                            
-                            <img src="../../../assets/cambridge/a1-movers/story-scene2.jpg" alt="Shopping at supermarket" class="story-image">
-                            
-                            <p style="font-size: 1.05rem; line-height: 1.8;">The children put their jackets on and went to the supermarket to buy the food they needed. They ran home to the flat and washed all the vegetables and started to cook.</p>
-                            
-                            <img src="../../../assets/cambridge/a1-movers/story-scene3.jpg" alt="Mum with books" class="story-image">
-                            
-                            <p style="font-size: 1.05rem; line-height: 1.8;">Mum carried lots of books in her bag. She wasn't very strong and she had to walk slowly.</p>
-                            
-                            <img src="../../../assets/cambridge/a1-movers/story-scene4.jpg" alt="Lift not working" class="story-image">
-                            
-                            <p style="font-size: 1.05rem; line-height: 1.8;">At the flat Mum walked into the hall and waited for the lift. It didn't come. 'It's not working,' she thought. 'I have to walk up the stairs to the flat!' It wasn't easy.</p>
-                            
-                            <img src="../../../assets/cambridge/a1-movers/story-scene5.jpg" alt="Family dinner" class="story-image">
-                            
-                            <p style="font-size: 1.05rem; line-height: 1.8;">When Mum opened the door of the flat, she was very surprised. Lucy and Hugo, who were near the table, said to her, 'Come and have dinner. It's sausages, potatoes and peas. Sit down and enjoy it, Mum!' 'This is great. Thank you,' she said. She was very happy.</p>
-                        </div>
+                    <div style="background: white; padding: 40px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                        <h3 style="text-align: center; margin-bottom: 30px; color: #333;">Lucy and Hugo's mum</h3>
                         
-                        <!-- Questions on the right -->
-                        <div>
-                            <div class="example-box">
-                                <h4><strong>Examples</strong></h4>
-                                <p style="margin: 5px 0;">Last Thursday was a <input type="text" value="cold" readonly style="background: #d1ecf1; border: none; border-bottom: 2px solid #0dcaf0; padding: 2px 8px; min-width: 100px;"> and windy day.</p>
-                                <p style="margin: 5px 0;">Lucy and Hugo lived in a <input type="text" value="flat" readonly style="background: #d1ecf1; border: none; border-bottom: 2px solid #0dcaf0; padding: 2px 8px; min-width: 100px;">.</p>
-                            </div>
-                            
-                            <h4 style="margin-bottom: 20px;"><strong>Questions</strong></h4>
-                            <ul class="question-list">
-                                <li><span class="question-number">1</span>Their mum worked at a<br>
-                                    <input type="text" id="q22" class="gap-input" placeholder="..............................." autocomplete="off">.</li>
-                                <li><span class="question-number">2</span>Lucy and Hugo wanted to do something<br>
-                                    <input type="text" id="q23" class="gap-input" placeholder="..............................." autocomplete="off"> for Mum.</li>
-                                <li><span class="question-number">3</span>Lucy and Hugo bought some food, then they<br>
-                                    <input type="text" id="q24" class="gap-input" placeholder="..............................." autocomplete="off"> the vegetables and started cooking.</li>
-                                <li><span class="question-number">4</span>There were some<br>
-                                    <input type="text" id="q25" class="gap-input" placeholder="..............................." autocomplete="off"> in Mum's bag which were difficult to carry.</li>
-                                <li><span class="question-number">5</span>Mum had to walk up the stairs because<br>
-                                    <input type="text" id="q26" class="gap-input" placeholder="..............................." autocomplete="off"> didn't work.</li>
-                                <li><span class="question-number">6</span>Mum was<br>
-                                    <input type="text" id="q27" class="gap-input" placeholder="..............................." autocomplete="off"> when she opened the door.</li>
-                                <li><span class="question-number">7</span>The family ate<br>
-                                    <input type="text" id="q28" class="gap-input" placeholder="..............................." autocomplete="off"> and potatoes and Mum said, 'This is great! Thank you!'</li>
-                            </ul>
+                        <img src="images/part 5/Lucy and Hugo's mom.png" alt="Lucy and Hugo at home" class="story-image" style="max-width: 700px;">
+                        
+                        <p style="font-size: 1.05rem; line-height: 1.8; margin: 20px 0;">Last Thursday was a cold and windy day. Lucy and Hugo were at home in their flat on the tenth floor. Their mum was a teacher at a music school. That day Mum had to go to the library after work.</p>
+                        
+                        <p style="font-size: 1.05rem; line-height: 1.8; margin: 20px 0;">Lucy said, 'Let's do something nice for Mum.' 'That's a good idea,' said Hugo. 'She cooks for us every day, let's cook for her today,' Hugo said.</p>
+                        
+                        <div class="example-box" style="background: #e7f3ff; padding: 20px; border-radius: 8px; margin: 30px 0; border-left: 4px solid #0d6efd;">
+                            <h4 style="margin-top: 0;"><strong>Examples</strong></h4>
+                            <p style="margin: 10px 0; font-size: 1.05rem;">Last Thursday was a <input type="text" value="cold" readonly style="background: #d1ecf1; border: none; border-bottom: 2px solid #0dcaf0; padding: 2px 8px; min-width: 100px; font-size: 1rem;"> and windy day.</p>
+                            <p style="margin: 10px 0; font-size: 1.05rem;">Lucy and Hugo lived in a <input type="text" value="flat" readonly style="background: #d1ecf1; border: none; border-bottom: 2px solid #0dcaf0; padding: 2px 8px; min-width: 100px; font-size: 1rem;">.</p>
                         </div>
                     </div>
                 </div>
 
                 <div id="questions-5" class="question-set hidden">
-                    <!-- Questions are now inline in passage-text-5 -->
+                    <!-- Question 22 (1) -->
+                    <div class="question-container" id="q-container-22">
+                        <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <img src="images/part 5/Lucy and Hugo's mom.png" alt="Lucy and Hugo at home" class="story-image" style="max-width: 700px;">
+                            
+                            <p style="font-size: 1.05rem; line-height: 1.8; margin: 20px 0; color: #333;">Their mum was a teacher at a music school.</p>
+                            
+                            <div style="margin-top: 25px; padding: 20px 0; border-top: 1px solid #e0e0e0;">
+                                <p style="margin: 0; font-size: 1.05rem; line-height: 1.8;"><strong>1</strong> Their mum worked at a 
+                                <input type="text" id="q22" class="gap-input" placeholder="................................................." autocomplete="off" style="min-width: 300px; font-size: 1rem;">.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 23 (2) -->
+                    <div class="question-container" id="q-container-23">
+                        <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <img src="images/part 5/Lucy and Hugo's mom.png" alt="Lucy and Hugo thinking" class="story-image" style="max-width: 700px;">
+                            
+                            <p style="font-size: 1.05rem; line-height: 1.8; margin: 20px 0; color: #333;">Lucy said, 'Let's do something nice for Mum.' 'That's a good idea,' said Hugo.</p>
+                            
+                            <div style="margin-top: 25px; padding: 20px 0; border-top: 1px solid #e0e0e0;">
+                                <p style="margin: 0; font-size: 1.05rem; line-height: 1.8;"><strong>2</strong> Lucy and Hugo wanted to do something 
+                                <input type="text" id="q23" class="gap-input" placeholder="................................................." autocomplete="off" style="min-width: 300px; font-size: 1rem;"> for Mum.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 24 (3) -->
+                    <div class="question-container" id="q-container-24">
+                        <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <img src="images/part 5/the children.png" alt="Children shopping and cooking" class="story-image" style="max-width: 700px;">
+                            
+                            <p style="font-size: 1.05rem; line-height: 1.8; margin: 20px 0; color: #333;">The children put their jackets on and went to the supermarket to buy the food they needed. They ran home to the flat and washed all the vegetables and started to cook.</p>
+                            
+                            <div style="margin-top: 25px; padding: 20px 0; border-top: 1px solid #e0e0e0;">
+                                <p style="margin: 0; font-size: 1.05rem; line-height: 1.8;"><strong>3</strong> Lucy and Hugo bought some food, then they 
+                                <input type="text" id="q24" class="gap-input" placeholder="................................................." autocomplete="off" style="min-width: 300px; font-size: 1rem;"> the vegetables and started cooking.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 25 (4) -->
+                    <div class="question-container" id="q-container-25">
+                        <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <img src="images/part 5/Lucy and Hugo's mom.png" alt="Mum carrying books" class="story-image" style="max-width: 700px;">
+                            
+                            <p style="font-size: 1.05rem; line-height: 1.8; margin: 20px 0; color: #333;">Mum carried lots of books in her bag. She wasn't very strong and she had to walk slowly.</p>
+                            
+                            <div style="margin-top: 25px; padding: 20px 0; border-top: 1px solid #e0e0e0;">
+                                <p style="margin: 0; font-size: 1.05rem; line-height: 1.8;"><strong>4</strong> There were some 
+                                <input type="text" id="q25" class="gap-input" placeholder="................................................." autocomplete="off" style="min-width: 300px; font-size: 1rem;"> in Mum's bag which were difficult to carry.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 26 (5) -->
+                    <div class="question-container" id="q-container-26">
+                        <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <img src="images/part 5/Lucy and Hugo's mom.png" alt="Mum at the lift" class="story-image" style="max-width: 700px;">
+                            
+                            <p style="font-size: 1.05rem; line-height: 1.8; margin: 20px 0; color: #333;">At the flat Mum walked into the hall and waited for the lift. It didn't come. 'It's not working,' she thought. 'I have to walk up the stairs to the flat!' It wasn't easy.</p>
+                            
+                            <div style="margin-top: 25px; padding: 20px 0; border-top: 1px solid #e0e0e0;">
+                                <p style="margin: 0; font-size: 1.05rem; line-height: 1.8;"><strong>5</strong> Mum had to walk up the stairs because 
+                                <input type="text" id="q26" class="gap-input" placeholder="................................................." autocomplete="off" style="min-width: 300px; font-size: 1rem;"> didn't work.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 27 (6) -->
+                    <div class="question-container" id="q-container-27">
+                        <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <img src="images/part 5/family dinner.png" alt="Mum surprised at door" class="story-image" style="max-width: 700px;">
+                            
+                            <p style="font-size: 1.05rem; line-height: 1.8; margin: 20px 0; color: #333;">When Mum opened the door of the flat, she was very surprised.</p>
+                            
+                            <div style="margin-top: 25px; padding: 20px 0; border-top: 1px solid #e0e0e0;">
+                                <p style="margin: 0; font-size: 1.05rem; line-height: 1.8;"><strong>6</strong> Mum was 
+                                <input type="text" id="q27" class="gap-input" placeholder="................................................." autocomplete="off" style="min-width: 300px; font-size: 1rem;"> when she opened the door.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 28 (7) -->
+                    <div class="question-container" id="q-container-28">
+                        <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <img src="images/part 5/family dinner.png" alt="Family having dinner" class="story-image" style="max-width: 700px;">
+                            
+                            <p style="font-size: 1.05rem; line-height: 1.8; margin: 20px 0; color: #333;">Lucy and Hugo, who were near the table, said to her, 'Come and have dinner. It's sausages, potatoes and peas. Sit down and enjoy it, Mum!' 'This is great. Thank you,' she said. She was very happy.</p>
+                            
+                            <div style="margin-top: 25px; padding: 20px 0; border-top: 1px solid #e0e0e0;">
+                                <p style="margin: 0; font-size: 1.05rem; line-height: 1.8;"><strong>7</strong> The family ate 
+                                <input type="text" id="q28" class="gap-input" placeholder="................................................." autocomplete="off" style="min-width: 300px; font-size: 1rem;"> and potatoes and Mum said, 'This is great! Thank you!'</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- PART 6 - PICTURE DESCRIPTION -->
                 <div id="passage-text-6" class="reading-passage hidden">
-                    <img src="../../../assets/cambridge/a1-movers/main-picture.jpg" alt="Family scene with rain" class="main-picture">
+                    <div class="part-header">
+                        <h3 style="text-align: center; margin: 0; color: #0d6efd;">Part 6 - 6 questions</h3>
+                        <p style="text-align: center; margin: 10px 0 0 0; font-size: 1.05rem;">Look and read and write.</p>
+                    </div>
                     
-                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
-                        <p style="margin: 0 0 15px 0;"><strong>Examples</strong></p>
-                        <p style="margin: 5px 0;">There is a lot of rain falling from those 
-                            <input type="text" value="grey clouds" readonly style="background: #e9ecef; border: none; border-bottom: 2px solid #666; padding: 2px 8px; min-width: 150px;">.</p>
-                        <p style="margin: 5px 0;"><strong>Where's the woman?</strong> 
-                            <input type="text" value="In the house" readonly style="background: #e9ecef; border: none; border-bottom: 2px solid #666; padding: 2px 8px; min-width: 150px;"></p>
+                    <div style="background: white; padding: 40px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                        <img src="images/part 6/playing outside.png" alt="Children playing outside" class="main-picture">
+                        
+                        <div style="background: #e7f3ff; padding: 25px; border-radius: 8px; margin-top: 30px; border-left: 4px solid #0d6efd;">
+                            <p style="margin: 0 0 15px 0; font-size: 1.1rem;"><strong>Examples</strong></p>
+                            <p style="margin: 10px 0; font-size: 1.05rem;">There is a lot of rain falling from those 
+                                <input type="text" value="grey clouds" readonly style="background: #d1ecf1; border: none; border-bottom: 2px solid #0dcaf0; padding: 4px 12px; min-width: 180px; font-size: 1rem;">.</p>
+                            <p style="margin: 10px 0; font-size: 1.05rem;"><strong>Where's the woman?</strong> 
+                                <input type="text" value="In the house" readonly style="background: #d1ecf1; border: none; border-bottom: 2px solid #0dcaf0; padding: 4px 12px; min-width: 180px; font-size: 1rem;"></p>
+                        </div>
                     </div>
                 </div>
 
                 <div id="questions-6" class="question-set hidden">
-                    <div class="questions-container">
-                        <div class="question">
-                            <div class="question-prompt">
-                                <p><strong>Questions</strong></p>
-                                <p><strong>Complete the sentences.</strong></p>
+                    <!-- Question 29 (1) -->
+                    <div class="question-container" id="q-container-29">
+                        <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <img src="images/part 6/playing outside.png" alt="Children playing outside" class="main-picture">
+                            
+                            <div style="margin-top: 25px; padding: 20px 0; border-top: 1px solid #e0e0e0;">
+                                <p style="margin: 0 0 10px 0; font-size: 1rem; color: #666;">Complete the sentences.</p>
+                                <p style="margin: 10px 0 0 0; font-size: 1.05rem; line-height: 1.8;"><strong>1</strong> On their feet, all the children are wearing 
+                                <input type="text" id="q29" class="gap-input" placeholder="................................................." autocomplete="off" style="min-width: 350px; font-size: 1rem;">.</p>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 30 (2) -->
+                    <div class="question-container" id="q-container-30">
+                        <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <img src="images/part 6/playing outside.png" alt="Children playing outside" class="main-picture">
                             
-                            <ul class="question-list">
-                                <li><span class="question-number">1</span>On their feet, all the children are wearing 
-                                    <input type="text" id="q29" class="gap-input" placeholder="..............................." autocomplete="off" style="min-width: 200px;">.</li>
-                                <li><span class="question-number">2</span>The cat in the tree is 
-                                    <input type="text" id="q30" class="gap-input" placeholder="..............................." autocomplete="off" style="min-width: 200px;">.</li>
-                            </ul>
-                            
-                            <div class="question-prompt" style="margin-top: 25px;">
-                                <p><strong>Answer the questions.</strong></p>
+                            <div style="margin-top: 25px; padding: 20px 0; border-top: 1px solid #e0e0e0;">
+                                <p style="margin: 0 0 10px 0; font-size: 1rem; color: #666;">Complete the sentences.</p>
+                                <p style="margin: 10px 0 0 0; font-size: 1.05rem; line-height: 1.8;"><strong>2</strong> The cat in the tree is 
+                                <input type="text" id="q30" class="gap-input" placeholder="................................................." autocomplete="off" style="min-width: 350px; font-size: 1rem;">.</p>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 31 (3) -->
+                    <div class="question-container" id="q-container-31">
+                        <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <img src="images/part 6/playing outside.png" alt="Children playing outside" class="main-picture">
                             
-                            <ul class="question-list">
-                                <li><span class="question-number">3</span>What are the two biggest children doing?<br>
-                                    <input type="text" id="q31" class="gap-input" placeholder="................................................................." autocomplete="off" style="min-width: 300px; margin-top: 8px;"></li>
-                                <li><span class="question-number">4</span>Where is the snail?<br>
-                                    <input type="text" id="q32" class="gap-input" placeholder="................................................................." autocomplete="off" style="min-width: 300px; margin-top: 8px;"></li>
-                            </ul>
-                            
-                            <div class="question-prompt" style="margin-top: 25px;">
-                                <p><strong>Now write two sentences about the picture.</strong></p>
+                            <div style="margin-top: 25px; padding: 20px 0; border-top: 1px solid #e0e0e0;">
+                                <p style="margin: 0 0 10px 0; font-size: 1rem; color: #666;">Answer the questions.</p>
+                                <p style="margin: 10px 0 0 0; font-size: 1.05rem; line-height: 1.8;"><strong>3</strong> What are the two biggest children doing?<br>
+                                <input type="text" id="q31" class="gap-input" placeholder=".................................................................................." autocomplete="off" style="min-width: 500px; margin-top: 8px; font-size: 1rem;"></p>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 32 (4) -->
+                    <div class="question-container" id="q-container-32">
+                        <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <img src="images/part 6/playing outside.png" alt="Children playing outside" class="main-picture">
                             
-                            <ul class="question-list">
-                                <li><span class="question-number">5</span><input type="text" id="q33" class="gap-input" placeholder="................................................................." autocomplete="off" style="min-width: 400px;"></li>
-                                <li><span class="question-number">6</span><input type="text" id="q34" class="gap-input" placeholder="................................................................." autocomplete="off" style="min-width: 400px;"></li>
-                            </ul>
+                            <div style="margin-top: 25px; padding: 20px 0; border-top: 1px solid #e0e0e0;">
+                                <p style="margin: 0 0 10px 0; font-size: 1rem; color: #666;">Answer the questions.</p>
+                                <p style="margin: 10px 0 0 0; font-size: 1.05rem; line-height: 1.8;"><strong>4</strong> Where is the snail?<br>
+                                <input type="text" id="q32" class="gap-input" placeholder=".................................................................................." autocomplete="off" style="min-width: 500px; margin-top: 8px; font-size: 1rem;"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 33 (5) -->
+                    <div class="question-container" id="q-container-33">
+                        <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <img src="images/part 6/playing outside.png" alt="Children playing outside" class="main-picture">
+                            
+                            <div style="margin-top: 25px; padding: 20px 0; border-top: 1px solid #e0e0e0;">
+                                <p style="margin: 0 0 10px 0; font-size: 1rem; color: #666;">Now write two sentences about the picture.</p>
+                                <p style="margin: 10px 0 0 0; font-size: 1.05rem; line-height: 1.8;"><strong>5</strong><br>
+                                <input type="text" id="q33" class="gap-input" placeholder=".................................................................................." autocomplete="off" style="min-width: 550px; margin-top: 8px; font-size: 1rem;"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 34 (6) -->
+                    <div class="question-container" id="q-container-34">
+                        <div style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <img src="images/part 6/playing outside.png" alt="Children playing outside" class="main-picture">
+                            
+                            <div style="margin-top: 25px; padding: 20px 0; border-top: 1px solid #e0e0e0;">
+                                <p style="margin: 0 0 10px 0; font-size: 1rem; color: #666;">Now write two sentences about the picture.</p>
+                                <p style="margin: 10px 0 0 0; font-size: 1.05rem; line-height: 1.8;"><strong>6</strong><br>
+                                <input type="text" id="q34" class="gap-input" placeholder=".................................................................................." autocomplete="off" style="min-width: 550px; margin-top: 8px; font-size: 1rem;"></p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -969,18 +1028,156 @@
 <script src="../../../assets/js/distraction-free.js"></script>
 <script src="../../../assets/js/session-manager.js"></script>
 <script>
-    // Cambridge A1 Movers - Unified Layout System
+    // Cambridge A1 Movers - Navigation System
+    let currentPart = 1;
+    let currentQuestion = 1;
+
+    // Part configuration
+    const partConfig = {
+        1: { questions: [1, 2, 3, 4, 5] },
+        2: { questions: [6, 7, 8, 9, 10, 11] },
+        3: { questions: [12, 13, 14, 15, 16] },
+        4: { questions: [17, 18, 19, 20, 21] },
+        5: { questions: [22, 23, 24, 25, 26, 27, 28] },
+        6: { questions: [29, 30, 31, 32, 33, 34] }
+    };
+
+    function switchToPart(part) {
+        console.log('Switching to part:', part);
+        currentPart = part;
+        
+        // Hide all passages and questions
+        document.querySelectorAll('.reading-passage').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.question-set').forEach(el => el.classList.add('hidden'));
+        
+        // Show the selected part's passage and questions
+        const passageEl = document.getElementById(`passage-text-${part}`);
+        const questionsEl = document.getElementById(`questions-${part}`);
+        
+        if (passageEl) passageEl.classList.remove('hidden');
+        if (questionsEl) questionsEl.classList.remove('hidden');
+        
+        // Update navigation buttons
+        updateNavigationButtons();
+        
+        // Go to first question of this part
+        const firstQuestion = partConfig[part].questions[0];
+        goToQuestion(firstQuestion);
+    }
+
+    function goToQuestion(questionNum) {
+        console.log('Going to question:', questionNum);
+        currentQuestion = questionNum;
+        
+        // Find which part this question belongs to
+        for (let part in partConfig) {
+            if (partConfig[part].questions.includes(questionNum)) {
+                if (currentPart !== parseInt(part)) {
+                    switchToPart(parseInt(part));
+                    return; // switchToPart will call goToQuestion again
+                }
+                break;
+            }
+        }
+        
+        // Hide all question containers
+        document.querySelectorAll('.question-container').forEach(el => {
+            el.style.display = 'none';
+        });
+        
+        // Show the specific question container
+        const questionContainer = document.getElementById(`q-container-${questionNum}`);
+        if (questionContainer) {
+            questionContainer.style.display = 'block';
+        }
+        
+        // Update navigation buttons
+        updateNavigationButtons();
+        
+        // Scroll to top
+        document.querySelector('.main-container').scrollTop = 0;
+    }
+
+    function nextQuestion() {
+        const partQuestions = partConfig[currentPart].questions;
+        const currentIndex = partQuestions.indexOf(currentQuestion);
+        
+        if (currentIndex < partQuestions.length - 1) {
+            // Next question in same part
+            goToQuestion(partQuestions[currentIndex + 1]);
+        } else if (currentPart < 6) {
+            // Move to next part
+            switchToPart(currentPart + 1);
+        }
+    }
+
+    function previousQuestion() {
+        const partQuestions = partConfig[currentPart].questions;
+        const currentIndex = partQuestions.indexOf(currentQuestion);
+        
+        if (currentIndex > 0) {
+            // Previous question in same part
+            goToQuestion(partQuestions[currentIndex - 1]);
+        } else if (currentPart > 1) {
+            // Move to previous part, last question
+            const prevPart = currentPart - 1;
+            const prevPartQuestions = partConfig[prevPart].questions;
+            currentPart = prevPart;
+            goToQuestion(prevPartQuestions[prevPartQuestions.length - 1]);
+        }
+    }
+
+    function updateNavigationButtons() {
+        // Update part buttons
+        document.querySelectorAll('.footer__questionNo___3WNct').forEach((btn, index) => {
+            const part = index + 1;
+            if (part === currentPart) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        
+        // Update question buttons
+        document.querySelectorAll('.subQuestion').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Find and highlight current question button
+        const allButtons = document.querySelectorAll('.subQuestion');
+        allButtons.forEach(btn => {
+            const onClick = btn.getAttribute('onclick');
+            if (onClick && onClick.includes(`goToQuestion(${currentQuestion})`)) {
+                btn.classList.add('active');
+            }
+        });
+        
+        // Update arrow buttons
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        if (prevBtn) {
+            prevBtn.disabled = (currentPart === 1 && currentQuestion === 1);
+        }
+        
+        if (nextBtn) {
+            nextBtn.disabled = (currentPart === 6 && currentQuestion === 34);
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const studentId = localStorage.getItem('studentId');
         if (studentId) {
             document.getElementById('student-id-display').textContent = studentId;
         }
 
+        // Initialize - show Part 1
+        switchToPart(1);
+
         // Add hover effect to word bank items
         const wordbankItems = document.querySelectorAll('.wordbank-item');
         wordbankItems.forEach(item => {
             item.addEventListener('click', function() {
-                // Optional: Copy word to clipboard for easier pasting
                 const word = this.textContent;
                 navigator.clipboard.writeText(word).then(() => {
                     this.style.background = '#d4edda';
