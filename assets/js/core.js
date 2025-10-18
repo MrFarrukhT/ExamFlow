@@ -42,12 +42,16 @@
         const testSkill = document.body.dataset.skill;
         let passagePanel, questionsPanel;
         
-        if (testSkill === 'reading') {
+        console.log(`🎯 Test skill detected: "${testSkill}"`);
+        
+        if (testSkill === 'reading' || testSkill === 'reading-writing') {
             passagePanel = document.getElementById('passage-panel');
             questionsPanel = document.getElementById('questions-panel');
+            console.log(`📖 Reading mode - Passage panel: ${passagePanel ? 'Found' : 'Not found'}, Questions panel: ${questionsPanel ? 'Found' : 'Not found'}`);
         } else if (testSkill === 'writing') {
             passagePanel = document.querySelector('.task-panel');
             questionsPanel = document.querySelector('.writing-panel');
+            console.log(`✍️ Writing mode - Task panel: ${passagePanel ? 'Found' : 'Not found'}, Writing panel: ${questionsPanel ? 'Found' : 'Not found'}`);
         }
         
         const contextMenu = document.getElementById('contextMenu');
@@ -249,12 +253,20 @@ async function loadAnswers() {
             });
 
             if (resizer) {
+                console.log('✅ Resizer found and initialized');
                 resizer.addEventListener('mousedown', initResize, false);
+                // Add touch support for mobile devices
+                resizer.addEventListener('touchstart', initResizeTouch, false);
+            } else {
+                console.warn('⚠️ Resizer element not found');
             }
             
             // Initialize context menu only if it exists
             if (contextMenu) {
+                console.log('✅ Context menu found and initialized');
                 initializeContextMenu();
+            } else {
+                console.warn('⚠️ Context menu element not found');
             }
         }
 
@@ -1475,6 +1487,29 @@ async function loadAnswers() {
             
             window.addEventListener('mousemove', doDrag, false);
             window.addEventListener('mouseup', stopDrag, false);
+        }
+        
+        // Touch support for resizer
+        function initResizeTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const startX = touch.clientX;
+            const startWidth = passagePanel.offsetWidth;
+            
+            const doDragTouch = (e) => {
+                const touch = e.touches[0];
+                const newWidth = startWidth + touch.clientX - startX;
+                if (newWidth > 200 && (document.body.clientWidth - newWidth - resizer.offsetWidth) > 200) {
+                    passagePanel.style.flex = `0 0 ${newWidth}px`;
+                }
+            };
+            const stopDragTouch = () => {
+                window.removeEventListener('touchmove', doDragTouch, false);
+                window.removeEventListener('touchend', stopDragTouch, false);
+            };
+            
+            window.addEventListener('touchmove', doDragTouch, false);
+            window.addEventListener('touchend', stopDragTouch, false);
         }
         
         // --- CONTEXT MENU (Highlighting) ---
