@@ -22,7 +22,7 @@ This will:
 - Load the entry page for student login
 
 ### 2. Student Workflow
-1. Students enter their ID and name on `index-cambridge.html`
+1. Students enter their ID and name on `index.html`
 2. Select their Cambridge level (A1, A2, B1, or B2) on the dashboard
 3. Complete test modules (Reading/Writing, Listening)
 4. Submit answers - automatically saved to database
@@ -36,7 +36,7 @@ This will:
 
 ```
 Cambridge/
-├── index-cambridge.html          # Entry/login page
+├── index.html                    # Entry/login page
 ├── dashboard-cambridge.html      # Level selection & module dashboard
 ├── launcher-cambridge.html       # Application launcher
 ├── README-CAMBRIDGE.md          # This file

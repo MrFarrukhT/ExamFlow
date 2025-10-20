@@ -114,13 +114,13 @@
                     sessionStorage.setItem('distractionFreeMode', 'true');
 
                     // Navigate to Cambridge entry page
-                    window.location.href = 'index-cambridge.html';
+                    window.location.href = 'index.html';
                 }, 100);
             }).catch(err => {
                 console.log('Fullscreen request failed:', err);
                 // Still navigate even if fullscreen fails
                 sessionStorage.setItem('distractionFreeMode', 'true');
-                window.location.href = 'index-cambridge.html';
+                window.location.href = 'index.html';
             });
         }
 

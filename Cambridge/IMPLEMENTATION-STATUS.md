@@ -3,7 +3,7 @@
 ## ✅ COMPLETED COMPONENTS (100%)
 
 ### 1. Core System Files ✓
-- ✅ `index-cambridge.html` - Entry/login page with Cambridge branding
+- ✅ `index.html` - Entry/login page with Cambridge branding
 - ✅ `dashboard-cambridge.html` - Level selection (A1, A2, B1, B2) with dynamic module loading
 - ✅ `launcher-cambridge.html` - Fullscreen application launcher
 - ✅ `README-CAMBRIDGE.md` - Complete setup and usage guide
@@ -56,7 +56,7 @@
 ### 8. Folder Structure ✓
 ```
 Cambridge/
-├── index-cambridge.html
+├── index.html
 ├── dashboard-cambridge.html
 ├── launcher-cambridge.html
 ├── README-CAMBRIDGE.md
