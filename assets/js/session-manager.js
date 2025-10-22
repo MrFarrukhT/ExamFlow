@@ -53,19 +53,27 @@ function getCurrentModule() {
 }
 
 function setupSessionHandlers() {
+    const currentModule = getCurrentModule();
+    
     // Override the existing deliver button functionality
     const deliverButton = document.getElementById('deliver-button');
     if (deliverButton) {
-        // Remove existing event listeners by cloning the button
-        const newDeliverButton = deliverButton.cloneNode(true);
-        
-        // Remove the onclick attribute to prevent double submission
-        newDeliverButton.removeAttribute('onclick');
-        
-        deliverButton.parentNode.replaceChild(newDeliverButton, deliverButton);
-        
-        // Add our new event listener
-        newDeliverButton.addEventListener('click', handleTestCompletion);
+        // For listening tests, the listening.js handles the submit button
+        // For writing tests, the writing-handler.js handles it
+        // Only override for reading tests or if no specific handler exists
+        if (currentModule === 'reading') {
+            // Remove existing event listeners by cloning the button
+            const newDeliverButton = deliverButton.cloneNode(true);
+            
+            // Remove the onclick attribute to prevent double submission
+            newDeliverButton.removeAttribute('onclick');
+            
+            deliverButton.parentNode.replaceChild(newDeliverButton, deliverButton);
+            
+            // Add our new event listener
+            newDeliverButton.addEventListener('click', handleTestCompletion);
+        }
+        // For listening and writing, their respective handlers will manage the button
     }
     
     // Prevent back navigation

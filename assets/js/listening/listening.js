@@ -1131,34 +1131,11 @@
                 
                 console.log(`Calculated listening score: ${score}/${totalQuestions}`);
                 
-                // Create form and submit to backend
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = window.location.href;
-                form.style.display = 'none';
-                
-                // Add score
-                const scoreInput = document.createElement('input');
-                scoreInput.type = 'hidden';
-                scoreInput.name = 'score';
-                scoreInput.value = score.toString();
-                form.appendChild(scoreInput);
-                
-                // Add completion status
-                const completedInput = document.createElement('input');
-                completedInput.type = 'hidden';
-                completedInput.name = 'completed';
-                completedInput.value = 'true';
-                form.appendChild(completedInput);
-                
-                // Add candidate ID if available
-                if (candidateId) {
-                    const candidateInput = document.createElement('input');
-                    candidateInput.type = 'hidden';
-                    candidateInput.name = 'candidate_id';
-                    candidateInput.value = candidateId;
-                    form.appendChild(candidateInput);
-                }
+                // Save the score and answers to localStorage
+                localStorage.setItem('listeningScore', score.toString());
+                localStorage.setItem('listeningAnswers', JSON.stringify(answers));
+                localStorage.setItem('listeningStatus', 'completed');
+                localStorage.setItem('listeningEndTime', new Date().toISOString());
                 
                 // Disable submit button to prevent double submission
                 const submitButton = document.getElementById('deliver-button');
@@ -1167,9 +1144,15 @@
                     submitButton.innerHTML = '<span>Submitting...</span>';
                 }
                 
-                document.body.appendChild(form);
-                console.log('Submitting listening form with score:', score);
-                form.submit();
+                console.log('Listening test completed. Score saved:', score);
+                
+                // Show success message without revealing score
+                alert('Listening section completed successfully!\nYou will be redirected to the dashboard.');
+                
+                // Redirect to dashboard
+                setTimeout(() => {
+                    window.location.href = '../../dashboard.html';
+                }, 500);
                 
             } catch (error) {
                 console.error('Listening submit error:', error);
@@ -1376,6 +1359,14 @@
             console.log(`🔒 Applying autocomplete prevention to ${answerInputs.length} input fields`);
             
             answerInputs.forEach((input, index) => {
+                // Skip radio buttons and checkboxes - they need their original name attribute to work as groups
+                if (input.type === 'radio' || input.type === 'checkbox') {
+                    // Only apply autocomplete attribute, don't change name or add readonly
+                    input.setAttribute('autocomplete', 'off');
+                    console.log(`⏩ Skipping name change for ${input.type} button: ${input.name || input.id}`);
+                    return;
+                }
+                
                 // Add autocomplete attribute to prevent browser suggestions
                 input.setAttribute('autocomplete', 'one-time-code');
                 

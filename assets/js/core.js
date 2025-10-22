@@ -282,6 +282,14 @@ async function loadAnswers() {
             console.log(`🔒 Applying autocomplete prevention to ${answerInputs.length} input fields and textareas`);
             
             answerInputs.forEach((input, index) => {
+                // Skip radio buttons and checkboxes - they need their original name attribute to work as groups
+                if (input.type === 'radio' || input.type === 'checkbox') {
+                    // Only apply autocomplete attribute, don't change name or add readonly
+                    input.setAttribute('autocomplete', 'off');
+                    console.log(`⏩ Skipping name change for ${input.type} button: ${input.name || input.id}`);
+                    return;
+                }
+                
                 // Add autocomplete attribute to prevent browser suggestions
                 input.setAttribute('autocomplete', 'one-time-code');
                 
