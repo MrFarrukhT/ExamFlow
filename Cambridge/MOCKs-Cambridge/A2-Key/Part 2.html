@@ -520,6 +520,68 @@
                 
                 console.log('Cambridge Test Page - Part 2 - Local Development Mode');
             })();
+
+            // Navigation between parts
+            document.addEventListener('DOMContentLoaded', function() {
+                const partFiles = {
+                    1: 'Part 1.html',
+                    2: 'Part 2.html',
+                    3: 'Part 3.html',
+                    4: 'Part 4.html',
+                    5: 'Part 5.html',
+                    6: 'Part 6.html',
+                    7: 'Part 7.html'
+                };
+
+                const currentPart = 2;
+
+                // Handle Part button clicks
+                document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach(function(wrapper) {
+                    const partButton = wrapper.querySelector('.footer__questionNo___3WNct');
+                    if (partButton) {
+                        const partNumber = parseInt(partButton.querySelector('.sectionNr').textContent.trim());
+                        
+                        partButton.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            if (partFiles[partNumber]) {
+                                window.location.href = partFiles[partNumber];
+                            }
+                        });
+                    }
+                });
+
+                // Handle Previous/Next arrow buttons
+                const prevButton = document.getElementById('footer-nav-button-previous');
+                const nextButton = document.getElementById('footer-nav-button-next');
+
+                if (prevButton) {
+                    prevButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (currentPart > 1) {
+                            window.location.href = partFiles[currentPart - 1];
+                        }
+                    });
+                }
+
+                if (nextButton) {
+                    nextButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (currentPart < 7) {
+                            window.location.href = partFiles[currentPart + 1];
+                        }
+                    });
+                }
+
+                // Update Previous button state
+                if (currentPart === 1 && prevButton) {
+                    prevButton.disabled = true;
+                }
+
+                // Update Next button state
+                if (currentPart === 7 && nextButton) {
+                    nextButton.disabled = true;
+                }
+            });
         </script>
     </body>
 </html>

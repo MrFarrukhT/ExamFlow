@@ -484,6 +484,70 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                                 " data-sectionid="2200793588978" tabindex="-1"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">7</span></span></button></div><button id="deliver-button" aria-label="Review your answers" class="footer__deliverButton___3FM07"><i class="fa fa fa-check" aria-hidden="true"></i></button></nav></footer></div></div></div><div class="s-alert-wrapper"></div></div></div>
         <!-- <script src="./Part 6_files/playerStartup.js.download"></script> -->
     
+        <script>
+            // Navigation between parts
+            document.addEventListener('DOMContentLoaded', function() {
+                const partFiles = {
+                    1: 'Part 1.html',
+                    2: 'Part 2.html',
+                    3: 'Part 3.html',
+                    4: 'Part 4.html',
+                    5: 'Part 5.html',
+                    6: 'Part 6.html',
+                    7: 'Part 7.html'
+                };
+
+                const currentPart = 6;
+
+                // Handle Part button clicks
+                document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach(function(wrapper) {
+                    const partButton = wrapper.querySelector('.footer__questionNo___3WNct');
+                    if (partButton) {
+                        const partNumber = parseInt(partButton.querySelector('.sectionNr').textContent.trim());
+                        
+                        partButton.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            if (partFiles[partNumber]) {
+                                window.location.href = partFiles[partNumber];
+                            }
+                        });
+                    }
+                });
+
+                // Handle Previous/Next arrow buttons
+                const prevButton = document.getElementById('footer-nav-button-previous');
+                const nextButton = document.getElementById('footer-nav-button-next');
+
+                if (prevButton) {
+                    prevButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (currentPart > 1) {
+                            window.location.href = partFiles[currentPart - 1];
+                        }
+                    });
+                }
+
+                if (nextButton) {
+                    nextButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (currentPart < 7) {
+                            window.location.href = partFiles[currentPart + 1];
+                        }
+                    });
+                }
+
+                // Update Previous button state
+                if (currentPart === 1 && prevButton) {
+                    prevButton.disabled = true;
+                }
+
+                // Update Next button state
+                if (currentPart === 7 && nextButton) {
+                    nextButton.disabled = true;
+                }
+            });
+        </script>
+
 
 <div id="preRenderTarget" aria-hidden="true" style="position: relative; height: 0px; width: 0px; overflow: hidden; visibility: hidden;"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_preload_143369604" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="preload_interactionWrapper_143369604">
       <div class="container generic">

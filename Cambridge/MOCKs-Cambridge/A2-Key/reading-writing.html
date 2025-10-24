@@ -1,85 +1,34 @@
 <!DOCTYPE html>
-<!-- saved from url=(0112)https://ceq.inspera.com/player/?assessmentRunId=146724146&context=exam#/section/3426847902314/question/144044610 -->
-<html translate="no" class="notranslate js-focus-visible" lang="en" data-js-focus-visible=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>
-/* Removed body[unresolved] rule to ensure page is always visible */
-body {
-    transition: opacity ease-in 0.2s;
-    opacity: 1 !important;
-    display: block !important;
-    overflow: auto !important;
-    position: relative;
-} 
-</style>
+<!-- saved from url=(0112)https://ceq.inspera.com/player/?assessmentRunId=146724146&context=exam#/section/1687665662102/question/143659692 -->
+<html translate="no" class="notranslate js-focus-visible" lang="en" data-js-focus-visible="">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+        /* Ensure body is always visible - prevent flash of blank page */
+        body {
+            transition: opacity ease-in 0.2s;
+            opacity: 1 !important;
+            display: block !important;
+            overflow: auto !important;
+            position: relative !important;
+        }
+        body[unresolved] {
+            opacity: 1 !important;
+        }
+    </style>
         
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="google" content="notranslate">
         <title>A2 Key RW Digital Sample Test 1_26.04.23</title>
         <link rel="shortcut icon" type="image/png" href="https://d133zon9jtcf53.cloudfront.net/favicon.png">
         
-        <script type="text/javascript">
-            // Force body visibility and authentication check
-            (function() {
-                // Check if in development mode
-                const urlParams = new URLSearchParams(window.location.search);
-                const devMode = urlParams.get('dev') === 'true';
-                
-                if (devMode) {
-                    // Development mode - set dummy credentials
-                    console.log('Development mode enabled');
-                    if (!localStorage.getItem('studentId')) {
-                        localStorage.setItem('studentId', '9999');
-                        localStorage.setItem('studentName', 'Test Student');
-                        localStorage.setItem('examType', 'Cambridge');
-                    }
-                } else {
-                    // Production mode - check authentication
-                    const studentId = localStorage.getItem('studentId');
-                    const studentName = localStorage.getItem('studentName');
-                    const examType = localStorage.getItem('examType');
-                    
-                    if (!studentId || !studentName || examType !== 'Cambridge') {
-                        alert('Session expired. Please log in again.');
-                        window.location.href = '../../index.html';
-                        return;
-                    }
-                }
-                
-                // Disable React rendering - we want to use static HTML
-                window.DISABLE_REACT_RENDERING = true;
-                
-                // Force body to be visible
-                setTimeout(function() {
-                    if (document.body) {
-                        document.body.removeAttribute('unresolved');
-                        document.body.style.opacity = '1';
-                    }
-                }, 100);
-            })();
+        <script>
+            // Stub for TrackJS to prevent errors
+            window.TrackJS = { 
+                install: function() {},
+                track: function() {} 
+            };
         </script>
-
-            <!-- <script src="./A2 Key RW Digital Sample Test 1_26.04.23_files/t.js.download"></script> -->
-            <script type="text/javascript">
-                (function () {
-                    var useProxy = true
-                    var errorURL = 'https://trackjs.inspera.com/prod/capture';
-                    var usageURL = 'https://trackjs.inspera.com/prod/usage.gif';
-                    var trackJsOptions = {
-                        token: 'b4cce6c8c1e24aac8cb156f72a033c63',
-                        application: 'tpl20',
-                        userId: '-1',
-                        version: '3.53.2'
-                    };
-
-                    if (useProxy && errorURL && usageURL) {
-                        trackJsOptions.errorURL = errorURL;
-                        trackJsOptions.usageURL = usageURL;
-                    }
-
-                    window.TrackJS && TrackJS.install(trackJsOptions);
-                })();
-            </script>
-
-        
 
         <script type="text/javascript">
             try {
@@ -226,7 +175,7 @@ body {
                 ENABLE_PRESET_ESSAY_TOOLBAR: false,
                 ENABLE_PRESET_ESSAY_SPECIAL_CHARS: false,
                 ENABLE_PRESET_MATH_SYMBOL_PALETTE: false,
-                ENABLE_PLAYER_SERVICE_WORKER_CACHE: false,
+                ENABLE_PLAYER_SERVICE_WORKER_CACHE: true,
                 ENABLE_EXPANDABLE_TEXT_FIELD: true,
                 DEFAULT_STIMULUS_SIZE: 50,
                 DEFAULT_ALLOW_STIMULUS_RESIZING: true,
@@ -333,6 +282,9 @@ body {
                 }
 
                 function shouldRegisterServiceWorker() {
+                    // Disabled for local development to prevent 404 errors
+                    return false;
+                    
                     if (window.document.location.search.indexOf('sw=register') !== -1) {
                         return true;
                     }
@@ -478,75 +430,53 @@ body {
                 }
             
         </style>
-    <!-- All external scripts disabled to prevent errors - static HTML content is sufficient -->
-    <!-- bundle.js disabled to prevent React from clearing static content -->
-    <!-- <script defer src="./A2 Key RW Digital Sample Test 1_26.04.23_files/bundle.js.download"></script> -->
-    <link rel="stylesheet" type="text/css" href="./A2 Key RW Digital Sample Test 1_26.04.23_files/player.css">
-    <!-- External scripts commented out to prevent JavaScript errors -->
-    <!-- <script async="" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/moment-timezone-with-data.min.js.download"></script> -->
-    <!-- <script async="" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/boot.js.download"></script> -->
-    <!-- <script type="text/javascript" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/jquery.bundle.js.download"></script> -->
-    <!-- <script type="text/javascript" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/annotator.bundle.js.download"></script> -->
-    
-    <!-- FontAwesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="./Part 1_files/player.css">
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ skipStartupTypeset: true });</script>
     
     <style>
-        /* Ensure content is always visible */
-        body {
-            opacity: 1 !important;
-            display: block !important;
-            visibility: visible !important;
-        }
-        #wrapper, #app {
-            display: block !important;
-            opacity: 1 !important;
-        }
+        /* Prevent flash of unstyled content */
+        body { opacity: 1 !important; }
         
-        /* MINIMAL FIX: Only add footer clearance, let Inspera CSS handle the rest */
-        .App__contentContainer___2Nu-R {
-            padding-bottom: 180px !important; /* Space for fixed footer */
-        }
-        
-        /* Fixed footer at bottom */
-        .App__footerWrapper___2el50 {
-            position: fixed !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            width: 100% !important;
-            background-color: #f2f2f2 !important;
-            z-index: 100 !important;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.1) !important;
+        /* Fallback for missing FontAwesome icons */
+        .fa:before { 
+            font-family: Arial, sans-serif; 
         }
     </style>
+
+<style>
+.part-container {
+    display: none;
+}
+.part-container:first-of-type {
+    display: block;
+}
+.part-container[style*="display: block"],
+.part-container[style=""] {
+    display: block;
+}
+</style>
+
 </head>
 
 
     <body class="ceq-theme hypothesis-highlights-always-on normal">
         
 
-        <div id="wrapper"><div class="App__app___3nDjL zoom-small" id="app" role="presentation"><div aria-hidden="false" class="App__mainScreen___3HaXz"><div class="App__mainScreenContent___1tXox" id="main-screen-content"><header class="header__header___3v_A5 header__compact___2hXxm " id="header"><div class="header__topbar___2CQ4O" id="headerTopBar"><div class="header__logo___3xoBS"><img src="./A2 Key RW Digital Sample Test 1_26.04.23_files/ceq.png" alt="header.logo"></div><div class="header__subToolbar___TmVu0"><div class="header__connectionAndButtonContainer___1t_Gd"><div class="header__connectionStatusContainer___3YItW"><div aria-live="polite" class="header__connectionStatus___3hqqN"><span role="status" class="sr-only">Connected</span></div><div class="header__icon___1ECrT"><i class="fa fa-wifi" aria-hidden="true"></i></div></div><button class="header__messagesButton___2Texb" id="messagesMenuButton"><span class="header__icon___1ECrT"><span class="sr-only">Messages</span><i class="fa fa-bell-o fa-3" aria-hidden="true"></i></span></button><button class="header__optionsButton___1BF6Z" id="optionsMenuButton"><span class="header__icon___1ECrT"><span class="sr-only">Options</span><i class="fa fa-bars fa-3" aria-hidden="true"></i></span></button><button class="header__optionsButton___1BF6Z" aria-label="Show notes" id="toggleSidebarButton" aria-expanded="false"><span class="header__icon___1ECrT"><span class="sr-only">Show notes</span><i class="fa fa-pencil-square-o fa-3" aria-hidden="true"></i></span></button></div><div class="header__centralBar___3GpJy"><div class="header__subHeaderWrapper___3FyBR"><div class="header__statusText___1fRqd"><div class="header__name___1Cw2x">Candidate ID</div><div></div></div></div></div><div class="header__statusColor___3HOPa"></div></div></div></header><div id="appContentContainer" class="App__contentContainer___2Nu-R">
-
-<!-- ==================== PART 1: Questions 1-6 ==================== -->
-<div class="part-container" data-part="1" id="part-1-container">
-<div class="DisplayTypeContainer__displayTypeContainer___3B6yh has-section-level-dynamic-rubric">
-<div class="DisplayTypeContainer__sectionContent___2HSJ0 gap-match-scroll-adjustment" id="sectionContent-part1">
-<div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE"><div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP QuestionDisplay__sectionLevelDynamicRubric___2zEDl"><h3 class="scorableItemHeadline" id="item_143369557_1">Questions 1–6</h3><div class="QuestionDisplay__rubricContent___1byNW">For each question, choose the correct answer.</div></div></div><div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper current numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-143659692" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group" aria-labelledby="nr_143369557_1 title_143369557_1"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_143659692" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_143659692">
+        <div id="wrapper"><div class="App__app___3nDjL zoom-small" id="app" role="presentation"><div aria-hidden="false" class="App__mainScreen___3HaXz"><div class="App__mainScreenContent___1tXox" id="main-screen-content"><header class="header__header___3v_A5 header__compact___2hXxm " id="header"><div class="header__topbar___2CQ4O" id="headerTopBar"><div class="header__logo___3xoBS"><img src="./Part 1_files/ceq.png" alt="header.logo"></div><div class="header__subToolbar___TmVu0"><div class="header__connectionAndButtonContainer___1t_Gd"><div class="header__connectionStatusContainer___3YItW"><div aria-live="polite" class="header__connectionStatus___3hqqN"><span role="status" class="sr-only">Connected</span></div><div class="header__icon___1ECrT"><i class="fa fa-wifi" aria-hidden="true"></i></div></div><button class="header__messagesButton___2Texb" id="messagesMenuButton"><span class="header__icon___1ECrT"><span class="sr-only">Messages</span><i class="fa fa-bell-o fa-3" aria-hidden="true"></i></span></button><button class="header__optionsButton___1BF6Z" id="optionsMenuButton"><span class="header__icon___1ECrT"><span class="sr-only">Options</span><i class="fa fa-bars fa-3" aria-hidden="true"></i></span></button><button class="header__optionsButton___1BF6Z" aria-label="Show notes" id="toggleSidebarButton" aria-expanded="false"><span class="header__icon___1ECrT"><span class="sr-only">Show notes</span><i class="fa fa-pencil-square-o fa-3" aria-hidden="true"></i></span></button></div><div class="header__centralBar___3GpJy"><div class="header__subHeaderWrapper___3FyBR"><div class="header__statusText___1fRqd"><div class="header__name___1Cw2x">Candidate ID</div><div></div></div></div></div><div class="header__statusColor___3HOPa"></div></div></div></header><div id="appContentContainer" class="App__contentContainer___2Nu-R">
+<!-- Part 1 -->
+<div class="part-container" id="part-1" data-part="1"><div class="DisplayTypeContainer__displayTypeContainer___3B6yh has-section-level-dynamic-rubric" style=""><div class="DisplayTypeContainer__sectionContent___2HSJ0 gap-match-scroll-adjustment" id="sectionContent"><div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE"><div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP QuestionDisplay__sectionLevelDynamicRubric___2zEDl"><h3 class="scorableItemHeadline" id="item_143369557_1">Questions 1–6</h3><div class="QuestionDisplay__rubricContent___1byNW">For each question, choose the correct answer.</div></div></div><div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper current numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-143659692" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group" aria-labelledby="nr_143369557_1 title_143369557_1"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_143659692" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_143659692">
       <div class="container generic">
          <div class="container partWidth percentwidth-30">
             <span class="inlineImage" id="img-1671789107627">
                <span id="143659692_content_item_127449474_143369555" class="qti-renderer-media-wrapper"><img alt="Background image" data-content-id="/file/cil/content_item_127449474_143369555/img?cacheable=true&amp;assessmentRunId=146724146" class="qti-image contrast-compatible" src="./Part 1_files/img" style="height: auto; width: 362px; max-width: 100%;"></span>
             </span>
          </div>
-         <div id="143659692_KETR20CB-NKR100014EVO-0-1" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_143659692_KETR20CB-NKR100014EVO-0-1"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt" id="interaction_group_143659692_KETR20CB-NKR100014EVO-0-1"><span class="order-number active" id="scorableItem-143659692_1">1</span></p></div><ul class="vertical"><li><input type="radio" name="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4" id="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4-A" value="A"><label for="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4-A" class="text"> <span>The bicycle that's for sale was built for a child.</span> </label></li><li><input type="radio" name="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4" id="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4-B" value="B"><label for="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4-B" class="text"> <span>Some parts of the bicycle must be changed.</span> </label></li><li><input type="radio" name="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4" id="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4-C" value="C"><label for="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4-C" class="text"> <span>Debbie is selling the bike because she's too big for it now.</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="143659692-1"><span class="sr-only">Flag question 1</span></button></div></div>
+         <div id="143659692_KETR20CB-NKR100014EVO-0-1" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_143659692_KETR20CB-NKR100014EVO-0-1"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt" id="interaction_group_143659692_KETR20CB-NKR100014EVO-0-1"><span class="order-number active" id="scorableItem-143659692_1">1</span></p></div><ul class="vertical"><li><input type="radio" name="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4" id="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4-A" value="A"><label for="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4-A" class="text"> <span>The bicycle that’s for sale was built for a child.</span> </label></li><li><input type="radio" name="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4" id="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4-B" value="B"><label for="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4-B" class="text"> <span>Some parts of the bicycle must be changed.</span> </label></li><li><input type="radio" name="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4" id="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4-C" value="C"><label for="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4-C" class="text"> <span>Debbie is selling the bike because she’s too big for it now.</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="143659692-1"><span class="sr-only">Flag question 1</span></button></div></div>
       </div>
-   </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="1" style="top: 215px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 1</span></button></div></div></div></div></div></div>
-</div>
+   </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="1" style="top: 215px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 1</span></button></div></div></div></div></div></div></div></div>
 
-<!-- ==================== PART 2: Questions 7-13 ==================== -->
-<div class="part-container" data-part="2" id="part-2-container" style="display: none;">
-<div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE" id="rubric__top-level"><div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP"><h3 class="scorableItemHeadline" id="item_143369260_7">Questions 7–13</h3><div class="QuestionDisplay__rubricContent___1byNW">For each question, choose the correct answer.</div></div></div><div class="DisplayTypeContainer__displayTypeContainer___3B6yh left-stimulus has-section-level-dynamic-rubric"><div class="StimulusDisplay__sectionStimulusWrapper___6IhoB gap-match-scroll-adjustment" id="stimulus-wrapper-3426847902314" lang="en-US" dir="ltr" role="region" tabindex="0" style="width: 736px;"><span class="sr-only">Stimulus for Questions 7–13</span><div class="StimulusDisplay__sectionStimulus___dxXPc"><div class="StimulusDisplay__stimulusContent___2KVn5 no-margins" id="stimulus-content-144044609"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_144044609" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_144044609">
+<!-- Part 2 -->
+<div class="part-container" id="part-2" data-part="2" style="display: none;"><div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE" id="rubric__top-level"><div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP"><h3 class="scorableItemHeadline" id="item_143369260_7">Questions 7–13</h3><div class="QuestionDisplay__rubricContent___1byNW">For each question, choose the correct answer.</div></div></div><div class="DisplayTypeContainer__displayTypeContainer___3B6yh left-stimulus has-section-level-dynamic-rubric" style="max-height: calc(-215px + 100vh);"><div class="StimulusDisplay__sectionStimulusWrapper___6IhoB gap-match-scroll-adjustment" id="stimulus-wrapper-3426847902314" lang="en-US" dir="ltr" role="region" tabindex="0" style="width: 736px;"><span class="sr-only">Stimulus for Questions 7–13</span><div class="StimulusDisplay__sectionStimulus___dxXPc"><div class="StimulusDisplay__stimulusContent___2KVn5 no-margins" id="stimulus-content-144044609"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_144044609" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_144044609">
       <div>
          <h2>Young blog writers</h2>
          <p><strong>Tasha</strong></p>
@@ -557,102 +487,69 @@ body {
 		 <br>
          <p><strong>Chrissie</strong></p>
          <p>I began writing on a school magazine. I stopped after a few years, but I missed it, so I started my own – I’m still writing it now! The blog’s new for me, and I write about daily life. I get ideas from friends or my sister when I can’t decide what to write about – we always think of something interesting, sad or serious. At first, almost nobody visited my site, but now more do, I’ve had some lovely comments.</p></div>
-   </div></div></div></div></div></div><div class="DisplayTypeContainer__divider___yWedB   react-draggable" style="touch-action: none; transform: translate(0px, 0px);"><div class="DisplayTypeContainer__resizeBar___1fgRC"><div class="DisplayTypeContainer__resizeBtn___1iBm6" tabindex="0" role="separator" aria-orientation="vertical"><i class="fa fa-arrows-h" aria-hidden="true"></i></div></div></div><div class="DisplayTypeContainer__sectionContent___2HSJ0 gap-match-scroll-adjustment" id="sectionContent" role="region" tabindex="0"><span class="sr-only">Questions 7–13</span><div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper current numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-144044610" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group" aria-labelledby="nr_143369260_7 title_143369260_7"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_144044610" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_144044610">
+   </div></div></div></div></div></div><div class="DisplayTypeContainer__divider___yWedB   react-draggable" style="touch-action: none; transform: translate(0px, 0px);"><div class="DisplayTypeContainer__resizeBar___1fgRC"><div class="DisplayTypeContainer__resizeBtn___1iBm6" tabindex="0" role="separator" aria-orientation="vertical"><i class="fa fa-arrows-h" aria-hidden="true"></i></div></div></div><div class="DisplayTypeContainer__sectionContent___2HSJ0 gap-match-scroll-adjustment" id="sectionContent" role="region" tabindex="0"><span class="sr-only">Questions 7–13</span><div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper current numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-144044610" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ" tabindex="-1" role="group" aria-labelledby="nr_143369260_7 title_143369260_7"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_144044610" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_144044610">
       <div class="container accordionChoice" id="choice-accordion-interaction-KR400252EVO-0-0-VFAOAQGPNTAADVP">
-         <div id="144044610_KETR20CB-KR400252EVO-0-1" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_144044610_KETR20CB-KR400252EVO-0-1"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_144044610_KETR20CB-KR400252EVO-0-1"><span class="order-number active" id="scorableItem-144044610_7">7</span><span class="text"><strong>Who writes both a magazine and a blog?</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA17609397840806dd7e02f58b04302084cc7b79bc2e79a" id="IA17609397840806dd7e02f58b04302084cc7b79bc2e79a-A" value="A"><label for="IA17609397840806dd7e02f58b04302084cc7b79bc2e79a-A" class="text"> <span>Tasha</span> </label></li><li><input type="radio" name="IA17609397840806dd7e02f58b04302084cc7b79bc2e79a" id="IA17609397840806dd7e02f58b04302084cc7b79bc2e79a-B" value="B"><label for="IA17609397840806dd7e02f58b04302084cc7b79bc2e79a-B" class="text"> <span>Danni</span> </label></li><li><input type="radio" name="IA17609397840806dd7e02f58b04302084cc7b79bc2e79a" id="IA17609397840806dd7e02f58b04302084cc7b79bc2e79a-C" value="C"><label for="IA17609397840806dd7e02f58b04302084cc7b79bc2e79a-C" class="text"> <span>Chrissie</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="144044610-7"><span class="sr-only">Flag question 7</span></button></div></div>
-         <div id="144044610_KETR20CB-KR400252EVO-0-2" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_144044610_KETR20CB-KR400252EVO-0-2"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_144044610_KETR20CB-KR400252EVO-0-2"><span class="order-number" id="scorableItem-144044610_8">8</span><span class="text"><strong>Who says that studying and writing a blog at the same time can be hard?</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA1760939784088391ae45976fd4f17169efe4714239d5f" id="IA1760939784088391ae45976fd4f17169efe4714239d5f-A" value="A"><label for="IA1760939784088391ae45976fd4f17169efe4714239d5f-A" class="text"> <span>Tasha</span> </label></li><li><input type="radio" name="IA1760939784088391ae45976fd4f17169efe4714239d5f" id="IA1760939784088391ae45976fd4f17169efe4714239d5f-B" value="B"><label for="IA1760939784088391ae45976fd4f17169efe4714239d5f-B" class="text"> <span>Danni</span> </label></li><li><input type="radio" name="IA1760939784088391ae45976fd4f17169efe4714239d5f" id="IA1760939784088391ae45976fd4f17169efe4714239d5f-C" value="C"><label for="IA1760939784088391ae45976fd4f17169efe4714239d5f-C" class="text"> <span>Chrissie</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="144044610-8"><span class="sr-only">Flag question 8</span></button></div></div>
-         <div id="144044610_KETR20CB-KR400252EVO-0-3" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_144044610_KETR20CB-KR400252EVO-0-3"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_144044610_KETR20CB-KR400252EVO-0-3"><span class="order-number" id="scorableItem-144044610_9">9</span><span class="text"><strong>Who answers questions from other people who read her blog?</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA1760939784093f5023bdfdc084d74866b535d9f42aa20" id="IA1760939784093f5023bdfdc084d74866b535d9f42aa20-A" value="A"><label for="IA1760939784093f5023bdfdc084d74866b535d9f42aa20-A" class="text"> <span>Tasha</span> </label></li><li><input type="radio" name="IA1760939784093f5023bdfdc084d74866b535d9f42aa20" id="IA1760939784093f5023bdfdc084d74866b535d9f42aa20-B" value="B"><label for="IA1760939784093f5023bdfdc084d74866b535d9f42aa20-B" class="text"> <span>Danni</span> </label></li><li><input type="radio" name="IA1760939784093f5023bdfdc084d74866b535d9f42aa20" id="IA1760939784093f5023bdfdc084d74866b535d9f42aa20-C" value="C"><label for="IA1760939784093f5023bdfdc084d74866b535d9f42aa20-C" class="text"> <span>Chrissie</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="144044610-9"><span class="sr-only">Flag question 9</span></button></div></div>
-         <div id="144044610_KETR20CB-KR400252EVO-0-4" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_144044610_KETR20CB-KR400252EVO-0-4"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_144044610_KETR20CB-KR400252EVO-0-4"><span class="order-number" id="scorableItem-144044610_10">10</span><span class="text"><strong>Who plans to stop writing her blog soon?</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA17609397840967b87051f4a814ffb2baf7db1ff36187d" id="IA17609397840967b87051f4a814ffb2baf7db1ff36187d-A" value="A"><label for="IA17609397840967b87051f4a814ffb2baf7db1ff36187d-A" class="text"> <span>Tasha</span> </label></li><li><input type="radio" name="IA17609397840967b87051f4a814ffb2baf7db1ff36187d" id="IA17609397840967b87051f4a814ffb2baf7db1ff36187d-B" value="B"><label for="IA17609397840967b87051f4a814ffb2baf7db1ff36187d-B" class="text"> <span>Danni</span> </label></li><li><input type="radio" name="IA17609397840967b87051f4a814ffb2baf7db1ff36187d" id="IA17609397840967b87051f4a814ffb2baf7db1ff36187d-C" value="C"><label for="IA17609397840967b87051f4a814ffb2baf7db1ff36187d-C" class="text"> <span>Chrissie</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="144044610-10"><span class="sr-only">Flag question 10</span></button></div></div>
-         <div id="144044610_KETR20CB-KR400252EVO-0-5" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_144044610_KETR20CB-KR400252EVO-0-5"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_144044610_KETR20CB-KR400252EVO-0-5"><span class="order-number" id="scorableItem-144044610_11">11</span><span class="text"><strong>Who didn’t have many people reading her blog in the beginning?</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA17609397840989d9f5d81e13a402eb9c5be376d12a4fa" id="IA17609397840989d9f5d81e13a402eb9c5be376d12a4fa-A" value="A"><label for="IA17609397840989d9f5d81e13a402eb9c5be376d12a4fa-A" class="text"> <span>Tasha</span> </label></li><li><input type="radio" name="IA17609397840989d9f5d81e13a402eb9c5be376d12a4fa" id="IA17609397840989d9f5d81e13a402eb9c5be376d12a4fa-B" value="B"><label for="IA17609397840989d9f5d81e13a402eb9c5be376d12a4fa-B" class="text"> <span>Danni</span> </label></li><li><input type="radio" name="IA17609397840989d9f5d81e13a402eb9c5be376d12a4fa" id="IA17609397840989d9f5d81e13a402eb9c5be376d12a4fa-C" value="C"><label for="IA17609397840989d9f5d81e13a402eb9c5be376d12a4fa-C" class="text"> <span>Chrissie</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="144044610-11"><span class="sr-only">Flag question 11</span></button></div></div>
-         <div id="144044610_KETR20CB-KR400252EVO-0-6" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_144044610_KETR20CB-KR400252EVO-0-6"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_144044610_KETR20CB-KR400252EVO-0-6"><span class="order-number" id="scorableItem-144044610_12">12</span><span class="text"><strong>Who asks a member of her family to help her write her blog?</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA1760939784102951df452b0524c780a00f09ef841c2a3" id="IA1760939784102951df452b0524c780a00f09ef841c2a3-A" value="A"><label for="IA1760939784102951df452b0524c780a00f09ef841c2a3-A" class="text"> <span>Tasha</span> </label></li><li><input type="radio" name="IA1760939784102951df452b0524c780a00f09ef841c2a3" id="IA1760939784102951df452b0524c780a00f09ef841c2a3-B" value="B"><label for="IA1760939784102951df452b0524c780a00f09ef841c2a3-B" class="text"> <span>Danni</span> </label></li><li><input type="radio" name="IA1760939784102951df452b0524c780a00f09ef841c2a3" id="IA1760939784102951df452b0524c780a00f09ef841c2a3-C" value="C"><label for="IA1760939784102951df452b0524c780a00f09ef841c2a3-C" class="text"> <span>Chrissie</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="144044610-12"><span class="sr-only">Flag question 12</span></button></div></div>
-         <div id="144044610_KETR20CB-KR400252EVO-0-7" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_144044610_KETR20CB-KR400252EVO-0-7"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_144044610_KETR20CB-KR400252EVO-0-7"><span class="order-number" id="scorableItem-144044610_13">13</span><span class="text"><strong>Who says writing a blog is easier than some other types of writing?</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA1760939784107645d6794b4d64b201d7f1f2baf4abac8" id="IA1760939784107645d6794b4d64b201d7f1f2baf4abac8-A" value="A"><label for="IA1760939784107645d6794b4d64b201d7f1f2baf4abac8-A" class="text"> <span>Tasha</span> </label></li><li><input type="radio" name="IA1760939784107645d6794b4d64b201d7f1f2baf4abac8" id="IA1760939784107645d6794b4d64b201d7f1f2baf4abac8-B" value="B"><label for="IA1760939784107645d6794b4d64b201d7f1f2baf4abac8-B" class="text"> <span>Danni</span> </label></li><li><input type="radio" name="IA1760939784107645d6794b4d64b201d7f1f2baf4abac8" id="IA1760939784107645d6794b4d64b201d7f1f2baf4abac8-C" value="C"><label for="IA1760939784107645d6794b4d64b201d7f1f2baf4abac8-C" class="text"> <span>Chrissie</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="144044610-13"><span class="sr-only">Flag question 13</span></button></div></div>
+         <div id="144044610_KETR20CB-KR400252EVO-0-1" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_144044610_KETR20CB-KR400252EVO-0-1"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_144044610_KETR20CB-KR400252EVO-0-1"><span class="order-number active" id="scorableItem-144044610_7">7</span><span class="text"><strong>Who writes both a magazine and a blog?</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA176130235934665437f376f2f47721bfd04a51a8dbb1c" id="IA176130235934665437f376f2f47721bfd04a51a8dbb1c-A" value="A"><label for="IA176130235934665437f376f2f47721bfd04a51a8dbb1c-A" class="text"> <span>Tasha</span> </label></li><li><input type="radio" name="IA176130235934665437f376f2f47721bfd04a51a8dbb1c" id="IA176130235934665437f376f2f47721bfd04a51a8dbb1c-B" value="B"><label for="IA176130235934665437f376f2f47721bfd04a51a8dbb1c-B" class="text"> <span>Danni</span> </label></li><li><input type="radio" name="IA176130235934665437f376f2f47721bfd04a51a8dbb1c" id="IA176130235934665437f376f2f47721bfd04a51a8dbb1c-C" value="C"><label for="IA176130235934665437f376f2f47721bfd04a51a8dbb1c-C" class="text"> <span>Chrissie</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="144044610-7"><span class="sr-only">Flag question 7</span></button></div></div>
+         <div id="144044610_KETR20CB-KR400252EVO-0-2" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_144044610_KETR20CB-KR400252EVO-0-2"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_144044610_KETR20CB-KR400252EVO-0-2"><span class="order-number" id="scorableItem-144044610_8">8</span><span class="text"><strong>Who says that studying and writing a blog at the same time can be hard?</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA1761302359349594501d523364d101500098c25d14612" id="IA1761302359349594501d523364d101500098c25d14612-A" value="A"><label for="IA1761302359349594501d523364d101500098c25d14612-A" class="text"> <span>Tasha</span> </label></li><li><input type="radio" name="IA1761302359349594501d523364d101500098c25d14612" id="IA1761302359349594501d523364d101500098c25d14612-B" value="B"><label for="IA1761302359349594501d523364d101500098c25d14612-B" class="text"> <span>Danni</span> </label></li><li><input type="radio" name="IA1761302359349594501d523364d101500098c25d14612" id="IA1761302359349594501d523364d101500098c25d14612-C" value="C"><label for="IA1761302359349594501d523364d101500098c25d14612-C" class="text"> <span>Chrissie</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="144044610-8"><span class="sr-only">Flag question 8</span></button></div></div>
+         <div id="144044610_KETR20CB-KR400252EVO-0-3" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_144044610_KETR20CB-KR400252EVO-0-3"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_144044610_KETR20CB-KR400252EVO-0-3"><span class="order-number" id="scorableItem-144044610_9">9</span><span class="text"><strong>Who answers questions from other people who read her blog?</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA1761302359352893b5b7780524eccb4b213e71d336b37" id="IA1761302359352893b5b7780524eccb4b213e71d336b37-A" value="A"><label for="IA1761302359352893b5b7780524eccb4b213e71d336b37-A" class="text"> <span>Tasha</span> </label></li><li><input type="radio" name="IA1761302359352893b5b7780524eccb4b213e71d336b37" id="IA1761302359352893b5b7780524eccb4b213e71d336b37-B" value="B"><label for="IA1761302359352893b5b7780524eccb4b213e71d336b37-B" class="text"> <span>Danni</span> </label></li><li><input type="radio" name="IA1761302359352893b5b7780524eccb4b213e71d336b37" id="IA1761302359352893b5b7780524eccb4b213e71d336b37-C" value="C"><label for="IA1761302359352893b5b7780524eccb4b213e71d336b37-C" class="text"> <span>Chrissie</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="144044610-9"><span class="sr-only">Flag question 9</span></button></div></div>
+         <div id="144044610_KETR20CB-KR400252EVO-0-4" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_144044610_KETR20CB-KR400252EVO-0-4"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_144044610_KETR20CB-KR400252EVO-0-4"><span class="order-number" id="scorableItem-144044610_10">10</span><span class="text"><strong>Who plans to stop writing her blog soon?</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA17613023593543522c36f62634d92a06f367fb0fe185a" id="IA17613023593543522c36f62634d92a06f367fb0fe185a-A" value="A"><label for="IA17613023593543522c36f62634d92a06f367fb0fe185a-A" class="text"> <span>Tasha</span> </label></li><li><input type="radio" name="IA17613023593543522c36f62634d92a06f367fb0fe185a" id="IA17613023593543522c36f62634d92a06f367fb0fe185a-B" value="B"><label for="IA17613023593543522c36f62634d92a06f367fb0fe185a-B" class="text"> <span>Danni</span> </label></li><li><input type="radio" name="IA17613023593543522c36f62634d92a06f367fb0fe185a" id="IA17613023593543522c36f62634d92a06f367fb0fe185a-C" value="C"><label for="IA17613023593543522c36f62634d92a06f367fb0fe185a-C" class="text"> <span>Chrissie</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="144044610-10"><span class="sr-only">Flag question 10</span></button></div></div>
+         <div id="144044610_KETR20CB-KR400252EVO-0-5" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_144044610_KETR20CB-KR400252EVO-0-5"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_144044610_KETR20CB-KR400252EVO-0-5"><span class="order-number" id="scorableItem-144044610_11">11</span><span class="text"><strong>Who didn’t have many people reading her blog in the beginning?</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA1761302359355e2ed0d1c3b5a4138bb864ab9573ff423" id="IA1761302359355e2ed0d1c3b5a4138bb864ab9573ff423-A" value="A"><label for="IA1761302359355e2ed0d1c3b5a4138bb864ab9573ff423-A" class="text"> <span>Tasha</span> </label></li><li><input type="radio" name="IA1761302359355e2ed0d1c3b5a4138bb864ab9573ff423" id="IA1761302359355e2ed0d1c3b5a4138bb864ab9573ff423-B" value="B"><label for="IA1761302359355e2ed0d1c3b5a4138bb864ab9573ff423-B" class="text"> <span>Danni</span> </label></li><li><input type="radio" name="IA1761302359355e2ed0d1c3b5a4138bb864ab9573ff423" id="IA1761302359355e2ed0d1c3b5a4138bb864ab9573ff423-C" value="C"><label for="IA1761302359355e2ed0d1c3b5a4138bb864ab9573ff423-C" class="text"> <span>Chrissie</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="144044610-11"><span class="sr-only">Flag question 11</span></button></div></div>
+         <div id="144044610_KETR20CB-KR400252EVO-0-6" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_144044610_KETR20CB-KR400252EVO-0-6"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_144044610_KETR20CB-KR400252EVO-0-6"><span class="order-number" id="scorableItem-144044610_12">12</span><span class="text"><strong>Who asks a member of her family to help her write her blog?</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA176130235935738c15ce84ed4492e11c987f161689f37" id="IA176130235935738c15ce84ed4492e11c987f161689f37-A" value="A"><label for="IA176130235935738c15ce84ed4492e11c987f161689f37-A" class="text"> <span>Tasha</span> </label></li><li><input type="radio" name="IA176130235935738c15ce84ed4492e11c987f161689f37" id="IA176130235935738c15ce84ed4492e11c987f161689f37-B" value="B"><label for="IA176130235935738c15ce84ed4492e11c987f161689f37-B" class="text"> <span>Danni</span> </label></li><li><input type="radio" name="IA176130235935738c15ce84ed4492e11c987f161689f37" id="IA176130235935738c15ce84ed4492e11c987f161689f37-C" value="C"><label for="IA176130235935738c15ce84ed4492e11c987f161689f37-C" class="text"> <span>Chrissie</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="144044610-12"><span class="sr-only">Flag question 12</span></button></div></div>
+         <div id="144044610_KETR20CB-KR400252EVO-0-7" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_144044610_KETR20CB-KR400252EVO-0-7"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_144044610_KETR20CB-KR400252EVO-0-7"><span class="order-number" id="scorableItem-144044610_13">13</span><span class="text"><strong>Who says writing a blog is easier than some other types of writing?</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA1761302359358b80f31f8212d4bfbadce01656e193cd2" id="IA1761302359358b80f31f8212d4bfbadce01656e193cd2-A" value="A"><label for="IA1761302359358b80f31f8212d4bfbadce01656e193cd2-A" class="text"> <span>Tasha</span> </label></li><li><input type="radio" name="IA1761302359358b80f31f8212d4bfbadce01656e193cd2" id="IA1761302359358b80f31f8212d4bfbadce01656e193cd2-B" value="B"><label for="IA1761302359358b80f31f8212d4bfbadce01656e193cd2-B" class="text"> <span>Danni</span> </label></li><li><input type="radio" name="IA1761302359358b80f31f8212d4bfbadce01656e193cd2" id="IA1761302359358b80f31f8212d4bfbadce01656e193cd2-C" value="C"><label for="IA1761302359358b80f31f8212d4bfbadce01656e193cd2-C" class="text"> <span>Chrissie</span> </label></li></ul></div></div>
       </div>
-   </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="7" style="top: 11px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 7</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="8"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 8</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="9"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 9</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="10"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 10</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="11"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 11</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="12"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 12</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="13"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 13</span></button></div></div></div></div></div></div></div>
-</div><!-- End Part 2 Container -->
+   </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="0" style="top: 11px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 7</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="0"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 8</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="0"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 9</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="0"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 10</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="0"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 11</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="0"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 12</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="0"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 13</span></button></div></div></div></div></div></div></div></div>
 
-<!-- ==================== PART 3: Questions 14-18 ==================== -->
-<div class="part-container" data-part="3" id="part-3-container" style="display: none;">
-<div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE" id="rubric__top-level"><div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP"><h3 class="scorableItemHeadline" id="item_143369574_8">Questions 14–18</h3><div class="QuestionDisplay__rubricContent___1byNW">For each question, choose the correct answer.</div></div></div><div class="DisplayTypeContainer__displayTypeContainer___3B6yh left-stimulus has-section-level-dynamic-rubric"><div class="StimulusDisplay__sectionStimulusWrapper___6IhoB gap-match-scroll-adjustment" id="stimulus-wrapper-6054724483958" lang="en-US" dir="ltr" role="region" tabindex="0" style="width: 736px;"><span class="sr-only">Stimulus for Questions 14–18</span><div class="StimulusDisplay__sectionStimulus___dxXPc"><div class="StimulusDisplay__stimulusContent___2KVn5 no-margins" id="stimulus-content-143369573"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_143369573" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_143369573">
+<!-- Part 3 -->
+<div class="part-container" id="part-3" data-part="3" style="display: none;"><div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE" id="rubric__top-level"><div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP"><h3 class="scorableItemHeadline" id="item_143369574_8">Questions 14–18</h3><div class="QuestionDisplay__rubricContent___1byNW">For each question, choose the correct answer.</div></div></div><div class="DisplayTypeContainer__displayTypeContainer___3B6yh left-stimulus has-section-level-dynamic-rubric" style="max-height: calc(-215px + 100vh);"><div class="StimulusDisplay__sectionStimulusWrapper___6IhoB gap-match-scroll-adjustment" id="stimulus-wrapper-6054724483958" lang="en-US" dir="ltr" role="region" tabindex="0" style="width: 736px;"><span class="sr-only">Stimulus for Questions 14–18</span><div class="StimulusDisplay__sectionStimulus___dxXPc"><div class="StimulusDisplay__stimulusContent___2KVn5 no-margins" id="stimulus-content-143369573"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_143369573" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_143369573">
       <div>
          <h2>A family of dancers</h2>
          <p>The women in the Watson family are all crazy about ballet. These days, Alice Watson gives ballet lessons, but for many years, she was a dancer with the National Ballet Company. Her mother, Hannah, also had a full-time job there, making costumes for the dancers.</p>
          <br>
-         <p>Alice's daughter Demi started learning ballet as soon as she could walk. 'I never taught her,' says Alice, 'because she never let me.' Now aged sixteen, Demi is a member of the ballet company where her mother was the star dancer for many years.</p>
+         <p>Alice’s daughter Demi started learning ballet as soon as she could walk. ‘I never taught her,’ says Alice, ‘because she never let me.’ Now aged sixteen, Demi is a member of the ballet company where her mother was the star dancer for many years.</p>
          <br>
-         <p>Alice's husband, Jack, is an electrician. They met while he was working at a theatre where she was dancing and got married soon after. 'When Demi started dancing, the house was too small for her and Alice to practise in so I made the garage into a dance studio. Now the living room is nice and quiet when I'm watching television!' he says.</p>
+         <p>Alice’s husband, Jack, is an electrician. They met while he was working at a theatre where she was dancing and got married soon after. ‘When Demi started dancing, the house was too small for her and Alice to practise in so I made the garage into a dance studio. Now the living room is nice and quiet when I’m watching television!’ he says.</p>
          <br>
-         <p>Last month, Demi was invited to dance in the ballet Swan Lake. Of course, Alice and Hannah were in the audience and even Jack was there, which made it very special for Demi. Jack says, 'I'm not that interested in ballet myself but it's fantastic seeing Demi taking her first steps with Alice's old company!' Demi was wearing a dress that Hannah made for Alice many years before.</p>
+         <p>Last month, Demi was invited to dance in the ballet Swan Lake. Of course, Alice and Hannah were in the audience and even Jack was there, which made it very special for Demi. Jack says, ‘I’m not that interested in ballet myself but it’s fantastic seeing Demi taking her first steps with Alice’s old company!’ Demi was wearing a dress that Hannah made for Alice many years before.</p>
          <br>
-         <p>'It was very exciting for all of us,' says Hannah. 'Demi's way of dancing is very like Alice's. I know I'm her grandmother, but I think she has a great future!'</p>
+         <p>‘It was very exciting for all of us,’ says Hannah. ‘Demi’s way of dancing is very like Alice’s. I know I’m her grandmother, but I think she has a great future!’</p>
          <br>
       </div>
    </div></div></div></div></div></div><div class="DisplayTypeContainer__divider___yWedB   react-draggable" style="touch-action: none; transform: translate(0px, 0px);"><div class="DisplayTypeContainer__resizeBar___1fgRC"><div class="DisplayTypeContainer__resizeBtn___1iBm6" tabindex="0" role="separator" aria-orientation="vertical"><i class="fa fa-arrows-h" aria-hidden="true"></i></div></div></div><div class="DisplayTypeContainer__sectionContent___2HSJ0 gap-match-scroll-adjustment" id="sectionContent" role="region" tabindex="0"><span class="sr-only">Questions 14–18</span><div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper current numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-143369575" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group" aria-labelledby="nr_143369574_8 title_143369574_8"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_143369575" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_143369575">
       <div class="container accordionChoice" id="choice-accordion-interaction-ID4AE0EOAETVFVKCGE0VNLFY5M2CK1TI5IYJHZOVMF4505HTE3MZOK">
-         <div id="143369575_KETR20CB-NKR300004EVO-0-1" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_143369575_KETR20CB-NKR300004EVO-0-1"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_143369575_KETR20CB-NKR300004EVO-0-1"><span class="order-number active" id="scorableItem-143369575_14">14</span><span class="text"><strong>What is Alice Watson's job now?</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA176094449651529b95800771a41d4be618ca1b1151364" id="IA176094449651529b95800771a41d4be618ca1b1151364-A" value="A"><label for="IA176094449651529b95800771a41d4be618ca1b1151364-A" class="text"> <span>dancer</span> </label></li><li><input type="radio" name="IA176094449651529b95800771a41d4be618ca1b1151364" id="IA176094449651529b95800771a41d4be618ca1b1151364-B" value="B"><label for="IA176094449651529b95800771a41d4be618ca1b1151364-B" class="text"> <span>teacher</span> </label></li><li><input type="radio" name="IA176094449651529b95800771a41d4be618ca1b1151364" id="IA176094449651529b95800771a41d4be618ca1b1151364-C" value="C"><label for="IA176094449651529b95800771a41d4be618ca1b1151364-C" class="text"> <span>dress-maker</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="143369575-14"><span class="sr-only">Flag question 14</span></button></div></div>
+         <div id="143369575_KETR20CB-NKR300004EVO-0-1" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_143369575_KETR20CB-NKR300004EVO-0-1"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_143369575_KETR20CB-NKR300004EVO-0-1"><span class="order-number active" id="scorableItem-143369575_14">14</span><span class="text"><strong>What is Alice Watson’s job now?</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA176094449651529b95800771a41d4be618ca1b1151364" id="IA176094449651529b95800771a41d4be618ca1b1151364-A" value="A"><label for="IA176094449651529b95800771a41d4be618ca1b1151364-A" class="text"> <span>dancer</span> </label></li><li><input type="radio" name="IA176094449651529b95800771a41d4be618ca1b1151364" id="IA176094449651529b95800771a41d4be618ca1b1151364-B" value="B"><label for="IA176094449651529b95800771a41d4be618ca1b1151364-B" class="text"> <span>teacher</span> </label></li><li><input type="radio" name="IA176094449651529b95800771a41d4be618ca1b1151364" id="IA176094449651529b95800771a41d4be618ca1b1151364-C" value="C"><label for="IA176094449651529b95800771a41d4be618ca1b1151364-C" class="text"> <span>dress-maker</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="143369575-14"><span class="sr-only">Flag question 14</span></button></div></div>
          <div id="143369575_KETR20CB-NKR300004EVO-0-2" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_143369575_KETR20CB-NKR300004EVO-0-2"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_143369575_KETR20CB-NKR300004EVO-0-2"><span class="order-number" id="scorableItem-143369575_15">15</span><span class="text"><strong>Demi had her first ballet lessons</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA176094449651609766933c72b463419800787687d6d45" id="IA176094449651609766933c72b463419800787687d6d45-A" value="A"><label for="IA176094449651609766933c72b463419800787687d6d45-A" class="text"> <span>at a very young age.</span> </label></li><li><input type="radio" name="IA176094449651609766933c72b463419800787687d6d45" id="IA176094449651609766933c72b463419800787687d6d45-B" value="B"><label for="IA176094449651609766933c72b463419800787687d6d45-B" class="text"> <span>at the National Ballet Company.</span> </label></li><li><input type="radio" name="IA176094449651609766933c72b463419800787687d6d45" id="IA176094449651609766933c72b463419800787687d6d45-C" value="C"><label for="IA176094449651609766933c72b463419800787687d6d45-C" class="text"> <span>from her mother.</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="143369575-15"><span class="sr-only">Flag question 15</span></button></div></div>
          <div id="143369575_KETR20CB-NKR300004EVO-0-3" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_143369575_KETR20CB-NKR300004EVO-0-3"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_143369575_KETR20CB-NKR300004EVO-0-3"><span class="order-number" id="scorableItem-143369575_16">16</span><span class="text"><strong>Jack helped his wife and daughter by</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA1760944496517f13c6849e03d410fb8ebc0558675253b" id="IA1760944496517f13c6849e03d410fb8ebc0558675253b-A" value="A"><label for="IA1760944496517f13c6849e03d410fb8ebc0558675253b-A" class="text"> <span>moving to a larger house.</span> </label></li><li><input type="radio" name="IA1760944496517f13c6849e03d410fb8ebc0558675253b" id="IA1760944496517f13c6849e03d410fb8ebc0558675253b-B" value="B"><label for="IA1760944496517f13c6849e03d410fb8ebc0558675253b-B" class="text"> <span>letting them use the living room for dancing.</span> </label></li><li><input type="radio" name="IA1760944496517f13c6849e03d410fb8ebc0558675253b" id="IA1760944496517f13c6849e03d410fb8ebc0558675253b-C" value="C"><label for="IA1760944496517f13c6849e03d410fb8ebc0558675253b-C" class="text"> <span>making a place for them to practise in.</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="143369575-16"><span class="sr-only">Flag question 16</span></button></div></div>
          <div id="143369575_KETR20CB-NKR300004EVO-0-4" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_143369575_KETR20CB-NKR300004EVO-0-4"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_143369575_KETR20CB-NKR300004EVO-0-4"><span class="order-number" id="scorableItem-143369575_17">17</span><span class="text"><strong>What was the best thing about the Swan Lake show for Demi?</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA1760944496517ae736ab8a9584063a10ee49033ec8ba9" id="IA1760944496517ae736ab8a9584063a10ee49033ec8ba9-A" value="A"><label for="IA1760944496517ae736ab8a9584063a10ee49033ec8ba9-A" class="text"> <span>It was her first show with the company.</span> </label></li><li><input type="radio" name="IA1760944496517ae736ab8a9584063a10ee49033ec8ba9" id="IA1760944496517ae736ab8a9584063a10ee49033ec8ba9-B" value="B"><label for="IA1760944496517ae736ab8a9584063a10ee49033ec8ba9-B" class="text"> <span>All her family were there.</span> </label></li><li><input type="radio" name="IA1760944496517ae736ab8a9584063a10ee49033ec8ba9" id="IA1760944496517ae736ab8a9584063a10ee49033ec8ba9-C" value="C"><label for="IA1760944496517ae736ab8a9584063a10ee49033ec8ba9-C" class="text"> <span>She was wearing a new dress.</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="143369575-17"><span class="sr-only">Flag question 17</span></button></div></div>
          <div id="143369575_KETR20CB-NKR300004EVO-0-5" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_143369575_KETR20CB-NKR300004EVO-0-5"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_143369575_KETR20CB-NKR300004EVO-0-5"><span class="order-number" id="scorableItem-143369575_18">18</span><span class="text"><strong>Hannah says that Demi</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA176094449651840de982739bb4e1b38f90bf3e443b6b7" id="IA176094449651840de982739bb4e1b38f90bf3e443b6b7-A" value="A"><label for="IA176094449651840de982739bb4e1b38f90bf3e443b6b7-A" class="text"> <span>will be a star one day.</span> </label></li><li><input type="radio" name="IA176094449651840de982739bb4e1b38f90bf3e443b6b7" id="IA176094449651840de982739bb4e1b38f90bf3e443b6b7-B" value="B"><label for="IA176094449651840de982739bb4e1b38f90bf3e443b6b7-B" class="text"> <span>is her favourite granddaughter.</span> </label></li><li><input type="radio" name="IA176094449651840de982739bb4e1b38f90bf3e443b6b7" id="IA176094449651840de982739bb4e1b38f90bf3e443b6b7-C" value="C"><label for="IA176094449651840de982739bb4e1b38f90bf3e443b6b7-C" class="text"> <span>dances better than Alice did.</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="143369575-18"><span class="sr-only">Flag question 18</span></button></div></div>
       </div>
-   </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="14" style="top: 11px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 14</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="15"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 15</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="16"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 16</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="17"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 17</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="18"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 18</span></button></div></div></div></div></div></div></div>
-</div><!-- End Part 3 Container -->
+   </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="14" style="top: 11px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 14</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="15"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 15</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="16"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 16</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="17"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 17</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="18"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 18</span></button></div></div></div></div></div></div></div></div>
 
-<!-- ==================== PART 4: Questions 19-24 ==================== -->
-<div class="part-container" data-part="4" id="part-4-container" style="display: none;">
-<div class="DisplayTypeContainer__displayTypeContainer___3B6yh has-section-level-dynamic-rubric" style="">
-<div class="DisplayTypeContainer__sectionContent___2HSJ0 gap-match-scroll-adjustment" id="sectionContent">
-<div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE">
-<div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP QuestionDisplay__sectionLevelDynamicRubric___2zEDl">
-<h3 class="scorableItemHeadline">Questions 19-24</h3>
-<div class="QuestionDisplay__rubricContent___1byNW">
-<p style="text-align: center; padding: 40px 20px; font-size: 18px; color: #666;">
-<strong>Part 4 content (Questions 19-24) not available</strong>
-</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><!-- End Part 4 Container -->
+<!-- Part 4 -->
+<div class="part-container" id="part-4" data-part="4" style="display: none;"><div class="DisplayTypeContainer__displayTypeContainer___3B6yh has-section-level-dynamic-rubric" style=""><div class="DisplayTypeContainer__sectionContent___2HSJ0 gap-match-scroll-adjustment" id="sectionContent"><div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE"><div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP QuestionDisplay__sectionLevelDynamicRubric___2zEDl"><h3 class="scorableItemHeadline" id="item_143369578_9">Questions 19–24</h3><div class="QuestionDisplay__rubricContent___1byNW">For each question, choose the correct answer.</div></div></div><div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper current numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-143709598" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ" tabindex="-1" role="group" aria-labelledby="nr_143369578_9 title_143369578_9"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_143709598" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender extraLineSpacing" lang="en-US"><div id="interactionWrapper_143709598">
+      <div class="container inlineChoice presentation-horizontalPopup">
+         <h2>William Perkin</h2>
+         <p>William Perkin was born in London in 1838. As a child he had many hobbies, including model making and photography. But it was the <span id="143709598_KETR20CB-NKR400003EVO-0-1" class="interaction-container"><span class="interaction" id="scorableItem-143709598_19" role="button"><span class="inlineChoiceInteraction__inlineChoiceInteractionWrapper___253ts"><button id="IA1761293232518c151467e22dd4d778d46e0ba8c42b9ff" class="inlineChoiceInteraction__inlineChoiceInteraction___hqnKe" name="IA1761293232518c151467e22dd4d778d46e0ba8c42b9ff" style="min-width: 144px;"><span class="inlineChoiceInteraction__visuallyHidden___1I9i0">Single select: </span>19</button></span><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="143709598-19"><span class="sr-only">Flag question 19</span></button></span></span> of chemistry that really interested him. At the age of 15, he went to college to study it.</p><br>
+         <p>While he was there, he was <span id="143709598_KETR20CB-NKR400003EVO-0-3" class="interaction-container"><span class="interaction" id="scorableItem-143709598_20" role="button"><span class="inlineChoiceInteraction__inlineChoiceInteractionWrapper___253ts"><button id="IA17612932325190c2c5fe5fd9e408503747e8af5db9385" class="inlineChoiceInteraction__inlineChoiceInteraction___hqnKe" name="IA17612932325190c2c5fe5fd9e408503747e8af5db9385" style="min-width: 144px;"><span class="inlineChoiceInteraction__visuallyHidden___1I9i0">Single select: </span>20</button></span><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="143709598-20"><span class="sr-only">Flag question 20</span></button></span></span> to make a medicine from coal. This didn’t go well, but when he was working on the problem, he found a cheap <span id="143709598_KETR20CB-NKR400003EVO-0-4" class="interaction-container"><span class="interaction" id="scorableItem-143709598_21" role="button"><span class="inlineChoiceInteraction__inlineChoiceInteractionWrapper___253ts"><button id="IA1761293232519697f6dc1092647a9254d320c0a4ed98c" class="inlineChoiceInteraction__inlineChoiceInteraction___hqnKe" name="IA1761293232519697f6dc1092647a9254d320c0a4ed98c" style="min-width: 144px;"><span class="inlineChoiceInteraction__visuallyHidden___1I9i0">Single select: </span>21</button></span><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="143709598-21"><span class="sr-only">Flag question 21</span></button></span></span> to make the colour purple. At that <span id="143709598_KETR20CB-NKR400003EVO-0-5" class="interaction-container"><span class="interaction" id="scorableItem-143709598_22" role="button"><span class="inlineChoiceInteraction__inlineChoiceInteractionWrapper___253ts"><button id="IA1761293232519dafaaa96080047c5bf288f711bf61e76" class="inlineChoiceInteraction__inlineChoiceInteraction___hqnKe" name="IA1761293232519dafaaa96080047c5bf288f711bf61e76" style="min-width: 144px;"><span class="inlineChoiceInteraction__visuallyHidden___1I9i0">Single select: </span>22</button></span><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="143709598-22"><span class="sr-only">Flag question 22</span></button></span></span> it was very expensive to make clothes in different colours. William knew he could make a business out of his new colour. Helped by his father and brother, William <span id="143709598_KETR20CB-NKR400003EVO-0-6" class="interaction-container"><span class="interaction" id="scorableItem-143709598_23" role="button"><span class="inlineChoiceInteraction__inlineChoiceInteractionWrapper___253ts"><button id="IA17612932329370af57f1097564cd5be4e8620b4b6d89d" class="inlineChoiceInteraction__inlineChoiceInteraction___hqnKe" name="IA17612932329370af57f1097564cd5be4e8620b4b6d89d" style="min-width: 144px;"><span class="inlineChoiceInteraction__visuallyHidden___1I9i0">Single select: </span>23</button></span><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="143709598-23"><span class="sr-only">Flag question 23</span></button></span></span> his own factory to make the colour. It sold well, and soon purple clothes <span id="143709598_KETR20CB-NKR400003EVO-0-7" class="interaction-container"><span class="interaction" id="scorableItem-143709598_24" role="button"><span class="inlineChoiceInteraction__inlineChoiceInteractionWrapper___253ts"><button id="IA17612932325197d030399e1a14e8f3d3a18b322e8c677" class="inlineChoiceInteraction__inlineChoiceInteraction___hqnKe" name="IA17612932325197d030399e1a14e8f3d3a18b322e8c677" style="min-width: 144px;"><span class="inlineChoiceInteraction__visuallyHidden___1I9i0">Single select: </span>24</button></span></span></span> very popular in England and the rest of the world.</p>
+      </div>
+   </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="0" style=""><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 19</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="0"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 20</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="0"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 21</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="0"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 22</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="0" style="top: 244px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 23</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="0"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 24</span></button></div></div></div></div></div></div></div></div>
 
-<!-- ==================== PART 5: Questions 25-30 ==================== -->
-<div class="part-container" data-part="5" id="part-5-container" style="display: none;">
-<div class="DisplayTypeContainer__displayTypeContainer___3B6yh has-section-level-dynamic-rubric" style=""><div class="DisplayTypeContainer__sectionContent___2HSJ0 gap-match-scroll-adjustment" id="sectionContent"><div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE"><div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP QuestionDisplay__sectionLevelDynamicRubric___2zEDl"><h3 class="scorableItemHeadline" id="item_143369214_10">Questions 25–30</h3><div class="QuestionDisplay__rubricContent___1byNW">For each question, write the correct answer. Write <b>one</b> word for each gap.</div></div></div><div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper current numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-143645736" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group" aria-labelledby="nr_143369214_10 title_143369214_10"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_143645736" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_143645736">
+<!-- Part 5 -->
+<div class="part-container" id="part-5" data-part="5" style="display: none;"><div class="DisplayTypeContainer__displayTypeContainer___3B6yh has-section-level-dynamic-rubric" style=""><div class="DisplayTypeContainer__sectionContent___2HSJ0 gap-match-scroll-adjustment" id="sectionContent"><div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE"><div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP QuestionDisplay__sectionLevelDynamicRubric___2zEDl"><h3 class="scorableItemHeadline" id="item_143369214_10">Questions 25–30</h3><div class="QuestionDisplay__rubricContent___1byNW">For each question, write the correct answer. Write <b>one</b> word for each gap.</div></div></div><div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper current numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-143645736" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group" aria-labelledby="nr_143369214_10 title_143369214_10"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_143645736" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_143645736">
       <div class="container inlineTextEntry">
          <p class="double-line-spacing ">
             <strong>From: </strong>Maria</p>
          <p class="double-line-spacing ">
             <strong>To: </strong>John</p>
-         <p class="double-line-spacing ">I hope you are well.&nbsp;I'm having a great holiday here in Thailand. Our hotel is very nice and there are a lot of good restaurants near it.</p>
+         <p class="double-line-spacing ">I hope you are well.&nbsp;I’m having a great holiday here in Thailand. Our hotel is very nice and there are a lot of good restaurants near it.</p>
          <p class="double-line-spacing ">Yesterday morning, we went to <span id="143645736_KETR20CB-KR600036AEVO-0-1" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-143645736_25"><label for="IA176094445762175da169d6e7e40b50d4a73119e729c3d"><input id="IA176094445762175da169d6e7e40b50d4a73119e729c3d" autocomplete="off" class="textEntryInteractionValue active" maxlength="20" name="IA1760944457621ad21cd3b2fd243033a4717e9ab819d32" spellcheck="false" size="20" type="text" placeholder="25" keyword="" aria-label="Insert answer" tabindex="25" value=""></label></span></span> lovely beach. We had to leave before lunch because it was very hot. We went to a party <span id="143645736_KETR20CB-KR600036AEVO-0-2" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-143645736_26"><label for="IA176094445762271b845b564af4999007b9ef57674b0ba"><input id="IA176094445762271b845b564af4999007b9ef57674b0ba" autocomplete="off" class="textEntryInteractionValue" maxlength="20" name="IA17609444576220e7e130b18124def3674749fcf5a9c94" spellcheck="false" size="20" type="text" placeholder="26" keyword="" aria-label="Insert answer" tabindex="26" value=""></label></span></span> the evening in the centre <span id="143645736_KETR20CB-KR600036AEVO-0-3" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-143645736_27"><label for="IA1760944457623f49c348f35c141bba321fd656f94bc22"><input id="IA1760944457623f49c348f35c141bba321fd656f94bc22" autocomplete="off" class="textEntryInteractionValue" maxlength="20" name="IA1760944457623aef8143b49bc45e39a8f02af721a1207" spellcheck="false" size="20" type="text" placeholder="27" keyword="" aria-label="Insert answer" tabindex="27" value=""></label></span></span> the town. Everyone had a good time and we got back at midnight. Tomorrow, we want to <span id="143645736_KETR20CB-KR600036AEVO-0-4" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-143645736_28"><label for="IA17609444576243f22e41ed4f54d32000229bc0588323a"><input id="IA17609444576243f22e41ed4f54d32000229bc0588323a" autocomplete="off" class="textEntryInteractionValue" maxlength="20" name="IA17609444576246abcaf383fdf4e5716c1d73c6449f972" spellcheck="false" size="20" type="text" placeholder="28" keyword="" aria-label="Insert answer" tabindex="28" value=""></label></span></span> on a boat trip or <span id="143645736_KETR20CB-KR600036AEVO-0-5" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-143645736_29"><label for="IA176094445762470bacd13910f4f0a0419ecbf8622fe61"><input id="IA176094445762470bacd13910f4f0a0419ecbf8622fe61" autocomplete="off" class="textEntryInteractionValue" maxlength="20" name="IA17609444576244b4a24ede7a94a06824d265f4950e1d7" spellcheck="false" size="20" type="text" placeholder="29" keyword="" aria-label="Insert answer" tabindex="29" value=""></label></span></span> tennis.</p>
          <p class="double-line-spacing ">I'll show you my photos <span id="143645736_KETR20CB-KR600036AEVO-0-6" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-143645736_30"><label for="IA1760944457625d2e9348dfc074ba6b8a8d488ea347c74"><input id="IA1760944457625d2e9348dfc074ba6b8a8d488ea347c74" autocomplete="off" class="textEntryInteractionValue" maxlength="20" name="IA1760944457625697ae5d8c27d4d312219f76e67184866" spellcheck="false" size="20" type="text" placeholder="30" keyword="" aria-label="Insert answer" tabindex="30" value=""></label></span></span> I get back.</p>
          <p class="double-line-spacing ">See you soon,</p>
          <p class="double-line-spacing ">Maria</p>
       </div>
-   </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="25" style="top: 162px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 25</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="26"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 26</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="27"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 27</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="28"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 28</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="29"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 29</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="30"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 30</span></button></div></div></div></div></div></div></div>
-</div><!-- End Part 5 Container -->
+   </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="25" style="top: 162px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 25</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="26"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 26</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="27"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 27</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="28"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 28</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="29"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 29</span></button><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__hiddenFlag___m4NOE" tabindex="30"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 30</span></button></div></div></div></div></div></div></div></div>
 
-<!-- ==================== PART 6: Question 31 ==================== -->
-<div class="part-container" data-part="6" id="part-6-container" style="display: none;">
-<div class="DisplayTypeContainer__displayTypeContainer___3B6yh has-section-level-dynamic-rubric" style="">
-<div class="DisplayTypeContainer__sectionContent___2HSJ0 gap-match-scroll-adjustment" id="sectionContent">
-<div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE">
-<div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP QuestionDisplay__sectionLevelDynamicRubric___2zEDl">
-<h3 class="scorableItemHeadline">Question 31</h3>
-<div class="QuestionDisplay__rubricContent___1byNW">
-<p style="text-align: center; padding: 40px 20px; font-size: 18px; color: #666;">
-<strong>Part 6 content (Question 31) not available</strong>
-</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><!-- End Part 6 Container -->
-
-<!-- ==================== PART 7: Question 32 ==================== -->
-<div class="part-container" data-part="7" id="part-7-container" style="display: none;">
-<div class="DisplayTypeContainer__displayTypeContainer___3B6yh has-section-level-dynamic-rubric" style=""><div class="DisplayTypeContainer__sectionContent___2HSJ0 gap-match-scroll-adjustment" id="sectionContent"><div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE"><div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP QuestionDisplay__sectionLevelDynamicRubric___2zEDl"><h3 class="scorableItemHeadline" id="item_143369603_12">Question 32</h3><div class="QuestionDisplay__rubricContent___1byNW">Look at the three pictures. Write the story shown in the pictures. Write <b>35 words</b> or more.</div></div></div><div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper current numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-143369604" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group" aria-labelledby="nr_143369603_12 title_143369603_12"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_143369604" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_143369604">
+<!-- Part 7 -->
+<div class="part-container" id="part-7" data-part="7" style="display: none;"><div class="DisplayTypeContainer__displayTypeContainer___3B6yh has-section-level-dynamic-rubric" style=""><div class="DisplayTypeContainer__sectionContent___2HSJ0 gap-match-scroll-adjustment" id="sectionContent"><div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE"><div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP QuestionDisplay__sectionLevelDynamicRubric___2zEDl"><h3 class="scorableItemHeadline" id="item_143369603_12">Question 32</h3><div class="QuestionDisplay__rubricContent___1byNW">Look at the three pictures. Write the story shown in the pictures. Write <b>35 words</b> or more.</div></div></div><div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper current numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-143369604" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group" aria-labelledby="nr_143369603_12 title_143369603_12"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_143369604" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_143369604">
       <div class="container generic">
          <div class="left align-center">
             <table class=" theme-border-4 align-center">
@@ -682,15 +579,11 @@ body {
             <div id="143369604_KETR20CB-NKW700002EVO-0-0-1" class="interaction-container"><div class="interaction allowed-break-inside"><br class="tts-hidden-break"><div id="scorableItem-143369604_32"><textarea id="labelText-143369604_32" aria-label="You are currently on the text editor. The text will be saved automatically" class="plainTextWrapper__plainText____1GRn" rows="5" spellcheck="false" style="overflow: hidden; overflow-wrap: break-word; resize: none; height: 117.6px;"></textarea><div><span class="WordCountText__wordCountText___3QyIr">Words: 0</span></div></div></div></div>
          </div>
       </div>
-   </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="32" style="top: 250px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 32</span></button></div></div></div></div></div></div></div>
-</div><!-- End Part 7 Container -->
-
-</div><!-- End App Content Container -->
-
-<div class="App__footerWrapper___2el50"><footer class="footer__footer___1NlzQ"><div class="footer__navButtons___Gtvxu   " role="navigation" aria-label="Previous / next question" id="footer-nav-wrapper" tabindex="-1"><button class="footer__previousBtn___3pfYh footer__arrowIconBtn___3AiJS" id="footer-nav-button-previous" aria-label="Previous"><i class="fa fa-arrow-left" aria-hidden="true"></i></button><button class="footer__promotedNextBtn___Qf9LU footer__arrowIconBtn___3AiJS" id="footer-nav-button-next" aria-label="Next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div><nav class="nav-row perScorableItem" aria-label="Questions"><div class="footer__questionWrapper___1tZ46 multiple" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
-                                " data-sectionid="1687665662102" tabindex="0"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">1</span><span class="attemptedCount" aria-hidden="true">0 of 6</span><span class="sr-only">Part 
-            1. 0 of 6 questions attempted.</span></span></button><div class="footer__subquestionWrapper___9GgoP"><button class="subQuestion scorable-item" data-contentrevisionid="143659692" data-ordernumber="1" data-sectionid="1687665662102" tabindex="0"><span class="sr-only">Question 1</span><span aria-hidden="true">1</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143706756" data-ordernumber="2" data-sectionid="1687665662102" tabindex="0"><span class="sr-only">Question 2</span><span aria-hidden="true">2</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143659678" data-ordernumber="3" data-sectionid="1687665662102" tabindex="0"><span class="sr-only">Question 3</span><span aria-hidden="true">3</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143708101" data-ordernumber="4" data-sectionid="1687665662102" tabindex="0"><span class="sr-only">Question 4</span><span aria-hidden="true">4</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143659689" data-ordernumber="5" data-sectionid="1687665662102" tabindex="0"><span class="sr-only">Question 5</span><span aria-hidden="true">5</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143708406" data-ordernumber="6" data-sectionid="1687665662102" tabindex="0"><span class="sr-only">Question 6</span><span aria-hidden="true">6</span><span class="sr-only">Not attempted</span></button></div></div><div class="footer__questionWrapper___1tZ46 selected multiple" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
-                                " data-sectionid="3426847902314" tabindex="-1"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">2</span></span></button><div class="footer__subquestionWrapper___9GgoP"><button class="subQuestion active scorable-item" data-contentrevisionid="144044610" data-ordernumber="7" data-sectionid="3426847902314" tabindex="0"><span class="sr-only">Question 7</span><span aria-hidden="true">7</span><span class="sr-only">Not attempted Active</span></button><button class="subQuestion scorable-item" data-contentrevisionid="144044610" data-ordernumber="8" data-sectionid="3426847902314" tabindex="0"><span class="sr-only">Question 8</span><span aria-hidden="true">8</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="144044610" data-ordernumber="9" data-sectionid="3426847902314" tabindex="0"><span class="sr-only">Question 9</span><span aria-hidden="true">9</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="144044610" data-ordernumber="10" data-sectionid="3426847902314" tabindex="0"><span class="sr-only">Question 10</span><span aria-hidden="true">10</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="144044610" data-ordernumber="11" data-sectionid="3426847902314" tabindex="0"><span class="sr-only">Question 11</span><span aria-hidden="true">11</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="144044610" data-ordernumber="12" data-sectionid="3426847902314" tabindex="0"><span class="sr-only">Question 12</span><span aria-hidden="true">12</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="144044610" data-ordernumber="13" data-sectionid="3426847902314" tabindex="0"><span class="sr-only">Question 13</span><span aria-hidden="true">13</span><span class="sr-only">Not attempted</span></button></div></div><div class="footer__questionWrapper___1tZ46 multiple" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
+   </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="32" style="top: 250px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 32</span></button></div></div></div></div></div></div></div></div>
+<div class="App__footerWrapper___2el50"><footer class="footer__footer___1NlzQ"><div class="footer__navButtons___Gtvxu   " role="navigation" aria-label="Previous / next question" id="footer-nav-wrapper" tabindex="-1"><button class="footer__previousBtn___3pfYh footer__arrowIconBtn___3AiJS" id="footer-nav-button-previous" aria-label="Previous" disabled=""><i class="fa fa-arrow-left" aria-hidden="true"></i></button><button class="footer__promotedNextBtn___Qf9LU footer__arrowIconBtn___3AiJS" id="footer-nav-button-next" aria-label="Next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div><nav class="nav-row perScorableItem" aria-label="Questions"><div class="footer__questionWrapper___1tZ46 selected multiple" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
+                                " data-sectionid="1687665662102" tabindex="-1"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">1</span></span></button><div class="footer__subquestionWrapper___9GgoP"><button class="subQuestion active scorable-item" data-contentrevisionid="143659692" data-ordernumber="1" data-sectionid="1687665662102" tabindex="0"><span class="sr-only">Question 1</span><span aria-hidden="true">1</span><span class="sr-only">Not attempted Active</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143706756" data-ordernumber="2" data-sectionid="1687665662102" tabindex="0"><span class="sr-only">Question 2</span><span aria-hidden="true">2</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143659678" data-ordernumber="3" data-sectionid="1687665662102" tabindex="0"><span class="sr-only">Question 3</span><span aria-hidden="true">3</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143708101" data-ordernumber="4" data-sectionid="1687665662102" tabindex="0"><span class="sr-only">Question 4</span><span aria-hidden="true">4</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143659689" data-ordernumber="5" data-sectionid="1687665662102" tabindex="0"><span class="sr-only">Question 5</span><span aria-hidden="true">5</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143708406" data-ordernumber="6" data-sectionid="1687665662102" tabindex="0"><span class="sr-only">Question 6</span><span aria-hidden="true">6</span><span class="sr-only">Not attempted</span></button></div></div><div class="footer__questionWrapper___1tZ46 multiple" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
+                                " data-sectionid="3426847902314" tabindex="0"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">2</span><span class="attemptedCount" aria-hidden="true">0 of 7</span><span class="sr-only">Part 
+            2. 0 of 7 questions attempted.</span></span></button><div class="footer__subquestionWrapper___9GgoP"><button class="subQuestion scorable-item" data-contentrevisionid="144044610" data-ordernumber="7" data-sectionid="3426847902314" tabindex="0"><span class="sr-only">Question 7</span><span aria-hidden="true">7</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="144044610" data-ordernumber="8" data-sectionid="3426847902314" tabindex="0"><span class="sr-only">Question 8</span><span aria-hidden="true">8</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="144044610" data-ordernumber="9" data-sectionid="3426847902314" tabindex="0"><span class="sr-only">Question 9</span><span aria-hidden="true">9</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="144044610" data-ordernumber="10" data-sectionid="3426847902314" tabindex="0"><span class="sr-only">Question 10</span><span aria-hidden="true">10</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="144044610" data-ordernumber="11" data-sectionid="3426847902314" tabindex="0"><span class="sr-only">Question 11</span><span aria-hidden="true">11</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="144044610" data-ordernumber="12" data-sectionid="3426847902314" tabindex="0"><span class="sr-only">Question 12</span><span aria-hidden="true">12</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="144044610" data-ordernumber="13" data-sectionid="3426847902314" tabindex="0"><span class="sr-only">Question 13</span><span aria-hidden="true">13</span><span class="sr-only">Not attempted</span></button></div></div><div class="footer__questionWrapper___1tZ46 multiple" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
                                 " data-sectionid="6054724483958" tabindex="0"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">3</span><span class="attemptedCount" aria-hidden="true">0 of 5</span><span class="sr-only">Part 
             3. 0 of 5 questions attempted.</span></span></button><div class="footer__subquestionWrapper___9GgoP"><button class="subQuestion scorable-item" data-contentrevisionid="143369575" data-ordernumber="14" data-sectionid="6054724483958" tabindex="0"><span class="sr-only">Question 14</span><span aria-hidden="true">14</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143369575" data-ordernumber="15" data-sectionid="6054724483958" tabindex="0"><span class="sr-only">Question 15</span><span aria-hidden="true">15</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143369575" data-ordernumber="16" data-sectionid="6054724483958" tabindex="0"><span class="sr-only">Question 16</span><span aria-hidden="true">16</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143369575" data-ordernumber="17" data-sectionid="6054724483958" tabindex="0"><span class="sr-only">Question 17</span><span aria-hidden="true">17</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143369575" data-ordernumber="18" data-sectionid="6054724483958" tabindex="0"><span class="sr-only">Question 18</span><span aria-hidden="true">18</span><span class="sr-only">Not attempted</span></button></div></div><div class="footer__questionWrapper___1tZ46 multiple" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
                                 " data-sectionid="7096491309053" tabindex="0"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">4</span><span class="attemptedCount" aria-hidden="true">0 of 6</span><span class="sr-only">Part 
@@ -701,400 +594,129 @@ body {
             6. 0 of 1 questions attempted.</span></span></button></div><div class="footer__questionWrapper___1tZ46 single" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
                                 " data-sectionid="2200793588978" tabindex="0"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">7</span><span class="attemptedCount" aria-hidden="true">0 of 1</span><span class="sr-only">Part 
             7. 0 of 1 questions attempted.</span></span></button></div><button id="deliver-button" aria-label="Review your answers" class="footer__deliverButton___3FM07"><i class="fa fa fa-check" aria-hidden="true"></i></button></nav></footer></div></div></div><div class="s-alert-wrapper"></div></div></div>
-        <!-- <script src="./A2 Key RW Digital Sample Test 1_26.04.23_files/playerStartup.js.download"></script> -->
+        <!-- <script src="./Part 1_files/playerStartup.js.download"></script> -->
     
 
-<div id="preRenderTarget" aria-hidden="true" style="position: relative; height: 0px; width: 0px; overflow: hidden; visibility: hidden;"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_preload_143708406" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="preload_interactionWrapper_143708406">
-      <div class="container generic">
-         <div class="container partWidth percentwidth-30">
-            <span class="inlineImage" id="img-1671789684427">
-               <span id="preload_143708406_content_item_127449474_143708404" class="qti-renderer-media-wrapper"><img alt="Background image" data-content-id="/file/cil/content_item_127449474_143708404/img?cacheable=true&amp;assessmentRunId=146724146" class="qti-image contrast-compatible" src="https://ceq.inspera.com/file/cil/content_item_127449474_143708404/img?cacheable=true&amp;assessmentRunId=146724146" style="height: auto; width: 271px; max-width: 100%;"></span>
-            </span>
-         </div><br>
-         <div id="preload_143708406_KETR20CB-NKR100008EVO-0-1" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_preload_143708406_KETR20CB-NKR100008EVO-0-1"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt rich-text-prompt" id="interaction_group_preload_143708406_KETR20CB-NKR100008EVO-0-1"><span class="order-number" id="scorableItem-143708406_6">6</span><span class="text"><strong>Why did Sophie write this message?</strong></span></p></div><ul class="vertical"><li><input type="radio" name="IA17609397953057dded6a33598485a17d9a92c9baa84fd" id="IA17609397953057dded6a33598485a17d9a92c9baa84fd-A" disabled="" value="A"><label for="IA17609397953057dded6a33598485a17d9a92c9baa84fd-A" disabled="" class="text"> <span>to check if Anna has completed her homework</span> </label></li><li><input type="radio" name="IA17609397953057dded6a33598485a17d9a92c9baa84fd" id="IA17609397953057dded6a33598485a17d9a92c9baa84fd-B" disabled="" value="B"><label for="IA17609397953057dded6a33598485a17d9a92c9baa84fd-B" disabled="" class="text"> <span>to let Anna know what they did in class today</span> </label></li><li><input type="radio" name="IA17609397953057dded6a33598485a17d9a92c9baa84fd" id="IA17609397953057dded6a33598485a17d9a92c9baa84fd-C" disabled="" value="C"><label for="IA17609397953057dded6a33598485a17d9a92c9baa84fd-C" disabled="" class="text"> <span>to ask Anna to contact her about the homework</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="143708406-6"><span class="sr-only">Flag question 6</span></button></div></div>
-      </div>
-   </div></div></div></div><div class="annotator-frame annotator-outer annotator-collapsed" style="display: none;"><div class="annotator-toolbar"><div><button class="annotator-frame-button annotator-frame-button--sidebar_toggle" aria-label="Annotation sidebar" aria-expanded="false" aria-pressed="false" title="Annotation sidebar" style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" class=""><g fill-rule="evenodd"><rect fill="none" stroke="none" x="0" y="0" width="16" height="16"></rect><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 12L6 8l4-4"></path></g></svg>
-</span></button><button class="annotator-frame-button" aria-label="Show highlights" aria-pressed="false" title="Show highlights"><span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" class=""><g fill-rule="evenodd"><rect fill="none" stroke="none" x="0" y="0" width="16" height="16"></rect><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.73 12.973A9.89 9.89 0 0 1 8 13c-3.866 0-7-2.239-7-5 0-.753.233-1.467.65-2.107m5.62-2.866A9.89 9.89 0 0 1 8 3c3.866 0 7 2.239 7 5 0 .753-.233 1.467-.65 2.107M1 1l14 14L1 1z"></path></g></svg>
-</span></button><button class="annotator-frame-button" aria-label="New page note" aria-pressed="false" title="New page note"><span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" class=""><g fill-rule="evenodd"><rect fill="none" stroke="none" x="0" y="0" width="16" height="16"></rect><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 15h6l8-6V1H1v14zm6-1V9h7"></path></g></svg>
-</span></button></div></div><div class="annotator-bucket-bar">
-</div></div><hypothesis-adder style="display: block; position: absolute; top: 0px; z-index: 999;"><hypothesis-adder-toolbar class="annotator-adder annotator-adder--arrow-up" style="visibility: hidden;"><hypothesis-adder-actions class="annotator-adder-actions"><button id="annotate-adder-button" class="annotator-adder-actions__button" aria-label="Create note" title="Create note" tabindex="0"><span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" class="annotator-adder-actions__icon">
-  <path fill="currentColor" fill-rule="nonzero" d="M15 0c.27 0 .505.099.703.297A.961.961 0 0116 1v15l-4-3H1a.974.974 0 01-.703-.29A.953.953 0 010 12V1C0 .719.096.482.29.29A.966.966 0 011 0h14zM7 3l-.469.063c-.312.041-.656.187-1.031.437-.375.25-.719.646-1.031 1.188C4.156 5.229 4 6 4 7l.002.063.006.062a.896.896 0 01.008.11l-.002.074-.006.066a1.447 1.447 0 00.43 1.188C4.729 8.854 5.082 9 5.5 9c.417 0 .77-.146 1.063-.438C6.854 8.271 7 7.918 7 7.5c0-.417-.146-.77-.438-1.063A1.447 1.447 0 005.5 6c-.073 0-.146.005-.219.016-.073.01-.14.026-.203.046.177-1.03.542-1.632 1.094-1.804L7 4V3zm5 0l-.469.063c-.312.041-.656.187-1.031.437-.375.25-.719.646-1.031 1.188C9.156 5.229 9 6 9 7l.002.063.006.062a.896.896 0 01.008.11l-.002.074-.006.066a1.447 1.447 0 00.43 1.188c.291.291.645.437 1.062.437.417 0 .77-.146 1.063-.438.291-.291.437-.645.437-1.062 0-.417-.146-.77-.438-1.063A1.447 1.447 0 0010.5 6c-.073 0-.146.005-.219.016-.073.01-.14.026-.203.046.177-1.03.542-1.632 1.094-1.804L12 4V3z"></path>
-</svg>
-</span><span class="annotator-adder-actions__label">Note</span></button><button id="highlight-adder-button" class="annotator-adder-actions__button" aria-label="Create highlight" title="Create highlight" tabindex="0"><span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" class="annotator-adder-actions__icon"><g fill-rule="evenodd"><rect fill="none" stroke="none" x="0" y="0" width="16" height="16"></rect><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15H1h11zm-.5-6v2l-1 1v-2l1-1zm.5-7v6h-2V2h2zm0-1h-2 2zm0 8h-2 2z"></path></g></svg>
-</span><span class="annotator-adder-actions__label">Highlight</span></button></hypothesis-adder-actions></hypothesis-adder-toolbar></hypothesis-adder>
+<div id="preRenderTarget" aria-hidden="true" style="position: relative; height: 0px; width: 0px; overflow: hidden; visibility: hidden;"></div>
 
-<!-- Comprehensive navigation and functionality script -->
+        <script>
+            // Fix for React Modal and external dependencies
+            (function() {
+                // Suppress console errors for missing external resources
+                var originalError = console.error;
+                console.error = function() {
+                    var args = Array.prototype.slice.call(arguments);
+                    var errorMsg = args.join(' ');
+                    
+                    // Filter out known external resource errors
+                    if (errorMsg.includes('react-modal') || 
+                        errorMsg.includes('Service worker') ||
+                        errorMsg.includes('CORS') ||
+                        errorMsg.includes('moment') ||
+                        errorMsg.includes('Pendo') ||
+                        errorMsg.includes('fontawesome') ||
+                        errorMsg.includes('@babel/polyfill')) {
+                        return; // Suppress these errors
+                    }
+                    
+                    originalError.apply(console, arguments);
+                };
+                
+                // Provide stub for missing dependencies
+                window.moment = window.moment || { version: '2.29.1', tz: function() {} };
+                
+                // Make sure the page stays visible
+                document.body.style.opacity = '1';
+                document.body.removeAttribute('unresolved');
+                
+                console.log('Cambridge Test Page - Local Development Mode');
+            })();
+        </script>
+    
 <script>
 (function() {
-    'use strict';
-    
-    // Ensure body is visible
-    document.body.style.opacity = '1';
-    document.body.style.display = 'block';
-    document.body.style.visibility = 'visible';
-    
-    console.log('✅ Cambridge A2-Key Reading/Writing test loaded successfully');
-    console.log('📝 Content loaded: All 7 parts (32 questions total)');
-    console.log('🧭 Navigation system enabled');
-    console.log('💡 Click question numbers or use arrow keys to navigate');
-    
-    // Track student answers
-    window.studentAnswers = {};
-    
-    // Navigation state
-    var currentQuestionNumber = 1; // Starting at question 1 (Part 1)
-    var questionElements = [];
-    
-    // Initialize question elements array
-    function initializeQuestions() {
-        // Find all question order numbers
-        var orderNumbers = document.querySelectorAll('.order-number[id^="scorableItem-"]');
-        questionElements = Array.from(orderNumbers).map(function(el) {
-            var id = el.id;
-            var match = id.match(/scorableItem-\d+_(\d+)/);
-            return {
-                number: match ? parseInt(match[1]) : 0,
-                element: el,
-                container: el.closest('.interaction-container')
-            };
-        }).filter(function(q) { return q.number > 0; });
-        
-        // Sort by question number
-        questionElements.sort(function(a, b) { return a.number - b.number; });
-        
-        console.log('📊 Found', questionElements.length, 'questions');
-        return questionElements;
-    }
-    
-    // Highlight active question
-    function highlightQuestion(questionNum) {
-        // Remove all active classes
-        document.querySelectorAll('.order-number').forEach(function(el) {
-            el.classList.remove('active');
+    console.log('Part navigation script loaded');
+
+    // Function to show a specific part
+    function showPart(partNumber) {
+        console.log('Showing part:', partNumber);
+
+        // Hide all parts
+        const allParts = document.querySelectorAll('.part-container');
+        allParts.forEach(part => {
+            part.style.display = 'none';
         });
-        
-        document.querySelectorAll('.subQuestion').forEach(function(el) {
-            el.classList.remove('active');
+
+        // Show the requested part
+        const targetPart = document.getElementById('part-' + partNumber);
+        if (targetPart) {
+            targetPart.style.display = 'block';
+        }
+
+        // Update footer button states
+        updateFooterButtons(partNumber);
+    }
+
+    // Update footer navigation button states
+    function updateFooterButtons(partNumber) {
+        // Remove 'selected' class from all part buttons
+        const partButtons = document.querySelectorAll('.footer__questionWrapper___1tZ46');
+        partButtons.forEach(btn => {
+            btn.classList.remove('selected');
         });
-        
-        // Add active class to current question - works for both Part 1 (1-6) and Part 2 (7-13)
-        var targetElement = document.querySelector('[id*="scorableItem-"][id$="_' + questionNum + '"]');
-        if (targetElement) {
-            targetElement.classList.add('active');
-        }
-        
-        // Add active class to footer button
-        var footerButtons = document.querySelectorAll('.subQuestion[data-ordernumber="' + questionNum + '"]');
-        footerButtons.forEach(function(btn) {
-            btn.classList.add('active');
-        });
-        
-        currentQuestionNumber = questionNum;
-        console.log('👉 Navigated to question', questionNum);
+
+        // Find and add 'selected' to the current part button
+        const currentButton = document.querySelector(`[data-sectionid]`);
+        // This is a simplified version - the actual section IDs would need to be mapped
     }
-    
-    // Scroll to question
-    function scrollToQuestion(questionNum) {
-        currentQuestionNumber = questionNum; // Update current question
-        
-        // First, show the correct part
-        showPartForQuestion(questionNum);
-        
-        // Then highlight the question
-        highlightQuestion(questionNum);
-        
-        // Wait a moment for the part to become visible, then scroll
-        setTimeout(function() {
-            // Find the question element - works for both Part 1 and Part 2
-            var targetElement = document.querySelector('[id*="scorableItem-"][id$="_' + questionNum + '"]');
-            if (targetElement) {
-                var container = targetElement.closest('.interaction-container');
-                if (container) {
-                    container.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                } else {
-                    // If no container, scroll to the element itself
-                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            } else {
-                console.log('⚠️ Could not find element for question', questionNum);
-            }
-        }, 100); // Small delay to ensure part is visible
+
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initNavigation);
+    } else {
+        initNavigation();
     }
-    
-    // Show the correct part based on question number
-    function showPartForQuestion(questionNum) {
-        var partContainers = document.querySelectorAll('.part-container');
-        
-        // Determine which part this question belongs to
-        var targetPart = 1; // Default to Part 1
-        if (questionNum >= 7 && questionNum <= 13) {
-            targetPart = 2;
-        } else if (questionNum >= 14 && questionNum <= 18) {
-            targetPart = 3;
-        } else if (questionNum >= 19 && questionNum <= 24) {
-            targetPart = 4;
-        } else if (questionNum >= 25 && questionNum <= 30) {
-            targetPart = 5;
-        } else if (questionNum === 31) {
-            targetPart = 6;
-        } else if (questionNum === 32) {
-            targetPart = 7;
-        }
-        
-        // Hide all parts, show only the target part
-        partContainers.forEach(function(container) {
-            var partNum = parseInt(container.getAttribute('data-part'));
-            if (partNum === targetPart) {
-                container.style.display = 'block';
-            } else {
-                container.style.display = 'none';
-            }
-        });
-        
-        console.log('📍 Showing Part ' + targetPart + ' for Question ' + questionNum);
-    }
-    
-    // Navigate to previous question
-    function gotoPreviousQuestion() {
-        if (currentQuestionNumber > 1) {
-            currentQuestionNumber--;
-            scrollToQuestion(currentQuestionNumber);
-        } else {
-            console.log('⚠️ Already at first question');
-        }
-    }
-    
-    // Navigate to next question
-    function gotoNextQuestion() {
-        if (currentQuestionNumber < 32) {
-            currentQuestionNumber++;
-            scrollToQuestion(currentQuestionNumber);
-        } else {
-            console.log('⚠️ Already at last question');
-        }
-    }
-    
-    // Initialize navigation
-    function initializeNavigation() {
-        initializeQuestions();
-        
-        // Add click handlers to all question number buttons in footer
-        document.querySelectorAll('.subQuestion.scorable-item').forEach(function(button) {
+
+    function initNavigation() {
+        console.log('Initializing part navigation...');
+
+        // Listen for clicks on Part buttons in footer
+        const partButtons = document.querySelectorAll('.footer__questionNo___3WNct[data-sectionid]');
+        partButtons.forEach((button, index) => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
-                var questionNum = parseInt(this.getAttribute('data-ordernumber'));
-                if (questionNum) {
-                    scrollToQuestion(questionNum);
+                const sectionText = this.querySelector('.sectionNr');
+                if (sectionText) {
+                    const partNum = parseInt(sectionText.textContent.trim());
+                    if (!isNaN(partNum)) {
+                        showPart(partNum);
+                    }
                 }
             });
         });
-        
-        // Handle Previous button
-        var prevButton = document.getElementById('footer-nav-button-previous');
-        if (prevButton) {
-            prevButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                gotoPreviousQuestion();
+
+        // Listen for clicks on individual question buttons
+        const questionButtons = document.querySelectorAll('.subQuestion[data-ordernumber]');
+        questionButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                const orderNum = parseInt(this.getAttribute('data-ordernumber'));
+                // Map question numbers to parts
+                let partNum = 1;
+                if (orderNum >= 1 && orderNum <= 6) partNum = 1;
+                else if (orderNum >= 7 && orderNum <= 13) partNum = 2;
+                else if (orderNum >= 14 && orderNum <= 18) partNum = 3;
+                else if (orderNum >= 19 && orderNum <= 24) partNum = 4;
+                else if (orderNum >= 25 && orderNum <= 30) partNum = 5;
+                else if (orderNum >= 31 && orderNum <= 33) partNum = 7; // Part 7
+
+                showPart(partNum);
             });
-        }
-        
-        // Handle Next button
-        var nextButton = document.getElementById('footer-nav-button-next');
-        if (nextButton) {
-            nextButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                gotoNextQuestion();
-            });
-        }
-        
-        // Add keyboard navigation
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-                e.preventDefault();
-                gotoPreviousQuestion();
-            } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-                e.preventDefault();
-                gotoNextQuestion();
-            }
         });
-        
-        // Show Part 1 by default
-        showPartForQuestion(1);
-        highlightQuestion(1);
-        
-        console.log('✅ Navigation initialized');
-        console.log('💡 Use arrow keys or click question numbers to navigate');
+
+        console.log('Part navigation initialized');
     }
-    
-    // Track answers
-    document.querySelectorAll('input[type="radio"]').forEach(function(radio) {
-        radio.addEventListener('change', function() {
-            var questionName = this.name;
-            var answerValue = this.value;
-            window.studentAnswers[questionName] = answerValue;
-            
-            // Update footer to show question as attempted
-            var questionNum = currentQuestionNumber;
-            var footerButtons = document.querySelectorAll('.subQuestion[data-ordernumber="' + questionNum + '"]');
-            footerButtons.forEach(function(btn) {
-                var srSpan = btn.querySelector('.sr-only');
-                if (srSpan && srSpan.textContent.includes('Not attempted')) {
-                    srSpan.textContent = srSpan.textContent.replace('Not attempted', 'Attempted');
-                }
-            });
-            
-            console.log('✓ Answer recorded for Q' + questionNum + ':', answerValue);
-        });
-    });
-    
-    // Handle deliver/submit button
-    var deliverButton = document.getElementById('deliver-button');
-    if (deliverButton) {
-        deliverButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            var answeredCount = Object.keys(window.studentAnswers).length;
-            var totalQuestions = 32; // Total questions across all 7 parts
-            
-            if (answeredCount < totalQuestions) {
-                var confirmSubmit = confirm('You have answered ' + answeredCount + ' out of ' + totalQuestions + ' questions.\\n\\nDo you want to submit anyway?');
-                if (!confirmSubmit) return;
-            }
-            
-            alert('✅ Test submitted successfully!\\n\\nAnswers recorded: ' + answeredCount + ' out of ' + totalQuestions);
-            console.log('📤 Submitted answers:', window.studentAnswers);
-            
-            // Here you can add code to send answers to server
-            // Example:
-            // fetch('/api/cambridge-submit', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({
-            //         studentId: localStorage.getItem('studentId'),
-            //         answers: window.studentAnswers,
-            //         testLevel: 'A2-Key',
-            //         module: 'reading-writing',
-            //         timestamp: new Date().toISOString()
-            //     })
-            // });
-        });
-    }
-    
-    // Handle part navigation buttons
-    var partQuestionMap = {
-        '1687665662102': { part: 1, questions: [1, 2, 3, 4, 5, 6], name: 'Part 1' },
-        '3426847902314': { part: 2, questions: [7, 8, 9, 10, 11, 12, 13], name: 'Part 2' },
-        '6054724483958': { part: 3, questions: [14, 15, 16, 17, 18], name: 'Part 3' },
-        '7096491309053': { part: 4, questions: [19, 20, 21, 22, 23, 24], name: 'Part 4' },
-        '8658776684776': { part: 5, questions: [25, 26, 27, 28, 29, 30], name: 'Part 5' },
-        '8662850947652': { part: 6, questions: [31], name: 'Part 6' },
-        '2200793588978': { part: 7, questions: [32], name: 'Part 7' }
-    };
-    
-    document.querySelectorAll('.footer__questionNo___3WNct[data-sectionid]').forEach(function(partButton) {
-        partButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            var sectionId = this.getAttribute('data-sectionid');
-            var partInfo = partQuestionMap[sectionId];
-            
-            if (!partInfo) return;
-            
-            // Toggle subquestion visibility
-            var wrapper = this.nextElementSibling;
-            if (wrapper && wrapper.classList.contains('footer__subquestionWrapper___9GgoP')) {
-                var isVisible = wrapper.style.display !== 'none';
-                
-                // Hide all other part wrappers
-                document.querySelectorAll('.footer__subquestionWrapper___9GgoP').forEach(function(w) {
-                    w.style.display = 'none';
-                });
-                
-                // Toggle current wrapper
-                wrapper.style.display = isVisible ? 'none' : 'block';
-                
-                // Update selected class on part button parent
-                document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach(function(qw) {
-                    qw.classList.remove('selected');
-                });
-                this.closest('.footer__questionWrapper___1tZ46').classList.add('selected');
-            }
-            
-            // Handle navigation for parts with content
-            if (sectionId === '1687665662102') {
-                // Navigate to first question of Part 1
-                scrollToQuestion(1);
-                console.log('📍 Navigated to Part 1 (Questions 1-6)');
-            } else if (sectionId === '3426847902314') {
-                // Navigate to first question of Part 2
-                scrollToQuestion(7);
-                console.log('📍 Navigated to Part 2 (Questions 7-13)');
-            } else {
-                // Navigate to first question of the part
-                var firstQuestion = partInfo.questions[0];
-                scrollToQuestion(firstQuestion);
-                console.log('📍 Navigated to ' + partInfo.name + ' (Question ' + firstQuestion + ')');
-            }
-        });
-    });
-    
-    // Add notification system (non-blocking alternative to alerts)
-    function showNotification(message) {
-        // Remove existing notification if any
-        var existingNotif = document.getElementById('custom-notification');
-        if (existingNotif) {
-            existingNotif.remove();
-        }
-        
-        // Create notification element
-        var notif = document.createElement('div');
-        notif.id = 'custom-notification';
-        notif.style.cssText = 'position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: #0066cc; color: white; padding: 15px 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 10000; max-width: 500px; text-align: center; font-size: 14px; animation: slideDown 0.3s ease;';
-        notif.textContent = message;
-        document.body.appendChild(notif);
-        
-        // Add animation
-        var style = document.createElement('style');
-        style.textContent = '@keyframes slideDown { from { opacity: 0; transform: translateX(-50%) translateY(-20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }';
-        document.head.appendChild(style);
-        
-        // Auto-remove after 3 seconds
-        setTimeout(function() {
-            notif.style.transition = 'opacity 0.3s ease';
-            notif.style.opacity = '0';
-            setTimeout(function() {
-                notif.remove();
-            }, 300);
-        }, 3000);
-    }
-    
-    // Disable annotator features
-    var annotatorFrame = document.querySelector('.annotator-frame');
-    if (annotatorFrame) {
-        annotatorFrame.style.display = 'none';
-    }
-    
-    var hypothesisAdder = document.querySelector('hypothesis-adder');
-    if (hypothesisAdder) {
-        hypothesisAdder.style.display = 'none';
-    }
-    
-    // Initialize everything when DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initializeNavigation);
-    } else {
-        initializeNavigation();
-    }
-    
-    // Make navigation functions globally available for debugging
-    window.cambridgeNavigation = {
-        goto: scrollToQuestion,
-        next: gotoNextQuestion,
-        prev: gotoPreviousQuestion,
-        current: function() { return currentQuestionNumber; },
-        answers: function() { return window.studentAnswers; }
-    };
-    
-    console.log('🎮 Debug: Use cambridgeNavigation.goto(8) to jump to question 8');
 })();
 </script>
 
-</body></html>
+</body>
+</html>
