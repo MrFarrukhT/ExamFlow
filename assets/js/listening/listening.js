@@ -1064,7 +1064,7 @@
         });
 
         // Submit function for listening test
-        window.submitListeningTest = function() {
+        window.submitListeningTest = async function() {
 
             try {
                 console.log('Starting listening test submission...');
@@ -1131,12 +1131,6 @@
                 
                 console.log(`Calculated listening score: ${score}/${totalQuestions}`);
                 
-                // Save the score and answers to localStorage
-                localStorage.setItem('listeningScore', score.toString());
-                localStorage.setItem('listeningAnswers', JSON.stringify(answers));
-                localStorage.setItem('listeningStatus', 'completed');
-                localStorage.setItem('listeningEndTime', new Date().toISOString());
-                
                 // Disable submit button to prevent double submission
                 const submitButton = document.getElementById('deliver-button');
                 if (submitButton) {
@@ -1144,15 +1138,51 @@
                     submitButton.innerHTML = '<span>Submitting...</span>';
                 }
                 
-                console.log('Listening test completed. Score saved:', score);
+                // Calculate band score
+                const bandScore = calculateBandScore(score);
                 
-                // Show success message without revealing score
-                alert('Listening section completed successfully!\nYou will be redirected to the dashboard.');
+                // Prepare test data for backend submission
+                const testData = {
+                    studentId: localStorage.getItem('studentId'),
+                    studentName: localStorage.getItem('studentName'),
+                    mockNumber: parseInt(localStorage.getItem('selectedMock') || '1'),
+                    skill: 'listening',
+                    answers: answers,
+                    score: score,
+                    bandScore: bandScore,
+                    startTime: localStorage.getItem('listeningStartTime'),
+                    endTime: new Date().toISOString()
+                };
                 
-                // Redirect to dashboard
-                setTimeout(() => {
-                    window.location.href = '../../dashboard.html';
-                }, 500);
+                // Save to localStorage as backup
+                localStorage.setItem('listeningScore', score.toString());
+                localStorage.setItem('listeningAnswers', JSON.stringify(answers));
+                localStorage.setItem('listeningStatus', 'completed');
+                localStorage.setItem('listeningEndTime', testData.endTime);
+                
+                // Try to submit to backend (admin dashboard)
+                try {
+                    await saveListeningToDatabase(testData);
+                    console.log('✅ Listening test submitted to admin dashboard');
+                    
+                    // Show success message
+                    alert('Listening section completed successfully!\nYou will be redirected to the dashboard.');
+                    
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = '../../dashboard.html';
+                    }, 500);
+                    
+                } catch (dbError) {
+                    console.warn('⚠️ Backend submission failed, but answers saved locally:', dbError);
+                    
+                    // Still proceed to dashboard even if backend fails
+                    alert('Listening section completed successfully!\nAnswers saved locally. You will be redirected to the dashboard.');
+                    
+                    setTimeout(() => {
+                        window.location.href = '../../dashboard.html';
+                    }, 500);
+                }
                 
             } catch (error) {
                 console.error('Listening submit error:', error);
@@ -1165,6 +1195,121 @@
                 }
             }
         };
+        
+        // Calculate band score for listening test
+        function calculateBandScore(score) {
+            if (!score) return '0.0';
+
+            const bandMapping = {
+                40: '9.0', 39: '9.0', 38: '8.5', 37: '8.5', 36: '8.0', 35: '8.0', 34: '7.5',
+                33: '7.5', 32: '7.0', 31: '7.0', 30: '7.0', 29: '6.5', 28: '6.5', 27: '6.5',
+                26: '6.0', 25: '6.0', 24: '6.0', 23: '5.5', 22: '5.5', 21: '5.5', 20: '5.5',
+                19: '5.0', 18: '5.0', 17: '5.0', 16: '5.0', 15: '5.0', 14: '4.5', 13: '4.5',
+                12: '4.0', 11: '4.0', 10: '4.0', 9: '3.5', 8: '3.5', 7: '3.0', 6: '3.0',
+                5: '2.5', 4: '2.5'
+            };
+
+            if (score <= 0) return '0.0';
+            if (score === 1) return '1.0';
+            if (score <= 3) return '2.0';
+
+            return bandMapping[score] || '0.0';
+        }
+        
+        // Save listening test to database with fallbacks
+        async function saveListeningToDatabase(testData) {
+            try {
+                // Try local database server first (preferred method)
+                console.log('🔄 Attempting to save listening test to local database server...');
+
+                const response = await fetch('http://localhost:3002/submissions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('✅ Listening test saved to local database server:', result.id);
+                    return result;
+                } else {
+                    throw new Error(`Local server responded with status: ${response.status}`);
+                }
+
+            } catch (error) {
+                console.warn('⚠️ Local database server not available:', error.message);
+
+                // Fallback 1: Try Vercel API if available
+                try {
+                    console.log('🔄 Trying Vercel API as fallback...');
+                    const VERCEL_API = 'https://innovative-centre-admin.vercel.app/api';
+
+                    const response = await fetch(`${VERCEL_API}/submissions`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(testData)
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        console.log('✅ Listening test saved to Vercel database');
+                        return result;
+                    }
+                } catch (vercelError) {
+                    console.warn('⚠️ Vercel API also failed:', vercelError.message);
+                }
+
+                // Fallback 2: Enhanced local storage (database format)
+                console.log('🔄 Using enhanced local storage as final fallback...');
+                return await saveToEnhancedLocalStorage(testData);
+            }
+        }
+        
+        // Enhanced local storage that mimics database structure
+        async function saveToEnhancedLocalStorage(testData) {
+            try {
+                // Get existing submissions
+                const existingData = localStorage.getItem('test_submissions_database') || '[]';
+                const submissions = JSON.parse(existingData);
+
+                // Add new submission with database-like structure
+                const newSubmission = {
+                    id: Date.now(),
+                    student_id: testData.studentId,
+                    student_name: testData.studentName,
+                    mock_number: testData.mockNumber,
+                    skill: testData.skill,
+                    answers: testData.answers,
+                    score: testData.score,
+                    band_score: testData.bandScore,
+                    start_time: testData.startTime,
+                    end_time: testData.endTime,
+                    created_at: new Date().toISOString(),
+                    saved_locally: true
+                };
+
+                submissions.push(newSubmission);
+
+                // Save back to localStorage
+                localStorage.setItem('test_submissions_database', JSON.stringify(submissions));
+
+                console.log('✅ Listening test saved to enhanced local storage (database format)');
+
+                return {
+                    success: true,
+                    message: 'Saved to local storage (will sync when database is available)',
+                    id: newSubmission.id
+                };
+
+            } catch (error) {
+                console.error('❌ Enhanced local storage failed:', error);
+                throw error;
+            }
+        }
 
         document.getElementById('deliver-button').addEventListener('click', function() {
             // Add confirmation dialog before submission
