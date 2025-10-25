@@ -57,10 +57,81 @@
       }catch(e){ /*noop*/ }
     }
 
+    function __A2_applyHighlightStyles(doc){
+      if (doc.getElementById('ic-a2key-style')) return;
+      var css = ''+
+        '.order-number.ic-on{border:2px solid #1976d2;border-radius:4px;padding:1px 6px;display:inline-block;box-shadow:0 0 0 3px rgba(25,118,210,.15);}'+
+        '.ic-active-question{outline:2px solid rgba(25,118,210,.25);outline-offset:4px;border-radius:6px;}';
+      var s = doc.createElement('style'); s.id='ic-a2key-style'; s.type='text/css'; s.appendChild(doc.createTextNode(css));
+      (doc.head || doc.documentElement).appendChild(s);
+    }
+
+    function __A2_markActiveQuestion(doc, n){
+      try{
+        __A2_applyHighlightStyles(doc);
+        doc.__icMarking = true; // guard to prevent observer feedback loops
+        var prevNums = doc.querySelectorAll('.order-number.ic-on');
+        prevNums.forEach(function(x){ x.classList.remove('ic-on'); });
+        var prevBoxes = doc.querySelectorAll('.ic-active-question');
+        prevBoxes.forEach(function(x){ x.classList.remove('ic-active-question'); });
+        var anchor = doc.querySelector('span.order-number[id^="scorableItem-"][id$="_'+n+'"]') || doc.querySelector('[data-ordernumber="'+n+'"]');
+        if (!anchor) return;
+        anchor.classList.add('ic-on');
+        var container = anchor.closest('.choiceInteraction__choiceInteraction___3W0MH') || anchor.parentElement;
+        if (container) container.classList.add('ic-active-question');
+        doc.__icMarking = false;
+      }catch(e){}
+    }
+
+    function __A2_findAnchor(doc, n){
+      // 1) Primary: the visible order number span in the question body
+      var sel = 'span.order-number[id^="scorableItem-"][id$="_'+n+'"]';
+      var el = doc.querySelector(sel) || doc.querySelector('[id^="scorableItem-"][id$="_'+n+'"]');
+      if (el) return el;
+      // 2) Fallback: hidden focus button with id="<revision>-<n>"
+      try{
+        var btn = doc.querySelector('.subQuestion.scorable-item[data-ordernumber="'+n+'"]');
+        var rid = btn && btn.getAttribute('data-contentrevisionid');
+        if (rid){
+          var hidden = doc.getElementById(rid+'-'+n);
+          if (hidden) return hidden;
+        }
+      }catch(e){}
+      return null;
+    }
+
+    function __A2_scrollToQuestion(doc, n){
+      var anchor = __A2_findAnchor(doc, n);
+      if(!anchor) return false;
+      var container = doc.querySelector('#sectionContent') || doc.querySelector('.DisplayTypeContainer__sectionContent___2HSJ0');
+      try{
+        if (container){
+          var cRect = container.getBoundingClientRect();
+          var aRect = anchor.getBoundingClientRect();
+          var top = aRect.top - cRect.top + container.scrollTop - 48;
+          container.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+        } else {
+          anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return true;
+      }catch(e){
+        if (container) container.scrollTop = (anchor.offsetTop||0) - 48; else anchor.scrollIntoView(true);
+        return true;
+      }
+    }
+
     function __A2_getPartForQuestion(q){
       var rs = window.__A2_ranges || [];
       for(var i=0;i<rs.length;i++){ var r=rs[i]; if(q>=r.min && q<=r.max) return r.part; }
       return null;
+    }
+
+    function __A2_getCurrentPartFromDoc(doc){
+      try{
+        var el = doc.querySelector('.footer__questionWrapper___1tZ46.selected .sectionNr');
+        var n = el ? parseInt(el.textContent.trim(),10) : null;
+        return isNaN(n) ? null : n;
+      }catch(e){ return null; }
     }
 
     function __A2_setPart(n) {
@@ -73,10 +144,20 @@
 
     function __A2_goToQuestion(qAbs){
       var part = __A2_getPartForQuestion(qAbs);
-      if(part){
-        try { sessionStorage.setItem('a2key-target-question', String(qAbs)); } catch(e) {}
-        __A2_setPart(part);
+      if(!part) return;
+      var frame = document.getElementById('part-frame');
+      var doc = frame && frame.contentDocument;
+      var currentPart = doc ? __A2_getCurrentPartFromDoc(doc) : null;
+      if (currentPart === part && doc) {
+        // Same part: select in-place, no reload
+        try{
+          var btn = doc.querySelector('.subQuestion.scorable-item[data-ordernumber="'+qAbs+'"]');
+          if (btn) { btn.click(); __A2_markActiveQuestion(doc, qAbs); }
+        }catch(e){}
+        return;
       }
+      try { sessionStorage.setItem('a2key-target-question', String(qAbs)); } catch(e) {}
+      __A2_setPart(part);
     }
 
     function __A2_bindCambridgeNav() {
@@ -85,49 +166,77 @@
       if (!doc) return;
 
       __A2_updateRangesFromFrameDoc(doc);
+      __A2_applyHighlightStyles(doc);
+      // Mark whatever is currently active on initial bind
+      try{
+        var __cur = (function(){
+          var el = doc.querySelector('.footer__questionWrapper___1tZ46.selected .subQuestion.active.scorable-item') || doc.querySelector('.subQuestion.active.scorable-item');
+          return el ? parseInt(el.getAttribute('data-ordernumber'),10) : null;
+        })();
+        if(__cur!=null){ __A2_scrollToQuestion(doc, __cur); __A2_markActiveQuestion(doc, __cur); }
+      }catch(e){}
 
       function currentAbs(){
         var el = doc.querySelector('.footer__questionWrapper___1tZ46.selected .subQuestion.active.scorable-item') || doc.querySelector('.subQuestion.active.scorable-item');
         return el ? parseInt(el.getAttribute('data-ordernumber'),10) : null;
       }
 
-      // Intercept subQuestion clicks (any part)
-      var qBtns = doc.querySelectorAll('.subQuestion.scorable-item');
-      qBtns.forEach(function(btn){
-        if(btn.__icHook) return; btn.__icHook = true;
-        btn.addEventListener('click', function(e){
-          if(!e.isTrusted) return; // allow programmatic selects
+      // Delegated click handler for dynamic footers
+      if (!doc.__icDelegated) {
+        doc.__icDelegated = true;
+        doc.addEventListener('click', function(e){
+          var btn = e.target && (e.target.closest && e.target.closest('.subQuestion.scorable-item'));
+          if (!btn) return;
+          if (!e.isTrusted) return;
           var n = parseInt(btn.getAttribute('data-ordernumber'),10);
-          if(!isNaN(n) && window.parent && window.parent.__A2_goToQuestion){
+          if (isNaN(n)) return;
+          var curPart = __A2_getCurrentPartFromDoc(doc);
+          var targetPart = (window.parent && window.parent.__A2_getPartForQuestion) ? window.parent.__A2_getPartForQuestion(n) : null;
+          if(targetPart && curPart && targetPart !== curPart && window.parent && window.parent.__A2_goToQuestion){
             e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation();
             window.parent.__A2_goToQuestion(n);
+          } else {
+            // Same part → let default select, then scroll + mark
+            setTimeout(function(){ __A2_scrollToQuestion(doc, n); __A2_markActiveQuestion(doc, n); }, 50);
           }
         }, true);
-      });
+      }
 
-      // Intercept Prev/Next to become global question navigation
-      var prev = doc.getElementById('footer-nav-button-previous');
-      if (prev && !prev.__icHook) {
-        prev.__icHook = true;
-        prev.addEventListener('click', function(e){
-          var c = currentAbs(); if(c==null) return;
-          if (window.parent && window.parent.__A2_goToQuestion) {
+      // Intercept Prev/Next only when crossing part boundaries
+      // Delegated for Prev/Next (handles dynamic re-render)
+      if (!doc.__icArrowsDelegated) {
+        doc.__icArrowsDelegated = true;
+        doc.addEventListener('click', function(e){
+          var prevBtn = e.target && (e.target.closest && e.target.closest('#footer-nav-button-previous'));
+          var nextBtn = e.target && (e.target.closest && e.target.closest('#footer-nav-button-next'));
+          if (!prevBtn && !nextBtn) return;
+          var c = currentAbs(); if (c==null) return;
+          var nextAbs = prevBtn ? (c-1) : (c+1);
+          var curPart = __A2_getCurrentPartFromDoc(doc);
+          var targetPart = (window.parent && window.parent.__A2_getPartForQuestion) ? window.parent.__A2_getPartForQuestion(nextAbs) : null;
+          if (targetPart && curPart && targetPart !== curPart && window.parent && window.parent.__A2_goToQuestion) {
             e.preventDefault(); e.stopPropagation(); if (e.stopImmediatePropagation) e.stopImmediatePropagation();
-            window.parent.__A2_goToQuestion(c-1);
+            window.parent.__A2_goToQuestion(nextAbs);
+          } else {
+            // Same part → allow default, then sync scroll + mark
+            setTimeout(function(){ __A2_scrollToQuestion(doc, nextAbs); __A2_markActiveQuestion(doc, nextAbs); }, 50);
           }
         }, true);
       }
-      var next = doc.getElementById('footer-nav-button-next');
-      if (next && !next.__icHook) {
-        next.__icHook = true;
-        next.addEventListener('click', function(e){
-          var c = currentAbs(); if(c==null) return;
-          if (window.parent && window.parent.__A2_goToQuestion) {
-            e.preventDefault(); e.stopPropagation(); if (e.stopImmediatePropagation) e.stopImmediatePropagation();
-            window.parent.__A2_goToQuestion(c+1);
-          }
-        }, true);
-      }
+
+      // Observe active changes to keep highlight in sync
+      try{
+        var mo = new MutationObserver(function(){
+          if (doc.__icMarking) return; // ignore our own changes
+          clearTimeout(doc.__icMoTimer);
+          doc.__icMoTimer = setTimeout(function(){
+            var c = currentAbs(); if(c!=null) __A2_markActiveQuestion(doc, c);
+          }, 40);
+        });
+        // Limit scope to footer and question body wrappers to reduce churn
+        var footer = doc.querySelector('.footer__footer___1NlzQ') || doc.body;
+        mo.observe(footer, { attributes: true, subtree: true, attributeFilter: ['class'] });
+      }catch(e){}
 
       // If parent requested a specific question, select it programmatically
       try{
@@ -135,6 +244,7 @@
         if(tgt){
           var b = doc.querySelector('.subQuestion.scorable-item[data-ordernumber="'+tgt+'"]');
           if(b){ b.click(); }
+          setTimeout(function(){ var num=parseInt(tgt,10); __A2_scrollToQuestion(doc, num); __A2_markActiveQuestion(doc, num); }, 80);
           sessionStorage.removeItem('a2key-target-question');
         }
       }catch(e){}
