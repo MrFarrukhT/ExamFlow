@@ -436,37 +436,81 @@
     <style>
         /* Prevent flash of unstyled content */
         body { opacity: 1 !important; }
-        
+
         /* Fallback for missing FontAwesome icons */
-        .fa:before { 
-            font-family: Arial, sans-serif; 
+        .fa:before {
+            font-family: Arial, sans-serif;
         }
-        
+
         /* Answered question indicator */
         .subQuestion.answered {
             background-color: #4CAF50 !important;
             color: white !important;
             border-color: #45a049 !important;
         }
-        
+
         .subQuestion.answered span {
             color: white !important;
         }
-        
+
         /* Active question indicator */
         .subQuestion.active {
             background-color: #2196F3 !important;
             color: white !important;
             font-weight: bold;
         }
-        
+
         .subQuestion.active span {
             color: white !important;
         }
-        
+
         /* Answered AND active */
         .subQuestion.answered.active {
             background-color: #1976D2 !important;
+        }
+
+        /* Part 1 Question Layout - Each question on new line, left-aligned */
+        .QuestionDisplay__questionDisplayWrapper___1n_b0 {
+            display: block !important;
+            width: 100% !important;
+            clear: both !important;
+            margin-bottom: 40px !important;
+        }
+
+        .container.generic {
+            display: block !important;
+            width: 100% !important;
+            clear: both !important;
+        }
+
+        .container.generic .container.partWidth {
+            display: block !important;
+            width: 100% !important;
+            max-width: 250px !important;
+            margin-bottom: 15px !important;
+            float: none !important;
+        }
+
+        .container.generic .container.partWidth img {
+            max-width: 100% !important;
+            width: auto !important;
+            height: auto !important;
+        }
+
+        .interaction-container {
+            display: block !important;
+            width: 100% !important;
+            clear: both !important;
+            padding-left: 0 !important;
+        }
+
+        .choiceInteraction__choiceInteraction___3W0MH {
+            width: 100% !important;
+        }
+
+        .choiceInteraction__choiceInteraction___3W0MH ul {
+            padding-left: 0 !important;
+            margin-left: 0 !important;
         }
     </style>
 </head>
@@ -479,7 +523,7 @@
       <div class="container generic">
          <div class="container partWidth percentwidth-30">
             <span class="inlineImage" id="img-1671789107627">
-               <span id="143659692_content_item_127449474_143369555" class="qti-renderer-media-wrapper"><img alt="Background image" data-content-id="/file/cil/content_item_127449474_143369555/img?cacheable=true&amp;assessmentRunId=146724146" class="qti-image contrast-compatible" src="./Part 1_files/img" style="height: auto; width: 362px; max-width: 100%;"></span>
+               <span id="143659692_content_item_127449474_143369555" class="qti-renderer-media-wrapper"><img alt="Background image" class="qti-image contrast-compatible" src="images/1.svg" style="height: auto; width: 362px; max-width: 100%;"></span>
             </span>
          </div>
          <div id="143659692_KETR20CB-NKR100014EVO-0-1" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_143659692_KETR20CB-NKR100014EVO-0-1"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt" id="interaction_group_143659692_KETR20CB-NKR100014EVO-0-1"><span class="order-number active" id="scorableItem-143659692_1">1</span></p></div><ul class="vertical"><li><input type="radio" name="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4" id="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4-A" value="A"><label for="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4-A" class="text"> <span>The bicycle that’s for sale was built for a child.</span> </label></li><li><input type="radio" name="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4" id="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4-B" value="B"><label for="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4-B" class="text"> <span>Some parts of the bicycle must be changed.</span> </label></li><li><input type="radio" name="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4" id="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4-C" value="C"><label for="IA1760944471472aacc9577b75b4e4402edd39bb1b5fff4-C" class="text"> <span>Debbie is selling the bike because she’s too big for it now.</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="143659692-1"><span class="sr-only">Flag question 1</span></button></div></div>
@@ -487,50 +531,50 @@
    </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="1" style="top: 215px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 1</span></button></div></div></div>
 
 <!-- Question 2 -->
-<div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view" id="question-wrapper-2" style="display: none;"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-2" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_2" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_2">
+<div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view" id="question-wrapper-2"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-2" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_2" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_2">
       <div class="container generic">
          <div class="container partWidth percentwidth-30">
-            <span class="inlineImage"><span class="qti-renderer-media-wrapper"><img alt="Advertisement image" class="qti-image contrast-compatible" src="./Part 1_files/img" style="height: auto; width: 362px; max-width: 100%;"></span></span>
+            <span class="inlineImage"><span class="qti-renderer-media-wrapper"><img alt="Advertisement image" class="qti-image contrast-compatible" src="images/2.svg" style="height: auto; width: 362px; max-width: 100%;"></span></span>
          </div>
          <div id="q2-interaction" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_q2"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt" id="interaction_group_q2"><span class="order-number active" id="scorableItem-2">2</span></p></div><ul class="vertical"><li><input type="radio" name="question_2" id="q2-A" value="A"><label for="q2-A" class="text"> <span>The concert starts at 8 p.m.</span> </label></li><li><input type="radio" name="question_2" id="q2-B" value="B"><label for="q2-B" class="text"> <span>Tickets must be purchased online.</span> </label></li><li><input type="radio" name="question_2" id="q2-C" value="C"><label for="q2-C" class="text"> <span>There are no tickets available at the door.</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="flag-q2"><span class="sr-only">Flag question 2</span></button></div></div>
       </div>
    </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="1" style="top: 215px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 2</span></button></div></div></div></div>
 
 <!-- Question 3 -->
-<div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view" id="question-wrapper-3" style="display: none;"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-3" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_3" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_3">
+<div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view" id="question-wrapper-3"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-3" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_3" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_3">
       <div class="container generic">
          <div class="container partWidth percentwidth-30">
-            <span class="inlineImage"><span class="qti-renderer-media-wrapper"><img alt="Advertisement image" class="qti-image contrast-compatible" src="./Part 1_files/img" style="height: auto; width: 362px; max-width: 100%;"></span></span>
+            <span class="inlineImage"><span class="qti-renderer-media-wrapper"><img alt="Advertisement image" class="qti-image contrast-compatible" src="images/3.svg" style="height: auto; width: 362px; max-width: 100%;"></span></span>
          </div>
          <div id="q3-interaction" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_q3"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt" id="interaction_group_q3"><span class="order-number active" id="scorableItem-3">3</span></p></div><ul class="vertical"><li><input type="radio" name="question_3" id="q3-A" value="A"><label for="q3-A" class="text"> <span>The library closes at 6 p.m. on weekdays.</span> </label></li><li><input type="radio" name="question_3" id="q3-B" value="B"><label for="q3-B" class="text"> <span>Students need a library card to borrow books.</span> </label></li><li><input type="radio" name="question_3" id="q3-C" value="C"><label for="q3-C" class="text"> <span>The library is open on Sundays.</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="flag-q3"><span class="sr-only">Flag question 3</span></button></div></div>
       </div>
    </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="1" style="top: 215px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 3</span></button></div></div></div></div>
 
 <!-- Question 4 -->
-<div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view" id="question-wrapper-4" style="display: none;"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-4" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_4" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_4">
+<div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view" id="question-wrapper-4"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-4" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_4" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_4">
       <div class="container generic">
          <div class="container partWidth percentwidth-30">
-            <span class="inlineImage"><span class="qti-renderer-media-wrapper"><img alt="Advertisement image" class="qti-image contrast-compatible" src="./Part 1_files/img" style="height: auto; width: 362px; max-width: 100%;"></span></span>
+            <span class="inlineImage"><span class="qti-renderer-media-wrapper"><img alt="Advertisement image" class="qti-image contrast-compatible" src="images/4.svg" style="height: auto; width: 362px; max-width: 100%;"></span></span>
          </div>
          <div id="q4-interaction" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_q4"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt" id="interaction_group_q4"><span class="order-number active" id="scorableItem-4">4</span></p></div><ul class="vertical"><li><input type="radio" name="question_4" id="q4-A" value="A"><label for="q4-A" class="text"> <span>The restaurant serves only vegetarian food.</span> </label></li><li><input type="radio" name="question_4" id="q4-B" value="B"><label for="q4-B" class="text"> <span>Customers must book a table in advance.</span> </label></li><li><input type="radio" name="question_4" id="q4-C" value="C"><label for="q4-C" class="text"> <span>The restaurant offers a lunch special.</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="flag-q4"><span class="sr-only">Flag question 4</span></button></div></div>
       </div>
    </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="1" style="top: 215px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 4</span></button></div></div></div></div>
 
 <!-- Question 5 -->
-<div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view" id="question-wrapper-5" style="display: none;"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-5" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_5" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_5">
+<div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view" id="question-wrapper-5"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-5" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_5" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_5">
       <div class="container generic">
          <div class="container partWidth percentwidth-30">
-            <span class="inlineImage"><span class="qti-renderer-media-wrapper"><img alt="Advertisement image" class="qti-image contrast-compatible" src="./Part 1_files/img" style="height: auto; width: 362px; max-width: 100%;"></span></span>
+            <span class="inlineImage"><span class="qti-renderer-media-wrapper"><img alt="Advertisement image" class="qti-image contrast-compatible" src="images/5.svg" style="height: auto; width: 362px; max-width: 100%;"></span></span>
          </div>
          <div id="q5-interaction" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_q5"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt" id="interaction_group_q5"><span class="order-number active" id="scorableItem-5">5</span></p></div><ul class="vertical"><li><input type="radio" name="question_5" id="q5-A" value="A"><label for="q5-A" class="text"> <span>The museum is free on Wednesdays.</span> </label></li><li><input type="radio" name="question_5" id="q5-B" value="B"><label for="q5-B" class="text"> <span>Children under 12 enter for free.</span> </label></li><li><input type="radio" name="question_5" id="q5-C" value="C"><label for="q5-C" class="text"> <span>The museum has extended hours on weekends.</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="flag-q5"><span class="sr-only">Flag question 5</span></button></div></div>
       </div>
    </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="1" style="top: 215px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 5</span></button></div></div></div></div>
 
 <!-- Question 6 -->
-<div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view" id="question-wrapper-6" style="display: none;"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-6" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_6" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_6">
+<div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view" id="question-wrapper-6"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-6" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_6" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_6">
       <div class="container generic">
          <div class="container partWidth percentwidth-30">
-            <span class="inlineImage"><span class="qti-renderer-media-wrapper"><img alt="Advertisement image" class="qti-image contrast-compatible" src="./Part 1_files/img" style="height: auto; width: 362px; max-width: 100%;"></span></span>
+            <span class="inlineImage"><span class="qti-renderer-media-wrapper"><img alt="Advertisement image" class="qti-image contrast-compatible" src="images/6.svg" style="height: auto; width: 362px; max-width: 100%;"></span></span>
          </div>
          <div id="q6-interaction" class="interaction-container"><div class="choiceInteraction__choiceInteraction___3W0MH interaction" role="radiogroup" aria-labelledby="interaction_group_q6"><div class="choiceInteraction__promptAndButtonRow___2Atbc"><p class="interaction-prompt" id="interaction_group_q6"><span class="order-number active" id="scorableItem-6">6</span></p></div><ul class="vertical"><li><input type="radio" name="question_6" id="q6-A" value="A"><label for="q6-A" class="text"> <span>The swimming pool opens at 7 a.m. daily.</span> </label></li><li><input type="radio" name="question_6" id="q6-B" value="B"><label for="q6-B" class="text"> <span>Swimming lessons are available for all ages.</span> </label></li><li><input type="radio" name="question_6" id="q6-C" value="C"><label for="q6-C" class="text"> <span>Members get a discount on entry fees.</span> </label></li></ul><button aria-pressed="false" class="QuestionDisplay__hiddenFocus___VyH0X" id="flag-q6"><span class="sr-only">Flag question 6</span></button></div></div>
       </div>
@@ -623,68 +667,13 @@
 
             // ===== QUESTION NAVIGATION SYSTEM =====
             document.addEventListener('DOMContentLoaded', function() {
-                let currentQuestionIndex = 1;
                 const totalQuestionsInPart1 = 6;
-                
-                // Question wrapper elements
-                const questionWrappers = {
-                    1: document.querySelector('.QuestionDisplay__questionDisplayWrapper___1n_b0.current'),
-                    2: document.getElementById('question-wrapper-2'),
-                    3: document.getElementById('question-wrapper-3'),
-                    4: document.getElementById('question-wrapper-4'),
-                    5: document.getElementById('question-wrapper-5'),
-                    6: document.getElementById('question-wrapper-6')
-                };
-
-                // Show specific question
-                function showQuestion(questionNumber) {
-                    // Hide all questions
-                    Object.values(questionWrappers).forEach(wrapper => {
-                        if (wrapper) {
-                            wrapper.style.display = 'none';
-                            wrapper.classList.remove('current');
-                        }
-                    });
-                    
-                    // Show target question
-                    if (questionWrappers[questionNumber]) {
-                        questionWrappers[questionNumber].style.display = 'block';
-                        questionWrappers[questionNumber].classList.add('current');
-                        currentQuestionIndex = questionNumber;
-                        
-                        // Update footer buttons
-                        updateFooterButtons();
-                        updateQuestionButtonStates();
-                        
-                        // Scroll to top
-                        window.scrollTo(0, 0);
-                    }
-                }
-
-                // Update Previous/Next button states
-                function updateFooterButtons() {
-                    const prevButton = document.getElementById('footer-nav-button-previous');
-                    const nextButton = document.getElementById('footer-nav-button-next');
-                    
-                    if (prevButton) {
-                        prevButton.disabled = (currentQuestionIndex === 1);
-                    }
-                    
-                    if (nextButton) {
-                        nextButton.disabled = (currentQuestionIndex === totalQuestionsInPart1);
-                    }
-                }
 
                 // Update question button states in footer
                 function updateQuestionButtonStates() {
                     const part1Questions = document.querySelectorAll('[data-sectionid="1687665662102"] .subQuestion');
                     part1Questions.forEach((btn, index) => {
                         const qNum = index + 1;
-                        if (qNum === currentQuestionIndex) {
-                            btn.classList.add('active');
-                        } else {
-                            btn.classList.remove('active');
-                        }
                         
                         // Update answered status
                         const answer = AnswerStorage.getAnswer(`part1_q${qNum}`);
@@ -729,39 +718,30 @@
                     }
                 }
 
-                // Handle question button clicks in footer
+                // Handle question button clicks in footer - scroll to question
                 const part1Questions = document.querySelectorAll('[data-sectionid="1687665662102"] .subQuestion');
                 part1Questions.forEach((btn, index) => {
                     const questionNumber = index + 1;
                     btn.addEventListener('click', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
-                        showQuestion(questionNumber);
+                        
+                        // Scroll to the question
+                        const questionWrapper = document.getElementById(`question-wrapper-${questionNumber}`) || 
+                                              document.querySelector('.QuestionDisplay__questionDisplayWrapper___1n_b0.current');
+                        if (questionWrapper) {
+                            questionWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
                     });
                 });
 
-                // Handle Previous/Next arrows for within Part 1
-                const prevButton = document.getElementById('footer-nav-button-previous');
+                // Handle Next arrow - navigate to Part 2
                 const nextButton = document.getElementById('footer-nav-button-next');
-
-                if (prevButton) {
-                    prevButton.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        if (currentQuestionIndex > 1) {
-                            showQuestion(currentQuestionIndex - 1);
-                        }
-                    });
-                }
-
                 if (nextButton) {
+                    nextButton.disabled = false;
                     nextButton.addEventListener('click', function(e) {
                         e.preventDefault();
-                        if (currentQuestionIndex < totalQuestionsInPart1) {
-                            showQuestion(currentQuestionIndex + 1);
-                        } else {
-                            // Last question in Part 1, go to Part 2
-                            window.location.href = 'Part 2.html';
-                        }
+                        window.location.href = 'Part 2.html';
                     });
                 }
 
@@ -799,8 +779,7 @@
                 // Initialize
                 loadSavedAnswers();
                 setupAnswerSaving();
-                showQuestion(1);
-                updateFooterButtons();
+                updateQuestionButtonStates();
             });
         </script>
 <script src="../../../assets/js/cambridge/a2-key-part-scroll.js"></script>
