@@ -6,6 +6,22 @@
   <title>Cambridge A2 Key - Reading & Writing (Combined Parts 1-7)</title>
   <link rel="icon" href="../../assets/icons/innovativecentre.png">
   <link rel="stylesheet" href="../../assets/css/base.css">
+  
+  <script>
+    // SESSION VERIFICATION - Redirect to login if not authenticated
+    (function() {
+        const studentId = localStorage.getItem('studentId');
+        const studentName = localStorage.getItem('studentName');
+        const examType = localStorage.getItem('examType');
+        
+        if (!studentId || !studentName || examType !== 'Cambridge') {
+            // No valid session - redirect to Cambridge login
+            alert('Please log in first to access the test.');
+            window.location.href = '../../../index.html';
+        }
+    })();
+  </script>
+  
   <!-- Prefetch other parts to reduce switch delay -->
   <link rel="prefetch" href="./Part 2.html" as="document">
   <link rel="prefetch" href="./Part 3.html" as="document">
@@ -259,11 +275,43 @@
     window.addEventListener('DOMContentLoaded', initCombined);
   </script>
 </head>
-<body>
+<body data-test-version="A2-Key" data-skill="reading-writing" data-mock="cambridge-a2-key">
   <main class="parts-container">
     <div class="frame-wrap">
       <iframe id="part-frame" class="part-frame" title="A2 Key Part" src="./Part 1.html"></iframe>
     </div>
   </main>
+
+  <!-- Backend Integration Scripts -->
+  <script src="../../../assets/js/universal-functions.js"></script>
+  <script src="../../../assets/js/distraction-free.js"></script>
+  <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
+  <script>
+    // Initialize Cambridge session on load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if student is logged in
+      const studentId = localStorage.getItem('studentId');
+      const studentName = localStorage.getItem('studentName');
+      const examType = localStorage.getItem('examType');
+      
+      if (!studentId || !studentName || examType !== 'Cambridge') {
+        alert('Session expired. Please log in again.');
+        window.location.href = '../../../Cambridge/index.html';
+        return;
+      }
+      
+      // Mark reading-writing as in progress
+      const currentModule = 'reading-writing';
+      localStorage.setItem(`${currentModule}Status`, 'in-progress');
+      if (!localStorage.getItem(`${currentModule}StartTime`)) {
+        localStorage.setItem(`${currentModule}StartTime`, new Date().toISOString());
+      }
+      
+      // Initialize answer storage if not exists
+      if (!localStorage.getItem('reading-writingAnswers')) {
+        localStorage.setItem('reading-writingAnswers', JSON.stringify({}));
+      }
+    });
+  </script>
 </body>
 </html>

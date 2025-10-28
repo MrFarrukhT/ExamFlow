@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0112)https://ceq.inspera.com/player/?assessmentRunId=146724146&context=exam#/section/2200793588978/question/143369604 -->
+<!-- saved from url=(0139)https://ceq.inspera.com/player/?assessmentRunId=146724146&context=exam#/section/2200793588978/question/143369604/scorableItem/32/skipScroll -->
 <html translate="no" class="notranslate js-focus-visible" lang="en" data-js-focus-visible=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>body {transition: opacity ease-in 0.2s; } 
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
 </style>
@@ -9,6 +9,20 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         <title>A2 Key RW Digital Sample Test 1_26.04.23</title>
         <link rel="shortcut icon" type="image/png" href="https://d133zon9jtcf53.cloudfront.net/favicon.png">
         
+        <script>
+            // SESSION VERIFICATION - Redirect to login if not authenticated
+            (function() {
+                const studentId = localStorage.getItem('studentId');
+                const studentName = localStorage.getItem('studentName');
+                const examType = localStorage.getItem('examType');
+                
+                if (!studentId || !studentName || examType !== 'Cambridge') {
+                    // No valid session - redirect to Cambridge login
+                    alert('Please log in first to access the test.');
+                    window.location.href = '../../../index.html';
+                }
+            })();
+        </script>
 
 
             <script src="./Part 7_files/t.js.download"></script>
@@ -547,6 +561,116 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 }
             });
         </script>
+        
+        <script>
+            // Answer Storage System - Part 7 Writing Task (Q32) + Submit Functionality
+            const AnswerStorage = {
+                storageKey: 'reading-writingAnswers',
+                
+                saveAnswer: function(questionId, answer) {
+                    const answers = this.loadAnswers();
+                    answers[questionId] = answer;
+                    localStorage.setItem(this.storageKey, JSON.stringify(answers));
+                },
+                
+                loadAnswers: function() {
+                    const saved = localStorage.getItem(this.storageKey);
+                    return saved ? JSON.parse(saved) : {};
+                },
+                
+                getAnswer: function(questionId) {
+                    const answers = this.loadAnswers();
+                    return answers[questionId] || '';
+                }
+            };
+
+            function setupAnswerSaving() {
+                // Setup event listener for writing task textarea
+                const textarea = document.getElementById('labelText-143369604_32');
+                if (textarea) {
+                    textarea.addEventListener('input', function() {
+                        AnswerStorage.saveAnswer('Q32', this.value);
+                        updateQuestionButtonStates();
+                    });
+                }
+            }
+
+            function loadSavedAnswers() {
+                // Load saved answer for Q32
+                const savedAnswer = AnswerStorage.getAnswer('Q32');
+                if (savedAnswer) {
+                    const textarea = document.getElementById('labelText-143369604_32');
+                    if (textarea) {
+                        textarea.value = savedAnswer;
+                    }
+                }
+                
+                updateQuestionButtonStates();
+            }
+
+            function updateQuestionButtonStates() {
+                // Update question button state based on answered status
+                const savedAnswer = AnswerStorage.getAnswer('Q32');
+                const questionButton = document.querySelector('[data-ordernumber="32"]');
+                
+                if (questionButton) {
+                    if (savedAnswer && savedAnswer.trim().length > 0) {
+                        questionButton.classList.add('answered');
+                        const srOnly = questionButton.querySelector('.sr-only');
+                        if (srOnly && !srOnly.textContent.includes('Answered')) {
+                            srOnly.textContent = srOnly.textContent.replace('Not attempted', 'Answered');
+                        }
+                    } else {
+                        questionButton.classList.remove('answered');
+                    }
+                }
+            }
+
+            // Submit functionality for deliver button
+            function setupSubmitButton() {
+                const deliverButton = document.getElementById('deliver-button');
+                if (deliverButton) {
+                    deliverButton.addEventListener('click', async function(e) {
+                        e.preventDefault();
+                        
+                        if (confirm('Are you sure you want to submit your reading-writing test? This will mark the module as completed.')) {
+                            try {
+                                // Save final answers
+                                const allAnswers = AnswerStorage.loadAnswers();
+                                
+                                // Submit to database via cambridge-answer-manager
+                                if (window.cambridgeAnswerManager && typeof window.cambridgeAnswerManager.submitTestToDatabase === 'function') {
+                                    await window.cambridgeAnswerManager.submitTestToDatabase();
+                                }
+                                
+                                // Mark module as completed
+                                localStorage.setItem('reading-writingStatus', 'completed');
+                                localStorage.setItem('reading-writingEndTime', new Date().toISOString());
+                                
+                                alert('Test submitted successfully!');
+                                
+                                // Redirect to dashboard
+                                window.location.href = '../../dashboard-cambridge.html';
+                            } catch (error) {
+                                console.error('Error submitting test:', error);
+                                alert('Error submitting test. Please try again.');
+                            }
+                        }
+                    });
+                }
+            }
+
+            // Initialize on page load
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(function() {
+                    loadSavedAnswers();
+                    setupAnswerSaving();
+                    setupSubmitButton();
+                }, 100);
+            });
+        </script>
+        <script src="../../../assets/js/universal-functions.js"></script>
+        <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
 <script src="../../../assets/js/cambridge/a2-key-part-scroll.js"></script>
 
 <div id="preRenderTarget" aria-hidden="true" style="position: relative; height: 0px; width: 0px; overflow: hidden; visibility: hidden;"></div><div class="annotator-frame annotator-outer annotator-collapsed" style="display: none;"><div class="annotator-toolbar"><div><button class="annotator-frame-button annotator-frame-button--sidebar_toggle" aria-label="Annotation sidebar" aria-expanded="false" aria-pressed="false" title="Annotation sidebar" style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" class=""><g fill-rule="evenodd"><rect fill="none" stroke="none" x="0" y="0" width="16" height="16"></rect><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 12L6 8l4-4"></path></g></svg>
