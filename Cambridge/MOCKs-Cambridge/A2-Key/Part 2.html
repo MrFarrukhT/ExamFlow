@@ -23,6 +23,19 @@
         <link rel="shortcut icon" type="image/png" href="https://d133zon9jtcf53.cloudfront.net/favicon.png">
         
         <script>
+            // SESSION VERIFICATION - Redirect to login if not authenticated
+            (function() {
+                const studentId = localStorage.getItem('studentId');
+                const studentName = localStorage.getItem('studentName');
+                const examType = localStorage.getItem('examType');
+                
+                if (!studentId || !studentName || examType !== 'Cambridge') {
+                    // No valid session - redirect to Cambridge login
+                    alert('Please log in first to access the test.');
+                    window.location.href = '../../../index.html';
+                }
+            })();
+            
             // Stub for TrackJS to prevent errors
             window.TrackJS = { 
                 install: function() {},
@@ -521,6 +534,32 @@
                 console.log('Cambridge Test Page - Part 2 - Local Development Mode');
             })();
 
+            // ===== CAMBRIDGE BACKEND INTEGRATED ANSWER STORAGE SYSTEM =====
+            const AnswerStorage = {
+                storageKey: 'reading-writingAnswers',
+                
+                loadAnswers: function() {
+                    const stored = localStorage.getItem(this.storageKey);
+                    return stored ? JSON.parse(stored) : {};
+                },
+                
+                saveAnswer: function(questionId, answer) {
+                    const answers = this.loadAnswers();
+                    answers[questionId] = answer;
+                    localStorage.setItem(this.storageKey, JSON.stringify(answers));
+                    console.log('✅ Answer saved to Cambridge backend:', questionId, answer);
+                },
+                
+                getAnswer: function(questionId) {
+                    const answers = this.loadAnswers();
+                    return answers[questionId] || null;
+                },
+                
+                clearAll: function() {
+                    localStorage.removeItem(this.storageKey);
+                }
+            };
+
             // Navigation between parts
             document.addEventListener('DOMContentLoaded', function() {
                 const partFiles = {
@@ -572,6 +611,72 @@
                     });
                 }
 
+                // ===== ANSWER STORAGE SETUP =====
+                function setupAnswerSaving() {
+                    // List of all unique input names for questions 7-13
+                    const inputNames = [
+                        'IA176130235934665437f376f2f47721bfd04a51a8dbb1c',  // Q7
+                        'IA1761302359349594501d523364d101500098c25d14612',  // Q8
+                        'IA1761302359352893b5b7780524eccb4b213e71d336b37',  // Q9
+                        'IA17613023593543522c36f62634d92a06f367fb0fe185a',  // Q10
+                        'IA1761302359355e2ed0d1c3b5a4138bb864ab9573ff423',  // Q11
+                        'IA176130235935738c15ce84ed4492e11c987f161689f37',  // Q12
+                        'IA1761302359358b80f31f8212d4bfbadce01656e193cd2'   // Q13
+                    ];
+
+                    inputNames.forEach((name, index) => {
+                        const questionNum = 7 + index;
+                        document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
+                            radio.addEventListener('change', function() {
+                                if (this.checked) {
+                                    AnswerStorage.saveAnswer(questionNum.toString(), this.value);
+                                    updateQuestionButtonStates();
+                                }
+                            });
+                        });
+                    });
+                }
+
+                function loadSavedAnswers() {
+                    const inputNames = [
+                        'IA176130235934665437f376f2f47721bfd04a51a8dbb1c',  // Q7
+                        'IA1761302359349594501d523364d101500098c25d14612',  // Q8
+                        'IA1761302359352893b5b7780524eccb4b213e71d336b37',  // Q9
+                        'IA17613023593543522c36f62634d92a06f367fb0fe185a',  // Q10
+                        'IA1761302359355e2ed0d1c3b5a4138bb864ab9573ff423',  // Q11
+                        'IA176130235935738c15ce84ed4492e11c987f161689f37',  // Q12
+                        'IA1761302359358b80f31f8212d4bfbadce01656e193cd2'   // Q13
+                    ];
+
+                    inputNames.forEach((name, index) => {
+                        const questionNum = 7 + index;
+                        const savedAnswer = AnswerStorage.getAnswer(questionNum.toString());
+                        if (savedAnswer) {
+                            const radio = document.querySelector(`input[name="${name}"][value="${savedAnswer}"]`);
+                            if (radio) {
+                                radio.checked = true;
+                            }
+                        }
+                    });
+                }
+
+                function updateQuestionButtonStates() {
+                    for (let q = 7; q <= 13; q++) {
+                        const answer = AnswerStorage.getAnswer(q.toString());
+                        const btn = document.querySelector(`.subQuestion[data-ordernumber="${q}"]`);
+                        if (btn && answer) {
+                            btn.classList.add('answered');
+                        } else if (btn) {
+                            btn.classList.remove('answered');
+                        }
+                    }
+                }
+
+                // Initialize answer saving
+                setupAnswerSaving();
+                loadSavedAnswers();
+                updateQuestionButtonStates();
+
                 // Update Previous button state
                 if (currentPart === 1 && prevButton) {
                     prevButton.disabled = true;
@@ -583,6 +688,8 @@
                 }
             });
         </script>
+<script src="../../../assets/js/universal-functions.js"></script>
+<script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
 <script src="../../../assets/js/cambridge/a2-key-part-scroll.js"></script>
 </body>
 </html>

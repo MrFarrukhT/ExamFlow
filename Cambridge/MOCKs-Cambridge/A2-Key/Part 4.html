@@ -9,6 +9,20 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         <title>A2 Key RW Digital Sample Test 1_26.04.23</title>
         <link rel="shortcut icon" type="image/png" href="https://d133zon9jtcf53.cloudfront.net/favicon.png">
         
+        <script>
+            // SESSION VERIFICATION - Redirect to login if not authenticated
+            (function() {
+                const studentId = localStorage.getItem('studentId');
+                const studentName = localStorage.getItem('studentName');
+                const examType = localStorage.getItem('examType');
+                
+                if (!studentId || !studentName || examType !== 'Cambridge') {
+                    // No valid session - redirect to Cambridge login
+                    alert('Please log in first to access the test.');
+                    window.location.href = '../../../index.html';
+                }
+            })();
+        </script>
 
 
             <script src="./Part 4_files/t.js.Без названия"></script><style type="text/css">#rb-privacy, #acceptance_of_cookies, #oct-policy, .cookie-permission-container, app-cookies-agreement, .pd-cookie-banner-window, #consent-manager, div[data-storage-item^="t886cookiename_"], div[data-testid="cookiePopup"], .dc-cookie-consent, .cookies-reminder-v2, .cookies-reminder, .cc_disclaimer_box, .cc-bottom-bar--slide-up, #cookieNoticePro, #avisoLGPD, .avisolgpd-bar, .lgpd:not(body):not(html), #lgdp, #LGPD, body div#lgpd-banner, #pjAcceptCookieBar, .cookie-disclaimer--overlay, .tarteaucitron-banner, #saycookie, .notice--cookieAdvanced, .adn-window.adn-message, .cookie-consent-banner-opt-out, .cookiefooter, .tm-cookie-banner, .consent-cookie, body > div.ns-cookie-consent, .ez-cookie-banner, .cookie123-popup, .siteCookies[data-testid="cookiesPopup"], .consent-container, .cky-consent-container, .ba_cookie_bar, body > div#cs_stripe, .gdpr-cookie-info, .gdprModal__placeholder, .cookie-police-bar, #cookiesck, #spicookiebanner, #cm-cookie-policy, .cookie-bg, .thb-cookie-bar, .kvkkpop, .bpa-cookie-banner, .cookieConsentBanner { display: none!important; }
@@ -821,6 +835,32 @@ div[class="adsbygoogle"][id="ad-detector"] { display: block !important; }</style
         <!-- <script src="./Part 4_files/playerStartup.js.Без названия"></script> -->
     
         <script>
+            // ===== CAMBRIDGE BACKEND INTEGRATED ANSWER STORAGE SYSTEM =====
+            const AnswerStorage = {
+                storageKey: 'reading-writingAnswers',
+                
+                loadAnswers: function() {
+                    const stored = localStorage.getItem(this.storageKey);
+                    return stored ? JSON.parse(stored) : {};
+                },
+                
+                saveAnswer: function(questionId, answer) {
+                    const answers = this.loadAnswers();
+                    answers[questionId] = answer;
+                    localStorage.setItem(this.storageKey, JSON.stringify(answers));
+                    console.log('✅ Answer saved to Cambridge backend:', questionId, answer);
+                },
+                
+                getAnswer: function(questionId) {
+                    const answers = this.loadAnswers();
+                    return answers[questionId] || null;
+                },
+                
+                clearAll: function() {
+                    localStorage.removeItem(this.storageKey);
+                }
+            };
+
             // Navigation between parts
             document.addEventListener('DOMContentLoaded', function() {
                 const partFiles = {
@@ -847,8 +887,83 @@ div[class="adsbygoogle"][id="ad-detector"] { display: block !important; }</style
                                 window.location.href = partFiles[partNumber];
                             }
                         });
-                    }
-                });
+                    });
+                }
+
+                // ===== ANSWER STORAGE SETUP FOR INLINE CHOICE (Dropdown-style) =====
+                const buttonIds = {
+                    19: 'IA1761293232518c151467e22dd4d778d46e0ba8c42b9ff',
+                    20: 'IA17612932325190c2c5fe5fd9e408503747e8af5db9385',
+                    21: 'IA1761293232519697f6dc1092647a9254d320c0a4ed98c',
+                    22: 'IA1761293232519dafaaa96080047c5bf288f711bf61e76',
+                    23: 'IA17612932329370af57f1097564cd5be4e8620b4b6d89d',
+                    24: 'IA17612932325197d030399e1a14e8f3d3a18b322e8c677'
+                };
+
+                function setupAnswerSaving() {
+                    // For inline choice buttons, we need to monitor button text changes
+                    Object.keys(buttonIds).forEach(questionNum => {
+                        const buttonId = buttonIds[questionNum];
+                        const button = document.getElementById(buttonId);
+                        if (button) {
+                            // Create observer to detect when selection is made
+                            const observer = new MutationObserver(function(mutations) {
+                                mutations.forEach(function(mutation) {
+                                    if (mutation.type === 'childList' || mutation.type === 'characterData') {
+                                        const buttonText = button.textContent.trim();
+                                        // If button text changed from just the number to an actual answer
+                                        if (buttonText && buttonText !== questionNum && buttonText.length > 3) {
+                                            AnswerStorage.saveAnswer(questionNum, buttonText);
+                                            updateQuestionButtonStates();
+                                        }
+                                    }
+                                });
+                            });
+                            observer.observe(button, { childList: true, subtree: true, characterData: true });
+                            
+                            // Also listen for click events
+                            button.addEventListener('click', function() {
+                                setTimeout(function() {
+                                    const buttonText = button.textContent.trim();
+                                    if (buttonText && buttonText !== questionNum && buttonText.length > 3) {
+                                        AnswerStorage.saveAnswer(questionNum, buttonText);
+                                        updateQuestionButtonStates();
+                                    }
+                                }, 100);
+                            });
+                        }
+                    });
+                }
+
+                function loadSavedAnswers() {
+                    // For inline choice, answers are stored as text, not values
+                    // This is informational only - actual restoration may need dropdown interaction
+                    Object.keys(buttonIds).forEach(questionNum => {
+                        const savedAnswer = AnswerStorage.getAnswer(questionNum);
+                        if (savedAnswer) {
+                            console.log(`Q${questionNum} previously answered: ${savedAnswer}`);
+                            // Note: Actual restoration of dropdown selection requires interacting with the dropdown
+                            // which is complex for this Cambridge system
+                        }
+                    });
+                }
+
+                function updateQuestionButtonStates() {
+                    Object.keys(buttonIds).forEach(questionNum => {
+                        const answer = AnswerStorage.getAnswer(questionNum);
+                        const btn = document.querySelector(`.subQuestion[data-ordernumber="${questionNum}"]`);
+                        if (btn && answer) {
+                            btn.classList.add('answered');
+                        } else if (btn) {
+                            btn.classList.remove('answered');
+                        }
+                    });
+                }
+
+                // Initialize
+                setupAnswerSaving();
+                loadSavedAnswers();
+                updateQuestionButtonStates();
 
                 // Handle Previous/Next arrow buttons
                 const prevButton = document.getElementById('footer-nav-button-previous');
@@ -883,6 +998,8 @@ div[class="adsbygoogle"][id="ad-detector"] { display: block !important; }</style
                 }
             });
         </script>
+<script src="../../../assets/js/universal-functions.js"></script>
+<script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
 <script src="../../../assets/js/cambridge/a2-key-part-scroll.js"></script>
 
 <div id="preRenderTarget" aria-hidden="true" style="position: relative; height: 0px; width: 0px; overflow: hidden; visibility: hidden;"></div><div class="annotator-frame annotator-outer annotator-collapsed" style="display: none;"><div class="annotator-toolbar"><div><button class="annotator-frame-button annotator-frame-button--sidebar_toggle" aria-label="Annotation sidebar" aria-expanded="false" aria-pressed="false" title="Annotation sidebar" style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" class=""><g fill-rule="evenodd"><rect fill="none" stroke="none" x="0" y="0" width="16" height="16"></rect><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 12L6 8l4-4"></path></g></svg>

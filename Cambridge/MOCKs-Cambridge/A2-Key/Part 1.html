@@ -23,6 +23,19 @@
         <link rel="shortcut icon" type="image/png" href="https://d133zon9jtcf53.cloudfront.net/favicon.png">
         
         <script>
+            // SESSION VERIFICATION - Redirect to login if not authenticated
+            (function() {
+                const studentId = localStorage.getItem('studentId');
+                const studentName = localStorage.getItem('studentName');
+                const examType = localStorage.getItem('examType');
+                
+                if (!studentId || !studentName || examType !== 'Cambridge') {
+                    // No valid session - redirect to Cambridge login
+                    alert('Please log in first to access the test.');
+                    window.location.href = '../../../index.html';
+                }
+            })();
+            
             // Stub for TrackJS to prevent errors
             window.TrackJS = { 
                 install: function() {},
@@ -632,9 +645,9 @@
                 console.log('Cambridge Test Page - Local Development Mode');
             })();
 
-            // ===== ANSWER STORAGE SYSTEM =====
+            // ===== CAMBRIDGE BACKEND INTEGRATED ANSWER STORAGE SYSTEM =====
             const AnswerStorage = {
-                storageKey: 'a2key_test_answers',
+                storageKey: 'reading-writingAnswers', // Use Cambridge backend key
                 
                 // Load all answers from localStorage
                 loadAnswers: function() {
@@ -645,18 +658,15 @@
                 // Save an answer
                 saveAnswer: function(questionId, answer) {
                     const answers = this.loadAnswers();
-                    answers[questionId] = {
-                        value: answer,
-                        timestamp: new Date().toISOString()
-                    };
+                    answers[questionId] = answer; // Store answer directly (not as object)
                     localStorage.setItem(this.storageKey, JSON.stringify(answers));
-                    console.log('Answer saved:', questionId, answer);
+                    console.log('✅ Answer saved to Cambridge backend:', questionId, answer);
                 },
                 
                 // Get a specific answer
                 getAnswer: function(questionId) {
                     const answers = this.loadAnswers();
-                    return answers[questionId] ? answers[questionId].value : null;
+                    return answers[questionId] || null;
                 },
                 
                 // Clear all answers
@@ -782,6 +792,8 @@
                 updateQuestionButtonStates();
             });
         </script>
+<script src="../../../assets/js/universal-functions.js"></script>
+<script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
 <script src="../../../assets/js/cambridge/a2-key-part-scroll.js"></script>
 </body>
 </html>
