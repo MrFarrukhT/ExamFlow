@@ -22,26 +22,7 @@
         <title>A2 Key RW Digital Sample Test 1_26.04.23</title>
         <link rel="shortcut icon" type="image/png" href="https://d133zon9jtcf53.cloudfront.net/favicon.png">
         
-        <script>
-            // SESSION VERIFICATION - Redirect to login if not authenticated
-            (function() {
-                const studentId = localStorage.getItem('studentId');
-                const studentName = localStorage.getItem('studentName');
-                const examType = localStorage.getItem('examType');
-                
-                if (!studentId || !studentName || examType !== 'Cambridge') {
-                    // No valid session - redirect to Cambridge login
-                    alert('Please log in first to access the test.');
-                    window.location.href = '../../../index.html';
-                }
-            })();
-            
-            // Stub for TrackJS to prevent errors
-            window.TrackJS = { 
-                install: function() {},
-                track: function() {} 
-            };
-        </script>
+        <script src="../../../assets/js/cambridge/session-verify.js"></script>
 
         <script type="text/javascript">
             try {

@@ -9,20 +9,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         <title>A2 Key RW Digital Sample Test 1_26.04.23</title>
         <link rel="shortcut icon" type="image/png" href="https://d133zon9jtcf53.cloudfront.net/favicon.png">
         
-        <script>
-            // SESSION VERIFICATION - Redirect to login if not authenticated
-            (function() {
-                const studentId = localStorage.getItem('studentId');
-                const studentName = localStorage.getItem('studentName');
-                const examType = localStorage.getItem('examType');
-                
-                if (!studentId || !studentName || examType !== 'Cambridge') {
-                    // No valid session - redirect to Cambridge login
-                    alert('Please log in first to access the test.');
-                    window.location.href = '../../../index.html';
-                }
-            })();
-        </script>
+        <script src="../../../assets/js/cambridge/session-verify.js"></script>
 
 
             <script src="./A2 Key RW Digital Sample Test 1_26.04.23_files/t.js.download"></script><style type="text/css">#rb-privacy, #acceptance_of_cookies, #oct-policy, .cookie-permission-container, app-cookies-agreement, .pd-cookie-banner-window, #consent-manager, div[data-storage-item^="t886cookiename_"], div[data-testid="cookiePopup"], .dc-cookie-consent, .cookies-reminder-v2, .cookies-reminder, .cc_disclaimer_box, .cc-bottom-bar--slide-up, #cookieNoticePro, #avisoLGPD, .avisolgpd-bar, .lgpd:not(body):not(html), #lgdp, #LGPD, body div#lgpd-banner, #pjAcceptCookieBar, .cookie-disclaimer--overlay, .tarteaucitron-banner, #saycookie, .notice--cookieAdvanced, .adn-window.adn-message, .cookie-consent-banner-opt-out, .cookiefooter, .tm-cookie-banner, .consent-cookie, body > div.ns-cookie-consent, .ez-cookie-banner, .cookie123-popup, .siteCookies[data-testid="cookiesPopup"], .consent-container, .cky-consent-container, .ba_cookie_bar, body > div#cs_stripe, .gdpr-cookie-info, .gdprModal__placeholder, .cookie-police-bar, #cookiesck, #spicookiebanner, #cm-cookie-policy, .cookie-bg, .thb-cookie-bar, .kvkkpop, .bpa-cookie-banner, .cookieConsentBanner { display: none!important; }

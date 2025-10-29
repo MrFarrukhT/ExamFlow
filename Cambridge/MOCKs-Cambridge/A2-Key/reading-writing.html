@@ -9,6 +9,8 @@
   
   <!-- Centralized session verification -->
   <script src="../../../assets/js/cambridge/session-verify.js"></script>
+  <!-- Optional ranges manifest to avoid recomputing on every load -->
+  <script src="../../../assets/js/cambridge/a2-key-manifest.js"></script>
   
   <!-- Prefetch other parts to reduce switch delay -->
   <link rel="prefetch" href="./Part 2.html" as="document">
@@ -24,10 +26,22 @@
       color: #000;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
     }
+    .rw-header {
+      position: sticky; top: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px; padding: 0 12px; background: #f7f7f7; border-bottom: 1px solid #e0e0e0;
+    }
+    .rw-header .left, .rw-header .right { display: flex; align-items: center; gap: 8px; }
+    .rw-header .center { display: flex; gap: 6px; }
+    .rw-header .brand { font-weight: 600; color: #1976d2; }
+    .rw-header .timer { font-variant-numeric: tabular-nums; font-weight: 600; }
+    .rw-header button { height: 32px; padding: 0 10px; border-radius: 6px; border: 1px solid #d0d0d0; background: #fff; cursor: pointer; }
+    .rw-header button.active { background: #1976d2; color: #fff; border-color: #1976d2; }
+    .rw-header .submit { background: #2e7d32; border-color: #2e7d32; color: #fff; }
     .parts-container { padding: 0; }
     .frame-wrap {
       width: 100%;
-      height: 100vh; /* occupy full viewport */
+      height: calc(100vh - 56px); /* account for header */
       background: #ffffff; /* avoid dark flash on switch */
     }
     .part-frame {
@@ -43,6 +57,18 @@
   <script src="../../../assets/js/cambridge/a2-key-wrapper.js"></script>
 </head>
 <body data-test-version="A2-Key" data-skill="reading-writing" data-mock="cambridge-a2-key">
+  <header class="rw-header" id="rw-header">
+    <div class="left">
+      <span class="brand">A2 Key – Reading & Writing</span>
+      <span id="rw-candidate"></span>
+    </div>
+    <div class="center" id="rw-part-switch"></div>
+    <div class="right">
+      <span class="timer" id="rw-timer">60:00</span>
+      <button id="rw-timer-toggle" title="Pause/Resume">Pause</button>
+      <button class="submit" id="rw-submit">Submit</button>
+    </div>
+  </header>
   <main class="parts-container">
     <div class="frame-wrap">
       <iframe id="part-frame" class="part-frame" title="A2 Key Part" src="./Part 1.html"></iframe>
@@ -64,6 +90,81 @@
       if (!localStorage.getItem('reading-writingAnswers')) {
         localStorage.setItem('reading-writingAnswers', JSON.stringify({}));
       }
+
+      // Header: candidate info
+      try {
+        const name = localStorage.getItem('studentName') || '';
+        const id = localStorage.getItem('studentId') || '';
+        const el = document.getElementById('rw-candidate');
+        if (el) el.textContent = name ? `• ${name} (${id})` : '';
+      } catch(e) {}
+
+      // Header: part switcher buttons 1..7
+      const switchWrap = document.getElementById('rw-part-switch');
+      if (switchWrap) {
+        for (let p=1; p<=7; p++) {
+          const b = document.createElement('button');
+          b.textContent = String(p);
+          b.setAttribute('data-part', String(p));
+          b.addEventListener('click', function(){
+            if (window.__A2_setPart) window.__A2_setPart(p);
+            updateActivePartUI(p);
+          });
+          switchWrap.appendChild(b);
+        }
+      }
+
+      // Sync active part highlight
+      function updateActivePartUI(n){
+        const btns = (document.getElementById('rw-part-switch')||{}).children || [];
+        Array.prototype.forEach.call(btns, function(x){ x.classList.remove('active'); });
+        const b = document.querySelector('#rw-part-switch button[data-part="'+n+'"]');
+        if (b) b.classList.add('active');
+        try { sessionStorage.setItem('a2key-rw-active', String(n)); } catch(e){}
+      }
+      const savedPart = parseInt(sessionStorage.getItem('a2key-rw-active')||'1',10);
+      updateActivePartUI(isNaN(savedPart)?1:savedPart);
+      document.getElementById('part-frame').addEventListener('load', function(){
+        const sp = parseInt(sessionStorage.getItem('a2key-rw-active')||'1',10);
+        updateActivePartUI(isNaN(sp)?1:sp);
+      });
+
+      // Header: timer (60:00 default countdown, persists between reloads)
+      const TIMER_KEY = 'rw-timer-remaining'; // seconds
+      const PAUSE_KEY = 'rw-timer-paused';
+      const STARTED_KEY = 'rw-timer-lastTick';
+      if (!localStorage.getItem(TIMER_KEY)) localStorage.setItem(TIMER_KEY, String(60*60));
+      if (!localStorage.getItem(PAUSE_KEY)) localStorage.setItem(PAUSE_KEY, 'false');
+      localStorage.setItem(STARTED_KEY, String(Date.now()));
+      const timerEl = document.getElementById('rw-timer');
+      const toggleBtn = document.getElementById('rw-timer-toggle');
+      function fmt(sec){ sec = Math.max(0, Math.floor(sec)); const m=Math.floor(sec/60), s=sec%60; return `${m}:${s<10?'0':''}${s}`; }
+      function tick(){
+        let paused = localStorage.getItem(PAUSE_KEY) === 'true';
+        let remaining = parseInt(localStorage.getItem(TIMER_KEY)||'0',10);
+        const last = parseInt(localStorage.getItem(STARTED_KEY)||String(Date.now()),10);
+        const now = Date.now();
+        const dt = Math.floor((now - last)/1000);
+        if (!paused && remaining>0 && dt>0){ remaining = Math.max(0, remaining - dt); }
+        localStorage.setItem(STARTED_KEY, String(now));
+        localStorage.setItem(TIMER_KEY, String(remaining));
+        if (timerEl) timerEl.textContent = fmt(remaining);
+      }
+      setInterval(tick, 1000);
+      toggleBtn.addEventListener('click', function(){
+        const paused = localStorage.getItem(PAUSE_KEY) === 'true';
+        localStorage.setItem(PAUSE_KEY, paused ? 'false' : 'true');
+        toggleBtn.textContent = paused ? 'Pause' : 'Resume';
+      });
+
+      // Header: submit -> click deliver inside iframe
+      document.getElementById('rw-submit').addEventListener('click', function(){
+        const frame = document.getElementById('part-frame');
+        const doc = frame && frame.contentDocument;
+        if (!doc) return;
+        const btn = doc.getElementById('deliver-button') || doc.querySelector('.footer__deliverButton___3FM07');
+        if (btn && typeof btn.click === 'function') btn.click();
+      });
     });
   </script>
 </body>
