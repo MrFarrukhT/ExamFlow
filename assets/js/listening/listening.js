@@ -1024,6 +1024,12 @@
         }
         
         function startTimer() {
+            // Prevent multiple timer instances by clearing any existing interval
+            if (timerInterval) {
+                console.log('⚠️ Timer already running, clearing old interval');
+                clearInterval(timerInterval);
+            }
+            
             // Re-read the timer value from HTML in case it was updated
             timeInSeconds = getInitialTimeInSeconds();
             
@@ -1045,7 +1051,8 @@
                     if (timerDisplayEl) {
                         timerDisplayEl.textContent = "Time's up!";
                     }
-                    checkAnswers();
+                    // Timer ended - just display message, don't force submit
+                    alert("Time's up! Please submit your test when ready.");
                 }
             }, 1000);
         }
@@ -1547,9 +1554,8 @@
             // Initialize timer value from HTML
             timeInSeconds = getInitialTimeInSeconds();
             
-            // Auto-start the timer for listening test
-            startTimer();
-            console.log('⏱️ Timer auto-started on page load');
+            // Timer will be started when audio begins playing or in initializeSync
+            console.log('⏱️ Timer initialized, will start when test begins');
             
             // Scroll to top on page load
             window.scrollTo(0, 0);
@@ -1809,7 +1815,10 @@
         
         // Enhanced resume function with audio control
         function resumeTimerAndAudio() {
-            startTimer();
+            // Only start timer if it's not already running
+            if (!timerInterval) {
+                startTimer();
+            }
             if (audioPlayer && audioPlayer.paused) {
                 audioPlayer.play().then(() => {
                     console.log('🎵 Audio resumed with timer');
@@ -2002,14 +2011,7 @@
                 resetCandidateTimeExtension();
             }
 
-            // Handle force submit
-            if (status.force_submit) {
-                console.log('🚨 Force submit detected - automatically submitting test');
-                showAdminMessage('🚨 Test is being submitted by administrator');
-                setTimeout(() => {
-                    submitTest(); // Automatically submit the test
-                }, 2000); // Give user 2 seconds to see the message
-            }
+            // Force submit functionality removed - candidates must submit manually
         }
 
         function showAdminMessage(message) {
@@ -2191,7 +2193,10 @@
             if (playPromise !== undefined) {
                 playPromise.then(() => {
                     console.log('🎵 Audio started successfully');
-                    startTimer(); // Start the timer when audio begins
+                    // Timer is already started in initializeSync, no need to start again
+                    if (!timerInterval) {
+                        startTimer(); // Start the timer only if not already running
+                    }
                 }).catch(error => {
                     console.error('❌ Error starting audio:', error);
                     
