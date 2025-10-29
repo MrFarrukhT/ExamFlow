@@ -17,7 +17,7 @@
         if (!studentId || !studentName || examType !== 'Cambridge') {
             // No valid session - redirect to Cambridge login
             alert('Please log in first to access the test.');
-            window.location.href = '../../../index.html';
+            window.location.href = '../../index.html';
         }
     })();
   </script>
@@ -296,7 +296,7 @@
       
       if (!studentId || !studentName || examType !== 'Cambridge') {
         alert('Session expired. Please log in again.');
-        window.location.href = '../../../Cambridge/index.html';
+        window.location.href = '../../index.html';
         return;
       }
       
