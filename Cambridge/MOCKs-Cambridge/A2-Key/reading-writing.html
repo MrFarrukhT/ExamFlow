@@ -7,20 +7,8 @@
   <link rel="icon" href="../../assets/icons/innovativecentre.png">
   <link rel="stylesheet" href="../../assets/css/base.css">
   
-  <script>
-    // SESSION VERIFICATION - Redirect to login if not authenticated
-    (function() {
-        const studentId = localStorage.getItem('studentId');
-        const studentName = localStorage.getItem('studentName');
-        const examType = localStorage.getItem('examType');
-        
-        if (!studentId || !studentName || examType !== 'Cambridge') {
-            // No valid session - redirect to Cambridge login
-            alert('Please log in first to access the test.');
-            window.location.href = '../../index.html';
-        }
-    })();
-  </script>
+  <!-- Centralized session verification -->
+  <script src="../../../assets/js/cambridge/session-verify.js"></script>
   
   <!-- Prefetch other parts to reduce switch delay -->
   <link rel="prefetch" href="./Part 2.html" as="document">
@@ -50,230 +38,9 @@
       display: block;
     }
   </style>
-  <script>
-    window.__A2_ranges = null; // [{part,min,max}]
-
-    function __A2_updateRangesFromFrameDoc(doc){
-      try{
-        var wrappers = doc.querySelectorAll('.footer__questionWrapper___1tZ46');
-        var ranges = [];
-        wrappers.forEach(function(w){
-          var partEl = w.querySelector('.sectionNr');
-          var part = partEl ? parseInt(partEl.textContent.trim(),10) : null;
-          var qs = Array.from(w.querySelectorAll('.subQuestion.scorable-item'))
-            .map(function(b){ return parseInt(b.getAttribute('data-ordernumber'),10); })
-            .filter(function(n){ return !isNaN(n); });
-          if(part && qs.length){
-            var min = Math.min.apply(null, qs);
-            var max = Math.max.apply(null, qs);
-            ranges.push({part: part, min: min, max: max});
-          }
-        });
-        if(ranges.length){ ranges.sort(function(a,b){ return a.part-b.part; }); window.__A2_ranges = ranges; }
-      }catch(e){ /*noop*/ }
-    }
-
-    function __A2_applyHighlightStyles(doc){
-      if (doc.getElementById('ic-a2key-style')) return;
-      var css = ''+
-        '.order-number.ic-on{border:2px solid #1976d2;border-radius:4px;padding:1px 6px;display:inline-block;box-shadow:0 0 0 3px rgba(25,118,210,.15);}'+
-        '.ic-active-question{outline:2px solid rgba(25,118,210,.25);outline-offset:4px;border-radius:6px;}';
-      var s = doc.createElement('style'); s.id='ic-a2key-style'; s.type='text/css'; s.appendChild(doc.createTextNode(css));
-      (doc.head || doc.documentElement).appendChild(s);
-    }
-
-    function __A2_markActiveQuestion(doc, n){
-      try{
-        __A2_applyHighlightStyles(doc);
-        doc.__icMarking = true; // guard to prevent observer feedback loops
-        var prevNums = doc.querySelectorAll('.order-number.ic-on');
-        prevNums.forEach(function(x){ x.classList.remove('ic-on'); });
-        var prevBoxes = doc.querySelectorAll('.ic-active-question');
-        prevBoxes.forEach(function(x){ x.classList.remove('ic-active-question'); });
-        var anchor = doc.querySelector('span.order-number[id^="scorableItem-"][id$="_'+n+'"]') || doc.querySelector('[data-ordernumber="'+n+'"]');
-        if (!anchor) return;
-        anchor.classList.add('ic-on');
-        var container = anchor.closest('.choiceInteraction__choiceInteraction___3W0MH') || anchor.parentElement;
-        if (container) container.classList.add('ic-active-question');
-        doc.__icMarking = false;
-      }catch(e){}
-    }
-
-    function __A2_findAnchor(doc, n){
-      // 1) Primary: the visible order number span in the question body
-      var sel = 'span.order-number[id^="scorableItem-"][id$="_'+n+'"]';
-      var el = doc.querySelector(sel) || doc.querySelector('[id^="scorableItem-"][id$="_'+n+'"]');
-      if (el) return el;
-      // 2) Fallback: hidden focus button with id="<revision>-<n>"
-      try{
-        var btn = doc.querySelector('.subQuestion.scorable-item[data-ordernumber="'+n+'"]');
-        var rid = btn && btn.getAttribute('data-contentrevisionid');
-        if (rid){
-          var hidden = doc.getElementById(rid+'-'+n);
-          if (hidden) return hidden;
-        }
-      }catch(e){}
-      return null;
-    }
-
-    function __A2_scrollToQuestion(doc, n){
-      var anchor = __A2_findAnchor(doc, n);
-      if(!anchor) return false;
-      var container = doc.querySelector('#sectionContent') || doc.querySelector('.DisplayTypeContainer__sectionContent___2HSJ0');
-      try{
-        if (container){
-          var cRect = container.getBoundingClientRect();
-          var aRect = anchor.getBoundingClientRect();
-          var top = aRect.top - cRect.top + container.scrollTop - 48;
-          container.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
-        } else {
-          anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-        return true;
-      }catch(e){
-        if (container) container.scrollTop = (anchor.offsetTop||0) - 48; else anchor.scrollIntoView(true);
-        return true;
-      }
-    }
-
-    function __A2_getPartForQuestion(q){
-      var rs = window.__A2_ranges || [];
-      for(var i=0;i<rs.length;i++){ var r=rs[i]; if(q>=r.min && q<=r.max) return r.part; }
-      return null;
-    }
-
-    function __A2_getCurrentPartFromDoc(doc){
-      try{
-        var el = doc.querySelector('.footer__questionWrapper___1tZ46.selected .sectionNr');
-        var n = el ? parseInt(el.textContent.trim(),10) : null;
-        return isNaN(n) ? null : n;
-      }catch(e){ return null; }
-    }
-
-    function __A2_setPart(n) {
-      var frame = document.getElementById('part-frame');
-      if (!frame) return;
-      try { sessionStorage.setItem('a2key-rw-active', String(n)); } catch (e) {}
-      var src = './Part ' + n + '.html';
-      frame.setAttribute('src', src);
-    }
-
-    function __A2_goToQuestion(qAbs){
-      var part = __A2_getPartForQuestion(qAbs);
-      if(!part) return;
-      var frame = document.getElementById('part-frame');
-      var doc = frame && frame.contentDocument;
-      var currentPart = doc ? __A2_getCurrentPartFromDoc(doc) : null;
-      if (currentPart === part && doc) {
-        // Same part: select in-place, no reload
-        try{
-          var btn = doc.querySelector('.subQuestion.scorable-item[data-ordernumber="'+qAbs+'"]');
-          if (btn) { btn.click(); __A2_markActiveQuestion(doc, qAbs); }
-        }catch(e){}
-        return;
-      }
-      try { sessionStorage.setItem('a2key-target-question', String(qAbs)); } catch(e) {}
-      __A2_setPart(part);
-    }
-
-    function __A2_bindCambridgeNav() {
-      var frame = document.getElementById('part-frame');
-      var doc = frame && frame.contentDocument;
-      if (!doc) return;
-
-      __A2_updateRangesFromFrameDoc(doc);
-      __A2_applyHighlightStyles(doc);
-      // Mark whatever is currently active on initial bind
-      try{
-        var __cur = (function(){
-          var el = doc.querySelector('.footer__questionWrapper___1tZ46.selected .subQuestion.active.scorable-item') || doc.querySelector('.subQuestion.active.scorable-item');
-          return el ? parseInt(el.getAttribute('data-ordernumber'),10) : null;
-        })();
-        if(__cur!=null){ __A2_scrollToQuestion(doc, __cur); __A2_markActiveQuestion(doc, __cur); }
-      }catch(e){}
-
-      function currentAbs(){
-        var el = doc.querySelector('.footer__questionWrapper___1tZ46.selected .subQuestion.active.scorable-item') || doc.querySelector('.subQuestion.active.scorable-item');
-        return el ? parseInt(el.getAttribute('data-ordernumber'),10) : null;
-      }
-
-      // Delegated click handler for dynamic footers
-      if (!doc.__icDelegated) {
-        doc.__icDelegated = true;
-        doc.addEventListener('click', function(e){
-          var btn = e.target && (e.target.closest && e.target.closest('.subQuestion.scorable-item'));
-          if (!btn) return;
-          if (!e.isTrusted) return;
-          var n = parseInt(btn.getAttribute('data-ordernumber'),10);
-          if (isNaN(n)) return;
-          var curPart = __A2_getCurrentPartFromDoc(doc);
-          var targetPart = (window.parent && window.parent.__A2_getPartForQuestion) ? window.parent.__A2_getPartForQuestion(n) : null;
-          if(targetPart && curPart && targetPart !== curPart && window.parent && window.parent.__A2_goToQuestion){
-            e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation();
-            window.parent.__A2_goToQuestion(n);
-          } else {
-            // Same part → let default select, then scroll + mark
-            setTimeout(function(){ __A2_scrollToQuestion(doc, n); __A2_markActiveQuestion(doc, n); }, 50);
-          }
-        }, true);
-      }
-
-      // Intercept Prev/Next only when crossing part boundaries
-      // Delegated for Prev/Next (handles dynamic re-render)
-      if (!doc.__icArrowsDelegated) {
-        doc.__icArrowsDelegated = true;
-        doc.addEventListener('click', function(e){
-          var prevBtn = e.target && (e.target.closest && e.target.closest('#footer-nav-button-previous'));
-          var nextBtn = e.target && (e.target.closest && e.target.closest('#footer-nav-button-next'));
-          if (!prevBtn && !nextBtn) return;
-          var c = currentAbs(); if (c==null) return;
-          var nextAbs = prevBtn ? (c-1) : (c+1);
-          var curPart = __A2_getCurrentPartFromDoc(doc);
-          var targetPart = (window.parent && window.parent.__A2_getPartForQuestion) ? window.parent.__A2_getPartForQuestion(nextAbs) : null;
-          if (targetPart && curPart && targetPart !== curPart && window.parent && window.parent.__A2_goToQuestion) {
-            e.preventDefault(); e.stopPropagation(); if (e.stopImmediatePropagation) e.stopImmediatePropagation();
-            window.parent.__A2_goToQuestion(nextAbs);
-          } else {
-            // Same part → allow default, then sync scroll + mark
-            setTimeout(function(){ __A2_scrollToQuestion(doc, nextAbs); __A2_markActiveQuestion(doc, nextAbs); }, 50);
-          }
-        }, true);
-      }
-
-      // Observe active changes to keep highlight in sync
-      try{
-        var mo = new MutationObserver(function(){
-          if (doc.__icMarking) return; // ignore our own changes
-          clearTimeout(doc.__icMoTimer);
-          doc.__icMoTimer = setTimeout(function(){
-            var c = currentAbs(); if(c!=null) __A2_markActiveQuestion(doc, c);
-          }, 40);
-        });
-        // Limit scope to footer and question body wrappers to reduce churn
-        var footer = doc.querySelector('.footer__footer___1NlzQ') || doc.body;
-        mo.observe(footer, { attributes: true, subtree: true, attributeFilter: ['class'] });
-      }catch(e){}
-
-      // If parent requested a specific question, select it programmatically
-      try{
-        var tgt = sessionStorage.getItem('a2key-target-question');
-        if(tgt){
-          var b = doc.querySelector('.subQuestion.scorable-item[data-ordernumber="'+tgt+'"]');
-          if(b){ b.click(); }
-          setTimeout(function(){ var num=parseInt(tgt,10); __A2_scrollToQuestion(doc, num); __A2_markActiveQuestion(doc, num); }, 80);
-          sessionStorage.removeItem('a2key-target-question');
-        }
-      }catch(e){}
-    }
-
-    function initCombined() {
-      var frame = document.getElementById('part-frame');
-      var saved = parseInt((sessionStorage.getItem('a2key-rw-active') || '1'), 10);
-      __A2_setPart(isNaN(saved) ? 1 : saved);
-      frame.addEventListener('load', function(){ setTimeout(__A2_bindCambridgeNav, 25); });
-    }
-    window.addEventListener('DOMContentLoaded', initCombined);
-  </script>
+  <!-- Shared helpers and wrapper controller -->
+  <script src="../../../assets/js/cambridge/a2-key-shared.js"></script>
+  <script src="../../../assets/js/cambridge/a2-key-wrapper.js"></script>
 </head>
 <body data-test-version="A2-Key" data-skill="reading-writing" data-mock="cambridge-a2-key">
   <main class="parts-container">
@@ -287,27 +54,13 @@
   <script src="../../../assets/js/distraction-free.js"></script>
   <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
   <script>
-    // Initialize Cambridge session on load
+    // Mark module as in-progress and ensure storage exists
     document.addEventListener('DOMContentLoaded', function() {
-      // Check if student is logged in
-      const studentId = localStorage.getItem('studentId');
-      const studentName = localStorage.getItem('studentName');
-      const examType = localStorage.getItem('examType');
-      
-      if (!studentId || !studentName || examType !== 'Cambridge') {
-        alert('Session expired. Please log in again.');
-        window.location.href = '../../index.html';
-        return;
-      }
-      
-      // Mark reading-writing as in progress
       const currentModule = 'reading-writing';
       localStorage.setItem(`${currentModule}Status`, 'in-progress');
       if (!localStorage.getItem(`${currentModule}StartTime`)) {
         localStorage.setItem(`${currentModule}StartTime`, new Date().toISOString());
       }
-      
-      // Initialize answer storage if not exists
       if (!localStorage.getItem('reading-writingAnswers')) {
         localStorage.setItem('reading-writingAnswers', JSON.stringify({}));
       }

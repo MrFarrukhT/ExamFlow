@@ -25,7 +25,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         </script>
 
 
-            <script src="./Part 3_files/t.js.download"></script>
+            <script src="./A2 Key RW Digital Sample Test 1_26.04.23_files/t.js.download"></script>
             <script type="text/javascript">
                 (function () {
                     var useProxy = true
@@ -446,7 +446,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 }
             
         </style>
-    <script src="./Part 3_files/bundle.js.download"></script><link rel="stylesheet" type="text/css" href="./Part 3_files/player.css"><script async="" src="./Part 3_files/moment-timezone-with-data.min.js.download"></script><script async="" src="./Part 3_files/boot.js.download"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({ skipStartupTypeset: true });</script><link rel="sidebar" href="https://d2snzxottmona5.cloudfront.net:5000/app.html" type="application/annotator+html"><link rel="hypothesis-client" href="./Part 3_files/boot.js.download" type="application/annotator+javascript"><script type="text/javascript" src="./Part 3_files/jquery.bundle.js.download"></script><script type="text/javascript" src="./Part 3_files/annotator.bundle.js.download"></script></head>
+    <script src="./A2 Key RW Digital Sample Test 1_26.04.23_files/bundle.js.download"></script><link rel="stylesheet" type="text/css" href="./A2 Key RW Digital Sample Test 1_26.04.23_files/player.css"><script async="" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/moment-timezone-with-data.min.js.download"></script><script async="" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/boot.js.download"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({ skipStartupTypeset: true });</script><link rel="sidebar" href="https://d2snzxottmona5.cloudfront.net:5000/app.html" type="application/annotator+html"><link rel="hypothesis-client" href="./A2 Key RW Digital Sample Test 1_26.04.23_files/boot.js.download" type="application/annotator+javascript"><script type="text/javascript" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/jquery.bundle.js.download"></script><script type="text/javascript" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/annotator.bundle.js.download"></script></head>
 
 
     <body class="ceq-theme hypothesis-highlights-always-on normal">
@@ -491,32 +491,6 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         <!-- <script src="./Part 3_files/playerStartup.js.download"></script> -->
     
         <script>
-            // ===== CAMBRIDGE BACKEND INTEGRATED ANSWER STORAGE SYSTEM =====
-            const AnswerStorage = {
-                storageKey: 'reading-writingAnswers',
-                
-                loadAnswers: function() {
-                    const stored = localStorage.getItem(this.storageKey);
-                    return stored ? JSON.parse(stored) : {};
-                },
-                
-                saveAnswer: function(questionId, answer) {
-                    const answers = this.loadAnswers();
-                    answers[questionId] = answer;
-                    localStorage.setItem(this.storageKey, JSON.stringify(answers));
-                    console.log('✅ Answer saved to Cambridge backend:', questionId, answer);
-                },
-                
-                getAnswer: function(questionId) {
-                    const answers = this.loadAnswers();
-                    return answers[questionId] || null;
-                },
-                
-                clearAll: function() {
-                    localStorage.removeItem(this.storageKey);
-                }
-            };
-
             // Navigation between parts
             document.addEventListener('DOMContentLoaded', function() {
                 const partFiles = {
@@ -568,56 +542,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     });
                 }
 
-                // ===== ANSWER STORAGE SETUP =====
-                const inputNames = {
-                    14: 'IA176094449651529b95800771a41d4be618ca1b1151364',
-                    15: 'IA176094449651609766933c72b463419800787687d6d45',
-                    16: 'IA1760944496517f13c6849e03d410fb8ebc0558675253b',
-                    17: 'IA1760944496517ae736ab8a9584063a10ee49033ec8ba9',
-                    18: 'IA176094449651840de982739bb4e1b38f90bf3e443b6b7'
-                };
-
-                function setupAnswerSaving() {
-                    Object.keys(inputNames).forEach(questionNum => {
-                        const name = inputNames[questionNum];
-                        document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
-                            radio.addEventListener('change', function() {
-                                if (this.checked) {
-                                    AnswerStorage.saveAnswer(questionNum, this.value);
-                                    updateQuestionButtonStates();
-                                }
-                            });
-                        });
-                    });
-                }
-
-                function loadSavedAnswers() {
-                    Object.keys(inputNames).forEach(questionNum => {
-                        const name = inputNames[questionNum];
-                        const savedAnswer = AnswerStorage.getAnswer(questionNum);
-                        if (savedAnswer) {
-                            const radio = document.querySelector(`input[name="${name}"][value="${savedAnswer}"]`);
-                            if (radio) radio.checked = true;
-                        }
-                    });
-                }
-
-                function updateQuestionButtonStates() {
-                    Object.keys(inputNames).forEach(questionNum => {
-                        const answer = AnswerStorage.getAnswer(questionNum);
-                        const btn = document.querySelector(`.subQuestion[data-ordernumber="${questionNum}"]`);
-                        if (btn && answer) {
-                            btn.classList.add('answered');
-                        } else if (btn) {
-                            btn.classList.remove('answered');
-                        }
-                    });
-                }
-
-                // Initialize
-                setupAnswerSaving();
-                loadSavedAnswers();
-                updateQuestionButtonStates();
+                // (Per-part answer save/load removed; unified answer sync handles it)
 
                 // Update Previous button state
                 if (currentPart === 1 && prevButton) {
@@ -633,6 +558,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 <script src="../../../assets/js/universal-functions.js"></script>
 <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
 <script src="../../../assets/js/cambridge/a2-key-part-scroll.js"></script>
+<script src="../../../assets/js/cambridge/a2-key-answer-sync.js"></script>
 
 <div id="preRenderTarget" aria-hidden="true" style="position: relative; height: 0px; width: 0px; overflow: hidden; visibility: hidden;"></div><div class="annotator-frame annotator-outer annotator-collapsed" style="display: none;"><div class="annotator-toolbar"><div><button class="annotator-frame-button annotator-frame-button--sidebar_toggle" aria-label="Annotation sidebar" aria-expanded="false" aria-pressed="false" title="Annotation sidebar" style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" class=""><g fill-rule="evenodd"><rect fill="none" stroke="none" x="0" y="0" width="16" height="16"></rect><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 12L6 8l4-4"></path></g></svg>
 </span></button><button class="annotator-frame-button" aria-label="Show highlights" aria-pressed="false" title="Show highlights"><span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" class=""><g fill-rule="evenodd"><rect fill="none" stroke="none" x="0" y="0" width="16" height="16"></rect><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.73 12.973A9.89 9.89 0 0 1 8 13c-3.866 0-7-2.239-7-5 0-.753.233-1.467.65-2.107m5.62-2.866A9.89 9.89 0 0 1 8 3c3.866 0 7 2.239 7 5 0 .753-.233 1.467-.65 2.107M1 1l14 14L1 1z"></path></g></svg>

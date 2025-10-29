@@ -304,7 +304,7 @@ class DistractionFreeMode {
     setupContextMenuHandling() {
         // Check if we're on a page that should have highlighting (reading/listening)
         const currentSkill = this.getCurrentSkill();
-        const needsHighlighting = currentSkill === 'reading' || currentSkill === 'listening';
+        const needsHighlighting = currentSkill === 'reading' || currentSkill === 'listening' || currentSkill === 'reading-writing';
         
         if (needsHighlighting) {
             // For pages that need highlighting, wait for core.js and check multiple times

@@ -25,7 +25,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         </script>
 
 
-            <script src="./Part 6_files/t.js.download"></script>
+            <script src="./A2 Key RW Digital Sample Test 1_26.04.23_files/t.js.download"></script>
             <script type="text/javascript">
                 (function () {
                     var useProxy = true
@@ -446,7 +446,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 }
             
         </style>
-    <script src="./Part 6_files/bundle.js.download"></script><link rel="stylesheet" type="text/css" href="./Part 6_files/player.css"><script async="" src="./Part 6_files/moment-timezone-with-data.min.js.download"></script><script async="" src="./Part 6_files/boot.js.download"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({ skipStartupTypeset: true });</script><link rel="sidebar" href="https://d2snzxottmona5.cloudfront.net:5000/app.html" type="application/annotator+html"><link rel="hypothesis-client" href="./Part 6_files/boot.js.download" type="application/annotator+javascript"><script type="text/javascript" src="./Part 6_files/jquery.bundle.js.download"></script><script type="text/javascript" src="./Part 6_files/annotator.bundle.js.download"></script></head>
+    <script src="./A2 Key RW Digital Sample Test 1_26.04.23_files/bundle.js.download"></script><link rel="stylesheet" type="text/css" href="./A2 Key RW Digital Sample Test 1_26.04.23_files/player.css"><script async="" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/moment-timezone-with-data.min.js.download"></script><script async="" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/boot.js.download"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({ skipStartupTypeset: true });</script><link rel="sidebar" href="https://d2snzxottmona5.cloudfront.net:5000/app.html" type="application/annotator+html"><link rel="hypothesis-client" href="./A2 Key RW Digital Sample Test 1_26.04.23_files/boot.js.download" type="application/annotator+javascript"><script type="text/javascript" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/jquery.bundle.js.download"></script><script type="text/javascript" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/annotator.bundle.js.download"></script></head>
 
 
     <body class="ceq-theme hypothesis-highlights-always-on normal">
@@ -563,80 +563,12 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         </script>
         
         <script>
-            // Answer Storage System - Part 6 Writing Task (Q31)
-            const AnswerStorage = {
-                storageKey: 'reading-writingAnswers',
-                
-                saveAnswer: function(questionId, answer) {
-                    const answers = this.loadAnswers();
-                    answers[questionId] = answer;
-                    localStorage.setItem(this.storageKey, JSON.stringify(answers));
-                },
-                
-                loadAnswers: function() {
-                    const saved = localStorage.getItem(this.storageKey);
-                    return saved ? JSON.parse(saved) : {};
-                },
-                
-                getAnswer: function(questionId) {
-                    const answers = this.loadAnswers();
-                    return answers[questionId] || '';
-                }
-            };
-
-            function setupAnswerSaving() {
-                // Setup event listener for writing task textarea
-                const textarea = document.getElementById('labelText-143369604_32');
-                if (textarea) {
-                    textarea.addEventListener('input', function() {
-                        AnswerStorage.saveAnswer('Q31', this.value);
-                        updateQuestionButtonStates();
-                    });
-                }
-            }
-
-            function loadSavedAnswers() {
-                // Load saved answer for Q31
-                const savedAnswer = AnswerStorage.getAnswer('Q31');
-                if (savedAnswer) {
-                    const textarea = document.getElementById('labelText-143369604_32');
-                    if (textarea) {
-                        textarea.value = savedAnswer;
-                    }
-                }
-                
-                updateQuestionButtonStates();
-            }
-
-            function updateQuestionButtonStates() {
-                // Update question button state based on answered status
-                const savedAnswer = AnswerStorage.getAnswer('Q31');
-                const questionButton = document.querySelector('[data-ordernumber="31"]');
-                
-                if (questionButton) {
-                    if (savedAnswer && savedAnswer.trim().length > 0) {
-                        questionButton.classList.add('answered');
-                        const srOnly = questionButton.querySelector('.sr-only');
-                        if (srOnly && !srOnly.textContent.includes('Answered')) {
-                            srOnly.textContent = srOnly.textContent.replace('Not attempted', 'Answered');
-                        }
-                    } else {
-                        questionButton.classList.remove('answered');
-                    }
-                }
-            }
-
-            // Initialize on page load
-            document.addEventListener('DOMContentLoaded', function() {
-                setTimeout(function() {
-                    loadSavedAnswers();
-                    setupAnswerSaving();
-                }, 100);
-            });
+            // Per-part answer storage removed; handled by a2-key-answer-sync.js
         </script>
-        <script src="../../../assets/js/universal-functions.js"></script>
-        <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
+<script src="../../../assets/js/universal-functions.js"></script>
+<script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
 <script src="../../../assets/js/cambridge/a2-key-part-scroll.js"></script>
+<script src="../../../assets/js/cambridge/a2-key-answer-sync.js"></script>
 
 <div id="preRenderTarget" aria-hidden="true" style="position: relative; height: 0px; width: 0px; overflow: hidden; visibility: hidden;"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_preload_143369604" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="preload_interactionWrapper_143369604">
       <div class="container generic">

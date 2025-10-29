@@ -13,11 +13,10 @@
     function qs(sel, root){ return (root||document).querySelector(sel); }
     function qsa(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
 
-    function ensureStyles(){
-      if (document.getElementById('ic-a2key-style')) return;
-      var css = ''+
-        '.order-number.ic-on{border:2px solid #1976d2;border-radius:4px;padding:1px 6px;display:inline-block;box-shadow:0 0 0 3px rgba(25,118,210,.15);}'+
-        '.ic-active-question{outline:2px solid rgba(25,118,210,.25);outline-offset:4px;border-radius:6px;}';
+    function ensureStyles(){ if (window.A2KeyShared) return A2KeyShared.ensureStyles(document); 
+      if (document.getElementById('ic-a2key-style')) return; var css = ''+
+      '.order-number.ic-on{border:2px solid #1976d2;border-radius:4px;padding:1px 6px;display:inline-block;box-shadow:0 0 0 3px rgba(25,118,210,.15);}'+
+      '.ic-active-question{outline:2px solid rgba(25,118,210,.25);outline-offset:4px;border-radius:6px;}';
       var s = document.createElement('style'); s.id='ic-a2key-style'; s.type='text/css'; s.appendChild(document.createTextNode(css));
       (document.head || document.documentElement).appendChild(s);
     }
@@ -27,63 +26,27 @@
     }
 
     function findAnchorFor(orderNumber){
+      if (window.A2KeyShared) return A2KeyShared.findAnchor(document, orderNumber);
       if (!orderNumber && orderNumber !== 0) return null;
-      // 1) Typical visible number element in question body
-      var el = qs('span.order-number[id^="scorableItem-"][id$="_'+orderNumber+'"]')
-            || qs('[id^="scorableItem-"][id$="_'+orderNumber+'"]');
-      if (el) return el;
-      // 2) Hidden focus element id="<revision>-<n>" derived from footer metadata
-      try {
-        var btn = qs('.subQuestion.scorable-item[data-ordernumber="'+orderNumber+'"]');
-        var rid = btn && btn.getAttribute('data-contentrevisionid');
-        if (rid) {
-          var hidden = qs('#'+rid+'-'+orderNumber);
-          if (hidden) return hidden;
-        }
-      } catch(e) {}
-      // 3) Last resort: the footer button itself
+      var el = qs('span.order-number[id^="scorableItem-"][id$="_'+orderNumber+'"]') || qs('[id^="scorableItem-"][id$="_'+orderNumber+'"]');
+      if (el) return el; try { var btn = qs('.subQuestion.scorable-item[data-ordernumber="'+orderNumber+'"]'); var rid = btn && btn.getAttribute('data-contentrevisionid'); if (rid) { var hidden = qs('#'+rid+'-'+orderNumber); if (hidden) return hidden; } } catch(e) {}
       return qs('.subQuestion.scorable-item[data-ordernumber="'+orderNumber+'"]');
     }
 
     function scrollToQuestion(orderNumber){
-      ensureStyles();
-      var anchor = findAnchorFor(orderNumber);
-      if (!anchor) return false;
-      var container = getSectionContent();
-      try {
-        if (container) {
-          var cRect = container.getBoundingClientRect();
-          var aRect = anchor.getBoundingClientRect();
-          var top = aRect.top - cRect.top + container.scrollTop - 48; // offset for padding/header
-          container.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
-        } else {
-          anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-        return true;
-      } catch (e) {
-        // Non-smooth fallback
-        if (container) container.scrollTop = (anchor.offsetTop || 0) - 48; else anchor.scrollIntoView(true);
-        return true;
-      }
+      if (window.A2KeyShared) return A2KeyShared.scrollToQuestion(document, orderNumber);
+      ensureStyles(); var anchor = findAnchorFor(orderNumber); if (!anchor) return false; var container = getSectionContent();
+      try { if (container) { var cRect = container.getBoundingClientRect(); var aRect = anchor.getBoundingClientRect(); var top = aRect.top - cRect.top + container.scrollTop - 48; container.scrollTo({ top: Math.max(0, top), behavior: 'smooth' }); } else { anchor.scrollIntoView({ behavior: 'smooth', block: 'center' }); } return true; } catch (e) { if (container) container.scrollTop = (anchor.offsetTop || 0) - 48; else anchor.scrollIntoView(true); return true; }
     }
 
     function highlightQuestion(orderNumber){
-      ensureStyles();
-      // remove previous marks
-      qsa('.order-number.ic-on').forEach(function(el){ el.classList.remove('ic-on'); });
-      qsa('.ic-active-question').forEach(function(el){ el.classList.remove('ic-active-question'); });
-      var anchor = findAnchorFor(orderNumber);
-      if (!anchor) return;
-      if (anchor.classList) anchor.classList.add('ic-on');
-      var container = anchor.closest ? (anchor.closest('.choiceInteraction__choiceInteraction___3W0MH') || anchor.closest('.QuestionDisplay__question___') || anchor.parentElement) : anchor.parentElement;
-      if (container) container.classList.add('ic-active-question');
+      if (window.A2KeyShared) return A2KeyShared.markActiveQuestion(document, orderNumber);
+      ensureStyles(); qsa('.order-number.ic-on').forEach(function(el){ el.classList.remove('ic-on'); }); qsa('.ic-active-question').forEach(function(el){ el.classList.remove('ic-active-question'); }); var anchor = findAnchorFor(orderNumber); if (!anchor) return; if (anchor.classList) anchor.classList.add('ic-on'); var container = anchor.closest ? (anchor.closest('.choiceInteraction__choiceInteraction___3W0MH') || anchor.closest('.QuestionDisplay__question___') || anchor.parentElement) : anchor.parentElement; if (container) container.classList.add('ic-active-question');
     }
 
     function getActiveNumber(){
-      var activeBtn = qs('.footer__questionWrapper___1tZ46.selected .subQuestion.active.scorable-item') || qs('.subQuestion.active.scorable-item');
-      if (!activeBtn) return null;
-      var n = parseInt(activeBtn.getAttribute('data-ordernumber'), 10);
-      return isNaN(n) ? null : n;
+      if (window.A2KeyShared) return A2KeyShared.getActiveQuestionAbs(document);
+      var activeBtn = qs('.footer__questionWrapper___1tZ46.selected .subQuestion.active.scorable-item') || qs('.subQuestion.active.scorable-item'); if (!activeBtn) return null; var n = parseInt(activeBtn.getAttribute('data-ordernumber'), 10); return isNaN(n) ? null : n;
     }
 
     function setActive(n){
@@ -116,6 +79,17 @@
     }
 
     function init(){
+      try {
+        // Normalize header logo to central asset to avoid per-part duplication
+        var img = document.querySelector('img[alt="header.logo"]');
+        if (img) {
+          var central = './A2 Key RW Digital Sample Test 1_26.04.23_files/ceq.png';
+          var src = img.getAttribute('src') || '';
+          if (src && /\bPart\s+\d+_files\/ceq\.png$/.test(src)) {
+            img.setAttribute('src', central);
+          }
+        }
+      } catch (e) { /* no-op */ }
       // Ensure the current question (if any) is visible and marked
       var cur = getActiveNumber();
       if (cur != null) {
