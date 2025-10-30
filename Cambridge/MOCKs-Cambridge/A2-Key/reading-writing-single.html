@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cambridge A2 Key - Reading & Writing (Single Page)</title>
+  <link rel="icon" href="../../../assets/icons/innovativecentre.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../../assets/css/cambridge-a2key-rw.css">
+  <link rel="stylesheet" type="text/css" href="./A2 Key RW Digital Sample Test 1_26.04.23_files/player.css">
+
+  <!-- Session + manifest -->
+  <script src="../../../assets/js/cambridge/session-verify.js"></script>
+  <script src="../../../assets/js/cambridge/a2-key-manifest.js"></script>
+  <script src="../../../assets/js/cambridge/a2-key-shared.js"></script>
+  <script src="../../../assets/js/cambridge/a2-key-combined.js"></script>
+</head>
+<body data-test-version="A2-Key" data-skill="reading-writing" data-mock="cambridge-a2-key">
+  <header class="rw-header" id="rw-header">
+    <div class="left">
+      <span class="brand">A2 Key - Reading & Writing</span>
+      <span id="rw-candidate"></span>
+    </div>
+    <div class="right">
+      <div class="icons">
+        <i class="fa fa-wifi connected" title="WiFi Status" aria-hidden="true"></i>
+        <i class="fa fa-bell-o" title="Notifications" aria-hidden="true"></i>
+        <i class="fa fa-bars" title="Options" aria-hidden="true"></i>
+      </div>
+      <span class="timer" id="rw-timer">60:00</span>
+      <button id="rw-timer-toggle" title="Pause/Resume">Pause</button>
+      <button class="submit" id="rw-submit">Submit</button>
+    </div>
+  </header>
+  <main class="parts-container">
+    <div id="combined-parts" class="combined-parts"></div>
+    <div class="App__footerWrapper___2el50" id="rw-footer-wrap">
+      <footer class="footer__footer___1NlzQ" id="rw-footer">
+        <div class="footer__navButtons___Gtvxu" role="navigation" aria-label="Previous / next question" id="footer-nav-wrapper" tabindex="-1">
+          <button class="footer__previousBtn___3pfYh footer__arrowIconBtn___3AiJS" id="footer-nav-button-previous" aria-label="Previous"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+          <button class="footer__promotedNextBtn___Qf9LU footer__arrowIconBtn___3AiJS" id="footer-nav-button-next" aria-label="Next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+        </div>
+        <nav class="nav-row perScorableItem" aria-label="Questions" id="rw-footer-nav"></nav>
+        <button id="deliver-button" aria-label="Review your answers" class="footer__deliverButton___3FM07"><i class="fa fa fa-check" aria-hidden="true"></i></button>
+      </footer>
+    </div>
+  </main>
+
+  <!-- Backend Integration Scripts -->
+  <script src="../../../assets/js/universal-functions.js"></script>
+  <script src="../../../assets/js/distraction-free.js"></script>
+  <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
+  <script src="../../../assets/js/cambridge/a2-key-answer-sync.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      const currentModule = 'reading-writing';
+      localStorage.setItem(`${currentModule}Status`, 'in-progress');
+      if (!localStorage.getItem(`${currentModule}StartTime`)) {
+        localStorage.setItem(`${currentModule}StartTime`, new Date().toISOString());
+      }
+      if (!localStorage.getItem('reading-writingAnswers')) {
+        localStorage.setItem('reading-writingAnswers', JSON.stringify({}));
+      }
+
+      // Candidate info
+      try {
+        const name = localStorage.getItem('studentName') || '';
+        const id = localStorage.getItem('studentId') || '';
+        const el = document.getElementById('rw-candidate');
+        if (el) el.textContent = name ? `• ${name} (${id})` : '';
+      } catch(e) {}
+
+      // Timer (namespaced)
+      const TIMER_KEY = 'a2key-rw-timer-remaining';
+      const PAUSE_KEY = 'a2key-rw-timer-paused';
+      const STARTED_KEY = 'a2key-rw-timer-lastTick';
+      if (!localStorage.getItem(TIMER_KEY)) localStorage.setItem(TIMER_KEY, String(60*60));
+      if (!localStorage.getItem(PAUSE_KEY)) localStorage.setItem(PAUSE_KEY, 'false');
+      localStorage.setItem(STARTED_KEY, String(Date.now()));
+      const timerEl = document.getElementById('rw-timer');
+      const toggleBtn = document.getElementById('rw-timer-toggle');
+      function fmt(sec){ sec = Math.max(0, Math.floor(sec)); const m=Math.floor(sec/60), s=sec%60; return `${m}:${s<10?'0':''}${s}`; }
+      function tick(){
+        let paused = localStorage.getItem(PAUSE_KEY) === 'true';
+        let remaining = parseInt(localStorage.getItem(TIMER_KEY)||'0',10);
+        const last = parseInt(localStorage.getItem(STARTED_KEY)||String(Date.now()),10);
+        const now = Date.now(); const dt = Math.floor((now-last)/1000);
+        if (!paused && remaining>0 && dt>0){ remaining = Math.max(0, remaining-dt); }
+        localStorage.setItem(STARTED_KEY, String(now));
+        localStorage.setItem(TIMER_KEY, String(remaining));
+        if (timerEl) timerEl.textContent = fmt(remaining);
+      }
+      setInterval(tick,1000);
+      toggleBtn.addEventListener('click', function(){
+        const paused = localStorage.getItem(PAUSE_KEY) === 'true';
+        localStorage.setItem(PAUSE_KEY, paused ? 'false' : 'true');
+        toggleBtn.textContent = paused ? 'Pause' : 'Resume';
+      });
+
+      document.getElementById('rw-submit').addEventListener('click', function(){
+        const deliver = document.getElementById('deliver-button'); if (deliver && deliver.click) deliver.click();
+      });
+    });
+  </script>
+</body>
+</html>
+
