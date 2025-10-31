@@ -6,7 +6,24 @@
   function setPart(n){
     var frame = document.getElementById('part-frame');
     if (!frame) return;
+    
+    // Force immediate save of all answers before switching parts
+    try {
+      var doc = frame.contentDocument;
+      if (doc && doc.defaultView && doc.defaultView.__A2_forceSaveAll) {
+        // Call the force save function in the iframe
+        doc.defaultView.__A2_forceSaveAll();
+        console.log('✓ Force-saved all answers before switching to Part', n);
+      } else {
+        console.warn('⚠ Force save function not available, answers may not be saved');
+      }
+    } catch(e) {
+      console.warn('Unable to force save before part switch:', e);
+    }
+    
     try { sessionStorage.setItem('a2key-rw-active', String(n)); } catch (e) {}
+    
+    // Navigate to new part (force save is synchronous, no delay needed)
     frame.setAttribute('src', './Part ' + n + '.html');
   }
 
@@ -22,6 +39,18 @@
     if (!doc) return;
     window.__A2_ranges = A2KeyShared.updateRangesFromDoc(doc);
     A2KeyShared.ensureStyles(doc);
+
+    // Restore answers for this part
+    setTimeout(function(){
+      try {
+        if (doc.defaultView && doc.defaultView.__A2_applySavedAnswers) {
+          doc.defaultView.__A2_applySavedAnswers();
+          console.log('🔄 Triggered answer restoration after part load');
+        }
+      } catch(e) {
+        console.warn('Could not trigger answer restoration:', e);
+      }
+    }, 200);
 
     // Initial mark/scroll
     try{
@@ -109,6 +138,15 @@
       }catch(e){}
       return;
     }
+    
+    // Force save before switching to different part
+    try {
+      if (doc && doc.defaultView && doc.defaultView.__A2_forceSaveAll) {
+        doc.defaultView.__A2_forceSaveAll();
+        console.log('✓ Saved answers before navigating to question', qAbs);
+      }
+    } catch(e) {}
+    
     try { sessionStorage.setItem('a2key-target-question', String(qAbs)); } catch(e) {}
     setPart(part);
   }

@@ -218,11 +218,14 @@ class IELTSUniversalFunctions {
         this.saveUserPreferences();
         this.showToast(`Theme changed to ${theme} mode`, 'success');
         
-        // Update contrast options
+        // Update contrast options (only if they exist in the DOM)
         document.querySelectorAll('.contrast-option').forEach(option => {
             option.classList.remove('active');
         });
-        document.querySelector(`.contrast-option:nth-child(${theme === 'light' ? '1' : '2'})`).classList.add('active');
+        const activeOption = document.querySelector(`.contrast-option:nth-child(${theme === 'light' ? '1' : '2'})`);
+        if (activeOption) {
+            activeOption.classList.add('active');
+        }
     }
 
     setTextSize(size) {
@@ -232,11 +235,14 @@ class IELTSUniversalFunctions {
         this.saveUserPreferences();
         this.showToast(`Text size changed to ${size}`, 'success');
         
-        // Update text size options
+        // Update text size options (only if they exist in the DOM)
         document.querySelectorAll('.text-size-option').forEach(option => {
             option.classList.remove('active');
         });
-        document.querySelector(`.text-size-option.${size}`).classList.add('active');
+        const activeOption = document.querySelector(`.text-size-option.${size}`);
+        if (activeOption) {
+            activeOption.classList.add('active');
+        }
     }
 
     goToSubmission() {

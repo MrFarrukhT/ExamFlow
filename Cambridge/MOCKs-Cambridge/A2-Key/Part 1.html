@@ -801,9 +801,13 @@
                 console.log('Cambridge Test Page - Local Development Mode');
             })();
 
+            // ===== SET CURRENT PART (must be before DOMContentLoaded for highlighting detection) =====
+            window.currentPart = 1;
+
             // ===== QUESTION NAVIGATION SYSTEM =====
             document.addEventListener('DOMContentLoaded', function() {
                 const totalQuestionsInPart1 = 6;
+                const currentPart = window.currentPart; // Use the window variable
 
                 // (Per-part answer storage removed; unified answer sync handles it)
 
@@ -834,8 +838,6 @@
                     6: 'Part 6.html',
                     7: 'Part 7.html'
                 };
-
-                const currentPart = 1;
 
                 // Handle Part button clicks
                 document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach(function(wrapper) {
@@ -905,6 +907,7 @@
 <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
 <script src="../../../assets/js/cambridge/a2-key-part-scroll.js"></script>
 <script src="../../../assets/js/cambridge/a2-key-answer-sync.js"></script>
+<script src="../../../assets/js/cambridge/question-marking.js"></script>
 
 <!-- Minimal initialization - Bridge handles everything else -->
 <script>

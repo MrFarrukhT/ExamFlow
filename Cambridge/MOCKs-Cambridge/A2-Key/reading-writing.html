@@ -79,6 +79,7 @@
   <script src="../../../assets/js/universal-functions.js"></script>
   <script src="../../../assets/js/distraction-free.js"></script>
   <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
+  <script src="../../../assets/js/cambridge/question-marking.js"></script>
   <script>
     // Mark module as in-progress and ensure storage exists
     document.addEventListener('DOMContentLoaded', function() {
@@ -165,6 +166,38 @@
         const btn = doc.getElementById('deliver-button') || doc.querySelector('.footer__deliverButton___3FM07');
         if (btn && typeof btn.click === 'function') btn.click();
       });
+
+      // ===== SEAMLESS AUTOSAVE SYSTEM =====
+      // Monitors iframe content and ensures all answers are continuously saved
+      const frame = document.getElementById('part-frame');
+      
+      // Force immediate save of all answers in iframe
+      function forceIframeSave(){
+        try {
+          const doc = frame && frame.contentDocument;
+          if (!doc) return;
+          
+          // Call the force save function if available in iframe
+          if (doc.defaultView && doc.defaultView.__A2_forceSaveAll) {
+            doc.defaultView.__A2_forceSaveAll();
+          }
+        } catch(e) {
+          // Cross-origin or access error - iframe may be loading
+        }
+      }
+
+      // Periodic backup save every 3 seconds
+      setInterval(forceIframeSave, 3000);
+
+      // Save when tab is hidden or window closed
+      document.addEventListener('visibilitychange', function(){
+        if (document.hidden) forceIframeSave();
+      });
+      
+      window.addEventListener('beforeunload', forceIframeSave);
+
+      // Debug: Log autosave initialization (silent, no user-facing output)
+      console.log('🔄 Seamless autosave enabled - answers saved continuously');
     });
   </script>
 </body>
