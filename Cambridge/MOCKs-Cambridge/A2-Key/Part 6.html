@@ -431,45 +431,157 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     background-color: #22506f;
                     border-color: #204a67;
                 }
-            
+
         </style>
-    <script src="./A2 Key RW Digital Sample Test 1_26.04.23_files/bundle.js.download"></script><link rel="stylesheet" type="text/css" href="./A2 Key RW Digital Sample Test 1_26.04.23_files/player.css"><script async="" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/moment-timezone-with-data.min.js.download"></script><script async="" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/boot.js.download"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({ skipStartupTypeset: true });</script><link rel="sidebar" href="https://d2snzxottmona5.cloudfront.net:5000/app.html" type="application/annotator+html"><link rel="hypothesis-client" href="./A2 Key RW Digital Sample Test 1_26.04.23_files/boot.js.download" type="application/annotator+javascript"><script type="text/javascript" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/jquery.bundle.js.download"></script><script type="text/javascript" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/annotator.bundle.js.download"></script></head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <!-- Universal Popup & Options Styles -->
+    <link rel="stylesheet" href="../../../assets/css/universal-popup-styles.css">
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ skipStartupTypeset: true });</script>
+    
+    <style>
+        /* Prevent flash of unstyled content */
+        body { opacity: 1 !important; }
+
+        /* Popup overlay styles for IELTS functions */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        .popup-overlay.show {
+            display: flex !important;
+        }
+        .popup-content {
+            background: white;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .popup-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .popup-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #666;
+            line-height: 1;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+        }
+        .popup-close:hover {
+            color: #000;
+        }
+        .popup-body {
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .notification-item {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .notification-message {
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .option-item:hover {
+            background: #f5f5f5;
+        }
+        .option-icon {
+            margin-right: 15px;
+            font-size: 1.2rem;
+            color: #2196F3;
+        }
+        .option-text {
+            flex: 1;
+            font-weight: 500;
+        }
+        .contrast-option, .text-size-option {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .contrast-option.active, .text-size-option.active {
+            border-color: #2196F3;
+            background: #e3f2fd;
+        }
+        
+        /* Dark mode support */
+        body.dark-mode {
+            background: #1a1a1a !important;
+            color: #fff !important;
+        }
+        body.dark-mode .App__app___3nDjL {
+            background: #1a1a1a !important;
+            color: #fff !important;
+        }
+        
+        /* Text size support */
+        body.text-small { font-size: 14px !important; }
+        body.text-medium { font-size: 16px !important; }
+        body.text-large { font-size: 18px !important; }
+        </style>
+    <script src="./A2 Key RW Digital Sample Test 1_26.04.23_files/bundle.js.download"></script><link rel="stylesheet" type="text/css" href="./A2 Key RW Digital Sample Test 1_26.04.23_files/player.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><script async="" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/moment-timezone-with-data.min.js.download"></script><script async="" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/boot.js.download"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({ skipStartupTypeset: true });</script><link rel="sidebar" href="https://d2snzxottmona5.cloudfront.net:5000/app.html" type="application/annotator+html"><link rel="hypothesis-client" href="./A2 Key RW Digital Sample Test 1_26.04.23_files/boot.js.download" type="application/annotator+javascript"><script type="text/javascript" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/jquery.bundle.js.download"></script><script type="text/javascript" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/annotator.bundle.js.download"></script></head>
 
 
-    <body class="ceq-theme hypothesis-highlights-always-on normal">
+    <body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="writing" data-mock="A2-Key" data-test-version="A2-Key">
         
 
-        <div id="wrapper"><div class="App__app___3nDjL zoom-small" id="app" role="presentation"><div aria-hidden="false" class="App__mainScreen___3HaXz"><div class="App__mainScreenContent___1tXox" id="main-screen-content"><header class="header__header___3v_A5 header__compact___2hXxm " id="header"><div class="header__topbar___2CQ4O" id="headerTopBar"><div class="header__logo___3xoBS"><img src="./Part 6_files/ceq.png" alt="header.logo"></div><div class="header__subToolbar___TmVu0"><div class="header__connectionAndButtonContainer___1t_Gd"><div class="header__connectionStatusContainer___3YItW"><div aria-live="polite" class="header__connectionStatus___3hqqN"><span role="status" class="sr-only">Connected</span></div><div class="header__icon___1ECrT"><i class="fa fa-wifi" aria-hidden="true"></i></div></div><button class="header__messagesButton___2Texb" id="messagesMenuButton"><span class="header__icon___1ECrT"><span class="sr-only">Messages</span><i class="fa fa-bell-o fa-3" aria-hidden="true"></i></span></button><button class="header__optionsButton___1BF6Z" id="optionsMenuButton"><span class="header__icon___1ECrT"><span class="sr-only">Options</span><i class="fa fa-bars fa-3" aria-hidden="true"></i></span></button><button class="header__optionsButton___1BF6Z" aria-label="Show notes" id="toggleSidebarButton" aria-expanded="false"><span class="header__icon___1ECrT"><span class="sr-only">Show notes</span><i class="fa fa-pencil-square-o fa-3" aria-hidden="true"></i></span></button></div><div class="header__centralBar___3GpJy"><div class="header__subHeaderWrapper___3FyBR"><div class="header__statusText___1fRqd"><div class="header__name___1Cw2x">Candidate ID</div><div></div></div></div></div><div class="header__statusColor___3HOPa"></div></div></div></header><div id="appContentContainer" class="App__contentContainer___2Nu-R"><div class="DisplayTypeContainer__displayTypeContainer___3B6yh has-section-level-dynamic-rubric" style=""><div class="DisplayTypeContainer__sectionContent___2HSJ0 gap-match-scroll-adjustment" id="sectionContent"><div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE"><div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP QuestionDisplay__sectionLevelDynamicRubric___2zEDl"><h3 class="scorableItemHeadline" id="item_143369603_12">Question 32</h3><div class="QuestionDisplay__rubricContent___1byNW">Look at the three pictures. Write the story shown in the pictures. Write <b>35 words</b> or more.</div></div></div><div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper current numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-143369604" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group" aria-labelledby="nr_143369603_12 title_143369603_12"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_143369604" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_143369604">
-      <div class="container generic">
-         <div class="left align-center">
-            <table class=" theme-border-4 align-center">
-               <thead>
-               </thead><tbody>
-                  <tr>
-                     <td class="align-center">
-                        <span class="inlineImage" id="img-1671791323182">
-                           <span id="143369604_content_item_127449474_143369595" class="qti-renderer-media-wrapper"><img alt="Background image" data-content-id="/file/cil/content_item_127449474_143369595/img?cacheable=true&amp;assessmentRunId=146724146" class="qti-image" src="./Part 6_files/img" style="height: auto; width: 280px; max-width: 100%;"></span>
-                        </span>
-                     </td>
-                     <td>
-                        <span class="inlineImage" id="img-1671791323183">
-                           <span id="143369604_content_item_127449474_143369597" class="qti-renderer-media-wrapper"><img alt="Background image" data-content-id="/file/cil/content_item_127449474_143369597/img?cacheable=true&amp;assessmentRunId=146724146" class="qti-image" src="./Part 6_files/img(1)" style="height: auto; width: 280px; max-width: 100%;"></span>
-                        </span>
-                     </td>
-                     <td>
-                        <span class="inlineImage" id="img-1671791323184">
-                           <span id="143369604_content_item_127449474_143369601" class="qti-renderer-media-wrapper"><img alt="Background image" data-content-id="/file/cil/content_item_127449474_143369601/img?cacheable=true&amp;assessmentRunId=146724146" class="qti-image" src="./Part 6_files/img(2)" style="height: auto; width: 280px; max-width: 100%;"></span>
-                        </span>
-                     </td>
-                  </tr>
-               </tbody>
-            </table>
+        <div id="wrapper"><div class="App__app___3nDjL zoom-small" id="app" role="presentation"><div aria-hidden="false" class="App__mainScreen___3HaXz"><div class="App__mainScreenContent___1tXox" id="main-screen-content"><header class="header__header___3v_A5 header__compact___2hXxm " id="header"><div class="header__topbar___2CQ4O" id="headerTopBar"><div class="header__logo___3xoBS"><img src="./Part 6_files/ceq.png" alt="header.logo"></div><div class="header__subToolbar___TmVu0"><div class="header__connectionAndButtonContainer___1t_Gd"><div class="header__connectionStatusContainer___3YItW"><div aria-live="polite" class="header__connectionStatus___3hqqN"><span role="status" class="sr-only">Connected</span></div><div class="header__icon___1ECrT"><i class="fa fa-wifi" aria-hidden="true"></i></div></div><button class="header__messagesButton___2Texb" id="messagesMenuButton"><span class="header__icon___1ECrT"><span class="sr-only">Messages</span><i class="fa fa-bell-o fa-3" aria-hidden="true"></i></span></button><button class="header__optionsButton___1BF6Z" id="optionsMenuButton"><span class="header__icon___1ECrT"><span class="sr-only">Options</span><i class="fa fa-bars fa-3" aria-hidden="true"></i></span></button><button class="header__optionsButton___1BF6Z" aria-label="Show notes" id="toggleSidebarButton" aria-expanded="false"><span class="header__icon___1ECrT"><span class="sr-only">Show notes</span><i class="fa fa-pencil-square-o fa-3" aria-hidden="true"></i></span></button></div><div class="header__centralBar___3GpJy"><div class="header__subHeaderWrapper___3FyBR"><div class="header__statusText___1fRqd"><div class="header__name___1Cw2x">Candidate ID</div><div></div></div></div></div><div class="header__statusColor___3HOPa"></div></div></div></header><div id="appContentContainer" class="App__contentContainer___2Nu-R"><div class="DisplayTypeContainer__displayTypeContainer___3B6yh has-section-level-dynamic-rubric" style=""><div class="DisplayTypeContainer__sectionContent___2HSJ0 gap-match-scroll-adjustment" id="sectionContent"><div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE"><div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP QuestionDisplay__sectionLevelDynamicRubric___2zEDl"><h3 class="scorableItemHeadline" id="item_143369603_11">Question 31</h3><div class="QuestionDisplay__rubricContent___1byNW">Write <b>25 words</b> or more.</div></div></div><div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper current numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-143369603" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group" aria-labelledby="nr_143369603_11 title_143369603_11"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_143369603" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_143369603">
+      <div class="container generic" style="max-width: 800px; margin: 0 auto;">
+         <div style="padding: 20px;">
+            <p style="font-size: 16px; line-height: 1.6; margin-bottom: 15px;">You want to go shopping with your English friend, Sam, on Saturday.</p>
+            <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px; font-weight: bold;">Write an email to Sam.</p>
+            <p style="font-size: 16px; line-height: 1.6; margin-bottom: 10px;">In your email:</p>
+            <ul style="font-size: 16px; line-height: 1.8; margin-left: 30px; margin-bottom: 30px;">
+               <li>suggest a time to meet</li>
+               <li>say where you want to go</li>
+               <li>tell Sam what you want to buy</li>
+            </ul>
          </div>
-         <div class="right">
-            <div id="143369604_KETR20CB-NKW700002EVO-0-0-1" class="interaction-container"><div class="interaction allowed-break-inside"><br class="tts-hidden-break"><div id="scorableItem-143369604_32"><textarea id="labelText-143369604_32" aria-label="You are currently on the text editor. The text will be saved automatically" class="plainTextWrapper__plainText____1GRn" rows="5" spellcheck="false" style="overflow: hidden; overflow-wrap: break-word; resize: none; height: 117.6px;"></textarea><div><span class="WordCountText__wordCountText___3QyIr">Words: 0</span></div></div></div></div>
+         <div style="padding: 0 20px;">
+            <div id="143369603_KETR20CB-NKW600002EVO-0-0-1" class="interaction-container"><div class="interaction allowed-break-inside"><br class="tts-hidden-break"><div id="scorableItem-143369603_31"><textarea id="labelText-143369603_31" aria-label="You are currently on the text editor. The text will be saved automatically" class="plainTextWrapper__plainText____1GRn" rows="10" spellcheck="false" style="overflow: hidden; overflow-wrap: break-word; resize: vertical; height: 200px; width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: Arial, sans-serif; font-size: 14px;"></textarea><div style="margin-top: 8px;"><span class="WordCountText__wordCountText___3QyIr">Words: 0</span></div></div></div></div>
          </div>
       </div>
-   </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="32" style="top: 250px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 32</span></button></div></div></div></div></div></div></div><div class="App__footerWrapper___2el50"><footer class="footer__footer___1NlzQ"><div class="footer__navButtons___Gtvxu   " role="navigation" aria-label="Previous / next question" id="footer-nav-wrapper" tabindex="-1"><button class="footer__previousBtn___3pfYh footer__arrowIconBtn___3AiJS" id="footer-nav-button-previous" aria-label="Previous"><i class="fa fa-arrow-left" aria-hidden="true"></i></button><button class="footer__promotedNextBtn___Qf9LU footer__arrowIconBtn___3AiJS" id="footer-nav-button-next" aria-label="Next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div><nav class="nav-row perScorableItem" aria-label="Questions"><div class="footer__questionWrapper___1tZ46 multiple" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
+   </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="31" style="top: 250px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 31</span></button></div></div></div></div></div></div></div><div class="App__footerWrapper___2el50"><footer class="footer__footer___1NlzQ"><div class="footer__navButtons___Gtvxu   " role="navigation" aria-label="Previous / next question" id="footer-nav-wrapper" tabindex="-1"><button class="footer__previousBtn___3pfYh footer__arrowIconBtn___3AiJS" id="footer-nav-button-previous" aria-label="Previous"><i class="fa fa-arrow-left" aria-hidden="true"></i></button><button class="footer__promotedNextBtn___Qf9LU footer__arrowIconBtn___3AiJS" id="footer-nav-button-next" aria-label="Next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div><nav class="nav-row perScorableItem" aria-label="Questions"><div class="footer__questionWrapper___1tZ46 multiple" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
                                 " data-sectionid="1687665662102" tabindex="0"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">1</span><span class="attemptedCount" aria-hidden="true">0 of 6</span><span class="sr-only">Part 
             1. 0 of 6 questions attempted.</span></span></button><div class="footer__subquestionWrapper___9GgoP"><button class="subQuestion scorable-item" data-contentrevisionid="143659692" data-ordernumber="1" data-sectionid="1687665662102" tabindex="0"><span class="sr-only">Question 1</span><span aria-hidden="true">1</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143706756" data-ordernumber="2" data-sectionid="1687665662102" tabindex="0"><span class="sr-only">Question 2</span><span aria-hidden="true">2</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143659678" data-ordernumber="3" data-sectionid="1687665662102" tabindex="0"><span class="sr-only">Question 3</span><span aria-hidden="true">3</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143708101" data-ordernumber="4" data-sectionid="1687665662102" tabindex="0"><span class="sr-only">Question 4</span><span aria-hidden="true">4</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143659689" data-ordernumber="5" data-sectionid="1687665662102" tabindex="0"><span class="sr-only">Question 5</span><span aria-hidden="true">5</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143708406" data-ordernumber="6" data-sectionid="1687665662102" tabindex="0"><span class="sr-only">Question 6</span><span aria-hidden="true">6</span><span class="sr-only">Not attempted</span></button></div></div><div class="footer__questionWrapper___1tZ46 multiple" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
                                 " data-sectionid="3426847902314" tabindex="0"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">2</span><span class="attemptedCount" aria-hidden="true">0 of 7</span><span class="sr-only">Part 
@@ -479,10 +591,10 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                                 " data-sectionid="7096491309053" tabindex="0"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">4</span><span class="attemptedCount" aria-hidden="true">0 of 6</span><span class="sr-only">Part 
             4. 0 of 6 questions attempted.</span></span></button><div class="footer__subquestionWrapper___9GgoP"><button class="subQuestion scorable-item" data-contentrevisionid="143709598" data-ordernumber="19" data-sectionid="7096491309053" tabindex="0"><span class="sr-only">Question 19</span><span aria-hidden="true">19</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143709598" data-ordernumber="20" data-sectionid="7096491309053" tabindex="0"><span class="sr-only">Question 20</span><span aria-hidden="true">20</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143709598" data-ordernumber="21" data-sectionid="7096491309053" tabindex="0"><span class="sr-only">Question 21</span><span aria-hidden="true">21</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143709598" data-ordernumber="22" data-sectionid="7096491309053" tabindex="0"><span class="sr-only">Question 22</span><span aria-hidden="true">22</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143709598" data-ordernumber="23" data-sectionid="7096491309053" tabindex="0"><span class="sr-only">Question 23</span><span aria-hidden="true">23</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143709598" data-ordernumber="24" data-sectionid="7096491309053" tabindex="0"><span class="sr-only">Question 24</span><span aria-hidden="true">24</span><span class="sr-only">Not attempted</span></button></div></div><div class="footer__questionWrapper___1tZ46 multiple" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
                                 " data-sectionid="8658776684776" tabindex="0"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">5</span><span class="attemptedCount" aria-hidden="true">0 of 6</span><span class="sr-only">Part 
-            5. 0 of 6 questions attempted.</span></span></button><div class="footer__subquestionWrapper___9GgoP"><button class="subQuestion scorable-item" data-contentrevisionid="143645736" data-ordernumber="25" data-sectionid="8658776684776" tabindex="0"><span class="sr-only">Question 25</span><span aria-hidden="true">25</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143645736" data-ordernumber="26" data-sectionid="8658776684776" tabindex="0"><span class="sr-only">Question 26</span><span aria-hidden="true">26</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143645736" data-ordernumber="27" data-sectionid="8658776684776" tabindex="0"><span class="sr-only">Question 27</span><span aria-hidden="true">27</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143645736" data-ordernumber="28" data-sectionid="8658776684776" tabindex="0"><span class="sr-only">Question 28</span><span aria-hidden="true">28</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143645736" data-ordernumber="29" data-sectionid="8658776684776" tabindex="0"><span class="sr-only">Question 29</span><span aria-hidden="true">29</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143645736" data-ordernumber="30" data-sectionid="8658776684776" tabindex="0"><span class="sr-only">Question 30</span><span aria-hidden="true">30</span><span class="sr-only">Not attempted</span></button></div></div><div class="footer__questionWrapper___1tZ46 single" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
-                                " data-sectionid="8662850947652" tabindex="0"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">6</span><span class="attemptedCount" aria-hidden="true">0 of 1</span><span class="sr-only">Part 
-            6. 0 of 1 questions attempted.</span></span></button></div><div class="footer__questionWrapper___1tZ46 selected single" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
-                                " data-sectionid="2200793588978" tabindex="-1"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">7</span></span></button></div><button id="deliver-button" aria-label="Review your answers" class="footer__deliverButton___3FM07"><i class="fa fa fa-check" aria-hidden="true"></i></button></nav></footer></div></div></div><div class="s-alert-wrapper"></div></div></div>
+            5. 0 of 6 questions attempted.</span></span></button><div class="footer__subquestionWrapper___9GgoP"><button class="subQuestion scorable-item" data-contentrevisionid="143645736" data-ordernumber="25" data-sectionid="8658776684776" tabindex="0"><span class="sr-only">Question 25</span><span aria-hidden="true">25</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143645736" data-ordernumber="26" data-sectionid="8658776684776" tabindex="0"><span class="sr-only">Question 26</span><span aria-hidden="true">26</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143645736" data-ordernumber="27" data-sectionid="8658776684776" tabindex="0"><span class="sr-only">Question 27</span><span aria-hidden="true">27</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143645736" data-ordernumber="28" data-sectionid="8658776684776" tabindex="0"><span class="sr-only">Question 28</span><span aria-hidden="true">28</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143645736" data-ordernumber="29" data-sectionid="8658776684776" tabindex="0"><span class="sr-only">Question 29</span><span aria-hidden="true">29</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143645736" data-ordernumber="30" data-sectionid="8658776684776" tabindex="0"><span class="sr-only">Question 30</span><span aria-hidden="true">30</span><span class="sr-only">Not attempted</span></button></div></div><div class="footer__questionWrapper___1tZ46 selected single" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
+                                " data-sectionid="8662850947652" tabindex="-1"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">6</span></span></button></div><div class="footer__questionWrapper___1tZ46 single" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
+                                " data-sectionid="2200793588978" tabindex="0"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">7</span><span class="attemptedCount" aria-hidden="true">0 of 1</span><span class="sr-only">Part 
+            7. 0 of 1 questions attempted.</span></span></button></div><button id="deliver-button" aria-label="Review your answers" class="footer__deliverButton___3FM07"><i class="fa fa fa-check" aria-hidden="true"></i></button></nav></footer></div></div></div><div class="s-alert-wrapper"></div></div></div>
         <!-- <script src="./Part 6_files/playerStartup.js.download"></script> -->
     
         <script>
@@ -552,10 +664,92 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         <script>
             // Per-part answer storage removed; handled by a2-key-answer-sync.js
         </script>
+
+    <!-- Context Menu for Highlighting -->
+    <div id="contextMenu" class="context-menu" style="display: none; position: absolute; z-index: 10000;">
+        <div id="menu-highlight" class="context-menu-item" onclick="highlightText()">
+            Highlight
+        </div>
+        <div id="menu-note" class="context-menu-item" onclick="addNote()">
+            Note
+        </div>
+        <div id="menu-clear" class="context-menu-item" onclick="clearHighlight()">
+            Clear
+        </div>
+        <div id="menu-clear-all" class="context-menu-item" onclick="clearAllHighlights()">
+            Clear All
+        </div>
+    </div>
+
+    <!-- Popup Overlay for Notifications and Options -->
+    <div id="popup-overlay" class="popup-overlay" style="display: none;">
+        <div class="popup-content" id="popup-content">
+            <!-- Dynamic content will be inserted here -->
+        </div>
+    </div>
+
+<!-- ============================================ -->
+<!-- IELTS Universal Functions Integration      -->
+<!-- ============================================ -->
 <script src="../../../assets/js/universal-functions.js"></script>
+<script src="../../../assets/js/cambridge/cambridge-bridge.js"></script>
+<script src="../../../assets/js/distraction-free.js"></script>
 <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
 <script src="../../../assets/js/cambridge/a2-key-part-scroll.js"></script>
 <script src="../../../assets/js/cambridge/a2-key-answer-sync.js"></script>
+<script>
+console.log('🎓 Cambridge A2 Key - Part 6 Loaded');
+console.log('✅ All IELTS Functions: Enabled');
+</script>
+
+<!-- Integrated Event Handlers and Initialization -->
+<script>
+window.addEventListener('load', function() {
+    console.log('Cambridge Part 6 - Initializing...');
+    if (typeof IELTSUniversalFunctions !== 'undefined') {
+        window.ieltsUniversal = new IELTSUniversalFunctions();
+        const messagesBtn = document.getElementById('messagesMenuButton');
+        const optionsBtn = document.getElementById('optionsMenuButton');
+        if (messagesBtn) {
+            messagesBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (window.ieltsUniversal && window.ieltsUniversal.showNotifications) {
+                    window.ieltsUniversal.showNotifications();
+                }
+            });
+        }
+        if (optionsBtn) {
+            optionsBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (window.ieltsUniversal && window.ieltsUniversal.showOptionsMenu) {
+                    window.ieltsUniversal.showOptionsMenu();
+                }
+            });
+        }
+        console.log('✓ Initialized');
+    }
+    const partFiles = {1: 'Part 1.html', 2: 'Part 2.html', 3: 'Part 3.html', 4: 'Part 4.html', 5: 'Part 5.html', 6: 'Part 6.html', 7: 'Part 7.html'};
+    document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach(function(wrapper) {
+        const partButton = wrapper.querySelector('.footer__questionNo___3WNct');
+        if (partButton) {
+            const partNumber = parseInt(partButton.querySelector('.sectionNr').textContent.trim());
+            const newButton = partButton.cloneNode(true);
+            partButton.parentNode.replaceChild(newButton, partButton);
+            newButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (partFiles[partNumber]) window.location.href = partFiles[partNumber];
+            });
+        }
+    });
+});
+function toggleOptionsMenu() {
+    const optionsBtn = document.getElementById('optionsMenuButton');
+    if (optionsBtn) optionsBtn.click();
+}
+</script>
 
 <div id="preRenderTarget" aria-hidden="true" style="position: relative; height: 0px; width: 0px; overflow: hidden; visibility: hidden;"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_preload_143369604" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="preload_interactionWrapper_143369604">
       <div class="container generic">

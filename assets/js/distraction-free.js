@@ -302,15 +302,15 @@ class DistractionFreeMode {
     }
 
     setupContextMenuHandling() {
-        // Check if we're on a page that should have highlighting (reading/listening)
+        // Check if we're on a page that should have highlighting (only reading)
         const currentSkill = this.getCurrentSkill();
-        const needsHighlighting = currentSkill === 'reading' || currentSkill === 'listening' || currentSkill === 'reading-writing';
+        const needsHighlighting = currentSkill === 'reading' || currentSkill === 'reading-writing';
         
         if (needsHighlighting) {
             // For pages that need highlighting, wait for core.js and check multiple times
             this.waitForCoreJS();
         } else {
-            // For pages that don't need highlighting (dashboard, writing, etc.), add fallback immediately
+            // For pages that don't need highlighting (dashboard, writing, listening, etc.), add fallback immediately
             console.log(`Page skill: ${currentSkill} - Adding fallback context menu handler`);
             this.addFallbackContextMenuHandler();
         }
@@ -366,24 +366,31 @@ class DistractionFreeMode {
     }
 
     addFallbackContextMenuHandler() {
-        // This should only run on pages that DON'T need highlighting (dashboard, writing, etc.)
-        // For reading/listening pages, the context menu is handled by core.js
+        // This should only run on pages that DON'T need highlighting (dashboard, writing, listening, etc.)
+        // For reading pages, the context menu is handled by core.js
         
         // Store reference to the handler for potential cleanup
         this.contextMenuHandler = (e) => {
             const currentSkill = this.getCurrentSkill();
             
-            // For writing, dashboard, and other sections, block right-click
-            if (currentSkill === 'writing' || currentSkill === 'dashboard' || !currentSkill) {
+            // For writing, listening, dashboard, and other sections, block right-click
+            if (currentSkill === 'writing' || currentSkill === 'listening' || currentSkill === 'dashboard' || !currentSkill) {
                 e.preventDefault();
                 this.showActionBlockedMessage('Right-click menu is disabled during the test');
                 return false;
             }
             
-            // For reading/listening, this handler should not have been added
+            // For reading, this handler should not have been added
             // But if it was added by mistake, don't block and warn
-            console.warn('Fallback context menu handler should not be active on reading/listening pages');
-            return true;
+            if (currentSkill === 'reading') {
+                console.warn('Fallback context menu handler should not be active on reading pages');
+                return true;
+            }
+            
+            // Block for any other cases
+            e.preventDefault();
+            this.showActionBlockedMessage('Right-click menu is disabled during the test');
+            return false;
         };
         
         document.addEventListener('contextmenu', this.contextMenuHandler);

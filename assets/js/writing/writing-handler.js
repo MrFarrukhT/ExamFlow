@@ -49,11 +49,19 @@ class WritingHandler {
             timerReset.addEventListener('click', () => this.resetTimer());
         }
 
-        // Word count updates
+        // Word count updates with limit enforcement
         document.querySelectorAll('.writing-area').forEach(textarea => {
             textarea.addEventListener('input', (e) => {
                 const taskId = e.target.id.includes('1') ? 'task1' : 'task2';
                 this.updateWordCount(taskId);
+            });
+            
+            // Prevent paste that would exceed limit
+            textarea.addEventListener('paste', (e) => {
+                const taskId = e.target.id.includes('1') ? 'task1' : 'task2';
+                setTimeout(() => {
+                    this.updateWordCount(taskId);
+                }, 10);
             });
         });
     }
@@ -86,11 +94,21 @@ class WritingHandler {
         
         if (!textarea || !wordCountEl) return;
         
-        const text = textarea.value.trim();
-        const wordCount = text === '' ? 0 : text.split(/\s+/).length;
+        let text = textarea.value.trim();
+        let wordCount = text === '' ? 0 : text.split(/\s+/).length;
+        const maxWords = 500; // 500 word limit
         
-        // Update main word count display
-        wordCountEl.textContent = `Word count: ${wordCount}`;
+        // Enforce 500 word limit - truncate if exceeds
+        if (wordCount > maxWords) {
+            const words = text.split(/\s+/);
+            text = words.slice(0, maxWords).join(' ');
+            textarea.value = text;
+            wordCount = maxWords;
+        }
+        
+        // Update main word count display with limit
+        const limitMessage = wordCount >= maxWords ? ' (Limit reached)' : '';
+        wordCountEl.textContent = `Word count: ${wordCount}/500${limitMessage}`;
         
         // Update bottom navigation count
         if (bottomCountEl) {
@@ -100,7 +118,12 @@ class WritingHandler {
         // Color coding for word count
         const minWords = taskId === 'task1' ? 150 : 250;
         
-        if (wordCount < minWords) {
+        if (wordCount >= maxWords) {
+            wordCountEl.className = 'word-count limit';
+        } else if (wordCount < minWords) {
+            wordCountEl.className = 'word-count warning';
+        } else if (wordCount >= maxWords * 0.9) {
+            // Warning when approaching limit (90% = 450 words)
             wordCountEl.className = 'word-count warning';
         } else {
             wordCountEl.className = 'word-count good';

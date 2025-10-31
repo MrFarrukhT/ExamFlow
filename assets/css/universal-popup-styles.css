@@ -1,0 +1,872 @@
+/**
+ * Universal Popup & Options Styles
+ * Shared between IELTS and Cambridge Test Systems
+ * 
+ * This provides consistent styling for:
+ * - Options menu
+ * - Notifications
+ * - Context menu (highlighting)
+ * - Contrast & text size settings
+ * 
+ * COMPLETE COPY FROM reading.css FOR 100% FEATURE PARITY
+ */
+
+/* ==================== POPUP OVERLAY ==================== */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #f5f5f5;
+    z-index: 2000;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 80px;
+}
+
+.popup-overlay.show {
+    display: flex;
+}
+
+/* ==================== POPUP CONTENT ==================== */
+.popup-content {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    max-width: 720px;
+    width: 90%;
+    max-height: 60vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ==================== POPUP HEADER ==================== */
+.popup-header {
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.popup-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+}
+
+.popup-back {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #666;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.popup-back:hover {
+    color: #333;
+    background-color: #f3f4f6;
+}
+
+.popup-back .fa {
+    font-size: 18px;
+}
+
+.popup-close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #666;
+    padding: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    line-height: 1;
+}
+
+.popup-close:hover {
+    color: #333;
+    background-color: #f3f4f6;
+}
+
+/* ==================== POPUP BODY ==================== */
+.popup-body {
+    padding: 32px;
+    flex: 1;
+}
+
+/* ==================== OPTION ITEMS ==================== */
+.option-item {
+    display: flex;
+    align-items: center;
+    padding: 20px 32px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s;
+}
+
+.option-item:hover {
+    background-color: #f8f9fa;
+}
+
+.option-item:last-child {
+    border-bottom: none;
+}
+
+/* Submit option - RED background */
+.option-item.submit-option {
+    background-color: #e53935;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.option-item.submit-option:hover {
+    background-color: #d32f2f;
+}
+
+.option-item.submit-option .option-icon,
+.option-item.submit-option .option-arrow {
+    color: white;
+}
+
+/* Option icon */
+.option-icon {
+    width: 28px;
+    height: 28px;
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.option-icon svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+}
+
+.option-icon .fa {
+    font-size: 20px;
+}
+
+/* Option text */
+.option-text {
+    flex: 1;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+/* Option arrow (chevron) */
+.option-arrow {
+    margin-left: auto;
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.option-arrow .fa {
+    font-size: 16px;
+}
+
+/* ==================== CONTRAST & TEXT SIZE OPTIONS ==================== */
+.contrast-options,
+.text-size-options {
+    display: flex;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+.contrast-option,
+.text-size-option {
+    flex: 1;
+    padding: 28px 20px;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 16px;
+    font-weight: 400;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+}
+
+.contrast-option:hover,
+.text-size-option:hover {
+    border-color: #9ca3af;
+}
+
+/* Dark preview styling */
+.contrast-option.dark-preview {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #000000;
+}
+
+.contrast-option.dark-preview:hover {
+    border-color: #374151;
+}
+
+.contrast-option.dark-preview.active {
+    border-color: #3b82f6;
+    background-color: #000000;
+}
+
+/* Active state */
+.contrast-option.active,
+.text-size-option.active {
+    border-color: #3b82f6;
+    background-color: #dbeafe;
+}
+
+/* Text size variations */
+.text-size-option.small {
+    font-size: 14px;
+}
+
+.text-size-option.medium {
+    font-size: 16px;
+}
+
+.text-size-option.large {
+    font-size: 18px;
+}
+
+/* ==================== NOTIFICATIONS ==================== */
+.notification-item {
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.notification-message {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 5px;
+}
+
+.notification-time {
+    color: #999;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* ==================== CONTEXT MENU (Highlighting) ==================== */
+.context-menu {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 10000;
+    min-width: 160px;
+    display: none;
+}
+
+.context-menu-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: 16px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s;
+}
+
+.context-menu-item:hover {
+    background-color: #f8f9fa;
+}
+
+.context-menu-item:last-child {
+    border-bottom: none;
+}
+
+/* Highlight styles */
+.highlight {
+    background-color: #ffff00;
+    cursor: pointer;
+}
+
+.highlight-with-note {
+    background-color: #ffeb3b;
+    border-bottom: 2px dotted #ff9800;
+    cursor: help;
+}
+
+/* ==================== THEME STYLES - Simple White on Black ==================== */
+body.dark-mode {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+body.dark-mode .header {
+    background-color: #000000;
+    color: #ffffff;
+    border-bottom-color: #333333;
+}
+
+body.dark-mode .main-container {
+    background-color: #000000;
+}
+
+body.dark-mode .passage-panel,
+body.dark-mode .questions-panel {
+    background-color: #000000;
+    color: #ffffff;
+    border-left-color: #333333;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent; /* Firefox dark scrollbar */
+}
+
+body.dark-mode .passage-panel::-webkit-scrollbar,
+body.dark-mode .questions-panel::-webkit-scrollbar {
+    width: 100px !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark-mode .passage-panel::-webkit-scrollbar-track,
+body.dark-mode .questions-panel::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 0px !important;
+}
+
+body.dark-mode .passage-panel::-webkit-scrollbar-thumb,
+body.dark-mode .questions-panel::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border-radius: 0px !important;
+    border: 20px solid rgba(255, 255, 255, 0.1) !important;
+    min-height: 50px !important;
+    opacity: 1 !important;
+    background-clip: content-box !important;
+}
+
+body.dark-mode .passage-panel::-webkit-scrollbar-thumb:hover,
+body.dark-mode .questions-panel::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5) !important;
+}
+
+body.dark-mode .reading-passage,
+body.dark-mode .question-prompt,
+body.dark-mode .question,
+body.dark-mode .tf-question-text,
+body.dark-mode .option-text {
+    color: #ffffff;
+}
+
+body.dark-mode .part-header {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+body.dark-mode .popup-overlay {
+    background-color: #000000;
+}
+
+body.dark-mode .popup-content {
+    background-color: #000000;
+    color: #ffffff;
+    border: 1px solid #333333;
+}
+
+body.dark-mode .popup-header {
+    border-bottom-color: #333333;
+}
+
+body.dark-mode .popup-title {
+    color: #ffffff;
+}
+
+body.dark-mode .popup-close,
+body.dark-mode .popup-back {
+    color: #ffffff;
+}
+
+body.dark-mode .popup-close:hover,
+body.dark-mode .popup-back:hover {
+    background-color: #2a2a2a;
+}
+
+body.dark-mode .option-item {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+body.dark-mode .option-item:hover {
+    background-color: #1a1a1a;
+}
+
+body.dark-mode .option-item.submit-option {
+    background-color: #e53935;
+    color: #ffffff;
+}
+
+body.dark-mode .option-item.submit-option:hover {
+    background-color: #d32f2f;
+}
+
+body.dark-mode .contrast-option,
+body.dark-mode .text-size-option {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+body.dark-mode .contrast-option:hover,
+body.dark-mode .text-size-option:hover {
+    border-color: #666666;
+}
+
+body.dark-mode .contrast-option.active,
+body.dark-mode .text-size-option.active {
+    border-color: #3b82f6;
+    background-color: #1e3a5f;
+}
+
+body.dark-mode .notification-item {
+    border-bottom-color: #333333;
+}
+
+body.dark-mode .notification-message {
+    color: #999;
+}
+
+body.dark-mode .context-menu {
+    background: #000000;
+    border-color: #333333;
+    box-shadow: 0 4px 12px rgba(255,255,255,0.15);
+}
+
+body.dark-mode .context-menu-item {
+    color: #ffffff;
+    border-bottom-color: #333333;
+}
+
+body.dark-mode .context-menu-item:hover {
+    background-color: #2a2a2a;
+}
+
+body.dark-mode .answer-input,
+body.dark-mode .drop-zone {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+body.dark-mode .nav-row {
+    background-color: #000000;
+    border-top: 1px solid #333333;
+}
+
+body.dark-mode .footer__questionNo___3WNct,
+body.dark-mode .subQuestion {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+body.dark-mode .subQuestion:hover {
+    background-color: #2a2a2a;
+    border-color: #555555;
+}
+
+body.dark-mode .subQuestion.answered {
+    background-color: #2a2a2a;
+    border-color: #555555;
+}
+
+body.dark-mode .subQuestion.active {
+    background-color: #003366;
+    color: #ffffff;
+    border-color: #0066cc;
+}
+
+body.dark-mode .subQuestion.completed,
+body.dark-mode .subQuestion.correct {
+    background-color: #004d00;
+    color: #ffffff;
+    border-color: #006600;
+}
+
+body.dark-mode .subQuestion.incorrect {
+    background-color: #660000;
+    color: #ffffff;
+    border-color: #cc0000;
+}
+
+body.dark-mode .resizer::before {
+    background-color: #ffffff;
+}
+
+body.dark-mode .resizer::after {
+    background-color: #000000;
+    border-color: #ffffff;
+}
+
+/* Dark mode for question numbers and labels */
+body.dark-mode .tf-question-number,
+body.dark-mode .question-number-box,
+body.dark-mode .q-number {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+body.dark-mode .tf-question.active-question .tf-question-number {
+    border-color: #4a90e2;
+}
+
+/* Dark mode for TRUE/FALSE/NOT GIVEN options */
+body.dark-mode .tf-option {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+body.dark-mode .tf-option:hover {
+    background-color: #2a2a2a;
+    border-color: #555555;
+}
+
+body.dark-mode .tf-option:has(input[type="radio"]:checked) {
+    background-color: #333333;
+    border-color: #666666;
+}
+
+/* Dark mode for question labels and text */
+body.dark-mode .question-prompt,
+body.dark-mode .question-prompt p,
+body.dark-mode .question-prompt strong,
+body.dark-mode .instruction {
+    color: #ffffff;
+}
+
+/* Dark mode for tables */
+body.dark-mode .matching-table,
+body.dark-mode .matching-table th,
+body.dark-mode .matching-table td {
+    color: #ffffff;
+    border-color: #333333;
+}
+
+body.dark-mode .matching-table th {
+    background-color: #000000;
+}
+
+/* Dark mode for drag and drop items */
+body.dark-mode .drag-item,
+body.dark-mode .responsibility-item,
+body.dark-mode .room-label {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+body.dark-mode .drag-item:hover,
+body.dark-mode .responsibility-item:hover,
+body.dark-mode .room-label:hover {
+    background-color: #2a2a2a;
+}
+
+/* Dark mode for summary text */
+body.dark-mode .summary-text,
+body.dark-mode .summary-text p,
+body.dark-mode .summary-text li {
+    color: #ffffff;
+}
+
+/* Dark mode for part headers */
+body.dark-mode #passage-header-container {
+    background-color: #000000;
+}
+
+/* Dark mode for ielts logo and test taker info */
+body.dark-mode .ielts-logo,
+body.dark-mode .test-taker-info,
+body.dark-mode .test-taker-id {
+    color: #ffffff;
+}
+
+/* Switch logos in dark mode */
+body.dark-mode .ielts-logo .logo-black {
+    display: none;
+}
+
+body.dark-mode .ielts-logo .logo-white {
+    display: block;
+}
+
+/* Dark mode for icons */
+body.dark-mode .wifi-indicator .fa,
+body.dark-mode .bell-notification .fa,
+body.dark-mode .options-menu .fa {
+    color: #ffffff;
+}
+
+/* Dark mode for timer */
+body.dark-mode .timer-display {
+    color: #ffffff;
+}
+
+/* Dark mode for navigation arrows */
+body.dark-mode .nav-arrow.prev {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+body.dark-mode .nav-arrow.next {
+    background-color: #555555;
+    color: #ffffff;
+}
+
+body.dark-mode .nav-arrow:focus-visible {
+    box-shadow: 0 0 0 3px rgba(135,206,235,0.4);
+}
+
+/* Dark mode for question navigation bar */
+body.dark-mode .nav-row {
+    background: #000000;
+    border-top: 1px solid #333333;
+}
+
+body.dark-mode .footer__questionWrapper___1tZ46 {
+    color: #ffffff;
+}
+
+body.dark-mode .footer__questionNo___3WNct {
+    color: #ffffff;
+    background-color: #000000;
+    border: 1px solid #333333;
+}
+
+body.dark-mode .footer__questionNo___3WNct:hover {
+    background-color: #2a2a2a;
+}
+
+body.dark-mode .footer__questionNo___3WNct.answered {
+    background-color: #004d00;
+    border-color: #006600;
+}
+
+body.dark-mode .footer__questionNo___3WNct.current,
+body.dark-mode .footer__questionNo___3WNct.active {
+    background-color: #003366;
+    border-color: #0066cc;
+}
+
+body.dark-mode .question-button {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+body.dark-mode .question-button:hover {
+    background-color: #2a2a2a;
+}
+
+body.dark-mode .question-button.answered {
+    background-color: #004d00;
+    border-color: #006600;
+}
+
+body.dark-mode .question-button.current {
+    background-color: #003366;
+    border-color: #0066cc;
+}
+
+/* Dark mode for contrast options popup */
+body.dark-mode .popup-overlay {
+    background-color: #000000;
+}
+
+body.dark-mode .popup-container,
+body.dark-mode .popup-content {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+body.dark-mode .popup-header {
+    color: #ffffff;
+    border-bottom-color: #333333;
+}
+
+body.dark-mode .close-button {
+    color: #ffffff;
+}
+
+body.dark-mode .close-button:hover {
+    background-color: #2a2a2a;
+}
+
+body.dark-mode .contrast-option {
+    background-color: #2a2a2a;
+    color: #ffffff;
+    border-color: #555555;
+}
+
+body.dark-mode .contrast-option:hover {
+    background-color: #333333;
+    border-color: #666666;
+}
+
+body.dark-mode .contrast-option.active {
+    border-color: #87ceeb;
+    background-color: #003366;
+}
+
+body.dark-mode .text-size-option {
+    background-color: #2a2a2a;
+    color: #ffffff;
+    border-color: #555555;
+}
+
+body.dark-mode .text-size-option:hover {
+    background-color: #333333;
+    border-color: #666666;
+}
+
+body.dark-mode .text-size-option.active {
+    border-color: #87ceeb;
+    background-color: #003366;
+}
+
+/* Change highlight color to light blue in dark mode */
+body.dark-mode .highlight {
+    background-color: #87ceeb;
+    color: #000000;
+}
+
+body.dark-mode .comment-highlight {
+    background-color: #90ee90;
+    color: #000000;
+}
+
+/* Dark mode for option arrows and buttons */
+body.dark-mode .option-arrow {
+    color: #ffffff;
+}
+
+body.dark-mode .option-arrow:hover {
+    background-color: #2a2a2a;
+}
+
+/* Dark mode for delivery button */
+body.dark-mode .footer__deliverButton___3FM07 {
+    background-color: #003366;
+    color: #ffffff;
+    border-color: #0066cc;
+}
+
+body.dark-mode .footer__deliverButton___3FM07:hover {
+    background-color: #004d99;
+}
+
+/* Dark mode for help button */
+body.dark-mode .help-button {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+body.dark-mode .help-button:hover {
+    background-color: #2a2a2a;
+}
+
+/* ==================== TEXT SIZE SUPPORT ==================== */
+body.text-small {
+    font-size: 14px !important;
+}
+
+body.text-medium {
+    font-size: 16px !important;
+}
+
+body.text-large {
+    font-size: 18px !important;
+}
+
+body.text-small .reading-passage,
+body.text-small .question-prompt,
+body.text-small .tf-question-text {
+    font-size: 14px;
+}
+
+body.text-medium .reading-passage,
+body.text-medium .question-prompt,
+body.text-medium .tf-question-text {
+    font-size: 16px;
+}
+
+body.text-large .reading-passage,
+body.text-large .question-prompt,
+body.text-large .tf-question-text {
+    font-size: 18px;
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+@media (max-width: 768px) {
+    .popup-overlay {
+        padding-top: 20px;
+    }
+
+    .popup-content {
+        max-width: 95%;
+        max-height: 80vh;
+    }
+
+    .popup-header {
+        padding: 16px 20px;
+    }
+
+    .popup-title {
+        font-size: 20px;
+    }
+
+    .popup-body {
+        padding: 20px;
+    }
+
+    .option-item {
+        padding: 16px 20px;
+    }
+
+    .contrast-options,
+    .text-size-options {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .contrast-option,
+    .text-size-option {
+        padding: 20px 16px;
+        min-height: 50px;
+    }
+}

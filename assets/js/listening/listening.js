@@ -1572,30 +1572,6 @@
             switchToPart(1);
             goToQuestion(1);
             setupCheckboxLimits();
-
-            document.body.addEventListener('contextmenu', function (e) {
-                const text = window.getSelection().toString();
-                if (!text) return;
-                e.preventDefault();
-                const menu = document.getElementById('contextMenu');
-                menu.style.left = e.pageX + 'px';
-                menu.style.top = e.pageY + 'px';
-                menu.style.display = 'block';
-
-                const target = e.target;
-                const clearItem = document.getElementById('clear-item');
-                contextElement = target.closest('.highlight, .comment-highlight');
-                if(contextElement){
-                    clearItem.style.display = 'block';
-                } else {
-                    clearItem.style.display = 'none';
-                }
-            });
-            
-            document.body.addEventListener('click', function(e) {
-                if (e.target.closest('.context-menu')) return;
-                document.getElementById('contextMenu').style.display = 'none';
-            });
         });
 
         // Initial setup on DOM load

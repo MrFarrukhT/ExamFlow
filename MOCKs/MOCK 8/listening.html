@@ -523,40 +523,6 @@
         </button>
     </nav>
 
-    <!-- Context Menu -->
-    <div id="contextMenu" class="context-menu">
-        <div class="context-menu-item" id="highlight-item" onclick="highlightText()">
-            <span class="context-menu-icon">
-                <svg viewBox="0 0 24 24" fill="black"><path d="M15.24 12.32L12.28 9.36l-1.04 1.04-1.04-1.04-1.04 1.04-1.04-1.04-1.04 1.04-1.04-1.04-3.12 3.12c-.59.58-1.54.58-2.12 0l-1.04-1.04c-.58-.59-.58-1.54 0-2.12L7.88.88c.59-.58 1.54-.58 2.12 0l1.04 1.04 1.04-1.04 1.04 1.04 1.04-1.04 1.04 1.04 1.04-1.04 3.12 3.12c.58.59.58 1.54 0 2.12l-1.04 1.04c-.58.59-1.54.59-2.12 0zM12 15l-3 3-7-7 3-3 7 7zm-9-5l-2.29 2.29c-.39.39-.39 1.02 0 1.41l8.29 8.29c.39.39 1.02.39 1.41 0L22.7 8.41c.39-.39.39-1.02 0-1.41L14.42.29c-.39-.39-1.02-.39-1.41 0L3 10z"/></svg>
-            </span>
-            <span>Highlight</span>
-        </div>
-        <div class="context-menu-item" id="comment-item" onclick="addComment()">
-            <span class="context-menu-icon">
-                <svg viewBox="0 0 24 24" fill="black"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 12H5.17L4 15.17V4h16v10z"/></svg>
-            </span>
-            <span>Comment</span>
-        </div>
-        <div class="context-menu-item" id="clear-item" onclick="clearHighlight()" style="display:none;">
-            <span class="context-menu-icon">
-                <svg viewBox="0 0 24 24" fill="black"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-            </span>
-            <span>Clear</span>
-        </div>
-        <div class="context-menu-item" onclick="clearAllHighlights()">
-            <span class="context-menu-icon">
-                <svg viewBox="0 0 24 24" fill="black"><path d="M16 9h-2.29l3-3-1.42-1.42-3 3V5h-2v2.29l-3-3-1.42 1.42 3 3H5v2h2.29l-3 3 1.42 1.42 3-3V17h2v-2.29l3 3 1.42-1.42-3-3H17V9h-2zm-4 4h-2v-2h2v2z"/></svg>
-            </span>
-            <span>Clear All</span>
-        </div>
-    </div>
-
-    <!-- Mobile highlight/comment toolbar -->
-    <div id="mobile-selection-menu" class="mobile-selection-menu hidden">
-        <button onclick="highlightText()">Highlight</button>
-        <button onclick="addComment()">Comment</button>
-    </div>
-
     <!-- Result Modal -->
     <div id="result-modal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
