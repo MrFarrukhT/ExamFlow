@@ -1,204 +1,142 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cambridge A2 Key - Reading & Writing (Combined Parts 1-7)</title>
+  <title>Cambridge A2 Key - Reading & Writing</title>
   <link rel="icon" href="../../assets/icons/innovativecentre.png">
   <link rel="stylesheet" href="../../assets/css/base.css">
   
-  <!-- Centralized session verification -->
   <script src="../../../assets/js/cambridge/session-verify.js"></script>
-  <!-- Optional ranges manifest to avoid recomputing on every load -->
-  <script src="../../../assets/js/cambridge/a2-key-manifest.js"></script>
   
-  <!-- Prefetch other parts to reduce switch delay -->
-  <link rel="prefetch" href="./Part 2.html" as="document">
-  <link rel="prefetch" href="./Part 3.html" as="document">
-  <link rel="prefetch" href="./Part 4.html" as="document">
-  <link rel="prefetch" href="./Part 5.html" as="document">
-  <link rel="prefetch" href="./Part 6.html" as="document">
-  <link rel="prefetch" href="./Part 7.html" as="document">
   <style>
     body {
       margin: 0;
-      background: #ffffff; /* Match Cambridge background */
+      background: #ffffff;
       color: #000;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-    }
-    .rw-header {
-      position: sticky; top: 0; z-index: 1000;
-      display: flex; align-items: center; justify-content: space-between;
-      height: 56px; padding: 0 12px; background: #f7f7f7; border-bottom: 1px solid #e0e0e0;
-    }
-    .rw-header .left, .rw-header .right { display: flex; align-items: center; gap: 8px; }
-    .rw-header .center { display: flex; gap: 6px; }
-    .rw-header .brand { font-weight: 600; color: #1976d2; }
-    .rw-header .timer { font-variant-numeric: tabular-nums; font-weight: 600; }
-    .rw-header button { height: 32px; padding: 0 10px; border-radius: 6px; border: 1px solid #d0d0d0; background: #fff; cursor: pointer; }
-    .rw-header button.active { background: #1976d2; color: #fff; border-color: #1976d2; }
-    .rw-header .submit { background: #2e7d32; border-color: #2e7d32; color: #fff; }
-    .parts-container { padding: 0; }
-    .frame-wrap {
-      width: 100%;
-      height: calc(100vh - 56px); /* account for header */
-      background: #ffffff; /* avoid dark flash on switch */
+      font-family: system-ui, -apple-system, sans-serif;
     }
     .part-frame {
       width: 100%;
-      height: 100%;
+      height: 100vh;
       border: 0;
       background: #ffffff;
       display: block;
     }
   </style>
-  <!-- Shared helpers and wrapper controller -->
-  <script src="../../../assets/js/cambridge/a2-key-shared.js"></script>
-  <script src="../../../assets/js/cambridge/a2-key-wrapper.js"></script>
 </head>
-<body data-test-version="A2-Key" data-skill="reading-writing" data-mock="cambridge-a2-key">
-  <header class="rw-header" id="rw-header">
-    <div class="left">
-      <span class="brand">A2 Key – Reading & Writing</span>
-      <span id="rw-candidate"></span>
-    </div>
-    <div class="center" id="rw-part-switch"></div>
-    <div class="right">
-      <span class="timer" id="rw-timer">60:00</span>
-      <button id="rw-timer-toggle" title="Pause/Resume">Pause</button>
-      <button class="submit" id="rw-submit">Submit</button>
-    </div>
-  </header>
-  <main class="parts-container">
-    <div class="frame-wrap">
-      <iframe id="part-frame" class="part-frame" title="A2 Key Part" src="./Part 1.html"></iframe>
-    </div>
-  </main>
+<body>
+  <iframe id="part-frame" class="part-frame" src="./Part 1.html"></iframe>
 
-  <!-- Backend Integration Scripts -->
   <script src="../../../assets/js/universal-functions.js"></script>
   <script src="../../../assets/js/distraction-free.js"></script>
   <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
   <script src="../../../assets/js/cambridge/question-marking.js"></script>
+  
   <script>
-    // Mark module as in-progress and ensure storage exists
-    document.addEventListener('DOMContentLoaded', function() {
-      const currentModule = 'reading-writing';
-      localStorage.setItem(`${currentModule}Status`, 'in-progress');
-      if (!localStorage.getItem(`${currentModule}StartTime`)) {
-        localStorage.setItem(`${currentModule}StartTime`, new Date().toISOString());
-      }
-      if (!localStorage.getItem('reading-writingAnswers')) {
-        localStorage.setItem('reading-writingAnswers', JSON.stringify({}));
-      }
+    // Initialize storage
+    const module = 'reading-writing';
+    localStorage.setItem(`${module}Status`, 'in-progress');
+    if (!localStorage.getItem(`${module}StartTime`)) {
+      localStorage.setItem(`${module}StartTime`, new Date().toISOString());
+    }
+    if (!localStorage.getItem('reading-writingAnswers')) {
+      localStorage.setItem('reading-writingAnswers', JSON.stringify({}));
+    }
 
-      // Header: candidate info
-      try {
-        const name = localStorage.getItem('studentName') || '';
-        const id = localStorage.getItem('studentId') || '';
-        const el = document.getElementById('rw-candidate');
-        if (el) el.textContent = name ? `• ${name} (${id})` : '';
-      } catch(e) {}
+    // Show candidate info
+    const name = localStorage.getItem('studentName') || '';
+    const id = localStorage.getItem('studentId') || '';
+    if (name) {
+      document.getElementById('candidate-info').textContent = `• ${name} (${id})`;
+    }
 
-      // Header: part switcher buttons 1..7
-      const switchWrap = document.getElementById('rw-part-switch');
-      if (switchWrap) {
-        for (let p=1; p<=7; p++) {
-          const b = document.createElement('button');
-          b.textContent = String(p);
-          b.setAttribute('data-part', String(p));
-          b.addEventListener('click', function(){
-            if (window.__A2_setPart) window.__A2_setPart(p);
-            updateActivePartUI(p);
-          });
-          switchWrap.appendChild(b);
-        }
-      }
+    // Create part buttons
+    const buttonsContainer = document.getElementById('part-buttons');
+    for (let i = 1; i <= 7; i++) {
+      const btn = document.createElement('button');
+      btn.textContent = i;
+      btn.onclick = () => switchPart(i);
+      buttonsContainer.appendChild(btn);
+    }
 
-      // Sync active part highlight
-      function updateActivePartUI(n){
-        const btns = (document.getElementById('rw-part-switch')||{}).children || [];
-        Array.prototype.forEach.call(btns, function(x){ x.classList.remove('active'); });
-        const b = document.querySelector('#rw-part-switch button[data-part="'+n+'"]');
-        if (b) b.classList.add('active');
-        try { sessionStorage.setItem('a2key-rw-active', String(n)); } catch(e){}
-      }
-      const savedPart = parseInt(sessionStorage.getItem('a2key-rw-active')||'1',10);
-      updateActivePartUI(isNaN(savedPart)?1:savedPart);
-      document.getElementById('part-frame').addEventListener('load', function(){
-        const sp = parseInt(sessionStorage.getItem('a2key-rw-active')||'1',10);
-        updateActivePartUI(isNaN(sp)?1:sp);
+    // Part switching
+    function switchPart(partNum) {
+      document.getElementById('part-frame').src = `./Part ${partNum}.html`;
+      document.querySelectorAll('#part-buttons button').forEach((btn, idx) => {
+        btn.classList.toggle('active', idx + 1 === partNum);
       });
+      sessionStorage.setItem('currentPart', partNum);
+    }
 
-      // Header: timer (60:00 default countdown, persists between reloads)
-      const TIMER_KEY = 'rw-timer-remaining'; // seconds
-      const PAUSE_KEY = 'rw-timer-paused';
-      const STARTED_KEY = 'rw-timer-lastTick';
-      if (!localStorage.getItem(TIMER_KEY)) localStorage.setItem(TIMER_KEY, String(60*60));
-      if (!localStorage.getItem(PAUSE_KEY)) localStorage.setItem(PAUSE_KEY, 'false');
-      localStorage.setItem(STARTED_KEY, String(Date.now()));
-      const timerEl = document.getElementById('rw-timer');
-      const toggleBtn = document.getElementById('rw-timer-toggle');
-      function fmt(sec){ sec = Math.max(0, Math.floor(sec)); const m=Math.floor(sec/60), s=sec%60; return `${m}:${s<10?'0':''}${s}`; }
-      function tick(){
-        let paused = localStorage.getItem(PAUSE_KEY) === 'true';
-        let remaining = parseInt(localStorage.getItem(TIMER_KEY)||'0',10);
-        const last = parseInt(localStorage.getItem(STARTED_KEY)||String(Date.now()),10);
-        const now = Date.now();
-        const dt = Math.floor((now - last)/1000);
-        if (!paused && remaining>0 && dt>0){ remaining = Math.max(0, remaining - dt); }
-        localStorage.setItem(STARTED_KEY, String(now));
-        localStorage.setItem(TIMER_KEY, String(remaining));
-        if (timerEl) timerEl.textContent = fmt(remaining);
-      }
-      setInterval(tick, 1000);
-      toggleBtn.addEventListener('click', function(){
-        const paused = localStorage.getItem(PAUSE_KEY) === 'true';
-        localStorage.setItem(PAUSE_KEY, paused ? 'false' : 'true');
-        toggleBtn.textContent = paused ? 'Pause' : 'Resume';
-      });
-
-      // Header: submit -> click deliver inside iframe
-      document.getElementById('rw-submit').addEventListener('click', function(){
-        const frame = document.getElementById('part-frame');
-        const doc = frame && frame.contentDocument;
-        if (!doc) return;
-        const btn = doc.getElementById('deliver-button') || doc.querySelector('.footer__deliverButton___3FM07');
-        if (btn && typeof btn.click === 'function') btn.click();
-      });
-
-      // ===== SEAMLESS AUTOSAVE SYSTEM =====
-      // Monitors iframe content and ensures all answers are continuously saved
-      const frame = document.getElementById('part-frame');
-      
-      // Force immediate save of all answers in iframe
-      function forceIframeSave(){
-        try {
-          const doc = frame && frame.contentDocument;
-          if (!doc) return;
-          
-          // Call the force save function if available in iframe
-          if (doc.defaultView && doc.defaultView.__A2_forceSaveAll) {
-            doc.defaultView.__A2_forceSaveAll();
-          }
-        } catch(e) {
-          // Cross-origin or access error - iframe may be loading
-        }
-      }
-
-      // Periodic backup save every 3 seconds
-      setInterval(forceIframeSave, 3000);
-
-      // Save when tab is hidden or window closed
-      document.addEventListener('visibilitychange', function(){
-        if (document.hidden) forceIframeSave();
-      });
-      
-      window.addEventListener('beforeunload', forceIframeSave);
-
-      // Debug: Log autosave initialization (silent, no user-facing output)
-      console.log('🔄 Seamless autosave enabled - answers saved continuously');
+    // Set initial active part
+    const savedPart = parseInt(sessionStorage.getItem('currentPart')) || 1;
+    document.querySelectorAll('#part-buttons button').forEach((btn, idx) => {
+      btn.classList.toggle('active', idx + 1 === savedPart);
     });
+
+    // Timer
+    if (!localStorage.getItem('timer-remaining')) {
+      localStorage.setItem('timer-remaining', 3600); // 60 minutes
+    }
+    if (!localStorage.getItem('timer-paused')) {
+      localStorage.setItem('timer-paused', 'false');
+    }
+    localStorage.setItem('timer-last', Date.now());
+
+    function updateTimer() {
+      const paused = localStorage.getItem('timer-paused') === 'true';
+      let remaining = parseInt(localStorage.getItem('timer-remaining'));
+      const last = parseInt(localStorage.getItem('timer-last'));
+      const now = Date.now();
+      
+      if (!paused && remaining > 0) {
+        const elapsed = Math.floor((now - last) / 1000);
+        remaining = Math.max(0, remaining - elapsed);
+        localStorage.setItem('timer-remaining', remaining);
+      }
+      
+      localStorage.setItem('timer-last', now);
+      
+      const mins = Math.floor(remaining / 60);
+      const secs = remaining % 60;
+      document.getElementById('timer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer();
+
+    // Timer toggle
+    document.getElementById('timer-toggle').onclick = () => {
+      const paused = localStorage.getItem('timer-paused') === 'true';
+      localStorage.setItem('timer-paused', !paused);
+      document.getElementById('timer-toggle').textContent = paused ? 'Pause' : 'Resume';
+    };
+
+    // Submit button
+    document.getElementById('submit-btn').onclick = () => {
+      const frame = document.getElementById('part-frame');
+      try {
+        const deliverBtn = frame.contentDocument.getElementById('deliver-button') ||
+                          frame.contentDocument.querySelector('.footer__deliverButton___3FM07');
+        if (deliverBtn) {
+          deliverBtn.click();
+        }
+      } catch(e) {
+        console.log('Submit clicked');
+      }
+    };
+
+    // Autosave
+    setInterval(() => {
+      try {
+        const frame = document.getElementById('part-frame');
+        const doc = frame.contentDocument;
+        if (doc && doc.defaultView && doc.defaultView.__A2_forceSaveAll) {
+          doc.defaultView.__A2_forceSaveAll();
+        }
+      } catch(e) {}
+    }, 3000);
   </script>
 </body>
 </html>

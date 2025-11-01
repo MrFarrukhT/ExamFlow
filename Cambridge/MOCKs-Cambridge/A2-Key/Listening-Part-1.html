@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html translate="no" class="notranslate js-focus-visible" lang="en" data-js-focus-visible="">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+        body {
+            transition: opacity ease-in 0.2s;
+            opacity: 1 !important;
+            display: block !important;
+            overflow: auto !important;
+            position: relative !important;
+        }
+    </style>
+        
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google" content="notranslate">
+    <title>A2 Key Listening Part 1</title>
+    <link rel="shortcut icon" type="image/png" href="https://d133zon9jtcf53.cloudfront.net/favicon.png">
+    
+    <script src="../../../assets/js/cambridge/session-verify.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="./A2 Key RW Digital Sample Test 1_26.04.23_files/player.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <link rel="stylesheet" href="../../../assets/css/universal-popup-styles.css">
+    
+    <style>
+        body { opacity: 1 !important; }
+        
+        /* Audio Start Popup */
+        .audio-popup-overlay {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-popup-content {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .headphones-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            fill: #2196F3;
+        }
+        .audio-popup-content h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .audio-popup-content p {
+            margin-bottom: 15px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .start-listening-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .start-listening-btn:hover {
+            background: #1976D2;
+        }
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-left: 12px solid white;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+        }
+        
+        /* Question styling */
+        .question-wrapper {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 4px;
+        }
+        .question-number {
+            font-weight: bold;
+            color: #2196F3;
+            margin-right: 10px;
+        }
+        .choices {
+            margin-top: 15px;
+        }
+        .choice-item {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .choice-item:hover {
+            background: #f5f5f5;
+        }
+        .choice-item input[type="radio"] {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="listening" data-mock="A2-Key" data-test-version="A2-Key">
+    <div id="wrapper">
+        <div class="App__app___3nDjL zoom-small" id="app" role="presentation">
+            <div aria-hidden="false" class="App__mainScreen___3HaXz">
+                <div class="App__mainScreenContent___1tXox" id="main-screen-content">
+                    <header class="header__header___3v_A5 header__compact___2hXxm " id="header">
+                        <div class="header__topbar___2CQ4O" id="headerTopBar">
+                            <div class="header__logo___3xoBS">
+                                <img src="./A2 Key RW Digital Sample Test 1_26.04.23_files/ceq.png" alt="header.logo">
+                            </div>
+                            <div class="header__subToolbar___TmVu0">
+                                <div class="header__connectionAndButtonContainer___1t_Gd">
+                                    <div class="header__connectionStatusContainer___3YItW">
+                                        <div aria-live="polite" class="header__connectionStatus___3hqqN">
+                                            <span role="status" class="sr-only">Connected</span>
+                                        </div>
+                                        <div class="header__icon___1ECrT">
+                                            <i class="fa fa-wifi" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                    <button class="header__messagesButton___2Texb" id="messagesMenuButton">
+                                        <span class="header__icon___1ECrT">
+                                            <span class="sr-only">Messages</span>
+                                            <i class="fa fa-bell-o fa-3" aria-hidden="true"></i>
+                                        </span>
+                                    </button>
+                                    <button class="header__optionsButton___1BF6Z" id="optionsMenuButton">
+                                        <span class="header__icon___1ECrT">
+                                            <span class="sr-only">Options</span>
+                                            <i class="fa fa-bars fa-3" aria-hidden="true"></i>
+                                        </span>
+                                    </button>
+                                </div>
+                                <div class="header__centralBar___3GpJy">
+                                    <div class="header__subHeaderWrapper___3FyBR">
+                                        <div class="header__statusText___1fRqd">
+                                            <div class="header__name___1Cw2x">Candidate ID</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                    
+                    <div id="appContentContainer" class="App__contentContainer___2Nu-R">
+                        <div class="DisplayTypeContainer__displayTypeContainer___3B6yh">
+                            <div class="DisplayTypeContainer__sectionContent___2HSJ0" id="sectionContent" style="padding: 20px; padding-bottom: 150px;">
+                                <div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE">
+                                    <div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL">
+                                        <h3 class="scorableItemHeadline">Part 1: Questions 1-5</h3>
+                                        <div class="QuestionDisplay__rubricContent___1byNW">
+                                            <p>For each question, choose the correct answer.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Hidden Audio Player -->
+                                <audio id="audio-player" preload="auto" style="display: none;">
+                                    <source src="../../../assets/audio/a2-key-listening-part1.mp3" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+
+                                <!-- Question 1 -->
+                                <div class="question-wrapper" id="question-1">
+                                    <div>
+                                        <span class="question-number">1</span>
+                                        <strong>What time does the library close today?</strong>
+                                    </div>
+                                    <div class="choices">
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_1" value="A" onchange="saveAnswer(1, 'A')">
+                                            <span>A) 5:00 PM</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_1" value="B" onchange="saveAnswer(1, 'B')">
+                                            <span>B) 6:00 PM</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_1" value="C" onchange="saveAnswer(1, 'C')">
+                                            <span>C) 7:00 PM</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Question 2 -->
+                                <div class="question-wrapper" id="question-2">
+                                    <div>
+                                        <span class="question-number">2</span>
+                                        <strong>What will the weather be like tomorrow?</strong>
+                                    </div>
+                                    <div class="choices">
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_2" value="A" onchange="saveAnswer(2, 'A')">
+                                            <span>A) Sunny</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_2" value="B" onchange="saveAnswer(2, 'B')">
+                                            <span>B) Rainy</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_2" value="C" onchange="saveAnswer(2, 'C')">
+                                            <span>C) Cloudy</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Question 3 -->
+                                <div class="question-wrapper" id="question-3">
+                                    <div>
+                                        <span class="question-number">3</span>
+                                        <strong>How much does the ticket cost?</strong>
+                                    </div>
+                                    <div class="choices">
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_3" value="A" onchange="saveAnswer(3, 'A')">
+                                            <span>A) £5</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_3" value="B" onchange="saveAnswer(3, 'B')">
+                                            <span>B) £10</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_3" value="C" onchange="saveAnswer(3, 'C')">
+                                            <span>C) £15</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Question 4 -->
+                                <div class="question-wrapper" id="question-4">
+                                    <div>
+                                        <span class="question-number">4</span>
+                                        <strong>Where are they going to meet?</strong>
+                                    </div>
+                                    <div class="choices">
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_4" value="A" onchange="saveAnswer(4, 'A')">
+                                            <span>A) At the café</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_4" value="B" onchange="saveAnswer(4, 'B')">
+                                            <span>B) At the cinema</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_4" value="C" onchange="saveAnswer(4, 'C')">
+                                            <span>C) At the park</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Question 5 -->
+                                <div class="question-wrapper" id="question-5">
+                                    <div>
+                                        <span class="question-number">5</span>
+                                        <strong>What did Sarah buy?</strong>
+                                    </div>
+                                    <div class="choices">
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_5" value="A" onchange="saveAnswer(5, 'A')">
+                                            <span>A) A book</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_5" value="B" onchange="saveAnswer(5, 'B')">
+                                            <span>B) A magazine</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_5" value="C" onchange="saveAnswer(5, 'C')">
+                                            <span>C) A newspaper</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer with navigation -->
+                    <div class="App__footerWrapper___2el50">
+                        <footer class="footer__footer___1NlzQ">
+                            <div class="footer__navButtons___Gtvxu" role="navigation">
+                                <button class="footer__previousBtn___3pfYh footer__arrowIconBtn___3AiJS" id="footer-nav-button-previous" disabled>
+                                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                </button>
+                                <button class="footer__promotedNextBtn___Qf9LU footer__arrowIconBtn___3AiJS" id="footer-nav-button-next">
+                                    <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <nav class="nav-row perScorableItem">
+                                <div class="footer__questionWrapper___1tZ46 selected multiple">
+                                    <button role="tab" class="footer__questionNo___3WNct">
+                                        <span><span class="section-prefix">Part </span><span class="sectionNr">1</span></span>
+                                    </button>
+                                    <div class="footer__subquestionWrapper___9GgoP">
+                                        <button class="subQuestion scorable-item" data-ordernumber="1"><span>1</span></button>
+                                        <button class="subQuestion scorable-item" data-ordernumber="2"><span>2</span></button>
+                                        <button class="subQuestion scorable-item" data-ordernumber="3"><span>3</span></button>
+                                        <button class="subQuestion scorable-item" data-ordernumber="4"><span>4</span></button>
+                                        <button class="subQuestion scorable-item" data-ordernumber="5"><span>5</span></button>
+                                    </div>
+                                </div>
+                                <div class="footer__questionWrapper___1tZ46 multiple">
+                                    <button role="tab" class="footer__questionNo___3WNct">
+                                        <span><span class="section-prefix">Part </span><span class="sectionNr">2</span></span>
+                                    </button>
+                                </div>
+                                <div class="footer__questionWrapper___1tZ46 multiple">
+                                    <button role="tab" class="footer__questionNo___3WNct">
+                                        <span><span class="section-prefix">Part </span><span class="sectionNr">3</span></span>
+                                    </button>
+                                </div>
+                                <div class="footer__questionWrapper___1tZ46 multiple">
+                                    <button role="tab" class="footer__questionNo___3WNct">
+                                        <span><span class="section-prefix">Part </span><span class="sectionNr">4</span></span>
+                                    </button>
+                                </div>
+                                <div class="footer__questionWrapper___1tZ46 multiple">
+                                    <button role="tab" class="footer__questionNo___3WNct">
+                                        <span><span class="section-prefix">Part </span><span class="sectionNr">5</span></span>
+                                    </button>
+                                </div>
+                                <button id="deliver-button" class="footer__deliverButton___3FM07">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                </button>
+                            </nav>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Start Popup -->
+    <div id="audio-popup" class="audio-popup-overlay">
+        <div class="audio-popup-content">
+            <div class="headphones-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h2v-5H6v-5c0-3.87 3.13-7 7-7s7 3.13 7 7v5h-2v5h2c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"/>
+                </svg>
+            </div>
+            <h2>A2 Key Listening Test - Part 1</h2>
+            <p>You will be listening to an audio clip during this test. You will <strong>not</strong> be permitted to pause or rewind the audio while answering the questions.</p>
+            <p>To continue, click Play.</p>
+            <button id="start-listening-btn" class="start-listening-btn">
+                <div class="play-icon"></div>
+                Play
+            </button>
+        </div>
+    </div>
+
+    <script src="../../../assets/js/universal-functions.js"></script>
+    <script src="../../../assets/js/cambridge/cambridge-bridge.js"></script>
+    <script src="../../../assets/js/distraction-free.js"></script>
+    <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
+    <script src="../../../assets/js/cambridge/question-marking.js"></script>
+
+    <script>
+        window.currentPart = 1;
+
+        // Audio Start Function
+        function startListeningTest() {
+            const popup = document.getElementById('audio-popup');
+            const audio = document.getElementById('audio-player');
+            
+            popup.style.display = 'none';
+            audio.play().catch(error => {
+                console.error('Error playing audio:', error);
+                alert('Could not start audio. Please check that the audio file exists.');
+            });
+        }
+
+        // Add event listener to start button
+        document.addEventListener('DOMContentLoaded', function() {
+            const startBtn = document.getElementById('start-listening-btn');
+            if (startBtn) {
+                startBtn.addEventListener('click', startListeningTest);
+            }
+        });
+
+        window.currentPart = 1;
+
+        // Save answer to localStorage
+        function saveAnswer(questionNum, answer) {
+            let answers = JSON.parse(localStorage.getItem('listeningAnswers') || '{}');
+            answers[`L${questionNum}`] = answer;
+            localStorage.setItem('listeningAnswers', JSON.stringify(answers));
+            
+            // Mark question as answered
+            const btn = document.querySelector(`[data-ordernumber="${questionNum}"]`);
+            if (btn) {
+                btn.classList.add('answered');
+            }
+        }
+
+        // Load saved answers
+        function loadSavedAnswers() {
+            const answers = JSON.parse(localStorage.getItem('listeningAnswers') || '{}');
+            for (let i = 1; i <= 5; i++) {
+                const answer = answers[`L${i}`];
+                if (answer) {
+                    const radio = document.querySelector(`input[name="question_${i}"][value="${answer}"]`);
+                    if (radio) {
+                        radio.checked = true;
+                    }
+                    const btn = document.querySelector(`[data-ordernumber="${i}"]`);
+                    if (btn) {
+                        btn.classList.add('answered');
+                    }
+                }
+            }
+        }
+
+        // Navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedAnswers();
+
+            const partFiles = {
+                1: 'Listening-Part-1.html',
+                2: 'Listening-Part-2.html',
+                3: 'Listening-Part-3.html',
+                4: 'Listening-Part-4.html',
+                5: 'Listening-Part-5.html'
+            };
+
+            document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach(function(wrapper) {
+                const partButton = wrapper.querySelector('.footer__questionNo___3WNct');
+                if (partButton) {
+                    const partNumber = parseInt(partButton.querySelector('.sectionNr').textContent.trim());
+                    partButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (partFiles[partNumber]) {
+                            window.location.href = partFiles[partNumber];
+                        }
+                    });
+                }
+            });
+
+            const nextButton = document.getElementById('footer-nav-button-next');
+            if (nextButton) {
+                nextButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.location.href = partFiles[2];
+                });
+            }
+
+            // Submit button
+            document.getElementById('deliver-button').addEventListener('click', function() {
+                if (confirm('Are you sure you want to submit your listening test?')) {
+                    localStorage.setItem('listeningStatus', 'completed');
+                    localStorage.setItem('listeningEndTime', new Date().toISOString());
+                    alert('Test submitted successfully!');
+                    window.location.href = '../../dashboard-cambridge.html';
+                }
+            });
+        });
+
+        console.log('🎓 Cambridge A2 Key - Listening Part 1 Loaded');
+    </script>
+</body>
+</html>
+

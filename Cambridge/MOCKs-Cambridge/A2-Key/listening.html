@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cambridge A2 Key - Listening</title>
+  <link rel="icon" href="../../assets/icons/innovativecentre.png">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  
+  <script src="../../../assets/js/cambridge/session-verify.js"></script>
+  
+  <style>
+    body {
+      margin: 0;
+      background: #ffffff;
+      color: #000;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .part-frame {
+      width: 100%;
+      height: 100vh;
+      border: 0;
+      background: #ffffff;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="part-frame" class="part-frame" src="./Listening-Part-1.html"></iframe>
+
+  <script src="../../../assets/js/universal-functions.js"></script>
+  <script src="../../../assets/js/distraction-free.js"></script>
+  <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
+  <script src="../../../assets/js/cambridge/question-marking.js"></script>
+  
+  <script>
+    // Initialize storage
+    const module = 'listening';
+    localStorage.setItem(`${module}Status`, 'in-progress');
+    if (!localStorage.getItem(`${module}StartTime`)) {
+      localStorage.setItem(`${module}StartTime`, new Date().toISOString());
+    }
+    if (!localStorage.getItem('listeningAnswers')) {
+      localStorage.setItem('listeningAnswers', JSON.stringify({}));
+    }
+
+    // Show candidate info
+    const name = localStorage.getItem('studentName') || '';
+    const id = localStorage.getItem('studentId') || '';
+
+    // Create part buttons
+    const buttonsContainer = document.getElementById('part-buttons');
+    if (buttonsContainer) {
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.onclick = () => switchPart(i);
+        buttonsContainer.appendChild(btn);
+      }
+    }
+
+    // Part switching
+    function switchPart(partNum) {
+      document.getElementById('part-frame').src = `./Listening-Part-${partNum}.html`;
+      const buttons = document.querySelectorAll('#part-buttons button');
+      if (buttons.length > 0) {
+        buttons.forEach((btn, idx) => {
+          btn.classList.toggle('active', idx + 1 === partNum);
+        });
+      }
+      sessionStorage.setItem('currentPart', partNum);
+    }
+
+    // Set initial active part
+    const savedPart = parseInt(sessionStorage.getItem('currentPart')) || 1;
+    const buttons = document.querySelectorAll('#part-buttons button');
+    if (buttons.length > 0) {
+      buttons.forEach((btn, idx) => {
+        btn.classList.toggle('active', idx + 1 === savedPart);
+      });
+    }
+
+    // Timer
+    if (!localStorage.getItem('listening-timer-remaining')) {
+      localStorage.setItem('listening-timer-remaining', 1800); // 30 minutes
+    }
+    if (!localStorage.getItem('listening-timer-paused')) {
+      localStorage.setItem('listening-timer-paused', 'false');
+    }
+    localStorage.setItem('listening-timer-last', Date.now());
+
+    function updateTimer() {
+      const paused = localStorage.getItem('listening-timer-paused') === 'true';
+      let remaining = parseInt(localStorage.getItem('listening-timer-remaining'));
+      const last = parseInt(localStorage.getItem('listening-timer-last'));
+      const now = Date.now();
+      
+      if (!paused && remaining > 0) {
+        const elapsed = Math.floor((now - last) / 1000);
+        remaining = Math.max(0, remaining - elapsed);
+        localStorage.setItem('listening-timer-remaining', remaining);
+      }
+      
+      localStorage.setItem('listening-timer-last', now);
+      
+      const mins = Math.floor(remaining / 60);
+      const secs = remaining % 60;
+      const timerEl = document.getElementById('timer');
+      if (timerEl) {
+        timerEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+      }
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer();
+
+    // Timer toggle
+    const timerToggle = document.getElementById('timer-toggle');
+    if (timerToggle) {
+      timerToggle.onclick = () => {
+        const paused = localStorage.getItem('listening-timer-paused') === 'true';
+        localStorage.setItem('listening-timer-paused', !paused);
+        timerToggle.textContent = paused ? 'Pause' : 'Resume';
+      };
+    }
+
+    // Submit button
+    const submitBtn = document.getElementById('submit-btn');
+    if (submitBtn) {
+      submitBtn.onclick = () => {
+        const frame = document.getElementById('part-frame');
+        try {
+          const deliverBtn = frame.contentDocument.getElementById('deliver-button') ||
+                            frame.contentDocument.querySelector('.footer__deliverButton___3FM07');
+          if (deliverBtn) {
+            deliverBtn.click();
+          }
+        } catch(e) {
+          console.log('Submit clicked');
+        }
+      };
+    }
+
+    // Autosave
+    setInterval(() => {
+      try {
+        const frame = document.getElementById('part-frame');
+        const doc = frame.contentDocument;
+        if (doc && doc.defaultView && doc.defaultView.__A2_forceSaveAll) {
+          doc.defaultView.__A2_forceSaveAll();
+        }
+      } catch(e) {}
+    }, 3000);
+  </script>
+</body>
+</html>
+
