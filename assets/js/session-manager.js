@@ -98,39 +98,43 @@ async function handleTestCompletion() {
         return;
     }
 
+    const examType = localStorage.getItem('examType');
+    const dashboardPath = examType === 'Cambridge' ? '../../dashboard-cambridge.html' : '../../dashboard.html';
+
     if (confirm('Are you sure you want to submit this section? You will not be able to return to it.')) {
         try {
             // Save final answers
             saveAnswersToSession();
 
-            // Get test data for submission
-            const testData = await collectTestData(currentModule);
-
-            // Save to database
-            await saveTestToDatabase(testData);
-
-            // Mark as completed
+            // Mark as completed first (in case database fails)
             localStorage.setItem(`${currentModule}Status`, 'completed');
             localStorage.setItem(`${currentModule}EndTime`, new Date().toISOString());
 
-            // Save to history if answer manager is available
-            if (window.answerManager) {
-                window.answerManager.saveCurrentTestToHistory();
+            // Use appropriate answer manager based on exam type
+            if (examType === 'Cambridge' && window.cambridgeAnswerManager) {
+                await window.cambridgeAnswerManager.submitTestToDatabase();
+            } else {
+                // Get test data for submission (IELTS)
+                const testData = await collectTestData(currentModule);
+                // Save to database
+                await saveTestToDatabase(testData);
+                // Save to history if answer manager is available
+                if (window.answerManager) {
+                    window.answerManager.saveCurrentTestToHistory();
+                }
             }
 
             // Show completion message
             alert(`${currentModule.charAt(0).toUpperCase() + currentModule.slice(1)} section completed successfully!`);
 
-            // Return to dashboard
-            window.location.href = '../../dashboard.html';
+            // Return to appropriate dashboard
+            window.location.href = dashboardPath;
 
         } catch (error) {
             console.error('Error submitting test:', error);
-            // Still allow completion even if database save fails
-            localStorage.setItem(`${currentModule}Status`, 'completed');
-            localStorage.setItem(`${currentModule}EndTime`, new Date().toISOString());
+            // Still allow completion even if database save fails (already marked as completed above)
             alert(`${currentModule.charAt(0).toUpperCase() + currentModule.slice(1)} section completed successfully!\nNote: There was an issue saving to the database, but your answers are saved locally.`);
-            window.location.href = '../../dashboard.html';
+            window.location.href = dashboardPath;
         }
     }
 }

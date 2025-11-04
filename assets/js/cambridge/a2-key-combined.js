@@ -91,9 +91,16 @@
     if (prev) prev.onclick = function(){ var a=getActiveAbs(); if (a!=null) { setActive(a-1); scrollToAbs(a-1); } };
     if (next) next.onclick = function(){ var a=getActiveAbs(); if (a!=null) { setActive(a+1); scrollToAbs(a+1); } };
     var deliver = byId('deliver-button');
-    if (deliver) deliver.onclick = function(){
+    if (deliver) deliver.onclick = async function(){
       if (confirm('Are you sure you want to submit your reading-writing test?')){
-        try{ var m = window.cambridgeAnswerManager; if (m && typeof m.submitTestToDatabase==='function'){ m.submitTestToDatabase(); } }catch(e){}
+        try{ 
+          var m = window.cambridgeAnswerManager; 
+          if (m && typeof m.submitTestToDatabase==='function'){ 
+            await m.submitTestToDatabase(); 
+          } 
+        }catch(e){
+          console.error('Error submitting to database:', e);
+        }
         localStorage.setItem('reading-writingStatus','completed');
         localStorage.setItem('reading-writingEndTime', new Date().toISOString());
         alert('Test submitted successfully!');

@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cambridge A2 Key - Reading & Writing</title>
   <link rel="icon" href="../../assets/icons/innovativecentre.png">
-  <link rel="stylesheet" href="../../assets/css/base.css">
   
   <script src="../../../assets/js/cambridge/session-verify.js"></script>
   
@@ -15,6 +14,7 @@
       background: #ffffff;
       color: #000;
       font-family: system-ui, -apple-system, sans-serif;
+      overflow: hidden;
     }
     .part-frame {
       width: 100%;
@@ -28,10 +28,8 @@
 <body>
   <iframe id="part-frame" class="part-frame" src="./Part 1.html"></iframe>
 
-  <script src="../../../assets/js/universal-functions.js"></script>
   <script src="../../../assets/js/distraction-free.js"></script>
   <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
-  <script src="../../../assets/js/cambridge/question-marking.js"></script>
   
   <script>
     // Initialize storage
@@ -44,90 +42,7 @@
       localStorage.setItem('reading-writingAnswers', JSON.stringify({}));
     }
 
-    // Show candidate info
-    const name = localStorage.getItem('studentName') || '';
-    const id = localStorage.getItem('studentId') || '';
-    if (name) {
-      document.getElementById('candidate-info').textContent = `• ${name} (${id})`;
-    }
-
-    // Create part buttons
-    const buttonsContainer = document.getElementById('part-buttons');
-    for (let i = 1; i <= 7; i++) {
-      const btn = document.createElement('button');
-      btn.textContent = i;
-      btn.onclick = () => switchPart(i);
-      buttonsContainer.appendChild(btn);
-    }
-
-    // Part switching
-    function switchPart(partNum) {
-      document.getElementById('part-frame').src = `./Part ${partNum}.html`;
-      document.querySelectorAll('#part-buttons button').forEach((btn, idx) => {
-        btn.classList.toggle('active', idx + 1 === partNum);
-      });
-      sessionStorage.setItem('currentPart', partNum);
-    }
-
-    // Set initial active part
-    const savedPart = parseInt(sessionStorage.getItem('currentPart')) || 1;
-    document.querySelectorAll('#part-buttons button').forEach((btn, idx) => {
-      btn.classList.toggle('active', idx + 1 === savedPart);
-    });
-
-    // Timer
-    if (!localStorage.getItem('timer-remaining')) {
-      localStorage.setItem('timer-remaining', 3600); // 60 minutes
-    }
-    if (!localStorage.getItem('timer-paused')) {
-      localStorage.setItem('timer-paused', 'false');
-    }
-    localStorage.setItem('timer-last', Date.now());
-
-    function updateTimer() {
-      const paused = localStorage.getItem('timer-paused') === 'true';
-      let remaining = parseInt(localStorage.getItem('timer-remaining'));
-      const last = parseInt(localStorage.getItem('timer-last'));
-      const now = Date.now();
-      
-      if (!paused && remaining > 0) {
-        const elapsed = Math.floor((now - last) / 1000);
-        remaining = Math.max(0, remaining - elapsed);
-        localStorage.setItem('timer-remaining', remaining);
-      }
-      
-      localStorage.setItem('timer-last', now);
-      
-      const mins = Math.floor(remaining / 60);
-      const secs = remaining % 60;
-      document.getElementById('timer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-    }
-
-    setInterval(updateTimer, 1000);
-    updateTimer();
-
-    // Timer toggle
-    document.getElementById('timer-toggle').onclick = () => {
-      const paused = localStorage.getItem('timer-paused') === 'true';
-      localStorage.setItem('timer-paused', !paused);
-      document.getElementById('timer-toggle').textContent = paused ? 'Pause' : 'Resume';
-    };
-
-    // Submit button
-    document.getElementById('submit-btn').onclick = () => {
-      const frame = document.getElementById('part-frame');
-      try {
-        const deliverBtn = frame.contentDocument.getElementById('deliver-button') ||
-                          frame.contentDocument.querySelector('.footer__deliverButton___3FM07');
-        if (deliverBtn) {
-          deliverBtn.click();
-        }
-      } catch(e) {
-        console.log('Submit clicked');
-      }
-    };
-
-    // Autosave
+    // Autosave answers periodically
     setInterval(() => {
       try {
         const frame = document.getElementById('part-frame');

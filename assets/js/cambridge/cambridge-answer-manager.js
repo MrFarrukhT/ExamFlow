@@ -223,7 +223,7 @@ class CambridgeAnswerManager {
     clearCurrentTestSession() {
         const keysToRemove = [
             'studentId', 'studentName', 'cambridgeLevel', 'examType', 'testStartTime',
-            'listeningStatus', 'listeningStartTime', 'listeningEndTime', 'listeningAnswers',
+            'listeningStatus', 'listeningStartTime', 'listeningEndTime', 'listeningAnswers', 'listeningTestStarted',
             'readingStatus', 'readingStartTime', 'readingEndTime', 'readingAnswers',
             'writingStatus', 'writingStartTime', 'writingEndTime', 'writingAnswers',
             'reading-writingStatus', 'reading-writingStartTime', 'reading-writingEndTime', 'reading-writingAnswers',
@@ -237,30 +237,91 @@ class CambridgeAnswerManager {
         console.log('Current Cambridge test session cleared. Historical data preserved.');
     }
 
-    // Submit test to database
+    // Submit test to database with fallback to local storage
     async submitTestToDatabase() {
         const testData = this.getCurrentTestData();
+        let success = false;
 
+        // Try multiple database endpoints
         try {
-            const response = await fetch('http://localhost:3000/api/cambridge-submissions', {
+            // First try: Local server endpoint
+            const response = await fetch('http://localhost:3002/submissions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(testData)
+                body: JSON.stringify({
+                    examType: 'Cambridge',
+                    studentId: testData.studentInfo.id,
+                    studentName: testData.studentInfo.name,
+                    level: testData.studentInfo.level,
+                    testStartTime: testData.studentInfo.testStartTime,
+                    completionTime: new Date().toISOString(),
+                    modules: testData.modules
+                })
             });
 
             if (response.ok) {
-                console.log('Cambridge test submitted successfully');
-                return true;
-            } else {
-                console.error('Failed to submit Cambridge test');
-                return false;
+                console.log('✅ Cambridge test submitted to database successfully');
+                success = true;
             }
+        } catch (error) {
+            console.log('Local database not available, using fallback storage...');
+        }
+
+        // Fallback: Save to enhanced local storage (database format)
+        try {
+            const existingData = localStorage.getItem('test_submissions_database') || '[]';
+            const submissions = JSON.parse(existingData);
+
+            const newSubmission = {
+                id: Date.now(),
+                examType: 'Cambridge',
+                studentId: testData.studentInfo.id,
+                studentName: testData.studentInfo.name,
+                level: testData.studentInfo.level,
+                testStartTime: testData.studentInfo.testStartTime,
+                completionTime: new Date().toISOString(),
+                modules: testData.modules,
+                saved_locally: !success,
+                created_at: new Date().toISOString()
+            };
+
+            submissions.push(newSubmission);
+            localStorage.setItem('test_submissions_database', JSON.stringify(submissions));
+
+            console.log('✅ Cambridge test saved to local database storage');
+            
+            // Also save to history
+            this.saveCurrentTestToHistory();
+
+            return true;
         } catch (error) {
             console.error('Error submitting Cambridge test:', error);
             return false;
         }
+    }
+
+    // Download historical test as formatted text file
+    downloadHistoricalTestTxt(testId) {
+        const history = this.getTestHistory();
+        const testEntry = history.find(entry => entry.id === testId);
+        
+        if (!testEntry) {
+            alert('Test not found in history!');
+            return;
+        }
+        
+        const formattedText = this.formatTestDataAsText(testEntry);
+        const dateStr = new Date(testEntry.savedAt).toISOString().split('T')[0];
+        const level = testEntry.studentInfo.level.replace('-', '_');
+        this.downloadTextFile(formattedText, `Cambridge_${level}_${testEntry.studentInfo.id}_${dateStr}.txt`);
+    }
+
+    // Clear all data including history
+    clearAllData() {
+        localStorage.clear();
+        console.log('All Cambridge data cleared including test history.');
     }
 
     getTestSummary() {

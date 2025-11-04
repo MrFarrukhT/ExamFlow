@@ -144,7 +144,11 @@
 
             // Load appropriate modules for the level
             loadModulesForLevel(level);
-            loadTestState();
+            
+            // Wait for DOM to update before loading test state
+            setTimeout(() => {
+                loadTestState();
+            }, 0);
         }
 
         function changeLevelSelection() {
@@ -188,7 +192,7 @@
 
                 // Add event listeners
                 document.getElementById('readingWritingButton').addEventListener('click', function() {
-                    if (localStorage.getItem('readingWritingStatus') === 'completed') return;
+                    if (localStorage.getItem('reading-writingStatus') === 'completed') return;
                     startModule('reading-writing');
                 });
 
@@ -247,9 +251,18 @@
 
             modules.forEach(module => {
                 const status = localStorage.getItem(`${module}Status`) || 'not-started';
-                const card = document.getElementById(`${module}Card`);
-                const statusEl = document.getElementById(`${module}Status`);
-                const button = document.getElementById(`${module}Button`);
+                
+                // Convert module name to camelCase for element IDs (reading-writing -> readingWriting)
+                const moduleId = module.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+                
+                const card = document.getElementById(`${moduleId}Card`);
+                const statusEl = document.getElementById(`${moduleId}Status`);
+                const button = document.getElementById(`${moduleId}Button`);
+
+                if (!card || !statusEl || !button) {
+                    console.warn(`Elements not found for module: ${module}`);
+                    return;
+                }
 
                 if (status === 'completed') {
                     card.classList.add('completed');
@@ -273,6 +286,11 @@
         }
 
         function startModule(module) {
+            // Prevent re-entry if already completed
+            if (localStorage.getItem(`${module}Status`) === 'completed') {
+                return;
+            }
+            
             const level = localStorage.getItem('cambridgeLevel');
             localStorage.setItem(`${module}Status`, 'in-progress');
             localStorage.setItem(`${module}StartTime`, new Date().toISOString());

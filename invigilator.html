@@ -11,6 +11,7 @@
     <!-- Load distraction-free mode first -->
     <script src="assets/js/distraction-free.js"></script>
     <script src="assets/js/answer-manager.js"></script>
+    <script src="assets/js/cambridge/cambridge-answer-manager.js"></script>
     <div class="container">
         <div class="header">
             <h1>Invigilator Control Panel</h1>
@@ -112,19 +113,23 @@
             const downloadCurrentTxt = document.getElementById('downloadCurrentTxt');
             if (downloadCurrentTxt) {
                 downloadCurrentTxt.addEventListener('click', function() {
-                    if (!window.answerManager) {
-                        alert('Answer management system not loaded!');
-                        return;
-                    }
-                    
                     const studentId = localStorage.getItem('studentId');
                     if (!studentId) {
                         alert('No current test data to download!');
                         return;
                     }
                     
-                    window.answerManager.downloadCurrentTestTxt();
-                    alert('Test results downloaded as TXT file!');
+                    const examType = localStorage.getItem('examType');
+                    
+                    if (examType === 'Cambridge' && window.cambridgeAnswerManager) {
+                        window.cambridgeAnswerManager.downloadCurrentTestTxt();
+                        alert('Cambridge test results downloaded as TXT file!');
+                    } else if (window.answerManager) {
+                        window.answerManager.downloadCurrentTestTxt();
+                        alert('IELTS test results downloaded as TXT file!');
+                    } else {
+                        alert('Answer management system not loaded!');
+                    }
                 });
             } else {
                 console.error('downloadCurrentTxt button not found!');
@@ -152,22 +157,29 @@
             if (resetSession) {
                 resetSession.addEventListener('click', function() {
                     if (confirm('Reset current session? This will clear the current test data but keep historical records.')) {
-                        if (window.answerManager) {
-                            // Save current session to history before clearing
-                            if (localStorage.getItem('studentId')) {
+                        const examType = localStorage.getItem('examType');
+                        
+                        // Save current session to history before clearing
+                        if (localStorage.getItem('studentId')) {
+                            if (examType === 'Cambridge' && window.cambridgeAnswerManager) {
+                                window.cambridgeAnswerManager.saveCurrentTestToHistory();
+                                window.cambridgeAnswerManager.clearCurrentTestSession();
+                            } else if (window.answerManager) {
                                 window.answerManager.saveCurrentTestToHistory();
+                                window.answerManager.clearCurrentTestSession();
+                            } else {
+                                // Fallback if answer managers aren't loaded
+                                const keysToRemove = [
+                                    'studentId', 'studentName', 'selectedMock', 'testStartTime', 'examType',
+                                    'cambridgeLevel',
+                                    'listeningStatus', 'listeningStartTime', 'listeningEndTime', 'listeningAnswers',
+                                    'readingStatus', 'readingStartTime', 'readingEndTime', 'readingAnswers',
+                                    'writingStatus', 'writingStartTime', 'writingEndTime', 'writingAnswers',
+                                    'reading-writingStatus', 'reading-writingStartTime', 'reading-writingEndTime', 'reading-writingAnswers',
+                                    'distractionFreeMode'
+                                ];
+                                keysToRemove.forEach(key => localStorage.removeItem(key));
                             }
-                            window.answerManager.clearCurrentTestSession();
-                        } else {
-                            // Fallback if answer manager isn't loaded
-                            const keysToRemove = [
-                                'studentId', 'studentName', 'selectedMock', 'testStartTime',
-                                'listeningStatus', 'listeningStartTime', 'listeningEndTime', 'listeningAnswers',
-                                'readingStatus', 'readingStartTime', 'readingEndTime', 'readingAnswers',
-                                'writingStatus', 'writingStartTime', 'writingEndTime', 'writingAnswers',
-                                'distractionFreeMode'
-                            ];
-                            keysToRemove.forEach(key => localStorage.removeItem(key));
                         }
                         
                         alert('Current session reset successfully!');
@@ -217,10 +229,31 @@
         function updateSessionInfo() {
             const studentId = localStorage.getItem('studentId');
             const studentName = localStorage.getItem('studentName');
+            const examType = localStorage.getItem('examType');
             const sessionInfo = document.getElementById('sessionInfo');
             
             if (studentId && studentName) {
-                const modules = ['listening', 'reading', 'writing'];
+                let modules, totalModules, testInfo;
+                
+                if (examType === 'Cambridge') {
+                    const level = localStorage.getItem('cambridgeLevel') || 'Unknown';
+                    testInfo = `Cambridge ${level}`;
+                    
+                    // Determine modules based on level
+                    if (level === 'A1-Movers' || level === 'A2-Key') {
+                        modules = ['reading-writing', 'listening'];
+                        totalModules = 2;
+                    } else {
+                        modules = ['reading', 'writing', 'listening'];
+                        totalModules = 3;
+                    }
+                } else {
+                    const mockTest = localStorage.getItem('selectedMock') || '1';
+                    testInfo = `IELTS Mock Test ${mockTest}`;
+                    modules = ['listening', 'reading', 'writing'];
+                    totalModules = 3;
+                }
+                
                 const completed = modules.filter(module => 
                     localStorage.getItem(`${module}Status`) === 'completed'
                 ).length;
@@ -228,7 +261,8 @@
                 sessionInfo.innerHTML = `
                     <p><strong>Student:</strong> ${studentName}</p>
                     <p><strong>ID:</strong> ${studentId}</p>
-                    <p><strong>Progress:</strong> ${completed}/3 modules completed</p>
+                    <p><strong>Test:</strong> ${testInfo}</p>
+                    <p><strong>Progress:</strong> ${completed}/${totalModules} modules completed</p>
                 `;
             } else {
                 sessionInfo.innerHTML = '<p>No active session</p>';
@@ -275,30 +309,52 @@
         }
 
         function loadTestHistory() {
-            if (!window.answerManager) {
-                document.getElementById('historyList').innerHTML = '<p>Answer management system not available</p>';
-                return;
-            }
-
-            const history = window.answerManager.getTestSummary();
             const historyList = document.getElementById('historyList');
             
-            if (history.length === 0) {
+            // Load both IELTS and Cambridge histories
+            let ieltsHistory = [];
+            let cambridgeHistory = [];
+            
+            if (window.answerManager) {
+                ieltsHistory = window.answerManager.getTestSummary();
+            }
+            
+            if (window.cambridgeAnswerManager) {
+                cambridgeHistory = window.cambridgeAnswerManager.getTestSummary();
+            }
+            
+            // Combine and sort by date
+            const allHistory = [...ieltsHistory, ...cambridgeHistory];
+            
+            if (allHistory.length === 0) {
                 historyList.innerHTML = '<p>No test history available</p>';
                 return;
             }
 
+            // Sort by completion date (newest first)
+            allHistory.sort((a, b) => {
+                const dateA = new Date(a.completionDate + ' ' + a.completionTime);
+                const dateB = new Date(b.completionDate + ' ' + b.completionTime);
+                return dateB - dateA;
+            });
+
             let historyHTML = '';
-            history.forEach((test, index) => {
+            allHistory.forEach((test, index) => {
+                const examType = test.examType || 'IELTS';
+                const testLabel = examType === 'Cambridge' 
+                    ? `${test.level}` 
+                    : `Mock Test ${test.mockTest}`;
+                const totalModules = examType === 'Cambridge' ? (test.level === 'A1-Movers' || test.level === 'A2-Key' ? 2 : 3) : 3;
+                
                 historyHTML += `
                     <div class="history-item">
                         <div class="history-info">
                             <strong>${test.studentName}</strong> (ID: ${test.studentId})
-                            <br>Mock Test ${test.mockTest} | ${test.completionDate} ${test.completionTime}
-                            <br>Modules Completed: ${test.modulesCompleted}/3
+                            <br><span style="background: ${examType === 'Cambridge' ? '#0066cc' : '#28a745'}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; margin-right: 5px;">${examType}</span> ${testLabel} | ${test.completionDate} ${test.completionTime}
+                            <br>Modules Completed: ${test.modulesCompleted}/${totalModules}
                         </div>
                         <div class="history-actions">
-                            <button onclick="downloadHistoricalTest('${test.id}')" class="small-btn">📄 Download TXT</button>
+                            <button onclick="downloadHistoricalTest('${test.id}', '${examType}')" class="small-btn">📄 Download TXT</button>
                         </div>
                     </div>
                 `;
@@ -307,8 +363,11 @@
             historyList.innerHTML = historyHTML;
         }
 
-        function downloadHistoricalTest(testId) {
-            if (window.answerManager) {
+        function downloadHistoricalTest(testId, examType) {
+            if (examType === 'Cambridge' && window.cambridgeAnswerManager) {
+                window.cambridgeAnswerManager.downloadHistoricalTestTxt(testId);
+                alert('Historical test downloaded!');
+            } else if (window.answerManager) {
                 window.answerManager.downloadHistoricalTestTxt(testId);
                 alert('Historical test downloaded!');
             }
@@ -388,16 +447,34 @@
         function goBackToTest() {
             // Check if there's an active session and redirect to dashboard, otherwise go to index
             const studentId = localStorage.getItem('studentId');
+            const examType = localStorage.getItem('examType');
+            
             if (studentId) {
-                window.location.href = 'dashboard.html';
+                // Redirect to appropriate dashboard based on exam type
+                if (examType === 'Cambridge') {
+                    window.location.href = 'Cambridge/dashboard-cambridge.html';
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
             } else {
-                window.location.href = 'index.html';
+                // No active session - redirect to appropriate index
+                if (examType === 'Cambridge') {
+                    window.location.href = 'Cambridge/index.html';
+                } else {
+                    window.location.href = 'index.html';
+                }
             }
         }
 
         function goToIndex() {
-            // Always go to the main index page
-            window.location.href = 'index.html';
+            // Go to the appropriate index page based on exam type
+            const examType = localStorage.getItem('examType');
+            
+            if (examType === 'Cambridge') {
+                window.location.href = 'Cambridge/launcher-cambridge.html';
+            } else {
+                window.location.href = 'index.html';
+            }
         }
     </script>
 </body>
