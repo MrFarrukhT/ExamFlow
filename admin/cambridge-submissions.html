@@ -500,7 +500,7 @@
     </div>
 
     <script>
-        const API_URL = 'http://localhost:3002';
+        const API_URL = 'http://localhost:3003'; // Cambridge Database Server
         let allSubmissions = [];
         let filteredSubmissions = [];
 
@@ -526,7 +526,7 @@
             emptyState.style.display = 'none';
 
             try {
-                const response = await fetch(`${API_URL}/api/cambridge-submissions`);
+                const response = await fetch(`${API_URL}/cambridge-submissions`);
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);

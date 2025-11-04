@@ -10,11 +10,11 @@ echo  Starting secure test environment...
 echo  Please wait...
 echo.
 
-REM Start the local database server in background
-echo  Starting database server...
-start /B node local-database-server.js
+REM Start the Cambridge database server in background
+echo  Starting Cambridge database server...
+start /B node cambridge-database-server.js
 timeout /t 3 /nobreak >nul
-echo  Database server started successfully!
+echo  Cambridge database server started successfully!
 echo.
 
 REM Try different browsers in order of preference

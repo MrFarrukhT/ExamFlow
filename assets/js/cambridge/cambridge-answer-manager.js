@@ -244,20 +244,22 @@ class CambridgeAnswerManager {
 
         // Try multiple database endpoints
         try {
-            // First try: Local server endpoint
-            const response = await fetch('http://localhost:3002/submissions', {
+            // First try: Cambridge dedicated server endpoint (port 3003)
+            const response = await fetch('http://localhost:3003/cambridge-submissions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    examType: 'Cambridge',
                     studentId: testData.studentInfo.id,
                     studentName: testData.studentInfo.name,
                     level: testData.studentInfo.level,
-                    testStartTime: testData.studentInfo.testStartTime,
-                    completionTime: new Date().toISOString(),
-                    modules: testData.modules
+                    skill: this.determineSkillFromModules(testData.modules),
+                    answers: this.flattenAnswers(testData.modules),
+                    score: null,
+                    grade: null,
+                    startTime: testData.studentInfo.testStartTime,
+                    endTime: new Date().toISOString()
                 })
             });
 
@@ -266,12 +268,12 @@ class CambridgeAnswerManager {
                 success = true;
             }
         } catch (error) {
-            console.log('Local database not available, using fallback storage...');
+            console.log('Cambridge database server not available, using fallback storage...');
         }
 
         // Fallback: Save to enhanced local storage (database format)
         try {
-            const existingData = localStorage.getItem('test_submissions_database') || '[]';
+            const existingData = localStorage.getItem('cambridge_submissions_database') || '[]';
             const submissions = JSON.parse(existingData);
 
             const newSubmission = {
@@ -338,6 +340,27 @@ class CambridgeAnswerManager {
                 entry.modules[module].status === 'completed'
             ).length
         }));
+    }
+
+    // Helper to determine primary skill from modules
+    determineSkillFromModules(modules) {
+        const moduleNames = Object.keys(modules);
+        if (moduleNames.includes('reading-writing')) return 'reading-writing';
+        if (moduleNames.includes('reading-use-of-english')) return 'reading-use-of-english';
+        if (moduleNames.length > 0) return moduleNames[0];
+        return 'unknown';
+    }
+
+    // Helper to flatten nested module answers into single object
+    flattenAnswers(modules) {
+        const allAnswers = {};
+        Object.keys(modules).forEach(moduleName => {
+            const moduleAnswers = modules[moduleName].answers || {};
+            Object.keys(moduleAnswers).forEach(key => {
+                allAnswers[`${moduleName}_${key}`] = moduleAnswers[key];
+            });
+        });
+        return allAnswers;
     }
 }
 

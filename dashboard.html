@@ -79,11 +79,18 @@
         function loadStudentInfo() {
             const studentId = localStorage.getItem('studentId');
             const studentName = localStorage.getItem('studentName');
+            const examType = localStorage.getItem('examType');
             const selectedMock = localStorage.getItem('selectedMock') || '1';
             
-            if (!studentId || !studentName) {
+            // Validate this is an IELTS session
+            if (!studentId || !studentName || (examType && examType !== 'IELTS')) {
                 window.location.href = 'index.html';
                 return;
+            }
+            
+            // Set examType if not set (for backwards compatibility)
+            if (!examType) {
+                localStorage.setItem('examType', 'IELTS');
             }
             
             document.getElementById('welcomeText').textContent = `Welcome, ${studentName}`;

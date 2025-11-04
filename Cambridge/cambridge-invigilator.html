@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambridge Invigilator Panel</title>
+    <link rel="stylesheet" href="../assets/css/invigilator.css">
+    <link rel="icon" href="../assets/icons/innovativecentre.png">
+    <style>
+        .level-card {
+            background: linear-gradient(135deg, #0066cc, #0052a3);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .level-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+        }
+        .level-card.selected {
+            border: 3px solid #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        .level-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Load distraction-free mode first -->
+    <script src="../assets/js/distraction-free.js"></script>
+    <script src="../assets/js/cambridge/cambridge-answer-manager.js"></script>
+    
+    <div class="container">
+        <div class="header" style="background: linear-gradient(135deg, #0066cc, #0052a3);">
+            <h1>Cambridge Invigilator Control Panel</h1>
+            <p>Configure and manage Cambridge Level Tests</p>
+            <div style="margin-top: 15px;">
+                <button onclick="goBackToTest()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px; margin-right: 10px;">
+                    ← Back to Test
+                </button>
+                <button onclick="goToIndex()" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px;">
+                    ← Back to Index
+                </button>
+            </div>
+        </div>
+        
+        <div class="panel-section">
+            <h3>Cambridge Level Configuration</h3>
+            <div class="level-selection">
+                <div class="level-card" data-level="A1-Movers" onclick="selectLevel('A1-Movers')">
+                    <span class="level-badge">A1</span>
+                    <strong>Movers</strong> - Basic level English
+                    <div style="font-size: 12px; margin-top: 5px; opacity: 0.9;">Modules: Reading & Writing (combined), Listening</div>
+                </div>
+                
+                <div class="level-card" data-level="A2-Key" onclick="selectLevel('A2-Key')">
+                    <span class="level-badge">A2</span>
+                    <strong>Key (KET)</strong> - Elementary level English
+                    <div style="font-size: 12px; margin-top: 5px; opacity: 0.9;">Modules: Reading & Writing (combined), Listening</div>
+                </div>
+                
+                <div class="level-card" data-level="B1-Preliminary" onclick="selectLevel('B1-Preliminary')">
+                    <span class="level-badge">B1</span>
+                    <strong>Preliminary (PET)</strong> - Intermediate level English
+                    <div style="font-size: 12px; margin-top: 5px; opacity: 0.9;">Modules: Reading, Writing, Listening</div>
+                </div>
+                
+                <div class="level-card" data-level="B2-First" onclick="selectLevel('B2-First')">
+                    <span class="level-badge">B2</span>
+                    <strong>First (FCE)</strong> - Upper-intermediate level English
+                    <div style="font-size: 12px; margin-top: 5px; opacity: 0.9;">Modules: Reading & Use of English, Writing, Listening</div>
+                </div>
+            </div>
+            <p id="currentLevel" style="margin-top: 15px; padding: 10px; background: #e8f5e9; border-radius: 5px; font-weight: bold; color: #2e7d32;">
+                Currently Selected: Not Set
+            </p>
+        </div>
+        
+        <div class="panel-section">
+            <h3>Test Results & Data Management</h3>
+            <div class="data-controls">
+                <button id="downloadCurrentTxt" class="export-btn">📄 Download Current Test (TXT)</button>
+                <button id="downloadCurrentJson" class="export-btn">📋 Export Current Test (JSON)</button>
+                <button id="viewHistory" class="history-btn">🗂️ View Test History</button>
+                <button id="resetSession" class="reset-btn">🔄 Reset Current Session</button>
+                <button id="resetAllData" class="danger-btn">⚠️ Clear All Data</button>
+            </div>
+            
+            <!-- Test History Panel -->
+            <div id="historyPanel" class="history-panel" style="display: none;">
+                <h4>Cambridge Test History (Last 3 Tests)</h4>
+                <div id="historyList" class="history-list">
+                    <!-- History items will be populated here -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel-section">
+            <h3>Current Session</h3>
+            <div id="sessionInfo">
+                <p>No active session</p>
+            </div>
+        </div>
+        
+        <!-- Password Modal -->
+        <div id="passwordModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h4>Enter Invigilator Password</h4>
+                <input type="password" id="passwordInput" placeholder="Enter password">
+                <div class="modal-buttons">
+                    <button id="confirmPassword">Confirm</button>
+                    <button id="cancelPassword">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const INVIGILATOR_PASSWORD = "InV!#2025$SecurePass"; // Same password for consistency
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentLevel();
+            updateSessionInfo();
+            initializeEventListeners();
+        });
+        
+        function initializeEventListeners() {
+            // Download buttons
+            document.getElementById('downloadCurrentTxt').addEventListener('click', function() {
+                const manager = new CambridgeAnswerManager();
+                manager.downloadCurrentTestTxt();
+            });
+            
+            document.getElementById('downloadCurrentJson').addEventListener('click', function() {
+                const manager = new CambridgeAnswerManager();
+                const data = manager.getCurrentTestData();
+                downloadJSON(data, `Cambridge_Test_${data.studentInfo.id}_${getDateString()}.json`);
+            });
+            
+            document.getElementById('viewHistory').addEventListener('click', function() {
+                toggleHistory();
+            });
+            
+            document.getElementById('resetSession').addEventListener('click', function() {
+                requirePassword(() => resetCurrentSession());
+            });
+            
+            document.getElementById('resetAllData').addEventListener('click', function() {
+                requirePassword(() => resetAllData());
+            });
+        }
+        
+        function selectLevel(level) {
+            localStorage.setItem('cambridgeLevel', level);
+            
+            // Update UI
+            document.querySelectorAll('.level-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`[data-level="${level}"]`).classList.add('selected');
+            
+            updateCurrentLevel();
+            alert(`Cambridge Level ${level} has been set successfully!`);
+        }
+        
+        function updateCurrentLevel() {
+            const level = localStorage.getItem('cambridgeLevel') || 'Not Set';
+            document.getElementById('currentLevel').textContent = `Currently Selected: ${level}`;
+            
+            if (level !== 'Not Set') {
+                document.querySelector(`[data-level="${level}"]`)?.classList.add('selected');
+            }
+        }
+        
+        function updateSessionInfo() {
+            const studentId = localStorage.getItem('studentId');
+            const studentName = localStorage.getItem('studentName');
+            const level = localStorage.getItem('cambridgeLevel');
+            const testStartTime = localStorage.getItem('testStartTime');
+            
+            const sessionDiv = document.getElementById('sessionInfo');
+            
+            if (studentId && studentName) {
+                const modules = getActiveModules(level);
+                
+                sessionDiv.innerHTML = `
+                    <p><strong>Student ID:</strong> ${studentId}</p>
+                    <p><strong>Name:</strong> ${studentName}</p>
+                    <p><strong>Level:</strong> ${level || 'Not Selected'}</p>
+                    <p><strong>Test Started:</strong> ${testStartTime ? new Date(testStartTime).toLocaleString() : 'N/A'}</p>
+                    <h4 style="margin-top: 15px;">Module Status:</h4>
+                    ${modules.map(module => {
+                        const status = localStorage.getItem(`${module}Status`) || 'not-started';
+                        const statusEmoji = status === 'completed' ? '✅' : status === 'in-progress' ? '⏳' : '⭕';
+                        return `<p>${statusEmoji} <strong>${formatModuleName(module)}:</strong> ${status}</p>`;
+                    }).join('')}
+                `;
+            } else {
+                sessionDiv.innerHTML = '<p>No active session</p>';
+            }
+        }
+        
+        function getActiveModules(level) {
+            if (level === 'A1-Movers' || level === 'A2-Key') {
+                return ['reading-writing', 'listening'];
+            } else {
+                return ['reading', 'writing', 'listening'];
+            }
+        }
+        
+        function formatModuleName(module) {
+            const names = {
+                'reading-writing': 'Reading & Writing',
+                'reading': 'Reading',
+                'writing': 'Writing',
+                'listening': 'Listening'
+            };
+            return names[module] || module;
+        }
+        
+        function toggleHistory() {
+            const panel = document.getElementById('historyPanel');
+            const list = document.getElementById('historyList');
+            
+            if (panel.style.display === 'none') {
+                const manager = new CambridgeAnswerManager();
+                const history = manager.getTestHistory();
+                
+                if (history.length === 0) {
+                    list.innerHTML = '<p style="color: #666; font-style: italic;">No test history available</p>';
+                } else {
+                    list.innerHTML = history.map((test, index) => `
+                        <div class="history-item">
+                            <h5>Test ${index + 1} - ${test.studentInfo.level}</h5>
+                            <p><strong>Student:</strong> ${test.studentInfo.name} (ID: ${test.studentInfo.id})</p>
+                            <p><strong>Completed:</strong> ${new Date(test.savedAt).toLocaleString()}</p>
+                            <button onclick="downloadHistoricalTest('${test.id}')" class="export-btn" style="font-size: 12px; padding: 5px 10px;">
+                                📄 Download
+                            </button>
+                        </div>
+                    `).join('');
+                }
+                
+                panel.style.display = 'block';
+            } else {
+                panel.style.display = 'none';
+            }
+        }
+        
+        function downloadHistoricalTest(testId) {
+            const manager = new CambridgeAnswerManager();
+            manager.downloadHistoricalTestTxt(testId);
+        }
+        
+        function resetCurrentSession() {
+            if (confirm('Are you sure you want to reset the current session? This will clear all progress but keep history.')) {
+                const manager = new CambridgeAnswerManager();
+                manager.saveCurrentTestToHistory();
+                
+                // Clear current session data
+                const keysToRemove = [
+                    'studentId', 'studentName', 'cambridgeLevel', 'testStartTime', 'examType',
+                    'readingStatus', 'writingStatus', 'listeningStatus', 'reading-writingStatus',
+                    'readingStartTime', 'writingStartTime', 'listeningStartTime', 'reading-writingStartTime',
+                    'readingEndTime', 'writingEndTime', 'listeningEndTime', 'reading-writingEndTime',
+                    'readingAnswers', 'writingAnswers', 'listeningAnswers', 'reading-writingAnswers'
+                ];
+                
+                keysToRemove.forEach(key => localStorage.removeItem(key));
+                
+                alert('Session reset successfully! History has been saved.');
+                updateSessionInfo();
+                updateCurrentLevel();
+            }
+        }
+        
+        function resetAllData() {
+            if (confirm('⚠️ WARNING: This will delete ALL Cambridge test data including history! Are you absolutely sure?')) {
+                if (confirm('This action cannot be undone. Continue?')) {
+                    localStorage.clear();
+                    alert('All Cambridge data has been cleared!');
+                    updateSessionInfo();
+                    updateCurrentLevel();
+                }
+            }
+        }
+        
+        function requirePassword(callback) {
+            const modal = document.getElementById('passwordModal');
+            const input = document.getElementById('passwordInput');
+            const confirmBtn = document.getElementById('confirmPassword');
+            const cancelBtn = document.getElementById('cancelPassword');
+            
+            modal.style.display = 'flex';
+            input.value = '';
+            input.focus();
+            
+            confirmBtn.onclick = function() {
+                if (input.value === INVIGILATOR_PASSWORD) {
+                    modal.style.display = 'none';
+                    callback();
+                } else {
+                    alert('Incorrect password!');
+                    input.value = '';
+                }
+            };
+            
+            cancelBtn.onclick = function() {
+                modal.style.display = 'none';
+            };
+            
+            input.onkeypress = function(e) {
+                if (e.key === 'Enter') {
+                    confirmBtn.click();
+                }
+            };
+        }
+        
+        function downloadJSON(data, filename) {
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        function getDateString() {
+            return new Date().toISOString().split('T')[0];
+        }
+        
+        function goBackToTest() {
+            const studentId = localStorage.getItem('studentId');
+            if (studentId) {
+                window.location.href = 'dashboard-cambridge.html';
+            } else {
+                alert('No active test session');
+            }
+        }
+        
+        function goToIndex() {
+            window.location.href = 'index.html';
+        }
+        
+        // Auto-refresh session info every 5 seconds
+        setInterval(updateSessionInfo, 5000);
+    </script>
+</body>
+</html>
