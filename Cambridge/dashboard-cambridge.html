@@ -48,6 +48,7 @@
                             <ul class="level-parts">
                                 <li>Reading & Writing (combined)</li>
                                 <li>Listening</li>
+                                <li>Speaking</li>
                             </ul>
                         </div>
 
@@ -59,6 +60,7 @@
                             <ul class="level-parts">
                                 <li>Reading & Writing (combined)</li>
                                 <li>Listening</li>
+                                <li>Speaking</li>
                             </ul>
                         </div>
 
@@ -71,6 +73,7 @@
                                 <li>Reading</li>
                                 <li>Writing</li>
                                 <li>Listening</li>
+                                <li>Speaking</li>
                             </ul>
                         </div>
 
@@ -83,6 +86,7 @@
                                 <li>Reading & Use of English</li>
                                 <li>Writing</li>
                                 <li>Listening</li>
+                                <li>Speaking</li>
                             </ul>
                         </div>
                     </div>
@@ -122,6 +126,13 @@
 
             document.getElementById('welcomeText').textContent = `Welcome, ${studentName}`;
             document.getElementById('studentDetails').textContent = `ID: ${studentId}`;
+            
+            // Also store in sessionStorage for speaking test
+            sessionStorage.setItem('cambridge_student_info', JSON.stringify({
+                studentId: studentId,
+                studentName: studentName,
+                examType: examType
+            }));
         }
 
         function loadLevelState() {
@@ -155,7 +166,7 @@
             // Confirm level change
             if (confirm('Changing level will reset your current progress. Are you sure?')) {
                 // Clear level-specific progress
-                const modules = ['listening', 'reading', 'writing', 'reading-writing'];
+                const modules = ['listening', 'reading', 'writing', 'reading-writing', 'speaking'];
                 modules.forEach(module => {
                     localStorage.removeItem(`${module}Status`);
                     localStorage.removeItem(`${module}StartTime`);
@@ -173,7 +184,7 @@
             modulesGrid.innerHTML = '';
 
             if (level === 'A1-Movers' || level === 'A2-Key') {
-                // Combined Reading & Writing + Listening
+                // Combined Reading & Writing + Listening + Speaking
                 modulesGrid.innerHTML = `
                     <div class="module-card" id="readingWritingCard" data-module="reading-writing">
                         <h3 class="module-title">Reading & Writing</h3>
@@ -188,6 +199,13 @@
                         <span class="status-badge" id="listeningStatus">Not Started</span>
                         <button class="module-button" id="listeningButton">Start Listening</button>
                     </div>
+
+                    <div class="module-card" id="speakingCard" data-module="speaking">
+                        <h3 class="module-title">Speaking</h3>
+                        <p class="module-duration">~${level === 'A1-Movers' ? '7' : '10'} minutes</p>
+                        <span class="status-badge" id="speakingStatus">Not Started</span>
+                        <button class="module-button" id="speakingButton">Start Speaking</button>
+                    </div>
                 `;
 
                 // Add event listeners
@@ -200,8 +218,13 @@
                     if (localStorage.getItem('listeningStatus') === 'completed') return;
                     startModule('listening');
                 });
+
+                document.getElementById('speakingButton').addEventListener('click', function() {
+                    if (localStorage.getItem('speakingStatus') === 'completed') return;
+                    startModule('speaking');
+                });
             } else {
-                // Separate Reading, Writing, Listening
+                // Separate Reading, Writing, Listening, Speaking
                 modulesGrid.innerHTML = `
                     <div class="module-card" id="readingCard" data-module="reading">
                         <h3 class="module-title">Reading${level === 'B2-First' ? ' & Use of English' : ''}</h3>
@@ -223,6 +246,13 @@
                         <span class="status-badge" id="listeningStatus">Not Started</span>
                         <button class="module-button" id="listeningButton">Start Listening</button>
                     </div>
+
+                    <div class="module-card" id="speakingCard" data-module="speaking">
+                        <h3 class="module-title">Speaking</h3>
+                        <p class="module-duration">~${level === 'B1-Preliminary' ? '12' : '14'} minutes</p>
+                        <span class="status-badge" id="speakingStatus">Not Started</span>
+                        <button class="module-button" id="speakingButton">Start Speaking</button>
+                    </div>
                 `;
 
                 // Add event listeners
@@ -240,14 +270,19 @@
                     if (localStorage.getItem('listeningStatus') === 'completed') return;
                     startModule('listening');
                 });
+
+                document.getElementById('speakingButton').addEventListener('click', function() {
+                    if (localStorage.getItem('speakingStatus') === 'completed') return;
+                    startModule('speaking');
+                });
             }
         }
 
         function loadTestState() {
             const level = localStorage.getItem('cambridgeLevel');
             const modules = (level === 'A1-Movers' || level === 'A2-Key')
-                ? ['reading-writing', 'listening']
-                : ['reading', 'writing', 'listening'];
+                ? ['reading-writing', 'listening', 'speaking']
+                : ['reading', 'writing', 'listening', 'speaking'];
 
             modules.forEach(module => {
                 const status = localStorage.getItem(`${module}Status`) || 'not-started';
@@ -294,6 +329,18 @@
             const level = localStorage.getItem('cambridgeLevel');
             localStorage.setItem(`${module}Status`, 'in-progress');
             localStorage.setItem(`${module}StartTime`, new Date().toISOString());
+
+            // For speaking test, update sessionStorage with full info
+            if (module === 'speaking') {
+                const studentId = localStorage.getItem('studentId');
+                const studentName = localStorage.getItem('studentName');
+                sessionStorage.setItem('cambridge_student_info', JSON.stringify({
+                    studentId: studentId,
+                    studentName: studentName,
+                    level: level,
+                    mockTest: '1' // Default to Mock 1, can be made dynamic later
+                }));
+            }
 
             // Navigate to the module
             window.location.href = `MOCKs-Cambridge/${level}/${module}.html`;

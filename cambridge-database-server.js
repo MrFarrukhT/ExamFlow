@@ -77,8 +77,16 @@ async function initializeCambridgeTables() {
                 start_time TIMESTAMP,
                 end_time TIMESTAMP,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                audio_data TEXT,
+                audio_size DECIMAL(10,2),
+                audio_duration INTEGER,
+                audio_mime_type VARCHAR(100),
+                evaluated BOOLEAN DEFAULT FALSE,
+                evaluator_name VARCHAR(200),
+                evaluation_date TIMESTAMP,
+                evaluation_notes TEXT,
                 CHECK (level IN ('A1-Movers', 'A2-Key', 'B1-Preliminary', 'B2-First')),
-                CHECK (skill IN ('reading', 'writing', 'listening', 'reading-writing', 'reading-use-of-english'))
+                CHECK (skill IN ('reading', 'writing', 'listening', 'speaking', 'reading-writing', 'reading-use-of-english'))
             )
         `);
 
@@ -94,6 +102,99 @@ async function initializeCambridgeTables() {
                 END IF;
             END $$;
         `);
+
+        // Add audio-related columns if they don't exist (for existing databases)
+        await client.query(`
+            DO $$ 
+            BEGIN 
+                -- Add audio_data column
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'cambridge_submissions' AND column_name = 'audio_data'
+                ) THEN
+                    ALTER TABLE cambridge_submissions ADD COLUMN audio_data TEXT;
+                END IF;
+                
+                -- Add audio_size column
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'cambridge_submissions' AND column_name = 'audio_size'
+                ) THEN
+                    ALTER TABLE cambridge_submissions ADD COLUMN audio_size DECIMAL(10,2);
+                END IF;
+                
+                -- Add audio_duration column
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'cambridge_submissions' AND column_name = 'audio_duration'
+                ) THEN
+                    ALTER TABLE cambridge_submissions ADD COLUMN audio_duration INTEGER;
+                END IF;
+                
+                -- Add audio_mime_type column
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'cambridge_submissions' AND column_name = 'audio_mime_type'
+                ) THEN
+                    ALTER TABLE cambridge_submissions ADD COLUMN audio_mime_type VARCHAR(100);
+                END IF;
+                
+                -- Add evaluated column
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'cambridge_submissions' AND column_name = 'evaluated'
+                ) THEN
+                    ALTER TABLE cambridge_submissions ADD COLUMN evaluated BOOLEAN DEFAULT FALSE;
+                END IF;
+                
+                -- Add evaluator_name column
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'cambridge_submissions' AND column_name = 'evaluator_name'
+                ) THEN
+                    ALTER TABLE cambridge_submissions ADD COLUMN evaluator_name VARCHAR(200);
+                END IF;
+                
+                -- Add evaluation_date column
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'cambridge_submissions' AND column_name = 'evaluation_date'
+                ) THEN
+                    ALTER TABLE cambridge_submissions ADD COLUMN evaluation_date TIMESTAMP;
+                END IF;
+                
+                -- Add evaluation_notes column
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'cambridge_submissions' AND column_name = 'evaluation_notes'
+                ) THEN
+                    ALTER TABLE cambridge_submissions ADD COLUMN evaluation_notes TEXT;
+                END IF;
+            END $$;
+        `);
+
+        console.log('✅ Audio columns migration completed');
+
+        // Update the skill check constraint to include 'speaking'
+        await client.query(`
+            DO $$ 
+            BEGIN 
+                -- Drop the old constraint if it exists
+                IF EXISTS (
+                    SELECT 1 FROM pg_constraint 
+                    WHERE conname = 'cambridge_submissions_skill_check'
+                ) THEN
+                    ALTER TABLE cambridge_submissions DROP CONSTRAINT cambridge_submissions_skill_check;
+                END IF;
+                
+                -- Add the new constraint with 'speaking' included
+                ALTER TABLE cambridge_submissions 
+                ADD CONSTRAINT cambridge_submissions_skill_check 
+                CHECK (skill IN ('reading', 'writing', 'listening', 'speaking', 'reading-writing', 'reading-use-of-english'));
+            END $$;
+        `);
+
+        console.log('✅ Skill constraint updated to include speaking');
 
         // Create indexes for performance
         await client.query(`
@@ -127,7 +228,8 @@ async function ensureConnection() {
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' })); // Increased limit for audio files
+app.use(express.urlencoded({ limit: '50mb', extended: true })); // Also increase URL-encoded limit
 app.use(express.static('./')); // Serve static files from current directory
 
 // Root redirect to Cambridge launcher
@@ -262,6 +364,68 @@ app.post('/cambridge-submissions', async (req, res) => {
     }
 });
 
+// Save Cambridge Speaking test submission with audio
+app.post('/submit-speaking', async (req, res) => {
+    try {
+        const { 
+            studentId, 
+            studentName, 
+            level, 
+            mockTest, 
+            skill,
+            audioData, 
+            audioSize, 
+            duration, 
+            mimeType,
+            startTime,
+            endTime
+        } = req.body;
+
+        console.log(`🎤 Saving speaking test: ${level} Mock ${mockTest} for ${studentName} (${audioSize}MB, ${duration}s)`);
+
+        const dbClient = await ensureConnection();
+        const result = await dbClient.query(`
+            INSERT INTO cambridge_submissions
+            (student_id, student_name, exam_type, level, mock_test, skill, 
+             answers, audio_data, audio_size, audio_duration, audio_mime_type,
+             start_time, end_time, evaluated)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+            RETURNING id
+        `, [
+            studentId, 
+            studentName, 
+            'Cambridge',
+            level, 
+            mockTest || '1', 
+            skill,
+            JSON.stringify({}), // Empty answers object for speaking tests
+            audioData,
+            audioSize,
+            duration,
+            mimeType,
+            startTime,
+            endTime,
+            false // Not evaluated yet
+        ]);
+
+        console.log(`✅ Speaking test saved with ID: ${result.rows[0].id}`);
+
+        res.json({
+            success: true,
+            message: 'Speaking test submitted successfully',
+            id: result.rows[0].id
+        });
+
+    } catch (error) {
+        console.error('❌ Speaking submission failed:', error.message);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to save speaking test',
+            error: error.message
+        });
+    }
+});
+
 // Get all Cambridge submissions
 app.get('/cambridge-submissions', async (req, res) => {
     try {
@@ -348,6 +512,57 @@ app.patch('/cambridge-submissions/:id/score', async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Failed to update score',
+            error: error.message
+        });
+    }
+});
+
+// Update speaking test evaluation
+app.patch('/cambridge-submissions/:id/evaluate', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { 
+            score, 
+            grade, 
+            evaluatorName, 
+            evaluationNotes 
+        } = req.body;
+
+        console.log(`🎤 Evaluating speaking test ${id} by ${evaluatorName}: ${score}, Grade: ${grade || 'N/A'}`);
+
+        const dbClient = await ensureConnection();
+        const result = await dbClient.query(`
+            UPDATE cambridge_submissions
+            SET score = $1, 
+                grade = $2, 
+                evaluated = TRUE,
+                evaluator_name = $3,
+                evaluation_date = CURRENT_TIMESTAMP,
+                evaluation_notes = $4
+            WHERE id = $5
+            RETURNING *
+        `, [score, grade || null, evaluatorName, evaluationNotes, id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Speaking submission not found'
+            });
+        }
+
+        console.log(`✅ Speaking test ${id} evaluated successfully`);
+
+        res.json({
+            success: true,
+            message: 'Speaking test evaluated successfully',
+            submission: result.rows[0]
+        });
+
+    } catch (error) {
+        console.error('❌ Evaluation failed:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to evaluate speaking test',
             error: error.message
         });
     }
