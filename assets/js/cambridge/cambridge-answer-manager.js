@@ -18,6 +18,7 @@ class CambridgeAnswerManager {
         const studentId = localStorage.getItem('studentId') || 'Unknown';
         const studentName = localStorage.getItem('studentName') || 'Unknown';
         const level = localStorage.getItem('cambridgeLevel') || 'Unknown';
+        const mockTest = localStorage.getItem('selectedCambridgeMock') || '1';
         const testStartTime = localStorage.getItem('testStartTime');
         const currentTime = new Date().toISOString();
 
@@ -28,6 +29,7 @@ class CambridgeAnswerManager {
                 id: studentId,
                 name: studentName,
                 level: level,
+                mockTest: mockTest,
                 testStartTime: testStartTime,
                 completionTime: currentTime
             },
@@ -100,7 +102,8 @@ class CambridgeAnswerManager {
         const testEntry = this.getCurrentTestData();
         const formattedText = this.formatTestDataAsText(testEntry);
         const level = testEntry.studentInfo.level.replace('-', '_');
-        this.downloadTextFile(formattedText, `Cambridge_${level}_${testEntry.studentInfo.id}_${this.getDateString()}.txt`);
+        const mockTest = testEntry.studentInfo.mockTest || '1';
+        this.downloadTextFile(formattedText, `Cambridge_${level}_Mock${mockTest}_${testEntry.studentInfo.id}_${this.getDateString()}.txt`);
     }
 
     // Get current test data
@@ -108,6 +111,7 @@ class CambridgeAnswerManager {
         const studentId = localStorage.getItem('studentId') || 'Unknown';
         const studentName = localStorage.getItem('studentName') || 'Unknown';
         const level = localStorage.getItem('cambridgeLevel') || 'Unknown';
+        const mockTest = localStorage.getItem('selectedCambridgeMock') || '1';
         const testStartTime = localStorage.getItem('testStartTime');
 
         return {
@@ -116,6 +120,7 @@ class CambridgeAnswerManager {
                 id: studentId,
                 name: studentName,
                 level: level,
+                mockTest: mockTest,
                 testStartTime: testStartTime
             },
             modules: this.getModulesData(level),
@@ -169,16 +174,19 @@ class CambridgeAnswerManager {
         text += `Student ID: ${testData.studentInfo.id}\n`;
         text += `Full Name: ${testData.studentInfo.name}\n`;
         text += `Level: ${testData.studentInfo.level}\n`;
+        text += `Mock Test: ${testData.studentInfo.mockTest || '1'}\n`;
         text += `Test Start: ${formatDate(testData.studentInfo.testStartTime)}\n`;
         text += `Export Time: ${formatDate(testData.exportTime || testData.savedAt)}\n\n`;
 
         // Test Results by Module
         const modules = Object.keys(testData.modules);
+        const level = testData.studentInfo.level;
 
         modules.forEach(module => {
             const moduleData = testData.modules[module];
-            text += `${module.toUpperCase().replace('-', ' & ')} TEST:\n`;
-            text += `-`.repeat(15) + `\n`;
+            const moduleName = module.toUpperCase().replace('-', ' & ');
+            text += `${level} - ${moduleName} TEST:\n`;
+            text += `-`.repeat(30) + `\n`;
             text += `Status: ${moduleData.status || 'Not started'}\n`;
             text += `Start Time: ${formatDate(moduleData.startTime)}\n`;
             if (moduleData.endTime) {
@@ -254,6 +262,7 @@ class CambridgeAnswerManager {
                     studentId: testData.studentInfo.id,
                     studentName: testData.studentInfo.name,
                     level: testData.studentInfo.level,
+                    mockTest: testData.studentInfo.mockTest || '1',
                     skill: this.determineSkillFromModules(testData.modules),
                     answers: this.flattenAnswers(testData.modules),
                     score: null,
@@ -282,6 +291,7 @@ class CambridgeAnswerManager {
                 studentId: testData.studentInfo.id,
                 studentName: testData.studentInfo.name,
                 level: testData.studentInfo.level,
+                mockTest: testData.studentInfo.mockTest || '1',
                 testStartTime: testData.studentInfo.testStartTime,
                 completionTime: new Date().toISOString(),
                 modules: testData.modules,
@@ -317,7 +327,8 @@ class CambridgeAnswerManager {
         const formattedText = this.formatTestDataAsText(testEntry);
         const dateStr = new Date(testEntry.savedAt).toISOString().split('T')[0];
         const level = testEntry.studentInfo.level.replace('-', '_');
-        this.downloadTextFile(formattedText, `Cambridge_${level}_${testEntry.studentInfo.id}_${dateStr}.txt`);
+        const mockTest = testEntry.studentInfo.mockTest || '1';
+        this.downloadTextFile(formattedText, `Cambridge_${level}_Mock${mockTest}_${testEntry.studentInfo.id}_${dateStr}.txt`);
     }
 
     // Clear all data including history

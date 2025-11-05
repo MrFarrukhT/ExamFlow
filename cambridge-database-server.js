@@ -69,6 +69,7 @@ async function initializeCambridgeTables() {
                 student_name VARCHAR(200) NOT NULL,
                 exam_type VARCHAR(50) DEFAULT 'Cambridge',
                 level VARCHAR(50) NOT NULL,
+                mock_test VARCHAR(10) DEFAULT '1',
                 skill VARCHAR(100) NOT NULL,
                 answers JSONB NOT NULL,
                 score INTEGER,
@@ -81,6 +82,19 @@ async function initializeCambridgeTables() {
             )
         `);
 
+        // Add mock_test column if it doesn't exist (for existing databases)
+        await client.query(`
+            DO $$ 
+            BEGIN 
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'cambridge_submissions' AND column_name = 'mock_test'
+                ) THEN
+                    ALTER TABLE cambridge_submissions ADD COLUMN mock_test VARCHAR(10) DEFAULT '1';
+                END IF;
+            END $$;
+        `);
+
         // Create indexes for performance
         await client.query(`
             CREATE INDEX IF NOT EXISTS idx_cambridge_student_id ON cambridge_submissions(student_id)
@@ -90,6 +104,9 @@ async function initializeCambridgeTables() {
         `);
         await client.query(`
             CREATE INDEX IF NOT EXISTS idx_cambridge_skill ON cambridge_submissions(skill)
+        `);
+        await client.query(`
+            CREATE INDEX IF NOT EXISTS idx_cambridge_mock_test ON cambridge_submissions(mock_test)
         `);
         await client.query(`
             CREATE INDEX IF NOT EXISTS idx_cambridge_created_at ON cambridge_submissions(created_at)
@@ -116,6 +133,11 @@ app.use(express.static('./')); // Serve static files from current directory
 // Root redirect to Cambridge launcher
 app.get('/', (req, res) => {
     res.redirect('/Cambridge/launcher-cambridge.html');
+});
+
+// Serve Cambridge Admin Dashboard
+app.get('/admin', (req, res) => {
+    res.sendFile(__dirname + '/cambridge-admin-dashboard.html');
 });
 
 // Test endpoint
@@ -154,17 +176,18 @@ async function backgroundRetrySystem() {
 
     for (const submission of toRetry) {
         try {
-            console.log(`📝 Retrying: ${submission.data.level} ${submission.data.skill} for ${submission.data.studentName}`);
+            console.log(`📝 Retrying: ${submission.data.level} ${submission.data.skill} Mock ${submission.data.mockTest || '1'} for ${submission.data.studentName}`);
             
             const dbClient = await ensureConnection();
             const result = await dbClient.query(`
                 INSERT INTO cambridge_submissions
-                (student_id, student_name, exam_type, level, skill, answers, score, grade, start_time, end_time)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+                (student_id, student_name, exam_type, level, mock_test, skill, answers, score, grade, start_time, end_time)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
                 RETURNING id
             `, [submission.data.studentId, submission.data.studentName, 'Cambridge',
-                submission.data.level, submission.data.skill, JSON.stringify(submission.data.answers), 
-                submission.data.score, submission.data.grade, submission.data.startTime, submission.data.endTime]);
+                submission.data.level, submission.data.mockTest || '1', submission.data.skill, 
+                JSON.stringify(submission.data.answers), submission.data.score, 
+                submission.data.grade, submission.data.startTime, submission.data.endTime]);
 
             console.log(`✅ Background retry success! ID: ${result.rows[0].id}`);
 
@@ -182,17 +205,17 @@ setInterval(backgroundRetrySystem, 90000);
 async function saveWithRetry(data, maxRetries = 3) {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
-            console.log(`📝 Attempt ${attempt}: Saving ${data.level} ${data.skill} for ${data.studentName}`);
+            console.log(`📝 Attempt ${attempt}: Saving ${data.level} ${data.skill} Mock ${data.mockTest || '1'} for ${data.studentName}`);
             
             const dbClient = await ensureConnection();
             const result = await dbClient.query(`
                 INSERT INTO cambridge_submissions
-                (student_id, student_name, exam_type, level, skill, answers, score, grade, start_time, end_time)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+                (student_id, student_name, exam_type, level, mock_test, skill, answers, score, grade, start_time, end_time)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
                 RETURNING id
             `, [data.studentId, data.studentName, 'Cambridge', data.level, 
-                data.skill, JSON.stringify(data.answers), data.score, data.grade, 
-                data.startTime, data.endTime]);
+                data.mockTest || '1', data.skill, JSON.stringify(data.answers), 
+                data.score, data.grade, data.startTime, data.endTime]);
 
             console.log(`✅ Saved with ID: ${result.rows[0].id}`);
             return result.rows[0].id;
@@ -266,10 +289,8 @@ app.get('/cambridge-submissions', async (req, res) => {
 
         const result = await dbClient.query(query, params);
 
-        res.json({
-            success: true,
-            submissions: result.rows
-        });
+        // Return submissions directly as array for admin dashboard
+        res.json(result.rows);
     } catch (error) {
         console.error('Failed to fetch submissions:', error);
         res.status(500).json({
@@ -280,7 +301,59 @@ app.get('/cambridge-submissions', async (req, res) => {
     }
 });
 
-// Update score for a Cambridge submission
+// Health check endpoint
+app.get('/health', async (req, res) => {
+    try {
+        const dbClient = await ensureConnection();
+        await dbClient.query('SELECT 1');
+        res.json({ status: 'ok', database: 'connected' });
+    } catch (error) {
+        res.status(500).json({ status: 'error', database: 'disconnected' });
+    }
+});
+
+// Update score for a Cambridge submission (PATCH method for REST compliance)
+app.patch('/cambridge-submissions/:id/score', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { score, grade } = req.body;
+
+        console.log(`📊 Updating score for Cambridge submission ${id}: ${score}, Grade: ${grade || 'N/A'}`);
+
+        const dbClient = await ensureConnection();
+        const result = await dbClient.query(`
+            UPDATE cambridge_submissions
+            SET score = $1, grade = $2
+            WHERE id = $3
+            RETURNING *
+        `, [score, grade || null, id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Submission not found'
+            });
+        }
+
+        console.log(`✅ Score updated for Cambridge submission ${id}`);
+
+        res.json({
+            success: true,
+            message: 'Score updated successfully',
+            submission: result.rows[0]
+        });
+
+    } catch (error) {
+        console.error('❌ Score update failed:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to update score',
+            error: error.message
+        });
+    }
+});
+
+// Update score for a Cambridge submission (POST method for backwards compatibility)
 app.post('/cambridge-update-score', async (req, res) => {
     try {
         const { submissionId, score, grade } = req.body;
