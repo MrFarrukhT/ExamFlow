@@ -24,3 +24,53 @@
   }
 })();
 
+// Global function to populate Candidate ID display in header
+window.populateCandidateIdDisplay = function() {
+  try {
+    const studentId = localStorage.getItem('studentId');
+    if (studentId) {
+      // Populate the header display (the div next to "Candidate ID" label)
+      const candidateIdLabel = document.querySelector('.header__name___1Cw2x');
+      if (candidateIdLabel && candidateIdLabel.textContent.includes('Candidate ID')) {
+        const displayDiv = candidateIdLabel.nextElementSibling;
+        if (displayDiv) {
+          displayDiv.textContent = studentId;
+          displayDiv.style.fontWeight = 'bold';
+          console.log('✅ Candidate ID header populated:', studentId);
+        }
+      }
+      
+      // Also populate any input fields
+      const candidateIdInputs = [
+        document.querySelector('input[placeholder*="Candidate"]'),
+        document.querySelector('input[placeholder*="candidate"]'),
+        document.querySelector('input[type="text"][placeholder]'),
+        document.getElementById('candidateId'),
+        document.getElementById('candidate-id')
+      ];
+      
+      for (const input of candidateIdInputs) {
+        if (input) {
+          input.value = studentId;
+          input.readOnly = true;
+          console.log('✅ Candidate ID input populated:', studentId);
+          break;
+        }
+      }
+    } else {
+      console.warn('⚠️ No studentId found in localStorage');
+    }
+  } catch(e) {
+    console.error('Error populating Candidate ID:', e);
+  }
+};
+
+// Auto-populate when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', window.populateCandidateIdDisplay);
+} else {
+  // DOM already loaded
+  window.populateCandidateIdDisplay();
+}
+
+

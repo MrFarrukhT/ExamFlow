@@ -538,6 +538,17 @@
         (function() {
             const studentId = localStorage.getItem('studentId');
             if (studentId) {
+                // Populate the header display
+                const candidateIdLabel = document.querySelector('.header__name___1Cw2x');
+                if (candidateIdLabel && candidateIdLabel.textContent.includes('Candidate ID')) {
+                    const displayDiv = candidateIdLabel.nextElementSibling;
+                    if (displayDiv) {
+                        displayDiv.textContent = studentId;
+                        displayDiv.style.fontWeight = 'bold';
+                        console.log('✅ Candidate ID header populated:', studentId);
+                    }
+                }
+                
                 const candidateIdInputs = [
                     document.querySelector('input[placeholder*="Candidate"]'),
                     document.querySelector('input[placeholder*="candidate"]'),
@@ -549,10 +560,12 @@
                     if (input) {
                         input.value = studentId;
                         input.readOnly = true;
-                        console.log('✅ Candidate ID populated:', studentId);
+                        console.log('✅ Candidate ID input populated:', studentId);
                         break;
                     }
                 }
+            } else {
+                console.warn('⚠️ No studentId found in localStorage');
             }
         })();
     </script>
