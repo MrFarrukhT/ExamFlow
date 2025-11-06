@@ -964,8 +964,8 @@ div[class="adsbygoogle"][id="ad-detector"] { display: block !important; }</style
                                 window.location.href = partFiles[partNumber];
                             }
                         });
-                    });
-                }
+                    }
+                });
 
                 // (Per-part answer save/load removed; unified answer sync handles it)
 
@@ -1039,6 +1039,118 @@ div[class="adsbygoogle"][id="ad-detector"] { display: block !important; }</style
 <script>
 console.log('🎓 Cambridge A2 Key - Part 4 Loaded');
 console.log('✅ All IELTS Functions: Enabled');
+
+// Part 4 Inline Choice Interaction Handler
+(function() {
+    console.log('🔧 Initializing Part 4 inline choice interactions...');
+    
+    // Define answer choices for each question
+    const questionChoices = {
+        19: ['subject', 'hobby', 'job', 'study'],
+        20: ['asked', 'taught', 'shown', 'told'],
+        21: ['idea', 'way', 'plan', 'result'],
+        22: ['century', 'time', 'year', 'age'],
+        23: ['opened', 'made', 'did', 'ran'],
+        24: ['became', 'felt', 'seemed', 'looked']
+    };
+    
+    // Function to create dropdown for inline choice
+    function createInlineChoiceDropdown(button, questionNum) {
+        const choices = questionChoices[questionNum];
+        if (!choices) {
+            console.log(`No choices found for question ${questionNum}`);
+            return;
+        }
+        
+        console.log(`Creating dropdown for question ${questionNum} with choices:`, choices);
+        
+        // Create select element
+        const select = document.createElement('select');
+        select.id = `inline-choice-${questionNum}`;
+        select.className = 'inline-choice-select';
+        select.style.cssText = 'min-width: 144px; padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; background: white; cursor: pointer; font-size: 14px;';
+        
+        // Add default option
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = `Select answer for ${questionNum}`;
+        select.appendChild(defaultOption);
+        
+        // Add answer choices
+        choices.forEach(choice => {
+            const option = document.createElement('option');
+            option.value = choice;
+            option.textContent = choice;
+            select.appendChild(option);
+        });
+        
+        // Add change handler to save answer
+        select.addEventListener('change', function() {
+            if (this.value) {
+                console.log(`Question ${questionNum}: ${this.value}`);
+                // Save answer using Cambridge answer manager
+                if (window.cambridgeAnswerManager) {
+                    window.cambridgeAnswerManager.saveAnswer(questionNum, this.value, 'reading-writing');
+                }
+                // Also save to localStorage backup
+                const answers = JSON.parse(localStorage.getItem('reading-writing-answers') || '{}');
+                answers[questionNum] = this.value;
+                localStorage.setItem('reading-writing-answers', JSON.stringify(answers));
+            }
+        });
+        
+        // Load saved answer if exists
+        const savedAnswers = JSON.parse(localStorage.getItem('reading-writing-answers') || '{}');
+        if (savedAnswers[questionNum]) {
+            select.value = savedAnswers[questionNum];
+        }
+        
+        // Replace button with select
+        try {
+            button.parentNode.replaceChild(select, button);
+            console.log(`✅ Created dropdown for question ${questionNum}`);
+        } catch (error) {
+            console.error(`Error replacing button for question ${questionNum}:`, error);
+        }
+    }
+    
+    // Initialize - try multiple times with increasing delays
+    let attempts = 0;
+    const maxAttempts = 5;
+    
+    function tryInitialize() {
+        attempts++;
+        console.log(`Attempt ${attempts} to initialize dropdowns...`);
+        
+        // Find all inline choice interaction buttons
+        const buttons = document.querySelectorAll('.inlineChoiceInteraction__inlineChoiceInteraction___hqnKe');
+        console.log(`Found ${buttons.length} inline choice buttons`);
+        
+        if (buttons.length > 0) {
+            buttons.forEach(button => {
+                const buttonText = button.textContent.trim();
+                // Extract just the number from text like "Single select: 19"
+                const match = buttonText.match(/\d+/);
+                if (match) {
+                    const questionNum = parseInt(match[0]);
+                    console.log(`Processing button with text "${buttonText}" -> question ${questionNum}`);
+                    
+                    if (questionNum >= 19 && questionNum <= 24) {
+                        createInlineChoiceDropdown(button, questionNum);
+                    }
+                }
+            });
+        } else if (attempts < maxAttempts) {
+            console.log(`No buttons found yet, retrying in ${attempts * 500}ms...`);
+            setTimeout(tryInitialize, attempts * 500);
+        } else {
+            console.error('Failed to find inline choice buttons after maximum attempts');
+        }
+    }
+    
+    // Start initialization
+    setTimeout(tryInitialize, 500);
+})();
 </script>
 
 <!-- Integrated Event Handlers and Initialization -->
