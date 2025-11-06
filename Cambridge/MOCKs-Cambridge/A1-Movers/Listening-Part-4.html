@@ -26,66 +26,6 @@
     <style>
         body { opacity: 1 !important; }
         
-        /* Audio Start Popup */
-        .audio-popup-overlay {
-            display: flex;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-        }
-        .audio-popup-content {
-            background: white;
-            border-radius: 12px;
-            padding: 40px;
-            max-width: 500px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-        .headphones-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            fill: #2196F3;
-        }
-        .audio-popup-content h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .audio-popup-content p {
-            margin-bottom: 15px;
-            color: #666;
-            line-height: 1.6;
-        }
-        .start-listening-btn {
-            background: #2196F3;
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .start-listening-btn:hover {
-            background: #1976D2;
-        }
-        .play-icon {
-            width: 0;
-            height: 0;
-            border-left: 12px solid white;
-            border-top: 8px solid transparent;
-            border-bottom: 8px solid transparent;
-        }
-        
         .question-wrapper {
             margin-bottom: 30px;
             padding: 20px;
@@ -165,9 +105,9 @@
                             <div class="DisplayTypeContainer__sectionContent___2HSJ0" id="sectionContent" style="padding: 20px; padding-bottom: 150px;">
                                 <div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE">
                                     <div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL">
-                                        <h3 class="scorableItemHeadline">Part 4: Questions 17-21</h3>
+                                        <h3 class="scorableItemHeadline">Part 4: Questions 16-20</h3>
                                         <div class="QuestionDisplay__rubricContent___1byNW">
-                                            <p>You will hear a teacher talking about a school trip. For each question, choose the correct answer.</p>
+                                            <p>For each question, choose the correct answer.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -178,24 +118,46 @@
                                     Your browser does not support the audio element.
                                 </audio>
 
+                                <!-- Question 16 -->
+                                <div class="question-wrapper" id="question-16">
+                                    <div>
+                                        <span class="question-number">16</span>
+                                        <strong>You will hear a man asking a hotel receptionist about going to the beach. What advice does the hotel receptionist give him?</strong>
+                                    </div>
+                                    <div class="choices">
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_16" value="A" onchange="saveAnswer(16, 'A')">
+                                            <span>A) go on foot</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_16" value="B" onchange="saveAnswer(16, 'B')">
+                                            <span>B) go by bus</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_16" value="C" onchange="saveAnswer(16, 'C')">
+                                            <span>C) go by taxi</span>
+                                        </label>
+                                    </div>
+                                </div>
+
                                 <!-- Question 17 -->
                                 <div class="question-wrapper" id="question-17">
                                     <div>
                                         <span class="question-number">17</span>
-                                        <strong>Where are the students going on the school trip?</strong>
+                                        <strong>You will hear a man talking about a course he's doing. What course is he doing?</strong>
                                     </div>
                                     <div class="choices">
                                         <label class="choice-item">
                                             <input type="radio" name="question_17" value="A" onchange="saveAnswer(17, 'A')">
-                                            <span>A) A science museum</span>
+                                            <span>A) photography</span>
                                         </label>
                                         <label class="choice-item">
                                             <input type="radio" name="question_17" value="B" onchange="saveAnswer(17, 'B')">
-                                            <span>B) A history museum</span>
+                                            <span>B) Spanish</span>
                                         </label>
                                         <label class="choice-item">
                                             <input type="radio" name="question_17" value="C" onchange="saveAnswer(17, 'C')">
-                                            <span>C) An art gallery</span>
+                                            <span>C) cooking</span>
                                         </label>
                                     </div>
                                 </div>
@@ -204,20 +166,20 @@
                                 <div class="question-wrapper" id="question-18">
                                     <div>
                                         <span class="question-number">18</span>
-                                        <strong>When is the school trip?</strong>
+                                        <strong>You will hear a woman talking about a colleague. Why does she like him?</strong>
                                     </div>
                                     <div class="choices">
                                         <label class="choice-item">
                                             <input type="radio" name="question_18" value="A" onchange="saveAnswer(18, 'A')">
-                                            <span>A) Next Monday</span>
+                                            <span>A) He helps her at work.</span>
                                         </label>
                                         <label class="choice-item">
                                             <input type="radio" name="question_18" value="B" onchange="saveAnswer(18, 'B')">
-                                            <span>B) Next Wednesday</span>
+                                            <span>B) He tells funny stories.</span>
                                         </label>
                                         <label class="choice-item">
                                             <input type="radio" name="question_18" value="C" onchange="saveAnswer(18, 'C')">
-                                            <span>C) Next Friday</span>
+                                            <span>C) He brings cakes for everyone.</span>
                                         </label>
                                     </div>
                                 </div>
@@ -226,20 +188,20 @@
                                 <div class="question-wrapper" id="question-19">
                                     <div>
                                         <span class="question-number">19</span>
-                                        <strong>What time will the bus leave the school?</strong>
+                                        <strong>You will hear a mother talking to her son. What does her son want to do first when he leaves school?</strong>
                                     </div>
                                     <div class="choices">
                                         <label class="choice-item">
                                             <input type="radio" name="question_19" value="A" onchange="saveAnswer(19, 'A')">
-                                            <span>A) 8:30 AM</span>
+                                            <span>A) get a job</span>
                                         </label>
                                         <label class="choice-item">
                                             <input type="radio" name="question_19" value="B" onchange="saveAnswer(19, 'B')">
-                                            <span>B) 9:00 AM</span>
+                                            <span>B) go to university</span>
                                         </label>
                                         <label class="choice-item">
                                             <input type="radio" name="question_19" value="C" onchange="saveAnswer(19, 'C')">
-                                            <span>C) 9:30 AM</span>
+                                            <span>C) spend some time travelling</span>
                                         </label>
                                     </div>
                                 </div>
@@ -248,20 +210,20 @@
                                 <div class="question-wrapper" id="question-20">
                                     <div>
                                         <span class="question-number">20</span>
-                                        <strong>What should students bring with them?</strong>
+                                        <strong>You will hear a woman talking about a college course that she's going to do. How does the woman feel about her college course?</strong>
                                     </div>
                                     <div class="choices">
                                         <label class="choice-item">
                                             <input type="radio" name="question_20" value="A" onchange="saveAnswer(20, 'A')">
-                                            <span>A) A packed lunch</span>
+                                            <span>A) surprised about when the course begins</span>
                                         </label>
                                         <label class="choice-item">
                                             <input type="radio" name="question_20" value="B" onchange="saveAnswer(20, 'B')">
-                                            <span>B) A notebook and pen</span>
+                                            <span>B) excited about meeting new students</span>
                                         </label>
                                         <label class="choice-item">
                                             <input type="radio" name="question_20" value="C" onchange="saveAnswer(20, 'C')">
-                                            <span>C) Money for lunch</span>
+                                            <span>C) worried about the work</span>
                                         </label>
                                     </div>
                                 </div>
@@ -319,17 +281,10 @@
                                         <span><span class="section-prefix">Part </span><span class="sectionNr">3</span></span>
                                     </button>
                                 </div>
-                                <div class="footer__questionWrapper___1tZ46 selected multiple">
+                                <div class="footer__questionWrapper___1tZ46 multiple">
                                     <button role="tab" class="footer__questionNo___3WNct">
                                         <span><span class="section-prefix">Part </span><span class="sectionNr">4</span></span>
                                     </button>
-                                    <div class="footer__subquestionWrapper___9GgoP">
-                                        <button class="subQuestion scorable-item" data-ordernumber="17"><span>17</span></button>
-                                        <button class="subQuestion scorable-item" data-ordernumber="18"><span>18</span></button>
-                                        <button class="subQuestion scorable-item" data-ordernumber="19"><span>19</span></button>
-                                        <button class="subQuestion scorable-item" data-ordernumber="20"><span>20</span></button>
-                                        <button class="subQuestion scorable-item" data-ordernumber="21"><span>21</span></button>
-                                    </div>
                                 </div>
                                 <div class="footer__questionWrapper___1tZ46 multiple">
                                     <button role="tab" class="footer__questionNo___3WNct">
@@ -369,7 +324,7 @@
 
         function loadSavedAnswers() {
             const answers = JSON.parse(localStorage.getItem('listeningAnswers') || '{}');
-            for (let i = 17; i <= 21; i++) {
+            for (let i = 16; i <= 20; i++) {
                 const answer = answers[`L${i}`];
                 if (answer) {
                     const radio = document.querySelector(`input[name="question_${i}"][value="${answer}"]`);
@@ -387,25 +342,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedAnswers();
 
-            // Check if listening test has already started and hide popup if so
-            const listeningStarted = localStorage.getItem('listeningTestStarted');
-            const popup = document.getElementById('audio-popup');
-            
-            if (listeningStarted === 'true' && popup) {
-                popup.style.display = 'none';
-                // Auto-play audio if needed
-                const audio = document.getElementById('audio-player');
-                if (audio) {
-                    audio.play().catch(error => console.log('Audio already playing or completed'));
-                }
-            }
-            
-            // Add event listener to start button  
-            const startBtn = document.getElementById('start-listening-btn');
-            if (startBtn) {
-                startBtn.addEventListener('click', startListeningTest);
-            }
-
             const partFiles = {
                 1: 'Listening-Part-1.html',
                 2: 'Listening-Part-2.html',
@@ -421,7 +357,12 @@
                     partButton.addEventListener('click', function(e) {
                         e.preventDefault();
                         if (partFiles[partNumber]) {
-                            window.location.href = partFiles[partNumber];
+                            // If we're in an iframe, navigate the parent; otherwise navigate normally
+                            if (window.self !== window.top) {
+                                window.top.document.getElementById('part-frame').src = partFiles[partNumber];
+                            } else {
+                                window.location.href = partFiles[partNumber];
+                            }
                         }
                     });
                 }
@@ -433,14 +374,22 @@
             if (prevButton) {
                 prevButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    window.location.href = partFiles[3];
+                    if (window.self !== window.top) {
+                        window.top.document.getElementById('part-frame').src = partFiles[3];
+                    } else {
+                        window.location.href = partFiles[3];
+                    }
                 });
             }
 
             if (nextButton) {
                 nextButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    window.location.href = partFiles[5];
+                    if (window.self !== window.top) {
+                        window.top.document.getElementById('part-frame').src = partFiles[5];
+                    } else {
+                        window.location.href = partFiles[5];
+                    }
                 });
             }
 
@@ -465,21 +414,6 @@
             });
         });
 
-        // Audio Start Function
-        function startListeningTest() {
-            const popup = document.getElementById('audio-popup');
-            const audio = document.getElementById('audio-player');
-            
-            // Set flag to indicate listening test has started
-            localStorage.setItem('listeningTestStarted', 'true');
-            
-            popup.style.display = 'none';
-            audio.play().catch(error => {
-                console.error('Error playing audio:', error);
-                alert('Could not start audio. Please check that the audio file exists.');
-            });
-        }
-
         console.log('🎓 Cambridge A2 Key - Listening Part 4 Loaded');
         
         // Populate Candidate ID field
@@ -493,24 +427,6 @@
             }
         })();
     </script>
-
-    <!-- Audio Start Popup -->
-    <div id="audio-popup" class="audio-popup-overlay">
-        <div class="audio-popup-content">
-            <div class="headphones-icon">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h2v-5H6v-5c0-3.87 3.13-7 7-7s7 3.13 7 7v5h-2v5h2c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"/>
-                </svg>
-            </div>
-            <h2>A2 Key Listening Test - Part 4</h2>
-            <p>You will be listening to an audio clip during this test. You will <strong>not</strong> be permitted to pause or rewind the audio while answering the questions.</p>
-            <p>To continue, click Play.</p>
-            <button id="start-listening-btn" class="start-listening-btn">
-                <div class="play-icon"></div>
-                Play
-            </button>
-        </div>
-    </div>
 </body>
 </html>
 

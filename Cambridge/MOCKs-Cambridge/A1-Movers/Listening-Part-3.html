@@ -26,66 +26,6 @@
     <style>
         body { opacity: 1 !important; }
         
-        /* Audio Start Popup */
-        .audio-popup-overlay {
-            display: flex;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-        }
-        .audio-popup-content {
-            background: white;
-            border-radius: 12px;
-            padding: 40px;
-            max-width: 500px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-        .headphones-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            fill: #2196F3;
-        }
-        .audio-popup-content h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .audio-popup-content p {
-            margin-bottom: 15px;
-            color: #666;
-            line-height: 1.6;
-        }
-        .start-listening-btn {
-            background: #2196F3;
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .start-listening-btn:hover {
-            background: #1976D2;
-        }
-        .play-icon {
-            width: 0;
-            height: 0;
-            border-left: 12px solid white;
-            border-top: 8px solid transparent;
-            border-bottom: 8px solid transparent;
-        }
-        
         .question-wrapper {
             margin-bottom: 30px;
             padding: 20px;
@@ -165,9 +105,10 @@
                             <div class="DisplayTypeContainer__sectionContent___2HSJ0" id="sectionContent" style="padding: 20px; padding-bottom: 150px;">
                                 <div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE">
                                     <div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL">
-                                        <h3 class="scorableItemHeadline">Part 3: Questions 12-16</h3>
+                                        <h3 class="scorableItemHeadline">Part 3: Questions 11-15</h3>
                                         <div class="QuestionDisplay__rubricContent___1byNW">
-                                            <p>You will hear a conversation between two friends about a holiday. For each question, choose the correct answer.</p>
+                                            <p>For each question, choose the correct answer.</p>
+                                            <p><br>You will hear John talking to his friend Karen about an airport.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -178,24 +119,46 @@
                                     Your browser does not support the audio element.
                                 </audio>
 
+                                <!-- Question 11 -->
+                                <div class="question-wrapper" id="question-11">
+                                    <div>
+                                        <span class="question-number">11</span>
+                                        <strong>What does John think is good to buy at the airport?</strong>
+                                    </div>
+                                    <div class="choices">
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_11" value="A" onchange="saveAnswer(11, 'A')">
+                                            <span>A) food</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_11" value="B" onchange="saveAnswer(11, 'B')">
+                                            <span>B) clothes</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_11" value="C" onchange="saveAnswer(11, 'C')">
+                                            <span>C) toys</span>
+                                        </label>
+                                    </div>
+                                </div>
+
                                 <!-- Question 12 -->
                                 <div class="question-wrapper" id="question-12">
                                     <div>
                                         <span class="question-number">12</span>
-                                        <strong>Where did Emma go on holiday?</strong>
+                                        <strong>Why should Karen go to the airport museum?</strong>
                                     </div>
                                     <div class="choices">
                                         <label class="choice-item">
                                             <input type="radio" name="question_12" value="A" onchange="saveAnswer(12, 'A')">
-                                            <span>A) Spain</span>
+                                            <span>A) It's famous.</span>
                                         </label>
                                         <label class="choice-item">
                                             <input type="radio" name="question_12" value="B" onchange="saveAnswer(12, 'B')">
-                                            <span>B) Italy</span>
+                                            <span>B) It's free.</span>
                                         </label>
                                         <label class="choice-item">
                                             <input type="radio" name="question_12" value="C" onchange="saveAnswer(12, 'C')">
-                                            <span>C) France</span>
+                                            <span>C) It's large.</span>
                                         </label>
                                     </div>
                                 </div>
@@ -204,20 +167,20 @@
                                 <div class="question-wrapper" id="question-13">
                                     <div>
                                         <span class="question-number">13</span>
-                                        <strong>How long was Emma's holiday?</strong>
+                                        <strong>John says the best place to sit is</strong>
                                     </div>
                                     <div class="choices">
                                         <label class="choice-item">
                                             <input type="radio" name="question_13" value="A" onchange="saveAnswer(13, 'A')">
-                                            <span>A) One week</span>
+                                            <span>A) next to the lift.</span>
                                         </label>
                                         <label class="choice-item">
                                             <input type="radio" name="question_13" value="B" onchange="saveAnswer(13, 'B')">
-                                            <span>B) Two weeks</span>
+                                            <span>B) under the information board.</span>
                                         </label>
                                         <label class="choice-item">
                                             <input type="radio" name="question_13" value="C" onchange="saveAnswer(13, 'C')">
-                                            <span>C) Three weeks</span>
+                                            <span>C) opposite the windows.</span>
                                         </label>
                                     </div>
                                 </div>
@@ -226,20 +189,20 @@
                                 <div class="question-wrapper" id="question-14">
                                     <div>
                                         <span class="question-number">14</span>
-                                        <strong>What did Emma like most about the hotel?</strong>
+                                        <strong>What does John say about the airport staff?</strong>
                                     </div>
                                     <div class="choices">
                                         <label class="choice-item">
                                             <input type="radio" name="question_14" value="A" onchange="saveAnswer(14, 'A')">
-                                            <span>A) The swimming pool</span>
+                                            <span>A) There are a lot of them.</span>
                                         </label>
                                         <label class="choice-item">
                                             <input type="radio" name="question_14" value="B" onchange="saveAnswer(14, 'B')">
-                                            <span>B) The restaurant</span>
+                                            <span>B) They work quickly.</span>
                                         </label>
                                         <label class="choice-item">
                                             <input type="radio" name="question_14" value="C" onchange="saveAnswer(14, 'C')">
-                                            <span>C) The beach view</span>
+                                            <span>C) They are friendly.</span>
                                         </label>
                                     </div>
                                 </div>
@@ -248,20 +211,20 @@
                                 <div class="question-wrapper" id="question-15">
                                     <div>
                                         <span class="question-number">15</span>
-                                        <strong>What problem did Emma have during her trip?</strong>
+                                        <strong>What is Karen going to take to the airport?</strong>
                                     </div>
                                     <div class="choices">
                                         <label class="choice-item">
                                             <input type="radio" name="question_15" value="A" onchange="saveAnswer(15, 'A')">
-                                            <span>A) She lost her camera</span>
+                                            <span>A) a blanket</span>
                                         </label>
                                         <label class="choice-item">
                                             <input type="radio" name="question_15" value="B" onchange="saveAnswer(15, 'B')">
-                                            <span>B) The weather was bad</span>
+                                            <span>B) a small pillow</span>
                                         </label>
                                         <label class="choice-item">
                                             <input type="radio" name="question_15" value="C" onchange="saveAnswer(15, 'C')">
-                                            <span>C) She missed her flight</span>
+                                            <span>C) something to read</span>
                                         </label>
                                     </div>
                                 </div>
@@ -314,17 +277,10 @@
                                         <span><span class="section-prefix">Part </span><span class="sectionNr">2</span></span>
                                     </button>
                                 </div>
-                                <div class="footer__questionWrapper___1tZ46 selected multiple">
+                                <div class="footer__questionWrapper___1tZ46 multiple">
                                     <button role="tab" class="footer__questionNo___3WNct">
                                         <span><span class="section-prefix">Part </span><span class="sectionNr">3</span></span>
                                     </button>
-                                    <div class="footer__subquestionWrapper___9GgoP">
-                                        <button class="subQuestion scorable-item" data-ordernumber="12"><span>12</span></button>
-                                        <button class="subQuestion scorable-item" data-ordernumber="13"><span>13</span></button>
-                                        <button class="subQuestion scorable-item" data-ordernumber="14"><span>14</span></button>
-                                        <button class="subQuestion scorable-item" data-ordernumber="15"><span>15</span></button>
-                                        <button class="subQuestion scorable-item" data-ordernumber="16"><span>16</span></button>
-                                    </div>
                                 </div>
                                 <div class="footer__questionWrapper___1tZ46 multiple">
                                     <button role="tab" class="footer__questionNo___3WNct">
@@ -369,7 +325,7 @@
 
         function loadSavedAnswers() {
             const answers = JSON.parse(localStorage.getItem('listeningAnswers') || '{}');
-            for (let i = 12; i <= 16; i++) {
+            for (let i = 11; i <= 15; i++) {
                 const answer = answers[`L${i}`];
                 if (answer) {
                     const radio = document.querySelector(`input[name="question_${i}"][value="${answer}"]`);
@@ -387,25 +343,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedAnswers();
 
-            // Check if listening test has already started and hide popup if so
-            const listeningStarted = localStorage.getItem('listeningTestStarted');
-            const popup = document.getElementById('audio-popup');
-            
-            if (listeningStarted === 'true' && popup) {
-                popup.style.display = 'none';
-                // Auto-play audio if needed
-                const audio = document.getElementById('audio-player');
-                if (audio) {
-                    audio.play().catch(error => console.log('Audio already playing or completed'));
-                }
-            }
-            
-            // Add event listener to start button  
-            const startBtn = document.getElementById('start-listening-btn');
-            if (startBtn) {
-                startBtn.addEventListener('click', startListeningTest);
-            }
-
             const partFiles = {
                 1: 'Listening-Part-1.html',
                 2: 'Listening-Part-2.html',
@@ -421,7 +358,12 @@
                     partButton.addEventListener('click', function(e) {
                         e.preventDefault();
                         if (partFiles[partNumber]) {
-                            window.location.href = partFiles[partNumber];
+                            // If we're in an iframe, navigate the parent; otherwise navigate normally
+                            if (window.self !== window.top) {
+                                window.top.document.getElementById('part-frame').src = partFiles[partNumber];
+                            } else {
+                                window.location.href = partFiles[partNumber];
+                            }
                         }
                     });
                 }
@@ -433,14 +375,22 @@
             if (prevButton) {
                 prevButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    window.location.href = partFiles[2];
+                    if (window.self !== window.top) {
+                        window.top.document.getElementById('part-frame').src = partFiles[2];
+                    } else {
+                        window.location.href = partFiles[2];
+                    }
                 });
             }
 
             if (nextButton) {
                 nextButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    window.location.href = partFiles[4];
+                    if (window.self !== window.top) {
+                        window.top.document.getElementById('part-frame').src = partFiles[4];
+                    } else {
+                        window.location.href = partFiles[4];
+                    }
                 });
             }
 
@@ -465,21 +415,6 @@
             });
         });
 
-        // Audio Start Function
-        function startListeningTest() {
-            const popup = document.getElementById('audio-popup');
-            const audio = document.getElementById('audio-player');
-            
-            // Set flag to indicate listening test has started
-            localStorage.setItem('listeningTestStarted', 'true');
-            
-            popup.style.display = 'none';
-            audio.play().catch(error => {
-                console.error('Error playing audio:', error);
-                alert('Could not start audio. Please check that the audio file exists.');
-            });
-        }
-
         console.log('🎓 Cambridge A2 Key - Listening Part 3 Loaded');
         
         // Populate Candidate ID field
@@ -493,24 +428,6 @@
             }
         })();
     </script>
-
-    <!-- Audio Start Popup -->
-    <div id="audio-popup" class="audio-popup-overlay">
-        <div class="audio-popup-content">
-            <div class="headphones-icon">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h2v-5H6v-5c0-3.87 3.13-7 7-7s7 3.13 7 7v5h-2v5h2c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"/>
-                </svg>
-            </div>
-            <h2>A2 Key Listening Test - Part 3</h2>
-            <p>You will be listening to an audio clip during this test. You will <strong>not</strong> be permitted to pause or rewind the audio while answering the questions.</p>
-            <p>To continue, click Play.</p>
-            <button id="start-listening-btn" class="start-listening-btn">
-                <div class="play-icon"></div>
-                Play
-            </button>
-        </div>
-    </div>
 </body>
 </html>
 

@@ -89,7 +89,7 @@
         
         /* Question styling */
         .question-wrapper {
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             padding: 20px;
             background: #fff;
             border-radius: 4px;
@@ -104,16 +104,27 @@
         }
         .choice-item {
             margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
         .choice-item:hover {
             background: #f5f5f5;
+            border-color: #2196F3;
         }
         .choice-item input[type="radio"] {
             margin-right: 10px;
+            display: none;
+        }
+        .choice-item img {
+            display: block;
+            margin: 0 auto;
+        }
+        .choice-item:has(input[type="radio"]:checked) {
+            background: #e3f2fd;
+            border-color: #2196F3;
         }
     </style>
 </head>
@@ -184,20 +195,23 @@
                                 <div class="question-wrapper" id="question-1">
                                     <div>
                                         <span class="question-number">1</span>
-                                        <strong>What time does the library close today?</strong>
+                                        <strong>Where is Kari working now?</strong>
                                     </div>
-                                    <div class="choices">
-                                        <label class="choice-item">
+                                    <div class="choices" style="display: flex; gap: 20px; margin-top: 20px;">
+                                        <label class="choice-item" style="flex: 1; text-align: center;">
                                             <input type="radio" name="question_1" value="A" onchange="saveAnswer(1, 'A')">
-                                            <span>A) 5:00 PM</span>
+                                            <div><img src="./images/1.1.png" alt="Option A" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                            <div style="margin-top: 10px; font-weight: bold;">A</div>
                                         </label>
-                                        <label class="choice-item">
+                                        <label class="choice-item" style="flex: 1; text-align: center;">
                                             <input type="radio" name="question_1" value="B" onchange="saveAnswer(1, 'B')">
-                                            <span>B) 6:00 PM</span>
+                                            <div><img src="./images/1.2.png" alt="Option B" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                            <div style="margin-top: 10px; font-weight: bold;">B</div>
                                         </label>
-                                        <label class="choice-item">
+                                        <label class="choice-item" style="flex: 1; text-align: center;">
                                             <input type="radio" name="question_1" value="C" onchange="saveAnswer(1, 'C')">
-                                            <span>C) 7:00 PM</span>
+                                            <div><img src="./images/1.3.png" alt="Option C" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                            <div style="margin-top: 10px; font-weight: bold;">C</div>
                                         </label>
                                     </div>
                                 </div>
@@ -206,20 +220,23 @@
                                 <div class="question-wrapper" id="question-2">
                                     <div>
                                         <span class="question-number">2</span>
-                                        <strong>What will the weather be like tomorrow?</strong>
+                                        <strong>When will they meet for lunch?</strong>
                                     </div>
-                                    <div class="choices">
-                                        <label class="choice-item">
+                                    <div class="choices" style="display: flex; gap: 20px; margin-top: 20px;">
+                                        <label class="choice-item" style="flex: 1; text-align: center;">
                                             <input type="radio" name="question_2" value="A" onchange="saveAnswer(2, 'A')">
-                                            <span>A) Sunny</span>
+                                            <div><img src="./images/2.1.png" alt="Option A" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                            <div style="margin-top: 10px; font-weight: bold;">A</div>
                                         </label>
-                                        <label class="choice-item">
+                                        <label class="choice-item" style="flex: 1; text-align: center;">
                                             <input type="radio" name="question_2" value="B" onchange="saveAnswer(2, 'B')">
-                                            <span>B) Rainy</span>
+                                            <div><img src="./images/2.2.png" alt="Option B" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                            <div style="margin-top: 10px; font-weight: bold;">B</div>
                                         </label>
-                                        <label class="choice-item">
+                                        <label class="choice-item" style="flex: 1; text-align: center;">
                                             <input type="radio" name="question_2" value="C" onchange="saveAnswer(2, 'C')">
-                                            <span>C) Cloudy</span>
+                                            <div><img src="./images/2.3.png" alt="Option C" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                            <div style="margin-top: 10px; font-weight: bold;">C</div>
                                         </label>
                                     </div>
                                 </div>
@@ -228,20 +245,23 @@
                                 <div class="question-wrapper" id="question-3">
                                     <div>
                                         <span class="question-number">3</span>
-                                        <strong>How much does the ticket cost?</strong>
+                                        <strong>Which new activity do the two students decide to do together?</strong>
                                     </div>
-                                    <div class="choices">
-                                        <label class="choice-item">
+                                    <div class="choices" style="display: flex; gap: 20px; margin-top: 20px;">
+                                        <label class="choice-item" style="flex: 1; text-align: center;">
                                             <input type="radio" name="question_3" value="A" onchange="saveAnswer(3, 'A')">
-                                            <span>A) £5</span>
+                                            <div><img src="./images/3.1.png" alt="Option A" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                            <div style="margin-top: 10px; font-weight: bold;">A</div>
                                         </label>
-                                        <label class="choice-item">
+                                        <label class="choice-item" style="flex: 1; text-align: center;">
                                             <input type="radio" name="question_3" value="B" onchange="saveAnswer(3, 'B')">
-                                            <span>B) £10</span>
+                                            <div><img src="./images/3.2.png" alt="Option B" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                            <div style="margin-top: 10px; font-weight: bold;">B</div>
                                         </label>
-                                        <label class="choice-item">
+                                        <label class="choice-item" style="flex: 1; text-align: center;">
                                             <input type="radio" name="question_3" value="C" onchange="saveAnswer(3, 'C')">
-                                            <span>C) £15</span>
+                                            <div><img src="./images/3.3.png" alt="Option C" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                            <div style="margin-top: 10px; font-weight: bold;">C</div>
                                         </label>
                                     </div>
                                 </div>
@@ -250,20 +270,23 @@
                                 <div class="question-wrapper" id="question-4">
                                     <div>
                                         <span class="question-number">4</span>
-                                        <strong>Where are they going to meet?</strong>
+                                        <strong>What was the weather like yesterday?</strong>
                                     </div>
-                                    <div class="choices">
-                                        <label class="choice-item">
+                                    <div class="choices" style="display: flex; gap: 20px; margin-top: 20px;">
+                                        <label class="choice-item" style="flex: 1; text-align: center;">
                                             <input type="radio" name="question_4" value="A" onchange="saveAnswer(4, 'A')">
-                                            <span>A) At the café</span>
+                                            <div><img src="./images/4.1.png" alt="Option A" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                            <div style="margin-top: 10px; font-weight: bold;">A</div>
                                         </label>
-                                        <label class="choice-item">
+                                        <label class="choice-item" style="flex: 1; text-align: center;">
                                             <input type="radio" name="question_4" value="B" onchange="saveAnswer(4, 'B')">
-                                            <span>B) At the cinema</span>
+                                            <div><img src="./images/4.2.png" alt="Option B" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                            <div style="margin-top: 10px; font-weight: bold;">B</div>
                                         </label>
-                                        <label class="choice-item">
+                                        <label class="choice-item" style="flex: 1; text-align: center;">
                                             <input type="radio" name="question_4" value="C" onchange="saveAnswer(4, 'C')">
-                                            <span>C) At the park</span>
+                                            <div><img src="./images/4.3.png" alt="Option C" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                            <div style="margin-top: 10px; font-weight: bold;">C</div>
                                         </label>
                                     </div>
                                 </div>
@@ -272,20 +295,23 @@
                                 <div class="question-wrapper" id="question-5">
                                     <div>
                                         <span class="question-number">5</span>
-                                        <strong>What did Sarah buy?</strong>
+                                        <strong>Where did the woman first hear the rock band?</strong>
                                     </div>
-                                    <div class="choices">
-                                        <label class="choice-item">
+                                    <div class="choices" style="display: flex; gap: 20px; margin-top: 20px;">
+                                        <label class="choice-item" style="flex: 1; text-align: center;">
                                             <input type="radio" name="question_5" value="A" onchange="saveAnswer(5, 'A')">
-                                            <span>A) A book</span>
+                                            <div><img src="./images/5.1.png" alt="Option A" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                            <div style="margin-top: 10px; font-weight: bold;">A</div>
                                         </label>
-                                        <label class="choice-item">
+                                        <label class="choice-item" style="flex: 1; text-align: center;">
                                             <input type="radio" name="question_5" value="B" onchange="saveAnswer(5, 'B')">
-                                            <span>B) A magazine</span>
+                                            <div><img src="./images/5.2.png" alt="Option B" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                            <div style="margin-top: 10px; font-weight: bold;">B</div>
                                         </label>
-                                        <label class="choice-item">
+                                        <label class="choice-item" style="flex: 1; text-align: center;">
                                             <input type="radio" name="question_5" value="C" onchange="saveAnswer(5, 'C')">
-                                            <span>C) A newspaper</span>
+                                            <div><img src="./images/5.3.png" alt="Option C" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                            <div style="margin-top: 10px; font-weight: bold;">C</div>
                                         </label>
                                     </div>
                                 </div>
@@ -462,7 +488,11 @@
                     partButton.addEventListener('click', function(e) {
                         e.preventDefault();
                         if (partFiles[partNumber]) {
-                            window.location.href = partFiles[partNumber];
+                            if (window.self !== window.top) {
+                                window.top.document.getElementById('part-frame').src = partFiles[partNumber];
+                            } else {
+                                window.location.href = partFiles[partNumber];
+                            }
                         }
                     });
                 }
@@ -472,7 +502,11 @@
             if (nextButton) {
                 nextButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    window.location.href = partFiles[2];
+                    if (window.self !== window.top) {
+                        window.top.document.getElementById('part-frame').src = partFiles[2];
+                    } else {
+                        window.location.href = partFiles[2];
+                    }
                 });
             }
 

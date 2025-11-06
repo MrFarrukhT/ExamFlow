@@ -189,9 +189,16 @@
                             <div class="DisplayTypeContainer__sectionContent___2HSJ0" id="sectionContent" style="padding: 20px; padding-bottom: 150px;">
                                 <div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE">
                                     <div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL">
-                                        <h3 class="scorableItemHeadline">Part 5: Questions 22-26</h3>
+                                        <h3 class="scorableItemHeadline">Part 5: Questions 21-25</h3>
                                         <div class="QuestionDisplay__rubricContent___1byNW">
-                                            <p>You will hear five short conversations. For each question, choose the correct answer.</p>
+                                            <p>For each question, choose the correct answer.</p>
+                                            <p><br>You will hear Jake talking to a friend about their plans for a camping trip.<br>What will each person bring on the camping trip?</p>
+                                            <p><br><strong>Example:</strong><br>
+                                            <span style="display: flex; align-items: center; margin-top: 10px;">
+                                                <span style="min-width: 60px;">0 Max</span>
+                                                <span style="margin-left: 100px; padding: 5px 10px; border: 1px solid #000; display: inline-block; min-width: 30px; text-align: center;">H</span>
+                                            </span>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -205,11 +212,30 @@
                                 <!-- Matching Section -->
                                 <div class="matching-container">
                                     <div class="matching-questions">
+                                        <!-- Question 21 -->
+                                        <div class="question-wrapper" id="question-21">
+                                            <div>
+                                                <span class="question-number">21</span>
+                                                <strong>Frank</strong>
+                                            </div>
+                                            <select class="dropdown-select" id="answer_21" onchange="saveAnswer(21, this.value)">
+                                                <option value="">Select an answer</option>
+                                                <option value="A">A</option>
+                                                <option value="B">B</option>
+                                                <option value="C">C</option>
+                                                <option value="D">D</option>
+                                                <option value="E">E</option>
+                                                <option value="F">F</option>
+                                                <option value="G">G</option>
+                                                <option value="H">H</option>
+                                            </select>
+                                        </div>
+
                                         <!-- Question 22 -->
                                         <div class="question-wrapper" id="question-22">
                                             <div>
                                                 <span class="question-number">22</span>
-                                                <strong>What did Sarah do last weekend?</strong>
+                                                <strong>John</strong>
                                             </div>
                                             <select class="dropdown-select" id="answer_22" onchange="saveAnswer(22, this.value)">
                                                 <option value="">Select an answer</option>
@@ -228,7 +254,7 @@
                                         <div class="question-wrapper" id="question-23">
                                             <div>
                                                 <span class="question-number">23</span>
-                                                <strong>What is Peter's favourite hobby?</strong>
+                                                <strong>Stan</strong>
                                             </div>
                                             <select class="dropdown-select" id="answer_23" onchange="saveAnswer(23, this.value)">
                                                 <option value="">Select an answer</option>
@@ -247,7 +273,7 @@
                                         <div class="question-wrapper" id="question-24">
                                             <div>
                                                 <span class="question-number">24</span>
-                                                <strong>What will Lisa buy for her mother's birthday?</strong>
+                                                <strong>Roy</strong>
                                             </div>
                                             <select class="dropdown-select" id="answer_24" onchange="saveAnswer(24, this.value)">
                                                 <option value="">Select an answer</option>
@@ -266,28 +292,9 @@
                                         <div class="question-wrapper" id="question-25">
                                             <div>
                                                 <span class="question-number">25</span>
-                                                <strong>Where did Tom lose his wallet?</strong>
+                                                <strong>Dave</strong>
                                             </div>
                                             <select class="dropdown-select" id="answer_25" onchange="saveAnswer(25, this.value)">
-                                                <option value="">Select an answer</option>
-                                                <option value="A">A</option>
-                                                <option value="B">B</option>
-                                                <option value="C">C</option>
-                                                <option value="D">D</option>
-                                                <option value="E">E</option>
-                                                <option value="F">F</option>
-                                                <option value="G">G</option>
-                                                <option value="H">H</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- Question 26 -->
-                                        <div class="question-wrapper" id="question-26">
-                                            <div>
-                                                <span class="question-number">26</span>
-                                                <strong>What time does the train leave?</strong>
-                                            </div>
-                                            <select class="dropdown-select" id="answer_26" onchange="saveAnswer(26, this.value)">
                                                 <option value="">Select an answer</option>
                                                 <option value="A">A</option>
                                                 <option value="B">B</option>
@@ -303,15 +310,15 @@
 
                                     <!-- Options Box -->
                                     <div class="matching-options">
-                                        <h4>Options:</h4>
-                                        <div class="matching-option"><strong>A</strong> went shopping</div>
-                                        <div class="matching-option"><strong>B</strong> visited friends</div>
-                                        <div class="matching-option"><strong>C</strong> played football</div>
-                                        <div class="matching-option"><strong>D</strong> a book</div>
-                                        <div class="matching-option"><strong>E</strong> a necklace</div>
-                                        <div class="matching-option"><strong>F</strong> at the park</div>
-                                        <div class="matching-option"><strong>G</strong> at the cinema</div>
-                                        <div class="matching-option"><strong>H</strong> 3:15 PM</div>
+                                        <h4>Things to bring:</h4>
+                                        <div class="matching-option"><strong>A</strong> board games</div>
+                                        <div class="matching-option"><strong>B</strong> dishes</div>
+                                        <div class="matching-option"><strong>C</strong> drinks</div>
+                                        <div class="matching-option"><strong>D</strong> fruit</div>
+                                        <div class="matching-option"><strong>E</strong> medicine</div>
+                                        <div class="matching-option"><strong>F</strong> musical instrument</div>
+                                        <div class="matching-option"><strong>G</strong> seats</div>
+                                        <div class="matching-option"><strong>H</strong> tents</div>
                                     </div>
                                 </div>
 
@@ -356,11 +363,11 @@
                                         <span><span class="section-prefix">Part </span><span class="sectionNr">5</span></span>
                                     </button>
                                     <div class="footer__subquestionWrapper___9GgoP">
+                                        <button class="subQuestion scorable-item" data-ordernumber="21"><span>21</span></button>
                                         <button class="subQuestion scorable-item" data-ordernumber="22"><span>22</span></button>
                                         <button class="subQuestion scorable-item" data-ordernumber="23"><span>23</span></button>
                                         <button class="subQuestion scorable-item" data-ordernumber="24"><span>24</span></button>
                                         <button class="subQuestion scorable-item" data-ordernumber="25"><span>25</span></button>
-                                        <button class="subQuestion scorable-item" data-ordernumber="26"><span>26</span></button>
                                     </div>
                                 </div>
                                 <button id="deliver-button" class="footer__deliverButton___3FM07">
@@ -398,7 +405,7 @@
 
         function loadSavedAnswers() {
             const answers = JSON.parse(localStorage.getItem('listeningAnswers') || '{}');
-            for (let i = 22; i <= 26; i++) {
+            for (let i = 21; i <= 25; i++) {
                 const answer = answers[`L${i}`];
                 if (answer) {
                     const select = document.getElementById(`answer_${i}`);
@@ -450,7 +457,11 @@
                     partButton.addEventListener('click', function(e) {
                         e.preventDefault();
                         if (partFiles[partNumber]) {
-                            window.location.href = partFiles[partNumber];
+                            if (window.self !== window.top) {
+                                window.top.document.getElementById('part-frame').src = partFiles[partNumber];
+                            } else {
+                                window.location.href = partFiles[partNumber];
+                            }
                         }
                     });
                 }
@@ -460,7 +471,11 @@
             if (prevButton) {
                 prevButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    window.location.href = partFiles[4];
+                    if (window.self !== window.top) {
+                        window.top.document.getElementById('part-frame').src = partFiles[4];
+                    } else {
+                        window.location.href = partFiles[4];
+                    }
                 });
             }
 
