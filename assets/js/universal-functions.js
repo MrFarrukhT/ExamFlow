@@ -209,14 +209,16 @@ class IELTSUniversalFunctions {
         this.showPopup(content);
     }
 
-    setTheme(theme) {
+    setTheme(theme, showNotification = true) {
         this.currentTheme = theme;
         document.body.className = document.body.className.replace(/dark-mode|light-mode/g, '');
         if (theme === 'dark') {
             document.body.classList.add('dark-mode');
         }
         this.saveUserPreferences();
-        this.showToast(`Theme changed to ${theme} mode`, 'success');
+        if (showNotification) {
+            this.showToast(`Theme changed to ${theme} mode`, 'success');
+        }
         
         // Update contrast options (only if they exist in the DOM)
         document.querySelectorAll('.contrast-option').forEach(option => {
@@ -228,12 +230,14 @@ class IELTSUniversalFunctions {
         }
     }
 
-    setTextSize(size) {
+    setTextSize(size, showNotification = true) {
         this.currentTextSize = size;
         document.body.className = document.body.className.replace(/text-small|text-medium|text-large/g, '');
         document.body.classList.add(`text-${size}`);
         this.saveUserPreferences();
-        this.showToast(`Text size changed to ${size}`, 'success');
+        if (showNotification) {
+            this.showToast(`Text size changed to ${size}`, 'success');
+        }
         
         // Update text size options (only if they exist in the DOM)
         document.querySelectorAll('.text-size-option').forEach(option => {
@@ -354,10 +358,10 @@ class IELTSUniversalFunctions {
             try {
                 const preferences = JSON.parse(saved);
                 if (preferences.theme) {
-                    this.setTheme(preferences.theme);
+                    this.setTheme(preferences.theme, false);
                 }
                 if (preferences.textSize) {
-                    this.setTextSize(preferences.textSize);
+                    this.setTextSize(preferences.textSize, false);
                 }
             } catch (e) {
                 console.warn('Error loading user preferences:', e);
