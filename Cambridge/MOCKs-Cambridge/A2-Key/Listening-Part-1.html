@@ -512,13 +512,19 @@
             if (nextButton) {
                 nextButton.addEventListener('click', function(e) {
                     e.preventDefault();
+                    console.log('⏭️ Next button clicked, navigating to Part 2');
                     if (window.self !== window.top) {
                         try {
+                            console.log('🔄 Attempting direct iframe navigation...');
                             window.top.document.getElementById('part-frame').src = partFiles[2];
+                            console.log('✅ Direct navigation successful');
                         } catch (error) {
+                            console.log('❌ Direct navigation failed:', error.message);
+                            console.log('📨 Using postMessage fallback...');
                             window.top.postMessage({ type: 'navigateTo', url: partFiles[2] }, '*');
                         }
                     } else {
+                        console.log('🔄 Standalone mode - using location.href');
                         window.location.href = partFiles[2];
                     }
                 });
@@ -553,14 +559,15 @@
             const studentId = localStorage.getItem('studentId');
             if (studentId) {
                 // Populate the header display
-                const candidateIdLabel = document.querySelector('.header__name___1Cw2x');
-                if (candidateIdLabel && candidateIdLabel.textContent.includes('Candidate ID')) {
-                    const displayDiv = candidateIdLabel.nextElementSibling;
-                    if (displayDiv) {
-                        displayDiv.textContent = studentId;
-                        displayDiv.style.fontWeight = 'bold';
-                        console.log('✅ Candidate ID header populated:', studentId);
+                const headerNameDiv = document.querySelector('.header__name___1Cw2x');
+                if (headerNameDiv && headerNameDiv.textContent.includes('Candidate ID')) {
+                    const headerValueDiv = headerNameDiv.nextElementSibling || document.createElement('div');
+                    headerValueDiv.textContent = studentId;
+                    headerValueDiv.style.fontWeight = 'bold';
+                    if (!headerNameDiv.nextElementSibling) {
+                        headerNameDiv.parentElement.appendChild(headerValueDiv);
                     }
+                    console.log('✅ Candidate ID header populated:', studentId);
                 }
                 
                 // Only target specific Candidate ID input fields, not answer inputs

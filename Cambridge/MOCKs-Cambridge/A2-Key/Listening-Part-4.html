@@ -285,6 +285,13 @@
                                     <button role="tab" class="footer__questionNo___3WNct">
                                         <span><span class="section-prefix">Part </span><span class="sectionNr">4</span></span>
                                     </button>
+                                    <div class="footer__subquestionWrapper___9GgoP">
+                                        <button class="subQuestion scorable-item" data-ordernumber="16"><span>16</span></button>
+                                        <button class="subQuestion scorable-item" data-ordernumber="17"><span>17</span></button>
+                                        <button class="subQuestion scorable-item" data-ordernumber="18"><span>18</span></button>
+                                        <button class="subQuestion scorable-item" data-ordernumber="19"><span>19</span></button>
+                                        <button class="subQuestion scorable-item" data-ordernumber="20"><span>20</span></button>
+                                    </div>
                                 </div>
                                 <div class="footer__questionWrapper___1tZ46 multiple">
                                     <button role="tab" class="footer__questionNo___3WNct">
@@ -341,6 +348,16 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedAnswers();
+
+            // FIXED: Auto-start audio if listening test has already been started
+            const listeningStarted = localStorage.getItem('listeningTestStarted');
+            if (listeningStarted === 'true') {
+                const audio = document.getElementById('audio-player');
+                if (audio) {
+                    console.log('🎵 Auto-starting Part 4 audio...');
+                    audio.play().catch(error => console.log('Audio playback:', error.message));
+                }
+            }
 
             const partFiles = {
                 1: 'Listening-Part-1.html',

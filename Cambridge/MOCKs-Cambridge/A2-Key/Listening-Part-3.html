@@ -281,6 +281,13 @@
                                     <button role="tab" class="footer__questionNo___3WNct">
                                         <span><span class="section-prefix">Part </span><span class="sectionNr">3</span></span>
                                     </button>
+                                    <div class="footer__subquestionWrapper___9GgoP">
+                                        <button class="subQuestion scorable-item" data-ordernumber="11"><span>11</span></button>
+                                        <button class="subQuestion scorable-item" data-ordernumber="12"><span>12</span></button>
+                                        <button class="subQuestion scorable-item" data-ordernumber="13"><span>13</span></button>
+                                        <button class="subQuestion scorable-item" data-ordernumber="14"><span>14</span></button>
+                                        <button class="subQuestion scorable-item" data-ordernumber="15"><span>15</span></button>
+                                    </div>
                                 </div>
                                 <div class="footer__questionWrapper___1tZ46 multiple">
                                     <button role="tab" class="footer__questionNo___3WNct">
@@ -342,6 +349,16 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedAnswers();
+
+            // FIXED: Auto-start audio if listening test has already been started
+            const listeningStarted = localStorage.getItem('listeningTestStarted');
+            if (listeningStarted === 'true') {
+                const audio = document.getElementById('audio-player');
+                if (audio) {
+                    console.log('🎵 Auto-starting Part 3 audio...');
+                    audio.play().catch(error => console.log('Audio playback:', error.message));
+                }
+            }
 
             const partFiles = {
                 1: 'Listening-Part-1.html',
@@ -434,14 +451,15 @@
             const studentId = localStorage.getItem('studentId');
             if (studentId) {
                 // Populate the header display
-                const candidateIdLabel = document.querySelector('.header__name___1Cw2x');
-                if (candidateIdLabel && candidateIdLabel.textContent.includes('Candidate ID')) {
-                    const displayDiv = candidateIdLabel.nextElementSibling;
-                    if (displayDiv) {
-                        displayDiv.textContent = studentId;
-                        displayDiv.style.fontWeight = 'bold';
-                        console.log('✅ Candidate ID header populated:', studentId);
+                const headerNameDiv = document.querySelector('.header__name___1Cw2x');
+                if (headerNameDiv && headerNameDiv.textContent.includes('Candidate ID')) {
+                    const headerValueDiv = headerNameDiv.nextElementSibling || document.createElement('div');
+                    headerValueDiv.textContent = studentId;
+                    headerValueDiv.style.fontWeight = 'bold';
+                    if (!headerNameDiv.nextElementSibling) {
+                        headerNameDiv.parentElement.appendChild(headerValueDiv);
                     }
+                    console.log('✅ Candidate ID header populated:', studentId);
                 }
                 
                 // Only target specific Candidate ID input fields, not answer inputs
