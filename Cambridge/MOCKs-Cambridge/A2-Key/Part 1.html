@@ -934,13 +934,12 @@ console.log('✅ Cross-Part State: Enabled');
             }
         }
         
-        // Try multiple selectors to find the candidate ID input field
+        // FIXED: Only populate dedicated Candidate ID input fields, NOT question answer fields
         const candidateIdInputs = [
-            document.querySelector('input[placeholder*="Candidate"]'),
-            document.querySelector('input[placeholder*="candidate"]'),
-            document.querySelector('input[type="text"][placeholder]'),
             document.getElementById('candidateId'),
-            document.getElementById('candidate-id')
+            document.getElementById('candidate-id'),
+            document.querySelector('input[name="candidateId"]'),
+            document.querySelector('input[name="candidate-id"]')
         ];
         
         for (const input of candidateIdInputs) {

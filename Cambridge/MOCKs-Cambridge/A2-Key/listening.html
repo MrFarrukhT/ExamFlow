@@ -26,7 +26,7 @@
   </style>
 </head>
 <body>
-  <iframe id="part-frame" class="part-frame" src="./Listening-Part-1.html"></iframe>
+  <iframe id="part-frame" class="part-frame" src="./Listening-Part-1.html" sandbox="allow-same-origin allow-scripts allow-forms allow-modals"></iframe>
 
   <script src="../../../assets/js/universal-functions.js"></script>
   <script src="../../../assets/js/distraction-free.js"></script>
@@ -45,6 +45,16 @@
     if (!localStorage.getItem('listeningAnswers')) {
       localStorage.setItem('listeningAnswers', JSON.stringify({}));
     }
+    
+    // FIXED: Add message listener to allow iframe navigation from child frames
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'navigateTo') {
+        const frame = document.getElementById('part-frame');
+        if (frame && event.data.url) {
+          frame.src = event.data.url;
+        }
+      }
+    });
   </script>
 </body>
 </html>

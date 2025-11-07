@@ -360,7 +360,11 @@
                         if (partFiles[partNumber]) {
                             // If we're in an iframe, navigate the parent; otherwise navigate normally
                             if (window.self !== window.top) {
-                                window.top.document.getElementById('part-frame').src = partFiles[partNumber];
+                                try {
+                                    window.top.document.getElementById('part-frame').src = partFiles[partNumber];
+                                } catch (err) {
+                                    window.top.postMessage({ type: 'navigateTo', url: partFiles[partNumber] }, '*');
+                                }
                             } else {
                                 window.location.href = partFiles[partNumber];
                             }
@@ -376,7 +380,11 @@
                 prevButton.addEventListener('click', function(e) {
                     e.preventDefault();
                     if (window.self !== window.top) {
-                        window.top.document.getElementById('part-frame').src = partFiles[2];
+                        try {
+                            window.top.document.getElementById('part-frame').src = partFiles[2];
+                        } catch (err) {
+                            window.top.postMessage({ type: 'navigateTo', url: partFiles[2] }, '*');
+                        }
                     } else {
                         window.location.href = partFiles[2];
                     }
@@ -387,7 +395,11 @@
                 nextButton.addEventListener('click', function(e) {
                     e.preventDefault();
                     if (window.self !== window.top) {
-                        window.top.document.getElementById('part-frame').src = partFiles[4];
+                        try {
+                            window.top.document.getElementById('part-frame').src = partFiles[4];
+                        } catch (err) {
+                            window.top.postMessage({ type: 'navigateTo', url: partFiles[4] }, '*');
+                        }
                     } else {
                         window.location.href = partFiles[4];
                     }
@@ -432,9 +444,12 @@
                     }
                 }
                 
-                const inputs = [document.querySelector('input[placeholder*="Candidate"]'), document.querySelector('input[placeholder*="candidate"]'), document.querySelector('input[type="text"][placeholder]'), document.getElementById('candidateId'), document.getElementById('candidate-id')];
-                for (const input of inputs) {
-                    if (input) { input.value = studentId; input.readOnly = true; console.log('✅ Candidate ID input populated:', studentId); break; }
+                // Only target specific Candidate ID input fields, not answer inputs
+                const candidateIdField = document.getElementById('candidateId') || document.getElementById('candidate-id');
+                if (candidateIdField) {
+                    candidateIdField.value = studentId;
+                    candidateIdField.readOnly = true;
+                    console.log('✅ Candidate ID input populated:', studentId);
                 }
             } else {
                 console.warn('⚠️ No studentId found in localStorage');
