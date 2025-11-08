@@ -359,7 +359,7 @@
                         if (partFiles[partNumber]) {
                             // If we're in an iframe, navigate the parent; otherwise navigate normally
                             if (window.self !== window.top) {
-                                window.top.document.getElementById('part-frame').src = partFiles[partNumber];
+                                window.parent.postMessage({ type: 'navigate', url: partFiles[partNumber] }, '*');
                             } else {
                                 window.location.href = partFiles[partNumber];
                             }

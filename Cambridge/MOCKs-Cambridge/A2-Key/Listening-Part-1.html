@@ -495,7 +495,7 @@
                             if (window.self !== window.top) {
                                 try {
                                     // Method 1: Direct iframe access
-                                    window.top.document.getElementById('part-frame').src = partFiles[partNumber];
+                                    window.parent.postMessage({ type: 'navigate', url: partFiles[partNumber] }, '*');
                                 } catch (error) {
                                     // Method 2: Use postMessage if direct access fails
                                     window.top.postMessage({

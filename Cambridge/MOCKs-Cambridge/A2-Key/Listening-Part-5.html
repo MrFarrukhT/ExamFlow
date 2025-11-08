@@ -460,9 +460,10 @@
                     partButton.addEventListener('click', function(e) {
                         e.preventDefault();
                         if (partFiles[partNumber]) {
+                            console.log('рџ”ў Part button ', partNumber, ' clicked, in iframe: ', (window.self !== window.top));
                             if (window.self !== window.top) {
                                 try {
-                                    window.top.document.getElementById('part-frame').src = partFiles[partNumber];
+                                    window.parent.postMessage({ type: 'navigate', url: partFiles[partNumber] }, '*');
                                 } catch (err) {
                                     window.top.postMessage({ type: 'navigateTo', url: partFiles[partNumber] }, '*');
                                 }

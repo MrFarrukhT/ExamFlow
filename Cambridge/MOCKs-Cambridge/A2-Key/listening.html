@@ -47,14 +47,10 @@
     }
     
     // FIXED: Add message listener to allow iframe navigation from child frames
-    window.addEventListener('message', function(event) {
-      console.log('📨 Parent received message:', event.data);
-      if (event.data && event.data.type === 'navigateTo') {
-        const frame = document.getElementById('part-frame');
-        if (frame && event.data.url) {
-          console.log('🔄 Navigating to:', event.data.url);
-          frame.src = event.data.url;
-        }
+    window.addEventListener('message', function(e) {
+      if (e.data && e.data.type === 'navigate') {
+        console.log('📡 Navigation message received:', e.data.url);
+        document.getElementById('part-frame').src = e.data.url;
       }
     });
   </script>
