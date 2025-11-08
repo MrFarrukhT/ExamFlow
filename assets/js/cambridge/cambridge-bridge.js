@@ -1100,8 +1100,11 @@ class CambridgeBridge {
             try {
                 this.highlightedRanges = JSON.parse(savedHighlights);
                 console.log(`Loaded ${this.highlightedRanges.length} highlights`);
-                // Note: We don't restore highlights visually here because the DOM structure
-                // may differ between parts. Highlights are restored by the save/load system.
+                
+                // Restore highlights visually after a short delay to ensure DOM is ready
+                setTimeout(() => {
+                    this.restoreHighlightsForCurrentPage();
+                }, 500);
             } catch (e) {
                 console.warn('Error loading highlights:', e);
             }
@@ -1111,6 +1114,11 @@ class CambridgeBridge {
             try {
                 this.notes = JSON.parse(savedNotes);
                 console.log(`Loaded ${Object.keys(this.notes).length} notes`);
+                
+                // Restore notes list
+                setTimeout(() => {
+                    this.updateNotesList();
+                }, 500);
             } catch (e) {
                 console.warn('Error loading notes:', e);
             }
@@ -1118,10 +1126,72 @@ class CambridgeBridge {
     }
     
     restoreHighlightsForCurrentPage() {
-        // This function can be called to restore highlights visually
-        // Currently highlights persist only through storage, not visual restoration
-        // because the DOM structure varies between parts
-        console.log('Highlights are managed through storage and will persist across parts');
+        console.log(`🎨 Restoring ${this.highlightedRanges.length} highlights visually...`);
+        
+        let restoredCount = 0;
+        
+        this.highlightedRanges.forEach((range, index) => {
+            try {
+                // Find text in the current page
+                const walker = document.createTreeWalker(
+                    document.body,
+                    NodeFilter.SHOW_TEXT,
+                    null,
+                    false
+                );
+                
+                let node;
+                while (node = walker.nextNode()) {
+                    const text = node.textContent;
+                    if (text.includes(range.text)) {
+                        // Found the text, apply highlight
+                        const parent = node.parentElement;
+                        if (parent && !parent.classList.contains('highlighted-text')) {
+                            const span = document.createElement('span');
+                            span.className = 'highlighted-text';
+                            span.style.backgroundColor = range.color || '#ffff00';
+                            span.textContent = range.text;
+                            span.dataset.highlightIndex = index;
+                            
+                            // Replace the text node with highlighted span
+                            const startIndex = text.indexOf(range.text);
+                            if (startIndex !== -1) {
+                                const before = text.substring(0, startIndex);
+                                const after = text.substring(startIndex + range.text.length);
+                                
+                                const beforeNode = document.createTextNode(before);
+                                const afterNode = document.createTextNode(after);
+                                
+                                parent.insertBefore(beforeNode, node);
+                                parent.insertBefore(span, node);
+                                parent.insertBefore(afterNode, node);
+                                parent.removeChild(node);
+                                
+                                restoredCount++;
+                                console.log(`✅ Restored highlight ${index + 1}: "${range.text.substring(0, 30)}..."`);
+                                break; // Move to next highlight
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn(`Could not restore highlight ${index + 1}:`, e);
+            }
+        });
+        
+        console.log(`✅ Restored ${restoredCount}/${this.highlightedRanges.length} highlights visually`);
+        
+        // Also restore notes visually if any
+        this.restoreNotesVisually();
+    }
+    
+    restoreNotesVisually() {
+        const noteCount = Object.keys(this.notes).length;
+        if (noteCount > 0) {
+            console.log(`📝 ${noteCount} notes are available in storage`);
+            // Notes are displayed in the notes sidebar, which is managed separately
+            this.updateNotesList();
+        }
     }
 
     // ==================== ANSWER TRACKING ====================

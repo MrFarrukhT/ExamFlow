@@ -909,7 +909,10 @@ div[class="adsbygoogle"][id="ad-detector"] { display: block !important; }</style
         body.text-large { font-size: 18px !important; }
             
         </style>
-    <script src="./Part 4_files/bundle.js.Без названия"></script><link rel="stylesheet" type="text/css" href="./A2 Key RW Digital Sample Test 1_26.04.23_files/player.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><script async="" src="./Part 4_files/moment-timezone-with-data.min.js.Без названия"></script><script async="" src="./Part 4_files/boot.js.Без названия"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({ skipStartupTypeset: true });</script><link rel="sidebar" href="https://d2snzxottmona5.cloudfront.net:5000/app.html" type="application/annotator+html"><link rel="hypothesis-client" href="./Part 4_files/boot.js.Без названия" type="application/annotator+javascript"><script type="text/javascript" src="./Part 4_files/jquery.bundle.js.Без названия"></script><script type="text/javascript" src="./Part 4_files/annotator.bundle.js.Без названия"></script></head>
+    <script src="./Part 4_files/bundle.js.Без названия"></script><link rel="stylesheet" type="text/css" href="./A2 Key RW Digital Sample Test 1_26.04.23_files/player.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><script async="" src="./Part 4_files/moment-timezone-with-data.min.js.Без названия"></script><script async="" src="./Part 4_files/boot.js.Без названия"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({ skipStartupTypeset: true });</script><link rel="sidebar" href="https://d2snzxottmona5.cloudfront.net:5000/app.html" type="application/annotator+html"><link rel="hypothesis-client" href="./Part 4_files/boot.js.Без названия" type="application/annotator+javascript"><script type="text/javascript" src="./Part 4_files/jquery.bundle.js.Без названия"></script><script type="text/javascript" src="./Part 4_files/annotator.bundle.js.Без названия"></script>    <!-- Highlight and Notes Persistence -->
+    <script src=""../../../assets/js/cambridge/highlight-manager.js""></script>
+    <script src=""../../../assets/js/cambridge/notes-manager.js""></script>
+</head>
 
 
     <body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="reading-writing" data-mock="A2-Key" data-test-version="A2-Key">
@@ -1301,5 +1304,94 @@ function toggleOptionsMenu() {
         console.log('✅ Submit handler attached');
     }
 })();
+
+// Enhanced answer saving for Part 4
+(function() {
+    // Wait for both DOM and cambridge-answer-manager to be ready
+    const initAnswerSaving = function() {
+        console.log('💾 Initializing enhanced answer save listeners for Part 4');
+        
+        // Wait for cambridgeAnswerManager to be available
+        if (!window.cambridgeAnswerManager) {
+            console.log('⏳ Waiting for cambridgeAnswerManager...');
+            setTimeout(initAnswerSaving, 100);
+            return;
+        }
+        
+        // Find all input fields in Part 4
+        const inputs = document.querySelectorAll('input[type="text"], textarea');
+        let savedCount = 0;
+        
+        console.log(`Found ${inputs.length} input fields in Part 4`);
+        
+        inputs.forEach(input => {
+            // Extract question number from input ID or name
+            const questionMatch = input.id.match(/\d+/) || (input.name && input.name.match(/\d+/));
+            if (questionMatch) {
+                const questionNum = questionMatch[0];
+                
+                console.log(`Setting up answer saving for input: ${input.id}, Question: ${questionNum}`);
+                
+                // Add save listeners
+                input.addEventListener('input', function() {
+                    saveAnswer(questionNum, this.value);
+                });
+                
+                input.addEventListener('change', function() {
+                    saveAnswer(questionNum, this.value);
+                });
+                
+                input.addEventListener('blur', function() {
+                    saveAnswer(questionNum, this.value);
+                });
+                
+                // Restore saved answer on load
+                const savedAnswer = getSavedAnswer(questionNum);
+                if (savedAnswer) {
+                    input.value = savedAnswer;
+                    savedCount++;
+                    console.log(`✅ Restored answer for Q${questionNum}: "${savedAnswer}"`);
+                }
+            }
+        });
+        
+        console.log(`✅ Part 4: Initialized ${inputs.length} inputs, restored ${savedCount} answers`);
+    };
+    
+    function saveAnswer(questionNum, answer) {
+        try {
+            if (window.cambridgeAnswerManager) {
+                window.cambridgeAnswerManager.saveAnswer(questionNum, answer, 'reading-writing');
+                console.log(`💾 Part 4: Saved answer for Q${questionNum}: "${answer}"`);
+            } else {
+                console.warn('⚠️ cambridgeAnswerManager not found, using localStorage directly');
+                const answers = JSON.parse(localStorage.getItem('reading-writingAnswers') || '{}');
+                answers[questionNum] = answer;
+                localStorage.setItem('reading-writingAnswers', JSON.stringify(answers));
+                console.log(`💾 Part 4: Saved to localStorage for Q${questionNum}`);
+            }
+        } catch (error) {
+            console.error('❌ Error saving answer:', error);
+        }
+    }
+    
+    function getSavedAnswer(questionNum) {
+        try {
+            const answers = JSON.parse(localStorage.getItem('reading-writingAnswers') || '{}');
+            return answers[questionNum] || '';
+        } catch (error) {
+            console.error('❌ Error getting saved answer:', error);
+            return '';
+        }
+    }
+    
+    // Start initialization when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAnswerSaving);
+    } else {
+        initAnswerSaving();
+    }
+})();
 </script>
 </body></html>
+

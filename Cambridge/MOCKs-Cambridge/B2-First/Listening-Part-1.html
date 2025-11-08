@@ -502,8 +502,10 @@
             if (nextButton) {
                 nextButton.addEventListener('click', function(e) {
                     e.preventDefault();
+                    console.log('▶️ Next button clicked, navigating to Part 2');
                     if (window.self !== window.top) {
-                        window.top.document.getElementById('part-frame').src = partFiles[2];
+                        // FIXED: Use postMessage to communicate with parent
+                        window.parent.postMessage({ type: 'navigate', url: partFiles[2] }, '*');
                     } else {
                         window.location.href = partFiles[2];
                     }

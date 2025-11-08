@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html translate="no" class="notranslate js-focus-visible" lang="en" data-js-focus-visible="">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -54,6 +54,9 @@
             margin-right: 10px;
         }
     </style>
+    <!-- Highlight and Notes Persistence -->
+    <script src=""../../../assets/js/cambridge/highlight-manager.js""></script>
+    <script src=""../../../assets/js/cambridge/notes-manager.js""></script>
 </head>
 
 <body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="listening" data-mock="A2-Key" data-test-version="A2-Key">
@@ -396,9 +399,10 @@
             if (prevButton) {
                 prevButton.addEventListener('click', function(e) {
                     e.preventDefault();
+                    console.log('в–¶пёЏ Next button clicked, navigating to next part');
                     if (window.self !== window.top) {
                         try {
-                            window.top.document.getElementById('part-frame').src = partFiles[2];
+                            window.parent.postMessage({ type: 'navigate', url: partFiles[2] }, '*');
                         } catch (err) {
                             window.top.postMessage({ type: 'navigateTo', url: partFiles[2] }, '*');
                         }
@@ -411,9 +415,10 @@
             if (nextButton) {
                 nextButton.addEventListener('click', function(e) {
                     e.preventDefault();
+                    console.log('в–¶пёЏ Next button clicked, navigating to next part');
                     if (window.self !== window.top) {
                         try {
-                            window.top.document.getElementById('part-frame').src = partFiles[4];
+                            window.parent.postMessage({ type: 'navigate', url: partFiles[4] }, '*');
                         } catch (err) {
                             window.top.postMessage({ type: 'navigateTo', url: partFiles[4] }, '*');
                         }
@@ -476,4 +481,5 @@
     </script>
 </body>
 </html>
+
 

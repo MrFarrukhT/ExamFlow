@@ -12,6 +12,33 @@ class CambridgeAnswerManager {
             localStorage.setItem('cambridgeTestHistory', JSON.stringify([]));
         }
     }
+    
+    // Save individual answer to localStorage
+    saveAnswer(questionNum, answer, module) {
+        try {
+            const storageKey = `${module}Answers`;
+            const answers = JSON.parse(localStorage.getItem(storageKey) || '{}');
+            answers[questionNum] = answer;
+            localStorage.setItem(storageKey, JSON.stringify(answers));
+            console.log(`💾 Saved answer for Q${questionNum} in ${module}:`, answer);
+            return true;
+        } catch (error) {
+            console.error('Error saving answer:', error);
+            return false;
+        }
+    }
+    
+    // Get saved answer from localStorage
+    getAnswer(questionNum, module) {
+        try {
+            const storageKey = `${module}Answers`;
+            const answers = JSON.parse(localStorage.getItem(storageKey) || '{}');
+            return answers[questionNum] || '';
+        } catch (error) {
+            console.error('Error getting answer:', error);
+            return '';
+        }
+    }
 
     // Save current Cambridge test to history
     saveCurrentTestToHistory() {

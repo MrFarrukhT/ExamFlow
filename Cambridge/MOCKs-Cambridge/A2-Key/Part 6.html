@@ -559,7 +559,10 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         body.text-medium { font-size: 16px !important; }
         body.text-large { font-size: 18px !important; }
         </style>
-    <script src="./A2 Key RW Digital Sample Test 1_26.04.23_files/bundle.js.download"></script><link rel="stylesheet" type="text/css" href="./A2 Key RW Digital Sample Test 1_26.04.23_files/player.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><script async="" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/moment-timezone-with-data.min.js.download"></script><script async="" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/boot.js.download"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({ skipStartupTypeset: true });</script><link rel="sidebar" href="https://d2snzxottmona5.cloudfront.net:5000/app.html" type="application/annotator+html"><link rel="hypothesis-client" href="./A2 Key RW Digital Sample Test 1_26.04.23_files/boot.js.download" type="application/annotator+javascript"><script type="text/javascript" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/jquery.bundle.js.download"></script><script type="text/javascript" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/annotator.bundle.js.download"></script></head>
+    <script src="./A2 Key RW Digital Sample Test 1_26.04.23_files/bundle.js.download"></script><link rel="stylesheet" type="text/css" href="./A2 Key RW Digital Sample Test 1_26.04.23_files/player.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><script async="" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/moment-timezone-with-data.min.js.download"></script><script async="" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/boot.js.download"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({ skipStartupTypeset: true });</script><link rel="sidebar" href="https://d2snzxottmona5.cloudfront.net:5000/app.html" type="application/annotator+html"><link rel="hypothesis-client" href="./A2 Key RW Digital Sample Test 1_26.04.23_files/boot.js.download" type="application/annotator+javascript"><script type="text/javascript" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/jquery.bundle.js.download"></script><script type="text/javascript" src="./A2 Key RW Digital Sample Test 1_26.04.23_files/annotator.bundle.js.download"></script>    <!-- Highlight and Notes Persistence -->
+    <script src=""../../../assets/js/cambridge/highlight-manager.js""></script>
+    <script src=""../../../assets/js/cambridge/notes-manager.js""></script>
+</head>
 
 
     <body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="writing" data-mock="A2-Key" data-test-version="A2-Key">
@@ -846,5 +849,39 @@ function toggleOptionsMenu() {
         console.log('✅ Submit handler attached');
     }
 })();
+
+// Word count functionality for writing tasks
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📝 Initializing word count functionality for Part 6');
+    
+    // Find all textareas with word count displays
+    const textareas = document.querySelectorAll('textarea[id^="labelText-"]');
+    
+    textareas.forEach(textarea => {
+        // Find the associated word count span
+        const wordCountSpan = textarea.parentElement.querySelector('.WordCountText__wordCountText___3QyIr');
+        
+        if (wordCountSpan) {
+            console.log('Found textarea with word count:', textarea.id);
+            
+            // Function to update word count
+            function updateWordCount() {
+                const text = textarea.value.trim();
+                const words = text ? text.split(/\s+/).length : 0;
+                wordCountSpan.textContent = `Words: ${words}`;
+            }
+            
+            // Update on input
+            textarea.addEventListener('input', updateWordCount);
+            textarea.addEventListener('change', updateWordCount);
+            
+            // Initial update
+            updateWordCount();
+            
+            console.log('✅ Word count initialized for', textarea.id);
+        }
+    });
+});
 </script>
 </body></html>
+

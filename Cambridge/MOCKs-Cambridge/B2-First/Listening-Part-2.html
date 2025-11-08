@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html translate="no" class="notranslate js-focus-visible" lang="en" data-js-focus-visible="">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -416,8 +416,9 @@
             if (prevButton) {
                 prevButton.addEventListener('click', function(e) {
                     e.preventDefault();
+                    console.log('в–¶пёЏ Next button clicked, navigating to next part');
                     if (window.self !== window.top) {
-                        window.top.document.getElementById('part-frame').src = partFiles[1];
+                        window.parent.postMessage({ type: 'navigate', url: partFiles[1] }, '*');
                     } else {
                         window.location.href = partFiles[1];
                     }
@@ -427,8 +428,9 @@
             if (nextButton) {
                 nextButton.addEventListener('click', function(e) {
                     e.preventDefault();
+                    console.log('в–¶пёЏ Next button clicked, navigating to next part');
                     if (window.self !== window.top) {
-                        window.top.document.getElementById('part-frame').src = partFiles[3];
+                        window.parent.postMessage({ type: 'navigate', url: partFiles[3] }, '*');
                     } else {
                         window.location.href = partFiles[3];
                     }

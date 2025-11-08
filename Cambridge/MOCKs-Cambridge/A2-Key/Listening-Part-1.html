@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html translate="no" class="notranslate js-focus-visible" lang="en" data-js-focus-visible="">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -127,6 +127,9 @@
             border-color: #2196F3;
         }
     </style>
+    <!-- Highlight and Notes Persistence -->
+    <script src=""../../../assets/js/cambridge/highlight-manager.js""></script>
+    <script src=""../../../assets/js/cambridge/notes-manager.js""></script>
 </head>
 
 <body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="listening" data-mock="A2-Key" data-test-version="A2-Key">
@@ -516,7 +519,7 @@
                     if (window.self !== window.top) {
                         try {
                             console.log('🔄 Attempting direct iframe navigation...');
-                            window.top.document.getElementById('part-frame').src = partFiles[2];
+                            window.parent.postMessage({ type: 'navigate', url: partFiles[2] }, '*');
                             console.log('✅ Direct navigation successful');
                         } catch (error) {
                             console.log('❌ Direct navigation failed:', error.message);
@@ -590,4 +593,5 @@
     </script>
 </body>
 </html>
+
 

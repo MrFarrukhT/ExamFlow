@@ -26,7 +26,7 @@
   </style>
 </head>
 <body>
-  <iframe id="part-frame" class="part-frame" src="./Listening-Part-1.html"></iframe>
+  <iframe id="part-frame" class="part-frame" src="./Listening-Part-1.html" sandbox="allow-same-origin allow-scripts allow-forms allow-modals allow-top-navigation allow-popups"></iframe>
 
   <script src="../../../assets/js/universal-functions.js"></script>
   <script src="../../../assets/js/distraction-free.js"></script>
@@ -34,6 +34,14 @@
   <script src="../../../assets/js/cambridge/question-marking.js"></script>
   
   <script>
+    // FIXED: Add message listener to allow iframe navigation from child frames
+    window.addEventListener('message', function(e) {
+      if (e.data && e.data.type === 'navigate') {
+        console.log('📡 Navigation message received:', e.data.url);
+        document.getElementById('part-frame').src = e.data.url;
+      }
+    });
+    
     // Initialize storage
     const module = 'listening';
     localStorage.setItem(`${module}Status`, 'in-progress');
