@@ -40,13 +40,14 @@ window.populateCandidateIdDisplay = function() {
         }
       }
       
-      // Also populate any input fields
+      // Also populate any input fields (specific to Candidate ID fields only)
       const candidateIdInputs = [
         document.querySelector('input[placeholder*="Candidate"]'),
         document.querySelector('input[placeholder*="candidate"]'),
-        document.querySelector('input[type="text"][placeholder]'),
         document.getElementById('candidateId'),
-        document.getElementById('candidate-id')
+        document.getElementById('candidate-id'),
+        document.querySelector('input[name="candidateId"]'),
+        document.querySelector('input[name="candidate-id"]')
       ];
       
       for (const input of candidateIdInputs) {

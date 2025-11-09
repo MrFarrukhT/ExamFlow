@@ -352,6 +352,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedAnswers();
 
+            // FIXED: Mark current part as selected to show questions in navigation
+            const currentPartWrapper = document.querySelectorAll('.footer__questionWrapper___1tZ46')[window.currentPart - 1];
+            if (currentPartWrapper) {
+                currentPartWrapper.classList.add('selected');
+                console.log('✅ Part 4 marked as selected in navigation');
+            }
+
             // FIXED: Auto-start audio if listening test has already been started
             const listeningStarted = localStorage.getItem('listeningTestStarted');
             if (listeningStarted === 'true') {

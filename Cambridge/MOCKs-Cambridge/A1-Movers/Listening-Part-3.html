@@ -343,6 +343,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedAnswers();
 
+            // FIXED: Mark current part as selected to show questions in navigation
+            const currentPartWrapper = document.querySelectorAll('.footer__questionWrapper___1tZ46')[window.currentPart - 1];
+            if (currentPartWrapper) {
+                currentPartWrapper.classList.add('selected');
+                console.log('✅ Part 3 marked as selected in navigation');
+            }
+
             const partFiles = {
                 1: 'Listening-Part-1.html',
                 2: 'Listening-Part-2.html',
@@ -434,7 +441,7 @@
                     }
                 }
                 
-                const inputs = [document.querySelector('input[placeholder*="Candidate"]'), document.querySelector('input[placeholder*="candidate"]'), document.querySelector('input[type="text"][placeholder]'), document.getElementById('candidateId'), document.getElementById('candidate-id')];
+                const inputs = [document.querySelector('input[placeholder*="Candidate"]'), document.querySelector('input[placeholder*="candidate"]'), document.getElementById('candidateId'), document.getElementById('candidate-id'), document.querySelector('input[name="candidateId"]'), document.querySelector('input[name="candidate-id"]')];
                 for (const input of inputs) {
                     if (input) { input.value = studentId; input.readOnly = true; console.log('✅ Candidate ID input populated:', studentId); break; }
                 }

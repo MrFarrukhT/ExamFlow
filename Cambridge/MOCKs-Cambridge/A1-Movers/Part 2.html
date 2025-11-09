@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!-- saved from url=(0112)https://ceq.inspera.com/player/?assessmentRunId=146724146&context=exam#/section/3426847902314/question/144044610 -->
 <html translate="no" class="notranslate js-focus-visible" lang="en" data-js-focus-visible="">
 <head>
@@ -738,6 +738,7 @@
 <script src="../../../assets/js/cambridge/a2-key-part-scroll.js"></script>
 <script src="../../../assets/js/cambridge/a2-key-answer-sync.js"></script>
 <script src="../../../assets/js/cambridge/question-marking.js"></script>
+<script src="../../../assets/js/cambridge/cambridge-layout-toggle.js"></script>
 
 <!-- Minimal initialization - Bridge handles everything else -->
 <script>
@@ -816,9 +817,10 @@ function toggleOptionsMenu() {
         const candidateIdInputs = [
             document.querySelector('input[placeholder*="Candidate"]'),
             document.querySelector('input[placeholder*="candidate"]'),
-            document.querySelector('input[type="text"][placeholder]'),
             document.getElementById('candidateId'),
-            document.getElementById('candidate-id')
+            document.getElementById('candidate-id'),
+            document.querySelector('input[name="candidateId"]'),
+            document.querySelector('input[name="candidate-id"]')
         ];
         for (const input of candidateIdInputs) {
             if (input) {

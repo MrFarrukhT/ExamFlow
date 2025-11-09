@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!-- saved from url=(0139)https://ceq.inspera.com/player/?assessmentRunId=146724146&context=exam#/section/2200793588978/question/143369604/scorableItem/32/skipScroll -->
 <html translate="no" class="notranslate js-focus-visible" lang="en" data-js-focus-visible=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>body {transition: opacity ease-in 0.2s; } 
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
@@ -763,6 +763,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 <script src="../../../assets/js/cambridge/a2-key-part-scroll.js"></script>
 <script src="../../../assets/js/cambridge/a2-key-answer-sync.js"></script>
 <script src="../../../assets/js/cambridge/question-marking.js"></script>
+<script src="../../../assets/js/cambridge/cambridge-layout-toggle.js"></script>
 <script>
 console.log('🎓 Cambridge A2 Key - Part 7 Loaded');
 console.log('✅ All IELTS Functions: Enabled');
@@ -786,9 +787,10 @@ console.log('✅ All IELTS Functions: Enabled');
         const candidateIdInputs = [
             document.querySelector('input[placeholder*="Candidate"]'),
             document.querySelector('input[placeholder*="candidate"]'),
-            document.querySelector('input[type="text"][placeholder]'),
             document.getElementById('candidateId'),
-            document.getElementById('candidate-id')
+            document.getElementById('candidate-id'),
+            document.querySelector('input[name="candidateId"]'),
+            document.querySelector('input[name="candidate-id"]')
         ];
         
         for (const input of candidateIdInputs) {

@@ -116,11 +116,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Hidden Audio Player -->
-                                <audio id="audio-player" preload="auto" style="display: none;">
-                                    <source src="../../../assets/audio/a2-key-listening-part3.mp3" type="audio/mpeg">
-                                    Your browser does not support the audio element.
-                                </audio>
+                                <!-- Audio is managed by the parent container -->
 
                                 <!-- Question 11 -->
                                 <div class="question-wrapper" id="question-11">
@@ -352,6 +348,13 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedAnswers();
+
+            // FIXED: Mark current part as selected to show questions in navigation
+            const currentPartWrapper = document.querySelectorAll('.footer__questionWrapper___1tZ46')[window.currentPart - 1];
+            if (currentPartWrapper) {
+                currentPartWrapper.classList.add('selected');
+                console.log('✅ Part 3 marked as selected in navigation');
+            }
 
             // FIXED: Auto-start audio if listening test has already been started
             const listeningStarted = localStorage.getItem('listeningTestStarted');

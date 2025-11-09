@@ -27,66 +27,6 @@
     <style>
         body { opacity: 1 !important; }
         
-        /* Audio Start Popup */
-        .audio-popup-overlay {
-            display: flex;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-        }
-        .audio-popup-content {
-            background: white;
-            border-radius: 12px;
-            padding: 40px;
-            max-width: 500px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-        .headphones-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            fill: #2196F3;
-        }
-        .audio-popup-content h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .audio-popup-content p {
-            margin-bottom: 15px;
-            color: #666;
-            line-height: 1.6;
-        }
-        .start-listening-btn {
-            background: #2196F3;
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .start-listening-btn:hover {
-            background: #1976D2;
-        }
-        .play-icon {
-            width: 0;
-            height: 0;
-            border-left: 12px solid white;
-            border-top: 8px solid transparent;
-            border-bottom: 8px solid transparent;
-        }
-        
         /* Question styling */
         .question-wrapper {
             margin-bottom: 40px;
@@ -188,11 +128,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Hidden Audio Player -->
-                                <audio id="audio-player" preload="auto" style="display: none;">
-                                    <source src="../../../assets/audio/a2-key-listening-part1.mp3" type="audio/mpeg">
-                                    Your browser does not support the audio element.
-                                </audio>
+                                <!-- Audio is managed by the parent container -->
 
                                 <!-- Question 1 -->
                                 <div class="question-wrapper" id="question-1">
@@ -378,23 +314,7 @@
         </div>
     </div>
 
-    <!-- Audio Start Popup -->
-    <div id="audio-popup" class="audio-popup-overlay">
-        <div class="audio-popup-content">
-            <div class="headphones-icon">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h2v-5H6v-5c0-3.87 3.13-7 7-7s7 3.13 7 7v5h-2v5h2c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"/>
-                </svg>
-            </div>
-            <h2>A2 Key Listening Test - Part 1</h2>
-            <p>You will be listening to an audio clip during this test. You will <strong>not</strong> be permitted to pause or rewind the audio while answering the questions.</p>
-            <p>To continue, click Play.</p>
-            <button id="start-listening-btn" class="start-listening-btn">
-                <div class="play-icon"></div>
-                Play
-            </button>
-        </div>
-    </div>
+    <!-- Audio popup is managed by the parent container -->
 
     <script src="../../../assets/js/universal-functions.js"></script>
     <script src="../../../assets/js/cambridge/cambridge-bridge.js"></script>
@@ -403,23 +323,6 @@
     <script src="../../../assets/js/cambridge/question-marking.js"></script>
 
     <script>
-        window.currentPart = 1;
-
-        // Audio Start Function
-        function startListeningTest() {
-            const popup = document.getElementById('audio-popup');
-            const audio = document.getElementById('audio-player');
-            
-            // Set flag to indicate listening test has started
-            localStorage.setItem('listeningTestStarted', 'true');
-            
-            popup.style.display = 'none';
-            audio.play().catch(error => {
-                console.error('Error playing audio:', error);
-                alert('Could not start audio. Please check that the audio file exists.');
-            });
-        }
-
         window.currentPart = 1;
 
         // Save answer to localStorage
@@ -457,23 +360,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedAnswers();
 
-            // Check if listening test has already started and hide popup if so
-            const listeningStarted = localStorage.getItem('listeningTestStarted');
-            const popup = document.getElementById('audio-popup');
-            
-            if (listeningStarted === 'true' && popup) {
-                popup.style.display = 'none';
-                // Auto-play audio if needed
-                const audio = document.getElementById('audio-player');
-                if (audio) {
-                    audio.play().catch(error => console.log('Audio already playing or completed'));
-                }
-            }
-            
-            // Add event listener to start button
-            const startBtn = document.getElementById('start-listening-btn');
-            if (startBtn) {
-                startBtn.addEventListener('click', startListeningTest);
+            // FIXED: Mark current part as selected to show questions in navigation
+            const currentPartWrapper = document.querySelectorAll('.footer__questionWrapper___1tZ46')[window.currentPart - 1];
+            if (currentPartWrapper) {
+                currentPartWrapper.classList.add('selected');
+                console.log('✅ Part 1 marked as selected in navigation');
             }
 
             const partFiles = {

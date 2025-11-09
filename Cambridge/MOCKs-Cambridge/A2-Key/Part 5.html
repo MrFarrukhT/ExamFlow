@@ -697,6 +697,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 <script src="../../../assets/js/cambridge/a2-key-part-scroll.js"></script>
 <script src="../../../assets/js/cambridge/a2-key-answer-sync.js"></script>
 <script src="../../../assets/js/cambridge/question-marking.js"></script>
+<script src="../../../assets/js/cambridge/cambridge-layout-toggle.js"></script>
 <script>
 console.log('🎓 Cambridge A2 Key - Part 5 Loaded');
 console.log('✅ All IELTS Functions: Enabled');
@@ -780,7 +781,10 @@ function toggleOptionsMenu() {
             document.getElementById('candidateId'),
             document.getElementById('candidate-id'),
             document.querySelector('input[name="candidateId"]'),
-            document.querySelector('input[name="candidate-id"]')
+            document.querySelector('input[name="candidate-id"]'),
+            // Only match inputs with "Candidate" or "candidate" in placeholder
+            document.querySelector('input[placeholder*="Candidate"]'),
+            document.querySelector('input[placeholder*="candidate"]')
         ];
         for (const input of candidateIdInputs) {
             if (input) { 
