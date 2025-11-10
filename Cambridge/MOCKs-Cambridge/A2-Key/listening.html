@@ -139,6 +139,7 @@
     const globalAudioPlayer = document.getElementById('global-audio-player');
     const audioPopup = document.getElementById('audio-popup');
     const startBtn = document.getElementById('start-listening-btn');
+    const partFrame = document.getElementById('part-frame');
     
     // Start listening test
     function startListeningTest() {
@@ -214,9 +215,32 @@
     window.addEventListener('message', function(e) {
       if (e.data && e.data.type === 'navigate') {
         console.log('📡 Navigation message received:', e.data.url);
-        document.getElementById('part-frame').src = e.data.url;
+        
+        // Ensure audio continues playing during navigation
+        if (globalAudioPlayer && globalAudioPlayer.paused && localStorage.getItem('listeningTestStarted') === 'true') {
+          globalAudioPlayer.play().catch(err => {
+            console.log('Audio play attempt during navigation:', err);
+          });
+        }
+        
+        partFrame.src = e.data.url;
       }
     });
+    
+    // Ensure audio continues playing after iframe loads
+    if (partFrame) {
+      partFrame.addEventListener('load', function() {
+        // Check if audio should be playing and resume if paused
+        if (globalAudioPlayer && globalAudioPlayer.paused && localStorage.getItem('listeningTestStarted') === 'true') {
+          // Small delay to ensure iframe is fully loaded
+          setTimeout(() => {
+            globalAudioPlayer.play().catch(err => {
+              console.log('Audio play attempt after iframe load:', err);
+            });
+          }, 100);
+        }
+      });
+    }
     
     // Prevent audio from being controlled by keyboard shortcuts
     document.addEventListener('keydown', function(e) {
