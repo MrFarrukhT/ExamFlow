@@ -261,11 +261,32 @@ class IELTSUniversalFunctions {
             this.showToast('Redirecting to dashboard...', 'info');
             this.closePopup();
             
-            // Redirect to dashboard
+            // Redirect to appropriate dashboard based on test system
             setTimeout(() => {
-                window.location.href = '../../dashboard.html';
+                const isCambridge = this.isCambridgeTest();
+                if (isCambridge) {
+                    window.location.href = '../../dashboard-cambridge.html';
+                } else {
+                    window.location.href = '../../dashboard.html';
+                }
             }, 1000);
         }
+    }
+
+    isCambridgeTest() {
+        // Check if we're in a Cambridge test based on multiple indicators
+        const examType = localStorage.getItem('examType');
+        if (examType === 'Cambridge') return true;
+        
+        // Check URL path
+        const path = window.location.pathname;
+        if (path.includes('/Cambridge/') || path.includes('cambridge')) return true;
+        
+        // Check for Cambridge-specific data
+        const cambridgeLevel = localStorage.getItem('cambridgeLevel');
+        if (cambridgeLevel) return true;
+        
+        return false;
     }
 
     getCurrentModule() {

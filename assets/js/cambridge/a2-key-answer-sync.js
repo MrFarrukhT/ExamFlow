@@ -38,6 +38,9 @@
     saveAnswers(answers);
     markAnswered(qNum, !!value);
     
+    // Update footer counter after saving
+    updateFooterCounter();
+    
     // Debug logging (silent to user, visible in console)
     if (value && value.length > 0) {
       var displayVal = typeof value === 'string' && value.length > 20 ? value.substring(0, 20) + '...' : value;
@@ -55,6 +58,91 @@
       var btn = document.querySelector('.subQuestion.scorable-item[data-ordernumber="'+qNum+'"]');
       if (btn){ if (answered) btn.classList.add('answered'); else btn.classList.remove('answered'); }
     }catch(e){}
+  }
+
+  function updateFooterCounter(){
+    // Update the "X of Y" counter in the footer navigation
+    // This works by updating the attemptedCount spans without rebuilding the entire footer
+    try{
+      var ranges = window.A2KeyManifest && Array.isArray(window.A2KeyManifest.ranges) 
+        ? window.A2KeyManifest.ranges.slice()
+        : [
+            { part: 1, min: 1,  max: 6 },
+            { part: 2, min: 7,  max: 13 },
+            { part: 3, min: 14, max: 18 },
+            { part: 4, min: 19, max: 24 },
+            { part: 5, min: 25, max: 30 },
+            { part: 6, min: 31, max: 31 },
+            { part: 7, min: 32, max: 32 }
+          ];
+      
+      var answers = loadAnswers();
+      
+      // Determine which document contains the footer (could be parent if we're in iframe)
+      var targetDoc = document;
+      var inIframe = false;
+      try {
+        inIframe = window.self !== window.top && window.parent && window.parent.document;
+        if (inIframe) {
+          // Check if parent has the footer navigation
+          var parentFooter = window.parent.document.querySelector('#rw-footer-nav, .footer-nav, [class*="footer"]');
+          if (parentFooter) {
+            targetDoc = window.parent.document;
+          }
+        }
+      } catch(e) {
+        // Cross-origin iframe, can't access parent
+      }
+      
+      // Update each part's counter
+      ranges.forEach(function(r){
+        var attempted = 0;
+        Object.keys(answers).forEach(function(k){
+          var q = parseInt(k, 10);
+          if (!isNaN(q) && q >= r.min && q <= r.max && answers[k]) {
+            attempted++;
+          }
+        });
+        
+        var total = r.max - r.min + 1;
+        
+        // Find and update the attemptedCount span for this part
+        var sectionNrs = targetDoc.querySelectorAll('.sectionNr');
+        for (var i = 0; i < sectionNrs.length; i++) {
+          if (sectionNrs[i].textContent.trim() === String(r.part)) {
+            var parentSpan = sectionNrs[i].parentElement;
+            var attemptedSpan = parentSpan.querySelector('.attemptedCount');
+            
+            if (attemptedSpan) {
+              // Update existing span
+              attemptedSpan.textContent = attempted + ' of ' + total;
+            } else {
+              // For selected parts, the attemptedCount span might not exist
+              // Create it dynamically and insert after sectionNr
+              attemptedSpan = targetDoc.createElement('span');
+              attemptedSpan.className = 'attemptedCount';
+              attemptedSpan.setAttribute('aria-hidden', 'true');
+              attemptedSpan.textContent = attempted + ' of ' + total;
+              attemptedSpan.style.marginLeft = '8px'; // Add some spacing
+              attemptedSpan.style.color = '#666'; // Match default gray color from CSS
+              attemptedSpan.style.fontWeight = '400'; // Normal weight (400)
+              
+              // Insert after the sectionNr span
+              if (sectionNrs[i].nextSibling) {
+                parentSpan.insertBefore(attemptedSpan, sectionNrs[i].nextSibling);
+              } else {
+                parentSpan.appendChild(attemptedSpan);
+              }
+            }
+            break;
+          }
+        }
+      });
+      
+      console.log('✅ Footer counters updated from localStorage');
+    }catch(e){
+      console.warn('⚠️ Could not update footer counter:', e);
+    }
   }
 
   function parseOrderNumberFromContainer(container){
@@ -403,9 +491,15 @@
     setTimeout(applySavedAnswers, 500);  // Second attempt after render
     setTimeout(applySavedAnswers, 1000); // Third attempt to be sure
     
+    // Update footer counters on page load
+    setTimeout(updateFooterCounter, 200);
+    setTimeout(updateFooterCounter, 600);
+    setTimeout(updateFooterCounter, 1200);
+    
     // Expose force save function globally for wrapper coordination
     window.__A2_forceSaveAll = forceSaveAll;
     window.__A2_applySavedAnswers = applySavedAnswers; // Also expose restore function
+    window.__A2_updateFooterCounter = updateFooterCounter; // Expose counter update function
   }
 
   if (document.readyState === 'loading') {

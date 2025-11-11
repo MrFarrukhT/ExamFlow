@@ -1291,9 +1291,10 @@ class CambridgeBridge {
             
             if (partButton) {
                 const attemptedSpan = partButton.parentElement.querySelector('.attemptedCount');
+                // Counter is already updated by a2-key-answer-sync.js updateFooterCounter()
+                // Just ensure it's visible if answers exist
                 if (attemptedSpan && answerCount > 0) {
-                    attemptedSpan.style.color = '#28a745';
-                    attemptedSpan.style.fontWeight = 'bold';
+                    // Don't change color - keep default styling
                 }
             }
         }

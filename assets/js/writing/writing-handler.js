@@ -56,12 +56,20 @@ class WritingHandler {
                 this.updateWordCount(taskId);
             });
             
-            // Prevent paste that would exceed limit
+            // Disable copy and paste
+            textarea.addEventListener('copy', (e) => {
+                e.preventDefault();
+                console.log('Copy disabled in writing test');
+            });
+            
             textarea.addEventListener('paste', (e) => {
-                const taskId = e.target.id.includes('1') ? 'task1' : 'task2';
-                setTimeout(() => {
-                    this.updateWordCount(taskId);
-                }, 10);
+                e.preventDefault();
+                console.log('Paste disabled in writing test');
+            });
+            
+            textarea.addEventListener('cut', (e) => {
+                e.preventDefault();
+                console.log('Cut disabled in writing test');
             });
         });
     }

@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Innovative Centre - Cambridge Test System</title>
     <link rel="stylesheet" href="../assets/css/launcher.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%230066cc'/><text x='50' y='60' text-anchor='middle' fill='white' font-size='40' font-weight='bold'>IC</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%234a90e2'/><text x='50' y='60' text-anchor='middle' fill='white' font-size='40' font-weight='bold'>IC</text></svg>">
 </head>
 <body>
-    <div class="launcher-container" style="background: linear-gradient(135deg, #0066cc, #0052a3);">
+    <div class="launcher-container">
         <div class="launcher-header">
             <div class="logo-container">
                 <div class="app-icon">
                     <svg viewBox="0 0 100 100" width="80" height="80">
-                        <circle cx="50" cy="50" r="45" fill="#ffffff"/>
-                        <text x="50" y="60" text-anchor="middle" fill="#0066cc" font-size="32" font-weight="bold">IC</text>
+                        <circle cx="50" cy="50" r="45" fill="#4a90e2"/>
+                        <text x="50" y="60" text-anchor="middle" fill="white" font-size="32" font-weight="bold">IC</text>
                     </svg>
                 </div>
                 <h1>Innovative Centre</h1>
@@ -82,7 +82,7 @@
         <div class="launcher-footer">
             <p>&copy; 2025 Innovative Centre. All rights reserved.</p>
             <div style="margin-top: 10px;">
-                <button onclick="showInvigilatorLogin()" style="background: none; border: 1px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.9); padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; transition: all 0.3s;">
+                <button onclick="showInvigilatorLogin()" style="background: none; border: 1px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.6); padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; transition: all 0.3s;">
                     <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="vertical-align: middle; margin-right: 3px;">
                         <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
                     </svg>
@@ -197,11 +197,11 @@
     <div id="invigilator-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <button class="modal-close-btn" onclick="closeInvigilatorModal()">&times;</button>
-            <h2 style="margin: 0; padding: 20px 20px 10px; font-size: 20px; color: #333;">Invigilator Access</h2>
+            <h2 style="margin: 0; padding: 20px 20px 10px; font-size: 20px;">Invigilator Access</h2>
             <div style="padding: 20px;">
-                <label for="invigilator-password" style="display: block; margin-bottom: 10px; font-weight: bold; color: #333;">Enter Password:</label>
-                <input type="password" id="invigilator-password" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;" autocomplete="off">
-                <button onclick="verifyInvigilatorPassword()" style="width: 100%; padding: 12px; background: #0066cc; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Access Invigilator Page</button>
+                <label for="invigilator-password" style="display: block; margin-bottom: 10px; font-weight: bold;">Enter Password:</label>
+                <input type="password" id="invigilator-password" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+                <button onclick="verifyInvigilatorPassword()" style="width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Access Invigilator Page</button>
                 <p id="password-error" style="color: red; margin-top: 10px; display: none;">Incorrect password. Please try again.</p>
             </div>
         </div>
