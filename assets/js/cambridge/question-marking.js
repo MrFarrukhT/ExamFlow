@@ -403,13 +403,27 @@
                 }
                 
                 // Method 3: Extract from displayed question number text (e.g., "(6)" or "5")
+                // BUT prioritize scorableItem ID which has the actual question number
                 if (!questionNumber || isNaN(questionNumber)) {
-                    const questionNumberEl = wrapper.querySelector('.question-number');
-                    if (questionNumberEl) {
-                        const text = questionNumberEl.textContent || '';
-                        const textMatch = text.match(/(\d+)/);
-                        if (textMatch) {
-                            questionNumber = parseInt(textMatch[1], 10);
+                    // First try to find scorableItem ID (most reliable)
+                    const scorableItem = wrapper.querySelector('[id^="scorableItem-"], .order-number[id*="_"]');
+                    if (scorableItem && scorableItem.id) {
+                        const scorableMatch = scorableItem.id.match(/scorableItem[^_]*_(\d+)/) || 
+                                             scorableItem.id.match(/scorableItem-(\d+)/);
+                        if (scorableMatch) {
+                            questionNumber = parseInt(scorableMatch[1], 10);
+                        }
+                    }
+                    
+                    // If still not found, try order-number text content
+                    if (!questionNumber || isNaN(questionNumber)) {
+                        const questionNumberEl = wrapper.querySelector('.order-number, .question-number');
+                        if (questionNumberEl) {
+                            const text = questionNumberEl.textContent || '';
+                            const textMatch = text.match(/(\d+)/);
+                            if (textMatch) {
+                                questionNumber = parseInt(textMatch[1], 10);
+                            }
                         }
                     }
                 }
@@ -429,7 +443,14 @@
                 // Mark as processed
                 wrapper.dataset.bookmarkProcessed = 'true';
                 
-                console.log(`🔖 Found question ${questionNumber} in wrapper:`, wrapper.id || wrapper.className);
+                // Store question number on wrapper for debugging
+                wrapper.dataset.detectedQuestion = questionNumber;
+                
+                console.log(`🔖 Found question ${questionNumber} in wrapper:`, {
+                    wrapperId: wrapper.id,
+                    wrapperClass: wrapper.className,
+                    detectedNumber: questionNumber
+                });
                 
                 // Check if bookmark button already exists
                 let bookmarkBtn = wrapper.querySelector('.ic-bookmark-button');
@@ -446,35 +467,40 @@
                     bookmarkBtn._questionNumber = questionNumber;
                     bookmarkBtn._hasHandler = true;
                     
-                    // Add click handler
-                    bookmarkBtn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        
-                        const qNum = bookmarkBtn._questionNumber || parseInt(bookmarkBtn.getAttribute('data-question'), 10) || questionNumber;
-                        console.log(`🔖 Bookmark clicked! Question number: ${qNum}`);
-                        console.log(`📌 Button data:`, {
-                            _questionNumber: bookmarkBtn._questionNumber,
-                            dataQuestion: bookmarkBtn.getAttribute('data-question'),
-                            extractedNumber: questionNumber
+                    // Add click handler - use closure to capture the correct questionNumber
+                    const self = this;
+                    (function(qNum) {
+                        bookmarkBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            
+                            // Use the captured qNum from closure, fallback to button attributes
+                            const finalQNum = qNum || bookmarkBtn._questionNumber || parseInt(bookmarkBtn.getAttribute('data-question'), 10);
+                            console.log(`🔖 Bookmark clicked! Question number: ${finalQNum}`);
+                            console.log(`📌 Button data:`, {
+                                closureQNum: qNum,
+                                _questionNumber: bookmarkBtn._questionNumber,
+                                dataQuestion: bookmarkBtn.getAttribute('data-question'),
+                                finalQNum: finalQNum
+                            });
+                            
+                            if (!finalQNum || isNaN(finalQNum)) {
+                                console.warn('⚠️ Could not determine question number from bookmark button');
+                                return;
+                            }
+                            
+                            if (self.markedQuestions.has(finalQNum)) {
+                                console.log(`🏳️ Unmarking question ${finalQNum}`);
+                                self.unmarkQuestion(finalQNum);
+                            } else {
+                                console.log(`🚩 Marking question ${finalQNum}`);
+                                self.markQuestion(finalQNum);
+                            }
+                            
+                            // Update button state
+                            self.updateBookmarkButton(bookmarkBtn, finalQNum);
                         });
-                        
-                        if (!qNum || isNaN(qNum)) {
-                            console.warn('⚠️ Could not determine question number from bookmark button');
-                            return;
-                        }
-                        
-                        if (this.markedQuestions.has(qNum)) {
-                            console.log(`🏳️ Unmarking question ${qNum}`);
-                            this.unmarkQuestion(qNum);
-                        } else {
-                            console.log(`🚩 Marking question ${qNum}`);
-                            this.markQuestion(qNum);
-                        }
-                        
-                        // Update button state
-                        this.updateBookmarkButton(bookmarkBtn, qNum);
-                    });
+                    })(questionNumber);
                     
                     wrapper.appendChild(bookmarkBtn);
                 } else {
@@ -828,6 +854,7 @@
 
         updateButtonClasses(button, questionNumber) {
             if (!button || !questionNumber || isNaN(questionNumber)) {
+                console.warn(`⚠️ updateButtonClasses: Invalid parameters`, { button, questionNumber });
                 return;
             }
             
@@ -838,17 +865,35 @@
                 return;
             }
             
+            const isMarked = this.markedQuestions.has(questionNumber);
+            const isAnswered = this.answeredQuestions.has(questionNumber);
+            
+            console.log(`🎨 Updating button ${questionNumber}:`, {
+                isMarked,
+                isAnswered,
+                currentClasses: button.className,
+                markedQuestions: Array.from(this.markedQuestions)
+            });
+            
             // Remove existing classes
             button.classList.remove('ic-answered', 'ic-marked');
             
             // Add appropriate classes - marked takes priority (orange)
-            if (this.markedQuestions.has(questionNumber)) {
+            if (isMarked) {
                 button.classList.add('ic-marked');
+                console.log(`✅ Added 'ic-marked' class to button ${questionNumber}`);
             }
             
-            if (this.answeredQuestions.has(questionNumber)) {
+            if (isAnswered) {
                 button.classList.add('ic-answered');
+                console.log(`✅ Added 'ic-answered' class to button ${questionNumber}`);
             }
+            
+            // Verify classes were added
+            const finalClasses = button.className;
+            console.log(`📋 Final classes for button ${questionNumber}:`, finalClasses);
+            console.log(`🔍 Has ic-marked?`, button.classList.contains('ic-marked'));
+            console.log(`🔍 Has ic-answered?`, button.classList.contains('ic-answered'));
         }
 
         updateAllIndicators() {
