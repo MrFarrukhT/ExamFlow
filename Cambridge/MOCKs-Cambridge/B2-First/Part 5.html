@@ -443,6 +443,12 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
     <style>
         /* Prevent flash of unstyled content */
         body { opacity: 1 !important; }
+        /* Hide Cambridge bookmark buttons */
+        .QuestionDisplay__txtButton___3AYy9,
+        .QuestionDisplay__visibleFlag___AmAom,
+        .QuestionDisplay__hiddenFlag___m4NOE {
+            display: none !important;
+        }
 
         /* Popup overlay styles for IELTS functions */
         .popup-overlay {
@@ -693,7 +699,6 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
 <script src="../../../assets/js/cambridge/a2-key-part-scroll.js"></script>
 <script src="../../../assets/js/cambridge/a2-key-answer-sync.js"></script>
-<script src="../../../assets/js/cambridge/question-marking.js"></script>
 <script src="../../../assets/js/cambridge/cambridge-layout-toggle.js"></script>
 <script>
 console.log('🎓 Cambridge A2 Key - Part 5 Loaded');
