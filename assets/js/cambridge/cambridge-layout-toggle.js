@@ -1,8 +1,20 @@
 /**
- * Cambridge Layout Toggle - Provides quick layout switching for Cambridge reading tests
+ * Cambridge Layout Toggle - Draggable Divider for Cambridge Reading Tests
  * 
- * This script adds layout toggle functionality that works with Cambridge's HTML structure.
- * It creates a toggle button in the header that cycles through different layout modes.
+ * This script enables draggable divider functionality for Cambridge reading tests.
+ * 
+ * CHANGES:
+ * - REMOVED: Toggle button in header (book icon) - deemed cumbersome
+ * - ADDED: Full drag functionality for the existing divider
+ * - Users can click and drag the middle divider to adjust reading passage vs questions ratio
+ * - Features:
+ *   • Click and hold the divider to drag horizontally
+ *   • Smooth dragging with 20%-80% width constraints
+ *   • Position is saved to localStorage and restored on page load
+ *   • Visual cursor changes during drag (col-resize)
+ *   • Works with the original approved design
+ * 
+ * The draggable divider provides intuitive, flexible layout control without cluttering the header.
  */
 
 (function() {
@@ -61,13 +73,16 @@
                 return;
             }
             
-            // Add toggle button to header
-            this.createToggleButton();
+            // REMOVED: Toggle button in header - users will use the draggable divider instead
+            // this.createToggleButton();
             
             // Add CSS for layout modes
             this.addLayoutStyles();
             
-            console.log('✅ Cambridge Layout Toggle initialized');
+            // Initialize drag functionality
+            this.initializeDragFunctionality();
+            
+            console.log('✅ Cambridge Layout Toggle initialized (draggable divider mode)');
         }
         
         detectPart1() {
@@ -301,6 +316,121 @@
                 }
             `;
             document.head.appendChild(style);
+        }
+        
+        initializeDragFunctionality() {
+            const divider = document.querySelector('.DisplayTypeContainer__divider___yWedB');
+            const stimulusWrapper = document.querySelector('.StimulusDisplay__sectionStimulusWrapper___6IhoB');
+            const sectionContent = document.querySelector('.DisplayTypeContainer__sectionContent___2HSJ0');
+            
+            if (!divider || !stimulusWrapper || !sectionContent) {
+                console.log('📐 Drag functionality: Required elements not found');
+                return;
+            }
+            
+            let isDragging = false;
+            let startX = 0;
+            let startWidth = 0;
+            let currentX = 0;
+            let animationFrameId = null;
+            let containerWidth = 0;
+            
+            const onMouseDown = (e) => {
+                isDragging = true;
+                startX = e.clientX;
+                currentX = e.clientX;
+                startWidth = stimulusWrapper.offsetWidth;
+                containerWidth = stimulusWrapper.parentElement.offsetWidth;
+                
+                divider.classList.add('react-draggable-dragging');
+                document.body.style.cursor = 'col-resize';
+                document.body.style.userSelect = 'none';
+                
+                // Disable transitions during drag for instant feedback
+                stimulusWrapper.style.transition = 'none';
+                sectionContent.style.transition = 'none';
+                
+                e.preventDefault();
+            };
+            
+            const updateWidth = () => {
+                if (!isDragging) return;
+                
+                const deltaX = currentX - startX;
+                const newWidth = startWidth + deltaX;
+                
+                // Calculate percentage (min 20%, max 80%)
+                let widthPercent = (newWidth / containerWidth) * 100;
+                widthPercent = Math.max(20, Math.min(80, widthPercent));
+                
+                // Apply the new width
+                stimulusWrapper.style.width = widthPercent + '%';
+                
+                // Continue animation loop if still dragging
+                if (isDragging) {
+                    animationFrameId = requestAnimationFrame(updateWidth);
+                }
+            };
+            
+            const onMouseMove = (e) => {
+                if (!isDragging) return;
+                
+                currentX = e.clientX;
+                
+                // Start animation loop if not already running
+                if (!animationFrameId) {
+                    animationFrameId = requestAnimationFrame(updateWidth);
+                }
+                
+                e.preventDefault();
+            };
+            
+            const onMouseUp = () => {
+                if (!isDragging) return;
+                
+                isDragging = false;
+                divider.classList.remove('react-draggable-dragging');
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+                
+                // Cancel animation frame
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+                }
+                
+                // Re-enable transitions
+                stimulusWrapper.style.transition = '';
+                sectionContent.style.transition = '';
+                
+                // Save the preference
+                const currentWidth = stimulusWrapper.style.width;
+                localStorage.setItem('cambridge-divider-width', currentWidth);
+                console.log('📐 Divider position saved:', currentWidth);
+            };
+            
+            // Restore saved position
+            const savedWidth = localStorage.getItem('cambridge-divider-width');
+            if (savedWidth) {
+                stimulusWrapper.style.width = savedWidth;
+                console.log('📐 Restored divider position:', savedWidth);
+            }
+            
+            // Add event listeners
+            divider.addEventListener('mousedown', onMouseDown);
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+            
+            // Handle mouse leaving window
+            document.addEventListener('mouseleave', onMouseUp);
+            
+            // Also allow clicking on the button itself
+            const resizeBtn = divider.querySelector('.DisplayTypeContainer__resizeBtn___1iBm6');
+            if (resizeBtn) {
+                resizeBtn.addEventListener('mousedown', onMouseDown);
+            }
+            
+            console.log('✅ Drag functionality initialized (optimized with RAF)');
         }
         
         showToast(message) {
