@@ -15,6 +15,14 @@
         body[unresolved] {
             opacity: 1 !important;
         }
+        
+        /* Prevent images from being draggable */
+        img {
+            user-select: none;
+            -webkit-user-drag: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
     </style>
         
         <meta name="viewport" content="width=device-width, initial-scale=1">

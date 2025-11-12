@@ -28,15 +28,58 @@
     function findAnchorFor(orderNumber){
       if (window.A2KeyShared) return A2KeyShared.findAnchor(document, orderNumber);
       if (!orderNumber && orderNumber !== 0) return null;
-      var el = qs('span.order-number[id^="scorableItem-"][id$="_'+orderNumber+'"]') || qs('[id^="scorableItem-"][id$="_'+orderNumber+'"]');
+      // Try both formats: scorableItem-XXX_N and scorableItem-N
+      var el = qs('#scorableItem-'+orderNumber) || qs('span.order-number[id^="scorableItem-"][id$="_'+orderNumber+'"]') || qs('[id^="scorableItem-"][id$="_'+orderNumber+'"]');
       if (el) return el; try { var btn = qs('.subQuestion.scorable-item[data-ordernumber="'+orderNumber+'"]'); var rid = btn && btn.getAttribute('data-contentrevisionid'); if (rid) { var hidden = qs('#'+rid+'-'+orderNumber); if (hidden) return hidden; } } catch(e) {}
-      return qs('.subQuestion.scorable-item[data-ordernumber="'+orderNumber+'"]');
+      // Last resort: find the question wrapper by ID
+      var wrapper = qs('#question-wrapper-'+orderNumber);
+      if (wrapper) {
+        var orderSpan = wrapper.querySelector('span.order-number');
+        if (orderSpan) return orderSpan;
+      }
+      return null;
     }
 
     function scrollToQuestion(orderNumber){
       if (window.A2KeyShared) return A2KeyShared.scrollToQuestion(document, orderNumber);
-      ensureStyles(); var anchor = findAnchorFor(orderNumber); if (!anchor) return false; var container = getSectionContent();
-      try { if (container) { var cRect = container.getBoundingClientRect(); var aRect = anchor.getBoundingClientRect(); var top = aRect.top - cRect.top + container.scrollTop - 48; container.scrollTo({ top: Math.max(0, top), behavior: 'smooth' }); } else { anchor.scrollIntoView({ behavior: 'smooth', block: 'center' }); } return true; } catch (e) { if (container) container.scrollTop = (anchor.offsetTop || 0) - 48; else anchor.scrollIntoView(true); return true; }
+      ensureStyles(); 
+      // First try to find the question wrapper - this is the best scroll target
+      var wrapper = qs('#question-wrapper-'+orderNumber) || qs('.QuestionDisplay__questionDisplayWrapper___1n_b0[id*="'+orderNumber+'"]');
+      console.log('[A2-Key Nav] Found wrapper:', wrapper ? wrapper.id || 'no-id' : 'NULL');
+      var scrollTarget = wrapper;
+      // Fallback to the anchor if no wrapper found
+      if (!scrollTarget) {
+        var anchor = findAnchorFor(orderNumber);
+        console.log('[A2-Key Nav] Found anchor:', anchor ? anchor.id || 'no-id' : 'NULL');
+        if (!anchor) return false;
+        // Try to find the closest question wrapper from the anchor
+        scrollTarget = anchor.closest ? (anchor.closest('.QuestionDisplay__questionDisplayWrapper___1n_b0') || anchor.closest('.question-wrapper') || anchor) : anchor;
+      }
+      if (!scrollTarget) {
+        console.log('[A2-Key Nav] No scroll target found!');
+        return false;
+      }
+      console.log('[A2-Key Nav] Final scroll target:', scrollTarget.tagName, scrollTarget.id || scrollTarget.className);
+      var container = getSectionContent();
+      console.log('[A2-Key Nav] Scroll container:', container ? container.id || container.className : 'NULL (will use scrollIntoView)');
+      try { 
+        if (container) { 
+          var cRect = container.getBoundingClientRect(); 
+          var targetRect = scrollTarget.getBoundingClientRect(); 
+          var top = targetRect.top - cRect.top + container.scrollTop - 80;
+          console.log('[A2-Key Nav] Scrolling container to:', top, '(current:', container.scrollTop, ')');
+          container.scrollTo({ top: Math.max(0, top), behavior: 'smooth' }); 
+        } else { 
+          console.log('[A2-Key Nav] Using scrollIntoView on target');
+          scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+        } 
+        return true; 
+      } catch (e) { 
+        console.log('[A2-Key Nav] Scroll error:', e);
+        if (container) container.scrollTop = (scrollTarget.offsetTop || 0) - 80; 
+        else scrollTarget.scrollIntoView(true); 
+        return true; 
+      }
     }
 
     function highlightQuestion(orderNumber){
@@ -58,22 +101,32 @@
 
     function bindFooterNav(){
       // Numbered sub-question buttons
-      qsa('.subQuestion.scorable-item').forEach(function(btn){
-        if (btn.__icBound) return; btn.__icBound = true;
+      var buttons = qsa('.subQuestion.scorable-item');
+      console.log('[A2-Key Nav] Found ' + buttons.length + ' question buttons');
+      buttons.forEach(function(btn){
+        if (btn.__icBound) return; 
+        btn.__icBound = true;
         btn.addEventListener('click', function(e){
-          if (e.defaultPrevented) return;
           var n = parseInt(btn.getAttribute('data-ordernumber'), 10);
+          console.log('[A2-Key Nav] Button clicked: Q' + n);
           if (isNaN(n)) return;
           // If embedded inside combined, only hijack when the clicked button
           // belongs to the currently selected part; otherwise let parent handle.
           if (__embeddedWithParentNav) {
             var wrapper = btn.closest ? btn.closest('.footer__questionWrapper___1tZ46') : null;
             var isSamePart = wrapper && /\bselected\b/.test(wrapper.className || '');
-            if (!isSamePart) return; // bubble up for parent cross-part nav
+            if (!isSamePart) {
+              console.log('[A2-Key Nav] Different part, letting parent handle');
+              return; // bubble up for parent cross-part nav
+            }
           }
-          e.preventDefault(); e.stopPropagation();
-          if (scrollToQuestion(n)) setActive(n);
-        }, false);
+          e.preventDefault(); 
+          e.stopPropagation();
+          console.log('[A2-Key Nav] Scrolling to Q' + n);
+          var success = scrollToQuestion(n);
+          console.log('[A2-Key Nav] Scroll result:', success);
+          if (success) setActive(n);
+        }, true); // Use capture phase to get the event first
       });
       // Leave Prev/Next alone to avoid conflicts with page logic.
     }

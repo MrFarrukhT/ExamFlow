@@ -817,27 +817,11 @@
 
             // ===== QUESTION NAVIGATION SYSTEM =====
             document.addEventListener('DOMContentLoaded', function() {
-                const totalQuestionsInPart1 = 6;
                 const currentPart = window.currentPart; // Use the window variable
 
                 // (Per-part answer storage removed; unified answer sync handles it)
 
-                // Handle question button clicks in footer - scroll to question
-                const part1Questions = document.querySelectorAll('[data-sectionid="1687665662102"] .subQuestion');
-                part1Questions.forEach((btn, index) => {
-                    const questionNumber = index + 1;
-                    btn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        
-                        // Scroll to the question
-                        const questionWrapper = document.getElementById(`question-wrapper-${questionNumber}`) || 
-                                              document.querySelector('.QuestionDisplay__questionDisplayWrapper___1n_b0.current');
-                        if (questionWrapper) {
-                            questionWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }
-                    });
-                });
+                // Question navigation is now handled by a2-key-part-scroll.js
 
                 // ===== PART NAVIGATION (between different parts) =====
                 const partFiles = {

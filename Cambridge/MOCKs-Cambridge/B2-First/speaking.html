@@ -467,6 +467,7 @@
 
     <!-- Load Audio Recorder -->
     <script src="../../../assets/js/cambridge/audio-recorder.js"></script>
+    <script src="../../../assets/js/cambridge/cambridge-timer.js"></script>
     
     <script>
         // Initialize
@@ -482,6 +483,23 @@
             alert('Student information not found. Please login again.');
             window.location.href = '../../../Cambridge/index.html';
         }
+
+        // Check if speaking test is already completed
+        const speakingStatus = localStorage.getItem('speakingStatus');
+        if (speakingStatus === 'completed') {
+            alert('Speaking test has already been completed. Returning to dashboard.');
+            window.location.href = '../../dashboard-cambridge.html';
+            throw new Error('Test already completed');
+        }
+
+        // Destroy any existing timers from other tests
+        CambridgeTimer.destroyAllTimers();
+        
+        // Initialize timer for speaking test (clear old state for fresh start)
+        CambridgeTimer.clearTimerState('speaking');
+        const level = studentInfo.level || localStorage.getItem('cambridgeLevel') || 'B2-First';
+        const timerDuration = CambridgeTimer.getTimerDuration(level, 'speaking');
+        const timer = new CambridgeTimer(timerDuration, 'Speaking');
 
         // Update student info display
         document.getElementById('studentInfo').textContent = 

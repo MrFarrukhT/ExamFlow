@@ -30,17 +30,44 @@
 
   <script src="../../../assets/js/distraction-free.js"></script>
   <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
+  <script src="../../../assets/js/cambridge/cambridge-timer.js"></script>
   
   <script>
+    // Destroy any existing timers from other tests
+    CambridgeTimer.destroyAllTimers();
+    
     // Initialize storage
     const module = 'reading-writing';
-    localStorage.setItem(`${module}Status`, 'in-progress');
-    if (!localStorage.getItem(`${module}StartTime`)) {
+    const moduleStatus = localStorage.getItem(`${module}Status`);
+    
+    // Check if test is already completed - redirect to dashboard
+    if (moduleStatus === 'completed') {
+      alert('This test has already been completed. Returning to dashboard.');
+      window.location.href = '../../dashboard-cambridge.html';
+      throw new Error('Test already completed'); // Stop execution
+    }
+    
+    const isNewTest = !localStorage.getItem(`${module}StartTime`) || moduleStatus !== 'in-progress';
+    
+    if (isNewTest) {
+      // Starting fresh test - clear everything
+      CambridgeTimer.clearTimerState(module);
+      localStorage.removeItem(`${module}StartTime`);
+      localStorage.removeItem(`${module}EndTime`);
+      // Set new start time
       localStorage.setItem(`${module}StartTime`, new Date().toISOString());
     }
+    
+    localStorage.setItem(`${module}Status`, 'in-progress');
+    
     if (!localStorage.getItem('reading-writingAnswers')) {
       localStorage.setItem('reading-writingAnswers', JSON.stringify({}));
     }
+
+    // Initialize timer
+    const level = localStorage.getItem('cambridgeLevel') || 'A1-Movers';
+    const timerDuration = CambridgeTimer.getTimerDuration(level, module);
+    const timer = new CambridgeTimer(timerDuration, 'Reading & Writing');
 
     // Autosave answers periodically
     setInterval(() => {

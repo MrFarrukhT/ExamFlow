@@ -9,12 +9,16 @@
   <script src="../../../assets/js/cambridge/session-verify.js"></script>
   
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       background: #ffffff;
       color: #000;
       font-family: system-ui, -apple-system, sans-serif;
       overflow: hidden;
+      max-width: 100vw !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
     }
     .part-frame {
       width: 100%;
@@ -22,6 +26,8 @@
       border: 0;
       background: #ffffff;
       display: block;
+      max-width: 100% !important;
+      overflow: hidden;
     }
   </style>
 </head>
@@ -30,17 +36,36 @@
 
   <script src="../../../assets/js/distraction-free.js"></script>
   <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
+  <script src="../../../assets/js/cambridge/cambridge-timer.js"></script>
   
   <script>
+    // Destroy any existing timers from other tests
+    CambridgeTimer.destroyAllTimers();
+    
     // Initialize storage
     const module = 'reading-writing';
-    localStorage.setItem(`${module}Status`, 'in-progress');
-    if (!localStorage.getItem(`${module}StartTime`)) {
+    const moduleStatus = localStorage.getItem(`${module}Status`);
+    const isNewTest = !localStorage.getItem(`${module}StartTime`) || moduleStatus !== 'in-progress';
+    
+    if (isNewTest) {
+      // Starting fresh test - clear everything
+      CambridgeTimer.clearTimerState(module);
+      localStorage.removeItem(`${module}StartTime`);
+      localStorage.removeItem(`${module}EndTime`);
+      // Set new start time
       localStorage.setItem(`${module}StartTime`, new Date().toISOString());
     }
+    
+    localStorage.setItem(`${module}Status`, 'in-progress');
+    
     if (!localStorage.getItem('reading-writingAnswers')) {
       localStorage.setItem('reading-writingAnswers', JSON.stringify({}));
     }
+
+    // Initialize timer for THIS test only
+    const level = localStorage.getItem('cambridgeLevel') || 'A2-Key';
+    const timerDuration = CambridgeTimer.getTimerDuration(level, module);
+    const timer = new CambridgeTimer(timerDuration, 'Reading & Writing');
 
     // Autosave answers periodically
     setInterval(() => {
