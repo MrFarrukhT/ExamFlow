@@ -76,8 +76,8 @@
         }
     </style>
     <!-- Highlight and Notes Persistence -->
-    <script src=""../../../assets/js/cambridge/highlight-manager.js""></script>
-    <script src=""../../../assets/js/cambridge/notes-manager.js""></script>
+    <script src="../../../assets/js/cambridge/highlight-manager.js"></script>
+    <script src="../../../assets/js/cambridge/notes-manager.js"></script>
 </head>
 
 <body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="listening" data-mock="A2-Key" data-test-version="A2-Key">
@@ -389,18 +389,9 @@
                     partButton.addEventListener('click', function(e) {
                         e.preventDefault();
                         if (partFiles[partNumber]) {
-                            // FIXED: Try multiple methods to navigate
+                            console.log('📢 Part button', partNumber, 'clicked, in iframe:', (window.self !== window.top));
                             if (window.self !== window.top) {
-                                try {
-                                    // Method 1: Direct iframe access
-                                    window.parent.postMessage({ type: 'navigate', url: partFiles[partNumber] }, '*');
-                                } catch (error) {
-                                    // Method 2: Use postMessage if direct access fails
-                                    window.top.postMessage({
-                                        type: 'navigateTo',
-                                        url: partFiles[partNumber]
-                                    }, '*');
-                                }
+                                window.parent.postMessage({ type: 'navigate', url: partFiles[partNumber] }, '*');
                             } else {
                                 window.location.href = partFiles[partNumber];
                             }
@@ -413,19 +404,10 @@
             if (nextButton) {
                 nextButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    console.log('⏭️ Next button clicked, navigating to Part 2');
+                    console.log('▶️ Next button clicked, navigating to Part 2');
                     if (window.self !== window.top) {
-                        try {
-                            console.log('🔄 Attempting direct iframe navigation...');
-                            window.parent.postMessage({ type: 'navigate', url: partFiles[2] }, '*');
-                            console.log('✅ Direct navigation successful');
-                        } catch (error) {
-                            console.log('❌ Direct navigation failed:', error.message);
-                            console.log('📨 Using postMessage fallback...');
-                            window.top.postMessage({ type: 'navigateTo', url: partFiles[2] }, '*');
-                        }
+                        window.parent.postMessage({ type: 'navigate', url: partFiles[2] }, '*');
                     } else {
-                        console.log('🔄 Standalone mode - using location.href');
                         window.location.href = partFiles[2];
                     }
                 });

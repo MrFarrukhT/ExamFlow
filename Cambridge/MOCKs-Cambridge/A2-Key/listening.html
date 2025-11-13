@@ -270,7 +270,10 @@
         return;
       }
 
-      if (e.origin && e.origin !== window.location.origin) {
+      // Allow messages from same origin or file:// protocol (where origin is null)
+      // Skip origin check for file:// protocol to allow local testing
+      if (e.origin && e.origin !== 'null' && e.origin !== window.location.origin && !window.location.protocol.startsWith('file')) {
+        console.warn('⚠️ Message from different origin blocked:', e.origin);
         return;
       }
 

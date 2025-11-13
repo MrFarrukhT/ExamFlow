@@ -63,8 +63,8 @@
         }
     </style>
     <!-- Highlight and Notes Persistence -->
-    <script src=""../../../assets/js/cambridge/highlight-manager.js""></script>
-    <script src=""../../../assets/js/cambridge/notes-manager.js""></script>
+    <script src="../../../assets/js/cambridge/highlight-manager.js"></script>
+    <script src="../../../assets/js/cambridge/notes-manager.js"></script>
 </head>
 
 <body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="listening" data-mock="A2-Key" data-test-version="A2-Key">
@@ -391,13 +391,9 @@
                     partButton.addEventListener('click', function(e) {
                         e.preventDefault();
                         if (partFiles[partNumber]) {
-                            // If we're in an iframe, navigate the parent; otherwise navigate normally
+                            console.log('📢 Part button', partNumber, 'clicked, in iframe:', (window.self !== window.top));
                             if (window.self !== window.top) {
-                                try {
-                                    window.parent.postMessage({ type: 'navigate', url: partFiles[partNumber] }, '*');
-                                } catch (err) {
-                                    window.top.postMessage({ type: 'navigateTo', url: partFiles[partNumber] }, '*');
-                                }
+                                window.parent.postMessage({ type: 'navigate', url: partFiles[partNumber] }, '*');
                             } else {
                                 window.location.href = partFiles[partNumber];
                             }
@@ -412,13 +408,9 @@
             if (prevButton) {
                 prevButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    console.log('в–¶пёЏ Next button clicked, navigating to next part');
+                    console.log('◀️ Previous button clicked, navigating to Part 3');
                     if (window.self !== window.top) {
-                        try {
-                            window.parent.postMessage({ type: 'navigate', url: partFiles[3] }, '*');
-                        } catch (err) {
-                            window.top.postMessage({ type: 'navigateTo', url: partFiles[3] }, '*');
-                        }
+                        window.parent.postMessage({ type: 'navigate', url: partFiles[3] }, '*');
                     } else {
                         window.location.href = partFiles[3];
                     }
@@ -428,13 +420,9 @@
             if (nextButton) {
                 nextButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    console.log('в–¶пёЏ Next button clicked, navigating to next part');
+                    console.log('▶️ Next button clicked, navigating to Part 5');
                     if (window.self !== window.top) {
-                        try {
-                            window.parent.postMessage({ type: 'navigate', url: partFiles[5] }, '*');
-                        } catch (err) {
-                            window.top.postMessage({ type: 'navigateTo', url: partFiles[5] }, '*');
-                        }
+                        window.parent.postMessage({ type: 'navigate', url: partFiles[5] }, '*');
                     } else {
                         window.location.href = partFiles[5];
                     }
