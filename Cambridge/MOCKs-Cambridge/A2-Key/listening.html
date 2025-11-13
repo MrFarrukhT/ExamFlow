@@ -167,6 +167,33 @@
     const startBtn = document.getElementById('start-listening-btn');
     const partFrame = document.getElementById('part-frame');
     
+    function stopListeningAudio(resetPosition = false) {
+      if (!globalAudioPlayer) return;
+      try {
+        globalAudioPlayer.pause();
+        if (resetPosition) {
+          globalAudioPlayer.currentTime = 0;
+        }
+      } catch (err) {
+        console.warn('Unable to stop listening audio:', err);
+      }
+    }
+
+    function handleListeningCompletion() {
+      console.log('�??� Listening module completion received - stopping audio and returning to dashboard');
+      stopListeningAudio(true);
+      localStorage.removeItem('listeningTestStarted');
+      localStorage.setItem(`${module}Status`, 'completed');
+      if (!localStorage.getItem(`${module}EndTime`)) {
+        localStorage.setItem(`${module}EndTime`, new Date().toISOString());
+      }
+      CambridgeTimer.clearTimerState(module);
+      CambridgeTimer.destroyAllTimers();
+      setTimeout(() => {
+        window.location.href = '../../dashboard-cambridge.html';
+      }, 150);
+    }
+    
     // Start listening test
     function startListeningTest() {
       console.log('🎵 Starting A2 Key listening test...');
@@ -239,7 +266,15 @@
     
     // Listen for navigation messages from child iframes
     window.addEventListener('message', function(e) {
-      if (e.data && e.data.type === 'navigate') {
+      if (!e.data || !e.data.type) {
+        return;
+      }
+
+      if (e.origin && e.origin !== window.location.origin) {
+        return;
+      }
+
+      if (e.data.type === 'navigate') {
         console.log('📡 Navigation message received:', e.data.url);
         
         // Ensure audio continues playing during navigation
@@ -250,6 +285,8 @@
         }
         
         partFrame.src = e.data.url;
+      } else if (e.data.type === 'listening-complete') {
+        handleListeningCompletion();
       }
     });
     

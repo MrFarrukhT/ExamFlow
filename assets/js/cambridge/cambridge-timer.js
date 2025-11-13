@@ -1,25 +1,37 @@
-// Cambridge Test Timer System
+﻿// Cambridge Test Timer System
 // Manages countdown timers for Cambridge tests with alerts when time is up
 
 class CambridgeTimer {
     constructor(durationMinutes, moduleName) {
         this.moduleName = moduleName;
         this.durationMinutes = durationMinutes;
+        this.moduleKey = CambridgeTimer.normalizeModuleKey(moduleName);
+        this.statusKey = `${this.moduleKey}Status`;
+        this.startTimeKey = `${this.moduleKey}StartTime`;
+        this.storageKey = CambridgeTimer.getTimerStateKey(moduleName);
         this.timerInterval = null;
         this.isPaused = false;
         this.timeRemaining = null;
         this.startTime = null;
         this.timerElement = null;
         this.alertShown = false;
+        this.completionHandled = false;
+        CambridgeTimer.trackInstance(this);
         this.init();
     }
 
     init() {
-        console.log('🕐 Initializing timer:', this.durationMinutes, 'minutes for', this.moduleName);
+        console.log('рџ•ђ Initializing timer:', this.durationMinutes, 'minutes for', this.moduleName);
+        
+        const existingStatus = localStorage.getItem(this.statusKey);
+        if (existingStatus === 'completed') {
+            // Module already marked as finished - ensure no stray timer state remains
+            CambridgeTimer.clearTimerState(this.moduleName);
+            return;
+        }
         
         // Try to get the actual test start time from module storage
-        const moduleStartTimeKey = this.moduleName.toLowerCase().replace(/\s+&\s+/g, '-').replace(/\s+/g, '-');
-        const testStartTimeStr = localStorage.getItem(`${moduleStartTimeKey}StartTime`);
+        const testStartTimeStr = localStorage.getItem(this.startTimeKey);
         
         if (testStartTimeStr) {
             // Test is in progress - calculate time based on actual test start
@@ -29,7 +41,7 @@ class CambridgeTimer {
             this.timeRemaining = Math.max(0, totalSeconds - elapsed);
             this.startTime = testStartTime;
             
-            console.log('📂 Restored from test start time:', {
+            console.log('рџ“‚ Restored from test start time:', {
                 testStarted: testStartTimeStr,
                 elapsed: Math.floor(elapsed / 60) + ' minutes',
                 remaining: Math.floor(this.timeRemaining / 60) + ' minutes'
@@ -54,12 +66,12 @@ class CambridgeTimer {
                 moduleName: this.moduleName,
                 completed: false
             });
-            console.log('✨ Started new timer:', this.timeRemaining, 'seconds');
+            console.log('вњЁ Started new timer:', this.timeRemaining, 'seconds');
         }
 
         // Ensure timeRemaining is valid
         if (!this.timeRemaining || this.timeRemaining < 0) {
-            console.warn('⚠️ Timer expired or invalid');
+            console.warn('вљ пёЏ Timer expired or invalid');
             this.timeRemaining = 0;
         }
 
@@ -239,6 +251,9 @@ class CambridgeTimer {
 
         this.timerInterval = setInterval(() => {
             if (!this.isPaused) {
+                if (this.checkForExternalCompletion()) {
+                    return;
+                }
                 // Recalculate time remaining from start time (more accurate, survives PC reboot)
                 const totalSeconds = this.durationMinutes * 60;
                 const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
@@ -333,7 +348,7 @@ class CambridgeTimer {
         modal.className = 'times-up-modal';
         modal.innerHTML = `
             <div class="times-up-content">
-                <div class="times-up-icon">⏰</div>
+                <div class="times-up-icon">вЏ°</div>
                 <div class="times-up-title">Time's Up!</div>
                 <div class="times-up-message">
                     Your time for the ${this.moduleName} test has ended.<br>
@@ -354,6 +369,25 @@ class CambridgeTimer {
         }, 10000);
     }
 
+    checkForExternalCompletion() {
+        const status = localStorage.getItem(this.statusKey);
+        if (status === 'completed') {
+            this.handleExternalCompletion('status-update');
+            return true;
+        }
+        return false;
+    }
+
+    handleExternalCompletion(reason = 'status-update') {
+        if (this.completionHandled) {
+            return;
+        }
+        this.completionHandled = true;
+        console.log('CambridgeTimer: external completion detected for', this.moduleName, 'via', reason);
+        this.destroy();
+        CambridgeTimer.clearTimerState(this.moduleName);
+    }
+
     pause() {
         this.isPaused = true;
     }
@@ -367,52 +401,85 @@ class CambridgeTimer {
             clearInterval(this.timerInterval);
             this.timerInterval = null;
         }
+        CambridgeTimer.untrackInstance(this);
         const container = document.getElementById('cambridge-timer-container');
         if (container) {
             container.remove();
         }
-        console.log('🧹 Timer destroyed for', this.moduleName);
+        console.log('рџ§№ Timer destroyed for', this.moduleName);
     }
-
     // Static method to destroy all existing timers
     static destroyAllTimers() {
+        if (CambridgeTimer.activeTimers && CambridgeTimer.activeTimers.size) {
+            Array.from(CambridgeTimer.activeTimers).forEach(timer => timer.destroy());
+            CambridgeTimer.activeTimers.clear();
+        }
         const container = document.getElementById('cambridge-timer-container');
         if (container) {
             container.remove();
         }
-        // Clear any intervals that might be running
-        console.log('🧹 Cleared all timer displays');
+        console.log('?? Cleared all timer displays');
     }
-
     saveTimerState(state) {
-        const key = `cambridge_timer_${this.moduleName}`;
-        localStorage.setItem(key, JSON.stringify(state));
+        localStorage.setItem(this.storageKey, JSON.stringify(state));
     }
 
     loadTimerState() {
-        const key = `cambridge_timer_${this.moduleName}`;
-        const saved = localStorage.getItem(key);
+        let saved = localStorage.getItem(this.storageKey);
+        if (!saved) {
+            const legacyKey = `cambridge_timer_${this.moduleName}`;
+            saved = localStorage.getItem(legacyKey);
+        }
         return saved ? JSON.parse(saved) : null;
     }
-
     // Static method to clear timer state (call when test is completed)
     static clearTimerState(moduleName) {
-        const key = `cambridge_timer_${moduleName}`;
-        localStorage.removeItem(key);
-        console.log('🗑️ Cleared timer state for:', moduleName);
+        const normalizedKey = CambridgeTimer.getTimerStateKey(moduleName);
+        localStorage.removeItem(normalizedKey);
+        const legacyKey = `cambridge_timer_${moduleName}`;
+        if (legacyKey !== normalizedKey) {
+            localStorage.removeItem(legacyKey);
+        }
+        console.log('?? Cleared timer state for:', moduleName);
     }
-
     // Static method to clear all Cambridge timer states
     static clearAllTimerStates() {
         const keys = Object.keys(localStorage);
         keys.forEach(key => {
             if (key.startsWith('cambridge_timer_')) {
                 localStorage.removeItem(key);
-                console.log('🗑️ Cleared:', key);
+                console.log('рџ—‘пёЏ Cleared:', key);
             }
         });
     }
 
+    static getTimerStateKey(moduleIdentifier) {
+        const normalized = CambridgeTimer.normalizeModuleKey(moduleIdentifier);
+        return `cambridge_timer_${normalized}`;
+    }
+
+    static normalizeModuleKey(value) {
+        const text = (value || '').toString().toLowerCase().trim();
+        const slug = text
+            .replace(/&/g, ' ')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
+        return slug || 'module';
+    }
+
+    static trackInstance(instance) {
+        if (!CambridgeTimer.activeTimers) {
+            CambridgeTimer.activeTimers = new Set();
+        }
+        CambridgeTimer.activeTimers.add(instance);
+    }
+
+    static untrackInstance(instance) {
+        if (CambridgeTimer.activeTimers) {
+            CambridgeTimer.activeTimers.delete(instance);
+        }
+    }
     // Static method to get timer configurations for different test types
     static getTimerDuration(level, module) {
         const durations = {
@@ -444,10 +511,15 @@ class CambridgeTimer {
     }
 }
 
+CambridgeTimer.activeTimers = new Set();
+
 // Export for use in other scripts
 if (typeof window !== 'undefined') {
     window.CambridgeTimer = CambridgeTimer;
 }
+
+
+
 
 
 

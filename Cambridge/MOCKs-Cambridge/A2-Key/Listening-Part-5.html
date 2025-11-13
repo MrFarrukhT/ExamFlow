@@ -438,8 +438,19 @@
                     localStorage.setItem('listeningEndTime', new Date().toISOString());
                     // Clear the listening test started flag after submission
                     localStorage.removeItem('listeningTestStarted');
+                    if (window.parent) {
+                        try {
+                            window.parent.postMessage({ type: 'listening-complete' }, '*');
+                        } catch (postMessageError) {
+                            console.warn('Unable to notify parent about listening completion:', postMessageError);
+                        }
+                    }
                     alert('Test submitted successfully!');
-                    window.location.href = '../../dashboard-cambridge.html';
+                    if (window.top && window.top !== window) {
+                        window.top.location.href = '../../dashboard-cambridge.html';
+                    } else {
+                        window.location.href = '../../dashboard-cambridge.html';
+                    }
                 }
             });
         });
