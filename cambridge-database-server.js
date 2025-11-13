@@ -213,6 +213,32 @@ async function initializeCambridgeTables() {
             CREATE INDEX IF NOT EXISTS idx_cambridge_created_at ON cambridge_submissions(created_at)
         `);
 
+        // Create cambridge_answer_keys table for storing correct answers
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS cambridge_answer_keys (
+                id SERIAL PRIMARY KEY,
+                level VARCHAR(50) NOT NULL,
+                skill VARCHAR(100) NOT NULL,
+                mock_test VARCHAR(10) DEFAULT '1',
+                answers JSONB NOT NULL,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                CHECK (level IN ('A1-Movers', 'A2-Key', 'B1-Preliminary', 'B2-First')),
+                CHECK (skill IN ('reading', 'writing', 'listening', 'reading-writing', 'reading-use-of-english')),
+                UNIQUE(level, skill, mock_test)
+            )
+        `);
+
+        // Create indexes for answer keys table
+        await client.query(`
+            CREATE INDEX IF NOT EXISTS idx_cambridge_answers_level ON cambridge_answer_keys(level)
+        `);
+        await client.query(`
+            CREATE INDEX IF NOT EXISTS idx_cambridge_answers_skill ON cambridge_answer_keys(skill)
+        `);
+        await client.query(`
+            CREATE INDEX IF NOT EXISTS idx_cambridge_answers_mock ON cambridge_answer_keys(mock_test)
+        `);
+
         console.log('✅ Cambridge tables initialized');
     } catch (error) {
         console.error('❌ Table initialization failed:', error.message);
@@ -615,10 +641,10 @@ app.post('/cambridge-update-score', async (req, res) => {
     }
 });
 
-// Get Cambridge answer keys (if you want to add them later)
+// Get Cambridge answer keys
 app.get('/cambridge-answers', async (req, res) => {
     try {
-        const { level, skill } = req.query;
+        const { level, skill, mock } = req.query;
 
         if (!level || !skill) {
             return res.status(400).json({
@@ -627,17 +653,127 @@ app.get('/cambridge-answers', async (req, res) => {
             });
         }
 
-        // This can be implemented later when you add answer keys to the database
-        res.json({
-            success: true,
-            message: 'Cambridge answer keys feature - to be implemented',
-            answers: {}
-        });
+        const dbClient = await ensureConnection();
+        
+        const mockCondition = mock ? 'AND mock_test = $3' : '';
+        const params = mock ? [level, skill, mock] : [level, skill];
+        
+        const result = await dbClient.query(`
+            SELECT answers, mock_test 
+            FROM cambridge_answer_keys 
+            WHERE level = $1 AND skill = $2 ${mockCondition}
+        `, params);
+
+        if (result.rows.length > 0) {
+            res.json({
+                success: true,
+                answers: result.rows[0].answers,
+                count: Object.keys(result.rows[0].answers || {}).length,
+                mock: result.rows[0].mock_test
+            });
+        } else {
+            res.json({
+                success: true,
+                answers: {},
+                count: 0
+            });
+        }
 
     } catch (error) {
+        console.error('Failed to fetch Cambridge answers:', error);
         res.status(500).json({
             success: false,
             message: 'Failed to fetch answers',
+            error: error.message
+        });
+    }
+});
+
+// Save Cambridge answer keys
+app.post('/cambridge-answers', async (req, res) => {
+    try {
+        const { level, skill, mock, answers } = req.body;
+
+        if (!level || !skill || !answers) {
+            return res.status(400).json({
+                success: false,
+                message: 'Level, skill, and answers are required'
+            });
+        }
+
+        const mockTest = mock || '1';
+        console.log(`💾 Saving Cambridge answer key: ${level} ${skill} Mock ${mockTest} (${Object.keys(answers).length} answers)`);
+
+        const dbClient = await ensureConnection();
+        
+        // Upsert (insert or update)
+        const result = await dbClient.query(`
+            INSERT INTO cambridge_answer_keys (level, skill, mock_test, answers, updated_at)
+            VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP)
+            ON CONFLICT (level, skill, mock_test) 
+            DO UPDATE SET answers = $4, updated_at = CURRENT_TIMESTAMP
+            RETURNING *
+        `, [level, skill, mockTest, JSON.stringify(answers)]);
+
+        console.log(`✅ Cambridge answer key saved: ${level} ${skill} Mock ${mockTest}`);
+
+        res.json({
+            success: true,
+            message: `Saved ${Object.keys(answers).length} answers for ${level} ${skill} Mock ${mockTest}`,
+            answerKey: result.rows[0]
+        });
+
+    } catch (error) {
+        console.error('Failed to save Cambridge answers:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to save answers',
+            error: error.message
+        });
+    }
+});
+
+// Delete Cambridge answer keys
+app.delete('/cambridge-answers', async (req, res) => {
+    try {
+        const { level, skill, mock } = req.query;
+
+        if (!level || !skill) {
+            return res.status(400).json({
+                success: false,
+                message: 'Level and skill are required'
+            });
+        }
+
+        const mockTest = mock || '1';
+        console.log(`🗑️ Deleting Cambridge answer key: ${level} ${skill} Mock ${mockTest}`);
+
+        const dbClient = await ensureConnection();
+        
+        const result = await dbClient.query(`
+            DELETE FROM cambridge_answer_keys
+            WHERE level = $1 AND skill = $2 AND mock_test = $3
+            RETURNING *
+        `, [level, skill, mockTest]);
+
+        if (result.rows.length > 0) {
+            console.log(`✅ Cambridge answer key deleted: ${level} ${skill} Mock ${mockTest}`);
+            res.json({
+                success: true,
+                message: `Deleted answers for ${level} ${skill} Mock ${mockTest}`
+            });
+        } else {
+            res.json({
+                success: false,
+                message: 'Answer key not found'
+            });
+        }
+
+    } catch (error) {
+        console.error('Failed to delete Cambridge answers:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to delete answers',
             error: error.message
         });
     }

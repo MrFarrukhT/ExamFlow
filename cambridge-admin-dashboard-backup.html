@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambridge Admin Dashboard - Innovative Centre</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0066cc, #0052a3);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header-left h1 {
+            font-size: 2.2em;
+            margin-bottom: 5px;
+        }
+
+        .header-left p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .connection-status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .connected {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .disconnected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .login-form, .admin-content {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0066cc;
+        }
+
+        .btn {
+            background: #0066cc;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #0052a3;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-success { background: #28a745; }
+        .btn-success:hover { background: #218838; }
+
+        .btn-info { background: #17a2b8; }
+        .btn-info:hover { background: #138496; }
+
+        .btn-warning { background: #ffc107; color: #212529; }
+        .btn-warning:hover { background: #e0a800; }
+
+        .error-message {
+            color: #e74c3c;
+            margin-top: 10px;
+            padding: 10px;
+            background: #ffeaea;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .success-message {
+            color: #27ae60;
+            margin-top: 10px;
+            padding: 10px;
+            background: #eafaf1;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .admin-content {
+            display: none;
+        }
+
+        /* Search and Filter Section */
+        .controls-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            font-size: 0.9em;
+            color: #495057;
+        }
+
+        .control-group input, .control-group select {
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .controls-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #0066cc, #0052a3);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .submissions-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .submissions-table th,
+        .submissions-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .submissions-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .submissions-table tr:hover {
+            background: #f8f9fa;
+            cursor: pointer;
+        }
+
+        .level-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .level-a1 { background: #e3f2fd; color: #1976d2; }
+        .level-a2 { background: #e8f5e9; color: #388e3c; }
+        .level-b1 { background: #fff3e0; color: #f57c00; }
+        .level-b2 { background: #f3e5f5; color: #7b1fa2; }
+
+        .skill-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .skill-reading { background: #e3f2fd; color: #1976d2; }
+        .skill-writing { background: #f3e5f5; color: #7b1fa2; }
+        .skill-listening { background: #e8f5e9; color: #388e3c; }
+        .skill-reading-writing { background: #fff3e0; color: #f57c00; }
+
+        .mock-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .score-good { color: #27ae60; font-weight: bold; }
+        .score-average { color: #f39c12; font-weight: bold; }
+        .score-poor { color: #e74c3c; font-weight: bold; }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .no-submissions {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Answer Comparison Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 2% auto;
+            padding: 0;
+            border-radius: 8px;
+            width: 95%;
+            max-width: 1400px;
+            height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #0066cc, #0052a3);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: white;
+        }
+
+        .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .answer-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 100%;
+        }
+
+        .student-answers, .correct-answers {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .answers-header {
+            background: #f8f9fa;
+            padding: 15px;
+            font-weight: bold;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .student-answers .answers-header {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .correct-answers .answers-header {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .answers-content {
+            padding: 15px;
+            max-height: calc(70vh - 100px);
+            overflow-y: auto;
+        }
+
+        .answer-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .answer-row:last-child {
+            border-bottom: none;
+        }
+
+        .question-id {
+            font-weight: bold;
+            color: #495057;
+            min-width: 60px;
+        }
+
+        .answer-value {
+            flex: 1;
+            text-align: right;
+        }
+
+        .correct-match {
+            background: #d4edda !important;
+            color: #155724;
+        }
+
+        .incorrect-match {
+            background: #f8d7da !important;
+            color: #721c24;
+        }
+
+        .score-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .score-input {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .score-input input {
+            width: 100px;
+            padding: 8px;
+            border: 2px solid #ced4da;
+            border-radius: 4px;
+        }
+
+        .pagination-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .pagination-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .pagination-buttons button {
+            padding: 8px 16px;
+            border: none;
+            background: #0066cc;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .pagination-buttons button:hover:not(:disabled) {
+            background: #0052a3;
+        }
+
+        .pagination-buttons button:disabled {
+            background: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .pagination-info {
+            font-size: 14px;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        @media (max-width: 1024px) {
+            .answer-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .submissions-table {
+                font-size: 12px;
+            }
+        }
+    </style>
+    
+    <!-- Cambridge Answer Manager for downloads -->
+    <script src="./assets/js/cambridge/cambridge-answer-manager.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <h1>🎓 Cambridge Admin Dashboard</h1>
+                <p>Manage Cambridge General English Test Submissions</p>
+            </div>
+            <div class="header-right">
+                <div id="connectionStatus" class="connection-status disconnected">
+                    ⚠️ Checking connection...
+                </div>
+                <button id="logoutBtn" class="logout-btn" onclick="logout()" style="display: none;">
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <div class="login-form" id="loginForm">
+            <form onsubmit="login(event)">
+                <h2 style="margin-bottom: 30px; color: #0066cc;">Admin Login</h2>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn" id="loginBtn">Login</button>
+                <div id="errorMessage" class="error-message"></div>
+                <div id="successMessage" class="success-message"></div>
+            </form>
+        </div>
+
+        <!-- Admin Content -->
+        <div class="admin-content" id="adminContent">
+            <!-- Search and Filter Controls -->
+            <div class="controls-section">
+                <div class="controls-grid">
+                    <div class="control-group">
+                        <label>Search Student</label>
+                        <input type="text" id="searchStudent" placeholder="ID or Name">
+                    </div>
+                    <div class="control-group">
+                        <label>Filter by Level</label>
+                        <select id="filterLevel">
+                            <option value="">All Levels</option>
+                            <option value="A1-Movers">A1 Movers</option>
+                            <option value="A2-Key">A2 Key</option>
+                            <option value="B1-Preliminary">B1 Preliminary</option>
+                            <option value="B2-First">B2 First</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Filter by Skill</label>
+                        <select id="filterSkill">
+                            <option value="">All Skills</option>
+                            <option value="reading">Reading</option>
+                            <option value="writing">Writing</option>
+                            <option value="listening">Listening</option>
+                            <option value="reading-writing">Reading & Writing</option>
+                            <option value="reading-use-of-english">Reading & Use of English</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Filter by Mock</label>
+                        <select id="filterMock">
+                            <option value="">All Mocks</option>
+                            <option value="1">Mock 1</option>
+                            <option value="2">Mock 2</option>
+                            <option value="3">Mock 3</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Date From</label>
+                        <input type="date" id="dateFrom">
+                    </div>
+                    <div class="control-group">
+                        <label>Date To</label>
+                        <input type="date" id="dateTo">
+                    </div>
+                </div>
+                <div class="controls-buttons">
+                    <button class="btn btn-info" onclick="applyFilters()">🔍 Apply Filters</button>
+                    <button class="btn" onclick="clearFilters()">🔄 Clear Filters</button>
+                    <button class="btn btn-success" onclick="filterTodaySubmissions()">📅 Today's Submissions</button>
+                    <button class="btn btn-primary" onclick="window.location.href='cambridge-speaking-evaluations.html'">🎤 Speaking Evaluations</button>
+                    <button class="btn btn-warning" onclick="exportData()">📊 Export CSV</button>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalSubmissions">0</div>
+                    <div class="stat-label">Total Submissions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="todaySubmissions">0</div>
+                    <div class="stat-label">Today's Tests</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="filteredCount">0</div>
+                    <div class="stat-label">Filtered Results</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avgScore">-</div>
+                    <div class="stat-label">Average Score</div>
+                </div>
+            </div>
+
+            <h2>Cambridge Test Submissions</h2>
+            
+            <!-- Pagination Controls -->
+            <div class="pagination-controls" id="paginationControls" style="display: none;">
+                <div class="pagination-info" id="paginationInfo">
+                    Showing 0-0 of 0 submissions
+                </div>
+                <div class="pagination-buttons">
+                    <button id="firstPageBtn" onclick="goToPage(1)">First</button>
+                    <button id="prevPageBtn" onclick="goToPage(currentPage - 1)">Previous</button>
+                    <span style="padding: 0 10px; font-weight: 600;">
+                        Page <span id="currentPageSpan">1</span> of <span id="totalPagesSpan">1</span>
+                    </span>
+                    <button id="nextPageBtn" onclick="goToPage(currentPage + 1)">Next</button>
+                    <button id="lastPageBtn" onclick="goToPage(totalPages)">Last</button>
+                </div>
+            </div>
+            
+            <div id="submissionsContainer">
+                <div class="loading">Loading submissions...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Answer Comparison Modal -->
+    <div id="answerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Answer Comparison</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="modalContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3003'; // Cambridge server port
+        let authToken = localStorage.getItem('cambridgeAdminToken');
+        let currentSubmissions = [];
+        let filteredSubmissions = [];
+        
+        // Pagination variables
+        let currentPage = 1;
+        let itemsPerPage = 15;
+        let totalPages = 0;
+
+        // Check database connection on load
+        checkDatabaseConnection();
+
+        // Check if already logged in
+        if (authToken) {
+            showAdminPanel();
+        }
+
+        async function checkDatabaseConnection() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const status = document.getElementById('connectionStatus');
+                
+                if (response.ok) {
+                    status.className = 'connection-status connected';
+                    status.textContent = '✅ Database Connected';
+                } else {
+                    status.className = 'connection-status disconnected';
+                    status.textContent = '⚠️ Database Error';
+                }
+            } catch (error) {
+                const status = document.getElementById('connectionStatus');
+                status.className = 'connection-status disconnected';
+                status.textContent = '❌ Database Offline';
+            }
+        }
+
+        function login(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Logging in...';
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+
+            if (username === 'admin' && password === 'Adm!n#2025$SecureP@ss') {
+                localStorage.setItem('cambridgeAdminToken', 'CAMBRIDGE_ADMIN_AUTHENTICATED');
+                authToken = 'CAMBRIDGE_ADMIN_AUTHENTICATED';
+                successMessage.textContent = 'Login successful! Loading dashboard...';
+                successMessage.style.display = 'block';
+                setTimeout(showAdminPanel, 1000);
+            } else {
+                errorMessage.textContent = 'Invalid username or password!';
+                errorMessage.style.display = 'block';
+            }
+
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Login';
+        }
+
+        function showAdminPanel() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('adminContent').style.display = 'block';
+            document.getElementById('logoutBtn').style.display = 'block';
+
+            // Set default date range (last 30 days)
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+            document.getElementById('dateTo').value = today.toISOString().split('T')[0];
+            document.getElementById('dateFrom').value = thirtyDaysAgo.toISOString().split('T')[0];
+
+            loadSubmissions();
+        }
+
+        async function loadSubmissions() {
+            const container = document.getElementById('submissionsContainer');
+            container.innerHTML = '<div class="loading">Loading Cambridge submissions...</div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/cambridge-submissions`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch submissions');
+                }
+
+                currentSubmissions = await response.json();
+                filteredSubmissions = currentSubmissions;
+                
+                displaySubmissions(filteredSubmissions);
+                updateStats(currentSubmissions, filteredSubmissions);
+            } catch (error) {
+                console.error('Error loading submissions:', error);
+                container.innerHTML = `
+                    <div class="no-submissions">
+                        <p>Unable to load submissions. Make sure the Cambridge database server is running.</p>
+                        <p style="margin-top: 10px; font-size: 14px; color: #666;">
+                            Run: <code style="background: #f0f0f0; padding: 2px 8px; border-radius: 4px;">node cambridge-database-server.js</code>
+                        </p>
+                    </div>
+                `;
+            }
+        }
+
+        function applyFilters() {
+            const searchStudent = document.getElementById('searchStudent').value.toLowerCase();
+            const filterLevel = document.getElementById('filterLevel').value;
+            const filterSkill = document.getElementById('filterSkill').value;
+            const filterMock = document.getElementById('filterMock').value;
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+
+            filteredSubmissions = currentSubmissions.filter(submission => {
+                // Student search
+                if (searchStudent && 
+                    !submission.student_id.toLowerCase().includes(searchStudent) &&
+                    !submission.student_name.toLowerCase().includes(searchStudent)) {
+                    return false;
+                }
+
+                // Level filter
+                if (filterLevel && submission.level !== filterLevel) {
+                    return false;
+                }
+
+                // Skill filter
+                if (filterSkill && submission.skill !== filterSkill) {
+                    return false;
+                }
+
+                // Mock filter
+                if (filterMock && submission.mock_test !== filterMock) {
+                    return false;
+                }
+
+                // Date filter
+                if (dateFrom || dateTo) {
+                    const submissionDate = new Date(submission.created_at).toISOString().split('T')[0];
+                    
+                    if (dateFrom && submissionDate < dateFrom) {
+                        return false;
+                    }
+                    
+                    if (dateTo && submissionDate > dateTo) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+
+            resetPagination();
+            displaySubmissions(filteredSubmissions);
+            updateStats(currentSubmissions, filteredSubmissions);
+        }
+
+        function clearFilters() {
+            document.getElementById('searchStudent').value = '';
+            document.getElementById('filterLevel').value = '';
+            document.getElementById('filterSkill').value = '';
+            document.getElementById('filterMock').value = '';
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+
+            applyFilters();
+        }
+
+        function filterTodaySubmissions() {
+            const today = new Date();
+            const todayISO = today.toISOString().split('T')[0];
+            
+            document.getElementById('dateFrom').value = todayISO;
+            document.getElementById('dateTo').value = todayISO;
+            
+            document.getElementById('searchStudent').value = '';
+            document.getElementById('filterLevel').value = '';
+            document.getElementById('filterSkill').value = '';
+            document.getElementById('filterMock').value = '';
+            
+            applyFilters();
+        }
+
+        function displaySubmissions(submissions) {
+            const container = document.getElementById('submissionsContainer');
+            const paginationControls = document.getElementById('paginationControls');
+
+            if (submissions.length === 0) {
+                container.innerHTML = '<div class="no-submissions">No submissions found matching the criteria.</div>';
+                paginationControls.style.display = 'none';
+                return;
+            }
+
+            // Calculate pagination
+            totalPages = Math.ceil(submissions.length / itemsPerPage);
+            
+            if (currentPage > totalPages) currentPage = 1;
+            if (currentPage < 1) currentPage = 1;
+            
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedSubmissions = submissions.slice(startIndex, endIndex);
+
+            // Update pagination info
+            updatePaginationControls(submissions.length, startIndex, Math.min(endIndex, submissions.length));
+
+            const table = `
+                <table class="submissions-table">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Level</th>
+                            <th>Skill</th>
+                            <th>Mock</th>
+                            <th>Score</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${paginatedSubmissions.map(submission => `
+                            <tr onclick="openAnswerComparison(${submission.id})">
+                                <td><strong>${submission.student_id}</strong></td>
+                                <td>${submission.student_name}</td>
+                                <td><span class="level-badge level-${submission.level.toLowerCase().split('-')[0]}">${submission.level}</span></td>
+                                <td><span class="skill-badge skill-${submission.skill}">${formatSkillName(submission.skill)}</span></td>
+                                <td><span class="mock-badge">Mock ${submission.mock_test || '1'}</span></td>
+                                <td>${getScoreDisplay(submission)}</td>
+                                <td>${formatDate(submission.created_at)}</td>
+                                <td>${calculateDuration(submission.start_time, submission.end_time)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            container.innerHTML = table;
+            paginationControls.style.display = 'flex';
+        }
+
+        function updatePaginationControls(totalItems, startIndex, endIndex) {
+            document.getElementById('paginationInfo').textContent = 
+                `Showing ${startIndex + 1}-${endIndex} of ${totalItems} submissions`;
+            document.getElementById('currentPageSpan').textContent = currentPage;
+            document.getElementById('totalPagesSpan').textContent = totalPages;
+
+            document.getElementById('firstPageBtn').disabled = currentPage === 1;
+            document.getElementById('prevPageBtn').disabled = currentPage === 1;
+            document.getElementById('nextPageBtn').disabled = currentPage === totalPages;
+            document.getElementById('lastPageBtn').disabled = currentPage === totalPages;
+        }
+
+        function goToPage(pageNumber) {
+            if (pageNumber >= 1 && pageNumber <= totalPages) {
+                currentPage = pageNumber;
+                displaySubmissions(filteredSubmissions);
+            }
+        }
+
+        function resetPagination() {
+            currentPage = 1;
+        }
+
+        function updateStats(allSubmissions, filteredSubs) {
+            document.getElementById('totalSubmissions').textContent = allSubmissions.length;
+            document.getElementById('filteredCount').textContent = filteredSubs.length;
+
+            // Today's submissions
+            const today = new Date().toISOString().split('T')[0];
+            const todayCount = allSubmissions.filter(s => 
+                new Date(s.created_at).toISOString().split('T')[0] === today
+            ).length;
+            document.getElementById('todaySubmissions').textContent = todayCount;
+
+            // Average score
+            const scoredSubmissions = filteredSubs.filter(s => s.score !== null && s.score !== undefined);
+            if (scoredSubmissions.length > 0) {
+                const avgScore = scoredSubmissions.reduce((sum, s) => sum + s.score, 0) / scoredSubmissions.length;
+                document.getElementById('avgScore').textContent = avgScore.toFixed(1) + '%';
+            } else {
+                document.getElementById('avgScore').textContent = 'N/A';
+            }
+        }
+
+        function formatSkillName(skill) {
+            const names = {
+                'reading': 'Reading',
+                'writing': 'Writing',
+                'listening': 'Listening',
+                'reading-writing': 'R&W',
+                'reading-use-of-english': 'R&UoE'
+            };
+            return names[skill] || skill;
+        }
+
+        function getScoreDisplay(submission) {
+            if (submission.score === null || submission.score === undefined) {
+                return '<span style="color: #999;">Not scored</span>';
+            }
+            const scoreClass = submission.score >= 70 ? 'score-good' : 
+                              submission.score >= 50 ? 'score-average' : 'score-poor';
+            return `<span class="${scoreClass}">${submission.score}%</span>`;
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString();
+        }
+
+        function calculateDuration(startTime, endTime) {
+            if (!startTime || !endTime) return 'N/A';
+            const duration = new Date(endTime) - new Date(startTime);
+            const minutes = Math.floor(duration / 60000);
+            return `${minutes} min`;
+        }
+
+        function openAnswerComparison(submissionId) {
+            const submission = currentSubmissions.find(s => s.id === submissionId);
+            if (!submission) return;
+
+            const modal = document.getElementById('answerModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalContent = document.getElementById('modalContent');
+
+            modalTitle.textContent = `${submission.student_name} - ${submission.level} ${formatSkillName(submission.skill)} (Mock ${submission.mock_test || '1'})`;
+
+            // Display answers
+            const studentAnswers = submission.answers || {};
+            
+            let html = `
+                <div style="margin-bottom: 20px;">
+                    <h3>Student Information</h3>
+                    <p><strong>ID:</strong> ${submission.student_id}</p>
+                    <p><strong>Name:</strong> ${submission.student_name}</p>
+                    <p><strong>Level:</strong> ${submission.level}</p>
+                    <p><strong>Skill:</strong> ${formatSkillName(submission.skill)}</p>
+                    <p><strong>Mock Test:</strong> ${submission.mock_test || '1'}</p>
+                    <p><strong>Submitted:</strong> ${new Date(submission.created_at).toLocaleString()}</p>
+                </div>
+
+                <h3>Student Answers</h3>
+                <div class="answers-content">
+            `;
+
+            Object.entries(studentAnswers).forEach(([key, value]) => {
+                html += `
+                    <div class="answer-row">
+                        <span class="question-id">${key}:</span>
+                        <span class="answer-value">${Array.isArray(value) ? value.join(', ') : value}</span>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+
+            // Score section
+            html += `
+                <div class="score-section">
+                    <h3>Scoring</h3>
+                    <div class="score-input">
+                        <label for="scoreInput">Score (%):</label>
+                        <input type="number" id="scoreInput" min="0" max="100" 
+                               value="${submission.score || ''}" placeholder="Enter score">
+                        <button class="btn btn-success" onclick="saveScore(${submission.id})">Save Score</button>
+                    </div>
+                    ${submission.score ? `<p style="margin-top: 10px; color: #28a745;">Current Score: ${submission.score}%</p>` : ''}
+                </div>
+            `;
+
+            modalContent.innerHTML = html;
+            modal.style.display = 'block';
+        }
+
+        async function saveScore(submissionId) {
+            const scoreInput = document.getElementById('scoreInput');
+            const score = parseInt(scoreInput.value);
+
+            if (isNaN(score) || score < 0 || score > 100) {
+                alert('Please enter a valid score between 0 and 100');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/cambridge-submissions/${submissionId}/score`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ score })
+                });
+
+                if (response.ok) {
+                    alert('Score saved successfully!');
+                    closeModal();
+                    loadSubmissions();
+                } else {
+                    alert('Failed to save score');
+                }
+            } catch (error) {
+                console.error('Error saving score:', error);
+                alert('Error saving score');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('answerModal').style.display = 'none';
+        }
+
+        function exportData() {
+            const csv = generateCSV(filteredSubmissions);
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `cambridge_submissions_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function generateCSV(submissions) {
+            let csv = 'Student ID,Name,Level,Skill,Mock Test,Score,Date,Start Time,End Time\n';
+            
+            submissions.forEach(s => {
+                csv += `"${s.student_id}","${s.student_name}","${s.level}","${s.skill}","${s.mock_test || '1'}","${s.score || 'N/A'}","${formatDate(s.created_at)}","${s.start_time || 'N/A'}","${s.end_time || 'N/A'}"\n`;
+            });
+            
+            return csv;
+        }
+
+        function logout() {
+            localStorage.removeItem('cambridgeAdminToken');
+            location.reload();
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('answerModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Auto-refresh every 60 seconds
+        setInterval(() => {
+            if (authToken && document.getElementById('adminContent').style.display !== 'none') {
+                loadSubmissions();
+            }
+        }, 60000);
+    </script>
+</body>
+</html>
