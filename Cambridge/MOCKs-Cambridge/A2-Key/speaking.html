@@ -724,6 +724,10 @@
                 const result = await response.json();
                 
                 if (result.success) {
+                    // Mark speaking test as completed
+                    localStorage.setItem('speakingStatus', 'completed');
+                    localStorage.setItem('speakingEndTime', new Date().toISOString());
+                    
                     document.getElementById('submissionStatus').innerHTML = `
                         <div class="success-box">
                             <h2>✓ Recording Submitted Successfully!</h2>
@@ -732,7 +736,7 @@
                             <p>An invigilator will evaluate your recording and provide feedback.</p>
                         </div>
                         <div class="recording-controls">
-                            <button class="btn btn-primary" onclick="window.location.href='../dashboard-cambridge.html'">
+                            <button class="btn btn-primary" onclick="window.location.href='../../dashboard-cambridge.html'">
                                 Return to Dashboard
                             </button>
                         </div>

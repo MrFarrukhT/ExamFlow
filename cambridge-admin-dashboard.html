@@ -276,6 +276,7 @@
         .skill-reading { background: #e3f2fd; color: #1976d2; }
         .skill-writing { background: #f3e5f5; color: #7b1fa2; }
         .skill-listening { background: #e8f5e9; color: #388e3c; }
+        .skill-speaking { background: #f3e5f5; color: #9c27b0; }
         .skill-reading-writing { background: #fff3e0; color: #f57c00; }
         .skill-reading-use-of-english { background: #fce4ec; color: #c2185b; }
 
@@ -893,6 +894,7 @@
                             <option value="reading">Reading</option>
                             <option value="writing">Writing</option>
                             <option value="listening">Listening</option>
+                            <option value="speaking">Speaking</option>
                             <option value="reading-writing">Reading & Writing</option>
                             <option value="reading-use-of-english">Reading & Use of English</option>
                         </select>
@@ -930,6 +932,7 @@
                     <button class="btn" onclick="exportData()">📤 Export CSV</button>
                     <button class="btn" onclick="toggleDateGroupView()" id="dateGroupToggle">📅 View by Date</button>
                     <button class="btn btn-success" onclick="filterTodaySubmissions()">📅 Today's Submissions</button>
+                    <button class="btn" onclick="window.location.href='cambridge-speaking-evaluations.html'" style="background: #9c27b0;">🎤 Speaking Evaluations</button>
                 </div>
             </div>
 
@@ -954,6 +957,10 @@
                 <div class="stat-card">
                     <div class="stat-value" id="unscoredCount">0</div>
                     <div class="stat-label">Needs Scoring</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #9c27b0, #7b1fa2);">
+                    <div class="stat-value" id="speakingCount">0</div>
+                    <div class="stat-label">Speaking Tests</div>
                 </div>
             </div>
 
@@ -1528,12 +1535,16 @@
             const uniqueStudents = new Set(filteredSubs.map(s => s.student_id)).size;
             
             const unscoredCount = filteredSubs.filter(s => !s.score).length;
+            
+            // Count speaking submissions
+            const speakingCount = filteredSubs.filter(s => s.skill === 'speaking').length;
 
             document.getElementById('totalSubmissions').textContent = totalSubmissions;
             document.getElementById('filteredSubmissions').textContent = filteredCount;
             document.getElementById('averageScore').textContent = averageScore + '%';
             document.getElementById('totalStudents').textContent = uniqueStudents;
             document.getElementById('unscoredCount').textContent = unscoredCount;
+            document.getElementById('speakingCount').textContent = speakingCount;
         }
 
         function getScoreClass(score) {
@@ -1556,6 +1567,7 @@
                 'reading': 'Reading',
                 'writing': 'Writing',
                 'listening': 'Listening',
+                'speaking': 'Speaking',
                 'reading-writing': 'R&W',
                 'reading-use-of-english': 'R&UoE'
             };
@@ -1586,6 +1598,12 @@
             const level = submission.level;
             const skill = submission.skill;
             const mockTest = submission.mock_test || '1';
+            
+            // If it's a speaking test, redirect to the speaking evaluations page
+            if (skill === 'speaking') {
+                window.location.href = 'cambridge-speaking-evaluations.html';
+                return;
+            }
             
             // Load correct answers from the structure: correctAnswers[level_skill_mock]
             const answerKey = `${level}_${skill}_${mockTest}`;
