@@ -985,6 +985,11 @@ console.log('✅ Cross-Part State: Enabled');
                     localStorage.setItem('reading-writingStatus', 'completed');
                     localStorage.setItem('reading-writingEndTime', new Date().toISOString());
                     
+                    // Clear timer state
+                    if (typeof CambridgeTimer !== 'undefined') {
+                        CambridgeTimer.clearTimerState('reading-writing');
+                    }
+                    
                     alert('Test submitted successfully!');
                     
                     // Redirect to dashboard
