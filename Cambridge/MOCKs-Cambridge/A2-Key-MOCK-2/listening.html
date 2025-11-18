@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cambridge A2 Key MOCK 2 - Listening</title>
+  <link rel="icon" href="../../assets/icons/innovativecentre.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  <script src="../../../assets/js/cambridge/session-verify.js"></script>
+  
+  <style>
+    body {
+      margin: 0;
+      background: #ffffff;
+      color: #000;
+      font-family: system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+    }
+    .part-frame {
+      width: 100%;
+      height: 100vh;
+      border: 0;
+      background: #ffffff;
+      display: block;
+    }
+    
+    /* Audio Start Popup */
+    .audio-popup-overlay {
+      display: flex;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+    }
+    .audio-popup-overlay.hidden {
+      display: none;
+    }
+    .audio-popup-content {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .headphones-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      fill: #2196F3;
+    }
+    .audio-popup-content h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .audio-popup-content p {
+      margin-bottom: 15px;
+      color: #666;
+      line-height: 1.6;
+    }
+    .start-listening-btn {
+      background: #2196F3;
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      font-size: 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .start-listening-btn:hover {
+      background: #1976D2;
+    }
+    .play-icon {
+      width: 0;
+      height: 0;
+      border-left: 12px solid white;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="part-frame" class="part-frame" src="./Listening-Part-1.html" sandbox="allow-same-origin allow-scripts allow-forms allow-modals allow-top-navigation allow-popups"></iframe>
+
+  <!-- Audio Start Popup -->
+  <div id="audio-popup" class="audio-popup-overlay">
+    <div class="audio-popup-content">
+      <div class="headphones-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h2v-5H6v-5c0-3.87 3.13-7 7-7s7 3.13 7 7v5h-2v5h2c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"/>
+        </svg>
+      </div>
+      <h2>A2 Key Listening Test</h2>
+      <p>You will be listening to an audio clip during this test. You will <strong>not</strong> be permitted to pause or rewind the audio while answering the questions.</p>
+      <p>The audio will continue playing in the background as you navigate between parts.</p>
+      <p>To continue, click Play.</p>
+      <button id="start-listening-btn" class="start-listening-btn">
+        <div class="play-icon"></div>
+        Play
+      </button>
+    </div>
+  </div>
+
+  <!-- Global Audio Player (plays in background) -->
+  <audio id="global-audio-player" preload="auto" style="display: none;">
+    <source src="./audio/Listening A2-001.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script src="../../../assets/js/universal-functions.js"></script>
+  <script src="../../../assets/js/distraction-free.js"></script>
+  <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
+  <script src="../../../assets/js/cambridge/cambridge-timer.js"></script>
+  
+  <script>
+    // Destroy any existing timers from other tests
+    CambridgeTimer.destroyAllTimers();
+    
+    // Initialize storage
+    const module = 'listening';
+    const moduleStatus = localStorage.getItem(`${module}Status`);
+    
+    // Check if test is already completed - redirect to dashboard
+    if (moduleStatus === 'completed') {
+      alert('This test has already been completed. Returning to dashboard.');
+      window.location.href = '../../dashboard-cambridge.html';
+      throw new Error('Test already completed'); // Stop execution
+    }
+    
+    const isNewTest = !localStorage.getItem(`${module}StartTime`) || moduleStatus !== 'in-progress';
+    
+    if (isNewTest) {
+      // Starting fresh test - clear everything
+      console.log('🆕 Starting fresh listening test');
+      CambridgeTimer.clearTimerState(module);
+      localStorage.removeItem(`${module}StartTime`);
+      localStorage.removeItem(`${module}EndTime`);
+      localStorage.removeItem('listeningTestStarted');
+      // Set new start time
+      localStorage.setItem(`${module}StartTime`, new Date().toISOString());
+    }
+    
+    localStorage.setItem(`${module}Status`, 'in-progress');
+    
+    if (!localStorage.getItem('listeningAnswers')) {
+      localStorage.setItem('listeningAnswers', JSON.stringify({}));
+    }
+
+    // Initialize timer
+    const level = localStorage.getItem('cambridgeLevel') || 'A2-Key';
+    const timerDuration = CambridgeTimer.getTimerDuration(level, module);
+    const timer = new CambridgeTimer(timerDuration, 'Listening');
+    
+    // Global audio player management
+    const globalAudioPlayer = document.getElementById('global-audio-player');
+    const audioPopup = document.getElementById('audio-popup');
+    const startBtn = document.getElementById('start-listening-btn');
+    const partFrame = document.getElementById('part-frame');
+    
+    function stopListeningAudio(resetPosition = false) {
+      if (!globalAudioPlayer) return;
+      try {
+        globalAudioPlayer.pause();
+        if (resetPosition) {
+          globalAudioPlayer.currentTime = 0;
+        }
+      } catch (err) {
+        console.warn('Unable to stop listening audio:', err);
+      }
+    }
+
+    function handleListeningCompletion() {
+      console.log('�??� Listening module completion received - stopping audio and returning to dashboard');
+      stopListeningAudio(true);
+      localStorage.removeItem('listeningTestStarted');
+      localStorage.setItem(`${module}Status`, 'completed');
+      if (!localStorage.getItem(`${module}EndTime`)) {
+        localStorage.setItem(`${module}EndTime`, new Date().toISOString());
+      }
+      CambridgeTimer.clearTimerState(module);
+      CambridgeTimer.destroyAllTimers();
+      setTimeout(() => {
+        window.location.href = '../../dashboard-cambridge.html';
+      }, 150);
+    }
+    
+    // Start listening test
+    function startListeningTest() {
+      console.log('🎵 Starting A2 Key listening test...');
+      
+      if (!globalAudioPlayer) {
+        console.error('❌ Audio player not found');
+        alert('Error: Audio player not found');
+        return;
+      }
+      
+      // Hide the popup
+      if (audioPopup) {
+        audioPopup.classList.add('hidden');
+      }
+      
+      // Set flag to indicate listening test has started
+      localStorage.setItem('listeningTestStarted', 'true');
+      
+      // Start playing audio
+      globalAudioPlayer.play().then(() => {
+        console.log('✅ Audio started playing');
+      }).catch(error => {
+        console.error('❌ Error playing audio:', error);
+        alert('Could not start audio. Please check that the audio file exists.');
+      });
+    }
+    
+    // Add click event listener to start button
+    if (startBtn) {
+      startBtn.addEventListener('click', startListeningTest);
+    }
+    
+    // Check if test already started
+    window.addEventListener('load', function() {
+      const listeningStarted = localStorage.getItem('listeningTestStarted');
+      if (listeningStarted === 'true') {
+        if (audioPopup) {
+          audioPopup.classList.add('hidden');
+        }
+        // Resume audio if it was playing
+        if (globalAudioPlayer && globalAudioPlayer.paused) {
+          globalAudioPlayer.play().catch(err => {
+            console.log('Audio already completed or not ready');
+          });
+        }
+      }
+    });
+    
+    // Auto-navigate through parts (optional - based on audio timing)
+    // You can add timeupdate event listener to auto-advance parts at specific timestamps
+    globalAudioPlayer.addEventListener('timeupdate', function() {
+      const currentTime = globalAudioPlayer.currentTime;
+      const iframe = document.getElementById('part-frame');
+      
+      // Example: Auto-navigate at specific timestamps (adjust these based on actual audio)
+      // Part 1: 0:00 - 10:00
+      // Part 2: 10:00 - 20:00
+      // Part 3: 20:00 - 30:00
+      // etc.
+      
+      // This is just an example - you'll need to adjust timestamps
+      /*
+      if (currentTime >= 600 && currentTime < 601 && !iframe.src.includes('Part-2')) {
+        iframe.src = './Listening-Part-2.html';
+      } else if (currentTime >= 1200 && currentTime < 1201 && !iframe.src.includes('Part-3')) {
+        iframe.src = './Listening-Part-3.html';
+      }
+      */
+    });
+    
+    // Listen for navigation messages from child iframes
+    window.addEventListener('message', function(e) {
+      if (!e.data || !e.data.type) {
+        return;
+      }
+
+      // Allow messages from same origin or file:// protocol (where origin is null)
+      // Skip origin check for file:// protocol to allow local testing
+      if (e.origin && e.origin !== 'null' && e.origin !== window.location.origin && !window.location.protocol.startsWith('file')) {
+        console.warn('⚠️ Message from different origin blocked:', e.origin);
+        return;
+      }
+
+      if (e.data.type === 'navigate') {
+        console.log('📡 Navigation message received:', e.data.url);
+        
+        // Ensure audio continues playing during navigation
+        if (globalAudioPlayer && globalAudioPlayer.paused && localStorage.getItem('listeningTestStarted') === 'true') {
+          globalAudioPlayer.play().catch(err => {
+            console.log('Audio play attempt during navigation:', err);
+          });
+        }
+        
+        partFrame.src = e.data.url;
+      } else if (e.data.type === 'listening-complete') {
+        handleListeningCompletion();
+      }
+    });
+    
+    // Ensure audio continues playing after iframe loads
+    if (partFrame) {
+      partFrame.addEventListener('load', function() {
+        // Check if audio should be playing and resume if paused
+        if (globalAudioPlayer && globalAudioPlayer.paused && localStorage.getItem('listeningTestStarted') === 'true') {
+          // Small delay to ensure iframe is fully loaded
+          setTimeout(() => {
+            globalAudioPlayer.play().catch(err => {
+              console.log('Audio play attempt after iframe load:', err);
+            });
+          }, 100);
+        }
+      });
+    }
+    
+    // Prevent audio from being controlled by keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      // Prevent media keys and common audio shortcuts
+      if (e.code === 'MediaPlayPause' || 
+          e.code === 'MediaStop' || 
+          e.code === 'MediaTrackNext' || 
+          e.code === 'MediaTrackPrevious' ||
+          (e.ctrlKey && e.key === 'm') || // Ctrl+M (mute)
+          (e.key === ' ' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA')) { // Spacebar (unless in input)
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+    });
+    
+    // Disable right-click on audio element
+    if (globalAudioPlayer) {
+      globalAudioPlayer.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+      });
+    }
+  </script>
+</body>
+</html>
+
