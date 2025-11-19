@@ -433,6 +433,98 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 }
 
         </style>
+    <style>
+        /* Custom Styles for Movers Part 6 */
+        .movers-split-container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            gap: 30px;
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            font-size: 18px;
+        }
+        .image-pane {
+            flex: 1;
+            min-width: 300px;
+        }
+        .image-pane img {
+            width: 100%;
+            height: auto;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .questions-pane {
+            flex: 1;
+            min-width: 300px;
+        }
+        .examples-section {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #eee;
+        }
+        .example-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-style: italic;
+            color: #555;
+        }
+        .question-group {
+            margin-bottom: 30px;
+        }
+        .group-instruction {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #000;
+        }
+        .question-item {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+        }
+        .question-number {
+            font-weight: bold;
+            margin-right: 10px;
+            min-width: 20px;
+        }
+        .question-text {
+            margin-right: 10px;
+        }
+        .movers-input {
+            border: none;
+            border-bottom: 1px solid #000;
+            background: transparent;
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            font-size: 18px;
+            padding: 5px 10px;
+            color: #000;
+            flex: 1;
+            min-width: 200px;
+            transition: border-color 0.3s;
+        }
+        .movers-input:focus {
+            outline: none;
+            border-bottom: 2px solid #1ca0d0;
+            background-color: rgba(28, 160, 208, 0.05);
+        }
+        /* For questions 5-6 which are full sentences */
+        .full-width-input {
+            width: 100%;
+            margin-top: 10px;
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .movers-split-container {
+                flex-direction: column;
+            }
+        }
+    </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     
     <!-- Universal Popup & Options Styles -->
@@ -575,21 +667,89 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
     <body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="writing" data-mock="A2-Key" data-test-version="A2-Key">
         
 
-        <div id="wrapper"><div class="App__app___3nDjL zoom-small" id="app" role="presentation"><div aria-hidden="false" class="App__mainScreen___3HaXz"><div class="App__mainScreenContent___1tXox" id="main-screen-content"><header class="header__header___3v_A5 header__compact___2hXxm " id="header"><div class="header__topbar___2CQ4O" id="headerTopBar"><div class="header__logo___3xoBS"><img src="./A2 Key RW Digital Sample Test 1_26.04.23_files/ceq.png" alt="header.logo"></div><div class="header__subToolbar___TmVu0"><div class="header__connectionAndButtonContainer___1t_Gd"><div class="header__connectionStatusContainer___3YItW"><div aria-live="polite" class="header__connectionStatus___3hqqN"><span role="status" class="sr-only">Connected</span></div><div class="header__icon___1ECrT"><i class="fa fa-wifi" aria-hidden="true"></i></div></div><button class="header__messagesButton___2Texb" id="messagesMenuButton"><span class="header__icon___1ECrT"><span class="sr-only">Messages</span><i class="fa fa-bell-o fa-3" aria-hidden="true"></i></span></button><button class="header__optionsButton___1BF6Z" id="optionsMenuButton"><span class="header__icon___1ECrT"><span class="sr-only">Options</span><i class="fa fa-bars fa-3" aria-hidden="true"></i></span></button><button class="header__optionsButton___1BF6Z" aria-label="Show notes" id="toggleSidebarButton" aria-expanded="false"><span class="header__icon___1ECrT"><span class="sr-only">Show notes</span><i class="fa fa-pencil-square-o fa-3" aria-hidden="true"></i></span></button></div><div class="header__centralBar___3GpJy"><div class="header__subHeaderWrapper___3FyBR"><div class="header__statusText___1fRqd"><div class="header__name___1Cw2x">Candidate ID</div><div></div></div></div></div><div class="header__statusColor___3HOPa"></div></div></div></header><div id="appContentContainer" class="App__contentContainer___2Nu-R"><div class="DisplayTypeContainer__displayTypeContainer___3B6yh has-section-level-dynamic-rubric" style=""><div class="DisplayTypeContainer__sectionContent___2HSJ0 gap-match-scroll-adjustment" id="sectionContent"><div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE"><div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP QuestionDisplay__sectionLevelDynamicRubric___2zEDl"><h3 class="scorableItemHeadline" id="item_143369603_11">Question 31</h3><div class="QuestionDisplay__rubricContent___1byNW">Write <b>25 words</b> or more.</div></div></div><div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper current numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-143369603" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group" aria-labelledby="nr_143369603_11 title_143369603_11"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_143369603" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_143369603">
-      <div class="container generic" style="max-width: 800px; margin: 0 auto;">
-         <div style="padding: 20px;">
-            <p style="font-size: 16px; line-height: 1.6; margin-bottom: 15px;">You want to go shopping with your English friend, Sam, on Saturday.</p>
-            <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px; font-weight: bold;">Write an email to Sam.</p>
-            <p style="font-size: 16px; line-height: 1.6; margin-bottom: 10px;">In your email:</p>
-            <ul style="font-size: 16px; line-height: 1.8; margin-left: 30px; margin-bottom: 30px;">
-               <li>suggest a time to meet</li>
-               <li>say where you want to go</li>
-               <li>tell Sam what you want to buy</li>
-            </ul>
-         </div>
-         <div style="padding: 0 20px;">
-            <div id="143369603_KETR20CB-NKW600002EVO-0-0-1" class="interaction-container"><div class="interaction allowed-break-inside"><br class="tts-hidden-break"><div id="scorableItem-143369603_31"><textarea id="labelText-143369603_31" aria-label="You are currently on the text editor. The text will be saved automatically" class="plainTextWrapper__plainText____1GRn" rows="10" spellcheck="false" style="overflow: hidden; overflow-wrap: break-word; resize: vertical; height: 200px; width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: Arial, sans-serif; font-size: 14px;"></textarea><div style="margin-top: 8px;"><span class="WordCountText__wordCountText___3QyIr">Words: 0</span></div></div></div></div>
-         </div>
+        <div id="wrapper"><div class="App__app___3nDjL zoom-small" id="app" role="presentation"><div aria-hidden="false" class="App__mainScreen___3HaXz"><div class="App__mainScreenContent___1tXox" id="main-screen-content"><header class="header__header___3v_A5 header__compact___2hXxm " id="header"><div class="header__topbar___2CQ4O" id="headerTopBar"><div class="header__logo___3xoBS"><img src="./A2 Key RW Digital Sample Test 1_26.04.23_files/ceq.png" alt="header.logo"></div><div class="header__subToolbar___TmVu0"><div class="header__connectionAndButtonContainer___1t_Gd"><div class="header__connectionStatusContainer___3YItW"><div aria-live="polite" class="header__connectionStatus___3hqqN"><span role="status" class="sr-only">Connected</span></div><div class="header__icon___1ECrT"><i class="fa fa-wifi" aria-hidden="true"></i></div></div><button class="header__messagesButton___2Texb" id="messagesMenuButton"><span class="header__icon___1ECrT"><span class="sr-only">Messages</span><i class="fa fa-bell-o fa-3" aria-hidden="true"></i></span></button><button class="header__optionsButton___1BF6Z" id="optionsMenuButton"><span class="header__icon___1ECrT"><span class="sr-only">Options</span><i class="fa fa-bars fa-3" aria-hidden="true"></i></span></button><button class="header__optionsButton___1BF6Z" aria-label="Show notes" id="toggleSidebarButton" aria-expanded="false"><span class="header__icon___1ECrT"><span class="sr-only">Show notes</span><i class="fa fa-pencil-square-o fa-3" aria-hidden="true"></i></span></button></div><div class="header__centralBar___3GpJy"><div class="header__subHeaderWrapper___3FyBR"><div class="header__statusText___1fRqd"><div class="header__name___1Cw2x">Candidate ID</div><div></div></div></div></div><div class="header__statusColor___3HOPa"></div></div></div></header><div id="appContentContainer" class="App__contentContainer___2Nu-R"><div class="DisplayTypeContainer__displayTypeContainer___3B6yh has-section-level-dynamic-rubric" style=""><div class="DisplayTypeContainer__sectionContent___2HSJ0 gap-match-scroll-adjustment" id="sectionContent"><div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE"><div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP QuestionDisplay__sectionLevelDynamicRubric___2zEDl"></div></div><div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper current numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-143369603" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group" aria-labelledby="nr_143369603_11 title_143369603_11"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_143369603" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_143369603">
+      <div class="movers-split-container">
+        <!-- Image Pane -->
+        <div class="image-pane">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h3 style="color: #333; margin-bottom: 5px;">Part 6</h3>
+                <p style="font-size: 16px; font-weight: bold; color: #555; margin: 0;">- 6 questions -</p>
+                <p style="font-size: 18px; margin-top: 10px; font-weight: bold;">Look and read and write.</p>
+            </div>
+            <img src="images/Reading&Writing/6.png" alt="Part 6 Picture">
+        </div>
+
+        <!-- Questions Pane -->
+        <div class="questions-pane">
+            <!-- Examples -->
+            <div class="examples-section">
+                <h4 style="margin-top: 0; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px;">Examples</h4>
+                <div class="example-item">
+                    <div style="display: flex; align-items: baseline;">
+                        <div style="margin-right: 10px;">There is a lot of rain falling from those grey</div>
+                    </div>
+                    <div style="font-weight: bold;">clouds</div>
+                </div>
+                <div class="example-item">
+                    <div style="display: flex; align-items: baseline;">
+                        <div style="margin-right: 10px;">Where's the woman?</div>
+                    </div>
+                    <div style="font-weight: bold;">In the house</div>
+                </div>
+            </div>
+
+            <!-- Questions -->
+            <div class="questions-section">
+                <!-- 1-2 -->
+                <div class="question-group">
+                    <p class="group-instruction">Complete the sentences.</p>
+                    
+                    <div class="question-item">
+                        <div class="question-number">1</div>
+                        <div class="question-text">On their feet, all the children are wearing</div>
+                        <input type="text" id="q1" class="movers-input">
+                    </div>
+
+                    <div class="question-item">
+                        <div class="question-number">2</div>
+                        <div class="question-text">The cat in the tree is</div>
+                        <input type="text" id="q2" class="movers-input">
+                    </div>
+                </div>
+
+                <!-- 3-4 -->
+                <div class="question-group">
+                    <p class="group-instruction">Answer the questions.</p>
+                    
+                    <div class="question-item">
+                        <div class="question-number">3</div>
+                        <div class="question-text">What are the two biggest children doing?</div>
+                        <input type="text" id="q3" class="movers-input">
+                    </div>
+
+                    <div class="question-item">
+                        <div class="question-number">4</div>
+                        <div class="question-text">Where is the snail?</div>
+                        <input type="text" id="q4" class="movers-input">
+                    </div>
+                </div>
+
+                <!-- 5-6 -->
+                <div class="question-group">
+                    <p class="group-instruction">Now write two sentences about the picture.</p>
+                    
+                    <div class="question-item">
+                        <div class="question-number">5</div>
+                        <input type="text" id="q5" class="movers-input full-width-input">
+                    </div>
+
+                    <div class="question-item">
+                        <div class="question-number">6</div>
+                        <input type="text" id="q6" class="movers-input full-width-input">
+                    </div>
+                </div>
+            </div>
+        </div>
       </div>
    </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div><div class="screen question-margin right no-title"><button aria-pressed="false" class="QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom" tabindex="31" style="top: 250px;"><i class="fa fa-bookmark-o" aria-hidden="true"></i><span class="sr-only">Flag question 31</span></button></div></div></div></div></div></div></div><div class="App__footerWrapper___2el50"><footer class="footer__footer___1NlzQ"><div class="footer__navButtons___Gtvxu   " role="navigation" aria-label="Previous / next question" id="footer-nav-wrapper" tabindex="-1"><button class="footer__previousBtn___3pfYh footer__arrowIconBtn___3AiJS" id="footer-nav-button-previous" aria-label="Previous"><i class="fa fa-arrow-left" aria-hidden="true"></i></button><button class="footer__promotedNextBtn___Qf9LU footer__arrowIconBtn___3AiJS" id="footer-nav-button-next" aria-label="Next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div><nav class="nav-row perScorableItem" aria-label="Questions"><div class="footer__questionWrapper___1tZ46 multiple" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
                                 " data-sectionid="1687665662102" tabindex="0"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">1</span><span class="attemptedCount" aria-hidden="true">0 of 6</span><span class="sr-only">Part 
