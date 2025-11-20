@@ -100,7 +100,7 @@
           <path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h2v-5H6v-5c0-3.87 3.13-7 7-7s7 3.13 7 7v5h-2v5h2c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"/>
         </svg>
       </div>
-      <h2>A2 Key Listening Test</h2>
+      <h2>A1 Movers Listening Test</h2>
       <p>You will be listening to an audio clip during this test. You will <strong>not</strong> be permitted to pause or rewind the audio while answering the questions.</p>
       <p>The audio will continue playing in the background as you navigate between parts.</p>
       <p>To continue, click Play.</p>
@@ -113,7 +113,7 @@
 
   <!-- Global Audio Player (plays in background) -->
   <audio id="global-audio-player" preload="auto" style="display: none;">
-    <source src="./audio/Listening A2-001.mp3" type="audio/mpeg">
+    <source src="./audio/A1%20Movers%20V7.wav" type="audio/wav">
     Your browser does not support the audio element.
   </audio>
 
@@ -145,7 +145,7 @@
       CambridgeTimer.clearTimerState(module);
       localStorage.removeItem(`${module}StartTime`);
       localStorage.removeItem(`${module}EndTime`);
-      localStorage.removeItem('listeningTestStarted');
+      localStorage.removeItem('A1Movers_listeningTestStarted');
       // Set new start time
       localStorage.setItem(`${module}StartTime`, new Date().toISOString());
     }
@@ -157,7 +157,7 @@
     }
 
     // Initialize timer
-    const level = localStorage.getItem('cambridgeLevel') || 'A2-Key';
+    const level = localStorage.getItem('cambridgeLevel') || 'A1-Movers';
     const timerDuration = CambridgeTimer.getTimerDuration(level, module);
     const timer = new CambridgeTimer(timerDuration, 'Listening');
     
@@ -182,7 +182,7 @@
     function handleListeningCompletion() {
       console.log('�??� Listening module completion received - stopping audio and returning to dashboard');
       stopListeningAudio(true);
-      localStorage.removeItem('listeningTestStarted');
+      localStorage.removeItem('A1Movers_listeningTestStarted');
       localStorage.setItem(`${module}Status`, 'completed');
       if (!localStorage.getItem(`${module}EndTime`)) {
         localStorage.setItem(`${module}EndTime`, new Date().toISOString());
@@ -196,7 +196,7 @@
     
     // Start listening test
     function startListeningTest() {
-      console.log('🎵 Starting A2 Key listening test...');
+      console.log('🎵 Starting A1 Movers listening test...');
       
       if (!globalAudioPlayer) {
         console.error('❌ Audio player not found');
@@ -210,7 +210,7 @@
       }
       
       // Set flag to indicate listening test has started
-      localStorage.setItem('listeningTestStarted', 'true');
+      localStorage.setItem('A1Movers_listeningTestStarted', 'true');
       
       // Start playing audio
       globalAudioPlayer.play().then(() => {
@@ -228,7 +228,7 @@
     
     // Check if test already started
     window.addEventListener('load', function() {
-      const listeningStarted = localStorage.getItem('listeningTestStarted');
+      const listeningStarted = localStorage.getItem('A1Movers_listeningTestStarted');
       if (listeningStarted === 'true') {
         if (audioPopup) {
           audioPopup.classList.add('hidden');
@@ -281,7 +281,7 @@
         console.log('📡 Navigation message received:', e.data.url);
         
         // Ensure audio continues playing during navigation
-        if (globalAudioPlayer && globalAudioPlayer.paused && localStorage.getItem('listeningTestStarted') === 'true') {
+        if (globalAudioPlayer && globalAudioPlayer.paused && localStorage.getItem('A1Movers_listeningTestStarted') === 'true') {
           globalAudioPlayer.play().catch(err => {
             console.log('Audio play attempt during navigation:', err);
           });
@@ -297,7 +297,7 @@
     if (partFrame) {
       partFrame.addEventListener('load', function() {
         // Check if audio should be playing and resume if paused
-        if (globalAudioPlayer && globalAudioPlayer.paused && localStorage.getItem('listeningTestStarted') === 'true') {
+        if (globalAudioPlayer && globalAudioPlayer.paused && localStorage.getItem('A1Movers_listeningTestStarted') === 'true') {
           // Small delay to ensure iframe is fully loaded
           setTimeout(() => {
             globalAudioPlayer.play().catch(err => {

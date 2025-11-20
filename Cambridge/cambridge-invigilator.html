@@ -270,6 +270,9 @@
             const level = localStorage.getItem('cambridgeLevel') || 'Not Set';
             const levelDisplay = document.getElementById('currentLevel');
             
+            // Update available mock options based on level
+            updateMockOptions(level);
+
             // Clear all current-level classes
             document.querySelectorAll('.level-card-readonly').forEach(card => {
                 card.classList.remove('current-level');
@@ -291,10 +294,53 @@
                 levelDisplay.style.color = '#856404';
             }
         }
+
+        function updateMockOptions(level) {
+            const mockSelect = document.getElementById('mockSelect');
+            
+            // Clear existing options
+            mockSelect.innerHTML = '';
+            
+            // Always add Mock 1
+            const option1 = document.createElement('option');
+            option1.value = '1';
+            option1.textContent = 'Mock Test 1 (Current)';
+            mockSelect.appendChild(option1);
+            
+            // Add Mock 2 and 3 for levels other than A1-Movers
+            if (level !== 'A1-Movers') {
+                const option2 = document.createElement('option');
+                option2.value = '2';
+                option2.textContent = 'Mock Test 2 (Coming Soon)';
+                mockSelect.appendChild(option2);
+                
+                const option3 = document.createElement('option');
+                option3.value = '3';
+                option3.textContent = 'Mock Test 3 (Coming Soon)';
+                mockSelect.appendChild(option3);
+            }
+        }
         
         function updateCurrentMock() {
-            const selectedMock = localStorage.getItem('selectedCambridgeMock') || '1';
-            document.getElementById('mockSelect').value = selectedMock;
+            let selectedMock = localStorage.getItem('selectedCambridgeMock') || '1';
+            const mockSelect = document.getElementById('mockSelect');
+            
+            // Check if selected mock exists in options
+            let mockExists = false;
+            for (let i = 0; i < mockSelect.options.length; i++) {
+                if (mockSelect.options[i].value === selectedMock) {
+                    mockExists = true;
+                    break;
+                }
+            }
+            
+            // If not valid for this level, default to 1
+            if (!mockExists) {
+                selectedMock = '1';
+                localStorage.setItem('selectedCambridgeMock', '1');
+            }
+
+            mockSelect.value = selectedMock;
             document.getElementById('currentMock').textContent = `Currently Selected: Mock Test ${selectedMock}`;
             
             // Show lock status if test is in progress

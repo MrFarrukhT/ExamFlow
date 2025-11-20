@@ -2095,11 +2095,55 @@
         function initializeAnswerManagement() {
             initializeAnswerGrid();
             
-            document.getElementById('answerLevelSelect').addEventListener('change', loadAnswerSet);
+            document.getElementById('answerLevelSelect').addEventListener('change', function() {
+                updateAnswerMockOptions();
+                loadAnswerSet();
+            });
             document.getElementById('answerSkillSelect').addEventListener('change', loadAnswerSet);
             document.getElementById('answerMockSelect').addEventListener('change', loadAnswerSet);
             
+            updateAnswerMockOptions(); // Initialize options
             loadAnswerSet(); // Load default
+        }
+
+        function updateAnswerMockOptions() {
+            const levelSelect = document.getElementById('answerLevelSelect');
+            const mockSelect = document.getElementById('answerMockSelect');
+            if (!levelSelect || !mockSelect) return;
+
+            const selectedLevel = levelSelect.value;
+            const currentMock = mockSelect.value;
+            
+            mockSelect.innerHTML = '';
+            
+            // Mock 1 always available
+            const opt1 = document.createElement('option');
+            opt1.value = '1';
+            opt1.textContent = 'Mock 1';
+            mockSelect.appendChild(opt1);
+
+            if (selectedLevel !== 'A1-Movers') {
+                const opt2 = document.createElement('option');
+                opt2.value = '2';
+                opt2.textContent = 'Mock 2';
+                mockSelect.appendChild(opt2);
+
+                const opt3 = document.createElement('option');
+                opt3.value = '3';
+                opt3.textContent = 'Mock 3';
+                mockSelect.appendChild(opt3);
+            }
+
+            // Restore selection if valid
+            if (currentMock === '2' || currentMock === '3') {
+                if (selectedLevel === 'A1-Movers') {
+                    mockSelect.value = '1';
+                } else {
+                    mockSelect.value = currentMock;
+                }
+            } else {
+                mockSelect.value = currentMock || '1';
+            }
         }
 
         function toggleAnswerManagement() {

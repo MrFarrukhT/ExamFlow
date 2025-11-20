@@ -305,6 +305,18 @@ class CambridgeTimer {
 
     onTimeUp() {
         clearInterval(this.timerInterval);
+
+        // Stop any global audio player (important for listening tests)
+        const audioPlayer = document.getElementById('global-audio-player');
+        if (audioPlayer) {
+            try {
+                audioPlayer.pause();
+                audioPlayer.currentTime = 0;
+            } catch (e) {
+                console.warn('Could not stop audio on timer expiry:', e);
+            }
+        }
+
         this.saveTimerState({
             startTime: this.startTime,
             totalSeconds: this.durationMinutes * 60,

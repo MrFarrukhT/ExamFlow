@@ -331,7 +331,13 @@
             localStorage.setItem(`${module}StartTime`, new Date().toISOString());
 
             // Get selected mock test
-            const selectedMock = localStorage.getItem('selectedCambridgeMock') || '1';
+            let selectedMock = localStorage.getItem('selectedCambridgeMock') || '1';
+
+            // Validate mock for A1-Movers
+            if (level === 'A1-Movers' && (selectedMock === '2' || selectedMock === '3')) {
+                selectedMock = '1';
+                localStorage.setItem('selectedCambridgeMock', '1');
+            }
             
             // For speaking test, update sessionStorage with full info
             if (module === 'speaking') {

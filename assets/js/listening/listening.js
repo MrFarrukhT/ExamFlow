@@ -1051,6 +1051,15 @@
                     if (timerDisplayEl) {
                         timerDisplayEl.textContent = "Time's up!";
                     }
+
+                    // Stop audio if playing when time runs out
+                    const audioPlayer = document.getElementById('global-audio-player');
+                    if (audioPlayer) {
+                        audioPlayer.pause();
+                        // reset to start so it doesn't resume if they somehow restart (though unlikely without reload)
+                        audioPlayer.currentTime = 0; 
+                    }
+
                     // Timer ended - just display message, don't force submit
                     alert("Time's up! Please submit your test when ready.");
                 }
@@ -1319,10 +1328,23 @@
         }
 
         document.getElementById('deliver-button').addEventListener('click', function() {
+            // Pause audio while confirming to ensure silence
+            const audioPlayer = document.getElementById('global-audio-player');
+            let wasPlaying = false;
+            if (audioPlayer && !audioPlayer.paused) {
+                audioPlayer.pause();
+                wasPlaying = true;
+            }
+
             // Add confirmation dialog before submission
             if (confirm('Are you sure you want to submit your listening test? This action cannot be undone.')) {
                 // Override to submit to backend instead of showing answers
                 window.submitListeningTest();
+            } else {
+                // Resume if they cancelled and it was previously playing
+                if (wasPlaying && audioPlayer) {
+                    audioPlayer.play().catch(e => console.warn("Could not resume audio:", e));
+                }
             }
         });
         
