@@ -22,7 +22,7 @@
         
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google" content="notranslate">
-    <title>A2 Key Listening Part 4</title>
+    <title>A1 Movers Listening Part 4</title>
     <link rel="shortcut icon" type="image/png" href="https://d133zon9jtcf53.cloudfront.net/favicon.png">
     
     <script src="../../../assets/js/cambridge/session-verify.js"></script>
@@ -34,40 +34,108 @@
     <style>
         body { opacity: 1 !important; }
         
-        .question-wrapper {
-            margin-bottom: 30px;
+        .questions-container {
+            max-width: 900px;
+            margin: 0 auto;
             padding: 20px;
+        }
+
+        .question-block {
+            margin-bottom: 40px;
             background: #fff;
-            border-radius: 4px;
+            padding: 20px;
+            border-radius: 8px;
+            /* border: 1px solid #eee; */
         }
-        .question-number {
+
+        .question-title {
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            font-size: 18px;
             font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .question-number {
             color: #2196F3;
-            margin-right: 10px;
         }
-        .choices {
-            margin-top: 15px;
+
+        .options-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
         }
-        .choice-item {
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
+
+        .option-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             cursor: pointer;
+            padding: 10px;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            transition: all 0.2s;
         }
-        .choice-item:hover {
+
+        .option-item:hover {
             background: #f5f5f5;
+            border-color: #ddd;
         }
-        .choice-item input[type="radio"] {
-            margin-right: 10px;
+
+        .option-item.selected {
+            background: #e3f2fd;
+            border-color: #2196F3;
         }
+
+        .option-item img {
+            max-width: 100%;
+            height: auto;
+            max-height: 150px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .tick-box {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #333;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            color: transparent;
+            background: #fff;
+        }
+
+        .option-item.selected .tick-box {
+            color: #2196F3;
+            border-color: #2196F3;
+        }
+        
+        /* Example styling */
+        .example-block {
+            border-bottom: 2px dashed #ccc;
+            padding-bottom: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .example-label {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
     </style>
     <!-- Highlight and Notes Persistence -->
     <script src="../../../assets/js/cambridge/highlight-manager.js"></script>
     <script src="../../../assets/js/cambridge/notes-manager.js"></script>
 </head>
 
-<body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="listening" data-mock="A2-Key" data-test-version="A2-Key">
+<body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="listening" data-mock="A1-Movers" data-test-version="A1-Movers">
     <div id="wrapper">
         <div class="App__app___3nDjL zoom-small" id="app" role="presentation">
             <div aria-hidden="false" class="App__mainScreen___3HaXz">
@@ -118,147 +186,163 @@
                                     <div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL">
                                         <h3 class="scorableItemHeadline">Part 4: Questions 16-20</h3>
                                         <div class="QuestionDisplay__rubricContent___1byNW">
-                                            <p>For each question, choose the correct answer.</p>
+                                            <p>Listen and tick the box. There is one example.</p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Hidden Audio Player -->
-                                <audio id="audio-player" preload="auto" style="display: none;">
-                                    <source src="../../../assets/audio/a2-key-listening-part4.mp3" type="audio/mpeg">
-                                    Your browser does not support the audio element.
-                                </audio>
+                                <div class="questions-container">
+                                    
+                                    <!-- Example -->
+                                    <div class="question-block example-block">
+                                        <div class="example-label">Example</div>
+                                        <div class="question-title">
+                                            Where is Sam's homework book?
+                                        </div>
+                                        <div class="options-row">
+                                            <div class="option-item selected"> <!-- Pre-selected example -->
+                                                <img src="images/Listening/4.e.1.png" alt="A">
+                                                <div class="tick-box">✓</div>
+                                                <div>A</div>
+                                            </div>
+                                            <div class="option-item">
+                                                <img src="images/Listening/4.e.2.png" alt="B">
+                                                <div class="tick-box">✓</div>
+                                                <div>B</div>
+                                            </div>
+                                            <div class="option-item">
+                                                <img src="images/Listening/4.e.3.png" alt="C">
+                                                <div class="tick-box">✓</div>
+                                                <div>C</div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                <!-- Question 16 -->
-                                <div class="question-wrapper" id="question-16">
-                                    <div>
-                                        <span class="question-number">16</span>
-                                        <strong>You will hear a man asking a hotel receptionist about going to the beach. What advice does the hotel receptionist give him?</strong>
+                                    <!-- Q1 -->
+                                    <div class="question-block">
+                                        <div class="question-title">
+                                            <span class="question-number">16</span>
+                                            What did Anna have for lunch yesterday?
+                                        </div>
+                                        <div class="options-row">
+                                            <div class="option-item" onclick="selectOption(16, 'A')">
+                                                <img src="images/Listening/4.1a.png" alt="A">
+                                                <div class="tick-box" id="tick-16-A">✓</div>
+                                                <div>A</div>
+                                            </div>
+                                            <div class="option-item" onclick="selectOption(16, 'B')">
+                                                <img src="images/Listening/4.1b.png" alt="B">
+                                                <div class="tick-box" id="tick-16-B">✓</div>
+                                                <div>B</div>
+                                            </div>
+                                            <div class="option-item" onclick="selectOption(16, 'C')">
+                                                <img src="images/Listening/4.1c.png" alt="C">
+                                                <div class="tick-box" id="tick-16-C">✓</div>
+                                                <div>C</div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="choices">
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_16" value="A" onchange="saveAnswer(16, 'A')">
-                                            <span>A) go on foot</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_16" value="B" onchange="saveAnswer(16, 'B')">
-                                            <span>B) go by bus</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_16" value="C" onchange="saveAnswer(16, 'C')">
-                                            <span>C) go by taxi</span>
-                                        </label>
-                                    </div>
-                                </div>
 
-                                <!-- Question 17 -->
-                                <div class="question-wrapper" id="question-17">
-                                    <div>
-                                        <span class="question-number">17</span>
-                                        <strong>You will hear a man talking about a course he's doing. What course is he doing?</strong>
+                                    <!-- Q2 -->
+                                    <div class="question-block">
+                                        <div class="question-title">
+                                            <span class="question-number">17</span>
+                                            Where is Charlie's sister?
+                                        </div>
+                                        <div class="options-row">
+                                            <div class="option-item" onclick="selectOption(17, 'A')">
+                                                <img src="images/Listening/4.2a.png" alt="A">
+                                                <div class="tick-box" id="tick-17-A">✓</div>
+                                                <div>A</div>
+                                            </div>
+                                            <div class="option-item" onclick="selectOption(17, 'B')">
+                                                <img src="images/Listening/4.2b.png" alt="B">
+                                                <div class="tick-box" id="tick-17-B">✓</div>
+                                                <div>B</div>
+                                            </div>
+                                            <div class="option-item" onclick="selectOption(17, 'C')">
+                                                <img src="images/Listening/4.2c.png" alt="C">
+                                                <div class="tick-box" id="tick-17-C">✓</div>
+                                                <div>C</div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="choices">
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_17" value="A" onchange="saveAnswer(17, 'A')">
-                                            <span>A) photography</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_17" value="B" onchange="saveAnswer(17, 'B')">
-                                            <span>B) Spanish</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_17" value="C" onchange="saveAnswer(17, 'C')">
-                                            <span>C) cooking</span>
-                                        </label>
-                                    </div>
-                                </div>
 
-                                <!-- Question 18 -->
-                                <div class="question-wrapper" id="question-18">
-                                    <div>
-                                        <span class="question-number">18</span>
-                                        <strong>You will hear a woman talking about a colleague. Why does she like him?</strong>
+                                    <!-- Q3 -->
+                                    <div class="question-block">
+                                        <div class="question-title">
+                                            <span class="question-number">18</span>
+                                            What was the weather like yesterday?
+                                        </div>
+                                        <div class="options-row">
+                                            <div class="option-item" onclick="selectOption(18, 'A')">
+                                                <img src="images/Listening/4.3a.png" alt="A">
+                                                <div class="tick-box" id="tick-18-A">✓</div>
+                                                <div>A</div>
+                                            </div>
+                                            <div class="option-item" onclick="selectOption(18, 'B')">
+                                                <img src="images/Listening/4.3b.png" alt="B">
+                                                <div class="tick-box" id="tick-18-B">✓</div>
+                                                <div>B</div>
+                                            </div>
+                                            <div class="option-item" onclick="selectOption(18, 'C')">
+                                                <img src="images/Listening/4.3c.png" alt="C">
+                                                <div class="tick-box" id="tick-18-C">✓</div>
+                                                <div>C</div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="choices">
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_18" value="A" onchange="saveAnswer(18, 'A')">
-                                            <span>A) He helps her at work.</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_18" value="B" onchange="saveAnswer(18, 'B')">
-                                            <span>B) He tells funny stories.</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_18" value="C" onchange="saveAnswer(18, 'C')">
-                                            <span>C) He brings cakes for everyone.</span>
-                                        </label>
-                                    </div>
-                                </div>
 
-                                <!-- Question 19 -->
-                                <div class="question-wrapper" id="question-19">
-                                    <div>
-                                        <span class="question-number">19</span>
-                                        <strong>You will hear a mother talking to her son. What does her son want to do first when he leaves school?</strong>
+                                    <!-- Q4 -->
+                                    <div class="question-block">
+                                        <div class="question-title">
+                                            <span class="question-number">19</span>
+                                            Where is the bus station?
+                                        </div>
+                                        <div class="options-row">
+                                            <div class="option-item" onclick="selectOption(19, 'A')">
+                                                <img src="images/Listening/4.4a.png" alt="A">
+                                                <div class="tick-box" id="tick-19-A">✓</div>
+                                                <div>A</div>
+                                            </div>
+                                            <div class="option-item" onclick="selectOption(19, 'B')">
+                                                <img src="images/Listening/4.4b.png" alt="B">
+                                                <div class="tick-box" id="tick-19-B">✓</div>
+                                                <div>B</div>
+                                            </div>
+                                            <div class="option-item" onclick="selectOption(19, 'C')">
+                                                <img src="images/Listening/4.4c.png" alt="C">
+                                                <div class="tick-box" id="tick-19-C">✓</div>
+                                                <div>C</div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="choices">
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_19" value="A" onchange="saveAnswer(19, 'A')">
-                                            <span>A) get a job</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_19" value="B" onchange="saveAnswer(19, 'B')">
-                                            <span>B) go to university</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_19" value="C" onchange="saveAnswer(19, 'C')">
-                                            <span>C) spend some time travelling</span>
-                                        </label>
-                                    </div>
-                                </div>
 
-                                <!-- Question 20 -->
-                                <div class="question-wrapper" id="question-20">
-                                    <div>
-                                        <span class="question-number">20</span>
-                                        <strong>You will hear a woman talking about a college course that she's going to do. How does the woman feel about her college course?</strong>
+                                    <!-- Q5 -->
+                                    <div class="question-block">
+                                        <div class="question-title">
+                                            <span class="question-number">20</span>
+                                            What does the boy want to buy for his mother?
+                                        </div>
+                                        <div class="options-row">
+                                            <div class="option-item" onclick="selectOption(20, 'A')">
+                                                <img src="images/Listening/4.5a.png" alt="A">
+                                                <div class="tick-box" id="tick-20-A">✓</div>
+                                                <div>A</div>
+                                            </div>
+                                            <div class="option-item" onclick="selectOption(20, 'B')">
+                                                <img src="images/Listening/4.5b.png" alt="B">
+                                                <div class="tick-box" id="tick-20-B">✓</div>
+                                                <div>B</div>
+                                            </div>
+                                            <div class="option-item" onclick="selectOption(20, 'C')">
+                                                <img src="images/Listening/4.5c.png" alt="C">
+                                                <div class="tick-box" id="tick-20-C">✓</div>
+                                                <div>C</div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="choices">
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_20" value="A" onchange="saveAnswer(20, 'A')">
-                                            <span>A) surprised about when the course begins</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_20" value="B" onchange="saveAnswer(20, 'B')">
-                                            <span>B) excited about meeting new students</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_20" value="C" onchange="saveAnswer(20, 'C')">
-                                            <span>C) worried about the work</span>
-                                        </label>
-                                    </div>
-                                </div>
 
-                                <!-- Question 21 -->
-                                <div class="question-wrapper" id="question-21">
-                                    <div>
-                                        <span class="question-number">21</span>
-                                        <strong>How much does the trip cost?</strong>
-                                    </div>
-                                    <div class="choices">
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_21" value="A" onchange="saveAnswer(21, 'A')">
-                                            <span>A) £8</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_21" value="B" onchange="saveAnswer(21, 'B')">
-                                            <span>B) £12</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_21" value="C" onchange="saveAnswer(21, 'C')">
-                                            <span>C) £15</span>
-                                        </label>
-                                    </div>
                                 </div>
 
                             </div>
@@ -292,7 +376,7 @@
                                         <span><span class="section-prefix">Part </span><span class="sectionNr">3</span></span>
                                     </button>
                                 </div>
-                                <div class="footer__questionWrapper___1tZ46 multiple">
+                                <div class="footer__questionWrapper___1tZ46 selected multiple">
                                     <button role="tab" class="footer__questionNo___3WNct">
                                         <span><span class="section-prefix">Part </span><span class="sectionNr">4</span></span>
                                     </button>
@@ -328,15 +412,27 @@
     <script>
         window.currentPart = 4;
 
+        function selectOption(qNum, option) {
+            // Deselect current in this question
+            const items = document.querySelectorAll(`.option-item[onclick="selectOption(${qNum}, '${option}')"]`);
+            const parent = items[0].parentElement;
+            
+            parent.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+            
+            // Select new
+            items[0].classList.add('selected');
+            
+            // Save
+            saveAnswer(qNum, option);
+        }
+
         function saveAnswer(questionNum, answer) {
             let answers = JSON.parse(localStorage.getItem('listeningAnswers') || '{}');
             answers[`L${questionNum}`] = answer;
             localStorage.setItem('listeningAnswers', JSON.stringify(answers));
             
             const btn = document.querySelector(`[data-ordernumber="${questionNum}"]`);
-            if (btn) {
-                btn.classList.add('answered');
-            }
+            if (btn) btn.classList.add('answered');
         }
 
         function loadSavedAnswers() {
@@ -344,37 +440,34 @@
             for (let i = 16; i <= 20; i++) {
                 const answer = answers[`L${i}`];
                 if (answer) {
-                    const radio = document.querySelector(`input[name="question_${i}"][value="${answer}"]`);
-                    if (radio) {
-                        radio.checked = true;
+                    const optionItem = document.querySelector(`.option-item[onclick="selectOption(${i}, '${answer}')"]`);
+                    if (optionItem) {
+                        optionItem.classList.add('selected');
                     }
                     const btn = document.querySelector(`[data-ordernumber="${i}"]`);
-                    if (btn) {
-                        btn.classList.add('answered');
-                    }
+                    if (btn) btn.classList.add('answered');
                 }
             }
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedAnswers();
-
-            // FIXED: Mark current part as selected to show questions in navigation
-            const currentPartWrapper = document.querySelectorAll('.footer__questionWrapper___1tZ46')[window.currentPart - 1];
-            if (currentPartWrapper) {
-                currentPartWrapper.classList.add('selected');
-                console.log('✅ Part 4 marked as selected in navigation');
-            }
-
-            // FIXED: Auto-start audio if listening test has already been started
-            const listeningStarted = localStorage.getItem('listeningTestStarted');
-            if (listeningStarted === 'true') {
-                const audio = document.getElementById('audio-player');
-                if (audio) {
-                    console.log('🎵 Auto-starting Part 4 audio...');
-                    audio.play().catch(error => console.log('Audio playback:', error.message));
+            
+            // Populate Candidate ID
+            (function() {
+                const studentId = localStorage.getItem('studentId');
+                if (studentId) {
+                    const headerNameDiv = document.querySelector('.header__name___1Cw2x');
+                    if (headerNameDiv && headerNameDiv.textContent.includes('Candidate ID')) {
+                        const headerValueDiv = headerNameDiv.nextElementSibling || document.createElement('div');
+                        headerValueDiv.textContent = studentId;
+                        headerValueDiv.style.fontWeight = 'bold';
+                        if (!headerNameDiv.nextElementSibling) {
+                            headerNameDiv.parentElement.appendChild(headerValueDiv);
+                        }
+                    }
                 }
-            }
+            })();
 
             const partFiles = {
                 1: 'Listening-Part-1.html',
@@ -391,7 +484,6 @@
                     partButton.addEventListener('click', function(e) {
                         e.preventDefault();
                         if (partFiles[partNumber]) {
-                            console.log('📢 Part button', partNumber, 'clicked, in iframe:', (window.self !== window.top));
                             if (window.self !== window.top) {
                                 window.parent.postMessage({ type: 'navigate', url: partFiles[partNumber] }, '*');
                             } else {
@@ -403,12 +495,9 @@
             });
 
             const prevButton = document.getElementById('footer-nav-button-previous');
-            const nextButton = document.getElementById('footer-nav-button-next');
-
             if (prevButton) {
                 prevButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    console.log('◀️ Previous button clicked, navigating to Part 3');
                     if (window.self !== window.top) {
                         window.parent.postMessage({ type: 'navigate', url: partFiles[3] }, '*');
                     } else {
@@ -417,10 +506,10 @@
                 });
             }
 
+            const nextButton = document.getElementById('footer-nav-button-next');
             if (nextButton) {
                 nextButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    console.log('▶️ Next button clicked, navigating to Part 5');
                     if (window.self !== window.top) {
                         window.parent.postMessage({ type: 'navigate', url: partFiles[5] }, '*');
                     } else {
@@ -428,67 +517,31 @@
                     }
                 });
             }
-
-            document.getElementById('deliver-button').addEventListener('click', async function() {
-                if (confirm('Are you sure you want to submit your listening test?')) {
-                    // Submit to database
-                    try {
-                        if (window.cambridgeAnswerManager && typeof window.cambridgeAnswerManager.submitTestToDatabase === 'function') {
-                            await window.cambridgeAnswerManager.submitTestToDatabase();
-                        }
-                    } catch (error) {
-                        console.error('Error submitting to database:', error);
-                    }
-                    
-                    localStorage.setItem('listeningStatus', 'completed');
-                    localStorage.setItem('listeningEndTime', new Date().toISOString());
-                    // Clear the listening test started flag after submission
-                    localStorage.removeItem('listeningTestStarted');
-                    if (window.parent) {
-                        try {
-                            window.parent.postMessage({ type: 'listening-complete' }, '*');
-                        } catch (postMessageError) {
-                            console.warn('Unable to notify parent about listening completion:', postMessageError);
-                        }
-                    }
-                    alert('Test submitted successfully!');
-                    if (window.top && window.top !== window) {
-                        window.top.location.href = '../../dashboard-cambridge.html';
-                    } else {
-                        window.location.href = '../../dashboard-cambridge.html';
-                    }
-                }
-            });
+            
+            // Deliver Button Logic
+             document.getElementById('deliver-button').addEventListener('click', async function() {
+                 if (confirm('Are you sure you want to submit your listening test?')) {
+                     try {
+                         if (window.cambridgeAnswerManager && typeof window.cambridgeAnswerManager.submitTestToDatabase === 'function') {
+                             await window.cambridgeAnswerManager.submitTestToDatabase();
+                         }
+                     } catch (error) { console.error(error); }
+                     
+                     localStorage.setItem('listeningStatus', 'completed');
+                     localStorage.setItem('listeningEndTime', new Date().toISOString());
+                     localStorage.removeItem('listeningTestStarted');
+                     if (window.parent) {
+                         try { window.parent.postMessage({ type: 'listening-complete' }, '*'); } catch (e) {}
+                     }
+                     alert('Test submitted successfully!');
+                     if (window.top && window.top !== window) {
+                         window.top.location.href = '../../dashboard-cambridge.html';
+                     } else {
+                         window.location.href = '../../dashboard-cambridge.html';
+                     }
+                 }
+             });
         });
-
-        console.log('🎓 Cambridge A2 Key - Listening Part 4 Loaded');
-        
-        // Populate Candidate ID field
-        (function() {
-            const studentId = localStorage.getItem('studentId');
-            if (studentId) {
-                // Only target specific Candidate ID fields, not answer inputs
-                const candidateIdField = document.getElementById('candidateId') || document.getElementById('candidate-id');
-                if (candidateIdField) {
-                    candidateIdField.value = studentId;
-                    candidateIdField.readOnly = true;
-                    console.log('✅ Candidate ID input populated:', studentId);
-                }
-                
-                // Populate the header display
-                const headerNameDiv = document.querySelector('.header__name___1Cw2x');
-                if (headerNameDiv && headerNameDiv.textContent.includes('Candidate ID')) {
-                    const headerValueDiv = headerNameDiv.nextElementSibling || document.createElement('div');
-                    headerValueDiv.textContent = studentId;
-                    if (!headerNameDiv.nextElementSibling) {
-                        headerNameDiv.parentElement.appendChild(headerValueDiv);
-                    }
-                    console.log('✅ Candidate ID header populated:', studentId);
-                }
-            }
-        })();
     </script>
 </body>
 </html>
-
-

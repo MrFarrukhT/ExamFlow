@@ -10,8 +10,6 @@
             overflow: auto !important;
             position: relative !important;
         }
-        
-        /* Prevent images from being draggable */
         img {
             user-select: none;
             -webkit-user-drag: none;
@@ -22,7 +20,7 @@
         
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google" content="notranslate">
-    <title>A2 Key Listening Part 2</title>
+    <title>A1 Movers Listening Part 2</title>
     <link rel="shortcut icon" type="image/png" href="https://d133zon9jtcf53.cloudfront.net/favicon.png">
     
     <script src="../../../assets/js/cambridge/session-verify.js"></script>
@@ -34,54 +32,90 @@
     <style>
         body { opacity: 1 !important; }
         
-        .notes-container {
-            background: #f8f9fa;
-            padding: 30px;
+        .part2-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
             border-radius: 8px;
-            max-width: 800px;
-            margin: 20px auto;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            font-size: 18px;
         }
-        .notes-title {
+
+        .main-image-container {
             text-align: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #1976D2;
+            margin-bottom: 30px;
         }
-        .note-field {
-            margin: 15px 0;
+        
+        .main-image-container img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+        }
+
+        .questions-list {
+            width: 100%;
+        }
+
+        .question-row {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            align-items: baseline;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ddd;
         }
-        .note-label {
-            font-weight: 500;
-            min-width: 150px;
-        }
-        .note-input {
-            flex: 1;
-            padding: 8px 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-        .note-input:focus {
-            outline: none;
-            border-color: #2196F3;
-        }
-        .question-number {
+
+        .q-num {
             font-weight: bold;
+            width: 30px;
             color: #2196F3;
+        }
+
+        .q-text {
+            flex: 1;
+            margin-right: 15px;
+        }
+
+        .q-input-container {
+            flex: 0 0 250px;
+            position: relative;
+        }
+
+        .q-input {
+            width: 100%;
+            padding: 5px 10px;
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            font-size: 18px;
+            border: none;
+            border-bottom: 2px solid #333;
+            background: #f9f9f9;
+            color: #000;
+        }
+
+        .q-input:focus {
+            outline: none;
+            border-bottom-color: #2196F3;
+            background: #e3f2fd;
+        }
+
+        .example-row {
+            color: #555;
+            font-style: italic;
+        }
+        
+        .example-label {
+            font-weight: bold;
             margin-right: 5px;
         }
+
     </style>
     <!-- Highlight and Notes Persistence -->
     <script src="../../../assets/js/cambridge/highlight-manager.js"></script>
     <script src="../../../assets/js/cambridge/notes-manager.js"></script>
 </head>
 
-<body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="listening" data-mock="A2-Key" data-test-version="A2-Key">
+<body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="listening" data-mock="A1-Movers" data-test-version="A1-Movers">
     <div id="wrapper">
         <div class="App__app___3nDjL zoom-small" id="app" role="presentation">
             <div aria-hidden="false" class="App__mainScreen___3HaXz">
@@ -130,84 +164,71 @@
                             <div class="DisplayTypeContainer__sectionContent___2HSJ0" id="sectionContent" style="padding: 20px; padding-bottom: 150px;">
                                 <div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE">
                                     <div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL">
-                                        <h3 class="scorableItemHeadline">Part 2: Questions 6-10</h3>
+                                        <h3 class="scorableItemHeadline">Part 2: Questions 1-5</h3>
                                         <div class="QuestionDisplay__rubricContent___1byNW">
-                                            <p>For each question, write the correct answer in the gap. Write <b>one word</b> or a <b>number</b> or a <b>date</b> or a <b>time</b>.</p>
-                                            <p><br>You will hear some information on the radio about a new swimming pool.</p>
+                                            <p>Listen and write. There is one example.</p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Audio is managed by the parent container -->
-
-                                <!-- Notes Form -->
-                                <div class="notes-container">
-                                    <div class="notes-title">New swimming pool</div>
-                                    
-                                    <div class="note-field">
-                                        <div class="note-label">
-                                            Name:
-                                        </div>
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <span style="min-width: 150px;">............................<i>City</i>................Pool</span>
-                                        </div>
+                                <div class="part2-container">
+                                    <div class="main-image-container">
+                                        <img src="images/Listening/2.png" alt="Part 2 Image">
                                     </div>
 
-                                    <div class="note-field">
-                                        <div class="note-label">
-                                            Address:
+                                    <div class="questions-list">
+                                        <!-- Questions will be dynamically generated or static here. 
+                                             Since the prompt text is usually specific to the mock, 
+                                             I will provide generic inputs that can be filled.
+                                             Ideally, the text itself should be in the HTML. 
+                                             Based on the user's screenshot, it looks like "Boy sends most messages...".
+                                             I'll use placeholders that match the screenshot provided earlier as a template. -->
+                                        
+                                        <div class="question-row example-row">
+                                            <div class="q-text"><span class="example-label">Example:</span> Boy sends most messages to his friends by:</div>
+                                            <div class="q-input-container">
+                                                <div style="padding: 5px;">text</div>
+                                            </div>
                                         </div>
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <span class="question-number">(6)</span>
-                                            <input type="text" class="note-input" id="answer_6" placeholder="Write your answer here" 
-                                                   onchange="saveAnswer(6, this.value)" style="flex: 0 0 150px;">
-                                            <span>...........................Street</span>
-                                        </div>
-                                    </div>
 
-                                    <div class="note-field">
-                                        <div class="note-label">
-                                            Day pool opens:
+                                        <div class="question-row">
+                                            <div class="q-num">6</div>
+                                            <div class="q-text">Age when first had a phone:</div>
+                                            <div class="q-input-container">
+                                                <input type="text" class="q-input" id="q6" onchange="saveAnswer(6, this.value)">
+                                            </div>
                                         </div>
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <span class="question-number">(7)</span>
-                                            <input type="text" class="note-input" id="answer_7" placeholder="Write your answer here" 
-                                                   onchange="saveAnswer(7, this.value)" style="flex: 1;">
-                                        </div>
-                                    </div>
 
-                                    <div class="note-field">
-                                        <div class="note-label">
-                                            Cost of adult ticket:
+                                        <div class="question-row">
+                                            <div class="q-num">7</div>
+                                            <div class="q-text">He texts his friends most at:</div>
+                                            <div class="q-input-container">
+                                                <input type="text" class="q-input" id="q7" onchange="saveAnswer(7, this.value)">
+                                            </div>
                                         </div>
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <span class="question-number">(8)</span>
-                                            <span>£</span>
-                                            <input type="text" class="note-input" id="answer_8" placeholder="Write your answer here" 
-                                                   onchange="saveAnswer(8, this.value)" style="flex: 1;">
-                                        </div>
-                                    </div>
 
-                                    <div class="note-field">
-                                        <div class="note-label">
-                                            Temperature of large pool:
+                                        <div class="question-row">
+                                            <div class="q-num">8</div>
+                                            <div class="q-text">Person that he texts in his family:</div>
+                                            <div class="q-input-container">
+                                                <input type="text" class="q-input" id="q8" onchange="saveAnswer(8, this.value)">
+                                            </div>
                                         </div>
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <span class="question-number">(9)</span>
-                                            <input type="text" class="note-input" id="answer_9" placeholder="Write your answer here" 
-                                                   onchange="saveAnswer(9, this.value)" style="flex: 1;">
-                                            <span><i>degrees</i></span>
-                                        </div>
-                                    </div>
 
-                                    <div class="note-field">
-                                        <div class="note-label">
-                                            Phone number:
+                                        <div class="question-row">
+                                            <div class="q-num">9</div>
+                                            <div class="q-text">Boy's name:</div>
+                                            <div class="q-input-container">
+                                                <input type="text" class="q-input" id="q9" onchange="saveAnswer(9, this.value)">
+                                            </div>
                                         </div>
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <span class="question-number">(10)</span>
-                                            <input type="text" class="note-input" id="answer_10" placeholder="Write your answer here" 
-                                                   onchange="saveAnswer(10, this.value)" style="flex: 1;">
+
+                                        <div class="question-row">
+                                            <div class="q-num">10</div>
+                                            <div class="q-text">Name of school:</div>
+                                            <div class="q-input-container">
+                                                <input type="text" class="q-input" id="q10" onchange="saveAnswer(10, this.value)">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -279,56 +300,56 @@
     <script>
         window.currentPart = 2;
 
+        // Question mapping: Part 2 typically corresponds to questions 6-10 in standard storage
+        // But in this file UI it is 1-5 relative to part. 
+        // Cambridge A1 Movers usually runs Part 1 (Q1-5), Part 2 (Q1-5? No, continues numbering).
+        // Standard Movers: Part 1 (1-5), Part 2 (6-10), Part 3 (11-15), Part 4 (16-20), Part 5 (21-25).
+        // So we should use offset +5.
+        
         function saveAnswer(questionNum, answer) {
             let answers = JSON.parse(localStorage.getItem('listeningAnswers') || '{}');
-            answers[`L${questionNum}`] = answer.trim();
+            answers[`L${questionNum}`] = answer;
             localStorage.setItem('listeningAnswers', JSON.stringify(answers));
             
             const btn = document.querySelector(`[data-ordernumber="${questionNum}"]`);
-            if (btn && answer.trim() !== '') {
-                btn.classList.add('answered');
-            } else if (btn) {
-                btn.classList.remove('answered');
+            if (btn) {
+                if(answer.trim()) btn.classList.add('answered');
+                else btn.classList.remove('answered');
             }
         }
 
         function loadSavedAnswers() {
             const answers = JSON.parse(localStorage.getItem('listeningAnswers') || '{}');
-            
-            // BUGFIX: Clean up any corrupted data where Candidate ID was saved as an answer
-            const studentId = localStorage.getItem('studentId');
-            if (studentId && answers['L6'] === studentId) {
-                console.warn('⚠️ Detected corrupted answer data - clearing Question 6');
-                delete answers['L6'];
-                localStorage.setItem('listeningAnswers', JSON.stringify(answers));
-            }
-            
             for (let i = 6; i <= 10; i++) {
                 const answer = answers[`L${i}`];
                 if (answer) {
-                    const input = document.getElementById(`answer_${i}`);
-                    if (input) {
-                        input.value = answer;
-                        input.readOnly = false; // Ensure inputs are always editable
-                    }
+                    const input = document.getElementById(`q${i}`);
+                    if (input) input.value = answer;
+                    
                     const btn = document.querySelector(`[data-ordernumber="${i}"]`);
-                    if (btn) {
-                        btn.classList.add('answered');
-                    }
-                }
-            }
-            
-            // Ensure all answer inputs are editable
-            for (let i = 6; i <= 10; i++) {
-                const input = document.getElementById(`answer_${i}`);
-                if (input) {
-                    input.readOnly = false;
+                    if (btn) btn.classList.add('answered');
                 }
             }
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedAnswers();
+            
+            // Populate Candidate ID
+            (function() {
+                const studentId = localStorage.getItem('studentId');
+                if (studentId) {
+                    const headerNameDiv = document.querySelector('.header__name___1Cw2x');
+                    if (headerNameDiv && headerNameDiv.textContent.includes('Candidate ID')) {
+                        const headerValueDiv = headerNameDiv.nextElementSibling || document.createElement('div');
+                        headerValueDiv.textContent = studentId;
+                        headerValueDiv.style.fontWeight = 'bold';
+                        if (!headerNameDiv.nextElementSibling) {
+                            headerNameDiv.parentElement.appendChild(headerValueDiv);
+                        }
+                    }
+                }
+            })();
 
             const partFiles = {
                 1: 'Listening-Part-1.html',
@@ -345,7 +366,6 @@
                     partButton.addEventListener('click', function(e) {
                         e.preventDefault();
                         if (partFiles[partNumber]) {
-                            console.log('📢 Part button', partNumber, 'clicked, in iframe:', (window.self !== window.top));
                             if (window.self !== window.top) {
                                 window.parent.postMessage({ type: 'navigate', url: partFiles[partNumber] }, '*');
                             } else {
@@ -357,12 +377,9 @@
             });
 
             const prevButton = document.getElementById('footer-nav-button-previous');
-            const nextButton = document.getElementById('footer-nav-button-next');
-
             if (prevButton) {
                 prevButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    console.log('◀️ Previous button clicked, navigating to Part 1');
                     if (window.self !== window.top) {
                         window.parent.postMessage({ type: 'navigate', url: partFiles[1] }, '*');
                     } else {
@@ -371,10 +388,10 @@
                 });
             }
 
+            const nextButton = document.getElementById('footer-nav-button-next');
             if (nextButton) {
                 nextButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    console.log('▶️ Next button clicked, navigating to Part 3');
                     if (window.self !== window.top) {
                         window.parent.postMessage({ type: 'navigate', url: partFiles[3] }, '*');
                     } else {
@@ -382,69 +399,31 @@
                     }
                 });
             }
-
-            document.getElementById('deliver-button').addEventListener('click', async function() {
-                if (confirm('Are you sure you want to submit your listening test?')) {
-                    // Submit to database
-                    try {
-                        if (window.cambridgeAnswerManager && typeof window.cambridgeAnswerManager.submitTestToDatabase === 'function') {
-                            await window.cambridgeAnswerManager.submitTestToDatabase();
-                        }
-                    } catch (error) {
-                        console.error('Error submitting to database:', error);
-                    }
-                    
-                    localStorage.setItem('listeningStatus', 'completed');
-                    localStorage.setItem('listeningEndTime', new Date().toISOString());
-                    // Clear the listening test started flag after submission
-                    localStorage.removeItem('listeningTestStarted');
-                    if (window.parent) {
-                        try {
-                            window.parent.postMessage({ type: 'listening-complete' }, '*');
-                        } catch (postMessageError) {
-                            console.warn('Unable to notify parent about listening completion:', postMessageError);
-                        }
-                    }
-                    alert('Test submitted successfully!');
-                    if (window.top && window.top !== window) {
-                        window.top.location.href = '../../dashboard-cambridge.html';
-                    } else {
-                        window.location.href = '../../dashboard-cambridge.html';
-                    }
-                }
-            });
+            
+            // Deliver Button Logic
+             document.getElementById('deliver-button').addEventListener('click', async function() {
+                 if (confirm('Are you sure you want to submit your listening test?')) {
+                     try {
+                         if (window.cambridgeAnswerManager && typeof window.cambridgeAnswerManager.submitTestToDatabase === 'function') {
+                             await window.cambridgeAnswerManager.submitTestToDatabase();
+                         }
+                     } catch (error) { console.error(error); }
+                     
+                     localStorage.setItem('listeningStatus', 'completed');
+                     localStorage.setItem('listeningEndTime', new Date().toISOString());
+                     localStorage.removeItem('listeningTestStarted');
+                     if (window.parent) {
+                         try { window.parent.postMessage({ type: 'listening-complete' }, '*'); } catch (e) {}
+                     }
+                     alert('Test submitted successfully!');
+                     if (window.top && window.top !== window) {
+                         window.top.location.href = '../../dashboard-cambridge.html';
+                     } else {
+                         window.location.href = '../../dashboard-cambridge.html';
+                     }
+                 }
+             });
         });
-
-        console.log('🎓 Cambridge A2 Key - Listening Part 2 Loaded');
-        
-        // Populate Candidate ID field
-        (function() {
-            const studentId = localStorage.getItem('studentId');
-            if (studentId) {
-                // Only target specific Candidate ID fields, not answer inputs
-                const candidateIdField = document.getElementById('candidateId') || document.getElementById('candidate-id');
-                if (candidateIdField) {
-                    candidateIdField.value = studentId;
-                    candidateIdField.readOnly = true;
-                    console.log('✅ Candidate ID input populated:', studentId);
-                }
-                
-                // Populate the header display
-                const headerNameDiv = document.querySelector('.header__name___1Cw2x');
-                if (headerNameDiv && headerNameDiv.textContent.includes('Candidate ID')) {
-                    const headerValueDiv = headerNameDiv.nextElementSibling || document.createElement('div');
-                    headerValueDiv.textContent = studentId;
-                    if (!headerNameDiv.nextElementSibling) {
-                        headerNameDiv.parentElement.appendChild(headerValueDiv);
-                    }
-                    console.log('✅ Candidate ID header populated:', studentId);
-                }
-            }
-        })();
     </script>
-
-    <!-- Audio popup is managed by the parent container -->
 </body>
 </html>
-
-

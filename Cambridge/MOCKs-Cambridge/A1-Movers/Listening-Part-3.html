@@ -22,7 +22,7 @@
         
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google" content="notranslate">
-    <title>A2 Key Listening Part 3</title>
+    <title>A1 Movers Listening Part 3</title>
     <link rel="shortcut icon" type="image/png" href="https://d133zon9jtcf53.cloudfront.net/favicon.png">
     
     <script src="../../../assets/js/cambridge/session-verify.js"></script>
@@ -34,40 +34,164 @@
     <style>
         body { opacity: 1 !important; }
         
-        .question-wrapper {
-            margin-bottom: 30px;
+        .matching-container {
+            max-width: 1000px;
+            margin: 0 auto;
             padding: 20px;
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .left-column, .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .match-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
             background: #fff;
-            border-radius: 4px;
-        }
-        .question-number {
-            font-weight: bold;
-            color: #2196F3;
-            margin-right: 10px;
-        }
-        .choices {
-            margin-top: 15px;
-        }
-        .choice-item {
-            margin: 10px 0;
             padding: 10px;
-            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            min-width: 300px;
+        }
+
+        .match-img {
+            width: 120px;
+            height: 90px;
+            object-fit: contain;
+            border: 1px solid #ddd;
             border-radius: 4px;
+        }
+
+        .match-text {
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+            flex: 1;
+        }
+
+        .match-box {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #333;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            font-size: 24px;
+            font-weight: bold;
+            background: #fff;
             cursor: pointer;
+            transition: all 0.2s;
         }
-        .choice-item:hover {
+
+        .match-box:hover {
+            background: #e3f2fd;
+            border-color: #2196F3;
+        }
+
+        .match-box.filled {
+            background: #e8f5e9;
+            border-color: #4caf50;
+        }
+
+        .right-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .right-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .right-item.selected {
+            border: 2px solid #2196F3;
+            background: #e3f2fd;
+        }
+        
+        .right-item.used {
+            opacity: 0.5;
+            filter: grayscale(100%);
+        }
+
+        .letter-label {
+            margin-top: 5px;
+            font-weight: bold;
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            font-size: 18px;
+        }
+
+        .q-num {
+            color: #2196F3;
+            font-weight: bold;
+            font-size: 20px;
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+        }
+
+        /* Modal for selection */
+        .selection-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .modal-item {
+            text-align: center;
+            cursor: pointer;
+            padding: 10px;
+            border: 2px solid transparent;
+            border-radius: 8px;
+        }
+
+        .modal-item:hover {
             background: #f5f5f5;
+            border-color: #2196F3;
         }
-        .choice-item input[type="radio"] {
-            margin-right: 10px;
+
+        .modal-item img {
+            width: 100px;
+            height: 80px;
+            object-fit: contain;
         }
+
     </style>
     <!-- Highlight and Notes Persistence -->
     <script src="../../../assets/js/cambridge/highlight-manager.js"></script>
     <script src="../../../assets/js/cambridge/notes-manager.js"></script>
 </head>
 
-<body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="listening" data-mock="A2-Key" data-test-version="A2-Key">
+<body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="listening" data-mock="A1-Movers" data-test-version="A1-Movers">
     <div id="wrapper">
         <div class="App__app___3nDjL zoom-small" id="app" role="presentation">
             <div aria-hidden="false" class="App__mainScreen___3HaXz">
@@ -118,146 +242,110 @@
                                     <div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL">
                                         <h3 class="scorableItemHeadline">Part 3: Questions 11-15</h3>
                                         <div class="QuestionDisplay__rubricContent___1byNW">
-                                            <p>For each question, choose the correct answer.</p>
-                                            <p><br>You will hear John talking to his friend Karen about an airport.</p>
+                                            <p>Listen and write a letter in each box. There is one example.</p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Audio is managed by the parent container -->
+                                <div class="matching-container">
+                                    <!-- Left Column: Places/People -->
+                                    <div class="left-column">
+                                        <!-- Example -->
+                                        <div class="match-item">
+                                            <img src="images/Listening/3.1.png" class="match-img" alt="Item 1">
+                                            <div class="match-text">a circus</div>
+                                            <div class="match-box filled">G</div>
+                                        </div>
 
-                                <!-- Question 11 -->
-                                <div class="question-wrapper" id="question-11">
-                                    <div>
-                                        <span class="question-number">11</span>
-                                        <strong>What does John think is good to buy at the airport?</strong>
+                                        <!-- Questions -->
+                                        <div class="match-item">
+                                            <div class="q-num">11</div>
+                                            <img src="images/Listening/3.2.png" class="match-img" alt="Item 2">
+                                            <div class="match-text">a farm</div>
+                                            <div class="match-box" id="box-11" onclick="openSelection(11)"></div>
+                                        </div>
+
+                                        <div class="match-item">
+                                            <div class="q-num">12</div>
+                                            <img src="images/Listening/3.3.png" class="match-img" alt="Item 3">
+                                            <div class="match-text">a beach</div>
+                                            <div class="match-box" id="box-12" onclick="openSelection(12)"></div>
+                                        </div>
+
+                                        <div class="match-item">
+                                            <div class="q-num">13</div>
+                                            <img src="images/Listening/3.4.png" class="match-img" alt="Item 4">
+                                            <div class="match-text">a library</div>
+                                            <div class="match-box" id="box-13" onclick="openSelection(13)"></div>
+                                        </div>
+
+                                        <div class="match-item">
+                                            <div class="q-num">14</div>
+                                            <img src="images/Listening/3.5.png" class="match-img" alt="Item 5">
+                                            <div class="match-text">a park</div>
+                                            <div class="match-box" id="box-14" onclick="openSelection(14)"></div>
+                                        </div>
+
+                                        <div class="match-item">
+                                            <div class="q-num">15</div>
+                                            <img src="images/Listening/3.6.png" class="match-img" alt="Item 6">
+                                            <div class="match-text">a café</div>
+                                            <div class="match-box" id="box-15" onclick="openSelection(15)"></div>
+                                        </div>
                                     </div>
-                                    <div class="choices">
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_11" value="A" onchange="saveAnswer(11, 'A')">
-                                            <span>A) food</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_11" value="B" onchange="saveAnswer(11, 'B')">
-                                            <span>B) clothes</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_11" value="C" onchange="saveAnswer(11, 'C')">
-                                            <span>C) toys</span>
-                                        </label>
+
+                                    <!-- Right Column: Options (Static Display) -->
+                                    <div class="right-column">
+                                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                            <!-- A-H options -->
+                                            <div class="right-item" id="opt-A"><img src="images/Listening/3.a.png" class="match-img"><div class="letter-label">A</div></div>
+                                            <div class="right-item" id="opt-B"><img src="images/Listening/3.b.png" class="match-img"><div class="letter-label">B</div></div>
+                                            <div class="right-item" id="opt-C"><img src="images/Listening/3.c.png" class="match-img"><div class="letter-label">C</div></div>
+                                            <div class="right-item" id="opt-D"><img src="images/Listening/3.d.png" class="match-img"><div class="letter-label">D</div></div>
+                                            <div class="right-item" id="opt-E"><img src="images/Listening/3.e.png" class="match-img"><div class="letter-label">E</div></div>
+                                            <div class="right-item" id="opt-F"><img src="images/Listening/3.f.png" class="match-img"><div class="letter-label">F</div></div>
+                                            <div class="right-item used" id="opt-G"><img src="images/Listening/3.g.png" class="match-img"><div class="letter-label">G</div></div>
+                                            <div class="right-item" id="opt-H"><img src="images/Listening/3.h.png" class="match-img"><div class="letter-label">H</div></div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <!-- Question 12 -->
-                                <div class="question-wrapper" id="question-12">
-                                    <div>
-                                        <span class="question-number">12</span>
-                                        <strong>Why should Karen go to the airport museum?</strong>
-                                    </div>
-                                    <div class="choices">
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_12" value="A" onchange="saveAnswer(12, 'A')">
-                                            <span>A) It's famous.</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_12" value="B" onchange="saveAnswer(12, 'B')">
-                                            <span>B) It's free.</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_12" value="C" onchange="saveAnswer(12, 'C')">
-                                            <span>C) It's large.</span>
-                                        </label>
-                                    </div>
-                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                                <!-- Question 13 -->
-                                <div class="question-wrapper" id="question-13">
-                                    <div>
-                                        <span class="question-number">13</span>
-                                        <strong>John says the best place to sit is</strong>
-                                    </div>
-                                    <div class="choices">
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_13" value="A" onchange="saveAnswer(13, 'A')">
-                                            <span>A) next to the lift.</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_13" value="B" onchange="saveAnswer(13, 'B')">
-                                            <span>B) under the information board.</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_13" value="C" onchange="saveAnswer(13, 'C')">
-                                            <span>C) opposite the windows.</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <!-- Question 14 -->
-                                <div class="question-wrapper" id="question-14">
-                                    <div>
-                                        <span class="question-number">14</span>
-                                        <strong>What does John say about the airport staff?</strong>
-                                    </div>
-                                    <div class="choices">
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_14" value="A" onchange="saveAnswer(14, 'A')">
-                                            <span>A) There are a lot of them.</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_14" value="B" onchange="saveAnswer(14, 'B')">
-                                            <span>B) They work quickly.</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_14" value="C" onchange="saveAnswer(14, 'C')">
-                                            <span>C) They are friendly.</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <!-- Question 15 -->
-                                <div class="question-wrapper" id="question-15">
-                                    <div>
-                                        <span class="question-number">15</span>
-                                        <strong>What is Karen going to take to the airport?</strong>
-                                    </div>
-                                    <div class="choices">
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_15" value="A" onchange="saveAnswer(15, 'A')">
-                                            <span>A) a blanket</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_15" value="B" onchange="saveAnswer(15, 'B')">
-                                            <span>B) a small pillow</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_15" value="C" onchange="saveAnswer(15, 'C')">
-                                            <span>C) something to read</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <!-- Question 16 -->
-                                <div class="question-wrapper" id="question-16">
-                                    <div>
-                                        <span class="question-number">16</span>
-                                        <strong>What does Emma recommend?</strong>
-                                    </div>
-                                    <div class="choices">
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_16" value="A" onchange="saveAnswer(16, 'A')">
-                                            <span>A) Visiting the local museum</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_16" value="B" onchange="saveAnswer(16, 'B')">
-                                            <span>B) Taking a boat trip</span>
-                                        </label>
-                                        <label class="choice-item">
-                                            <input type="radio" name="question_16" value="C" onchange="saveAnswer(16, 'C')">
-                                            <span>C) Trying the local food</span>
-                                        </label>
-                                    </div>
-                                </div>
-
+                    <!-- Modal for selecting letters -->
+                    <div id="selectionModal" class="selection-modal" onclick="closeModal(event)">
+                        <div class="modal-content">
+                            <div class="modal-item" onclick="selectLetter('A')">
+                                <img src="images/Listening/3.a.png">
+                                <div class="letter-label">A</div>
+                            </div>
+                            <div class="modal-item" onclick="selectLetter('B')">
+                                <img src="images/Listening/3.b.png">
+                                <div class="letter-label">B</div>
+                            </div>
+                            <div class="modal-item" onclick="selectLetter('C')">
+                                <img src="images/Listening/3.c.png">
+                                <div class="letter-label">C</div>
+                            </div>
+                            <div class="modal-item" onclick="selectLetter('D')">
+                                <img src="images/Listening/3.d.png">
+                                <div class="letter-label">D</div>
+                            </div>
+                            <div class="modal-item" onclick="selectLetter('E')">
+                                <img src="images/Listening/3.e.png">
+                                <div class="letter-label">E</div>
+                            </div>
+                            <div class="modal-item" onclick="selectLetter('F')">
+                                <img src="images/Listening/3.f.png">
+                                <div class="letter-label">F</div>
+                            </div>
+                            <!-- G is example, skip or show disabled -->
+                            <!-- <div class="modal-item" style="opacity:0.5"><img src="images/Listening/3.g.png"><div>G</div></div> -->
+                            <div class="modal-item" onclick="selectLetter('H')">
+                                <img src="images/Listening/3.h.png">
+                                <div class="letter-label">H</div>
                             </div>
                         </div>
                     </div>
@@ -284,7 +372,7 @@
                                         <span><span class="section-prefix">Part </span><span class="sectionNr">2</span></span>
                                     </button>
                                 </div>
-                                <div class="footer__questionWrapper___1tZ46 multiple">
+                                <div class="footer__questionWrapper___1tZ46 selected multiple">
                                     <button role="tab" class="footer__questionNo___3WNct">
                                         <span><span class="section-prefix">Part </span><span class="sectionNr">3</span></span>
                                     </button>
@@ -324,6 +412,55 @@
 
     <script>
         window.currentPart = 3;
+        let currentQuestionForModal = null;
+
+        function openSelection(qNum) {
+            currentQuestionForModal = qNum;
+            document.getElementById('selectionModal').style.display = 'flex';
+        }
+
+        function closeModal(e) {
+            if (e.target.id === 'selectionModal') {
+                document.getElementById('selectionModal').style.display = 'none';
+            }
+        }
+
+        function selectLetter(letter) {
+            if (!currentQuestionForModal) return;
+            
+            // Save
+            saveAnswer(currentQuestionForModal, letter);
+            
+            // Update UI
+            const box = document.getElementById(`box-${currentQuestionForModal}`);
+            if (box) {
+                box.textContent = letter;
+                box.classList.add('filled');
+            }
+            
+            // Close modal
+            document.getElementById('selectionModal').style.display = 'none';
+            currentQuestionForModal = null;
+            
+            updateUsedOptions();
+        }
+
+        function updateUsedOptions() {
+            // Reset all except G
+            document.querySelectorAll('.right-item').forEach(el => {
+                if (el.id !== 'opt-G') el.classList.remove('used');
+            });
+
+            // Mark used ones
+            const answers = JSON.parse(localStorage.getItem('listeningAnswers') || '{}');
+            for (let i = 11; i <= 15; i++) {
+                const letter = answers[`L${i}`];
+                if (letter) {
+                    const opt = document.getElementById(`opt-${letter}`);
+                    if (opt) opt.classList.add('used');
+                }
+            }
+        }
 
         function saveAnswer(questionNum, answer) {
             let answers = JSON.parse(localStorage.getItem('listeningAnswers') || '{}');
@@ -331,9 +468,9 @@
             localStorage.setItem('listeningAnswers', JSON.stringify(answers));
             
             const btn = document.querySelector(`[data-ordernumber="${questionNum}"]`);
-            if (btn) {
-                btn.classList.add('answered');
-            }
+            if (btn) btn.classList.add('answered');
+            
+            updateUsedOptions();
         }
 
         function loadSavedAnswers() {
@@ -341,37 +478,36 @@
             for (let i = 11; i <= 15; i++) {
                 const answer = answers[`L${i}`];
                 if (answer) {
-                    const radio = document.querySelector(`input[name="question_${i}"][value="${answer}"]`);
-                    if (radio) {
-                        radio.checked = true;
+                    const box = document.getElementById(`box-${i}`);
+                    if (box) {
+                        box.textContent = answer;
+                        box.classList.add('filled');
                     }
                     const btn = document.querySelector(`[data-ordernumber="${i}"]`);
-                    if (btn) {
-                        btn.classList.add('answered');
-                    }
+                    if (btn) btn.classList.add('answered');
                 }
             }
+            updateUsedOptions();
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedAnswers();
-
-            // FIXED: Mark current part as selected to show questions in navigation
-            const currentPartWrapper = document.querySelectorAll('.footer__questionWrapper___1tZ46')[window.currentPart - 1];
-            if (currentPartWrapper) {
-                currentPartWrapper.classList.add('selected');
-                console.log('✅ Part 3 marked as selected in navigation');
-            }
-
-            // FIXED: Auto-start audio if listening test has already been started
-            const listeningStarted = localStorage.getItem('listeningTestStarted');
-            if (listeningStarted === 'true') {
-                const audio = document.getElementById('audio-player');
-                if (audio) {
-                    console.log('🎵 Auto-starting Part 3 audio...');
-                    audio.play().catch(error => console.log('Audio playback:', error.message));
+            
+            // Populate Candidate ID
+            (function() {
+                const studentId = localStorage.getItem('studentId');
+                if (studentId) {
+                    const headerNameDiv = document.querySelector('.header__name___1Cw2x');
+                    if (headerNameDiv && headerNameDiv.textContent.includes('Candidate ID')) {
+                        const headerValueDiv = headerNameDiv.nextElementSibling || document.createElement('div');
+                        headerValueDiv.textContent = studentId;
+                        headerValueDiv.style.fontWeight = 'bold';
+                        if (!headerNameDiv.nextElementSibling) {
+                            headerNameDiv.parentElement.appendChild(headerValueDiv);
+                        }
+                    }
                 }
-            }
+            })();
 
             const partFiles = {
                 1: 'Listening-Part-1.html',
@@ -388,7 +524,6 @@
                     partButton.addEventListener('click', function(e) {
                         e.preventDefault();
                         if (partFiles[partNumber]) {
-                            console.log('📢 Part button', partNumber, 'clicked, in iframe:', (window.self !== window.top));
                             if (window.self !== window.top) {
                                 window.parent.postMessage({ type: 'navigate', url: partFiles[partNumber] }, '*');
                             } else {
@@ -400,12 +535,9 @@
             });
 
             const prevButton = document.getElementById('footer-nav-button-previous');
-            const nextButton = document.getElementById('footer-nav-button-next');
-
             if (prevButton) {
                 prevButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    console.log('◀️ Previous button clicked, navigating to Part 2');
                     if (window.self !== window.top) {
                         window.parent.postMessage({ type: 'navigate', url: partFiles[2] }, '*');
                     } else {
@@ -414,10 +546,10 @@
                 });
             }
 
+            const nextButton = document.getElementById('footer-nav-button-next');
             if (nextButton) {
                 nextButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    console.log('▶️ Next button clicked, navigating to Part 4');
                     if (window.self !== window.top) {
                         window.parent.postMessage({ type: 'navigate', url: partFiles[4] }, '*');
                     } else {
@@ -425,70 +557,31 @@
                     }
                 });
             }
-
-            document.getElementById('deliver-button').addEventListener('click', async function() {
-                if (confirm('Are you sure you want to submit your listening test?')) {
-                    // Submit to database
-                    try {
-                        if (window.cambridgeAnswerManager && typeof window.cambridgeAnswerManager.submitTestToDatabase === 'function') {
-                            await window.cambridgeAnswerManager.submitTestToDatabase();
-                        }
-                    } catch (error) {
-                        console.error('Error submitting to database:', error);
-                    }
-                    
-                    localStorage.setItem('listeningStatus', 'completed');
-                    localStorage.setItem('listeningEndTime', new Date().toISOString());
-                    // Clear the listening test started flag after submission
-                    localStorage.removeItem('listeningTestStarted');
-                    if (window.parent) {
-                        try {
-                            window.parent.postMessage({ type: 'listening-complete' }, '*');
-                        } catch (postMessageError) {
-                            console.warn('Unable to notify parent about listening completion:', postMessageError);
-                        }
-                    }
-                    alert('Test submitted successfully!');
-                    if (window.top && window.top !== window) {
-                        window.top.location.href = '../../dashboard-cambridge.html';
-                    } else {
-                        window.location.href = '../../dashboard-cambridge.html';
-                    }
-                }
-            });
+            
+            // Deliver Button Logic
+             document.getElementById('deliver-button').addEventListener('click', async function() {
+                 if (confirm('Are you sure you want to submit your listening test?')) {
+                     try {
+                         if (window.cambridgeAnswerManager && typeof window.cambridgeAnswerManager.submitTestToDatabase === 'function') {
+                             await window.cambridgeAnswerManager.submitTestToDatabase();
+                         }
+                     } catch (error) { console.error(error); }
+                     
+                     localStorage.setItem('listeningStatus', 'completed');
+                     localStorage.setItem('listeningEndTime', new Date().toISOString());
+                     localStorage.removeItem('listeningTestStarted');
+                     if (window.parent) {
+                         try { window.parent.postMessage({ type: 'listening-complete' }, '*'); } catch (e) {}
+                     }
+                     alert('Test submitted successfully!');
+                     if (window.top && window.top !== window) {
+                         window.top.location.href = '../../dashboard-cambridge.html';
+                     } else {
+                         window.location.href = '../../dashboard-cambridge.html';
+                     }
+                 }
+             });
         });
-
-        console.log('🎓 Cambridge A2 Key - Listening Part 3 Loaded');
-        
-        // Populate Candidate ID field
-        (function() {
-            const studentId = localStorage.getItem('studentId');
-            if (studentId) {
-                // Populate the header display
-                const headerNameDiv = document.querySelector('.header__name___1Cw2x');
-                if (headerNameDiv && headerNameDiv.textContent.includes('Candidate ID')) {
-                    const headerValueDiv = headerNameDiv.nextElementSibling || document.createElement('div');
-                    headerValueDiv.textContent = studentId;
-                    headerValueDiv.style.fontWeight = 'bold';
-                    if (!headerNameDiv.nextElementSibling) {
-                        headerNameDiv.parentElement.appendChild(headerValueDiv);
-                    }
-                    console.log('✅ Candidate ID header populated:', studentId);
-                }
-                
-                // Only target specific Candidate ID input fields, not answer inputs
-                const candidateIdField = document.getElementById('candidateId') || document.getElementById('candidate-id');
-                if (candidateIdField) {
-                    candidateIdField.value = studentId;
-                    candidateIdField.readOnly = true;
-                    console.log('✅ Candidate ID input populated:', studentId);
-                }
-            } else {
-                console.warn('⚠️ No studentId found in localStorage');
-            }
-        })();
     </script>
 </body>
 </html>
-
-

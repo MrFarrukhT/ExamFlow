@@ -22,7 +22,7 @@
         
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google" content="notranslate">
-    <title>A2 Key Listening Part 5</title>
+    <title>A1 Movers Listening Part 5</title>
     <link rel="shortcut icon" type="image/png" href="https://d133zon9jtcf53.cloudfront.net/favicon.png">
     
     <script src="../../../assets/js/cambridge/session-verify.js"></script>
@@ -34,64 +34,104 @@
     <style>
         body { opacity: 1 !important; }
         
-        .matching-container {
+        .part5-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
             display: flex;
             gap: 30px;
-            margin: 20px 0;
+            align-items: flex-start;
+        }
+
+        .image-area {
+            flex: 1;
+            background: #fff;
+            padding: 10px;
+            border: 4px solid #2196F3;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .image-area img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .questions-area {
+            flex: 0 0 350px;
             background: #fff;
             padding: 20px;
             border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        .matching-questions {
-            flex: 1;
-        }
-        .matching-options {
-            flex: 1;
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 4px;
-        }
-        .matching-options h4 {
-            margin-top: 0;
-            color: #1976D2;
-        }
-        .matching-option {
-            padding: 10px;
-            margin: 8px 0;
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-        }
-        .question-wrapper {
+
+        .question-row {
             margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 15px;
         }
-        .question-number {
+
+        .question-label {
             font-weight: bold;
-            color: #2196F3;
-            margin-right: 10px;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 16px;
+            display: flex;
+            align-items: baseline;
         }
-        .dropdown-select {
-            padding: 8px 12px;
-            border: 2px solid #e0e0e0;
+
+        .color-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-input {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid #ddd;
             border-radius: 4px;
-            font-size: 1rem;
-            min-width: 200px;
-            margin-top: 10px;
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            font-size: 16px;
         }
-        .dropdown-select:focus {
+
+        .color-input:focus {
             outline: none;
             border-color: #2196F3;
+            background: #e3f2fd;
         }
+
+        .q-num {
+            color: #2196F3;
+            font-weight: bold;
+            margin-right: 10px;
+            min-width: 20px;
+        }
+
+        .example-row {
+            color: #666;
+            font-style: italic;
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .instruction-note {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
     </style>
     <!-- Highlight and Notes Persistence -->
     <script src="../../../assets/js/cambridge/highlight-manager.js"></script>
     <script src="../../../assets/js/cambridge/notes-manager.js"></script>
 </head>
 
-<body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="listening" data-mock="A2-Key" data-test-version="A2-Key">
+<body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="listening" data-mock="A1-Movers" data-test-version="A1-Movers">
     <div id="wrapper">
         <div class="App__app___3nDjL zoom-small" id="app" role="presentation">
             <div aria-hidden="false" class="App__mainScreen___3HaXz">
@@ -142,130 +182,71 @@
                                     <div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL">
                                         <h3 class="scorableItemHeadline">Part 5: Questions 21-25</h3>
                                         <div class="QuestionDisplay__rubricContent___1byNW">
-                                            <p>For each question, choose the correct answer.</p>
-                                            <p><br>You will hear Jake talking to a friend about their plans for a camping trip.<br>What will each person bring on the camping trip?</p>
-                                            <p><br><strong>Example:</strong><br>
-                                            <span style="display: flex; align-items: center; margin-top: 10px;">
-                                                <span style="min-width: 60px;">0 Max</span>
-                                                <span style="margin-left: 100px; padding: 5px 10px; border: 1px solid #000; display: inline-block; min-width: 30px; text-align: center;">H</span>
-                                            </span>
-                                            </p>
+                                            <p>Listen and colour and write. There is one example.</p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Audio is managed by the parent container -->
-
-                                <!-- Matching Section -->
-                                <div class="matching-container">
-                                    <div class="matching-questions">
-                                        <!-- Question 21 -->
-                                        <div class="question-wrapper" id="question-21">
-                                            <div>
-                                                <span class="question-number">21</span>
-                                                <strong>Frank</strong>
-                                            </div>
-                                            <select class="dropdown-select" id="answer_21" onchange="saveAnswer(21, this.value)">
-                                                <option value="">Select an answer</option>
-                                                <option value="A">A</option>
-                                                <option value="B">B</option>
-                                                <option value="C">C</option>
-                                                <option value="D">D</option>
-                                                <option value="E">E</option>
-                                                <option value="F">F</option>
-                                                <option value="G">G</option>
-                                                <option value="H">H</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- Question 22 -->
-                                        <div class="question-wrapper" id="question-22">
-                                            <div>
-                                                <span class="question-number">22</span>
-                                                <strong>John</strong>
-                                            </div>
-                                            <select class="dropdown-select" id="answer_22" onchange="saveAnswer(22, this.value)">
-                                                <option value="">Select an answer</option>
-                                                <option value="A">A</option>
-                                                <option value="B">B</option>
-                                                <option value="C">C</option>
-                                                <option value="D">D</option>
-                                                <option value="E">E</option>
-                                                <option value="F">F</option>
-                                                <option value="G">G</option>
-                                                <option value="H">H</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- Question 23 -->
-                                        <div class="question-wrapper" id="question-23">
-                                            <div>
-                                                <span class="question-number">23</span>
-                                                <strong>Stan</strong>
-                                            </div>
-                                            <select class="dropdown-select" id="answer_23" onchange="saveAnswer(23, this.value)">
-                                                <option value="">Select an answer</option>
-                                                <option value="A">A</option>
-                                                <option value="B">B</option>
-                                                <option value="C">C</option>
-                                                <option value="D">D</option>
-                                                <option value="E">E</option>
-                                                <option value="F">F</option>
-                                                <option value="G">G</option>
-                                                <option value="H">H</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- Question 24 -->
-                                        <div class="question-wrapper" id="question-24">
-                                            <div>
-                                                <span class="question-number">24</span>
-                                                <strong>Roy</strong>
-                                            </div>
-                                            <select class="dropdown-select" id="answer_24" onchange="saveAnswer(24, this.value)">
-                                                <option value="">Select an answer</option>
-                                                <option value="A">A</option>
-                                                <option value="B">B</option>
-                                                <option value="C">C</option>
-                                                <option value="D">D</option>
-                                                <option value="E">E</option>
-                                                <option value="F">F</option>
-                                                <option value="G">G</option>
-                                                <option value="H">H</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- Question 25 -->
-                                        <div class="question-wrapper" id="question-25">
-                                            <div>
-                                                <span class="question-number">25</span>
-                                                <strong>Dave</strong>
-                                            </div>
-                                            <select class="dropdown-select" id="answer_25" onchange="saveAnswer(25, this.value)">
-                                                <option value="">Select an answer</option>
-                                                <option value="A">A</option>
-                                                <option value="B">B</option>
-                                                <option value="C">C</option>
-                                                <option value="D">D</option>
-                                                <option value="E">E</option>
-                                                <option value="F">F</option>
-                                                <option value="G">G</option>
-                                                <option value="H">H</option>
-                                            </select>
-                                        </div>
+                                <div class="part5-container">
+                                    <!-- Main Image -->
+                                    <div class="image-area">
+                                        <img src="images/Listening/5.png" alt="Part 5 Image">
                                     </div>
 
-                                    <!-- Options Box -->
-                                    <div class="matching-options">
-                                        <h4>Things to bring:</h4>
-                                        <div class="matching-option"><strong>A</strong> board games</div>
-                                        <div class="matching-option"><strong>B</strong> dishes</div>
-                                        <div class="matching-option"><strong>C</strong> drinks</div>
-                                        <div class="matching-option"><strong>D</strong> fruit</div>
-                                        <div class="matching-option"><strong>E</strong> medicine</div>
-                                        <div class="matching-option"><strong>F</strong> musical instrument</div>
-                                        <div class="matching-option"><strong>G</strong> seats</div>
-                                        <div class="matching-option"><strong>H</strong> tents</div>
+                                    <!-- Questions / Inputs -->
+                                    <div class="questions-area">
+                                        <div class="instruction-note">
+                                            Listen to the audio. Write the color or word you hear for each item.
+                                        </div>
+
+                                        <!-- Example -->
+                                        <div class="question-row example-row">
+                                            <div class="question-label">Example: Shell</div>
+                                            <div class="color-input-group">
+                                                <input type="text" class="color-input" value="red" disabled>
+                                            </div>
+                                        </div>
+
+                                        <!-- Q21 -->
+                                        <div class="question-row">
+                                            <div class="question-label"><span class="q-num">21</span> Jellyfish</div>
+                                            <div class="color-input-group">
+                                                <input type="text" class="color-input" id="q21" placeholder="Color" onchange="saveAnswer(21, this.value)">
+                                            </div>
+                                        </div>
+
+                                        <!-- Q22 -->
+                                        <div class="question-row">
+                                            <div class="question-label"><span class="q-num">22</span> Parrot</div>
+                                            <div class="color-input-group">
+                                                <input type="text" class="color-input" id="q22" placeholder="Color" onchange="saveAnswer(22, this.value)">
+                                            </div>
+                                        </div>
+
+                                        <!-- Q23 -->
+                                        <div class="question-row">
+                                            <div class="question-label"><span class="q-num">23</span> Bag</div>
+                                            <div class="color-input-group">
+                                                <input type="text" class="color-input" id="q23" placeholder="Word" onchange="saveAnswer(23, this.value)">
+                                            </div>
+                                        </div>
+
+                                        <!-- Q24 -->
+                                        <div class="question-row">
+                                            <div class="question-label"><span class="q-num">24</span> Sleeping pirate's blanket</div>
+                                            <div class="color-input-group">
+                                                <input type="text" class="color-input" id="q24" placeholder="Color" onchange="saveAnswer(24, this.value)">
+                                            </div>
+                                        </div>
+                                        
+                                         <!-- Q25 -->
+                                        <div class="question-row">
+                                            <div class="question-label"><span class="q-num">25</span> Rabbit</div>
+                                            <div class="color-input-group">
+                                                <input type="text" class="color-input" id="q25" placeholder="Color" onchange="saveAnswer(25, this.value)">
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
 
@@ -338,11 +319,11 @@
 
         function saveAnswer(questionNum, answer) {
             let answers = JSON.parse(localStorage.getItem('listeningAnswers') || '{}');
-            answers[`L${questionNum}`] = answer;
+            answers[`L${questionNum}`] = answer.trim();
             localStorage.setItem('listeningAnswers', JSON.stringify(answers));
             
             const btn = document.querySelector(`[data-ordernumber="${questionNum}"]`);
-            if (btn && answer !== '') {
+            if (btn && answer.trim() !== '') {
                 btn.classList.add('answered');
             } else if (btn) {
                 btn.classList.remove('answered');
@@ -354,9 +335,9 @@
             for (let i = 21; i <= 25; i++) {
                 const answer = answers[`L${i}`];
                 if (answer) {
-                    const select = document.getElementById(`answer_${i}`);
-                    if (select) {
-                        select.value = answer;
+                    const input = document.getElementById(`q${i}`);
+                    if (input) {
+                        input.value = answer;
                     }
                     const btn = document.querySelector(`[data-ordernumber="${i}"]`);
                     if (btn) {
@@ -366,15 +347,25 @@
             }
         }
 
+        // --- Standard Navigation & Init ---
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedAnswers();
-
-            // FIXED: Mark current part as selected to show questions in navigation
-            const currentPartWrapper = document.querySelectorAll('.footer__questionWrapper___1tZ46')[window.currentPart - 1];
-            if (currentPartWrapper) {
-                currentPartWrapper.classList.add('selected');
-                console.log('✅ Part 5 marked as selected in navigation');
-            }
+            
+            // Populate Candidate ID
+            (function() {
+                const studentId = localStorage.getItem('studentId');
+                if (studentId) {
+                    const headerNameDiv = document.querySelector('.header__name___1Cw2x');
+                    if (headerNameDiv && headerNameDiv.textContent.includes('Candidate ID')) {
+                        const headerValueDiv = headerNameDiv.nextElementSibling || document.createElement('div');
+                        headerValueDiv.textContent = studentId;
+                        headerValueDiv.style.fontWeight = 'bold';
+                        if (!headerNameDiv.nextElementSibling) {
+                            headerNameDiv.parentElement.appendChild(headerValueDiv);
+                        }
+                    }
+                }
+            })();
 
             const partFiles = {
                 1: 'Listening-Part-1.html',
@@ -391,7 +382,6 @@
                     partButton.addEventListener('click', function(e) {
                         e.preventDefault();
                         if (partFiles[partNumber]) {
-                            console.log('📢 Part button', partNumber, 'clicked, in iframe:', (window.self !== window.top));
                             if (window.self !== window.top) {
                                 window.parent.postMessage({ type: 'navigate', url: partFiles[partNumber] }, '*');
                             } else {
@@ -406,7 +396,6 @@
             if (prevButton) {
                 prevButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    console.log('◀️ Previous button clicked, navigating to Part 4');
                     if (window.self !== window.top) {
                         window.parent.postMessage({ type: 'navigate', url: partFiles[4] }, '*');
                     } else {
@@ -414,69 +403,35 @@
                     }
                 });
             }
-
-            document.getElementById('deliver-button').addEventListener('click', async function() {
-                if (confirm('Are you sure you want to submit your listening test? This will mark the module as completed.')) {
-                    // Submit to database
-                    try {
-                        if (window.cambridgeAnswerManager && typeof window.cambridgeAnswerManager.submitTestToDatabase === 'function') {
-                            await window.cambridgeAnswerManager.submitTestToDatabase();
-                        }
-                    } catch (error) {
-                        console.error('Error submitting to database:', error);
-                    }
-                    
-                    localStorage.setItem('listeningStatus', 'completed');
-                    localStorage.setItem('listeningEndTime', new Date().toISOString());
-                    // Clear the listening test started flag after submission
-                    localStorage.removeItem('listeningTestStarted');
-                    if (window.parent) {
-                        try {
-                            window.parent.postMessage({ type: 'listening-complete' }, '*');
-                        } catch (postMessageError) {
-                            console.warn('Unable to notify parent about listening completion:', postMessageError);
-                        }
-                    }
-                    alert('Test submitted successfully!');
-                    if (window.top && window.top !== window) {
-                        window.top.location.href = '../../dashboard-cambridge.html';
-                    } else {
-                        window.location.href = '../../dashboard-cambridge.html';
-                    }
-                }
-            });
+            
+            // Deliver Button
+             document.getElementById('deliver-button').addEventListener('click', async function() {
+                 if (confirm('Are you sure you want to submit your listening test? This will mark the module as completed.')) {
+                     try {
+                         if (window.cambridgeAnswerManager && typeof window.cambridgeAnswerManager.submitTestToDatabase === 'function') {
+                             await window.cambridgeAnswerManager.submitTestToDatabase();
+                         }
+                     } catch (error) {
+                         console.error('Error submitting to database:', error);
+                     }
+                     
+                     localStorage.setItem('listeningStatus', 'completed');
+                     localStorage.setItem('listeningEndTime', new Date().toISOString());
+                     localStorage.removeItem('listeningTestStarted');
+                     if (window.parent) {
+                         try {
+                             window.parent.postMessage({ type: 'listening-complete' }, '*');
+                         } catch (postMessageError) {}
+                     }
+                     alert('Test submitted successfully!');
+                     if (window.top && window.top !== window) {
+                         window.top.location.href = '../../dashboard-cambridge.html';
+                     } else {
+                         window.location.href = '../../dashboard-cambridge.html';
+                     }
+                 }
+             });
         });
-
-        console.log('🎓 Cambridge A2 Key - Listening Part 5 Loaded');
-        
-        // Populate Candidate ID field
-        (function() {
-            const studentId = localStorage.getItem('studentId');
-            if (studentId) {
-                // Only target specific Candidate ID fields, not answer inputs
-                const candidateIdField = document.getElementById('candidateId') || document.getElementById('candidate-id');
-                if (candidateIdField) {
-                    candidateIdField.value = studentId;
-                    candidateIdField.readOnly = true;
-                    console.log('✅ Candidate ID input populated:', studentId);
-                }
-                
-                // Populate the header display
-                const headerNameDiv = document.querySelector('.header__name___1Cw2x');
-                if (headerNameDiv && headerNameDiv.textContent.includes('Candidate ID')) {
-                    const headerValueDiv = headerNameDiv.nextElementSibling || document.createElement('div');
-                    headerValueDiv.textContent = studentId;
-                    if (!headerNameDiv.nextElementSibling) {
-                        headerNameDiv.parentElement.appendChild(headerValueDiv);
-                    }
-                    console.log('✅ Candidate ID header populated:', studentId);
-                }
-            }
-        })();
     </script>
-
-    <!-- Audio popup is managed by the parent container -->
 </body>
 </html>
-
-
