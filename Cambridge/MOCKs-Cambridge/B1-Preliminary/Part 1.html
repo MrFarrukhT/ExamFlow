@@ -682,7 +682,7 @@
 </head>
 
 
-    <body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="reading-writing" data-mock="A2-Key" data-test-version="A2-Key">
+    <body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="reading" data-mock="A2-Key" data-test-version="A2-Key">
         
 
         <div id="wrapper"><div class="App__app___3nDjL zoom-small" id="app" role="presentation"><div aria-hidden="false" class="App__mainScreen___3HaXz"><div class="App__mainScreenContent___1tXox" id="main-screen-content"><header class="header__header___3v_A5 header__compact___2hXxm " id="header"><div class="header__topbar___2CQ4O" id="headerTopBar"><div class="header__logo___3xoBS"><img src="./A2 Key RW Digital Sample Test 1_26.04.23_files/ceq.png" alt="header.logo"></div><div class="header__subToolbar___TmVu0"><div class="header__connectionAndButtonContainer___1t_Gd"><div class="header__connectionStatusContainer___3YItW"><div aria-live="polite" class="header__connectionStatus___3hqqN"><span role="status" class="sr-only">Connected</span></div><div class="header__icon___1ECrT"><i class="fa fa-wifi" aria-hidden="true"></i></div></div><button class="header__messagesButton___2Texb" id="messagesMenuButton"><span class="header__icon___1ECrT"><span class="sr-only">Messages</span><i class="fa fa-bell-o fa-3" aria-hidden="true"></i></span></button><button class="header__optionsButton___1BF6Z" id="optionsMenuButton"><span class="header__icon___1ECrT"><span class="sr-only">Options</span><i class="fa fa-bars fa-3" aria-hidden="true"></i></span></button><button class="header__optionsButton___1BF6Z" aria-label="Show notes" id="toggleSidebarButton" aria-expanded="false"><span class="header__icon___1ECrT"><span class="sr-only">Show notes</span><i class="fa fa-pencil-square-o fa-3" aria-hidden="true"></i></span></button></div><div class="header__centralBar___3GpJy"><div class="header__subHeaderWrapper___3FyBR"><div class="header__statusText___1fRqd"><div class="header__name___1Cw2x">Candidate ID</div><div></div></div></div></div><div class="header__statusColor___3HOPa"></div></div></div></header><div id="appContentContainer" class="App__contentContainer___2Nu-R"><div class="DisplayTypeContainer__displayTypeContainer___3B6yh has-section-level-dynamic-rubric" style=""><div class="DisplayTypeContainer__sectionContent___2HSJ0 gap-match-scroll-adjustment" id="sectionContent"><div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE"><div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP QuestionDisplay__sectionLevelDynamicRubric___2zEDl"><h3 class="scorableItemHeadline" id="item_143369557_1">Questions 1–6</h3><div class="QuestionDisplay__rubricContent___1byNW">For each question, choose the correct answer.</div></div></div><div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper current numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-143659692" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group" aria-labelledby="nr_143369557_1 title_143369557_1"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_143659692" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_143659692">
@@ -831,6 +831,17 @@
 
                 // Question navigation is now handled by a2-key-part-scroll.js
 
+                // Hide Part 7 from navigation (it's in the writing test)
+                document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach(function(wrapper) {
+                    const partButton = wrapper.querySelector('.footer__questionNo___3WNct');
+                    if (partButton) {
+                        const sectionNr = partButton.querySelector('.sectionNr');
+                        if (sectionNr && parseInt(sectionNr.textContent.trim()) === 7) {
+                            wrapper.style.display = 'none';
+                        }
+                    }
+                });
+
                 // ===== PART NAVIGATION (between different parts) =====
                 const partFiles = {
                     1: 'Part 1.html',
@@ -838,8 +849,7 @@
                     3: 'Part 3.html',
                     4: 'Part 4.html',
                     5: 'Part 5.html',
-                    6: 'Part 6.html',
-                    7: 'Part 7.html'
+                    6: 'Part 6.html'
                 };
 
                 // Handle Part button clicks
@@ -873,7 +883,7 @@
                 if (nextButton) {
                     nextButton.addEventListener('click', function(e) {
                         e.preventDefault();
-                        if (currentPart < 7) {
+                        if (currentPart < 6 && partFiles[currentPart + 1]) {
                             window.location.href = partFiles[currentPart + 1];
                         }
                     });
@@ -886,8 +896,8 @@
                     prevButton.disabled = true;
                 }
 
-                // Update Next button state
-                if (currentPart === 7 && nextButton) {
+                // Update Next button state (disable on Part 6 since Part 7 is in writing test)
+                if (currentPart === 6 && nextButton) {
                     nextButton.disabled = true;
                 }
             });
@@ -968,7 +978,7 @@ console.log('✅ Cross-Part State: Enabled');
             e.preventDefault();
             e.stopPropagation();
             
-            if (confirm('Are you sure you want to submit your reading-writing test?')) {
+            if (confirm('Are you sure you want to submit your reading test?')) {
                 try {
                     // Force save all answers first
                     if (window.__A2_forceSaveAll) {
@@ -982,12 +992,12 @@ console.log('✅ Cross-Part State: Enabled');
                     }
                     
                     // Mark module as completed
-                    localStorage.setItem('reading-writingStatus', 'completed');
-                    localStorage.setItem('reading-writingEndTime', new Date().toISOString());
+                    localStorage.setItem('readingStatus', 'completed');
+                    localStorage.setItem('readingEndTime', new Date().toISOString());
                     
                     // Clear timer state
                     if (typeof CambridgeTimer !== 'undefined') {
-                        CambridgeTimer.clearTimerState('reading-writing');
+                        CambridgeTimer.clearTimerState('reading');
                     }
                     
                     alert('Test submitted successfully!');
@@ -998,8 +1008,8 @@ console.log('✅ Cross-Part State: Enabled');
                     console.error('Error submitting test:', error);
                     alert('Test marked as completed. Note: Database submission may have failed.');
                     // Still mark as completed locally even if database fails
-                    localStorage.setItem('reading-writingStatus', 'completed');
-                    localStorage.setItem('reading-writingEndTime', new Date().toISOString());
+                    localStorage.setItem('readingStatus', 'completed');
+                    localStorage.setItem('readingEndTime', new Date().toISOString());
                     window.location.href = '../../dashboard-cambridge.html';
                 }
             }

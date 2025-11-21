@@ -608,23 +608,37 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             5. 0 of 6 questions attempted.</span></span></button><div class="footer__subquestionWrapper___9GgoP"><button class="subQuestion scorable-item" data-contentrevisionid="143645736" data-ordernumber="25" data-sectionid="8658776684776" tabindex="0"><span class="sr-only">Question 25</span><span aria-hidden="true">25</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143645736" data-ordernumber="26" data-sectionid="8658776684776" tabindex="0"><span class="sr-only">Question 26</span><span aria-hidden="true">26</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143645736" data-ordernumber="27" data-sectionid="8658776684776" tabindex="0"><span class="sr-only">Question 27</span><span aria-hidden="true">27</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143645736" data-ordernumber="28" data-sectionid="8658776684776" tabindex="0"><span class="sr-only">Question 28</span><span aria-hidden="true">28</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143645736" data-ordernumber="29" data-sectionid="8658776684776" tabindex="0"><span class="sr-only">Question 29</span><span aria-hidden="true">29</span><span class="sr-only">Not attempted</span></button><button class="subQuestion scorable-item" data-contentrevisionid="143645736" data-ordernumber="30" data-sectionid="8658776684776" tabindex="0"><span class="sr-only">Question 30</span><span aria-hidden="true">30</span><span class="sr-only">Not attempted</span></button></div></div><div class="footer__questionWrapper___1tZ46 single" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
                                 " data-sectionid="8662850947652" tabindex="0"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">6</span><span class="attemptedCount" aria-hidden="true">0 of 1</span><span class="sr-only">Part 
             6. 0 of 1 questions attempted.</span></span></button></div><div class="footer__questionWrapper___1tZ46 selected single" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
-                                " data-sectionid="2200793588978" tabindex="-1"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">7</span></span></button></div><button id="deliver-button" aria-label="Review your answers" class="footer__deliverButton___3FM07"><i class="fa fa fa-check" aria-hidden="true"></i></button></nav></footer></div></div></div><div class="s-alert-wrapper"></div></div></div>
+                                " data-sectionid="2200793588978" tabindex="-1"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">1</span></span></button></div><div class="footer__questionWrapper___1tZ46 single" role="tablist"><button role="tab" class="footer__questionNo___3WNct 
+                                " data-sectionid="2200793588979" tabindex="0"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">2</span></span></button></div><button id="deliver-button" aria-label="Review your answers" class="footer__deliverButton___3FM07"><i class="fa fa fa-check" aria-hidden="true"></i></button></nav></footer></div></div></div><div class="s-alert-wrapper"></div></div></div>
         <!-- <script src="./Part 7_files/playerStartup.js.download"></script> -->
     
         <script>
             // Navigation between parts
             document.addEventListener('DOMContentLoaded', function() {
+                // Hide ALL reading parts (1-6) from navigation since this is the writing test
+                // Only show the writing parts (which we renumbered as 1 and 2)
+                document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach(function(wrapper) {
+                    const partButton = wrapper.querySelector('.footer__questionNo___3WNct');
+                    if (partButton) {
+                        const sectionNr = partButton.querySelector('.sectionNr');
+                        if (sectionNr) {
+                            const partNum = parseInt(sectionNr.textContent.trim());
+                            // Hide reading parts by checking if they have sub-questions (attemptedCount)
+                            const attemptedCount = partButton.querySelector('.attemptedCount');
+                            if (attemptedCount) {
+                                // This is a reading part (has "X of Y" counter), hide it
+                                wrapper.style.display = 'none';
+                            }
+                        }
+                    }
+                });
+                
                 const partFiles = {
-                    1: 'Part 1.html',
-                    2: 'Part 2.html',
-                    3: 'Part 3.html',
-                    4: 'Part 4.html',
-                    5: 'Part 5.html',
-                    6: 'Part 6.html',
-                    7: 'Part 7.html'
+                    1: 'Part 7.html',
+                    2: 'Part 8.html'
                 };
 
-                const currentPart = 7;
+                const currentPart = 1;
 
                 // Handle Part button clicks
                 document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach(function(wrapper) {
@@ -645,32 +659,18 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 const prevButton = document.getElementById('footer-nav-button-previous');
                 const nextButton = document.getElementById('footer-nav-button-next');
 
+                // Handle Previous/Next arrow buttons for writing test
                 if (prevButton) {
-                    prevButton.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        if (currentPart > 1) {
-                            window.location.href = partFiles[currentPart - 1];
-                        }
-                    });
+                    prevButton.disabled = true; // Disable prev button (we're on Part 1)
                 }
 
                 if (nextButton) {
                     nextButton.addEventListener('click', function(e) {
                         e.preventDefault();
-                        if (currentPart < 7) {
+                        if (currentPart < 2 && partFiles[currentPart + 1]) {
                             window.location.href = partFiles[currentPart + 1];
                         }
                     });
-                }
-
-                // Update Previous button state
-                if (currentPart === 1 && prevButton) {
-                    prevButton.disabled = true;
-                }
-
-                // Update Next button state
-                if (currentPart === 7 && nextButton) {
-                    nextButton.disabled = true;
                 }
             });
         </script>
@@ -689,7 +689,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                         e.preventDefault();
                         console.log('✅ Submit button clicked!');
                         
-                        if (confirm('Are you sure you want to submit your reading-writing test? This will mark the module as completed.')) {
+                        if (confirm('Are you sure you want to submit your writing test? This will mark the module as completed.')) {
                             try {
                                 console.log('📤 Submitting test to database...');
                                 
@@ -704,8 +704,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                                 }
                                 
                                 // Mark module as completed
-                                localStorage.setItem('reading-writingStatus', 'completed');
-                                localStorage.setItem('reading-writingEndTime', new Date().toISOString());
+                                localStorage.setItem('writingStatus', 'completed');
+                                localStorage.setItem('writingEndTime', new Date().toISOString());
                                 console.log('✅ Module marked as completed');
                                 
                                 alert('Test submitted successfully!');
@@ -717,8 +717,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                                 console.error('❌ Error submitting test:', error);
                                 alert('Test marked as completed. Note: Database submission may have failed.');
                                 // Still mark as completed locally even if database fails
-                                localStorage.setItem('reading-writingStatus', 'completed');
-                                localStorage.setItem('reading-writingEndTime', new Date().toISOString());
+                                localStorage.setItem('writingStatus', 'completed');
+                                localStorage.setItem('writingEndTime', new Date().toISOString());
                                 window.location.href = '../../dashboard-cambridge.html';
                             }
                         } else {
@@ -842,20 +842,8 @@ window.addEventListener('load', function() {
         }
         console.log('✓ Initialized');
     }
-    const partFiles = {1: 'Part 1.html', 2: 'Part 2.html', 3: 'Part 3.html', 4: 'Part 4.html', 5: 'Part 5.html', 6: 'Part 6.html', 7: 'Part 7.html'};
-    document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach(function(wrapper) {
-        const partButton = wrapper.querySelector('.footer__questionNo___3WNct');
-        if (partButton) {
-            const partNumber = parseInt(partButton.querySelector('.sectionNr').textContent.trim());
-            const newButton = partButton.cloneNode(true);
-            partButton.parentNode.replaceChild(newButton, partButton);
-            newButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                if (partFiles[partNumber]) window.location.href = partFiles[partNumber];
-            });
-        }
-    });
+    // Part navigation already handled above - no need for duplicate code
+    console.log('✅ Part navigation initialized');
 });
 function toggleOptionsMenu() {
     const optionsBtn = document.getElementById('optionsMenuButton');

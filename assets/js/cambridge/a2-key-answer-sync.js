@@ -4,7 +4,15 @@
 (function(){
   if (window.__A2AnswerSyncLoaded) return; window.__A2AnswerSyncLoaded = true;
 
-  var STORAGE_KEY = 'reading-writingAnswers';
+  // Dynamically determine storage key based on data-skill attribute
+  function getStorageKey() {
+    var skill = document.body.getAttribute('data-skill');
+    if (skill === 'reading') return 'readingAnswers';
+    if (skill === 'writing') return 'writingAnswers';
+    return 'reading-writingAnswers'; // Default for combined tests
+  }
+  
+  var STORAGE_KEY = getStorageKey();
   var saveTimers = {}; // Debounce timers for text inputs
   var AUTOSAVE_DELAY = 500; // ms delay for text field autosave (while typing)
   var PERIODIC_SAVE_INTERVAL = 5000; // Background save every 5 seconds

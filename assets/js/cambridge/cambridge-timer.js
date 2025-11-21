@@ -506,7 +506,7 @@ class CambridgeTimer {
                 'speaking': 10          // 10 minutes
             },
             'B1-Preliminary': {
-                'reading': 60,          // 60 minutes
+                'reading': 45,          // 45 minutes
                 'writing': 45,          // 45 minutes
                 'listening': 40,        // 40 minutes
                 'speaking': 12          // 12 minutes
