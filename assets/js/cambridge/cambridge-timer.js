@@ -360,7 +360,6 @@ class CambridgeTimer {
         modal.className = 'times-up-modal';
         modal.innerHTML = `
             <div class="times-up-content">
-                <div class="times-up-icon">вЏ°</div>
                 <div class="times-up-title">Time's Up!</div>
                 <div class="times-up-message">
                     Your time for the ${this.moduleName} test has ended.<br>
@@ -508,6 +507,7 @@ class CambridgeTimer {
             'B1-Preliminary': {
                 'reading': 45,          // 45 minutes
                 'writing': 45,          // 45 minutes
+                'reading-writing': 90,  // 90 minutes (combined)
                 'listening': 40,        // 40 minutes
                 'speaking': 12          // 12 minutes
             },
