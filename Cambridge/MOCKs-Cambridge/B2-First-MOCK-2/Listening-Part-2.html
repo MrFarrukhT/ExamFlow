@@ -22,7 +22,7 @@
         
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google" content="notranslate">
-    <title>A2 Key Listening Part 2</title>
+    <title>B1 Preliminary Listening Part 2</title>
     <link rel="shortcut icon" type="image/png" href="https://d133zon9jtcf53.cloudfront.net/favicon.png">
     
     <script src="../../../assets/js/cambridge/session-verify.js"></script>
@@ -34,46 +34,32 @@
     <style>
         body { opacity: 1 !important; }
         
-        .notes-container {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 8px;
-            max-width: 800px;
-            margin: 20px auto;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .notes-title {
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #1976D2;
-        }
-        .note-field {
-            margin: 15px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .note-label {
-            font-weight: 500;
-            min-width: 150px;
-        }
-        .note-input {
-            flex: 1;
-            padding: 8px 12px;
-            border: 2px solid #e0e0e0;
+        .question-wrapper {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #fff;
             border-radius: 4px;
-            font-size: 1rem;
-        }
-        .note-input:focus {
-            outline: none;
-            border-color: #2196F3;
         }
         .question-number {
             font-weight: bold;
             color: #2196F3;
-            margin-right: 5px;
+            margin-right: 10px;
+        }
+        .choices {
+            margin-top: 15px;
+        }
+        .choice-item {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .choice-item:hover {
+            background: #f5f5f5;
+        }
+        .choice-item input[type="radio"] {
+            margin-right: 10px;
         }
     </style>
     <!-- Highlight and Notes Persistence -->
@@ -81,7 +67,7 @@
     <script src="../../../assets/js/cambridge/notes-manager.js"></script>
 </head>
 
-<body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="listening" data-mock="A2-Key" data-test-version="A2-Key">
+<body class="ceq-theme hypothesis-highlights-always-on normal" data-skill="listening" data-mock="B1-Preliminary" data-test-version="B1-Preliminary">
     <div id="wrapper">
         <div class="App__app___3nDjL zoom-small" id="app" role="presentation">
             <div aria-hidden="false" class="App__mainScreen___3HaXz">
@@ -130,85 +116,144 @@
                             <div class="DisplayTypeContainer__sectionContent___2HSJ0" id="sectionContent" style="padding: 20px; padding-bottom: 150px;">
                                 <div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE">
                                     <div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL">
-                                        <h3 class="scorableItemHeadline">Part 2: Questions 6-10</h3>
+                                        <h3 class="scorableItemHeadline">Part 2: Questions 8-13</h3>
                                         <div class="QuestionDisplay__rubricContent___1byNW">
-                                            <p>For each question, write the correct answer in the gap. Write <b>one word</b> or a <b>number</b> or a <b>date</b> or a <b>time</b>.</p>
-                                            <p><br>You will hear some information on the radio about a new swimming pool.</p>
+                                            <p>For each question, choose the correct answer.</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Audio is managed by the parent container -->
 
-                                <!-- Notes Form -->
-                                <div class="notes-container">
-                                    <div class="notes-title">New swimming pool</div>
-                                    
-                                    <div class="note-field">
-                                        <div class="note-label">
-                                            Name:
-                                        </div>
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <span style="min-width: 150px;">............................<i>City</i>................Pool</span>
-                                        </div>
+                                <!-- Question 8 -->
+                                <div class="question-wrapper" id="question-8">
+                                    <div>
+                                        <span class="question-number">8</span>
+                                        <strong>You will hear a boy telling a friend about an opera singer. When he heard her singing, he felt</strong>
                                     </div>
-
-                                    <div class="note-field">
-                                        <div class="note-label">
-                                            Address:
-                                        </div>
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <span class="question-number">(6)</span>
-                                            <input type="text" class="note-input" id="answer_6" placeholder="Write your answer here" 
-                                                   onchange="saveAnswer(6, this.value)" style="flex: 0 0 150px;">
-                                            <span>...........................Street</span>
-                                        </div>
+                                    <div class="choices">
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_8" value="A" onchange="saveAnswer(8, 'A')">
+                                            <span>A) keen to learn about others like her.</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_8" value="B" onchange="saveAnswer(8, 'B')">
+                                            <span>B) amazed at how very good she was.</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_8" value="C" onchange="saveAnswer(8, 'C')">
+                                            <span>C) surprised that she wasn't better known.</span>
+                                        </label>
                                     </div>
+                                </div>
 
-                                    <div class="note-field">
-                                        <div class="note-label">
-                                            Day pool opens:
-                                        </div>
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <span class="question-number">(7)</span>
-                                            <input type="text" class="note-input" id="answer_7" placeholder="Write your answer here" 
-                                                   onchange="saveAnswer(7, this.value)" style="flex: 1;">
-                                        </div>
+                                <!-- Question 9 -->
+                                <div class="question-wrapper" id="question-9">
+                                    <div>
+                                        <span class="question-number">9</span>
+                                        <strong>You will hear two friends talking about holidays. When the woman is on holiday, she likes to</strong>
                                     </div>
-
-                                    <div class="note-field">
-                                        <div class="note-label">
-                                            Cost of adult ticket:
-                                        </div>
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <span class="question-number">(8)</span>
-                                            <span>£</span>
-                                            <input type="text" class="note-input" id="answer_8" placeholder="Write your answer here" 
-                                                   onchange="saveAnswer(8, this.value)" style="flex: 1;">
-                                        </div>
+                                    <div class="choices">
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_9" value="A" onchange="saveAnswer(9, 'A')">
+                                            <span>A) have some new experiences.</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_9" value="B" onchange="saveAnswer(9, 'B')">
+                                            <span>B) visit different countries.</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_9" value="C" onchange="saveAnswer(9, 'C')">
+                                            <span>C) do very little.</span>
+                                        </label>
                                     </div>
+                                </div>
 
-                                    <div class="note-field">
-                                        <div class="note-label">
-                                            Temperature of large pool:
-                                        </div>
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <span class="question-number">(9)</span>
-                                            <input type="text" class="note-input" id="answer_9" placeholder="Write your answer here" 
-                                                   onchange="saveAnswer(9, this.value)" style="flex: 1;">
-                                            <span><i>degrees</i></span>
-                                        </div>
+                                <!-- Question 10 -->
+                                <div class="question-wrapper" id="question-10">
+                                    <div>
+                                        <span class="question-number">10</span>
+                                        <strong>You will hear two friends talking about a national science competition. What do they both like about the competition?</strong>
                                     </div>
+                                    <div class="choices">
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_10" value="A" onchange="saveAnswer(10, 'A')">
+                                            <span>A) It gets people interested in science.</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_10" value="B" onchange="saveAnswer(10, 'B')">
+                                            <span>B) It can lead to great scientific discoveries.</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_10" value="C" onchange="saveAnswer(10, 'C')">
+                                            <span>C) It gives non-scientists the chance to enter.</span>
+                                        </label>
+                                    </div>
+                                </div>
 
-                                    <div class="note-field">
-                                        <div class="note-label">
-                                            Phone number:
-                                        </div>
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <span class="question-number">(10)</span>
-                                            <input type="text" class="note-input" id="answer_10" placeholder="Write your answer here" 
-                                                   onchange="saveAnswer(10, this.value)" style="flex: 1;">
-                                        </div>
+                                <!-- Question 11 -->
+                                <div class="question-wrapper" id="question-11">
+                                    <div>
+                                        <span class="question-number">11</span>
+                                        <strong>You will hear a girl talking to a friend about visiting her cousins. What pleased her about the visit?</strong>
+                                    </div>
+                                    <div class="choices">
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_11" value="A" onchange="saveAnswer(11, 'A')">
+                                            <span>A) They helped her to make a decision.</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_11" value="B" onchange="saveAnswer(11, 'B')">
+                                            <span>B) The place where they live is beautiful.</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_11" value="C" onchange="saveAnswer(11, 'C')">
+                                            <span>C) She found she shared an interest with them.</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Question 12 -->
+                                <div class="question-wrapper" id="question-12">
+                                    <div>
+                                        <span class="question-number">12</span>
+                                        <strong>You will hear two friends talking about learning Spanish. The man suggests that the woman should</strong>
+                                    </div>
+                                    <div class="choices">
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_12" value="A" onchange="saveAnswer(12, 'A')">
+                                            <span>A) speak Spanish with a friend.</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_12" value="B" onchange="saveAnswer(12, 'B')">
+                                            <span>B) study Spanish grammar.</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_12" value="C" onchange="saveAnswer(12, 'C')">
+                                            <span>C) read more in Spanish.</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Question 13 -->
+                                <div class="question-wrapper" id="question-13">
+                                    <div>
+                                        <span class="question-number">13</span>
+                                        <strong>You will hear a husband and wife talking about a tree in their garden. What do they agree about?</strong>
+                                    </div>
+                                    <div class="choices">
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_13" value="A" onchange="saveAnswer(13, 'A')">
+                                            <span>A) how attractive it is</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_13" value="B" onchange="saveAnswer(13, 'B')">
+                                            <span>B) how fast it has grown</span>
+                                        </label>
+                                        <label class="choice-item">
+                                            <input type="radio" name="question_13" value="C" onchange="saveAnswer(13, 'C')">
+                                            <span>C) how much fruit it provides</span>
+                                        </label>
                                     </div>
                                 </div>
 
@@ -238,11 +283,12 @@
                                         <span><span class="section-prefix">Part </span><span class="sectionNr">2</span></span>
                                     </button>
                                     <div class="footer__subquestionWrapper___9GgoP">
-                                        <button class="subQuestion scorable-item" data-ordernumber="6"><span>6</span></button>
-                                        <button class="subQuestion scorable-item" data-ordernumber="7"><span>7</span></button>
                                         <button class="subQuestion scorable-item" data-ordernumber="8"><span>8</span></button>
                                         <button class="subQuestion scorable-item" data-ordernumber="9"><span>9</span></button>
                                         <button class="subQuestion scorable-item" data-ordernumber="10"><span>10</span></button>
+                                        <button class="subQuestion scorable-item" data-ordernumber="11"><span>11</span></button>
+                                        <button class="subQuestion scorable-item" data-ordernumber="12"><span>12</span></button>
+                                        <button class="subQuestion scorable-item" data-ordernumber="13"><span>13</span></button>
                                     </div>
                                 </div>
                                 <div class="footer__questionWrapper___1tZ46 multiple">
@@ -253,11 +299,6 @@
                                 <div class="footer__questionWrapper___1tZ46 multiple">
                                     <button role="tab" class="footer__questionNo___3WNct">
                                         <span><span class="section-prefix">Part </span><span class="sectionNr">4</span></span>
-                                    </button>
-                                </div>
-                                <div class="footer__questionWrapper___1tZ46 multiple">
-                                    <button role="tab" class="footer__questionNo___3WNct">
-                                        <span><span class="section-prefix">Part </span><span class="sectionNr">5</span></span>
                                     </button>
                                 </div>
                                 <button id="deliver-button" class="footer__deliverButton___3FM07">
@@ -281,48 +322,28 @@
 
         function saveAnswer(questionNum, answer) {
             let answers = JSON.parse(localStorage.getItem('listeningAnswers') || '{}');
-            answers[`L${questionNum}`] = answer.trim();
+            answers[`L${questionNum}`] = answer;
             localStorage.setItem('listeningAnswers', JSON.stringify(answers));
             
             const btn = document.querySelector(`[data-ordernumber="${questionNum}"]`);
-            if (btn && answer.trim() !== '') {
+            if (btn) {
                 btn.classList.add('answered');
-            } else if (btn) {
-                btn.classList.remove('answered');
             }
         }
 
         function loadSavedAnswers() {
             const answers = JSON.parse(localStorage.getItem('listeningAnswers') || '{}');
-            
-            // BUGFIX: Clean up any corrupted data where Candidate ID was saved as an answer
-            const studentId = localStorage.getItem('studentId');
-            if (studentId && answers['L6'] === studentId) {
-                console.warn('⚠️ Detected corrupted answer data - clearing Question 6');
-                delete answers['L6'];
-                localStorage.setItem('listeningAnswers', JSON.stringify(answers));
-            }
-            
-            for (let i = 6; i <= 10; i++) {
+            for (let i = 8; i <= 13; i++) {
                 const answer = answers[`L${i}`];
                 if (answer) {
-                    const input = document.getElementById(`answer_${i}`);
-                    if (input) {
-                        input.value = answer;
-                        input.readOnly = false; // Ensure inputs are always editable
+                    const radio = document.querySelector(`input[name="question_${i}"][value="${answer}"]`);
+                    if (radio) {
+                        radio.checked = true;
                     }
                     const btn = document.querySelector(`[data-ordernumber="${i}"]`);
                     if (btn) {
                         btn.classList.add('answered');
                     }
-                }
-            }
-            
-            // Ensure all answer inputs are editable
-            for (let i = 6; i <= 10; i++) {
-                const input = document.getElementById(`answer_${i}`);
-                if (input) {
-                    input.readOnly = false;
                 }
             }
         }
@@ -334,8 +355,7 @@
                 1: 'Listening-Part-1.html',
                 2: 'Listening-Part-2.html',
                 3: 'Listening-Part-3.html',
-                4: 'Listening-Part-4.html',
-                5: 'Listening-Part-5.html'
+                4: 'Listening-Part-4.html'
             };
 
             document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach(function(wrapper) {
@@ -415,7 +435,7 @@
             });
         });
 
-        console.log('🎓 Cambridge A2 Key - Listening Part 2 Loaded');
+        console.log('🎓 Cambridge B1 Preliminary - Listening Part 2 Loaded');
         
         // Populate Candidate ID field
         (function() {
