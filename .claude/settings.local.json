@@ -34,7 +34,9 @@
       "Bash(mv /tmp/test-system-fresh.git .git)",
       "Bash(git reset:*)",
       "Bash(GIT_DIR=.git-corrupt git format-patch 273f615..dad5a73 -o /tmp/unpushed-patches/)",
-      "Bash(GIT_DIR=.git-corrupt git format-patch -1 dad5a73 --stdout)"
+      "Bash(GIT_DIR=.git-corrupt git format-patch -1 dad5a73 --stdout)",
+      "Bash(git am:*)",
+      "Bash(git apply:*)"
     ],
     "additionalDirectories": [
       "e:\\Test-System-v2",
