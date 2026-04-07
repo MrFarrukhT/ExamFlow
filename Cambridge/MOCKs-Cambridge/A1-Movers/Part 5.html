@@ -180,10 +180,10 @@
                                         <div class="questions-section">
                                             <strong>Questions</strong>
                                             <div class="question-item">
-                                                <span class="q-num">23</span> The children’s mum worked in a <input type="text" class="answer-input" id="q1" autocomplete="off">.
+                                                <span class="q-num">23</span> The children's mum worked in a <input type="text" class="answer-input" id="p5_q1" autocomplete="off">.
                                             </div>
                                             <div class="question-item">
-                                                <span class="q-num">24</span> The children wanted to <input type="text" class="answer-input" id="q2" autocomplete="off"> for Mum because she had to go to the library after work.
+                                                <span class="q-num">24</span> The children wanted to <input type="text" class="answer-input" id="p5_q2" autocomplete="off"> for Mum because she had to go to the library after work.
                                             </div>
                                         </div>
                                     </div>
@@ -198,10 +198,10 @@
                                         
                                         <div class="questions-section">
                                             <div class="question-item">
-                                                <span class="q-num">25</span> Lucy and Hugo bought some food, then they <input type="text" class="answer-input" id="q3" autocomplete="off"> the vegetables and started cooking.
+                                                <span class="q-num">25</span> Lucy and Hugo bought some food, then they <input type="text" class="answer-input" id="p5_q3" autocomplete="off"> the vegetables and started cooking.
                                             </div>
                                             <div class="question-item">
-                                                <span class="q-num">26</span> There were some <input type="text" class="answer-input" id="q4" autocomplete="off"> in Mum’s bag which were difficult to carry.
+                                                <span class="q-num">26</span> There were some <input type="text" class="answer-input" id="p5_q4" autocomplete="off"> in Mum's bag which were difficult to carry.
                                             </div>
                                         </div>
                                     </div>
@@ -216,13 +216,13 @@
                                         
                                         <div class="questions-section">
                                             <div class="question-item">
-                                                <span class="q-num">27</span> Mum had to walk up the stairs because <input type="text" class="answer-input" id="q5" autocomplete="off"> didn't work.
+                                                <span class="q-num">27</span> Mum had to walk up the stairs because <input type="text" class="answer-input" id="p5_q5" autocomplete="off"> didn't work.
                                             </div>
                                             <div class="question-item">
-                                                <span class="q-num">28</span> Mum was <input type="text" class="answer-input" id="q6" autocomplete="off"> when she opened the door.
+                                                <span class="q-num">28</span> Mum was <input type="text" class="answer-input" id="p5_q6" autocomplete="off"> when she opened the door.
                                             </div>
                                             <div class="question-item">
-                                                <span class="q-num">29</span> The family ate <input type="text" class="answer-input" id="q7" autocomplete="off"> and potatoes and Mum said, ‘This is great! Thank you!’
+                                                <span class="q-num">29</span> The family ate <input type="text" class="answer-input" id="p5_q7" autocomplete="off"> and potatoes and Mum said, 'This is great! Thank you!'
                                             </div>
                                         </div>
                                     </div>
@@ -414,12 +414,12 @@
             const inputs = document.querySelectorAll('.answer-input');
             inputs.forEach(input => {
                 // Load saved answer
-                const saved = localStorage.getItem(`movers_rw_p5_${input.id}`);
+                const saved = localStorage.getItem(`movers_rw_${input.id}`);
                 if(saved) input.value = saved;
                 
                 // Save on change
                 input.addEventListener('change', () => {
-                    localStorage.setItem(`movers_rw_p5_${input.id}`, input.value);
+                    localStorage.setItem(`movers_rw_${input.id}`, input.value);
                 });
             });
         });

@@ -1123,17 +1123,17 @@ console.log('✅ All IELTS Functions: Enabled');
                 console.log(`Question ${questionNum}: ${this.value}`);
                 // Save answer using Cambridge answer manager
                 if (window.cambridgeAnswerManager) {
-                    window.cambridgeAnswerManager.saveAnswer(questionNum, this.value, 'reading-writing');
+                    window.cambridgeAnswerManager.saveAnswer(questionNum, this.value, 'reading');
                 }
                 // Also save to localStorage backup
-                const answers = JSON.parse(localStorage.getItem('reading-writing-answers') || '{}');
+                const answers = JSON.parse(localStorage.getItem('readingAnswers') || '{}');
                 answers[questionNum] = this.value;
-                localStorage.setItem('reading-writing-answers', JSON.stringify(answers));
+                localStorage.setItem('readingAnswers', JSON.stringify(answers));
             }
         });
-        
+
         // Load saved answer if exists
-        const savedAnswers = JSON.parse(localStorage.getItem('reading-writing-answers') || '{}');
+        const savedAnswers = JSON.parse(localStorage.getItem('readingAnswers') || '{}');
         if (savedAnswers[questionNum]) {
             select.value = savedAnswers[questionNum];
         }
@@ -1316,15 +1316,15 @@ function toggleOptionsMenu() {
                         await window.cambridgeAnswerManager.submitTestToDatabase();
                         console.log('✅ Test submitted');
                     }
-                    localStorage.setItem('readingStatus', 'completed');
-                    localStorage.setItem('readingEndTime', new Date().toISOString());
+                    localStorage.setItem('cambridge-readingStatus', 'completed');
+                    localStorage.setItem('cambridge-readingEndTime', new Date().toISOString());
                     alert('Test submitted successfully!');
                     window.location.href = '../../dashboard-cambridge.html';
                 } catch(error) {
                     console.error('Error:', error);
                     alert('Test marked as completed. Note: Database submission may have failed.');
-                    localStorage.setItem('readingStatus', 'completed');
-                    localStorage.setItem('readingEndTime', new Date().toISOString());
+                    localStorage.setItem('cambridge-readingStatus', 'completed');
+                    localStorage.setItem('cambridge-readingEndTime', new Date().toISOString());
                     window.location.href = '../../dashboard-cambridge.html';
                 }
             }
@@ -1389,23 +1389,23 @@ function toggleOptionsMenu() {
     function saveAnswer(questionNum, answer) {
         try {
             if (window.cambridgeAnswerManager) {
-                window.cambridgeAnswerManager.saveAnswer(questionNum, answer, 'reading-writing');
+                window.cambridgeAnswerManager.saveAnswer(questionNum, answer, 'reading');
                 console.log(`💾 Part 4: Saved answer for Q${questionNum}: "${answer}"`);
             } else {
                 console.warn('⚠️ cambridgeAnswerManager not found, using localStorage directly');
-                const answers = JSON.parse(localStorage.getItem('reading-writingAnswers') || '{}');
+                const answers = JSON.parse(localStorage.getItem('readingAnswers') || '{}');
                 answers[questionNum] = answer;
-                localStorage.setItem('reading-writingAnswers', JSON.stringify(answers));
+                localStorage.setItem('readingAnswers', JSON.stringify(answers));
                 console.log(`💾 Part 4: Saved to localStorage for Q${questionNum}`);
             }
         } catch (error) {
             console.error('❌ Error saving answer:', error);
         }
     }
-    
+
     function getSavedAnswer(questionNum) {
         try {
-            const answers = JSON.parse(localStorage.getItem('reading-writingAnswers') || '{}');
+            const answers = JSON.parse(localStorage.getItem('readingAnswers') || '{}');
             return answers[questionNum] || '';
         } catch (error) {
             console.error('❌ Error getting saved answer:', error);

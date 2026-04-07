@@ -504,13 +504,6 @@
         window.nextPart = nextPart;
         window.previousPart = previousPart;
         
-        console.log('Navigation functions assigned to window:', {
-            goToQuestion: typeof window.goToQuestion,
-            switchToPart: typeof window.switchToPart,
-            nextPart: typeof window.nextPart,
-            previousPart: typeof window.previousPart
-        });
-
         function highlightText() {
             if (!selectedRange || selectedRange.collapsed) {
                 closeContextMenu();
@@ -608,8 +601,6 @@
                     selectedRange.insertNode(fragment);
                 }
             } catch(err) {
-                console.warn('Primary highlighting failed, trying robust fallback:', err);
-                
                 // Robust fallback for complex selections
                 try {
                     const selection = window.getSelection();
@@ -656,7 +647,6 @@
                         range.insertNode(contents);
                     }
                 } catch(e2) {
-                    console.warn('Robust fallback failed, using final method:', e2);
                     // Final fallback - use execCommand
                     try {
                         document.execCommand('backColor', false, 'yellow');
@@ -687,7 +677,6 @@
                 span.appendChild(tooltip);
                 selectedRange.surroundContents(span);
             }catch(err){
-                console.warn('Complex selection – cannot comment');
             }
             window.getSelection().removeAllRanges();
             closeContextMenu();
@@ -1026,14 +1015,11 @@
         function startTimer() {
             // Prevent multiple timer instances by clearing any existing interval
             if (timerInterval) {
-                console.log('⚠️ Timer already running, clearing old interval');
                 clearInterval(timerInterval);
             }
             
             // Re-read the timer value from HTML in case it was updated
             timeInSeconds = getInitialTimeInSeconds();
-            
-            console.log('🔄 Starting timer with', timeInSeconds, 'seconds');
             
             timerInterval = setInterval(() => {
                 timeInSeconds--;
@@ -1083,8 +1069,6 @@
         window.submitListeningTest = async function() {
 
             try {
-                console.log('Starting listening test submission...');
-                
                 // Stop audio if playing
                 const audioPlayer = document.getElementById('global-audio-player');
                 if (audioPlayer) {
@@ -1101,7 +1085,9 @@
                     const selectInput = document.querySelector(`select[name="q${i}"]`);
                     const dropZone = document.querySelector(`.drop-zone[data-q-start="${i}"], .drop-zone[data-question="${i}"]`);
                     
-                    if (textInput && (textInput.tagName === 'INPUT' || textInput.tagName === 'TEXTAREA')) {
+                    if (textInput && textInput.tagName === 'SELECT') {
+                        answers[`q${i}`] = textInput.value;
+                    } else if (textInput && (textInput.tagName === 'INPUT' || textInput.tagName === 'TEXTAREA')) {
                         answers[`q${i}`] = textInput.value.trim();
                     } else if (selectInput) {
                         answers[`q${i}`] = selectInput.value;
@@ -1145,8 +1131,6 @@
                     if (isCorrect) score += 1;
                 });
                 
-                console.log(`Calculated listening score: ${score}/${totalQuestions}`);
-                
                 // Disable submit button to prevent double submission
                 const submitButton = document.getElementById('deliver-button');
                 if (submitButton) {
@@ -1179,8 +1163,7 @@
                 // Try to submit to backend (admin dashboard)
                 try {
                     await saveListeningToDatabase(testData);
-                    console.log('✅ Listening test submitted to admin dashboard');
-                    
+
                     // Show success message
                     alert('Listening section completed successfully!\nYou will be redirected to the dashboard.');
                     
@@ -1190,8 +1173,6 @@
                     }, 500);
                     
                 } catch (dbError) {
-                    console.warn('⚠️ Backend submission failed, but answers saved locally:', dbError);
-                    
                     // Still proceed to dashboard even if backend fails
                     alert('Listening section completed successfully!\nAnswers saved locally. You will be redirected to the dashboard.');
                     
@@ -1236,9 +1217,7 @@
         async function saveListeningToDatabase(testData) {
             try {
                 // Try local database server first (preferred method)
-                console.log('🔄 Attempting to save listening test to local database server...');
-
-                const response = await fetch('http://localhost:3002/submissions', {
+                const response = await fetch('/submissions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1248,18 +1227,14 @@
 
                 if (response.ok) {
                     const result = await response.json();
-                    console.log('✅ Listening test saved to local database server:', result.id);
                     return result;
                 } else {
                     throw new Error(`Local server responded with status: ${response.status}`);
                 }
 
             } catch (error) {
-                console.warn('⚠️ Local database server not available:', error.message);
-
                 // Fallback 1: Try Vercel API if available
                 try {
-                    console.log('🔄 Trying Vercel API as fallback...');
                     const VERCEL_API = 'https://innovative-centre-admin.vercel.app/api';
 
                     const response = await fetch(`${VERCEL_API}/submissions`, {
@@ -1272,15 +1247,12 @@
 
                     if (response.ok) {
                         const result = await response.json();
-                        console.log('✅ Listening test saved to Vercel database');
                         return result;
                     }
                 } catch (vercelError) {
-                    console.warn('⚠️ Vercel API also failed:', vercelError.message);
                 }
 
                 // Fallback 2: Enhanced local storage (database format)
-                console.log('🔄 Using enhanced local storage as final fallback...');
                 return await saveToEnhancedLocalStorage(testData);
             }
         }
@@ -1313,8 +1285,6 @@
                 // Save back to localStorage
                 localStorage.setItem('test_submissions_database', JSON.stringify(submissions));
 
-                console.log('✅ Listening test saved to enhanced local storage (database format)');
-
                 return {
                     success: true,
                     message: 'Saved to local storage (will sync when database is available)',
@@ -1343,7 +1313,7 @@
             } else {
                 // Resume if they cancelled and it was previously playing
                 if (wasPlaying && audioPlayer) {
-                    audioPlayer.play().catch(e => console.warn("Could not resume audio:", e));
+                    audioPlayer.play().catch(e => {});
                 }
             }
         });
@@ -1530,14 +1500,11 @@
             // Select all answer input fields
             const answerInputs = document.querySelectorAll('.answer-input');
             
-            console.log(`🔒 Applying autocomplete prevention to ${answerInputs.length} input fields`);
-            
             answerInputs.forEach((input, index) => {
                 // Skip radio buttons and checkboxes - they need their original name attribute to work as groups
                 if (input.type === 'radio' || input.type === 'checkbox') {
                     // Only apply autocomplete attribute, don't change name or add readonly
                     input.setAttribute('autocomplete', 'off');
-                    console.log(`⏩ Skipping name change for ${input.type} button: ${input.name || input.id}`);
                     return;
                 }
                 
@@ -1566,7 +1533,6 @@
                 });
             });
             
-            console.log(`✅ Autocomplete prevention applied successfully`);
         }
 
         // --- PAGE INITIALIZATION ---
@@ -1577,8 +1543,7 @@
             timeInSeconds = getInitialTimeInSeconds();
             
             // Timer will be started when audio begins playing or in initializeSync
-            console.log('⏱️ Timer initialized, will start when test begins');
-            
+
             // Scroll to top on page load
             window.scrollTo(0, 0);
             
@@ -1807,7 +1772,6 @@
             pauseTimer();
             if (audioPlayer && !audioPlayer.paused) {
                 audioPlayer.pause();
-                console.log('🎵 Audio paused with timer');
             }
         }
         
@@ -1819,7 +1783,6 @@
             }
             if (audioPlayer && audioPlayer.paused) {
                 audioPlayer.play().then(() => {
-                    console.log('🎵 Audio resumed with timer');
                 }).catch(err => {
                     console.error('Error resuming audio:', err);
                 });
@@ -1849,11 +1812,9 @@
             const urlParts = window.location.pathname.split('/');
             if (urlParts.length >= 3 && urlParts[1] === 'test') {
                 sessionCode = urlParts[2];
-                console.log('🔄 Session code extracted:', sessionCode);
-                
+
                 // Start the timer immediately when test begins
                 startTimer();
-                console.log('⏱️ Timer started for listening test');
                 
                 // Get candidate ID first
                 getCandidateId().then(() => {
@@ -1864,7 +1825,6 @@
                     startBackendSync();
                 });
             } else {
-                console.log('❌ Could not extract session code from URL');
             }
         }
 
@@ -1874,17 +1834,14 @@
                 .then(response => response.json())
                 .then(data => {
                     candidateId = data.candidate_id;
-                    console.log('👤 Candidate ID obtained:', candidateId);
                 })
                 .catch(error => {
-                    console.log('❌ Could not get candidate ID:', error.message);
                 });
         }
 
         // Update current module to track which test candidate is taking
         function updateCurrentModule(module) {
             if (!sessionCode || !candidateId) {
-                console.log('⚠️ Cannot update current module - missing session code or candidate ID');
                 return;
             }
             
@@ -1899,10 +1856,8 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('📚 Current module updated to:', data.current_module);
                 })
                 .catch(error => {
-                    console.log('❌ Could not update current module:', error.message);
                 });
         }
 
@@ -1911,7 +1866,6 @@
             if (syncInterval) clearInterval(syncInterval);
             syncInterval = setInterval(checkSessionStatus, 3000);
             checkSessionStatus(); // Check immediately
-            console.log('🔄 Backend sync started - polling every 3 seconds');
         }
 
         function checkSessionStatus() {
@@ -1921,11 +1875,9 @@
             fetch(`/api/session/${sessionCode}/status`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log('📡 Session status:', data);
                     handleSessionStatus(data);
                 })
                 .catch(error => {
-                    console.log('🔧 Sync error (normal during development):', error.message);
                 });
 
             // Also check candidate-specific status if we have candidate ID
@@ -1933,11 +1885,9 @@
                 fetch(`/api/session/${sessionCode}/candidate/${candidateId}/status`)
                     .then(response => response.json())
                     .then(data => {
-                        console.log('👤 Candidate status:', data);
                         handleCandidateStatus(data);
                     })
                     .catch(error => {
-                        console.log('🔧 Candidate sync error:', error.message);
                     });
             }
         }
@@ -1945,13 +1895,11 @@
         function handleSessionStatus(status) {
             // Handle session pause/resume
             if (status.paused && !isPausedByAdmin) {
-                console.log('⏸️ Session paused by admin');
                 pauseTimerAndAudio(); // Enhanced with audio control
                 isPausedByAdmin = true;
                 addPauseBlur(); // Add blur effect
                 showAdminMessage('⏸️ Test paused by administrator');
             } else if (!status.paused && isPausedByAdmin) {
-                console.log('▶️ Session resumed by admin');
                 resumeTimerAndAudio(); // Enhanced with audio control
                 isPausedByAdmin = false;
                 removePauseBlur(); // Remove blur effect
@@ -1963,8 +1911,7 @@
                 const timeChange = status.time_extended - timeExtensionApplied;
                 const changeType = timeChange > 0 ? 'added' : 'reduced';
                 const absMinutes = Math.abs(timeChange);
-                
-                console.log(`⏰ Time ${changeType} by ${absMinutes} minutes`);
+
                 timeInSeconds += timeChange * 60;
                 timeExtensionApplied = status.time_extended;
                 showAdminMessage(`⏰ ${absMinutes} minutes ${changeType} by administrator`);
@@ -1979,13 +1926,11 @@
         function handleCandidateStatus(status) {
             // Handle individual pause/resume
             if (status.individual_paused && !isIndividuallyPaused) {
-                console.log('⏸️ Individual pause by admin');
                 pauseTimerAndAudio(); // Enhanced with audio control
                 isIndividuallyPaused = true;
                 addPauseBlur(); // Add blur effect
                 showAdminMessage('⏸️ You have been individually paused by administrator');
             } else if (!status.individual_paused && isIndividuallyPaused) {
-                console.log('▶️ Individual resume by admin');
                 resumeTimerAndAudio(); // Enhanced with audio control
                 isIndividuallyPaused = false;
                 removePauseBlur(); // Remove blur effect
@@ -1999,7 +1944,6 @@
                 const changeType = timeChange > 0 ? 'added' : 'reduced';
                 const absMinutes = Math.abs(timeChange);
                 
-                console.log(`👤 Individual time ${changeType} by ${absMinutes} minutes`);
                 timeInSeconds += timeChange * 60;
                 showAdminMessage(`👤 ${absMinutes} minutes ${changeType} individually`);
                 updateTimer();
@@ -2064,10 +2008,8 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('✅ Session time extension reset:', data.message);
                 })
                 .catch(error => {
-                    console.log('❌ Could not reset session time extension:', error.message);
                 });
         }
 
@@ -2079,10 +2021,8 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('✅ Candidate time extension reset:', data.message);
                 })
                 .catch(error => {
-                    console.log('❌ Could not reset candidate time extension:', error.message);
                 });
         }
 
@@ -2139,23 +2079,16 @@
             const audioPlayer = document.getElementById('global-audio-player');
             
             if (!audioPlayer) {
-                console.log('❌ Audio player not found');
                 return;
             }
             
-            console.log('🎵 Audio initialized and ready');
         }
         
         // Start listening test - simplified approach
         function startListeningTest() {
-            console.log('🎵 startListeningTest function called');
-            
             const audioPlayer = document.getElementById('global-audio-player');
             const popup = document.getElementById('audio-popup');
-            
-            console.log('🎵 Audio player found:', !!audioPlayer);
-            console.log('🎵 Popup found:', !!popup);
-            
+
             if (!audioPlayer) {
                 console.error('❌ Audio player not found');
                 alert('Error: Audio player not found');
@@ -2164,7 +2097,6 @@
             
             // Hide the popup first
             if (popup) {
-                console.log('🎵 Hiding popup...');
                 popup.style.display = 'none';
                 popup.classList.add('hidden');
             }
@@ -2183,14 +2115,10 @@
             audioPlayer.load();
             
             // Try to play the audio with error handling
-            console.log('🎵 Attempting to start audio...');
-            console.log('🎵 Audio src:', audioPlayer.src);
-            
             const playPromise = audioPlayer.play();
             
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    console.log('🎵 Audio started successfully');
                     // Timer is already started in initializeSync, no need to start again
                     if (!timerInterval) {
                         startTimer(); // Start the timer only if not already running
@@ -2211,7 +2139,6 @@
             
             // Listen for audio events
             audioPlayer.addEventListener('ended', function() {
-                console.log('🎵 Audio playback completed');
             });
             
             audioPlayer.addEventListener('error', function(e) {

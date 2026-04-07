@@ -870,3 +870,41 @@ body.text-large .tf-question-text {
         min-height: 50px;
     }
 }
+
+/* ========================================
+   GLOBAL IMAGE PROTECTION
+   Prevents images from being dragged/moved
+   Applies to ALL Cambridge and IELTS tests
+   ======================================== */
+img,
+.qti-image,
+.word-item img,
+.word-bank img,
+.inlineImage img,
+.qti-renderer-media-wrapper img,
+img.contrast-compatible,
+.container img,
+.question-wrapper img {
+    -webkit-user-drag: none !important;
+    -khtml-user-drag: none !important;
+    -moz-user-drag: none !important;
+    -o-user-drag: none !important;
+    user-drag: none !important;
+    -webkit-user-select: none !important;
+    -khtml-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-touch-callout: none !important;
+    pointer-events: none !important;
+    draggable: false !important;
+}
+
+/* Re-enable pointer events for clickable option images in listening tests */
+.option-image img,
+.clickable-image img,
+.image-option img,
+[onclick] img,
+.selectable-image img {
+    pointer-events: auto !important;
+}

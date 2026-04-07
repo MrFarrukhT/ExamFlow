@@ -1,3 +1,9 @@
+// XSS escape utility for dynamic content
+function escapeHTML(str) {
+    if (str == null) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
 // IELTS Universal Functions - Shared across Reading, Listening, Writing
 class IELTSUniversalFunctions {
     constructor() {
@@ -101,9 +107,9 @@ class IELTSUniversalFunctions {
             <div class="popup-body">
                 ${this.notifications.map(notification => `
                     <div class="notification-item">
-                        <div class="notification-title">${notification.title}</div>
-                        <div class="notification-message">${notification.message}</div>
-                        <div class="notification-time">${notification.time}</div>
+                        <div class="notification-title">${escapeHTML(notification.title)}</div>
+                        <div class="notification-message">${escapeHTML(notification.message)}</div>
+                        <div class="notification-time">${escapeHTML(notification.time)}</div>
                     </div>
                 `).join('')}
                 ${this.notifications.length === 0 ? 
@@ -385,7 +391,7 @@ class IELTSUniversalFunctions {
                     this.setTextSize(preferences.textSize, false);
                 }
             } catch (e) {
-                console.warn('Error loading user preferences:', e);
+                // Error loading user preferences
             }
         }
     }
@@ -408,7 +414,7 @@ class IELTSUniversalFunctions {
         };
         this.notifications.unshift(notification);
         this.updateNotificationBadge();
-        this.showToast(`New notification: ${title}`, 'info');
+        this.showToast(`New notification: ${escapeHTML(title)}`, 'info');
     }
 }
 

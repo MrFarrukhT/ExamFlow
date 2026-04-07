@@ -30,7 +30,7 @@
                 </div>
                 <div class="info-item">
                     <span class="info-label">Build:</span>
-                    <span class="info-value">September 2025</span>
+                    <span class="info-value">April 2026</span>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Status:</span>
@@ -38,14 +38,15 @@
                 </div>
             </div>
             
-            <button class="launch-button" onclick="launchApp()">
+            <button class="launch-button" id="launch-btn" onclick="launchApp()">
                 <div class="launch-icon">
                     <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
                         <polygon points="5,3 19,12 5,21 12,12"/>
                     </svg>
                 </div>
-                Launch Test System
+                <span class="launch-text">Launch Test System</span>
             </button>
+            <div class="launch-hint">Press <kbd>Enter</kbd> to launch</div>
             
             <div class="features-list">
                 <div class="feature-item">
@@ -81,12 +82,12 @@
         
         <div class="launcher-footer">
             <p>&copy; 2025 Innovative Centre. All rights reserved.</p>
-            <div style="margin-top: 10px;">
-                <button onclick="showInvigilatorLogin()" style="background: none; border: 1px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.6); padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; transition: all 0.3s;">
-                    <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="vertical-align: middle; margin-right: 3px;">
+            <div>
+                <button class="footer-admin-btn" onclick="showInvigilatorLogin()">
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
                         <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
                     </svg>
-                    Admin Access
+                    Invigilator Access
                 </button>
             </div>
         </div>
@@ -94,7 +95,10 @@
 
     <script>
         function launchApp() {
-            // Launch in fullscreen distraction-free mode
+            const btn = document.getElementById('launch-btn');
+            if (btn.classList.contains('launching')) return;
+            btn.classList.add('launching');
+            btn.querySelector('.launch-text').textContent = 'Launching...';
             enterFullscreenMode();
         }
 
@@ -197,31 +201,14 @@
     <div id="invigilator-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <button class="modal-close-btn" onclick="closeInvigilatorModal()">&times;</button>
-            <h2 style="margin: 0; padding: 20px 20px 10px; font-size: 20px;">Invigilator Access</h2>
-            <div style="padding: 20px;">
-                <label for="invigilator-password" style="display: block; margin-bottom: 10px; font-weight: bold;">Enter Password:</label>
-                <input type="password" id="invigilator-password" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
-                <button onclick="verifyInvigilatorPassword()" style="width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Access Invigilator Page</button>
-                <p id="password-error" style="color: red; margin-top: 10px; display: none;">Incorrect password. Please try again.</p>
+            <h2 class="modal-title">Invigilator Access</h2>
+            <div class="modal-body">
+                <label for="invigilator-password">Enter Password:</label>
+                <input type="password" id="invigilator-password" placeholder="Password">
+                <button class="modal-submit-btn" onclick="verifyInvigilatorPassword()">Access Invigilator Page</button>
+                <p id="password-error" class="modal-error">Incorrect password. Please try again.</p>
             </div>
         </div>
     </div>
-
-    <style>
-        .modal-close-btn {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #999;
-        }
-        
-        .modal-close-btn:hover {
-            color: #333;
-        }
-    </style>
 </body>
 </html>

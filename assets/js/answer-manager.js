@@ -252,13 +252,11 @@ class AnswerManager {
         });
         
         // Keep testHistory intact
-        console.log('Current test session cleared. Historical data preserved.');
     }
 
     // Clear all data including history (complete reset)
     clearAllData() {
         localStorage.clear();
-        console.log('All data cleared including test history.');
     }
 
     // Get summary of available tests

@@ -208,31 +208,31 @@
                                         <div class="question-item">
                                             <div class="question-number">1</div>
                                             <div class="question-text">Some men have this on their face below their mouth.</div>
-                                            <input type="text" class="answer-input" id="q1" data-answer="a beard">
+                                            <input type="text" class="answer-input" id="p1_q1" data-answer="a beard">
                                         </div>
 
                                         <div class="question-item">
                                             <div class="question-number">2</div>
                                             <div class="question-text">This is part of a river that drops down quickly.</div>
-                                            <input type="text" class="answer-input" id="q2" data-answer="a waterfall">
+                                            <input type="text" class="answer-input" id="p1_q2" data-answer="a waterfall">
                                         </div>
 
                                         <div class="question-item">
                                             <div class="question-number">3</div>
                                             <div class="question-text">These are at the top of your arms. You have two of them.</div>
-                                            <input type="text" class="answer-input" id="q3" data-answer="shoulders">
+                                            <input type="text" class="answer-input" id="p1_q3" data-answer="shoulders">
                                         </div>
 
                                         <div class="question-item">
                                             <div class="question-number">4</div>
                                             <div class="question-text">When you eat, all the food goes into this part of your body.</div>
-                                            <input type="text" class="answer-input" id="q4" data-answer="a stomach">
+                                            <input type="text" class="answer-input" id="p1_q4" data-answer="a stomach">
                                         </div>
 
                                         <div class="question-item">
                                             <div class="question-number">5</div>
                                             <div class="question-text">These are very big, and some people like climbing them.</div>
-                                            <input type="text" class="answer-input" id="q5" data-answer="mountains">
+                                            <input type="text" class="answer-input" id="p1_q5" data-answer="mountains">
                                         </div>
                                     </div>
                                 </div>
@@ -438,12 +438,12 @@
             const inputs = document.querySelectorAll('.answer-input');
             inputs.forEach(input => {
                 // Load saved answer
-                const saved = localStorage.getItem(`movers_rw_p1_${input.id}`);
+                const saved = localStorage.getItem(`movers_rw_${input.id}`);
                 if(saved) input.value = saved;
                 
                 // Save on change
                 input.addEventListener('change', () => {
-                    localStorage.setItem(`movers_rw_p1_${input.id}`, input.value);
+                    localStorage.setItem(`movers_rw_${input.id}`, input.value);
                 });
             });
         });

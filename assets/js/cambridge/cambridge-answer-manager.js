@@ -20,7 +20,6 @@ class CambridgeAnswerManager {
             const answers = JSON.parse(localStorage.getItem(storageKey) || '{}');
             answers[questionNum] = answer;
             localStorage.setItem(storageKey, JSON.stringify(answers));
-            console.log(`💾 Saved answer for Q${questionNum} in ${module}:`, answer);
             return true;
         } catch (error) {
             console.error('Error saving answer:', error);
@@ -76,41 +75,47 @@ class CambridgeAnswerManager {
     }
 
     // Get modules data based on level
+    // Uses cambridge- prefixed keys to avoid collision with IELTS storage
     getModulesData(level) {
         if (level === 'A1-Movers' || level === 'A2-Key') {
+            // For A1-Movers, consolidate scattered answers before retrieving
+            if (level === 'A1-Movers' && typeof window.consolidateMoversAnswers === 'function') {
+                window.consolidateMoversAnswers();
+            }
+
             return {
                 'reading-writing': {
-                    status: localStorage.getItem('reading-writingStatus'),
-                    startTime: localStorage.getItem('reading-writingStartTime'),
-                    endTime: localStorage.getItem('reading-writingEndTime'),
-                    answers: JSON.parse(localStorage.getItem('reading-writingAnswers') || '{}')
+                    status: localStorage.getItem('cambridge-reading-writingStatus'),
+                    startTime: localStorage.getItem('cambridge-reading-writingStartTime'),
+                    endTime: localStorage.getItem('cambridge-reading-writingEndTime'),
+                    answers: JSON.parse(localStorage.getItem('cambridge-reading-writingAnswers') || '{}')
                 },
                 listening: {
-                    status: localStorage.getItem('listeningStatus'),
-                    startTime: localStorage.getItem('listeningStartTime'),
-                    endTime: localStorage.getItem('listeningEndTime'),
-                    answers: JSON.parse(localStorage.getItem('listeningAnswers') || '{}')
+                    status: localStorage.getItem('cambridge-listeningStatus'),
+                    startTime: localStorage.getItem('cambridge-listeningStartTime'),
+                    endTime: localStorage.getItem('cambridge-listeningEndTime'),
+                    answers: JSON.parse(localStorage.getItem('cambridge-listeningAnswers') || '{}')
                 }
             };
         } else {
             return {
                 reading: {
-                    status: localStorage.getItem('readingStatus'),
-                    startTime: localStorage.getItem('readingStartTime'),
-                    endTime: localStorage.getItem('readingEndTime'),
-                    answers: JSON.parse(localStorage.getItem('readingAnswers') || '{}')
+                    status: localStorage.getItem('cambridge-readingStatus'),
+                    startTime: localStorage.getItem('cambridge-readingStartTime'),
+                    endTime: localStorage.getItem('cambridge-readingEndTime'),
+                    answers: JSON.parse(localStorage.getItem('cambridge-readingAnswers') || '{}')
                 },
                 writing: {
-                    status: localStorage.getItem('writingStatus'),
-                    startTime: localStorage.getItem('writingStartTime'),
-                    endTime: localStorage.getItem('writingEndTime'),
-                    answers: JSON.parse(localStorage.getItem('writingAnswers') || '{}')
+                    status: localStorage.getItem('cambridge-writingStatus'),
+                    startTime: localStorage.getItem('cambridge-writingStartTime'),
+                    endTime: localStorage.getItem('cambridge-writingEndTime'),
+                    answers: JSON.parse(localStorage.getItem('cambridge-writingAnswers') || '{}')
                 },
                 listening: {
-                    status: localStorage.getItem('listeningStatus'),
-                    startTime: localStorage.getItem('listeningStartTime'),
-                    endTime: localStorage.getItem('listeningEndTime'),
-                    answers: JSON.parse(localStorage.getItem('listeningAnswers') || '{}')
+                    status: localStorage.getItem('cambridge-listeningStatus'),
+                    startTime: localStorage.getItem('cambridge-listeningStartTime'),
+                    endTime: localStorage.getItem('cambridge-listeningEndTime'),
+                    answers: JSON.parse(localStorage.getItem('cambridge-listeningAnswers') || '{}')
                 }
             };
         }
@@ -258,10 +263,11 @@ class CambridgeAnswerManager {
     clearCurrentTestSession() {
         const keysToRemove = [
             'studentId', 'studentName', 'cambridgeLevel', 'examType', 'testStartTime',
-            'listeningStatus', 'listeningStartTime', 'listeningEndTime', 'listeningAnswers', 'listeningTestStarted',
-            'readingStatus', 'readingStartTime', 'readingEndTime', 'readingAnswers',
-            'writingStatus', 'writingStartTime', 'writingEndTime', 'writingAnswers',
-            'reading-writingStatus', 'reading-writingStartTime', 'reading-writingEndTime', 'reading-writingAnswers',
+            // Cambridge-prefixed keys (to avoid collision with IELTS)
+            'cambridge-listeningStatus', 'cambridge-listeningStartTime', 'cambridge-listeningEndTime', 'cambridge-listeningAnswers', 'cambridge-listeningTestStarted',
+            'cambridge-readingStatus', 'cambridge-readingStartTime', 'cambridge-readingEndTime', 'cambridge-readingAnswers',
+            'cambridge-writingStatus', 'cambridge-writingStartTime', 'cambridge-writingEndTime', 'cambridge-writingAnswers',
+            'cambridge-reading-writingStatus', 'cambridge-reading-writingStartTime', 'cambridge-reading-writingEndTime', 'cambridge-reading-writingAnswers',
             'distractionFreeMode'
         ];
 
@@ -269,7 +275,6 @@ class CambridgeAnswerManager {
             localStorage.removeItem(key);
         });
 
-        console.log('Current Cambridge test session cleared. Historical data preserved.');
     }
 
     // Submit test to database with fallback to local storage
@@ -277,10 +282,23 @@ class CambridgeAnswerManager {
         const testData = this.getCurrentTestData();
         let success = false;
 
+        // Get skill directly from the page's data-skill attribute (most reliable)
+        // This works for ALL Cambridge test levels (A1, A2, B1, B2)
+        let skill = null;
+        if (typeof document !== 'undefined' && document.body) {
+            skill = document.body.getAttribute('data-skill');
+        }
+
+        // Fallback to module detection if data-skill not found on page
+        if (!skill) {
+            skill = this.determineSkillFromModules(testData.modules);
+        }
+
+
         // Try multiple database endpoints
         try {
             // First try: Cambridge dedicated server endpoint (port 3003)
-            const response = await fetch('http://localhost:3003/cambridge-submissions', {
+            const response = await fetch('/cambridge-submissions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -290,8 +308,8 @@ class CambridgeAnswerManager {
                     studentName: testData.studentInfo.name,
                     level: testData.studentInfo.level,
                     mockTest: testData.studentInfo.mockTest || '1',
-                    skill: this.determineSkillFromModules(testData.modules),
-                    answers: this.flattenAnswers(testData.modules),
+                    skill: skill,
+                    answers: this.flattenAnswers(testData.modules, skill),
                     score: null,
                     grade: null,
                     startTime: testData.studentInfo.testStartTime,
@@ -300,11 +318,9 @@ class CambridgeAnswerManager {
             });
 
             if (response.ok) {
-                console.log('✅ Cambridge test submitted to database successfully');
                 success = true;
             }
         } catch (error) {
-            console.log('Cambridge database server not available, using fallback storage...');
         }
 
         // Fallback: Save to enhanced local storage (database format)
@@ -319,6 +335,8 @@ class CambridgeAnswerManager {
                 studentName: testData.studentInfo.name,
                 level: testData.studentInfo.level,
                 mockTest: testData.studentInfo.mockTest || '1',
+                skill: skill,
+                answers: this.flattenAnswers(testData.modules, skill),
                 testStartTime: testData.studentInfo.testStartTime,
                 completionTime: new Date().toISOString(),
                 modules: testData.modules,
@@ -329,8 +347,6 @@ class CambridgeAnswerManager {
             submissions.push(newSubmission);
             localStorage.setItem('test_submissions_database', JSON.stringify(submissions));
 
-            console.log('✅ Cambridge test saved to local database storage');
-            
             // Also save to history
             this.saveCurrentTestToHistory();
 
@@ -361,7 +377,6 @@ class CambridgeAnswerManager {
     // Clear all data including history
     clearAllData() {
         localStorage.clear();
-        console.log('All Cambridge data cleared including test history.');
     }
 
     getTestSummary() {
@@ -381,18 +396,69 @@ class CambridgeAnswerManager {
     }
 
     // Helper to determine primary skill from modules
+    // For B1-Preliminary and B2-First, multiple modules exist - find the most recently completed one
     determineSkillFromModules(modules) {
         const moduleNames = Object.keys(modules);
+
+        // Check for specific combined skills first (A1-Movers, A2-Key)
         if (moduleNames.includes('reading-writing')) return 'reading-writing';
         if (moduleNames.includes('reading-use-of-english')) return 'reading-use-of-english';
+
+        // For B1-Preliminary and B2-First, find the module that was most recently completed
+        // by checking endTime or status
+        let mostRecentModule = null;
+        let mostRecentTime = 0;
+
+        moduleNames.forEach(moduleName => {
+            const moduleData = modules[moduleName];
+            if (moduleData && moduleData.status === 'completed' && moduleData.endTime) {
+                const endTime = new Date(moduleData.endTime).getTime();
+                if (endTime > mostRecentTime) {
+                    mostRecentTime = endTime;
+                    mostRecentModule = moduleName;
+                }
+            }
+        });
+
+        // If we found a recently completed module, return it
+        if (mostRecentModule) {
+            return mostRecentModule;
+        }
+
+        // Fallback: check for any completed module
+        for (const moduleName of moduleNames) {
+            const moduleData = modules[moduleName];
+            if (moduleData && moduleData.status === 'completed') {
+                return moduleName;
+            }
+        }
+
+        // Last fallback: return first module name if any exist
         if (moduleNames.length > 0) return moduleNames[0];
         return 'unknown';
     }
 
     // Helper to flatten nested module answers into single object
-    flattenAnswers(modules) {
+    // If skill is provided, only include answers from that module
+    flattenAnswers(modules, skill = null) {
         const allAnswers = {};
+
+        // Map skill to module name
+        const skillToModule = {
+            'reading': 'reading',
+            'writing': 'writing',
+            'listening': 'listening',
+            'reading-writing': 'reading-writing'
+        };
+
+        const targetModule = skill ? skillToModule[skill] : null;
+
         Object.keys(modules).forEach(moduleName => {
+            // If a specific skill/module is requested, only include that module's answers
+            if (targetModule && moduleName !== targetModule) {
+                return; // Skip other modules
+            }
+
             const moduleAnswers = modules[moduleName].answers || {};
             Object.keys(moduleAnswers).forEach(key => {
                 allAnswers[`${moduleName}_${key}`] = moduleAnswers[key];

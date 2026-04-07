@@ -848,7 +848,7 @@
                 </div>
                 <div class="form-group">
                     <label for="password">Password:</label>
-                    <input type="password" id="password" required value="Adm!n#2025$SecureP@ss">
+                    <input type="password" id="password" required>
                 </div>
                 <button type="submit" class="btn" id="loginBtn">Login</button>
                 <div class="error-message" id="errorMessage"></div>
@@ -1079,7 +1079,7 @@
             }
         }
 
-        function login(event) {
+        async function login(event) {
             event.preventDefault();
 
             const username = document.getElementById('username').value;
@@ -1093,14 +1093,25 @@
             errorMessage.style.display = 'none';
             successMessage.style.display = 'none';
 
-            if (username === 'admin' && password === 'Adm!n#2025$SecureP@ss') {
-                localStorage.setItem('adminToken', 'local-admin-token');
-                authToken = 'local-admin-token';
-                successMessage.textContent = 'Login successful!';
-                successMessage.style.display = 'block';
-                setTimeout(showAdminPanel, 1000);
-            } else {
-                errorMessage.textContent = 'Invalid credentials. Use admin/admin123';
+            try {
+                const response = await fetch('/admin-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    localStorage.setItem('adminToken', result.token);
+                    authToken = result.token;
+                    successMessage.textContent = 'Login successful!';
+                    successMessage.style.display = 'block';
+                    setTimeout(showAdminPanel, 1000);
+                } else {
+                    errorMessage.textContent = 'Invalid credentials.';
+                    errorMessage.style.display = 'block';
+                }
+            } catch (err) {
+                errorMessage.textContent = 'Server unavailable. Please ensure the server is running.';
                 errorMessage.style.display = 'block';
             }
 
@@ -1794,10 +1805,32 @@
                 <div style="display: grid; gap: 20px;">
                     <div class="score-section">
                         <h3>Writing Assessment</h3>
-                        <div class="score-input">
+                        <div class="score-input" style="flex-wrap: wrap; gap: 10px;">
                             <label><strong>Overall Band Score (0-9):</strong></label>
                             <input type="text" id="writingBandScore" value="${submission.band_score || ''}" placeholder="e.g. 6.5" />
+                            <button class="btn" style="background: #17a2b8;" onclick="getAISuggestion('${submission.id}')">
+                                <span id="aiButtonText">Get AI Suggestion</span>
+                            </button>
                             <button class="btn btn-success" onclick="saveWritingScore('${submission.id}')">Save Band Score</button>
+                        </div>
+                        <div id="aiSuggestionResult" style="margin-top: 15px; display: none;">
+                            <div style="background: #e7f3ff; padding: 12px 18px; border-radius: 6px; border: 1px solid #b3d9ff;">
+                                <div style="display: flex; gap: 25px; align-items: center; flex-wrap: wrap;">
+                                    <div style="text-align: center;">
+                                        <div style="font-size: 12px; color: #666; margin-bottom: 3px;">Task 1</div>
+                                        <div style="font-size: 20px; font-weight: bold; color: #1976d2;" id="aiTask1Score">-</div>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <div style="font-size: 12px; color: #666; margin-bottom: 3px;">Task 2</div>
+                                        <div style="font-size: 20px; font-weight: bold; color: #7b1fa2;" id="aiTask2Score">-</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 8px 15px; background: #fff; border-radius: 6px; border: 2px solid #28a745;">
+                                        <div style="font-size: 12px; color: #666; margin-bottom: 3px;">Overall</div>
+                                        <div style="font-size: 24px; font-weight: bold; color: #28a745;" id="aiSuggestedScore">-</div>
+                                    </div>
+                                    <button onclick="acceptAISuggestion()" style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Accept Overall</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -1921,6 +1954,67 @@
             }
         }
 
+        // AI Score Suggestion Functions
+        async function getAISuggestion(submissionId) {
+            const submission = currentSubmissions.find(s => s.id == submissionId);
+            if (!submission) {
+                alert('Submission not found');
+                return;
+            }
+
+            // Extract task texts from the submission answers
+            const task1Text = submission.answers?.task_1?.text ||
+                             (typeof submission.answers?.task_1 === 'string' ? submission.answers.task_1 : '') ||
+                             submission.answers?.task1?.text ||
+                             (typeof submission.answers?.task1 === 'string' ? submission.answers.task1 : '');
+
+            const task2Text = submission.answers?.task_2?.text ||
+                             (typeof submission.answers?.task_2 === 'string' ? submission.answers.task_2 : '') ||
+                             submission.answers?.task2?.text ||
+                             (typeof submission.answers?.task2 === 'string' ? submission.answers.task2 : '');
+
+            const buttonText = document.getElementById('aiButtonText');
+            const resultDiv = document.getElementById('aiSuggestionResult');
+
+            // Show loading state
+            buttonText.textContent = 'Getting suggestion...';
+            resultDiv.style.display = 'none';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/ai-score-suggestion`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        task1: task1Text,
+                        task2: task2Text
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('aiTask1Score').textContent = data.task1Band;
+                    document.getElementById('aiTask2Score').textContent = data.task2Band;
+                    document.getElementById('aiSuggestedScore').textContent = data.overallBand;
+                    resultDiv.style.display = 'block';
+                } else {
+                    alert('Failed to get AI suggestion: ' + data.message);
+                }
+            } catch (error) {
+                console.error('AI suggestion error:', error);
+                alert('Error getting AI suggestion. Make sure the server is running and the OpenAI API key is configured in .env file.');
+            } finally {
+                buttonText.textContent = 'Get AI Suggestion';
+            }
+        }
+
+        function acceptAISuggestion() {
+            const suggestedScore = document.getElementById('aiSuggestedScore').textContent;
+            if (suggestedScore && suggestedScore !== '-') {
+                document.getElementById('writingBandScore').value = suggestedScore;
+            }
+        }
+
         function closeModal() {
             document.getElementById('answerModal').style.display = 'none';
         }
@@ -1964,7 +2058,7 @@
             document.getElementById('adminContent').style.display = 'none';
             document.getElementById('logoutBtn').style.display = 'none';
             document.getElementById('username').value = 'admin';
-            document.getElementById('password').value = 'Adm!n#2025$SecureP@ss';
+            document.getElementById('password').value = '';
         }
 
         // Close modal when clicking outside

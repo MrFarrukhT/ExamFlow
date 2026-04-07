@@ -1,71 +1,63 @@
 // Local server to connect tests directly to Neon database
 // Run this with: node local-database-server.js
 
-import { Client } from 'pg';
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import open from 'open';
+import { fileURLToPath } from 'url';
+import OpenAI from 'openai';
+import { createDatabaseManager, createRetryQueue, adminLoginHandler } from './shared/database.js';
+
+// Initialize OpenAI client (will work if API key is configured)
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
+}) : null;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = 3002; // Using 3002 to avoid conflicts
 
-// Database connection with auto-reconnect
-let client;
-let isConnecting = false;
+// Database connection using shared module
+const db = createDatabaseManager({
+    connectionString: process.env.DATABASE_URL || '',
+    ssl: { require: true, rejectUnauthorized: false }
+});
 
-const DATABASE_CONFIG = {
-    connectionString: 'postgresql://neondb_owner:npg_2yHMSvBcN6rI@ep-old-tooth-agav7q24-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
-    ssl: {
-        require: true,
-        rejectUnauthorized: false
-    }
-};
+const { ensureConnection } = db;
 
-async function createDatabaseConnection() {
-    if (isConnecting) {
-        return;
-    }
-
-    isConnecting = true;
-
-    try {
-        if (client) {
-            try {
-                await client.end();
-            } catch (e) {
-                // Ignore errors when ending old connection
-            }
-        }
-
-        client = new Client(DATABASE_CONFIG);
-
-        client.on('error', (err) => {
-            console.error('🔄 Database connection lost, will reconnect on next request...', err.message);
-            client = null;
-        });
-
-        await client.connect();
-        console.log('✅ Database connected successfully');
-
-    } catch (error) {
-        console.error('❌ Database connection failed:', error.message);
-        client = null;
-        throw error;
-    } finally {
-        isConnecting = false;
-    }
+// IELTS submission insert function
+async function insertIeltsSubmission(dbClient, data) {
+    const result = await dbClient.query(`
+        INSERT INTO test_submissions
+        (student_id, student_name, mock_number, skill, answers, score, band_score, start_time, end_time)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        RETURNING id
+    `, [data.studentId, data.studentName, data.mockNumber, data.skill,
+    JSON.stringify(data.answers), data.score, data.bandScore, data.startTime, data.endTime]);
+    console.log(`✅ Saved with ID: ${result.rows[0].id}`);
+    return result.rows[0].id;
 }
 
-async function ensureConnection() {
-    if (!client || client._ending) {
-        await createDatabaseConnection();
-    }
-    return client;
-}
+const { saveWithRetry } = createRetryQueue(ensureConnection, insertIeltsSubmission);
 
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('./')); // Serve static files from current directory
+
+// Serve static files - handle both local dev and packaged environment
+if (process.pkg) {
+    app.use(express.static(path.join(__dirname, 'public')));
+    app.use(express.static(__dirname));
+} else {
+    app.use(express.static('./'));
+}
+
+// Admin login endpoint
+app.post('/admin-login', adminLoginHandler);
 
 // Root redirect to launcher
 app.get('/', (req, res) => {
@@ -91,84 +83,6 @@ app.get('/test', async (req, res) => {
         });
     }
 });
-
-// Queue for failed submissions
-const failedSubmissions = [];
-
-// Background retry system - runs every 90 seconds
-async function backgroundRetrySystem() {
-    if (failedSubmissions.length === 0) {
-        return; // No failed submissions to retry
-    }
-
-    console.log(`🔄 Background retry: ${failedSubmissions.length} submissions pending...`);
-
-    const toRetry = [...failedSubmissions]; // Copy the array
-    failedSubmissions.length = 0; // Clear original array
-
-    for (const submission of toRetry) {
-        try {
-            console.log(`📝 Retrying: ${submission.data.skill} test for ${submission.data.studentName}`);
-            
-            const dbClient = await ensureConnection();
-            const result = await dbClient.query(`
-                INSERT INTO test_submissions
-                (student_id, student_name, mock_number, skill, answers, score, band_score, start_time, end_time)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-                RETURNING id
-            `, [submission.data.studentId, submission.data.studentName, submission.data.mockNumber, 
-                submission.data.skill, JSON.stringify(submission.data.answers), submission.data.score, 
-                submission.data.bandScore, submission.data.startTime, submission.data.endTime]);
-
-            console.log(`✅ Background retry success! ID: ${result.rows[0].id}`);
-
-        } catch (error) {
-            console.log(`❌ Background retry failed, will try again in 90s`);
-            failedSubmissions.push(submission); // Put it back in queue
-        }
-    }
-}
-
-// Start background retry system (runs every 90 seconds)
-setInterval(backgroundRetrySystem, 90000);
-
-// Simple immediate retry function (3 quick attempts)
-async function saveWithRetry(data, maxRetries = 3) {
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-        try {
-            console.log(`📝 Attempt ${attempt}: Saving ${data.skill} test for ${data.studentName}`);
-            
-            const dbClient = await ensureConnection();
-            const result = await dbClient.query(`
-                INSERT INTO test_submissions
-                (student_id, student_name, mock_number, skill, answers, score, band_score, start_time, end_time)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-                RETURNING id
-            `, [data.studentId, data.studentName, data.mockNumber, data.skill, 
-                JSON.stringify(data.answers), data.score, data.bandScore, data.startTime, data.endTime]);
-
-            console.log(`✅ Saved with ID: ${result.rows[0].id}`);
-            return result.rows[0].id;
-
-        } catch (error) {
-            console.error(`❌ Attempt ${attempt} failed:`, error.message);
-            
-            if (attempt < maxRetries) {
-                console.log(`🔄 Retrying in 2 seconds...`);
-                await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
-            }
-        }
-    }
-    
-    // If all immediate retries failed, add to background queue
-    console.log(`📋 Adding to background retry queue (will retry every 90s)`);
-    failedSubmissions.push({ 
-        data: data, 
-        timestamp: new Date().toISOString() 
-    });
-    
-    throw new Error('Immediate save failed - added to background retry queue');
-}
 
 // Save test submission
 app.post('/submissions', async (req, res) => {
@@ -287,13 +201,13 @@ app.get('/mock-answers', async (req, res) => {
         const answers = {};
         result.rows.forEach(row => {
             const questionKey = skill === 'listening' ? `q${row.question_number}` : `${row.question_number}`;
-            
+
             // Handle alternative answers
             let answerValue = row.correct_answer;
             if (row.alternative_answers && row.alternative_answers.length > 0) {
                 answerValue = [row.correct_answer, ...row.alternative_answers];
             }
-            
+
             answers[questionKey] = answerValue;
         });
 
@@ -344,7 +258,7 @@ app.post('/mock-answers', async (req, res) => {
             for (const [questionKey, answerValue] of Object.entries(answers)) {
                 // Extract question number from key (remove 'q' prefix if present)
                 const questionNumber = parseInt(questionKey.replace(/^q/, ''));
-                
+
                 if (isNaN(questionNumber)) continue;
 
                 let correctAnswer;
@@ -365,7 +279,7 @@ app.post('/mock-answers', async (req, res) => {
                      VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP)`,
                     [parseInt(mock), skill, questionNumber, correctAnswer, alternativeAnswers]
                 );
-                
+
                 insertedCount++;
             }
 
@@ -432,76 +346,92 @@ app.delete('/mock-answers', async (req, res) => {
 });
 
 // ============================================
-// CAMBRIDGE TEST SYSTEM ENDPOINTS
+// AI SCORING SUGGESTION ENDPOINT
 // ============================================
 
-// Save Cambridge test submission
-app.post('/api/cambridge-submissions', async (req, res) => {
+app.post('/api/ai-score-suggestion', async (req, res) => {
     try {
-        const data = req.body;
-        console.log(`📝 Cambridge: Saving ${data.module} for ${data.studentName} (${data.level})`);
+        // Check if OpenAI is configured
+        if (!openai) {
+            return res.status(503).json({
+                success: false,
+                message: 'AI scoring not configured. Please add OPENAI_API_KEY to your .env file.'
+            });
+        }
 
-        const dbClient = await ensureConnection();
-        const result = await dbClient.query(`
-            INSERT INTO cambridge_submissions
-            (student_id, student_name, level, module, answers, score, start_time, end_time)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-            RETURNING id
-        `, [data.studentId, data.studentName, data.level, data.module,
-            JSON.stringify(data.answers), data.score || 0, data.startTime, data.endTime]);
+        const { task1, task2 } = req.body;
 
-        console.log(`✅ Cambridge submission saved with ID: ${result.rows[0].id}`);
+        if (!task1 && !task2) {
+            return res.status(400).json({
+                success: false,
+                message: 'At least one task response is required'
+            });
+        }
+
+        console.log('🤖 Getting AI score suggestion...');
+
+        const prompt = `You are an experienced and fair IELTS writing examiner. Score these writing responses realistically.
+
+=== TASK 1 (Academic Report) ===
+${task1 || 'No response provided'}
+
+=== TASK 2 (Essay) ===
+${task2 || 'No response provided'}
+
+Score each task (0-9, use .5 increments) based on IELTS Public Band Descriptors:
+
+BAND 7: Good command - handles complex language, occasional inaccuracies
+BAND 6: Competent - generally effective, some errors but meaning is clear
+BAND 5: Modest - partial command, frequent errors, basic meaning conveyed
+
+For each task, consider:
+- Task Achievement/Response (Did they address the topic adequately?)
+- Coherence & Cohesion (Is it logically organized?)
+- Lexical Resource (Vocabulary range - look for attempts at higher-level words)
+- Grammatical Range & Accuracy (Sentence variety, error frequency)
+
+Scoring guidance:
+- Most IELTS candidates score between 5.5-7.0
+- Give credit for good ideas and attempts at complex vocabulary/structures
+- Minor spelling errors shouldn't heavily penalize if meaning is clear
+- Word count under minimum (150/250) should reduce score by max 0.5 band
+- Calculate overall as: (Task1 + Task2 + Task2) / 3, rounded to nearest 0.5
+
+Respond with ONLY a JSON object:
+{"task1Band": 6.0, "task2Band": 6.5, "overallBand": 6.5}`;
+
+        const completion = await openai.chat.completions.create({
+            model: 'gpt-4',
+            messages: [{ role: 'user', content: prompt }],
+            temperature: 0.5,
+            max_tokens: 100
+        });
+
+        const responseText = completion.choices[0].message.content.trim();
+
+        // Parse the JSON response, handling potential markdown code blocks
+        let cleanedResponse = responseText;
+        if (responseText.includes('```')) {
+            cleanedResponse = responseText.replace(/```json?\n?/g, '').replace(/```/g, '').trim();
+        }
+
+        const result = JSON.parse(cleanedResponse);
+
+        console.log(`✅ AI suggested scores - Task 1: ${result.task1Band}, Task 2: ${result.task2Band}, Overall: ${result.overallBand}`);
 
         res.json({
             success: true,
-            message: 'Cambridge test saved successfully',
-            id: result.rows[0].id
+            task1Band: result.task1Band,
+            task2Band: result.task2Band,
+            overallBand: result.overallBand,
+            model: 'gpt-4'
         });
 
     } catch (error) {
-        console.error('❌ Cambridge save failed:', error);
+        console.error('❌ AI scoring error:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to save Cambridge submission',
-            error: error.message
-        });
-    }
-});
-
-// Get all Cambridge submissions
-app.get('/api/cambridge-submissions', async (req, res) => {
-    try {
-        const { level, module } = req.query;
-        let query = 'SELECT * FROM cambridge_submissions';
-        const params = [];
-        const conditions = [];
-
-        if (level) {
-            params.push(level);
-            conditions.push(`level = $${params.length}`);
-        }
-        if (module) {
-            params.push(module);
-            conditions.push(`module = $${params.length}`);
-        }
-        if (conditions.length > 0) {
-            query += ' WHERE ' + conditions.join(' AND ');
-        }
-        query += ' ORDER BY submission_time DESC';
-
-        const dbClient = await ensureConnection();
-        const result = await dbClient.query(query, params);
-
-        res.json({
-            success: true,
-            submissions: result.rows,
-            count: result.rows.length
-        });
-    } catch (error) {
-        console.error('Failed to fetch Cambridge submissions:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to fetch submissions',
+            message: 'Failed to get AI suggestion',
             error: error.message
         });
     }
@@ -513,10 +443,10 @@ async function startServer() {
         console.log('🚀 Starting local database server...');
 
         // Initialize database connection
-        await createDatabaseConnection();
+        await db.createConnection();
 
         // Start server
-        app.listen(PORT, () => {
+        app.listen(PORT, async () => {
             console.log(`
 🎉 Local Database Server running!
 
@@ -530,6 +460,29 @@ async function startServer() {
 To test manually:
 curl http://localhost:${PORT}/test
             `);
+
+            // Auto-launch browser
+            console.log('🚀 Launching IELTS Test System...');
+            try {
+                await open(`http://localhost:${PORT}/launcher.html`, {
+                    app: {
+                        name: open.apps.chrome,
+                        arguments: ['--new-window', '--start-fullscreen', '--disable-web-security', '--disable-features=VizDisplayCompositor']
+                    }
+                });
+            } catch (e) {
+                // Fallback to Edge if Chrome fails
+                try {
+                    await open(`http://localhost:${PORT}/launcher.html`, {
+                        app: {
+                            name: open.apps.edge,
+                            arguments: ['--new-window', '--start-fullscreen']
+                        }
+                    });
+                } catch (e2) {
+                    console.log('⚠️ Could not auto-launch browser. Please open http://localhost:3002/launcher.html manually.');
+                }
+            }
         });
 
     } catch (error) {
@@ -552,13 +505,7 @@ curl http://localhost:${PORT}/test
 // Handle shutdown
 process.on('SIGINT', async () => {
     console.log('\n🛑 Shutting down server...');
-    if (client) {
-        try {
-            await client.end();
-        } catch (e) {
-            // Ignore errors during shutdown
-        }
-    }
+    await db.shutdown();
     process.exit(0);
 });
 

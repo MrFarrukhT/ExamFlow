@@ -860,7 +860,7 @@
                 </div>
                 <div class="form-group">
                     <label for="password">Password:</label>
-                    <input type="password" id="password" required value="Adm!n#2025$SecureP@ss">
+                    <input type="password" id="password" required>
                 </div>
                 <button type="submit" class="btn" id="loginBtn">Login</button>
                 <div class="error-message" id="errorMessage"></div>
@@ -933,6 +933,7 @@
                     <button class="btn" onclick="toggleDateGroupView()" id="dateGroupToggle">📅 View by Date</button>
                     <button class="btn btn-success" onclick="filterTodaySubmissions()">📅 Today's Submissions</button>
                     <button class="btn" onclick="window.location.href='cambridge-speaking-evaluations.html'" style="background: #9c27b0;">🎤 Speaking Evaluations</button>
+                    <button class="btn" onclick="window.location.href='cambridge-student-results.html'" style="background: #2196f3;">📊 Student Results</button>
                 </div>
             </div>
 
@@ -1101,7 +1102,7 @@
             }
         }
 
-        function login(event) {
+        async function login(event) {
             event.preventDefault();
 
             const username = document.getElementById('username').value;
@@ -1115,14 +1116,25 @@
             errorMessage.style.display = 'none';
             successMessage.style.display = 'none';
 
-            if (username === 'admin' && password === 'Adm!n#2025$SecureP@ss') {
-                localStorage.setItem('cambridgeAdminToken', 'cambridge-admin-token');
-                authToken = 'cambridge-admin-token';
-                successMessage.textContent = 'Login successful!';
-                successMessage.style.display = 'block';
-                setTimeout(showAdminPanel, 1000);
-            } else {
-                errorMessage.textContent = 'Invalid credentials.';
+            try {
+                const response = await fetch('/admin-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    localStorage.setItem('cambridgeAdminToken', result.token);
+                    authToken = result.token;
+                    successMessage.textContent = 'Login successful!';
+                    successMessage.style.display = 'block';
+                    setTimeout(showAdminPanel, 1000);
+                } else {
+                    errorMessage.textContent = 'Invalid credentials.';
+                    errorMessage.style.display = 'block';
+                }
+            } catch (err) {
+                errorMessage.textContent = 'Server unavailable. Please ensure the server is running.';
                 errorMessage.style.display = 'block';
             }
 
@@ -1588,7 +1600,7 @@
             return `${minutes}m`;
         }
 
-        function openAnswerComparison(submissionId) {
+        async function openAnswerComparison(submissionId) {
             const submission = currentSubmissions.find(s => s.id == submissionId);
             if (!submission) {
                 alert('Submission not found');
@@ -1598,32 +1610,323 @@
             const level = submission.level;
             const skill = submission.skill;
             const mockTest = submission.mock_test || '1';
-            
+
             // If it's a speaking test, redirect to the speaking evaluations page
             if (skill === 'speaking') {
                 window.location.href = 'cambridge-speaking-evaluations.html';
                 return;
             }
-            
-            // Load correct answers from the structure: correctAnswers[level_skill_mock]
-            const answerKey = `${level}_${skill}_${mockTest}`;
-            const correctAnswersForTest = correctAnswers[answerKey] || {};
-            
+
             const studentAnswers = submission.answers || {};
 
-            document.getElementById('modalTitle').textContent =
-                `${submission.student_name} (${submission.student_id}) - ${level} ${formatSkillName(skill)} Mock ${mockTest}`;
+            // Detect if this submission contains mixed skills (e.g., both reading-writing and listening)
+            const hasMixedSkills = detectMixedSkills(studentAnswers);
 
-            let modalContent = '';
+            if (hasMixedSkills) {
+                // Handle A1-Movers and A2-Key which have combined Reading&Writing + Listening
+                const readingWritingAnswers = filterAnswersByPrefix(studentAnswers, 'reading-writing_');
+                const listeningAnswers = filterAnswersByPrefix(studentAnswers, 'listening_');
 
-            if (skill === 'writing') {
-                modalContent = generateWritingComparison(studentAnswers, correctAnswersForTest, submission);
+                // Load answer keys for both skills
+                const rwAnswerKey = `${level}_reading-writing_${mockTest}`;
+                const listeningAnswerKey = `${level}_listening_${mockTest}`;
+
+                // Auto-load correct answers if not already loaded
+                if (!correctAnswers[rwAnswerKey] || Object.keys(correctAnswers[rwAnswerKey]).length === 0) {
+                    await fetchCorrectAnswersForSkill(level, 'reading-writing', mockTest);
+                }
+                if (!correctAnswers[listeningAnswerKey] || Object.keys(correctAnswers[listeningAnswerKey]).length === 0) {
+                    await fetchCorrectAnswersForSkill(level, 'listening', mockTest);
+                }
+
+                const rwCorrectAnswers = correctAnswers[rwAnswerKey] || {};
+                const listeningCorrectAnswers = correctAnswers[listeningAnswerKey] || {};
+
+                document.getElementById('modalTitle').textContent =
+                    `${submission.student_name} (${submission.student_id}) - ${level} R&W Mock ${mockTest}`;
+
+                const modalContent = generateMixedSkillsComparison(
+                    readingWritingAnswers,
+                    listeningAnswers,
+                    rwCorrectAnswers,
+                    listeningCorrectAnswers,
+                    submission
+                );
+
+                document.getElementById('modalContent').innerHTML = modalContent;
             } else {
-                modalContent = generateAnswerComparison(studentAnswers, correctAnswersForTest, submission);
-            }
+                // Standard single-skill submission
+                const answerKey = `${level}_${skill}_${mockTest}`;
 
-            document.getElementById('modalContent').innerHTML = modalContent;
+                // Auto-load correct answers if not already loaded
+                if (!correctAnswers[answerKey] || Object.keys(correctAnswers[answerKey]).length === 0) {
+                    await fetchCorrectAnswersForSkill(level, skill, mockTest);
+                }
+
+                const correctAnswersForTest = correctAnswers[answerKey] || {};
+                
+                document.getElementById('modalTitle').textContent =
+                    `${submission.student_name} (${submission.student_id}) - ${level} ${formatSkillName(skill)} Mock ${mockTest}`;
+
+                let modalContent = '';
+
+                // Filter student answers to only show relevant answers for this skill type
+                const filteredStudentAnswers = filterAnswersBySkill(studentAnswers, skill);
+
+                if (skill === 'writing') {
+                    modalContent = generateWritingComparison(filteredStudentAnswers, correctAnswersForTest, submission);
+                } else {
+                    modalContent = generateAnswerComparison(filteredStudentAnswers, correctAnswersForTest, submission);
+                }
+
+                document.getElementById('modalContent').innerHTML = modalContent;
+            }
+            
             document.getElementById('answerModal').style.display = 'block';
+        }
+        
+        // Helper function to detect if submission has mixed skills
+        function detectMixedSkills(answers) {
+            const keys = Object.keys(answers);
+            const hasReadingWriting = keys.some(k => k.startsWith('reading-writing_'));
+            const hasListening = keys.some(k => k.startsWith('listening_'));
+            return hasReadingWriting && hasListening;
+        }
+        
+        // Helper function to filter answers by prefix
+        function filterAnswersByPrefix(answers, prefix) {
+            const filtered = {};
+            Object.keys(answers).forEach(key => {
+                if (key.startsWith(prefix)) {
+                    filtered[key] = answers[key];
+                }
+            });
+            return filtered;
+        }
+
+        // Filter student answers by skill type for single-skill view
+        function filterAnswersBySkill(answers, skill) {
+            const filtered = {};
+            Object.keys(answers).forEach(key => {
+                const keyLower = key.toLowerCase();
+
+                if (skill === 'listening') {
+                    // Only include L-prefixed or listening_ prefixed answers
+                    if (/^l\d+/i.test(key) || keyLower.startsWith('listening_')) {
+                        filtered[key] = answers[key];
+                    }
+                } else if (skill === 'writing') {
+                    // Only include writing_ prefixed answers
+                    if (keyLower.startsWith('writing_')) {
+                        filtered[key] = answers[key];
+                    }
+                } else if (skill === 'reading' || skill === 'reading-writing') {
+                    // Only include q-prefixed, reading_ prefixed, or plain number answers
+                    // Exclude listening and writing answers
+                    if (!keyLower.startsWith('listening_') &&
+                        !keyLower.startsWith('writing_') &&
+                        !/^l\d+/i.test(key)) {
+                        filtered[key] = answers[key];
+                    }
+                } else {
+                    // For any other skill, include all answers
+                    filtered[key] = answers[key];
+                }
+            });
+            return filtered;
+        }
+
+        // Helper function to fetch correct answers for a specific skill from the API
+        async function fetchCorrectAnswersForSkill(level, skill, mock) {
+            try {
+                console.log(`Auto-loading answers for ${level} ${skill} Mock ${mock}...`);
+                const response = await fetch(`${API_BASE}/cambridge-answers?level=${encodeURIComponent(level)}&skill=${skill}&mock=${mock}`);
+                const data = await response.json();
+
+                if (data.success && data.answers && Object.keys(data.answers).length > 0) {
+                    const key = `${level}_${skill}_${mock}`;
+                    correctAnswers[key] = data.answers;
+                    console.log(`Loaded ${Object.keys(data.answers).length} answers for ${key}`);
+                } else {
+                    console.log(`No answers found for ${level} ${skill} Mock ${mock}`);
+                }
+            } catch (error) {
+                console.error(`Error loading answers for ${level} ${skill} Mock ${mock}:`, error);
+            }
+        }
+
+        // Generate comparison for mixed skills (Reading&Writing + Listening)
+        function generateMixedSkillsComparison(rwAnswers, listeningAnswers, rwCorrectAnswers, listeningCorrectAnswers, submission) {
+            // Generate comparison for Reading & Writing section
+            const rwComparison = generateSingleSkillSection(
+                rwAnswers, 
+                rwCorrectAnswers, 
+                'Reading & Writing',
+                'reading-writing'
+            );
+            
+            // Generate comparison for Listening section
+            const listeningComparison = generateSingleSkillSection(
+                listeningAnswers, 
+                listeningCorrectAnswers, 
+                'Listening',
+                'listening'
+            );
+            
+            // Calculate combined score
+            const totalCorrect = rwComparison.correctCount + listeningComparison.correctCount;
+            const totalQuestions = rwComparison.totalQuestions + listeningComparison.totalQuestions;
+            const overallPercentage = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
+            
+            return `
+                <div class="answer-comparison">
+                    <div style="grid-column: 1 / -1;">
+                        <div class="score-section">
+                            <h3>Overall Scoring</h3>
+                            <p><strong>Total Score:</strong> ${totalCorrect}/${totalQuestions} correct answers (${overallPercentage}%)</p>
+                            <p style="margin-top: 10px;">
+                                <strong>Reading & Writing:</strong> ${rwComparison.correctCount}/${rwComparison.totalQuestions} (${rwComparison.percentage}%) &nbsp;|&nbsp;
+                                <strong>Listening:</strong> ${listeningComparison.correctCount}/${listeningComparison.totalQuestions} (${listeningComparison.percentage}%)
+                            </p>
+                            <div class="score-input">
+                                <label><strong>Final Score (%):</strong></label>
+                                <input type="number" id="finalScore" min="0" max="100" value="${submission.score || overallPercentage}" />
+                                <label><strong>Grade:</strong></label>
+                                <input type="text" id="gradeInput" value="${submission.grade || ''}" placeholder="e.g. A, B, C" />
+                                <button class="btn btn-success" onclick="saveScore('${submission.id}')">Save Score</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="grid-column: 1 / -1; margin-top: 20px;">
+                        <h3 style="background: linear-gradient(135deg, #ff9800, #f57c00); color: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            📝 Reading & Writing Section (${rwComparison.correctCount}/${rwComparison.totalQuestions} correct)
+                        </h3>
+                        <div class="answers-content">
+                            ${rwComparison.rows}
+                        </div>
+                    </div>
+                    
+                    <div style="grid-column: 1 / -1; margin-top: 30px;">
+                        <h3 style="background: linear-gradient(135deg, #4caf50, #388e3c); color: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            🎧 Listening Section (${listeningComparison.correctCount}/${listeningComparison.totalQuestions} correct)
+                        </h3>
+                        <div class="answers-content">
+                            ${listeningComparison.rows}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Helper function to generate a single skill section
+        function generateSingleSkillSection(studentAnswers, correctAnswers, sectionName, prefix) {
+            let correctCount = 0;
+            let totalQuestions = 0;
+            const comparisonRows = [];
+            
+            // Normalize question keys
+            function normalizeQuestionKey(key) {
+                // Remove skill prefixes (listening_, reading-writing_, etc.)
+                let normalized = key.replace(/^(listening_|reading-writing_|reading_|writing_)/i, '');
+                
+                // Keep L-prefix format (L6, L7, L8, etc.) as-is for listening
+                // This matches how listening tests save their answers
+                
+                return normalized;
+            }
+            
+            // Check if answer is correct
+            function isAnswerCorrect(studentAnswer, correctAnswer) {
+                if (!studentAnswer || !correctAnswer || studentAnswer === 'No Answer' || correctAnswer === 'N/A') {
+                    return false;
+                }
+                
+                const normalizeAnswer = (answer) => {
+                    return answer.toString().toLowerCase().trim()
+                        .replace(/\([^)]*\)/g, '')
+                        .trim();
+                };
+                
+                const normalizedStudent = normalizeAnswer(studentAnswer);
+                
+                if (Array.isArray(correctAnswer)) {
+                    return correctAnswer.some(ans => {
+                        const normalizedCorrect = normalizeAnswer(ans);
+                        return normalizedStudent === normalizedCorrect;
+                    });
+                } else {
+                    const normalizedCorrect = normalizeAnswer(correctAnswer);
+                    return normalizedStudent === normalizedCorrect;
+                }
+            }
+            
+            // Normalize student answers
+            const normalizedStudentAnswers = {};
+            const normalizedCorrectAnswers = {};
+            const originalKeys = {};
+            
+            Object.keys(studentAnswers).forEach(key => {
+                const normalized = normalizeQuestionKey(key);
+                normalizedStudentAnswers[normalized] = studentAnswers[key];
+                if (!originalKeys[normalized]) {
+                    originalKeys[normalized] = key;
+                }
+            });
+            
+            Object.keys(correctAnswers).forEach(key => {
+                const normalized = normalizeQuestionKey(key);
+                normalizedCorrectAnswers[normalized] = correctAnswers[key];
+                if (!originalKeys[normalized]) {
+                    originalKeys[normalized] = key;
+                }
+            });
+            
+            // Get all unique question keys and sort
+            const allNormalizedKeys = [...new Set([
+                ...Object.keys(normalizedStudentAnswers),
+                ...Object.keys(normalizedCorrectAnswers)
+            ])].sort((a, b) => {
+                const numA = parseInt(a.replace(/\D/g, '')) || 0;
+                const numB = parseInt(b.replace(/\D/g, '')) || 0;
+                return numA - numB;
+            });
+            
+            // Generate comparison rows
+            for (const normalizedKey of allNormalizedKeys) {
+                const studentAnswer = normalizedStudentAnswers[normalizedKey] || 'No Answer';
+                const correctAnswer = normalizedCorrectAnswers[normalizedKey] || 'N/A';
+                const displayKey = originalKeys[normalizedKey] || normalizedKey;
+                
+                let isCorrect = false;
+                if (correctAnswer !== 'N/A' && studentAnswer !== 'No Answer') {
+                    totalQuestions++;
+                    isCorrect = isAnswerCorrect(studentAnswer, correctAnswer);
+                    if (isCorrect) correctCount++;
+                }
+                
+                const displayCorrect = Array.isArray(correctAnswer) ? correctAnswer.join(' / ') : correctAnswer;
+                const rowClass = correctAnswer === 'N/A' ? '' : (isCorrect ? 'correct-match' : 'incorrect-match');
+                
+                comparisonRows.push(`
+                    <div class="answer-row ${rowClass}">
+                        <div class="question-id">${displayKey}:</div>
+                        <div style="display: flex; gap: 20px; flex: 1;">
+                            <div style="flex: 1;"><strong>Student:</strong> ${studentAnswer}</div>
+                            <div style="flex: 1;"><strong>Correct:</strong> ${displayCorrect}</div>
+                        </div>
+                    </div>
+                `);
+            }
+            
+            const percentage = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
+            
+            return {
+                correctCount,
+                totalQuestions,
+                percentage,
+                rows: comparisonRows.join('')
+            };
         }
 
         function generateAnswerComparison(studentAnswers, correctAnswers, submission) {
@@ -1764,8 +2067,53 @@
         }
 
         function generateWritingComparison(studentAnswers, correctAnswers, submission) {
-            const writingText = studentAnswers.writing || studentAnswers.text || 'No answer provided';
-            const wordCount = typeof writingText === 'string' ? writingText.split(/\s+/).filter(word => word.length > 0).length : 0;
+            // Collect all writing responses from various possible key formats
+            const writingParts = [];
+            let totalWordCount = 0;
+
+            // Sort keys to display in order
+            const sortedKeys = Object.keys(studentAnswers).sort((a, b) => {
+                const numA = parseInt(a.replace(/\D/g, '')) || 0;
+                const numB = parseInt(b.replace(/\D/g, '')) || 0;
+                return numA - numB;
+            });
+
+            sortedKeys.forEach(key => {
+                const value = studentAnswers[key];
+                if (value && typeof value === 'string' && value.trim()) {
+                    const wordCount = value.split(/\s+/).filter(word => word.length > 0).length;
+                    totalWordCount += wordCount;
+
+                    // Format the key for display
+                    let displayKey = key;
+                    if (key.startsWith('writing_')) {
+                        displayKey = 'Task ' + key.replace('writing_', '');
+                    } else if (/^\d+$/.test(key)) {
+                        displayKey = 'Task ' + key;
+                    }
+
+                    writingParts.push({
+                        key: displayKey,
+                        text: value,
+                        wordCount: wordCount
+                    });
+                }
+            });
+
+            // Generate HTML for each writing part
+            let writingHTML = '';
+            if (writingParts.length === 0) {
+                writingHTML = '<div style="color: #666; font-style: italic;">No writing answers provided</div>';
+            } else {
+                writingParts.forEach(part => {
+                    writingHTML += `
+                        <div style="margin-bottom: 20px; padding: 15px; background: #f9f9f9; border-radius: 8px; border-left: 4px solid #7b1fa2;">
+                            <div style="font-weight: bold; color: #7b1fa2; margin-bottom: 10px;">${part.key} (${part.wordCount} words)</div>
+                            <div style="white-space: pre-wrap; line-height: 1.6; font-family: 'Times New Roman', serif; font-size: 14px;">${part.text}</div>
+                        </div>
+                    `;
+                });
+            }
 
             return `
                 <div style="display: grid; gap: 20px;">
@@ -1782,10 +2130,10 @@
 
                     <div class="student-answers">
                         <div class="answers-header">
-                            Student Writing - ${wordCount} words
+                            Student Writing - Total: ${totalWordCount} words (${writingParts.length} task${writingParts.length !== 1 ? 's' : ''})
                         </div>
                         <div class="answers-content">
-                            <div style="white-space: pre-wrap; line-height: 1.6; font-family: 'Times New Roman', serif; font-size: 14px;">${writingText}</div>
+                            ${writingHTML}
                         </div>
                     </div>
                 </div>
@@ -1902,7 +2250,7 @@
             document.getElementById('adminContent').style.display = 'none';
             document.getElementById('logoutBtn').style.display = 'none';
             document.getElementById('username').value = 'admin';
-            document.getElementById('password').value = 'Adm!n#2025$SecureP@ss';
+            document.getElementById('password').value = '';
         }
 
         // Close modal when clicking outside
@@ -1950,9 +2298,12 @@
                 
                 if (data.success && data.answers && Object.keys(data.answers).length > 0) {
                     // Fill the input fields
+                    // Use L-prefix for listening skills, q-prefix for others
+                    const useLPrefix = skill === 'listening';
+                    
                     for (let i = 1; i <= 40; i++) {
                         const input = document.getElementById(`answer_${i}`);
-                        const answerKey = `q${i}`;
+                        const answerKey = useLPrefix ? `L${i}` : `q${i}`;
                         
                         if (input && data.answers[answerKey]) {
                             const answerValue = Array.isArray(data.answers[answerKey]) ? 
@@ -1983,10 +2334,13 @@
             const answers = {};
             let filledCount = 0;
             
+            // Use L-prefix for listening skills, q-prefix for others
+            const useLPrefix = skill === 'listening';
+            
             for (let i = 1; i <= 40; i++) {
                 const input = document.getElementById(`answer_${i}`);
                 if (input && input.value.trim()) {
-                    const answerKey = `q${i}`;
+                    const answerKey = useLPrefix ? `L${i}` : `q${i}`;
                     let answerValue = input.value.trim();
                     
                     // Handle multiple acceptable answers (comma-separated)

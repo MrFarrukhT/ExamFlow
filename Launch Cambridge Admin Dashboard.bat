@@ -47,7 +47,7 @@ if exist "C:\Program Files\Google\Chrome\Application\chrome.exe" (
 
 echo.
 echo  Cambridge Admin dashboard opened successfully!
-echo  Login credentials: admin / Adm!n#2025$SecureP@ss
+echo  Login with your admin credentials
 echo.
 echo  Server running on: http://localhost:3003
 echo  Dashboard: cambridge-admin-dashboard.html

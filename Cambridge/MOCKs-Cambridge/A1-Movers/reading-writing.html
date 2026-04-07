@@ -44,22 +44,22 @@
     
     // Initialize storage
     const module = 'reading-writing';
-    const moduleStatus = localStorage.getItem(`${module}Status`);
-    const isNewTest = !localStorage.getItem(`${module}StartTime`) || moduleStatus !== 'in-progress';
-    
+    const moduleStatus = localStorage.getItem(`cambridge-${module}Status`);
+    const isNewTest = !localStorage.getItem(`cambridge-${module}StartTime`) || moduleStatus !== 'in-progress';
+
     if (isNewTest) {
       // Starting fresh test - clear everything
       CambridgeTimer.clearTimerState(module);
-      localStorage.removeItem(`${module}StartTime`);
-      localStorage.removeItem(`${module}EndTime`);
+      localStorage.removeItem(`cambridge-${module}StartTime`);
+      localStorage.removeItem(`cambridge-${module}EndTime`);
       // Set new start time
-      localStorage.setItem(`${module}StartTime`, new Date().toISOString());
+      localStorage.setItem(`cambridge-${module}StartTime`, new Date().toISOString());
     }
-    
-    localStorage.setItem(`${module}Status`, 'in-progress');
-    
-    if (!localStorage.getItem('reading-writingAnswers')) {
-      localStorage.setItem('reading-writingAnswers', JSON.stringify({}));
+
+    localStorage.setItem(`cambridge-${module}Status`, 'in-progress');
+
+    if (!localStorage.getItem('cambridge-reading-writingAnswers')) {
+      localStorage.setItem('cambridge-reading-writingAnswers', JSON.stringify({}));
     }
 
     // Initialize timer for THIS test only

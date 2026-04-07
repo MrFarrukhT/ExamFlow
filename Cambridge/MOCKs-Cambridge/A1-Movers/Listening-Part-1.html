@@ -546,20 +546,40 @@
 
         function saveLines() {
             localStorage.setItem('movers_listening_part1', JSON.stringify(lines));
-            const simpleAnswers = {};
-            lines.forEach(l => {
-                simpleAnswers[l.nameId] = l.zoneId;
+            
+            // Map zones to question numbers and get name text
+            // Note: p5 (Sally) is the example and commented out in hitZones
+            // So we have p1, p2, p3, p4, p6, p7, p8 available
+            const zoneToQuestion = {
+                'p1': 'L1',
+                'p2': 'L2',
+                'p3': 'L3',
+                'p4': 'L4',
+                'p6': 'L5',  // p5 is the example (Sally), so p6 is question 5
+                'p7': 'L6',  // Extended zones if needed
+                'p8': 'L7'   // Extended zones if needed
+            };
+            
+            // Get existing listening answers
+            let allAnswers = JSON.parse(localStorage.getItem('cambridge-listeningAnswers') || '{}');
+            
+            // Clear previous Part 1 answers (L1-L7, in case all zones are used)
+            ['L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7'].forEach(key => delete allAnswers[key]);
+            
+            // Map each line to proper format: zoneId -> L1-L5, nameId -> actual name text
+            lines.forEach(line => {
+                const questionKey = zoneToQuestion[line.zoneId];
+                if (questionKey) {
+                    // Find the name text from the nameId
+                    const nameData = names.find(n => n.id === line.nameId);
+                    if (nameData) {
+                        allAnswers[questionKey] = nameData.text;
+                    }
+                }
             });
             
-            // Merge with existing answers for sync
-            let allAnswers = JSON.parse(localStorage.getItem('listeningAnswers') || '{}');
-            
-            // Map our lines to Q1-Q5 (simplified)
-            // In a real scenario, we'd map specific Name IDs to Question Numbers
-            // For this demo, we'll just count how many lines as 'answered' questions 1-X
-            // Or better, we just save the raw data and let backend handle grading.
-            
-            localStorage.setItem('listeningAnswers', JSON.stringify(allAnswers));
+            localStorage.setItem('cambridge-listeningAnswers', JSON.stringify(allAnswers));
+            console.log('✅ Saved Part 1 listening answers:', allAnswers);
             updateNavigationStatus();
         }
 
@@ -677,8 +697,8 @@
                          console.error('Error submitting to database:', error);
                      }
                      
-                     localStorage.setItem('listeningStatus', 'completed');
-                     localStorage.setItem('listeningEndTime', new Date().toISOString());
+                     localStorage.setItem('cambridge-listeningStatus', 'completed');
+                     localStorage.setItem('cambridge-listeningEndTime', new Date().toISOString());
                      localStorage.removeItem('listeningTestStarted');
                      if (window.parent) {
                          try {

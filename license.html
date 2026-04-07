@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activation Required - Innovative Centre</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .container {
+            background-color: var(--surface);
+            padding: 2.5rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 1rem;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .machine-id-box {
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .code {
+            font-family: 'Courier New', monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--primary);
+            user-select: all;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text);
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 0.875rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .status {
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            min-height: 1.25rem;
+        }
+
+        .error { color: #ef4444; }
+        .success { color: #22c55e; }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+        
+        .copy-btn:hover { color: var(--text); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🔒</div>
+        <h1>Activation Required</h1>
+        <p>This copy of the Innovative Centre Test System is locked to this computer. Please provide the Machine ID below to your administrator to receive an activation key.</p>
+
+        <div class="machine-id-box">
+            <span class="label">Your Machine ID</span>
+            <div class="code" id="machineId">Loading...</div>
+            <button class="copy-btn" onclick="copyMachineId()" title="Copy to clipboard">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+        </div>
+
+        <div class="input-group">
+            <span class="label">Enter Activation Key</span>
+            <input type="text" id="licenseKey" placeholder="XXXX-XXXX-XXXX-XXXX">
+        </div>
+
+        <button onclick="activate()">Activate System</button>
+        <div class="status" id="status"></div>
+    </div>
+
+    <script>
+        // Fetch Machine ID on load
+        fetch('/api/machine-id')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('machineId').textContent = data.machineId;
+            })
+            .catch(err => {
+                document.getElementById('machineId').textContent = 'Error loading ID';
+            });
+
+        function copyMachineId() {
+            const id = document.getElementById('machineId').textContent;
+            navigator.clipboard.writeText(id);
+            showStatus('Machine ID copied!', 'success');
+        }
+
+        async function activate() {
+            const key = document.getElementById('licenseKey').value.trim();
+            const btn = document.querySelector('button');
+            const status = document.getElementById('status');
+
+            if (!key) {
+                showStatus('Please enter a license key', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Verifying...';
+            status.textContent = '';
+
+            try {
+                const res = await fetch('/api/activate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    showStatus('Activation successful! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/launcher.html';
+                    }, 1500);
+                } else {
+                    showStatus('Invalid license key', 'error');
+                    btn.disabled = false;
+                    btn.textContent = 'Activate System';
+                }
+            } catch (error) {
+                showStatus('Connection error', 'error');
+                btn.disabled = false;
+                btn.textContent = 'Activate System';
+            }
+        }
+
+        function showStatus(msg, type) {
+            const el = document.getElementById('status');
+            el.textContent = msg;
+            el.className = 'status ' + type;
+        }
+    </script>
+</body>
+</html>

@@ -10,8 +10,6 @@ class CambridgeHighlightManager {
     }
     
     init() {
-        console.log('🎨 Initializing Cambridge Highlight Manager for:', this.currentPart);
-        
         // Wait for page to fully load
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
@@ -39,7 +37,6 @@ class CambridgeHighlightManager {
             this.saveHighlights();
         }, 5000);
         
-        console.log('✅ Highlight Manager initialized');
     }
     
     getCurrentPart() {
@@ -96,7 +93,7 @@ class CambridgeHighlightManager {
                     }
                 });
             } catch (e) {
-                console.warn(`Could not find elements with selector: ${selector}`);
+                // Could not find elements with selector
             }
         });
         
@@ -125,9 +122,6 @@ class CambridgeHighlightManager {
         allHighlights[this.currentPart] = highlights;
         localStorage.setItem(this.storageKey, JSON.stringify(allHighlights));
         
-        if (highlights.length > 0) {
-            console.log(`💾 Saved ${highlights.length} highlights for ${this.currentPart}`, highlights);
-        }
     }
     
     getElementRange(element) {
@@ -148,11 +142,8 @@ class CambridgeHighlightManager {
         const highlights = allHighlights[this.currentPart] || [];
         
         if (highlights.length === 0) {
-            console.log('No highlights to restore for', this.currentPart);
             return;
         }
-        
-        console.log(`Attempting to restore ${highlights.length} highlights for ${this.currentPart}`, highlights);
         
         let restoredCount = 0;
         
@@ -201,27 +192,18 @@ class CambridgeHighlightManager {
                         }
                         
                         restoredCount++;
-                        console.log(`✅ Restored highlight ${index + 1}: "${highlightText.substring(0, 30)}..."`);
                     } else {
-                        console.warn(`Text mismatch for highlight ${index + 1}:`, {
-                            expected: highlightText.substring(0, 50),
-                            found: elementText.substring(0, 50)
-                        });
+                        // Text mismatch for highlight
                     }
-                } else {
-                    console.warn(`Could not find element for highlight ${index + 1}:`, highlight.xpath);
                 }
             } catch (e) {
-                console.warn(`Error restoring highlight ${index + 1}:`, e);
+                // Error restoring highlight
             }
         });
         
-        console.log(`✅ Successfully restored ${restoredCount}/${highlights.length} highlights for ${this.currentPart}`);
     }
     
     setupHighlightListeners() {
-        console.log('🎨 Setting up highlight listeners');
-        
         // Listen for text selection and highlighting
         document.addEventListener('mouseup', () => {
             setTimeout(() => {
@@ -244,7 +226,6 @@ class CambridgeHighlightManager {
                             node.tagName === 'MARK'
                         )) {
                             shouldSave = true;
-                            console.log('🎨 New highlight detected:', node);
                         }
                     }
                 });
@@ -265,12 +246,10 @@ class CambridgeHighlightManager {
         
         // Listen for Hypothesis annotation events
         document.addEventListener('hypothesis:annotationCreated', () => {
-            console.log('📝 Hypothesis annotation created event');
             setTimeout(() => this.saveHighlights(), 500);
         });
         
         document.addEventListener('hypothesis:annotationUpdated', () => {
-            console.log('📝 Hypothesis annotation updated event');
             setTimeout(() => this.saveHighlights(), 500);
         });
         
@@ -278,12 +257,10 @@ class CambridgeHighlightManager {
         document.addEventListener('click', (e) => {
             const target = e.target.closest('.annotator-adder-actions__button, #highlight-adder-button, button[aria-label*="highlight" i]');
             if (target) {
-                console.log('🖱️ Highlight button clicked');
                 setTimeout(() => this.saveHighlights(), 500);
             }
         });
         
-        console.log('✅ Highlight listeners attached');
     }
     
     getAllHighlights() {
@@ -334,7 +311,6 @@ class CambridgeHighlightManager {
                 null
             ).singleNodeValue;
         } catch (e) {
-            console.warn('Error evaluating XPath:', xpath, e);
             return null;
         }
     }
@@ -350,12 +326,10 @@ class CambridgeHighlightManager {
             el.classList.remove('highlighted');
         });
         
-        console.log(`🗑️ Cleared highlights for ${this.currentPart}`);
     }
-    
+
     clearAllHighlights() {
         localStorage.removeItem(this.storageKey);
-        console.log('🗑️ Cleared all highlights for all parts');
     }
 }
 

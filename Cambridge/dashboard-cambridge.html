@@ -11,6 +11,7 @@
     <!-- Load distraction-free mode first -->
     <script src="../assets/js/distraction-free.js"></script>
     <script src="../assets/js/cambridge/cambridge-answer-manager.js"></script>
+    <script src="../assets/js/cambridge/cambridge-timer.js"></script>
 
     <div class="dashboard-wrapper">
         <!-- Header Section -->
@@ -108,8 +109,28 @@
     </div>
 
     <script>
+        // IMMEDIATELY destroy any timers from test pages when returning to dashboard
+        // This runs synchronously as soon as the script loads, before waiting for DOMContentLoaded
+        if (typeof CambridgeTimer !== 'undefined') {
+            CambridgeTimer.destroyAllTimers();
+        }
+
+        // Also clean up any timer UI elements that might be orphaned
+        (function() {
+            const timerContainer = document.getElementById('cambridge-timer-container');
+            if (timerContainer) timerContainer.remove();
+            const timerStyles = document.getElementById('cambridge-timer-styles');
+            if (timerStyles) timerStyles.remove();
+            const timesUpModal = document.querySelector('.times-up-modal');
+            if (timesUpModal) timesUpModal.remove();
+        })();
+
         // Load student information and test state
         document.addEventListener('DOMContentLoaded', function() {
+            // Double-check timer cleanup after DOM is ready
+            if (typeof CambridgeTimer !== 'undefined') {
+                CambridgeTimer.destroyAllTimers();
+            }
             loadStudentInfo();
             loadLevelState();
         });
@@ -165,11 +186,11 @@
         function changeLevelSelection() {
             // Confirm level change
             if (confirm('Changing level will reset your current progress. Are you sure?')) {
-                // Clear level-specific progress
+                // Clear level-specific progress (use cambridge- prefix)
                 const modules = ['listening', 'reading', 'writing', 'reading-writing', 'speaking'];
                 modules.forEach(module => {
-                    localStorage.removeItem(`${module}Status`);
-                    localStorage.removeItem(`${module}StartTime`);
+                    localStorage.removeItem(`cambridge-${module}Status`);
+                    localStorage.removeItem(`cambridge-${module}StartTime`);
                 });
 
                 // Show level selection
@@ -210,17 +231,17 @@
 
                 // Add event listeners
                 document.getElementById('readingWritingButton').addEventListener('click', function() {
-                    if (localStorage.getItem('reading-writingStatus') === 'completed') return;
+                    if (localStorage.getItem('cambridge-reading-writingStatus') === 'completed') return;
                     startModule('reading-writing');
                 });
 
                 document.getElementById('listeningButton').addEventListener('click', function() {
-                    if (localStorage.getItem('listeningStatus') === 'completed') return;
+                    if (localStorage.getItem('cambridge-listeningStatus') === 'completed') return;
                     startModule('listening');
                 });
 
                 document.getElementById('speakingButton').addEventListener('click', function() {
-                    if (localStorage.getItem('speakingStatus') === 'completed') return;
+                    if (localStorage.getItem('cambridge-speakingStatus') === 'completed') return;
                     startModule('speaking');
                 });
             } else {
@@ -257,22 +278,22 @@
 
                 // Add event listeners
                 document.getElementById('readingButton').addEventListener('click', function() {
-                    if (localStorage.getItem('readingStatus') === 'completed') return;
+                    if (localStorage.getItem('cambridge-readingStatus') === 'completed') return;
                     startModule('reading');
                 });
 
                 document.getElementById('writingButton').addEventListener('click', function() {
-                    if (localStorage.getItem('writingStatus') === 'completed') return;
+                    if (localStorage.getItem('cambridge-writingStatus') === 'completed') return;
                     startModule('writing');
                 });
 
                 document.getElementById('listeningButton').addEventListener('click', function() {
-                    if (localStorage.getItem('listeningStatus') === 'completed') return;
+                    if (localStorage.getItem('cambridge-listeningStatus') === 'completed') return;
                     startModule('listening');
                 });
 
                 document.getElementById('speakingButton').addEventListener('click', function() {
-                    if (localStorage.getItem('speakingStatus') === 'completed') return;
+                    if (localStorage.getItem('cambridge-speakingStatus') === 'completed') return;
                     startModule('speaking');
                 });
             }
@@ -285,7 +306,7 @@
                 : ['reading', 'writing', 'listening', 'speaking'];
 
             modules.forEach(module => {
-                const status = localStorage.getItem(`${module}Status`) || 'not-started';
+                const status = localStorage.getItem(`cambridge-${module}Status`) || 'not-started';
                 
                 // Convert module name to camelCase for element IDs (reading-writing -> readingWriting)
                 const moduleId = module.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
@@ -322,13 +343,13 @@
 
         function startModule(module) {
             // Prevent re-entry if already completed
-            if (localStorage.getItem(`${module}Status`) === 'completed') {
+            if (localStorage.getItem(`cambridge-${module}Status`) === 'completed') {
                 return;
             }
-            
+
             const level = localStorage.getItem('cambridgeLevel');
-            localStorage.setItem(`${module}Status`, 'in-progress');
-            localStorage.setItem(`${module}StartTime`, new Date().toISOString());
+            localStorage.setItem(`cambridge-${module}Status`, 'in-progress');
+            localStorage.setItem(`cambridge-${module}StartTime`, new Date().toISOString());
 
             // Get selected mock test
             let selectedMock = localStorage.getItem('selectedCambridgeMock') || '1';

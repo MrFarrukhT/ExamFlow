@@ -707,13 +707,13 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     <div class="question-item">
                         <div class="question-number">30</div>
                         <div class="question-text">On their feet, all the children are wearing</div>
-                        <input type="text" id="q1" class="movers-input">
+                        <input type="text" id="p6_q1" class="movers-input">
                     </div>
 
                     <div class="question-item">
                         <div class="question-number">31</div>
                         <div class="question-text">The cat in the tree is</div>
-                        <input type="text" id="q2" class="movers-input">
+                        <input type="text" id="p6_q2" class="movers-input">
                     </div>
                 </div>
 
@@ -724,13 +724,13 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     <div class="question-item">
                         <div class="question-number">32</div>
                         <div class="question-text">What are the two biggest children doing?</div>
-                        <input type="text" id="q3" class="movers-input">
+                        <input type="text" id="p6_q3" class="movers-input">
                     </div>
 
                     <div class="question-item">
                         <div class="question-number">33</div>
                         <div class="question-text">Where is the snail?</div>
-                        <input type="text" id="q4" class="movers-input">
+                        <input type="text" id="p6_q4" class="movers-input">
                     </div>
                 </div>
 
@@ -739,13 +739,13 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     <p class="group-instruction">Now write two sentences about the picture.</p>
                     
                     <div class="question-item">
-                        <div class="question-number">5</div>
-                        <input type="text" id="q5" class="movers-input full-width-input">
+                        <div class="question-number">34</div>
+                        <input type="text" id="p6_q5" class="movers-input full-width-input">
                     </div>
 
                     <div class="question-item">
-                        <div class="question-number">6</div>
-                        <input type="text" id="q6" class="movers-input full-width-input">
+                        <div class="question-number">35</div>
+                        <input type="text" id="p6_q6" class="movers-input full-width-input">
                     </div>
                 </div>
             </div>
@@ -1075,15 +1075,15 @@ function toggleOptionsMenu() {
                         await window.cambridgeAnswerManager.submitTestToDatabase();
                         console.log('✅ Test submitted');
                     }
-                    localStorage.setItem('reading-writingStatus', 'completed');
-                    localStorage.setItem('reading-writingEndTime', new Date().toISOString());
+                    localStorage.setItem('cambridge-reading-writingStatus', 'completed');
+                    localStorage.setItem('cambridge-reading-writingEndTime', new Date().toISOString());
                     alert('Test submitted successfully!');
                     window.location.href = '../../dashboard-cambridge.html';
                 } catch(error) {
                     console.error('Error:', error);
                     alert('Test marked as completed. Note: Database submission may have failed.');
-                    localStorage.setItem('reading-writingStatus', 'completed');
-                    localStorage.setItem('reading-writingEndTime', new Date().toISOString());
+                    localStorage.setItem('cambridge-reading-writingStatus', 'completed');
+                    localStorage.setItem('cambridge-reading-writingEndTime', new Date().toISOString());
                     window.location.href = '../../dashboard-cambridge.html';
                 }
             }
@@ -1091,6 +1091,41 @@ function toggleOptionsMenu() {
         console.log('✅ Submit handler attached');
     }
 })();
+
+// ===== PART 6 ANSWER SAVING/LOADING =====
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📝 Initializing Part 6 answer saving system');
+    
+    // Get all Part 6 input fields
+    const part6Inputs = document.querySelectorAll('.movers-input');
+    
+    part6Inputs.forEach(input => {
+        // Load saved answer
+        const saved = localStorage.getItem(`movers_rw_${input.id}`);
+        if(saved) {
+            input.value = saved;
+            console.log(`✅ Loaded answer for ${input.id}:`, saved);
+        }
+        
+        // Save on input (real-time)
+        input.addEventListener('input', () => {
+            localStorage.setItem(`movers_rw_${input.id}`, input.value);
+            console.log(`💾 Saved answer for ${input.id}:`, input.value);
+            
+            // Trigger the footer update
+            if (typeof window.consolidateMoversAnswers === 'function') {
+                window.consolidateMoversAnswers();
+            }
+        });
+        
+        // Also save on change (backup)
+        input.addEventListener('change', () => {
+            localStorage.setItem(`movers_rw_${input.id}`, input.value);
+        });
+    });
+    
+    console.log(`✅ Part 6: Initialized ${part6Inputs.length} input fields with auto-save`);
+});
 
 // Word count functionality for writing tasks
 document.addEventListener('DOMContentLoaded', function() {

@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovative Centre - Cambridge Student Results</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0066cc, #0052a3);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header-left h1 {
+            font-size: 2.2em;
+            margin-bottom: 5px;
+        }
+
+        .header-left p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .connection-status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .connected {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .disconnected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .admin-content {
+            padding: 30px;
+        }
+
+        .controls-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            font-size: 0.9em;
+            color: #495057;
+        }
+
+        .control-group input, .control-group select {
+            padding: 10px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .controls-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #0066cc;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #0052a3;
+            transform: translateY(-1px);
+        }
+
+        .btn-success { background: #28a745; }
+        .btn-success:hover { background: #218838; }
+
+        .btn-warning { background: #ffc107; color: #212529; }
+        .btn-warning:hover { background: #e0a800; }
+
+        .btn-danger { background: #dc3545; }
+        .btn-danger:hover { background: #c82333; }
+
+        .btn-info { background: #17a2b8; }
+        .btn-info:hover { background: #138496; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #0066cc, #0052a3);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .results-table th,
+        .results-table td {
+            padding: 12px 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+
+        .results-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .results-table tr:hover {
+            background: #f0f7ff;
+        }
+
+        .results-table td:first-child,
+        .results-table td:nth-child(2) {
+            text-align: left;
+        }
+
+        .level-badge {
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .level-a1 { background: #e3f2fd; color: #1976d2; }
+        .level-a2 { background: #e8f5e9; color: #388e3c; }
+        .level-b1 { background: #fff3e0; color: #f57c00; }
+        .level-b2 { background: #f3e5f5; color: #7b1fa2; }
+
+        .score-cell {
+            font-weight: 600;
+            min-width: 50px;
+        }
+
+        .scale-score {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #0066cc;
+        }
+
+        .cefr-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .cefr-a1 { background: #bbdefb; color: #0d47a1; }
+        .cefr-a2 { background: #c8e6c9; color: #1b5e20; }
+        .cefr-b1 { background: #ffe0b2; color: #e65100; }
+        .cefr-b2 { background: #e1bee7; color: #6a1b9a; }
+        .cefr-c1 { background: #ffccbc; color: #bf360c; }
+
+        .status-passed {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-failed {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .edit-btn {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #138496;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 3% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 95%;
+            max-width: 900px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #0066cc, #0052a3);
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.4em;
+        }
+
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .close:hover {
+            opacity: 1;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.9em;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 10px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #0066cc;
+        }
+
+        .form-group input:disabled {
+            background: #e9ecef;
+            color: #6c757d;
+        }
+
+        .skills-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .skills-section h3 {
+            margin-bottom: 15px;
+            color: #0066cc;
+            font-size: 1.1em;
+        }
+
+        .skill-row {
+            display: grid;
+            grid-template-columns: 120px 1fr 1fr 1fr;
+            gap: 15px;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .skill-row:last-child {
+            border-bottom: none;
+        }
+
+        .skill-name {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .skill-input {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .skill-input input {
+            width: 70px;
+            padding: 8px;
+            border: 2px solid #e9ecef;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .skill-input input:focus {
+            outline: none;
+            border-color: #0066cc;
+        }
+
+        .skill-input span {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .calculated-value {
+            font-weight: bold;
+            color: #0066cc;
+            font-size: 1.1em;
+        }
+
+        .overall-section {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .overall-section h3 {
+            margin-bottom: 15px;
+            color: #0d47a1;
+        }
+
+        .overall-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .overall-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .overall-label {
+            font-size: 0.85em;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .overall-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #0066cc;
+        }
+
+        .overall-value.passed {
+            color: #28a745;
+        }
+
+        .overall-value.failed {
+            color: #dc3545;
+        }
+
+        .modal-footer {
+            padding: 20px 25px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Pagination */
+        .pagination-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            margin-top: 20px;
+        }
+
+        .pagination-info {
+            color: #6c757d;
+        }
+
+        .pagination-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .pagination-buttons button {
+            padding: 8px 15px;
+            font-size: 13px;
+        }
+
+        .pagination-buttons button:disabled {
+            background: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .skill-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .results-table {
+                font-size: 12px;
+            }
+
+            .results-table th,
+            .results-table td {
+                padding: 8px 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <h1>Cambridge Student Results</h1>
+                <p>Manage and view Cambridge exam results with official score calculations</p>
+            </div>
+            <div class="header-right">
+                <span id="connectionStatus" class="connection-status disconnected">Database Offline</span>
+                <a href="cambridge-admin-dashboard.html" class="back-btn">Back to Dashboard</a>
+            </div>
+        </div>
+
+        <div class="admin-content">
+            <!-- Controls Section -->
+            <div class="controls-section">
+                <div class="controls-grid">
+                    <div class="control-group">
+                        <label for="searchStudent">Search Student:</label>
+                        <input type="text" id="searchStudent" placeholder="Name or ID">
+                    </div>
+                    <div class="control-group">
+                        <label for="filterLevel">Filter by Level:</label>
+                        <select id="filterLevel">
+                            <option value="">All Levels</option>
+                            <option value="A1-Movers">A1 Movers</option>
+                            <option value="A2-Key">A2 Key</option>
+                            <option value="B1-Preliminary">B1 Preliminary</option>
+                            <option value="B2-First">B2 First</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="filterMock">Filter by Mock:</label>
+                        <select id="filterMock">
+                            <option value="">All Mocks</option>
+                            <option value="1">Mock 1</option>
+                            <option value="2">Mock 2</option>
+                            <option value="3">Mock 3</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="controls-buttons">
+                    <button class="btn btn-info" onclick="applyFilters()">Search</button>
+                    <button class="btn btn-warning" onclick="clearFilters()">Clear Filters</button>
+                    <button class="btn btn-success" onclick="loadResults()">Refresh</button>
+                    <button class="btn" onclick="openAddModal()">+ Add New Result</button>
+                    <button class="btn" onclick="exportResults()">Export CSV</button>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalResults">0</div>
+                    <div class="stat-label">Total Results</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="passedCount">0</div>
+                    <div class="stat-label">Passed / Scored</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avgScore">0</div>
+                    <div class="stat-label">Average Scale</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #28a745, #218838);">
+                    <div class="stat-value" id="passRate">0%</div>
+                    <div class="stat-label">Pass Rate</div>
+                </div>
+            </div>
+
+            <!-- Results Table -->
+            <div id="resultsContainer">
+                <div class="loading">Loading results...</div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination-controls" id="paginationControls" style="display: none;">
+                <div class="pagination-info" id="paginationInfo">Showing 0-0 of 0</div>
+                <div class="pagination-buttons">
+                    <button class="btn" onclick="goToPage(1)" id="firstBtn">First</button>
+                    <button class="btn" onclick="goToPage(currentPage - 1)" id="prevBtn">Previous</button>
+                    <span style="padding: 8px 15px;">Page <span id="currentPageSpan">1</span> of <span id="totalPagesSpan">1</span></span>
+                    <button class="btn" onclick="goToPage(currentPage + 1)" id="nextBtn">Next</button>
+                    <button class="btn" onclick="goToPage(totalPages)" id="lastBtn">Last</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Student Result</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editId">
+
+                <!-- Student Info -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="studentId">Student ID *</label>
+                        <input type="text" id="studentId" required placeholder="e.g., 5930">
+                    </div>
+                    <div class="form-group">
+                        <label for="studentName">Student Name *</label>
+                        <input type="text" id="studentName" required placeholder="e.g., Boburbek Abduahadov">
+                    </div>
+                    <div class="form-group">
+                        <label for="examLevel">Exam Level *</label>
+                        <select id="examLevel" onchange="updateSkillFields()">
+                            <option value="A1-Movers">A1 Movers</option>
+                            <option value="A2-Key" selected>A2 Key</option>
+                            <option value="B1-Preliminary">B1 Preliminary</option>
+                            <option value="B2-First">B2 First</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="mockTest">Mock Test</label>
+                        <select id="mockTest">
+                            <option value="1">Mock 1</option>
+                            <option value="2">Mock 2</option>
+                            <option value="3">Mock 3</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="skills-section" id="skillsSection">
+                    <h3>Skill Scores (Enter Raw Scores)</h3>
+                    <div id="skillInputs">
+                        <!-- Skill inputs will be generated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Overall Section -->
+                <div class="overall-section">
+                    <h3>Calculated Results</h3>
+                    <div class="overall-grid">
+                        <div class="overall-item">
+                            <div class="overall-label">Overall Scale Score</div>
+                            <div class="overall-value" id="overallScaleDisplay">-</div>
+                        </div>
+                        <div class="overall-item">
+                            <div class="overall-label">CEFR Level</div>
+                            <div class="overall-value" id="cefrLevelDisplay">-</div>
+                        </div>
+                        <div class="overall-item">
+                            <div class="overall-label">Status</div>
+                            <div class="overall-value" id="passStatusDisplay">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-success" onclick="saveResult()">Save Result</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3003';
+        let allResults = [];
+        let filteredResults = [];
+        let currentPage = 1;
+        let itemsPerPage = 15;
+        let totalPages = 1;
+
+        // Cambridge scoring conversion table generator
+        // Based on official cambridge-score.com data
+        // passRaw = the raw score needed to achieve the pass scale score
+        function generateConversionTable(maxRaw, minScale, maxScale, passScale, passRaw) {
+            const table = {};
+
+            for (let i = 0; i <= maxRaw; i++) {
+                if (i <= passRaw) {
+                    // Below/at pass: map 0 to passRaw → minScale to passScale
+                    const ratio = i / passRaw;
+                    table[i] = Math.round(minScale + ratio * (passScale - minScale));
+                } else {
+                    // Above pass: map passRaw to maxRaw → passScale to maxScale
+                    const ratio = (i - passRaw) / (maxRaw - passRaw);
+                    table[i] = Math.round(passScale + ratio * (maxScale - passScale));
+                }
+            }
+            return table;
+        }
+
+        // Cambridge Score Conversion Tables
+        // Based on official data from cambridge-score.com
+        // Format: generateConversionTable(maxRaw, minScale, maxScale, passScale, passRaw)
+        const CONVERSION_TABLES = {
+            'A2-Key': {
+                // A2-Key: scale 100-150, pass at 120
+                // Pass raw scores from cambridge-score.com: Reading 20/30, Writing 18/30, Listening 17/25, Speaking 27/45
+                reading: { max: 30, scale: generateConversionTable(30, 100, 150, 120, 20) },
+                writing: { max: 30, scale: generateConversionTable(30, 100, 150, 120, 18) },
+                listening: { max: 25, scale: generateConversionTable(25, 100, 150, 120, 17) },
+                speaking: { max: 45, scale: generateConversionTable(45, 100, 150, 120, 27) }
+            },
+            'B1-Preliminary': {
+                // B1-Preliminary: scale 120-170, pass at 140
+                // Pass raw scores from cambridge-score.com: Reading 23/32, Writing 24/40, Listening 18/25, Speaking 18/30
+                reading: { max: 32, scale: generateConversionTable(32, 120, 170, 140, 23) },
+                writing: { max: 40, scale: generateConversionTable(40, 120, 170, 140, 24) },
+                listening: { max: 25, scale: generateConversionTable(25, 120, 170, 140, 18) },
+                speaking: { max: 30, scale: generateConversionTable(30, 120, 170, 140, 18) }
+            },
+            'B2-First': {
+                // B2-First: scale 140-190, pass at 160
+                // Pass raw scores from cambridge-score.com: Reading 24/42, Writing 24/40, Listening 18/30, Speaking 36/60, UoE 18/28
+                reading: { max: 42, scale: generateConversionTable(42, 140, 190, 160, 24) },
+                writing: { max: 40, scale: generateConversionTable(40, 140, 190, 160, 24) },
+                listening: { max: 30, scale: generateConversionTable(30, 140, 190, 160, 18) },
+                speaking: { max: 60, scale: generateConversionTable(60, 140, 190, 160, 36) },
+                useOfEnglish: { max: 28, scale: generateConversionTable(28, 140, 190, 160, 18) }
+            },
+            'A1-Movers': {
+                // A1-Movers: scale 100-120, uses shields (1-5), all students achieve at least A1
+                // Approximate pass thresholds (~60-70% for good shield count)
+                readingWriting: { max: 35, scale: generateConversionTable(35, 100, 120, 106, 21) },
+                listening: { max: 25, scale: generateConversionTable(25, 100, 120, 106, 15) },
+                speaking: { max: 15, scale: generateConversionTable(15, 100, 120, 106, 9) }
+            }
+        };
+
+        // Grade boundaries
+        const GRADE_BOUNDARIES = {
+            'A2-Key': {
+                'B1': 140,  // Pass with Distinction
+                'A2-Merit': 133,  // Pass with Merit
+                'A2': 120,  // Pass
+                'A1': 100,  // Below Level
+                minPass: 120
+            },
+            'B1-Preliminary': {
+                'B2': 160,  // Pass with Distinction
+                'B1-Merit': 153,  // Pass with Merit
+                'B1': 140,  // Pass
+                'A2': 120,  // Below Level
+                minPass: 140
+            },
+            'B2-First': {
+                'C1': 180,  // Grade A
+                'B2-Merit': 173,  // Grade B
+                'B2': 160,  // Grade C (Pass)
+                'B1': 140,  // Below Level
+                minPass: 160
+            },
+            'A1-Movers': {
+                'A2': 100,  // All students achieve A1
+                minPass: 100
+            }
+        };
+
+        function convertRawToScale(raw, skill, level) {
+            if (raw === null || raw === undefined || raw === '') return null;
+
+            const table = CONVERSION_TABLES[level];
+            if (!table || !table[skill]) return null;
+
+            const skillData = table[skill];
+            const rawScore = Math.min(Math.max(0, parseInt(raw)), skillData.max);
+
+            return skillData.scale[rawScore] || null;
+        }
+
+        function calculateOverallScale(scales) {
+            const validScales = scales.filter(s => s !== null && s !== undefined);
+            if (validScales.length === 0) return null;
+            return Math.round(validScales.reduce((a, b) => a + b, 0) / validScales.length);
+        }
+
+        function getCefrLevel(overallScale, level) {
+            const boundaries = GRADE_BOUNDARIES[level];
+            if (!boundaries || !overallScale) return '-';
+
+            const sortedGrades = Object.entries(boundaries)
+                .filter(([key]) => key !== 'minPass')
+                .sort((a, b) => b[1] - a[1]);
+
+            for (const [grade, threshold] of sortedGrades) {
+                if (overallScale >= threshold) {
+                    return grade;
+                }
+            }
+            return 'Below Level';
+        }
+
+        function isPassed(overallScale, level) {
+            const boundaries = GRADE_BOUNDARIES[level];
+            if (!boundaries || !overallScale) return false;
+            return overallScale >= boundaries.minPass;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            checkConnection();
+            loadResults();
+            updateSkillFields();
+        });
+
+        async function checkConnection() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                if (response.ok) {
+                    document.getElementById('connectionStatus').textContent = 'Database Online';
+                    document.getElementById('connectionStatus').className = 'connection-status connected';
+                } else {
+                    throw new Error('Not connected');
+                }
+            } catch (error) {
+                document.getElementById('connectionStatus').textContent = 'Database Offline';
+                document.getElementById('connectionStatus').className = 'connection-status disconnected';
+            }
+        }
+
+        async function loadResults() {
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = '<div class="loading">Loading results...</div>';
+
+            try {
+                // First, load existing results from cambridge_student_results
+                const resultsResponse = await fetch(`${API_BASE}/cambridge-student-results`);
+                const existingResults = resultsResponse.ok ? await resultsResponse.json() : [];
+
+                // Then, load all submissions to get the list of students who took tests
+                const submissionsResponse = await fetch(`${API_BASE}/cambridge-submissions`);
+                if (!submissionsResponse.ok) throw new Error('Failed to fetch submissions');
+
+                const submissions = await submissionsResponse.json();
+
+                // Group submissions by student_id + level + mock_test to get unique student-test combinations
+                const studentTestMap = new Map();
+
+                submissions.forEach(sub => {
+                    const key = `${sub.student_id}_${sub.level}_${sub.mock_test || '1'}`;
+                    if (!studentTestMap.has(key)) {
+                        studentTestMap.set(key, {
+                            student_id: sub.student_id,
+                            student_name: sub.student_name,
+                            level: sub.level,
+                            mock_test: sub.mock_test || '1',
+                            submissions: [],
+                            created_at: sub.created_at
+                        });
+                    }
+                    studentTestMap.get(key).submissions.push(sub);
+                });
+
+                // Merge with existing results
+                allResults = [];
+
+                studentTestMap.forEach((studentData, key) => {
+                    // Check if we have existing results for this student-test combination
+                    const existingResult = existingResults.find(r =>
+                        r.student_id === studentData.student_id &&
+                        r.level === studentData.level &&
+                        r.mock_test === studentData.mock_test
+                    );
+
+                    if (existingResult) {
+                        // Use existing result but add submission info
+                        existingResult.submissions = studentData.submissions;
+                        existingResult.hasExistingResult = true;
+                        allResults.push(existingResult);
+                    } else {
+                        // Create a new entry from submissions
+                        allResults.push({
+                            ...studentData,
+                            hasExistingResult: false,
+                            listening_scale: null,
+                            reading_scale: null,
+                            writing_scale: null,
+                            speaking_scale: null,
+                            reading_writing_scale: null,
+                            overall_scale: null,
+                            cefr_level: null,
+                            passed: false
+                        });
+                    }
+                });
+
+                // Sort by created_at descending
+                allResults.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+                applyFilters();
+            } catch (error) {
+                console.error('Load error:', error);
+                container.innerHTML = `<div class="no-results">Failed to load results. Please ensure the server is running.</div>`;
+            }
+        }
+
+        function applyFilters() {
+            const search = document.getElementById('searchStudent').value.toLowerCase();
+            const level = document.getElementById('filterLevel').value;
+            const mock = document.getElementById('filterMock').value;
+
+            filteredResults = allResults.filter(r => {
+                if (search && !r.student_name.toLowerCase().includes(search) &&
+                    !r.student_id.toLowerCase().includes(search)) return false;
+                if (level && r.level !== level) return false;
+                if (mock && r.mock_test !== mock) return false;
+                return true;
+            });
+
+            currentPage = 1;
+            displayResults();
+            updateStats();
+        }
+
+        function clearFilters() {
+            document.getElementById('searchStudent').value = '';
+            document.getElementById('filterLevel').value = '';
+            document.getElementById('filterMock').value = '';
+            applyFilters();
+        }
+
+        function displayResults() {
+            const container = document.getElementById('resultsContainer');
+
+            if (filteredResults.length === 0) {
+                container.innerHTML = '<div class="no-results">No results found.</div>';
+                document.getElementById('paginationControls').style.display = 'none';
+                return;
+            }
+
+            totalPages = Math.ceil(filteredResults.length / itemsPerPage);
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = Math.min(start + itemsPerPage, filteredResults.length);
+            const pageResults = filteredResults.slice(start, end);
+
+            let html = `
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Level</th>
+                            <th>Mock</th>
+                            <th>L</th>
+                            <th>R</th>
+                            <th>W</th>
+                            <th>S</th>
+                            <th>Scale Score</th>
+                            <th>Grade</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            pageResults.forEach((r, index) => {
+                const levelClass = `level-${r.level.split('-')[0].toLowerCase()}`;
+                const cefrClass = `cefr-${(r.cefr_level || '').split('-')[0].toLowerCase()}`;
+
+                // Determine which scores to show based on level
+                let lScore = r.listening_scale || '-';
+                let rScore = r.level === 'A1-Movers' ? (r.reading_writing_scale || '-') : (r.reading_scale || '-');
+                let wScore = r.level === 'A1-Movers' ? '-' : (r.writing_scale || '-');
+                let sScore = r.speaking_scale || '-';
+
+                // Check if this student has been scored
+                const isScored = r.hasExistingResult && r.overall_scale;
+                const statusText = isScored ? (r.passed ? 'Passed' : 'Failed') : 'Not Scored';
+                const statusClass = isScored ? (r.passed ? 'status-passed' : 'status-failed') : '';
+
+                // Create a unique key for this row
+                const rowKey = `${r.student_id}_${r.level}_${r.mock_test}`;
+
+                html += `
+                    <tr>
+                        <td>${r.student_id}</td>
+                        <td>${r.student_name}</td>
+                        <td><span class="level-badge ${levelClass}">${r.level}</span></td>
+                        <td>Mock ${r.mock_test || '1'}</td>
+                        <td class="score-cell">${lScore}</td>
+                        <td class="score-cell">${rScore}</td>
+                        <td class="score-cell">${wScore}</td>
+                        <td class="score-cell">${sScore}</td>
+                        <td class="scale-score">${r.overall_scale || '-'}</td>
+                        <td><span class="cefr-badge ${cefrClass}">${r.cefr_level || '-'}</span></td>
+                        <td class="${statusClass}" style="${!isScored ? 'color: #6c757d; font-style: italic;' : ''}">${statusText}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn edit-btn" onclick="editResultByKey('${rowKey}')">${isScored ? 'Edit' : 'Score'}</button>
+                                ${r.hasExistingResult && r.id ? `<button class="action-btn delete-btn" onclick="deleteResult(${r.id})">Delete</button>` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+
+            // Update pagination
+            updatePagination(start + 1, end, filteredResults.length);
+        }
+
+        function updatePagination(start, end, total) {
+            document.getElementById('paginationInfo').textContent = `Showing ${start}-${end} of ${total}`;
+            document.getElementById('currentPageSpan').textContent = currentPage;
+            document.getElementById('totalPagesSpan').textContent = totalPages;
+
+            document.getElementById('firstBtn').disabled = currentPage === 1;
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages;
+            document.getElementById('lastBtn').disabled = currentPage === totalPages;
+
+            document.getElementById('paginationControls').style.display = total > 0 ? 'flex' : 'none';
+        }
+
+        function goToPage(page) {
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                displayResults();
+            }
+        }
+
+        function updateStats() {
+            const total = filteredResults.length;
+            const scored = filteredResults.filter(r => r.hasExistingResult && r.overall_scale);
+            const passed = scored.filter(r => r.passed).length;
+            const avgScale = scored.length > 0 ?
+                Math.round(scored.reduce((sum, r) => sum + (r.overall_scale || 0), 0) / scored.length) : 0;
+            const passRate = scored.length > 0 ? Math.round((passed / scored.length) * 100) : 0;
+
+            document.getElementById('totalResults').textContent = total;
+            document.getElementById('passedCount').textContent = `${passed}/${scored.length}`;
+            document.getElementById('avgScore').textContent = avgScale || '-';
+            document.getElementById('passRate').textContent = scored.length > 0 ? passRate + '%' : '-';
+        }
+
+        function openAddModal() {
+            document.getElementById('modalTitle').textContent = 'Add Student Result';
+            document.getElementById('editId').value = '';
+            document.getElementById('studentId').value = '';
+            document.getElementById('studentName').value = '';
+            document.getElementById('examLevel').value = 'A2-Key';
+            document.getElementById('mockTest').value = '1';
+
+            updateSkillFields();
+            clearSkillInputs();
+
+            document.getElementById('resultModal').style.display = 'block';
+        }
+
+        function editResultByKey(key) {
+            // Key format: studentId_level_mockTest
+            const [studentId, level, mockTest] = key.split('_');
+            const result = allResults.find(r =>
+                r.student_id === studentId &&
+                r.level === level &&
+                r.mock_test === mockTest
+            );
+            if (!result) return;
+
+            const isNewScore = !result.hasExistingResult;
+            document.getElementById('modalTitle').textContent = isNewScore ? 'Score Student' : 'Edit Student Result';
+            document.getElementById('editId').value = result.id || '';
+            document.getElementById('studentId').value = result.student_id;
+            document.getElementById('studentName').value = result.student_name;
+            document.getElementById('examLevel').value = result.level;
+            document.getElementById('mockTest').value = result.mock_test || '1';
+
+            // Disable student info fields since we're editing from submissions
+            document.getElementById('studentId').disabled = true;
+            document.getElementById('studentName').disabled = true;
+            document.getElementById('examLevel').disabled = true;
+            document.getElementById('mockTest').disabled = true;
+
+            updateSkillFields();
+
+            // Fill in the raw scores if they exist
+            setTimeout(() => {
+                const level = result.level;
+
+                if (level === 'A1-Movers') {
+                    setInputValue('readingWriting_raw', result.reading_writing_raw);
+                    setInputValue('readingWriting_max', result.reading_writing_max || 35);
+                    setInputValue('listening_raw', result.listening_raw);
+                    setInputValue('listening_max', result.listening_max || 25);
+                    setInputValue('speaking_raw', result.speaking_raw);
+                    setInputValue('speaking_max', result.speaking_max || 15);
+                } else {
+                    setInputValue('reading_raw', result.reading_raw);
+                    setInputValue('reading_max', result.reading_max || getMaxScore('reading', level));
+                    setInputValue('writing_raw', result.writing_raw);
+                    setInputValue('writing_max', result.writing_max || getMaxScore('writing', level));
+                    setInputValue('listening_raw', result.listening_raw);
+                    setInputValue('listening_max', result.listening_max || getMaxScore('listening', level));
+                    setInputValue('speaking_raw', result.speaking_raw);
+                    setInputValue('speaking_max', result.speaking_max || getMaxScore('speaking', level));
+
+                    if (level === 'B2-First') {
+                        setInputValue('useOfEnglish_raw', result.use_of_english_raw);
+                        setInputValue('useOfEnglish_max', result.use_of_english_max || 30);
+                    }
+                }
+
+                calculateScores();
+            }, 100);
+
+            document.getElementById('resultModal').style.display = 'block';
+        }
+
+        function editResult(id) {
+            const result = allResults.find(r => r.id === id);
+            if (!result) return;
+
+            document.getElementById('modalTitle').textContent = 'Edit Student Result';
+            document.getElementById('editId').value = id;
+            document.getElementById('studentId').value = result.student_id;
+            document.getElementById('studentName').value = result.student_name;
+            document.getElementById('examLevel').value = result.level;
+            document.getElementById('mockTest').value = result.mock_test || '1';
+
+            updateSkillFields();
+
+            // Fill in the raw scores
+            setTimeout(() => {
+                const level = result.level;
+
+                if (level === 'A1-Movers') {
+                    setInputValue('readingWriting_raw', result.reading_writing_raw);
+                    setInputValue('readingWriting_max', result.reading_writing_max || 35);
+                    setInputValue('listening_raw', result.listening_raw);
+                    setInputValue('listening_max', result.listening_max || 25);
+                    setInputValue('speaking_raw', result.speaking_raw);
+                    setInputValue('speaking_max', result.speaking_max || 15);
+                } else {
+                    setInputValue('reading_raw', result.reading_raw);
+                    setInputValue('reading_max', result.reading_max || getMaxScore('reading', level));
+                    setInputValue('writing_raw', result.writing_raw);
+                    setInputValue('writing_max', result.writing_max || getMaxScore('writing', level));
+                    setInputValue('listening_raw', result.listening_raw);
+                    setInputValue('listening_max', result.listening_max || getMaxScore('listening', level));
+                    setInputValue('speaking_raw', result.speaking_raw);
+                    setInputValue('speaking_max', result.speaking_max || getMaxScore('speaking', level));
+
+                    if (level === 'B2-First') {
+                        setInputValue('useOfEnglish_raw', result.use_of_english_raw);
+                        setInputValue('useOfEnglish_max', result.use_of_english_max || 30);
+                    }
+                }
+
+                calculateScores();
+            }, 100);
+
+            document.getElementById('resultModal').style.display = 'block';
+        }
+
+        function setInputValue(id, value) {
+            const input = document.getElementById(id);
+            if (input) input.value = value || '';
+        }
+
+        function getMaxScore(skill, level) {
+            const table = CONVERSION_TABLES[level];
+            return table && table[skill] ? table[skill].max : 0;
+        }
+
+        function clearSkillInputs() {
+            const inputs = document.querySelectorAll('#skillInputs input[type="number"]');
+            inputs.forEach(input => {
+                if (input.id.includes('_raw')) {
+                    input.value = '';
+                }
+            });
+
+            document.getElementById('overallScaleDisplay').textContent = '-';
+            document.getElementById('cefrLevelDisplay').textContent = '-';
+            document.getElementById('passStatusDisplay').textContent = '-';
+            document.getElementById('passStatusDisplay').className = 'overall-value';
+        }
+
+        function updateSkillFields() {
+            const level = document.getElementById('examLevel').value;
+            const container = document.getElementById('skillInputs');
+
+            let html = '';
+
+            if (level === 'A1-Movers') {
+                html = `
+                    <div class="skill-row">
+                        <div class="skill-name">Listening</div>
+                        <div class="skill-input">
+                            <input type="number" id="listening_raw" min="0" max="25" placeholder="0" oninput="calculateScores()">
+                            <span>/ </span>
+                            <input type="number" id="listening_max" value="25" min="1" style="width:50px" oninput="calculateScores()">
+                        </div>
+                        <div class="calculated-value" id="listening_scale_display">-</div>
+                    </div>
+                    <div class="skill-row">
+                        <div class="skill-name">Reading & Writing</div>
+                        <div class="skill-input">
+                            <input type="number" id="readingWriting_raw" min="0" max="35" placeholder="0" oninput="calculateScores()">
+                            <span>/ </span>
+                            <input type="number" id="readingWriting_max" value="35" min="1" style="width:50px" oninput="calculateScores()">
+                        </div>
+                        <div class="calculated-value" id="readingWriting_scale_display">-</div>
+                    </div>
+                    <div class="skill-row">
+                        <div class="skill-name">Speaking</div>
+                        <div class="skill-input">
+                            <input type="number" id="speaking_raw" min="0" max="15" placeholder="0" oninput="calculateScores()">
+                            <span>/ </span>
+                            <input type="number" id="speaking_max" value="15" min="1" style="width:50px" oninput="calculateScores()">
+                        </div>
+                        <div class="calculated-value" id="speaking_scale_display">-</div>
+                    </div>
+                `;
+            } else {
+                const maxScores = CONVERSION_TABLES[level] || {};
+
+                html = `
+                    <div class="skill-row">
+                        <div class="skill-name">Listening</div>
+                        <div class="skill-input">
+                            <input type="number" id="listening_raw" min="0" max="${maxScores.listening?.max || 25}" placeholder="0" oninput="calculateScores()">
+                            <span>/ </span>
+                            <input type="number" id="listening_max" value="${maxScores.listening?.max || 25}" min="1" style="width:50px" oninput="calculateScores()">
+                        </div>
+                        <div class="calculated-value" id="listening_scale_display">-</div>
+                    </div>
+                    <div class="skill-row">
+                        <div class="skill-name">Reading</div>
+                        <div class="skill-input">
+                            <input type="number" id="reading_raw" min="0" max="${maxScores.reading?.max || 30}" placeholder="0" oninput="calculateScores()">
+                            <span>/ </span>
+                            <input type="number" id="reading_max" value="${maxScores.reading?.max || 30}" min="1" style="width:50px" oninput="calculateScores()">
+                        </div>
+                        <div class="calculated-value" id="reading_scale_display">-</div>
+                    </div>
+                    <div class="skill-row">
+                        <div class="skill-name">Writing</div>
+                        <div class="skill-input">
+                            <input type="number" id="writing_raw" min="0" max="${maxScores.writing?.max || 30}" placeholder="0" oninput="calculateScores()">
+                            <span>/ </span>
+                            <input type="number" id="writing_max" value="${maxScores.writing?.max || 30}" min="1" style="width:50px" oninput="calculateScores()">
+                        </div>
+                        <div class="calculated-value" id="writing_scale_display">-</div>
+                    </div>
+                    <div class="skill-row">
+                        <div class="skill-name">Speaking</div>
+                        <div class="skill-input">
+                            <input type="number" id="speaking_raw" min="0" max="${maxScores.speaking?.max || 45}" placeholder="0" oninput="calculateScores()">
+                            <span>/ </span>
+                            <input type="number" id="speaking_max" value="${maxScores.speaking?.max || 45}" min="1" style="width:50px" oninput="calculateScores()">
+                        </div>
+                        <div class="calculated-value" id="speaking_scale_display">-</div>
+                    </div>
+                `;
+
+                if (level === 'B2-First') {
+                    html += `
+                        <div class="skill-row">
+                            <div class="skill-name">Use of English</div>
+                            <div class="skill-input">
+                                <input type="number" id="useOfEnglish_raw" min="0" max="30" placeholder="0" oninput="calculateScores()">
+                                <span>/ </span>
+                                <input type="number" id="useOfEnglish_max" value="30" min="1" style="width:50px" oninput="calculateScores()">
+                            </div>
+                            <div class="calculated-value" id="useOfEnglish_scale_display">-</div>
+                        </div>
+                    `;
+                }
+            }
+
+            container.innerHTML = html;
+        }
+
+        function calculateScores() {
+            const level = document.getElementById('examLevel').value;
+            const scales = [];
+
+            if (level === 'A1-Movers') {
+                const listeningRaw = getInputValue('listening_raw');
+                const rwRaw = getInputValue('readingWriting_raw');
+                const speakingRaw = getInputValue('speaking_raw');
+
+                const listeningScale = convertRawToScale(listeningRaw, 'listening', level);
+                const rwScale = convertRawToScale(rwRaw, 'readingWriting', level);
+                const speakingScale = convertRawToScale(speakingRaw, 'speaking', level);
+
+                updateScaleDisplay('listening_scale_display', listeningScale);
+                updateScaleDisplay('readingWriting_scale_display', rwScale);
+                updateScaleDisplay('speaking_scale_display', speakingScale);
+
+                if (listeningScale) scales.push(listeningScale);
+                if (rwScale) scales.push(rwScale);
+                if (speakingScale) scales.push(speakingScale);
+            } else {
+                const listeningRaw = getInputValue('listening_raw');
+                const readingRaw = getInputValue('reading_raw');
+                const writingRaw = getInputValue('writing_raw');
+                const speakingRaw = getInputValue('speaking_raw');
+
+                const listeningScale = convertRawToScale(listeningRaw, 'listening', level);
+                const readingScale = convertRawToScale(readingRaw, 'reading', level);
+                const writingScale = convertRawToScale(writingRaw, 'writing', level);
+                const speakingScale = convertRawToScale(speakingRaw, 'speaking', level);
+
+                updateScaleDisplay('listening_scale_display', listeningScale);
+                updateScaleDisplay('reading_scale_display', readingScale);
+                updateScaleDisplay('writing_scale_display', writingScale);
+                updateScaleDisplay('speaking_scale_display', speakingScale);
+
+                if (listeningScale) scales.push(listeningScale);
+                if (readingScale) scales.push(readingScale);
+                if (writingScale) scales.push(writingScale);
+                if (speakingScale) scales.push(speakingScale);
+
+                if (level === 'B2-First') {
+                    const uoeRaw = getInputValue('useOfEnglish_raw');
+                    const uoeScale = convertRawToScale(uoeRaw, 'useOfEnglish', level);
+                    updateScaleDisplay('useOfEnglish_scale_display', uoeScale);
+                    if (uoeScale) scales.push(uoeScale);
+                }
+            }
+
+            // Calculate overall
+            const overallScale = calculateOverallScale(scales);
+            const cefrLevel = getCefrLevel(overallScale, level);
+            const passed = isPassed(overallScale, level);
+
+            document.getElementById('overallScaleDisplay').textContent = overallScale || '-';
+            document.getElementById('cefrLevelDisplay').textContent = cefrLevel;
+            document.getElementById('passStatusDisplay').textContent = passed ? 'Passed' : 'Not Passed';
+            document.getElementById('passStatusDisplay').className = `overall-value ${passed ? 'passed' : 'failed'}`;
+        }
+
+        function getInputValue(id) {
+            const input = document.getElementById(id);
+            return input && input.value !== '' ? parseInt(input.value) : null;
+        }
+
+        function updateScaleDisplay(id, value) {
+            const display = document.getElementById(id);
+            if (display) {
+                display.textContent = value !== null ? value : '-';
+            }
+        }
+
+        async function saveResult() {
+            const studentId = document.getElementById('studentId').value.trim();
+            const studentName = document.getElementById('studentName').value.trim();
+            const level = document.getElementById('examLevel').value;
+            const mockTest = document.getElementById('mockTest').value;
+            const editId = document.getElementById('editId').value;
+
+            if (!studentId || !studentName) {
+                alert('Please fill in Student ID and Name');
+                return;
+            }
+
+            // Gather all scores
+            const data = {
+                student_id: studentId,
+                student_name: studentName,
+                level: level,
+                mock_test: mockTest
+            };
+
+            if (level === 'A1-Movers') {
+                data.listening_raw = getInputValue('listening_raw');
+                data.listening_max = getInputValue('listening_max') || 25;
+                data.listening_scale = convertRawToScale(data.listening_raw, 'listening', level);
+
+                data.reading_writing_raw = getInputValue('readingWriting_raw');
+                data.reading_writing_max = getInputValue('readingWriting_max') || 35;
+                data.reading_writing_scale = convertRawToScale(data.reading_writing_raw, 'readingWriting', level);
+
+                data.speaking_raw = getInputValue('speaking_raw');
+                data.speaking_max = getInputValue('speaking_max') || 15;
+                data.speaking_scale = convertRawToScale(data.speaking_raw, 'speaking', level);
+
+                // Clear other fields for A1-Movers
+                data.reading_raw = null;
+                data.reading_max = null;
+                data.reading_scale = null;
+                data.writing_raw = null;
+                data.writing_max = null;
+                data.writing_scale = null;
+            } else {
+                data.listening_raw = getInputValue('listening_raw');
+                data.listening_max = getInputValue('listening_max');
+                data.listening_scale = convertRawToScale(data.listening_raw, 'listening', level);
+
+                data.reading_raw = getInputValue('reading_raw');
+                data.reading_max = getInputValue('reading_max');
+                data.reading_scale = convertRawToScale(data.reading_raw, 'reading', level);
+
+                data.writing_raw = getInputValue('writing_raw');
+                data.writing_max = getInputValue('writing_max');
+                data.writing_scale = convertRawToScale(data.writing_raw, 'writing', level);
+
+                data.speaking_raw = getInputValue('speaking_raw');
+                data.speaking_max = getInputValue('speaking_max');
+                data.speaking_scale = convertRawToScale(data.speaking_raw, 'speaking', level);
+
+                // Clear A1-Movers fields
+                data.reading_writing_raw = null;
+                data.reading_writing_max = null;
+                data.reading_writing_scale = null;
+
+                if (level === 'B2-First') {
+                    data.use_of_english_raw = getInputValue('useOfEnglish_raw');
+                    data.use_of_english_max = getInputValue('useOfEnglish_max') || 30;
+                    data.use_of_english_scale = convertRawToScale(data.use_of_english_raw, 'useOfEnglish', level);
+                } else {
+                    data.use_of_english_raw = null;
+                    data.use_of_english_max = null;
+                    data.use_of_english_scale = null;
+                }
+            }
+
+            // Calculate overall
+            const scales = [
+                data.listening_scale,
+                data.reading_scale,
+                data.writing_scale,
+                data.speaking_scale,
+                data.reading_writing_scale,
+                data.use_of_english_scale
+            ].filter(s => s !== null && s !== undefined);
+
+            data.overall_scale = scales.length > 0 ? Math.round(scales.reduce((a, b) => a + b, 0) / scales.length) : null;
+            data.cefr_level = getCefrLevel(data.overall_scale, level);
+            data.passed = isPassed(data.overall_scale, level);
+
+            try {
+                const url = editId ?
+                    `${API_BASE}/cambridge-student-results/${editId}` :
+                    `${API_BASE}/cambridge-student-results`;
+
+                const response = await fetch(url, {
+                    method: editId ? 'PATCH' : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(editId ? 'Result updated successfully!' : 'Result added successfully!');
+                    closeModal();
+                    loadResults();
+                } else {
+                    alert('Failed to save: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Save error:', error);
+                alert('Error saving result. Please try again.');
+            }
+        }
+
+        async function deleteResult(id) {
+            if (!confirm('Are you sure you want to delete this result?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/cambridge-student-results/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Result deleted successfully');
+                    loadResults();
+                } else {
+                    alert('Failed to delete: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('Error deleting result. Please try again.');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').style.display = 'none';
+            // Re-enable the fields for next time
+            document.getElementById('studentId').disabled = false;
+            document.getElementById('studentName').disabled = false;
+            document.getElementById('examLevel').disabled = false;
+            document.getElementById('mockTest').disabled = false;
+        }
+
+        function exportResults() {
+            if (filteredResults.length === 0) {
+                alert('No results to export');
+                return;
+            }
+
+            const headers = ['Student ID', 'Name', 'Level', 'Mock', 'Listening', 'Reading', 'Writing', 'Speaking', 'Overall Scale', 'CEFR Level', 'Passed'];
+            const rows = filteredResults.map(r => [
+                r.student_id,
+                r.student_name,
+                r.level,
+                r.mock_test || '1',
+                r.listening_scale || '',
+                r.level === 'A1-Movers' ? (r.reading_writing_scale || '') : (r.reading_scale || ''),
+                r.level === 'A1-Movers' ? '' : (r.writing_scale || ''),
+                r.speaking_scale || '',
+                r.overall_scale || '',
+                r.cefr_level || '',
+                r.passed ? 'Yes' : 'No'
+            ]);
+
+            const csv = [headers, ...rows].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `cambridge_results_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('resultModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

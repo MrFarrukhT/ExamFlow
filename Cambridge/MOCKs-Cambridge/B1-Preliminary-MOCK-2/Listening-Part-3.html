@@ -219,9 +219,9 @@
         window.currentPart = 3;
 
         function saveAnswer(questionNum, answer) {
-            let answers = JSON.parse(localStorage.getItem('listeningAnswers') || '{}');
+            let answers = JSON.parse(localStorage.getItem('cambridge-listeningAnswers') || '{}');
             answers[`L${questionNum}`] = answer.trim();
-            localStorage.setItem('listeningAnswers', JSON.stringify(answers));
+            localStorage.setItem('cambridge-listeningAnswers', JSON.stringify(answers));
             
             const btn = document.querySelector(`[data-ordernumber="${questionNum}"]`);
             if (btn && answer.trim() !== '') {
@@ -232,7 +232,7 @@
         }
 
         function loadSavedAnswers() {
-            const answers = JSON.parse(localStorage.getItem('listeningAnswers') || '{}');
+            const answers = JSON.parse(localStorage.getItem('cambridge-listeningAnswers') || '{}');
             for (let i = 14; i <= 19; i++) {
                 const answer = answers[`L${i}`];
                 if (answer) {
@@ -331,8 +331,8 @@
                         console.error('Error submitting to database:', error);
                     }
                     
-                    localStorage.setItem('listeningStatus', 'completed');
-                    localStorage.setItem('listeningEndTime', new Date().toISOString());
+                    localStorage.setItem('cambridge-listeningStatus', 'completed');
+                    localStorage.setItem('cambridge-listeningEndTime', new Date().toISOString());
                     // Clear the listening test started flag after submission
                     localStorage.removeItem('listeningTestStarted');
                     if (window.parent) {

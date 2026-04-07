@@ -842,15 +842,15 @@ function toggleOptionsMenu() {
                         await window.cambridgeAnswerManager.submitTestToDatabase();
                         console.log('✅ Test submitted');
                     }
-                    localStorage.setItem('reading-writingStatus', 'completed');
-                    localStorage.setItem('reading-writingEndTime', new Date().toISOString());
+                    localStorage.setItem('cambridge-reading-writingStatus', 'completed');
+                    localStorage.setItem('cambridge-reading-writingEndTime', new Date().toISOString());
                     alert('Test submitted successfully!');
                     window.location.href = '../../dashboard-cambridge.html';
                 } catch(error) {
                     console.error('Error:', error);
                     alert('Test marked as completed. Note: Database submission may have failed.');
-                    localStorage.setItem('reading-writingStatus', 'completed');
-                    localStorage.setItem('reading-writingEndTime', new Date().toISOString());
+                    localStorage.setItem('cambridge-reading-writingStatus', 'completed');
+                    localStorage.setItem('cambridge-reading-writingEndTime', new Date().toISOString());
                     window.location.href = '../../dashboard-cambridge.html';
                 }
             }

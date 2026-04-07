@@ -1,5 +1,10 @@
     // Flag to indicate core.js has loaded (for distraction-free.js)
     window.coreJSLoaded = true;
+
+    function escapeHTML(str) {
+        if (str == null) return '';
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
     
     document.addEventListener('DOMContentLoaded', () => {
         // --- STATE VARIABLES ---
@@ -42,16 +47,13 @@
         const testSkill = document.body.dataset.skill;
         let passagePanel, questionsPanel;
         
-        console.log(`🎯 Test skill detected: "${testSkill}"`);
         
         if (testSkill === 'reading' || testSkill === 'reading-writing') {
             passagePanel = document.getElementById('passage-panel');
             questionsPanel = document.getElementById('questions-panel');
-            console.log(`📖 Reading mode - Passage panel: ${passagePanel ? 'Found' : 'Not found'}, Questions panel: ${questionsPanel ? 'Found' : 'Not found'}`);
         } else if (testSkill === 'writing') {
             passagePanel = document.querySelector('.task-panel');
             questionsPanel = document.querySelector('.writing-panel');
-            console.log(`✍️ Writing mode - Task panel: ${passagePanel ? 'Found' : 'Not found'}, Writing panel: ${questionsPanel ? 'Found' : 'Not found'}`);
         }
         
         const contextMenu = document.getElementById('contextMenu');
@@ -96,7 +98,6 @@ async function loadAnswers() {
         script.onload = () => {
             if (window.testAnswers) {
                 correctAnswers = window.testAnswers;
-                console.log(`✅ Loaded answers for MOCK ${testInfo.mock} - ${testInfo.skill.toUpperCase()}`);
                 // Clean up global variable
                 delete window.testAnswers;
             } else {
@@ -121,33 +122,23 @@ async function loadAnswers() {
 
         // --- INITIALIZATION ---
         function initialize() {
-            console.log(`🚀 Initializing application...`);
             
             // Load answers first, then continue initialization
             loadAnswers();
             
             // Continue with rest of initialization
-            console.log('🔄 Starting timer...');
             startTimer();
-            console.log('🔄 Preventing browser autocomplete...');
             preventAutocomplete();
-            console.log('🔄 Initializing drag and drop...');
             initializeDragAndDrop();
-            console.log('🔄 Setting up checkbox limits...');
             setupCheckboxLimits();
-            console.log('🔄 Setting up example heading...');
             setupExampleHeading();
-            console.log(`📋 Setting up initial state - switching to part 1`);
             switchToPart(1); // Also calls goToQuestion(1) and updateNavigation
             
-            console.log('🔄 Adding event listeners...');
             document.body.addEventListener('input', updateAllIndicators);
             document.body.addEventListener('change', updateAllIndicators);
-            console.log('🔄 Adding deliver button listener...');
             if (deliverButton) {
                 deliverButton.addEventListener('click', checkAnswers);
             }
-            console.log('🔄 Adding timer button listeners...');
             if (timerToggleButton) {
                 timerToggleButton.addEventListener('click', toggleTimer);
             }
@@ -172,24 +163,17 @@ async function loadAnswers() {
                     const qNum = parseInt(el.dataset.qStart, 10);
                     const qEnd = parseInt(el.dataset.qEnd, 10);
                     
-                    console.log(`🖱️ Question container clicked - qNum: ${qNum}, qEnd: ${qEnd}, currentQuestion: ${currentQuestion}, element:`, el);
                     
                     // Handle cases where qNum is NaN
                     if (isNaN(qNum)) {
-                        console.log(`ℹ️ Container without valid question number, ignoring navigation`);
                         return;
                     }
                     
                     // Only navigate if this is a single question (qStart === qEnd) or if we're clicking on a specific question within a group
                     if (qNum === qEnd || el.classList.contains('tf-question')) {
                         if (currentQuestion !== qNum) {
-                            console.log(`🚀 Navigating from question ${currentQuestion} to question ${qNum}`);
                             goToQuestion(qNum);
-                        } else {
-                            console.log(`ℹ️ Already on question ${qNum}, no navigation needed`);
                         }
-                    } else {
-                        console.log(`ℹ️ Ignoring click on group container (${qNum}-${qEnd})`);
                     }
                 });
             });
@@ -199,39 +183,30 @@ async function loadAnswers() {
                 el.addEventListener('click', (event) => {
                     event.stopPropagation();
                     const qNum = parseInt(el.dataset.qStart, 10);
-                    console.log(`🎯 Individual question element clicked - qNum: ${qNum}, currentQuestion: ${currentQuestion}, element:`, el);
                     
                     // Handle cases where qNum is NaN (like .summary-text containers)
                     if (isNaN(qNum)) {
-                        console.log(`ℹ️ Container without specific question number, ignoring navigation`);
                         return;
                     }
                     
                     if (currentQuestion !== qNum) {
-                        console.log(`🚀 Navigating from question ${currentQuestion} to question ${qNum} (individual element)`);
                         goToQuestion(qNum);
-                    } else {
-                        console.log(`ℹ️ Already on question ${qNum}, no navigation needed (individual element)`);
                     }
                 });
             });
-            
+
             // Add specific click listeners for individual input elements in questions 33-36
             document.querySelectorAll('.answer-input[id^="q3"]').forEach(input => {
                 input.addEventListener('click', (event) => {
                     event.stopPropagation();
                     const qNum = parseInt(input.id.replace('q', ''), 10);
-                    console.log(`📝 Input element clicked - qNum: ${qNum}, currentQuestion: ${currentQuestion}, input:`, input);
                     
                     if (currentQuestion !== qNum) {
-                        console.log(`🚀 Navigating from question ${currentQuestion} to question ${qNum} (input element)`);
                         goToQuestion(qNum);
-                    } else {
-                        console.log(`ℹ️ Already on question ${qNum}, no navigation needed (input element)`);
                     }
                 });
             });
-            
+
             // Add click listeners for the paragraph elements containing questions 33-36
             document.querySelectorAll('.summary-text p').forEach(p => {
                 p.addEventListener('click', (event) => {
@@ -240,33 +215,23 @@ async function loadAnswers() {
                     const strongElement = p.querySelector('strong');
                     if (strongElement) {
                         const qNum = parseInt(strongElement.textContent, 10);
-                        console.log(`📄 Summary paragraph clicked - qNum: ${qNum}, currentQuestion: ${currentQuestion}, paragraph:`, p);
                         
                         if (!isNaN(qNum) && currentQuestion !== qNum) {
-                            console.log(`🚀 Navigating from question ${currentQuestion} to question ${qNum} (summary paragraph)`);
                             goToQuestion(qNum);
-                        } else if (!isNaN(qNum)) {
-                            console.log(`ℹ️ Already on question ${qNum}, no navigation needed (summary paragraph)`);
                         }
                     }
                 });
             });
 
             if (resizer) {
-                console.log('✅ Resizer found and initialized');
                 resizer.addEventListener('mousedown', initResize, false);
                 // Add touch support for mobile devices
                 resizer.addEventListener('touchstart', initResizeTouch, false);
-            } else {
-                console.warn('⚠️ Resizer element not found');
             }
             
             // Initialize context menu only if it exists
             if (contextMenu) {
-                console.log('✅ Context menu found and initialized');
                 initializeContextMenu();
-            } else {
-                console.warn('⚠️ Context menu element not found');
             }
         }
 
@@ -279,14 +244,12 @@ async function loadAnswers() {
             // Select all answer input fields and textareas
             const answerInputs = document.querySelectorAll('.answer-input, textarea');
             
-            console.log(`🔒 Applying autocomplete prevention to ${answerInputs.length} input fields and textareas`);
             
             answerInputs.forEach((input, index) => {
                 // Skip radio buttons and checkboxes - they need their original name attribute to work as groups
                 if (input.type === 'radio' || input.type === 'checkbox') {
                     // Only apply autocomplete attribute, don't change name or add readonly
                     input.setAttribute('autocomplete', 'off');
-                    console.log(`⏩ Skipping name change for ${input.type} button: ${input.name || input.id}`);
                     return;
                 }
                 
@@ -315,7 +278,6 @@ async function loadAnswers() {
                 });
             });
             
-            console.log(`✅ Autocomplete prevention applied successfully`);
         }
 
         // --- CORE TEST LOGIC ---
@@ -399,14 +361,14 @@ async function loadAnswers() {
                 resultsDetailsContainer.innerHTML += `
                     <div class="result-row ${isCorrect20 ? '' : 'incorrect'}">
                         <span class="q-num">20</span>
-                        <span class="user-ans">${selectedText}</span>
+                        <span class="user-ans">${escapeHTML(selectedText)}</span>
                         <span class="correct-ans">A</span>
                     </div>`;
                 // Q21 row
                 resultsDetailsContainer.innerHTML += `
                     <div class="result-row ${isCorrect21 ? '' : 'incorrect'}">
                         <span class="q-num">21</span>
-                        <span class="user-ans">${selectedText}</span>
+                        <span class="user-ans">${escapeHTML(selectedText)}</span>
                         <span class="correct-ans">E</span>
                     </div>`;
 
@@ -474,102 +436,84 @@ async function loadAnswers() {
                         element.classList.add('incorrect');
                         const correctAnswerSpan = document.createElement('span');
                         correctAnswerSpan.className = 'correct-answer-display';
-                        correctAnswerSpan.innerHTML = `&nbsp;➜&nbsp;<span class="correct-answer-highlight">${correctAnswerText}</span>`;
+                        correctAnswerSpan.innerHTML = `&nbsp;&#10148;&nbsp;<span class="correct-answer-highlight">${escapeHTML(correctAnswerText)}</span>`;
                         textInput.parentNode.insertBefore(correctAnswerSpan, textInput.nextSibling);
                     }
                 }
                 // Handle drag and drop questions (any with a drop-zone for this question)
                 else if (document.querySelector(`.drop-zone[data-q-start="${i}"]`)) {
-                    console.log(`🔍 Checking drag-and-drop question ${i}`);
                     const dropZone = document.querySelector(`.drop-zone[data-q-start="${i}"]`);
                     const droppedItem = dropZone ? dropZone.querySelector('.drag-item') : null;
                     
-                    console.log(`📍 Drop zone for question ${i}:`, dropZone);
-                    console.log(`📍 Dropped item for question ${i}:`, droppedItem);
-                    console.log(`📍 Correct answer for question ${i}:`, correctAnswer);
                     
                     if (droppedItem) {
                         userAnswer = droppedItem.dataset.value;
                         userAnswerDisplay = userAnswer;
                         isCorrect = userAnswer === correctAnswer;
                         
-                        console.log(`✅ User answer for question ${i}: "${userAnswer}", Correct: "${correctAnswer}", IsCorrect: ${isCorrect}`);
                         
                         // Mark the drop zone as correct or incorrect
                         dropZone.classList.add(isCorrect ? 'correct' : 'incorrect');
                         
                         if (isCorrect) {
                             score++;
-                            console.log(`🎉 Question ${i} is correct! Score: ${score}`);
-                        } else {
-                            console.log(`❌ Question ${i} is incorrect. Expected: "${correctAnswer}", Got: "${userAnswer}"`);
                         }
-                        
+
                         // Show correct answer if wrong
                         if (!isCorrect && correctAnswer) {
                             const correctAnswerSpan = document.createElement('span');
                             correctAnswerSpan.className = 'correct-answer-display';
-                            correctAnswerSpan.innerHTML = `&nbsp;➜&nbsp;<span class="correct-answer-highlight">${correctAnswer}</span>`;
+                            correctAnswerSpan.innerHTML = `&nbsp;&#10148;&nbsp;<span class="correct-answer-highlight">${escapeHTML(correctAnswer)}</span>`;
                             dropZone.appendChild(correctAnswerSpan);
                         }
                     } else {
                         // No answer provided - mark as incorrect
-                        console.log(`⚠️ No answer provided for question ${i}`);
                         if (dropZone) {
                             dropZone.classList.add('incorrect');
                         }
                         if (correctAnswer) {
                             const correctAnswerSpan = document.createElement('span');
                             correctAnswerSpan.className = 'correct-answer-display';
-                            correctAnswerSpan.innerHTML = `&nbsp;➜&nbsp;<span class="correct-answer-highlight">${correctAnswer}</span>`;
+                            correctAnswerSpan.innerHTML = `&nbsp;&#10148;&nbsp;<span class="correct-answer-highlight">${escapeHTML(correctAnswer)}</span>`;
                             dropZone.appendChild(correctAnswerSpan);
                         }
                     }
                 }
                 // Handle summary drop zone questions (36-40)
                 else if (document.querySelector(`.summary-drop-zone[data-question="${i}"]`)) {
-                    console.log(`🔍 Checking summary drop zone question ${i}`);
                     const summaryDropZone = document.querySelector(`.summary-drop-zone[data-question="${i}"]`);
                     const droppedItem = summaryDropZone ? summaryDropZone.querySelector('.drag-item') : null;
                     
-                    console.log(`📍 Summary drop zone for question ${i}:`, summaryDropZone);
-                    console.log(`📍 Dropped item for question ${i}:`, droppedItem);
-                    console.log(`📍 Correct answer for question ${i}:`, correctAnswer);
                     
                     if (droppedItem) {
                         userAnswer = droppedItem.dataset.value;
                         userAnswerDisplay = userAnswer;
                         isCorrect = userAnswer === correctAnswer;
                         
-                        console.log(`✅ User answer for question ${i}: "${userAnswer}", Correct: "${correctAnswer}", IsCorrect: ${isCorrect}`);
                         
                         // Mark the summary drop zone as correct or incorrect
                         summaryDropZone.classList.add(isCorrect ? 'correct' : 'incorrect');
                         
                         if (isCorrect) {
                             score++;
-                            console.log(`🎉 Question ${i} is correct! Score: ${score}`);
-                        } else {
-                            console.log(`❌ Question ${i} is incorrect. Expected: "${correctAnswer}", Got: "${userAnswer}"`);
                         }
-                        
+
                         // Show correct answer if wrong
                         if (!isCorrect && correctAnswer) {
                             const correctAnswerSpan = document.createElement('span');
                             correctAnswerSpan.className = 'correct-answer-display';
-                            correctAnswerSpan.innerHTML = `&nbsp;➜&nbsp;<span class="correct-answer-highlight">${correctAnswer}</span>`;
+                            correctAnswerSpan.innerHTML = `&nbsp;&#10148;&nbsp;<span class="correct-answer-highlight">${escapeHTML(correctAnswer)}</span>`;
                             summaryDropZone.appendChild(correctAnswerSpan);
                         }
                     } else {
                         // No answer provided - mark as incorrect
-                        console.log(`⚠️ No answer provided for question ${i}`);
                         if (summaryDropZone) {
                             summaryDropZone.classList.add('incorrect');
                         }
                         if (correctAnswer) {
                             const correctAnswerSpan = document.createElement('span');
                             correctAnswerSpan.className = 'correct-answer-display';
-                            correctAnswerSpan.innerHTML = `&nbsp;➜&nbsp;<span class="correct-answer-highlight">${correctAnswer}</span>`;
+                            correctAnswerSpan.innerHTML = `&nbsp;&#10148;&nbsp;<span class="correct-answer-highlight">${escapeHTML(correctAnswer)}</span>`;
                             summaryDropZone.appendChild(correctAnswerSpan);
                         }
                     }
@@ -614,45 +558,33 @@ async function loadAnswers() {
                 }
                 // Handle clickable-cell matrix questions (generic for any i that has clickable cells)
                 else if (document.querySelector(`.clickable-cell[data-question="${i}"]`)) {
-                    console.log(`🔍 Checking clickable cell question ${i}`);
                     const selectedCell = document.querySelector(`.clickable-cell[data-question="${i}"][data-selected="true"]`);
-                    console.log(`📍 Selected cell for question ${i}:`, selectedCell);
-                    console.log(`📍 Correct answer for question ${i}:`, correctAnswer);
                     
                     if (selectedCell) {
                         userAnswer = selectedCell.dataset.answer;
                         userAnswerDisplay = userAnswer;
                         isCorrect = userAnswer === correctAnswer;
                         
-                        console.log(`✅ User answer for question ${i}: "${userAnswer}", Correct: "${correctAnswer}", IsCorrect: ${isCorrect}`);
                         
                         selectedCell.classList.add(isCorrect ? 'correct' : 'incorrect');
                         
                         if (isCorrect) {
                             score++;
-                            console.log(`🎉 Question ${i} is correct! Score: ${score}`);
-                        } else {
-                            console.log(`❌ Question ${i} is incorrect. Expected: "${correctAnswer}", Got: "${userAnswer}"`);
                         }
                     } else {
-                        console.log(`⚠️ No answer provided for question ${i}`);
                         userAnswerDisplay = 'Not Answered';
                     }
-                    
+
                     // Handle highlighting correct answers for incorrect responses
                     if (!isCorrect) {
                         const correctCell = document.querySelector(`.clickable-cell[data-question="${i}"][data-value="${correctAnswerText}"]`);
                         if (correctCell) {
                             correctCell.classList.add('correct-answer-highlight');
-                            console.log(`✅ Highlighted correct answer for question ${i}:`, correctCell);
-                        } else {
-                            console.log(`⚠️ Could not find correct cell for question ${i} with value "${correctAnswerText}"`);
                         }
                     }
                 }
                 // Handle text input questions (33-39)
                 else if (i >= 33 && i <= 39) {
-                    console.log(`🔍 Checking text input question ${i}`);
                     const textInput = document.getElementById(`q${i}`);
                     
                     if (textInput) {
@@ -667,24 +599,19 @@ async function loadAnswers() {
                             isCorrect = userAnswer === correctAnswer.toLowerCase();
                         }
                         
-                        console.log(`✅ User answer for question ${i}: "${userAnswer}", Correct: "${correctAnswer}", IsCorrect: ${isCorrect}`);
                         
                         if (isCorrect) {
                             score++;
                             textInput.classList.add('correct');
-                            console.log(`🎉 Question ${i} is correct! Score: ${score}`);
                         } else {
                             textInput.classList.add('incorrect');
-                            console.log(`❌ Question ${i} is incorrect. Expected: "${correctAnswer}", Got: "${userAnswer}"`);
                         }
                     } else {
-                        console.log(`⚠️ No answer provided for question ${i}`);
                         userAnswerDisplay = 'Not Answered';
                     }
                 }
                 // Handle question 40 (multiple choice)
                 else if (i === 40) {
-                    console.log(`🔍 Checking multiple choice question ${i}`);
                     const checkedRadio = document.querySelector(`input[name="q${i}"]:checked`);
                     
                     if (checkedRadio) {
@@ -692,7 +619,6 @@ async function loadAnswers() {
                         userAnswerDisplay = userAnswer;
                         isCorrect = userAnswer === correctAnswer;
                         
-                        console.log(`✅ User answer for question ${i}: "${userAnswer}", Correct: "${correctAnswer}", IsCorrect: ${isCorrect}`);
                         
                         const userLabel = checkedRadio.closest('.multi-choice-option');
                         if (userLabel) {
@@ -701,9 +627,7 @@ async function loadAnswers() {
                         
                         if (isCorrect) {
                             score++;
-                            console.log(`🎉 Question ${i} is correct! Score: ${score}`);
                         } else {
-                            console.log(`❌ Question ${i} is incorrect. Expected: "${correctAnswer}", Got: "${userAnswer}"`);
                             
                             // Highlight correct answer
                             const correctOptionEl = document.querySelector(`input[name="q${i}"][value="${correctAnswer}"]`);
@@ -715,7 +639,6 @@ async function loadAnswers() {
                             }
                         }
                     } else {
-                        console.log(`⚠️ No answer provided for question ${i}`);
                         userAnswerDisplay = 'Not Answered';
                     }
                 }
@@ -726,8 +649,8 @@ async function loadAnswers() {
                  const resultRow = `
                     <div class="result-row ${isCorrect ? '' : 'incorrect'}">
                         <span class="q-num">${i}</span>
-                        <span class="user-ans">${userAnswerDisplay}</span>
-                        <span class="correct-ans">${correctAnswerText}</span>
+                        <span class="user-ans">${escapeHTML(userAnswerDisplay)}</span>
+                        <span class="correct-ans">${escapeHTML(correctAnswerText)}</span>
                     </div>`;
                 resultsDetailsContainer.innerHTML += resultRow;
                 
@@ -970,9 +893,9 @@ async function loadAnswers() {
                 row.classList.add('incorrect');
             }
             row.innerHTML = `
-                <span class="q-num">${qNum}</span>
-                <span class="user-ans">${userAnswer}</span>
-                <span class="correct-ans">${correctAnswer}</span>
+                <span class="q-num">${escapeHTML(qNum)}</span>
+                <span class="user-ans">${escapeHTML(userAnswer)}</span>
+                <span class="correct-ans">${escapeHTML(correctAnswer)}</span>
             `;
             resultsDetails.appendChild(row);
         }
@@ -1045,7 +968,6 @@ async function loadAnswers() {
         }
 
         function switchToPart(partNumber) {
-            console.log(`🔀 switchToPart called with partNumber: ${partNumber}, currentPassage: ${currentPassage}`);
             
             currentPassage = partNumber;
 
@@ -1098,7 +1020,6 @@ async function loadAnswers() {
                 }
             }
 
-            console.log(`✅ switchToPart completed - switched to part ${partNumber}`);
             
             // Only go to first question when switching parts, not when staying in same part
             // This allows goToQuestion to work properly for specific question navigation
@@ -1107,7 +1028,6 @@ async function loadAnswers() {
         }
         
         function goToQuestion(questionNumber) {
-            console.log(`🎯 goToQuestion called with questionNumber: ${questionNumber}, currentQuestion: ${currentQuestion}, currentPassage: ${currentPassage}`);
             
             currentQuestion = questionNumber;
 
@@ -1115,15 +1035,12 @@ async function loadAnswers() {
             if (questionNumber >= 14 && questionNumber <= 26) passageNumber = 2;
             else if (questionNumber >= 27) passageNumber = 3;
             
-            console.log(`📍 Calculated passageNumber: ${passageNumber} for question ${questionNumber}`);
             
             if (currentPassage !== passageNumber) {
-                console.log(`🔄 Switching from part ${currentPassage} to part ${passageNumber} for question ${questionNumber}`);
                 switchToPart(passageNumber);
                 return; 
             }
 
-            console.log(`✅ Staying in same part (${currentPassage}) for question ${questionNumber}`);
 
             if (activeQuestionElement) {
                 // Remove active style from previous block
@@ -1137,57 +1054,43 @@ async function loadAnswers() {
             let targetEl = document.getElementById(`q${questionNumber}`);
             if (targetEl) {
                 activeQuestionElement = targetEl;
-                console.log(`✅ Found specific input element:`, targetEl);
                 targetEl.classList.add('active-input');
                 scrollIntoViewIfNeeded(targetEl);
             } else {
                 // Fall back to looking for question containers
                 targetEl = document.querySelector(`[data-q-start="${questionNumber}"]`);
-                console.log(`🔍 Looking for target element with data-q-start="${questionNumber}":`, targetEl);
 
                 if (targetEl) {
                     activeQuestionElement = targetEl;
-                    console.log(`✅ Found target element:`, targetEl);
                     
                     if (targetEl.matches('input[type="text"]') || targetEl.matches('select')) {
                         targetEl.classList.add('active-input');
-                        console.log(`📝 Added active-input class to input/select element`);
                     } else {
                         targetEl.classList.add('active-question');
-                        console.log(`📋 Added active-question class to question element`);
                     }
                     scrollIntoViewIfNeeded(targetEl);
                 } else {
-                    console.log(`⚠️ Target element not found, looking for paragraph matching question`);
                     const pMatch = document.querySelector(`.paragraph-matching-question select[id="q${questionNumber}"]`);
                     if(pMatch) {
                         activeQuestionElement = pMatch;
                         pMatch.classList.add('active-input');
                         scrollIntoViewIfNeeded(pMatch);
-                        console.log(`✅ Found paragraph matching question:`, pMatch);
-                    } else {
-                        console.log(`❌ No target element found for question ${questionNumber}`);
                     }
                 }
             }
 
             updateNavigation();
-            console.log(`✅ goToQuestion completed for question ${questionNumber}`);
         }
         
         // --- UI & NAVIGATION ---
 
         function updateNavigation() {
-            console.log(`🔄 updateNavigation called for currentQuestion: ${currentQuestion}`);
             
             const navButtons = document.querySelectorAll('.subQuestion');
             navButtons.forEach(btn => btn.classList.remove('active'));
             const activeNav = document.querySelector(`.subQuestion[onclick="goToQuestion(${currentQuestion})"]`);
             if (activeNav) {
                 activeNav.classList.add('active');
-                console.log(`✅ Updated navigation - active nav button:`, activeNav);
-            } else {
-                console.log(`⚠️ No active navigation button found for question ${currentQuestion}`);
             }
 
             const inputs = document.querySelectorAll('.answer-input, .drop-zone.filled, .summary-drop-zone.filled');
@@ -1199,9 +1102,7 @@ async function loadAnswers() {
                 if (typeof activeInput.focus === 'function') {
                     activeInput.focus();
                 }
-                console.log(`✅ Focused on input element:`, activeInput);
             } else {
-                console.log(`⚠️ No direct input found for question ${currentQuestion}, looking in question block`);
                 // Prefer the specific question element for styling (TF/MCQ), fallback to any data-q-start container
                 let activeQuestionBlock = document.querySelector(`.tf-question[data-q-start="${currentQuestion}"]`) 
                     || document.querySelector(`.multi-choice-question[data-q-start="${currentQuestion}"]`) 
@@ -1215,16 +1116,10 @@ async function loadAnswers() {
                          if (typeof firstInput.focus === 'function') {
                             firstInput.focus();
                         }
-                        console.log(`✅ Focused on input in question block:`, firstInput);
-                    } else {
-                        console.log(`⚠️ No input found in question block for question ${currentQuestion}`);
                     }
-                } else {
-                    console.log(`❌ No question block found for question ${currentQuestion}`);
                 }
             }
             
-            console.log(`✅ updateNavigation completed`);
         }
         
         function selectDragItem(item) {
@@ -1528,7 +1423,6 @@ async function loadAnswers() {
 
             // Only initialize if we have valid panels
             if (panels.length === 0) {
-                console.log('No valid panels found for context menu initialization');
                 return;
             }
 
@@ -1638,7 +1532,6 @@ async function loadAnswers() {
                     
                     // If selection spans multiple paragraphs, restrict to first paragraph only
                     if (startParagraph && endParagraph && startParagraph !== endParagraph) {
-                        console.log('Multi-paragraph selection detected. Restricting to first paragraph only.');
                         
                         // Create a new range that ends at the end of the first paragraph
                         const restrictedRange = document.createRange();
@@ -1672,7 +1565,6 @@ async function loadAnswers() {
                     }
                 } catch (e) {
                     // Fallback for selections that can't be surrounded
-                    console.warn('Could not highlight selection:', e);
                     const span = document.createElement('span');
                     span.className = 'highlight';
                     const contents = selectedRange.extractContents();
@@ -1732,7 +1624,6 @@ async function loadAnswers() {
                     }
                 } catch (e) {
                     // Fallback for selections that can't be surrounded
-                    console.warn('Could not add note to selection:', e);
                     const span = document.createElement('span');
                     span.className = 'comment-highlight';
                     const tooltip = document.createElement('span');
@@ -1854,7 +1745,6 @@ async function loadAnswers() {
         function initializeMobileFeatures() {
             // Add touch event listeners for mobile
             if ('ontouchstart' in window) {
-                console.log('📱 Mobile device detected, initializing touch features');
                 
                 // Improve touch handling for question navigation
                 document.querySelectorAll('.subQuestion').forEach(btn => {
@@ -1986,7 +1876,6 @@ async function loadAnswers() {
 
         // Global function for selecting cells
         window.selectCell = function(cell, questionNum, value) {
-            console.log('selectCell called:', questionNum, value);
             
             // Remove selected class from all cells in the same row
             const row = cell.closest('tr');
@@ -2002,7 +1891,6 @@ async function loadAnswers() {
             cell.setAttribute('data-selected', 'true');
             cell.setAttribute('data-answer', value);
             
-            console.log('Cell selected:', questionNum, value);
             updateAllIndicators();
         };
 

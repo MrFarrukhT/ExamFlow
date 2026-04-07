@@ -280,9 +280,9 @@
         window.currentPart = 2;
 
         function saveAnswer(questionNum, answer) {
-            let answers = JSON.parse(localStorage.getItem('listeningAnswers') || '{}');
+            let answers = JSON.parse(localStorage.getItem('cambridge-listeningAnswers') || '{}');
             answers[`L${questionNum}`] = answer.trim();
-            localStorage.setItem('listeningAnswers', JSON.stringify(answers));
+            localStorage.setItem('cambridge-listeningAnswers', JSON.stringify(answers));
             
             const btn = document.querySelector(`[data-ordernumber="${questionNum}"]`);
             if (btn && answer.trim() !== '') {
@@ -293,14 +293,14 @@
         }
 
         function loadSavedAnswers() {
-            const answers = JSON.parse(localStorage.getItem('listeningAnswers') || '{}');
+            const answers = JSON.parse(localStorage.getItem('cambridge-listeningAnswers') || '{}');
             
             // BUGFIX: Clean up any corrupted data where Candidate ID was saved as an answer
             const studentId = localStorage.getItem('studentId');
             if (studentId && answers['L6'] === studentId) {
                 console.warn('⚠️ Detected corrupted answer data - clearing Question 6');
                 delete answers['L6'];
-                localStorage.setItem('listeningAnswers', JSON.stringify(answers));
+                localStorage.setItem('cambridge-listeningAnswers', JSON.stringify(answers));
             }
             
             for (let i = 6; i <= 10; i++) {
@@ -394,8 +394,8 @@
                         console.error('Error submitting to database:', error);
                     }
                     
-                    localStorage.setItem('listeningStatus', 'completed');
-                    localStorage.setItem('listeningEndTime', new Date().toISOString());
+                    localStorage.setItem('cambridge-listeningStatus', 'completed');
+                    localStorage.setItem('cambridge-listeningEndTime', new Date().toISOString());
                     // Clear the listening test started flag after submission
                     localStorage.removeItem('listeningTestStarted');
                     if (window.parent) {

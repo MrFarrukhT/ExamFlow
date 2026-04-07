@@ -982,8 +982,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                                 }
                                 
                                 // Mark module as completed
-                                localStorage.setItem('writingStatus', 'completed');
-                                localStorage.setItem('writingEndTime', new Date().toISOString());
+                                localStorage.setItem('cambridge-writingStatus', 'completed');
+                                localStorage.setItem('cambridge-writingEndTime', new Date().toISOString());
                                 console.log('✅ Module marked as completed');
                                 
                                 alert('Test submitted successfully!');
@@ -995,8 +995,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                                 console.error('❌ Error submitting test:', error);
                                 alert('Test marked as completed. Note: Database submission may have failed.');
                                 // Still mark as completed locally even if database fails
-                                localStorage.setItem('writingStatus', 'completed');
-                                localStorage.setItem('writingEndTime', new Date().toISOString());
+                                localStorage.setItem('cambridge-writingStatus', 'completed');
+                                localStorage.setItem('cambridge-writingEndTime', new Date().toISOString());
                                 window.location.href = '../../dashboard-cambridge.html';
                             }
                         } else {

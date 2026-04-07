@@ -2,64 +2,26 @@
 // Separate server for Cambridge tests - runs on port 3003
 // Run this with: node cambridge-database-server.js
 
-import { Client } from 'pg';
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { createDatabaseManager, createRetryQueue, adminLoginHandler } from './shared/database.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = 3003; // Different port from IELTS server (3002)
 
-// Database connection with auto-reconnect
-let client;
-let isConnecting = false;
+// Database connection using shared module
+const db = createDatabaseManager({
+    connectionString: process.env.CAMBRIDGE_DATABASE_URL || '',
+    ssl: { require: true, rejectUnauthorized: false }
+});
 
-const DATABASE_CONFIG = {
-    connectionString: 'postgresql://neondb_owner:npg_4HphojyG2lRn@ep-holy-feather-aggb9nm6-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
-    ssl: {
-        require: true,
-        rejectUnauthorized: false
-    }
-};
-
-async function createDatabaseConnection() {
-    if (isConnecting) {
-        return;
-    }
-
-    isConnecting = true;
-
-    try {
-        if (client) {
-            try {
-                await client.end();
-            } catch (e) {
-                // Ignore errors when ending old connection
-            }
-        }
-
-        client = new Client(DATABASE_CONFIG);
-
-        client.on('error', (err) => {
-            console.error('🔄 Database connection lost, will reconnect on next request...', err.message);
-            client = null;
-        });
-
-        await client.connect();
-        console.log('✅ Cambridge Database connected successfully');
-
-        // Initialize Cambridge-specific tables
-        await initializeCambridgeTables();
-
-    } catch (error) {
-        console.error('❌ Database connection failed:', error.message);
-        client = null;
-        throw error;
-    } finally {
-        isConnecting = false;
-    }
-}
-
-async function initializeCambridgeTables() {
+async function initializeCambridgeTables(client) {
     try {
         // Create cambridge_submissions table with proper schema
         await client.query(`
@@ -245,18 +207,32 @@ async function initializeCambridgeTables() {
     }
 }
 
-async function ensureConnection() {
-    if (!client || client._ending) {
-        await createDatabaseConnection();
-    }
-    return client;
+const { ensureConnection } = db;
+
+// Cambridge submission insert function
+async function insertCambridgeSubmission(dbClient, data) {
+    const result = await dbClient.query(`
+        INSERT INTO cambridge_submissions
+        (student_id, student_name, exam_type, level, mock_test, skill, answers, score, grade, start_time, end_time)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        RETURNING id
+    `, [data.studentId, data.studentName, 'Cambridge', data.level,
+        data.mockTest || '1', data.skill, JSON.stringify(data.answers),
+        data.score, data.grade, data.startTime, data.endTime]);
+    console.log(`✅ Saved with ID: ${result.rows[0].id}`);
+    return result.rows[0].id;
 }
+
+const { saveWithRetry } = createRetryQueue(ensureConnection, insertCambridgeSubmission);
 
 // Middleware
 app.use(cors());
 app.use(express.json({ limit: '50mb' })); // Increased limit for audio files
 app.use(express.urlencoded({ limit: '50mb', extended: true })); // Also increase URL-encoded limit
 app.use(express.static('./')); // Serve static files from current directory
+
+// Admin login endpoint
+app.post('/admin-login', adminLoginHandler);
 
 // Root redirect to Cambridge launcher
 app.get('/', (req, res) => {
@@ -265,7 +241,7 @@ app.get('/', (req, res) => {
 
 // Serve Cambridge Admin Dashboard
 app.get('/admin', (req, res) => {
-    res.sendFile(__dirname + '/cambridge-admin-dashboard.html');
+    res.sendFile(path.join(__dirname, 'cambridge-admin-dashboard.html'));
 });
 
 // Test endpoint
@@ -287,86 +263,6 @@ app.get('/test', async (req, res) => {
         });
     }
 });
-
-// Queue for failed submissions
-const failedSubmissions = [];
-
-// Background retry system - runs every 90 seconds
-async function backgroundRetrySystem() {
-    if (failedSubmissions.length === 0) {
-        return;
-    }
-
-    console.log(`🔄 Background retry: ${failedSubmissions.length} Cambridge submissions pending...`);
-
-    const toRetry = [...failedSubmissions];
-    failedSubmissions.length = 0;
-
-    for (const submission of toRetry) {
-        try {
-            console.log(`📝 Retrying: ${submission.data.level} ${submission.data.skill} Mock ${submission.data.mockTest || '1'} for ${submission.data.studentName}`);
-            
-            const dbClient = await ensureConnection();
-            const result = await dbClient.query(`
-                INSERT INTO cambridge_submissions
-                (student_id, student_name, exam_type, level, mock_test, skill, answers, score, grade, start_time, end_time)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-                RETURNING id
-            `, [submission.data.studentId, submission.data.studentName, 'Cambridge',
-                submission.data.level, submission.data.mockTest || '1', submission.data.skill, 
-                JSON.stringify(submission.data.answers), submission.data.score, 
-                submission.data.grade, submission.data.startTime, submission.data.endTime]);
-
-            console.log(`✅ Background retry success! ID: ${result.rows[0].id}`);
-
-        } catch (error) {
-            console.log(`❌ Background retry failed, will try again in 90s`);
-            failedSubmissions.push(submission);
-        }
-    }
-}
-
-// Start background retry system
-setInterval(backgroundRetrySystem, 90000);
-
-// Simple immediate retry function
-async function saveWithRetry(data, maxRetries = 3) {
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-        try {
-            console.log(`📝 Attempt ${attempt}: Saving ${data.level} ${data.skill} Mock ${data.mockTest || '1'} for ${data.studentName}`);
-            
-            const dbClient = await ensureConnection();
-            const result = await dbClient.query(`
-                INSERT INTO cambridge_submissions
-                (student_id, student_name, exam_type, level, mock_test, skill, answers, score, grade, start_time, end_time)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-                RETURNING id
-            `, [data.studentId, data.studentName, 'Cambridge', data.level, 
-                data.mockTest || '1', data.skill, JSON.stringify(data.answers), 
-                data.score, data.grade, data.startTime, data.endTime]);
-
-            console.log(`✅ Saved with ID: ${result.rows[0].id}`);
-            return result.rows[0].id;
-
-        } catch (error) {
-            console.error(`❌ Attempt ${attempt} failed:`, error.message);
-            
-            if (attempt < maxRetries) {
-                console.log(`🔄 Retrying in 2 seconds...`);
-                await new Promise(resolve => setTimeout(resolve, 2000));
-            }
-        }
-    }
-    
-    // If all immediate retries failed, add to background queue
-    console.log(`📋 Adding to background retry queue (will retry every 90s)`);
-    failedSubmissions.push({ 
-        data: data, 
-        timestamp: new Date().toISOString() 
-    });
-    
-    throw new Error('Immediate save failed - added to background retry queue');
-}
 
 // Save Cambridge test submission
 app.post('/cambridge-submissions', async (req, res) => {
@@ -733,6 +629,233 @@ app.post('/cambridge-answers', async (req, res) => {
     }
 });
 
+// =====================================================
+// CAMBRIDGE STUDENT RESULTS ENDPOINTS
+// =====================================================
+
+// Get all Cambridge student results with optional filters
+app.get('/cambridge-student-results', async (req, res) => {
+    try {
+        const { level, mock_test, search } = req.query;
+
+        const dbClient = await ensureConnection();
+        let query = 'SELECT * FROM cambridge_student_results';
+        const params = [];
+        const conditions = [];
+
+        if (level) {
+            conditions.push(`level = $${params.length + 1}`);
+            params.push(level);
+        }
+        if (mock_test) {
+            conditions.push(`mock_test = $${params.length + 1}`);
+            params.push(mock_test);
+        }
+        if (search) {
+            conditions.push(`(student_name ILIKE $${params.length + 1} OR student_id ILIKE $${params.length + 1})`);
+            params.push(`%${search}%`);
+        }
+
+        if (conditions.length > 0) {
+            query += ' WHERE ' + conditions.join(' AND ');
+        }
+
+        query += ' ORDER BY created_at DESC';
+
+        const result = await dbClient.query(query, params);
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Failed to fetch student results:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch student results',
+            error: error.message
+        });
+    }
+});
+
+// Add new Cambridge student result
+app.post('/cambridge-student-results', async (req, res) => {
+    try {
+        const data = req.body;
+
+        console.log(`📊 Adding student result: ${data.student_name} (${data.student_id}) - ${data.level}`);
+
+        const dbClient = await ensureConnection();
+        const result = await dbClient.query(`
+            INSERT INTO cambridge_student_results (
+                student_id, student_name, level, mock_test,
+                reading_raw, reading_max, reading_scale,
+                writing_raw, writing_max, writing_scale,
+                listening_raw, listening_max, listening_scale,
+                speaking_raw, speaking_max, speaking_scale,
+                use_of_english_raw, use_of_english_max, use_of_english_scale,
+                reading_writing_raw, reading_writing_max, reading_writing_scale,
+                overall_scale, cefr_level,
+                shields_listening, shields_reading_writing, shields_speaking, total_shields,
+                passed
+            ) VALUES (
+                $1, $2, $3, $4,
+                $5, $6, $7,
+                $8, $9, $10,
+                $11, $12, $13,
+                $14, $15, $16,
+                $17, $18, $19,
+                $20, $21, $22,
+                $23, $24,
+                $25, $26, $27, $28,
+                $29
+            ) RETURNING *
+        `, [
+            data.student_id, data.student_name, data.level, data.mock_test || '1',
+            data.reading_raw, data.reading_max, data.reading_scale,
+            data.writing_raw, data.writing_max, data.writing_scale,
+            data.listening_raw, data.listening_max, data.listening_scale,
+            data.speaking_raw, data.speaking_max, data.speaking_scale,
+            data.use_of_english_raw, data.use_of_english_max, data.use_of_english_scale,
+            data.reading_writing_raw, data.reading_writing_max, data.reading_writing_scale,
+            data.overall_scale, data.cefr_level,
+            data.shields_listening, data.shields_reading_writing, data.shields_speaking, data.total_shields,
+            data.passed || false
+        ]);
+
+        console.log(`✅ Student result added with ID: ${result.rows[0].id}`);
+
+        res.json({
+            success: true,
+            message: 'Student result added successfully',
+            result: result.rows[0]
+        });
+
+    } catch (error) {
+        console.error('❌ Failed to add student result:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to add student result',
+            error: error.message
+        });
+    }
+});
+
+// Update Cambridge student result
+app.patch('/cambridge-student-results/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = req.body;
+
+        console.log(`📊 Updating student result ID ${id}`);
+
+        const dbClient = await ensureConnection();
+        const result = await dbClient.query(`
+            UPDATE cambridge_student_results SET
+                student_id = COALESCE($1, student_id),
+                student_name = COALESCE($2, student_name),
+                level = COALESCE($3, level),
+                mock_test = COALESCE($4, mock_test),
+                reading_raw = $5,
+                reading_max = $6,
+                reading_scale = $7,
+                writing_raw = $8,
+                writing_max = $9,
+                writing_scale = $10,
+                listening_raw = $11,
+                listening_max = $12,
+                listening_scale = $13,
+                speaking_raw = $14,
+                speaking_max = $15,
+                speaking_scale = $16,
+                use_of_english_raw = $17,
+                use_of_english_max = $18,
+                use_of_english_scale = $19,
+                reading_writing_raw = $20,
+                reading_writing_max = $21,
+                reading_writing_scale = $22,
+                overall_scale = $23,
+                cefr_level = $24,
+                shields_listening = $25,
+                shields_reading_writing = $26,
+                shields_speaking = $27,
+                total_shields = $28,
+                passed = $29,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = $30
+            RETURNING *
+        `, [
+            data.student_id, data.student_name, data.level, data.mock_test,
+            data.reading_raw, data.reading_max, data.reading_scale,
+            data.writing_raw, data.writing_max, data.writing_scale,
+            data.listening_raw, data.listening_max, data.listening_scale,
+            data.speaking_raw, data.speaking_max, data.speaking_scale,
+            data.use_of_english_raw, data.use_of_english_max, data.use_of_english_scale,
+            data.reading_writing_raw, data.reading_writing_max, data.reading_writing_scale,
+            data.overall_scale, data.cefr_level,
+            data.shields_listening, data.shields_reading_writing, data.shields_speaking, data.total_shields,
+            data.passed,
+            id
+        ]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Student result not found'
+            });
+        }
+
+        console.log(`✅ Student result ${id} updated successfully`);
+
+        res.json({
+            success: true,
+            message: 'Student result updated successfully',
+            result: result.rows[0]
+        });
+
+    } catch (error) {
+        console.error('❌ Failed to update student result:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to update student result',
+            error: error.message
+        });
+    }
+});
+
+// Delete Cambridge student result
+app.delete('/cambridge-student-results/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        console.log(`🗑️ Deleting student result ID ${id}`);
+
+        const dbClient = await ensureConnection();
+        const result = await dbClient.query(
+            'DELETE FROM cambridge_student_results WHERE id = $1 RETURNING *',
+            [id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Student result not found'
+            });
+        }
+
+        console.log(`✅ Student result ${id} deleted`);
+
+        res.json({
+            success: true,
+            message: 'Student result deleted successfully'
+        });
+
+    } catch (error) {
+        console.error('❌ Failed to delete student result:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to delete student result',
+            error: error.message
+        });
+    }
+});
+
 // Delete Cambridge answer keys
 app.delete('/cambridge-answers', async (req, res) => {
     try {
@@ -782,7 +905,10 @@ app.delete('/cambridge-answers', async (req, res) => {
 // Initialize database on startup
 async function initialize() {
     try {
-        await createDatabaseConnection();
+        await db.createConnection();
+        // Initialize Cambridge-specific tables after connection
+        const client = await ensureConnection();
+        await initializeCambridgeTables(client);
         console.log('🚀 Cambridge Database Server starting...');
     } catch (error) {
         console.error('❌ Failed to initialize:', error);
@@ -813,8 +939,6 @@ initialize().then(() => {
 // Graceful shutdown
 process.on('SIGINT', async () => {
     console.log('\n\n🛑 Shutting down Cambridge Database Server...');
-    if (client) {
-        await client.end();
-    }
+    await db.shutdown();
     process.exit(0);
 });

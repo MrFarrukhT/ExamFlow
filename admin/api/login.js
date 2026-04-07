@@ -1,10 +1,10 @@
 // Simple authentication for admin panel
 const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = 'Adm!n#2025$SecureP@ss'; // Strong password - change this for production
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
 
 export default async function handler(req, res) {
   // Enable CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || 'http://localhost:3002');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 

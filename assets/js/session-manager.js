@@ -1,6 +1,16 @@
 // Test Session Management Integration
 // This script should be included in all test pages (reading.html, listening.html, writing.html)
 
+function escapeHTML(str) {
+    if (str == null) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+// Concurrency guards to prevent race conditions between periodic saves and submission
+let _isSaving = false;
+let _isSubmitting = false;
+let _periodicSaveIntervalId = null;
+
 document.addEventListener('DOMContentLoaded', function () {
     initializeSession();
     setupSessionHandlers();
@@ -23,7 +33,7 @@ function initializeSession() {
     if (testTakerInfo) {
         testTakerInfo.innerHTML = `
             <div>Test taker ID</div>
-            <div class="test-taker-id"><strong>${studentId}</strong></div>
+            <div class="test-taker-id"><strong>${escapeHTML(studentId)}</strong></div>
         `;
     }
 
@@ -81,8 +91,8 @@ function setupSessionHandlers() {
         alert('Please use the navigation buttons within the test.');
     });
 
-    // Save answers periodically
-    setInterval(saveAnswersToSession, 30000); // Every 30 seconds
+    // Save answers periodically (store ID so we can clear it on submission)
+    _periodicSaveIntervalId = setInterval(saveAnswersToSession, 30000); // Every 30 seconds
 }
 
 async function handleTestCompletion() {
@@ -99,8 +109,15 @@ async function handleTestCompletion() {
     const dashboardPath = examType === 'Cambridge' ? '../../dashboard-cambridge.html' : '../../dashboard.html';
 
     if (confirm('Are you sure you want to submit this section? You will not be able to return to it.')) {
+        // Stop periodic saves and mark submission in progress to prevent race conditions
+        _isSubmitting = true;
+        if (_periodicSaveIntervalId) {
+            clearInterval(_periodicSaveIntervalId);
+            _periodicSaveIntervalId = null;
+        }
+
         try {
-            // Save final answers
+            // Save final answers (waits if a periodic save is still running)
             saveAnswersToSession();
 
             // Mark as completed first (in case database fails)
@@ -215,8 +232,7 @@ function calculateBandScore(score) {
 async function saveTestToDatabase(testData) {
     try {
         // Try local database server first (preferred method)
-        console.log('🔄 Attempting to save to local database server...');
-        const response = await fetch('http://localhost:3002/submissions', {
+        const response = await fetch('/submissions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -226,17 +242,13 @@ async function saveTestToDatabase(testData) {
 
         if (response.ok) {
             const result = await response.json();
-            console.log('✅ Test data saved to local database server:', result.id);
             return result;
         } else {
             throw new Error(`Local server responded with status: ${response.status}`);
         }
     } catch (error) {
-        console.warn('⚠️ Local database server not available:', error.message);
-
         // Fallback 1: Try Vercel API if available
         try {
-            console.log('🔄 Trying Vercel API as fallback...');
             const VERCEL_API = 'https://innovative-centre-admin.vercel.app/api'; // Update with actual URL when deployed
             const response = await fetch(`${VERCEL_API}/submissions`, {
                 method: 'POST',
@@ -248,15 +260,13 @@ async function saveTestToDatabase(testData) {
 
             if (response.ok) {
                 const result = await response.json();
-                console.log('✅ Test data saved to Vercel database');
                 return result;
             }
         } catch (vercelError) {
-            console.warn('⚠️ Vercel API also failed:', vercelError.message);
+            // Vercel API also failed
         }
 
         // Fallback 2: Enhanced local storage (database format)
-        console.log('🔄 Using enhanced local storage as final fallback...');
         return await saveToEnhancedLocalStorage(testData);
     }
 }
@@ -288,7 +298,6 @@ async function saveToEnhancedLocalStorage(testData) {
 
         // Save back to localStorage
         localStorage.setItem('test_submissions_database', JSON.stringify(submissions));
-        console.log('✅ Test data saved to enhanced local storage (database format)');
 
         // Also trigger a sync attempt in the background
         setTimeout(() => syncLocalDataToDatabase(), 5000);
@@ -315,12 +324,11 @@ async function syncLocalDataToDatabase() {
 
         if (unsynced.length === 0) return;
 
-        console.log(`🔄 Attempting to sync ${unsynced.length} local submissions...`);
 
         // Try to sync each submission
         for (const submission of unsynced) {
             try {
-                const response = await fetch('http://localhost:3002/submissions', {
+                const response = await fetch('/submissions', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -340,10 +348,9 @@ async function syncLocalDataToDatabase() {
                     // Mark as synced
                     submission.saved_locally = false;
                     submission.synced_at = new Date().toISOString();
-                    console.log(`✅ Synced submission ${submission.id}`);
                 }
             } catch (syncError) {
-                console.warn(`⚠️ Failed to sync submission ${submission.id}`);
+                // Failed to sync submission
             }
         }
 
@@ -351,13 +358,19 @@ async function syncLocalDataToDatabase() {
         localStorage.setItem('test_submissions_database', JSON.stringify(submissions));
 
     } catch (error) {
-        console.warn('Background sync failed:', error);
+        // Background sync failed
     }
 }
 
 function saveAnswersToSession() {
+    // Prevent concurrent saves from overlapping (race condition guard).
+    // The periodic interval is cleared when submission starts, but a straggler
+    // callback could still fire. This flag blocks it.
+    if (_isSaving) return;
+    _isSaving = true;
+
     const currentModule = getCurrentModule();
-    if (!currentModule) return;
+    if (!currentModule) { _isSaving = false; return; }
 
     const answers = {};
 
@@ -416,6 +429,7 @@ function saveAnswersToSession() {
 
     // Save to localStorage
     localStorage.setItem(`${currentModule}Answers`, JSON.stringify(answers));
+    _isSaving = false;
 }
 
 // Auto-save on page unload

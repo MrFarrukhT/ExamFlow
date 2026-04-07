@@ -1102,15 +1102,19 @@ console.log('✅ All IELTS Functions: Enabled');
                 if (window.cambridgeAnswerManager) {
                     window.cambridgeAnswerManager.saveAnswer(questionNum, this.value, 'reading-writing');
                 }
-                // Also save to localStorage backup
-                const answers = JSON.parse(localStorage.getItem('reading-writing-answers') || '{}');
+                // Also save to localStorage backup using correct key (cambridge- prefix)
+                const answers = JSON.parse(localStorage.getItem('cambridge-reading-writingAnswers') || '{}');
                 answers[questionNum] = this.value;
-                localStorage.setItem('reading-writing-answers', JSON.stringify(answers));
+                localStorage.setItem('cambridge-reading-writingAnswers', JSON.stringify(answers));
+
+                // Mark question as answered in footer
+                const footerBtn = document.querySelector(`.subQuestion[data-ordernumber="${questionNum}"]`);
+                if (footerBtn) footerBtn.classList.add('answered');
             }
         });
-        
-        // Load saved answer if exists
-        const savedAnswers = JSON.parse(localStorage.getItem('reading-writing-answers') || '{}');
+
+        // Load saved answer if exists (check both keys for backward compatibility)
+        let savedAnswers = JSON.parse(localStorage.getItem('cambridge-reading-writingAnswers') || '{}');
         if (savedAnswers[questionNum]) {
             select.value = savedAnswers[questionNum];
         }
@@ -1293,15 +1297,15 @@ function toggleOptionsMenu() {
                         await window.cambridgeAnswerManager.submitTestToDatabase();
                         console.log('✅ Test submitted');
                     }
-                    localStorage.setItem('reading-writingStatus', 'completed');
-                    localStorage.setItem('reading-writingEndTime', new Date().toISOString());
+                    localStorage.setItem('cambridge-reading-writingStatus', 'completed');
+                    localStorage.setItem('cambridge-reading-writingEndTime', new Date().toISOString());
                     alert('Test submitted successfully!');
                     window.location.href = '../../dashboard-cambridge.html';
                 } catch(error) {
                     console.error('Error:', error);
                     alert('Test marked as completed. Note: Database submission may have failed.');
-                    localStorage.setItem('reading-writingStatus', 'completed');
-                    localStorage.setItem('reading-writingEndTime', new Date().toISOString());
+                    localStorage.setItem('cambridge-reading-writingStatus', 'completed');
+                    localStorage.setItem('cambridge-reading-writingEndTime', new Date().toISOString());
                     window.location.href = '../../dashboard-cambridge.html';
                 }
             }
@@ -1370,19 +1374,19 @@ function toggleOptionsMenu() {
                 console.log(`💾 Part 4: Saved answer for Q${questionNum}: "${answer}"`);
             } else {
                 console.warn('⚠️ cambridgeAnswerManager not found, using localStorage directly');
-                const answers = JSON.parse(localStorage.getItem('reading-writingAnswers') || '{}');
+                const answers = JSON.parse(localStorage.getItem('cambridge-reading-writingAnswers') || '{}');
                 answers[questionNum] = answer;
-                localStorage.setItem('reading-writingAnswers', JSON.stringify(answers));
+                localStorage.setItem('cambridge-reading-writingAnswers', JSON.stringify(answers));
                 console.log(`💾 Part 4: Saved to localStorage for Q${questionNum}`);
             }
         } catch (error) {
             console.error('❌ Error saving answer:', error);
         }
     }
-    
+
     function getSavedAnswer(questionNum) {
         try {
-            const answers = JSON.parse(localStorage.getItem('reading-writingAnswers') || '{}');
+            const answers = JSON.parse(localStorage.getItem('cambridge-reading-writingAnswers') || '{}');
             return answers[questionNum] || '';
         } catch (error) {
             console.error('❌ Error getting saved answer:', error);

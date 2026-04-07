@@ -16,7 +16,6 @@ class CambridgeBridge {
         this.savedSelection = null; // Store selection when context menu opens
         this.savedRange = null;
         
-        console.log('🌉 Cambridge Bridge initializing...');
         this.init();
     }
 
@@ -32,8 +31,6 @@ class CambridgeBridge {
     }
 
     setup() {
-        console.log('🔧 Cambridge Bridge setting up adapters...');
-        
         // 1. Map Cambridge header elements to IELTS structure
         this.setupHeaderAdapters();
         
@@ -56,14 +53,11 @@ class CambridgeBridge {
         this.wireUpCambridgeEvents();
         
         this.initialized = true;
-        console.log('✅ Cambridge Bridge ready!');
     }
 
     // ==================== HEADER ADAPTERS ====================
     
     setupHeaderAdapters() {
-        console.log('🔗 Mapping Cambridge header to IELTS structure...');
-        
         // Cambridge uses different IDs for header buttons
         const messagesBtn = document.getElementById('messagesMenuButton');
         const optionsBtn = document.getElementById('optionsMenuButton');
@@ -76,7 +70,6 @@ class CambridgeBridge {
                 e.stopPropagation();
                 window.ieltsUniversal.showNotifications();
             });
-            console.log('✓ Messages button mapped');
         }
         
         if (optionsBtn && window.ieltsUniversal) {
@@ -85,7 +78,6 @@ class CambridgeBridge {
                 e.stopPropagation();
                 window.ieltsUniversal.showOptionsMenu();
             });
-            console.log('✓ Options button mapped');
         }
         
         if (notesBtn) {
@@ -94,7 +86,6 @@ class CambridgeBridge {
                 e.stopPropagation();
                 this.toggleNotesSidebar();
             });
-            console.log('✓ Notes button mapped');
         }
 
         // Update WiFi status indicator for Cambridge structure
@@ -272,15 +263,12 @@ class CambridgeBridge {
                 </div>
             `;
             document.body.appendChild(overlay);
-            console.log('✓ Popup overlay created');
         }
     }
 
     // ==================== CONTEXT MENU & HIGHLIGHTING ====================
     
     setupContextMenuAdapter() {
-        console.log('🎨 Setting up context menu for Cambridge...');
-        
         // Ensure context menu exists - use existing one or create new
         let contextMenu = document.getElementById('contextMenu');
         if (!contextMenu) {
@@ -288,7 +276,6 @@ class CambridgeBridge {
             contextMenu = document.getElementById('contextMenu');
         } else {
             // Context menu exists in HTML, attach event listeners to it
-            console.log('✓ Using existing context menu from HTML');
             this.attachContextMenuListeners(contextMenu);
         }
         
@@ -327,7 +314,6 @@ class CambridgeBridge {
                 this.savedSelection = selectedText;
                 if (selection.rangeCount > 0) {
                     this.savedRange = selection.getRangeAt(0).cloneRange();
-                    console.log('✓ Saved selection:', selectedText.substring(0, 50) + '...');
                 }
                 
                 this.showContextMenu(e.clientX, e.clientY);
@@ -343,8 +329,6 @@ class CambridgeBridge {
         
         // Enable text selection globally (override any user-select: none)
         this.enableTextSelection();
-        
-        console.log('✓ Context menu adapter ready');
     }
     
     enableTextSelection() {
@@ -378,17 +362,6 @@ class CambridgeBridge {
                 isPart1 = true;
             }
         }
-        
-        console.log('Text selection setup:', { 
-            hasReadingPassage: !!hasReadingPassage, 
-            hasQuestions: !!hasQuestions, 
-            isSplitView, 
-            isPart1,
-            currentPartVariable: window.currentPart,
-            questionCount: document.querySelectorAll('.question-wrapper').length,
-            url: window.location.href,
-            pathname: window.location.pathname
-        });
         
         // Add CSS to enable text selection
         if (!document.getElementById('text-selection-styles')) {
@@ -605,8 +578,6 @@ class CambridgeBridge {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log(`Context menu "${text}" clicked`);
-                
                 if (text.includes('highlight') && !text.includes('clear')) {
                     if (window.highlightText) window.highlightText();
                 } else if (text.includes('note')) {
@@ -618,7 +589,6 @@ class CambridgeBridge {
                 }
             });
         });
-        console.log(`✓ Attached listeners to ${items.length} context menu items`);
     }
     
     createContextMenu() {
@@ -634,7 +604,6 @@ class CambridgeBridge {
         highlightItem.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log('Highlight menu item clicked');
             if (window.highlightText) window.highlightText();
         });
         
@@ -644,7 +613,6 @@ class CambridgeBridge {
         noteItem.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log('Note menu item clicked');
             if (window.addNote) window.addNote();
         });
         
@@ -654,7 +622,6 @@ class CambridgeBridge {
         clearItem.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log('Clear menu item clicked');
             if (window.clearHighlight) window.clearHighlight();
         });
         
@@ -664,7 +631,6 @@ class CambridgeBridge {
         clearAllItem.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log('Clear All menu item clicked');
             if (window.clearAllHighlights) window.clearAllHighlights();
         });
         
@@ -674,7 +640,6 @@ class CambridgeBridge {
         menu.appendChild(clearAllItem);
         
         document.body.appendChild(menu);
-        console.log('✓ Context menu created with event listeners');
     }
 
     showContextMenu(x, y) {
@@ -715,15 +680,12 @@ class CambridgeBridge {
     }
 
     highlightSelection() {
-        console.log('highlightSelection() executing...');
-        
         // Use saved range instead of current selection (which may be cleared)
         let range = this.savedRange;
         let selectedText = this.savedSelection;
-        
+
         // Fallback to current selection if saved range doesn't exist
         if (!range) {
-            console.log('No saved range, trying current selection');
             const selection = window.getSelection();
             if (selection.rangeCount === 0) {
                 console.error('No selection found');
@@ -737,8 +699,6 @@ class CambridgeBridge {
             selectedText = selection.toString().trim();
         }
         
-        console.log('Using text:', selectedText?.substring(0, 50));
-        
         if (!selectedText || selectedText.length === 0) {
             if (window.ieltsUniversal) {
                 window.ieltsUniversal.showToast('Please select text first', 'error');
@@ -750,8 +710,7 @@ class CambridgeBridge {
         // Limit selection to first paragraph if multiple paragraphs selected
         range = this.limitToFirstParagraph(range);
         selectedText = range.toString().trim();
-        console.log('After limiting to first paragraph:', selectedText?.substring(0, 50));
-        
+
         // Check if selection is already highlighted
         const container = range.commonAncestorContainer;
         const parentElement = container.nodeType === 3 ? container.parentElement : container;
@@ -835,8 +794,6 @@ class CambridgeBridge {
         
         // If selection spans multiple blocks, limit to first block
         if (startBlock && endBlock && startBlock !== endBlock) {
-            console.log('Selection spans multiple paragraphs, limiting to first paragraph');
-            
             const newRange = document.createRange();
             newRange.setStart(range.startContainer, range.startOffset);
             
@@ -855,15 +812,12 @@ class CambridgeBridge {
     }
     
     addNoteToSelection() {
-        console.log('addNoteToSelection() executing...');
-        
         // Use saved range instead of current selection (which may be cleared)
         let range = this.savedRange;
         let text = this.savedSelection;
-        
+
         // Fallback to current selection if saved range doesn't exist
         if (!range) {
-            console.log('No saved range, trying current selection');
             const selection = window.getSelection();
             if (selection.rangeCount === 0) {
                 console.error('No selection found');
@@ -877,8 +831,6 @@ class CambridgeBridge {
             text = selection.toString().trim();
         }
         
-        console.log('Using text for note:', text?.substring(0, 50));
-        
         if (!text || text.length === 0) {
             if (window.ieltsUniversal) {
                 window.ieltsUniversal.showToast('Please select text first', 'error');
@@ -890,8 +842,7 @@ class CambridgeBridge {
         // Limit selection to first paragraph if multiple paragraphs selected
         range = this.limitToFirstParagraph(range);
         text = range.toString().trim();
-        console.log('After limiting to first paragraph:', text?.substring(0, 50));
-        
+
         const note = prompt('Enter your note:', '');
         
         if (!note || note.trim().length === 0) {
@@ -1099,35 +1050,29 @@ class CambridgeBridge {
         if (savedHighlights) {
             try {
                 this.highlightedRanges = JSON.parse(savedHighlights);
-                console.log(`Loaded ${this.highlightedRanges.length} highlights`);
                 
                 // Restore highlights visually after a short delay to ensure DOM is ready
                 setTimeout(() => {
                     this.restoreHighlightsForCurrentPage();
                 }, 500);
             } catch (e) {
-                console.warn('Error loading highlights:', e);
             }
         }
         
         if (savedNotes) {
             try {
                 this.notes = JSON.parse(savedNotes);
-                console.log(`Loaded ${Object.keys(this.notes).length} notes`);
                 
                 // Restore notes list
                 setTimeout(() => {
                     this.updateNotesList();
                 }, 500);
             } catch (e) {
-                console.warn('Error loading notes:', e);
             }
         }
     }
     
     restoreHighlightsForCurrentPage() {
-        console.log(`🎨 Restoring ${this.highlightedRanges.length} highlights visually...`);
-        
         let restoredCount = 0;
         
         this.highlightedRanges.forEach((range, index) => {
@@ -1168,18 +1113,14 @@ class CambridgeBridge {
                                 parent.removeChild(node);
                                 
                                 restoredCount++;
-                                console.log(`✅ Restored highlight ${index + 1}: "${range.text.substring(0, 30)}..."`);
                                 break; // Move to next highlight
                             }
                         }
                     }
                 }
             } catch (e) {
-                console.warn(`Could not restore highlight ${index + 1}:`, e);
             }
         });
-        
-        console.log(`✅ Restored ${restoredCount}/${this.highlightedRanges.length} highlights visually`);
         
         // Also restore notes visually if any
         this.restoreNotesVisually();
@@ -1188,7 +1129,6 @@ class CambridgeBridge {
     restoreNotesVisually() {
         const noteCount = Object.keys(this.notes).length;
         if (noteCount > 0) {
-            console.log(`📝 ${noteCount} notes are available in storage`);
             // Notes are displayed in the notes sidebar, which is managed separately
             this.updateNotesList();
         }
@@ -1197,8 +1137,6 @@ class CambridgeBridge {
     // ==================== ANSWER TRACKING ====================
     
     setupAnswerTracking() {
-        console.log('📝 Setting up answer tracking for Cambridge...');
-        
         // Track all input changes
         document.addEventListener('change', (e) => {
             if (e.target.matches('input, select, textarea')) {
@@ -1211,8 +1149,6 @@ class CambridgeBridge {
         
         // Load answers for current part
         this.loadAnswersForCurrentPart();
-        
-        console.log('✓ Answer tracking ready');
     }
 
     saveAnswersForCurrentPart() {
@@ -1303,8 +1239,6 @@ class CambridgeBridge {
     // ==================== CROSS-PAGE STATE ====================
     
     setupCrossPageState() {
-        console.log('🔄 Setting up cross-page state management...');
-        
         // Save current scroll position
         window.addEventListener('beforeunload', () => {
             this.saveAnswersForCurrentPart();
@@ -1317,15 +1251,11 @@ class CambridgeBridge {
         if (savedScroll) {
             setTimeout(() => window.scrollTo(0, parseInt(savedScroll)), 100);
         }
-        
-        console.log('✓ Cross-page state ready');
     }
 
     // ==================== CAMBRIDGE-SPECIFIC EVENTS ====================
     
     wireUpCambridgeEvents() {
-        console.log('⚡ Wiring up Cambridge-specific events...');
-        
         // Update answered state when questions are answered
         document.querySelectorAll('.subQuestion').forEach(btn => {
             const observer = new MutationObserver(() => {
@@ -1338,7 +1268,6 @@ class CambridgeBridge {
             observer.observe(btn, { attributes: true, attributeFilter: ['class'] });
         });
         
-        console.log('✓ Cambridge events wired');
     }
 
     // ==================== UTILITY METHODS ====================
@@ -1362,8 +1291,6 @@ class CambridgeBridge {
 function initCambridgeBridge() {
     if (!window.cambridgeBridge) {
         window.cambridgeBridge = new CambridgeBridge();
-        console.log('🌉 Cambridge Bridge initialized globally');
-        console.log('✅ Context menu functions available');
     }
     return window.cambridgeBridge;
 }
@@ -1372,7 +1299,6 @@ function initCambridgeBridge() {
 try {
     initCambridgeBridge();
 } catch (e) {
-    console.warn('Could not initialize immediately:', e);
 }
 
 // Initialize immediately if DOM is ready, otherwise wait
@@ -1395,9 +1321,7 @@ window.addEventListener('load', () => {
 
 // Global wrapper function for highlighting text
 window.highlightText = function() {
-    console.log('highlightText() called');
     if (window.cambridgeBridge) {
-        console.log('Calling cambridgeBridge.highlightSelection()');
         try {
             window.cambridgeBridge.highlightSelection();
         } catch (e) {
@@ -1412,9 +1336,7 @@ window.highlightText = function() {
 
 // Global wrapper function for adding a note
 window.addNote = function() {
-    console.log('addNote() called');
     if (window.cambridgeBridge) {
-        console.log('Calling cambridgeBridge.addNoteToSelection()');
         try {
             window.cambridgeBridge.addNoteToSelection();
         } catch (e) {
@@ -1429,9 +1351,7 @@ window.addNote = function() {
 
 // Global wrapper function for clearing a highlight
 window.clearHighlight = function() {
-    console.log('clearHighlight() called');
     if (window.cambridgeBridge) {
-        console.log('Calling cambridgeBridge.clearHighlightAtCursor()');
         try {
             window.cambridgeBridge.clearHighlightAtCursor();
         } catch (e) {
@@ -1446,9 +1366,7 @@ window.clearHighlight = function() {
 
 // Global wrapper function for clearing all highlights
 window.clearAllHighlights = function() {
-    console.log('clearAllHighlights() called');
     if (window.cambridgeBridge) {
-        console.log('Calling cambridgeBridge.clearAllHighlights()');
         try {
             window.cambridgeBridge.clearAllHighlights();
         } catch (e) {

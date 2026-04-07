@@ -138,16 +138,57 @@
     // Listen for any input change (radio or text)
     document.addEventListener('change', (e) => {
         // We wait a brief moment to allow the inline script to save to localStorage
-        setTimeout(updateFooterUI, 50);
+        setTimeout(() => {
+            updateFooterUI();
+            consolidateAnswers(); // Also consolidate on every change
+        }, 50);
     });
     
     // Listen for localStorage changes (cross-tab syncing)
     window.addEventListener('storage', (e) => {
         if (e.key && e.key.startsWith('movers_rw_')) {
             updateFooterUI();
+            consolidateAnswers(); // Also consolidate when another tab saves
         }
     });
   }
+
+  // Consolidate all movers_rw_* answers into reading-writingAnswers
+  function consolidateAnswers() {
+    const consolidated = {};
+    let questionNumber = 1;
+    
+    // Go through all parts in order
+    for (const [partStr, count] of Object.entries(MOVERS_STRUCTURE)) {
+      const part = parseInt(partStr);
+      
+      // Get all questions from this part
+      for (let q = 1; q <= count; q++) {
+        const key = getStorageKey(part, q);
+        const answer = localStorage.getItem(key);
+        
+        if (answer && answer.trim()) {
+          consolidated[`q${questionNumber}`] = answer.trim();
+        }
+        questionNumber++;
+      }
+    }
+    
+    // Save consolidated answers to the expected localStorage key
+    localStorage.setItem('cambridge-reading-writingAnswers', JSON.stringify(consolidated));
+    console.log(`✅ Consolidated ${Object.keys(consolidated).length} A1-Movers R&W answers`);
+    
+    return consolidated;
+  }
+  
+  // Expose consolidateAnswers globally so it can be called before submission
+  window.consolidateMoversAnswers = consolidateAnswers;
+  
+  // Auto-consolidate every 5 seconds to keep reading-writingAnswers in sync
+  setInterval(consolidateAnswers, 5000);
+  
+  // Consolidate immediately on load
+  setTimeout(consolidateAnswers, 1000);
 
   // Initialize
   if (document.readyState === 'loading') {
@@ -161,5 +202,7 @@
   }
 
 })();
+
+
 
 

@@ -3,26 +3,65 @@
 
 class CambridgeTimer {
     constructor(durationMinutes, moduleName) {
+        // CRITICAL: Destroy ALL existing timers before creating a new one
+        // This prevents multiple timers from running simultaneously
+        CambridgeTimer.destroyAllTimers();
+
         this.moduleName = moduleName;
         this.durationMinutes = durationMinutes;
         this.moduleKey = CambridgeTimer.normalizeModuleKey(moduleName);
-        this.statusKey = `${this.moduleKey}Status`;
-        this.startTimeKey = `${this.moduleKey}StartTime`;
+        // Use cambridge- prefixed keys to avoid collision with IELTS
+        this.statusKey = `cambridge-${this.moduleKey}Status`;
+        this.startTimeKey = `cambridge-${this.moduleKey}StartTime`;
         this.storageKey = CambridgeTimer.getTimerStateKey(moduleName);
         this.timerInterval = null;
         this.isPaused = false;
         this.timeRemaining = null;
         this.startTime = null;
         this.timerElement = null;
+        this.styleElement = null; // Track the style element for cleanup
         this.alertShown = false;
         this.completionHandled = false;
         CambridgeTimer.trackInstance(this);
+
+        // Add navigation protection - cleanup timer when user leaves the page
+        this.setupNavigationCleanup();
+
         this.init();
     }
 
+    setupNavigationCleanup() {
+        // Clean up timer when navigating away from the page
+        this.beforeUnloadHandler = () => {
+            // Don't destroy on page unload if test is completed
+            const status = localStorage.getItem(this.statusKey);
+            if (status !== 'completed') {
+                // Save current state before leaving
+                if (this.startTime && this.timeRemaining > 0) {
+                    this.saveTimerState({
+                        startTime: this.startTime,
+                        totalSeconds: this.durationMinutes * 60,
+                        isRunning: true,
+                        moduleName: this.moduleName,
+                        completed: false
+                    });
+                }
+            }
+        };
+
+        // Use pagehide for better cross-browser support (works with bfcache)
+        this.pageHideHandler = (event) => {
+            if (this.timerInterval) {
+                clearInterval(this.timerInterval);
+                this.timerInterval = null;
+            }
+        };
+
+        window.addEventListener('beforeunload', this.beforeUnloadHandler);
+        window.addEventListener('pagehide', this.pageHideHandler);
+    }
+
     init() {
-        console.log('рџ•ђ Initializing timer:', this.durationMinutes, 'minutes for', this.moduleName);
-        
         const existingStatus = localStorage.getItem(this.statusKey);
         if (existingStatus === 'completed') {
             // Module already marked as finished - ensure no stray timer state remains
@@ -40,12 +79,6 @@ class CambridgeTimer {
             const totalSeconds = this.durationMinutes * 60;
             this.timeRemaining = Math.max(0, totalSeconds - elapsed);
             this.startTime = testStartTime;
-            
-            console.log('рџ“‚ Restored from test start time:', {
-                testStarted: testStartTimeStr,
-                elapsed: Math.floor(elapsed / 60) + ' minutes',
-                remaining: Math.floor(this.timeRemaining / 60) + ' minutes'
-            });
             
             // Save state
             this.saveTimerState({
@@ -66,12 +99,10 @@ class CambridgeTimer {
                 moduleName: this.moduleName,
                 completed: false
             });
-            console.log('вњЁ Started new timer:', this.timeRemaining, 'seconds');
         }
 
         // Ensure timeRemaining is valid
         if (!this.timeRemaining || this.timeRemaining < 0) {
-            console.warn('вљ пёЏ Timer expired or invalid');
             this.timeRemaining = 0;
         }
 
@@ -97,8 +128,9 @@ class CambridgeTimer {
             </div>
         `;
 
-        // Add styles
+        // Add styles (and track for cleanup)
         const style = document.createElement('style');
+        style.id = 'cambridge-timer-styles'; // ID for easy removal
         style.textContent = `
             #cambridge-timer-container {
                 position: fixed;
@@ -228,9 +260,16 @@ class CambridgeTimer {
             }
         `;
 
+        // Remove any existing style element first
+        const existingStyle = document.getElementById('cambridge-timer-styles');
+        if (existingStyle) {
+            existingStyle.remove();
+        }
+
         document.head.appendChild(style);
         document.body.appendChild(timerContainer);
         this.timerElement = document.getElementById('cambridge-timer-display');
+        this.styleElement = style; // Track for cleanup
     }
 
     formatTime(seconds) {
@@ -313,7 +352,6 @@ class CambridgeTimer {
                 audioPlayer.pause();
                 audioPlayer.currentTime = 0;
             } catch (e) {
-                console.warn('Could not stop audio on timer expiry:', e);
             }
         }
 
@@ -351,7 +389,6 @@ class CambridgeTimer {
             oscillator.start(audioContext.currentTime);
             oscillator.stop(audioContext.currentTime + 0.5);
         } catch (e) {
-            console.log('Could not play alert sound:', e);
         }
     }
 
@@ -394,7 +431,6 @@ class CambridgeTimer {
             return;
         }
         this.completionHandled = true;
-        console.log('CambridgeTimer: external completion detected for', this.moduleName, 'via', reason);
         this.destroy();
         CambridgeTimer.clearTimerState(this.moduleName);
     }
@@ -408,28 +444,73 @@ class CambridgeTimer {
     }
 
     destroy() {
+        // Clear the interval
         if (this.timerInterval) {
             clearInterval(this.timerInterval);
             this.timerInterval = null;
         }
-        CambridgeTimer.untrackInstance(this);
+
+        // Remove event listeners to prevent memory leaks
+        if (this.beforeUnloadHandler) {
+            window.removeEventListener('beforeunload', this.beforeUnloadHandler);
+            this.beforeUnloadHandler = null;
+        }
+        if (this.pageHideHandler) {
+            window.removeEventListener('pagehide', this.pageHideHandler);
+            this.pageHideHandler = null;
+        }
+
+        // Remove UI elements
         const container = document.getElementById('cambridge-timer-container');
         if (container) {
             container.remove();
         }
-        console.log('рџ§№ Timer destroyed for', this.moduleName);
+
+        // Remove style element
+        if (this.styleElement && this.styleElement.parentNode) {
+            this.styleElement.remove();
+            this.styleElement = null;
+        }
+        // Also check for any orphaned style elements by ID
+        const styleById = document.getElementById('cambridge-timer-styles');
+        if (styleById) {
+            styleById.remove();
+        }
+
+        // Remove any time's up modals that might be open
+        const timesUpModal = document.querySelector('.times-up-modal');
+        if (timesUpModal) {
+            timesUpModal.remove();
+        }
+
+        CambridgeTimer.untrackInstance(this);
     }
     // Static method to destroy all existing timers
     static destroyAllTimers() {
+        // Destroy all tracked timer instances
         if (CambridgeTimer.activeTimers && CambridgeTimer.activeTimers.size) {
             Array.from(CambridgeTimer.activeTimers).forEach(timer => timer.destroy());
             CambridgeTimer.activeTimers.clear();
         }
+
+        // Clean up any orphaned UI elements (safety net)
         const container = document.getElementById('cambridge-timer-container');
         if (container) {
             container.remove();
         }
-        console.log('?? Cleared all timer displays');
+
+        // Clean up any orphaned style elements
+        const styleElement = document.getElementById('cambridge-timer-styles');
+        if (styleElement) {
+            styleElement.remove();
+        }
+
+        // Clean up any orphaned time's up modals
+        const timesUpModal = document.querySelector('.times-up-modal');
+        if (timesUpModal) {
+            timesUpModal.remove();
+        }
+
     }
     saveTimerState(state) {
         localStorage.setItem(this.storageKey, JSON.stringify(state));
@@ -451,7 +532,6 @@ class CambridgeTimer {
         if (legacyKey !== normalizedKey) {
             localStorage.removeItem(legacyKey);
         }
-        console.log('?? Cleared timer state for:', moduleName);
     }
     // Static method to clear all Cambridge timer states
     static clearAllTimerStates() {
@@ -459,7 +539,6 @@ class CambridgeTimer {
         keys.forEach(key => {
             if (key.startsWith('cambridge_timer_')) {
                 localStorage.removeItem(key);
-                console.log('рџ—‘пёЏ Cleared:', key);
             }
         });
     }
@@ -495,7 +574,7 @@ class CambridgeTimer {
     static getTimerDuration(level, module) {
         const durations = {
             'A1-Movers': {
-                'reading-writing': 60,  // 60 minutes
+                'reading-writing': 35,  // 35 minutes
                 'listening': 30,        // 30 minutes
                 'speaking': 7           // 7 minutes
             },

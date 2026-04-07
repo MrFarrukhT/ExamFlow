@@ -9,7 +9,6 @@ class AnswerLoader {
     init() {
         this.detectQuestionTypes();
         this.loadAnswers();
-        console.log('✅ Answer Loader initialized');
     }
 
     // Detect what question types are present on the page
@@ -69,10 +68,7 @@ class AnswerLoader {
             await this.loadJS(`../../assets/js/${questionType.skill}/${questionType.type}.js`);
             
             this.loadedModules.add(moduleKey);
-            console.log(`✅ Loaded module: ${moduleKey}`);
-            
         } catch (error) {
-            console.warn(`⚠️ Failed to load module: ${moduleKey}`, error);
         }
     }
 
@@ -108,7 +104,6 @@ class AnswerLoader {
             if (window.testAnswers) {
                 this.correctAnswers = window.testAnswers;
                 window.correctAnswers = this.correctAnswers; // Make globally available
-                console.log(`✅ Loaded answers for MOCK ${testInfo.mock} - ${testInfo.skill.toUpperCase()}`);
                 delete window.testAnswers; // Clean up
             }
             

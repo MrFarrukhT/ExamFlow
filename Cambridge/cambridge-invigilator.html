@@ -360,10 +360,11 @@
         
         function checkIfTestInProgress() {
             // Check if any module status indicates the test has started
+            // Use cambridge- prefixed keys to match the test files
             const modules = ['reading', 'writing', 'listening', 'reading-writing', 'speaking'];
-            
+
             for (const module of modules) {
-                const status = localStorage.getItem(`${module}Status`);
+                const status = localStorage.getItem(`cambridge-${module}Status`);
                 if (status === 'in-progress' || status === 'completed') {
                     return true;
                 }
@@ -396,7 +397,7 @@
                     <p><strong>Test Started:</strong> ${testStartTime ? new Date(testStartTime).toLocaleString() : 'N/A'}</p>
                     <h4 style="margin-top: 15px;">Module Status:</h4>
                     ${modules.map(module => {
-                        const status = localStorage.getItem(`${module}Status`) || 'not-started';
+                        const status = localStorage.getItem(`cambridge-${module}Status`) || 'not-started';
                         const statusEmoji = status === 'completed' ? '✅' : status === 'in-progress' ? '⏳' : '⭕';
                         return `<p>${statusEmoji} <strong>${formatModuleName(module)}:</strong> ${status}</p>`;
                     }).join('')}
@@ -462,18 +463,18 @@
             if (confirm('Are you sure you want to reset the current session? This will clear all progress but keep history.')) {
                 const manager = new CambridgeAnswerManager();
                 manager.saveCurrentTestToHistory();
-                
-                // Clear current session data
+
+                // Clear current session data using cambridge- prefixed keys
                 const keysToRemove = [
                     'studentId', 'studentName', 'cambridgeLevel', 'testStartTime', 'examType',
-                    'readingStatus', 'writingStatus', 'listeningStatus', 'reading-writingStatus',
-                    'readingStartTime', 'writingStartTime', 'listeningStartTime', 'reading-writingStartTime',
-                    'readingEndTime', 'writingEndTime', 'listeningEndTime', 'reading-writingEndTime',
-                    'readingAnswers', 'writingAnswers', 'listeningAnswers', 'reading-writingAnswers'
+                    'cambridge-readingStatus', 'cambridge-writingStatus', 'cambridge-listeningStatus', 'cambridge-reading-writingStatus',
+                    'cambridge-readingStartTime', 'cambridge-writingStartTime', 'cambridge-listeningStartTime', 'cambridge-reading-writingStartTime',
+                    'cambridge-readingEndTime', 'cambridge-writingEndTime', 'cambridge-listeningEndTime', 'cambridge-reading-writingEndTime',
+                    'cambridge-readingAnswers', 'cambridge-writingAnswers', 'cambridge-listeningAnswers', 'cambridge-reading-writingAnswers'
                 ];
-                
+
                 keysToRemove.forEach(key => localStorage.removeItem(key));
-                
+
                 alert('Session reset successfully! History has been saved.');
                 updateSessionInfo();
                 updateCurrentLevel();

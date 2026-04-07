@@ -194,7 +194,7 @@
                                             It was a ticket to ride a horse at a farm.
                                         </p>
                                         <p>
-                                            'I'm <span class="gap-number">(12)</span> <input type="text" class="gap-input" id="q1" autocomplete="off"> of horses. I don't want to go. It's difficult to ride them and they are very big.' She started to <span class="gap-number">(13)</span> <input type="text" class="gap-input" id="q2" autocomplete="off">.
+                                            'I'm <span class="gap-number">(12)</span> <input type="text" class="gap-input" id="p3_q1" autocomplete="off"> of horses. I don't want to go. It's difficult to ride them and they are very big.' She started to <span class="gap-number">(13)</span> <input type="text" class="gap-input" id="p3_q2" autocomplete="off">.
                                         </p>
                                         <p>
                                             Mum said, 'It's exciting, not difficult or dangerous, and horses are beautiful. But you don't have to do it.'
@@ -203,10 +203,10 @@
                                             'But I've got to because Grandma wants me to do it,' said Jane.
                                         </p>
                                         <p>
-                                            On Saturday, Jane's dad <span class="gap-number">(14)</span> <input type="text" class="gap-input" id="q3" autocomplete="off"> her to her first lesson.
+                                            On Saturday, Jane's dad <span class="gap-number">(14)</span> <input type="text" class="gap-input" id="p3_q3" autocomplete="off"> her to her first lesson.
                                         </p>
                                         <p>
-                                            A woman, Alice, showed Jane the horse. 'This horse is called Star,' she said. Dad and Alice helped Jane to get on Star's <span class="gap-number">(15)</span> <input type="text" class="gap-input" id="q4" autocomplete="off"> and they all walked slowly down a quiet road. When they came back Jane <span class="gap-number">(16)</span> <input type="text" class="gap-input" id="q5" autocomplete="off"> and said, 'Dad, that was so cool!'
+                                            A woman, Alice, showed Jane the horse. 'This horse is called Star,' she said. Dad and Alice helped Jane to get on Star's <span class="gap-number">(15)</span> <input type="text" class="gap-input" id="p3_q4" autocomplete="off"> and they all walked slowly down a quiet road. When they came back Jane <span class="gap-number">(16)</span> <input type="text" class="gap-input" id="p3_q5" autocomplete="off"> and said, 'Dad, that was so cool!'
                                         </p>
                                         <p>
                                             At home Jane phoned Grandma. 'I had a riding lesson today on a horse who was called Star and I loved it, thank you.'
@@ -221,15 +221,15 @@
                                         <div class="q6-title">(17) Now choose the best name for the story. Tick one box.</div>
                                         <div class="q6-options">
                                             <label class="q6-label">
-                                                <input type="radio" name="q6" value="A" class="q6-checkbox">
+                                                <input type="radio" name="p3_q6" value="A" class="q6-checkbox">
                                                 A girl enjoys riding a horse
                                             </label>
                                             <label class="q6-label">
-                                                <input type="radio" name="q6" value="B" class="q6-checkbox">
+                                                <input type="radio" name="p3_q6" value="B" class="q6-checkbox">
                                                 A birthday party
                                             </label>
                                             <label class="q6-label">
-                                                <input type="radio" name="q6" value="C" class="q6-checkbox">
+                                                <input type="radio" name="p3_q6" value="C" class="q6-checkbox">
                                                 Grandma goes for a walk
                                             </label>
                                         </div>
@@ -417,28 +417,28 @@
                 });
             });
 
-            // Answer saving for Text Inputs (q1-q5)
-            const textQuestions = ['q1', 'q2', 'q3', 'q4', 'q5'];
+            // Answer saving for Text Inputs (p3_q1-p3_q5)
+            const textQuestions = ['p3_q1', 'p3_q2', 'p3_q3', 'p3_q4', 'p3_q5'];
             textQuestions.forEach(id => {
                 const input = document.getElementById(id);
                 // Load
-                const saved = localStorage.getItem(`movers_rw_p3_${id}`);
+                const saved = localStorage.getItem(`movers_rw_${id}`);
                 if(saved) input.value = saved;
                 
                 // Save
                 input.addEventListener('input', (e) => {
-                    localStorage.setItem(`movers_rw_p3_${id}`, e.target.value);
+                    localStorage.setItem(`movers_rw_${id}`, e.target.value);
                 });
             });
             
             // Answer saving for Q6 (Radio)
             const savedQ6 = localStorage.getItem('movers_rw_p3_q6');
             if(savedQ6) {
-                const radio = document.querySelector(`input[name="q6"][value="${savedQ6}"]`);
+                const radio = document.querySelector(`input[name="p3_q6"][value="${savedQ6}"]`);
                 if(radio) radio.checked = true;
             }
             
-            document.querySelectorAll('input[name="q6"]').forEach(radio => {
+            document.querySelectorAll('input[name="p3_q6"]').forEach(radio => {
                 radio.addEventListener('change', (e) => {
                     if(e.target.checked) {
                         localStorage.setItem('movers_rw_p3_q6', e.target.value);

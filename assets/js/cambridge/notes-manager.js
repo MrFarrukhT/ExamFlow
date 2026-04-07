@@ -11,8 +11,6 @@ class CambridgeNotesManager {
     }
     
     init() {
-        console.log('📝 Initializing Cambridge Notes Manager for:', this.currentPart);
-        
         // Wait for page to fully load
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
@@ -28,18 +26,12 @@ class CambridgeNotesManager {
         this.notesElement = this.findNotesElement();
         
         if (this.notesElement) {
-            console.log('Found notes element:', this.notesElement);
-            
             // Restore saved notes
             this.restoreNotes();
-            
+
             // Setup save listeners
             this.setupSaveListeners();
-            
-            console.log('✅ Notes Manager initialized');
         } else {
-            console.log('⚠️ No notes element found on this page');
-            
             // Still try to restore hypothesis notes
             this.restoreHypothesisNotes();
         }
@@ -87,7 +79,6 @@ class CambridgeNotesManager {
         for (const selector of selectors) {
             const element = document.querySelector(selector);
             if (element) {
-                console.log(`📝 Found notes element with selector: ${selector}`);
                 return element;
             }
         }
@@ -95,11 +86,9 @@ class CambridgeNotesManager {
         // Check for hypothesis notes
         const hypothesisNotes = document.querySelector('.hypothesis-notes, .annotator-note, .hypothesis-annotation-body');
         if (hypothesisNotes) {
-            console.log('📝 Found Hypothesis notes element');
             return hypothesisNotes;
         }
         
-        console.log('⚠️ No notes element found, will still track Hypothesis annotations');
         return null;
     }
     
@@ -124,9 +113,6 @@ class CambridgeNotesManager {
         
         localStorage.setItem(this.storageKey, JSON.stringify(allNotes));
         
-        if (notesContent || hypothesisNotes.length > 0) {
-            console.log(`💾 Saved notes for ${this.currentPart} (${notesContent.length} chars, ${hypothesisNotes.length} annotations)`);
-        }
     }
     
     restoreNotes() {
@@ -134,7 +120,6 @@ class CambridgeNotesManager {
         const savedNotes = allNotes[this.currentPart];
         
         if (!savedNotes) {
-            console.log('No notes to restore for', this.currentPart);
             return;
         }
         
@@ -145,7 +130,6 @@ class CambridgeNotesManager {
             } else {
                 this.notesElement.textContent = savedNotes.content;
             }
-            console.log(`✅ Restored ${savedNotes.content.length} characters of notes`);
         }
         
         // Restore hypothesis notes
@@ -187,13 +171,9 @@ class CambridgeNotesManager {
                     }
                 });
             } catch (e) {
-                console.warn(`Could not query selector: ${selector}`);
+                // Could not query selector
             }
         });
-        
-        if (notes.length > 0) {
-            console.log(`📝 Found ${notes.length} Hypothesis notes`);
-        }
         
         return notes;
     }
@@ -224,27 +204,20 @@ class CambridgeNotesManager {
                     restoredCount++;
                 }
             } catch (e) {
-                console.warn('Could not restore note:', e);
+                // Could not restore note
             }
         });
         
-        if (restoredCount > 0) {
-            console.log(`✅ Restored ${restoredCount}/${notes.length} hypothesis notes`);
-        }
     }
     
     setupSaveListeners() {
-        console.log('📝 Setting up notes save listeners');
-        
         if (this.notesElement) {
             // Save on input
             this.notesElement.addEventListener('input', () => {
-                console.log('📝 Notes input detected');
                 this.saveNotes();
             });
             
             this.notesElement.addEventListener('change', () => {
-                console.log('📝 Notes change detected');
                 this.saveNotes();
             });
         }
@@ -273,7 +246,6 @@ class CambridgeNotesManager {
                             node.classList.contains('annotation-body')
                         )) {
                             shouldSave = true;
-                            console.log('📝 New note detected:', node);
                         }
                     }
                 });
@@ -293,12 +265,10 @@ class CambridgeNotesManager {
         
         // Listen for hypothesis annotation events
         document.addEventListener('hypothesis:annotationCreated', () => {
-            console.log('📝 Hypothesis annotation created event');
             setTimeout(() => this.saveNotes(), 500);
         });
         
         document.addEventListener('hypothesis:annotationUpdated', () => {
-            console.log('📝 Hypothesis annotation updated event');
             setTimeout(() => this.saveNotes(), 500);
         });
         
@@ -306,12 +276,10 @@ class CambridgeNotesManager {
         document.addEventListener('click', (e) => {
             const target = e.target.closest('[aria-label*="note" i], [title*="note" i], .note-button, button[aria-label*="New page note"]');
             if (target) {
-                console.log('📝 Note button clicked');
                 setTimeout(() => this.saveNotes(), 500);
             }
         });
         
-        console.log('✅ Notes save listeners attached');
     }
     
     getAllNotes() {
@@ -362,7 +330,6 @@ class CambridgeNotesManager {
                 null
             ).singleNodeValue;
         } catch (e) {
-            console.warn('Error evaluating XPath:', xpath, e);
             return null;
         }
     }
@@ -380,12 +347,10 @@ class CambridgeNotesManager {
             }
         }
         
-        console.log(`🗑️ Cleared notes for ${this.currentPart}`);
     }
-    
+
     clearAllNotes() {
         localStorage.removeItem(this.storageKey);
-        console.log('🗑️ Cleared all notes for all parts');
     }
 }
 

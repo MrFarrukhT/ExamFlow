@@ -5,11 +5,12 @@
   if (window.__A2AnswerSyncLoaded) return; window.__A2AnswerSyncLoaded = true;
 
   // Dynamically determine storage key based on data-skill attribute
+  // Use cambridge- prefix to avoid collision with IELTS storage keys
   function getStorageKey() {
     var skill = document.body.getAttribute('data-skill');
-    if (skill === 'reading') return 'readingAnswers';
-    if (skill === 'writing') return 'writingAnswers';
-    return 'reading-writingAnswers'; // Default for combined tests
+    if (skill === 'reading') return 'cambridge-readingAnswers';
+    if (skill === 'writing') return 'cambridge-writingAnswers';
+    return 'cambridge-reading-writingAnswers'; // Default for combined tests
   }
   
   var STORAGE_KEY = getStorageKey();
@@ -38,7 +39,6 @@
 
   function saveAnswer(qNum, value, silent){
     if (qNum == null) {
-      console.warn('⚠️ Attempted to save answer but question number is null');
       return;
     }
     var answers = loadAnswers();
@@ -48,12 +48,6 @@
     
     // Update footer counter after saving
     updateFooterCounter();
-    
-    // Debug logging (silent to user, visible in console)
-    if (value && value.length > 0) {
-      var displayVal = typeof value === 'string' && value.length > 20 ? value.substring(0, 20) + '...' : value;
-      console.log('💾 Saved Q' + qNum + ':', displayVal);
-    }
     
     // Silent mode: no notifications or visual feedback
     if (!silent) {
@@ -147,9 +141,7 @@
         }
       });
       
-      console.log('✅ Footer counters updated from localStorage');
     }catch(e){
-      console.warn('⚠️ Could not update footer counter:', e);
     }
   }
 
@@ -260,8 +252,6 @@
     // Sort the questions numerically
     existingQuestions.sort(function(a, b){ return a - b; });
     
-    console.log('🔄 Attempting to restore answers for questions:', existingQuestions);
-    
     Object.keys(answers).forEach(function(k){
       var q = parseInt(k,10); 
       if (isNaN(q)) return;
@@ -302,7 +292,6 @@
         }
         
         if (!orderEl) {
-          console.warn('Could not find element for question', q);
           return;
         }
         
@@ -319,7 +308,6 @@
         }
         
         if (!qWrapper) {
-          console.warn('Could not find wrapper for question', q);
           return;
         }
         
@@ -330,7 +318,6 @@
             if (radios[i].value === val) {
               radios[i].checked = true;
               restoredCount++;
-              console.log('✓ Restored Q'+q+':', val);
               break;
             }
           }
@@ -343,7 +330,6 @@
             var evt = new Event('input', { bubbles: true });
             textInput.dispatchEvent(evt);
             restoredCount++;
-            console.log('✓ Restored Q'+q+' (text):', val.substring(0, 30)+'...');
           }
           
           // Restore textareas (Part 6-7)
@@ -354,8 +340,6 @@
             var evt2 = new Event('input', { bubbles: true });
             textarea.dispatchEvent(evt2);
             restoredCount++;
-            var displayVal = val.substring(0, 30);
-            console.log('✓ Restored Q'+q+' (textarea):', displayVal + (val.length > 30 ? '...' : ''));
           }
         }
         
@@ -365,11 +349,6 @@
       }
     });
     
-    if (restoredCount > 0) {
-      console.log('📂 Successfully restored', restoredCount, 'answer(s) for this part');
-    } else {
-      console.log('ℹ️ No answers to restore for questions:', existingQuestions);
-    }
   }
 
   // Handle immediate saves (radio buttons)
@@ -390,7 +369,6 @@
     if (t.matches && t.matches('input[type="text"], textarea')){
       var q = getQuestionNumberFromInput(t);
       if (q == null) {
-        console.warn('⚠️ Input detected but could not determine question number', t);
         return;
       }
       
@@ -415,14 +393,9 @@
         if (q != null) {
           saveAnswer(q, field.value, true);
           savedCount++;
-        } else {
-          console.warn('⚠️ Periodic save: Could not determine question number for field', field);
         }
       }
     });
-    if (savedCount > 0) {
-      console.log('🔄 Periodic save completed:', savedCount, 'answer(s)');
-    }
   }
 
   // Save on visibility change (tab switch, minimize)
@@ -472,10 +445,6 @@
         savedCount++;
       }
     });
-    
-    if (savedCount > 0) {
-      console.log('💾 Force-saved', savedCount, 'answer(s) to localStorage');
-    }
     
     return savedCount;
   }

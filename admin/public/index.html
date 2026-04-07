@@ -306,15 +306,25 @@
             errorMessage.style.display = 'none';
             successMessage.style.display = 'none';
 
-            // Simple local authentication
-            if (username === 'admin' && password === 'Adm!n#2025$SecureP@ss') {
-                localStorage.setItem('adminToken', 'local-admin-token');
-                authToken = 'local-admin-token';
-                successMessage.textContent = 'Login successful!';
-                successMessage.style.display = 'block';
-                setTimeout(showAdminPanel, 1000);
-            } else {
-                errorMessage.textContent = 'Invalid credentials. Use admin/admin123';
+            try {
+                const response = await fetch('/admin-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    localStorage.setItem('adminToken', result.token);
+                    authToken = result.token;
+                    successMessage.textContent = 'Login successful!';
+                    successMessage.style.display = 'block';
+                    setTimeout(showAdminPanel, 1000);
+                } else {
+                    errorMessage.textContent = 'Invalid credentials.';
+                    errorMessage.style.display = 'block';
+                }
+            } catch (err) {
+                errorMessage.textContent = 'Server unavailable. Please ensure the server is running.';
                 errorMessage.style.display = 'block';
             }
 

@@ -6,6 +6,22 @@ class WritingHandler {
         this.timerInterval = null;
         this.isTimerRunning = false;
         this.autosaveInterval = null;
+
+        // Store references for cleanup in destroy()
+        this._boundHandlers = {
+            textareaListeners: [],  // { element, event, handler } entries
+            submitBtn: null,
+            submitHandler: null,
+            timerToggle: null,
+            timerToggleHandler: null,
+            timerReset: null,
+            timerResetHandler: null,
+            resizerMousedown: null,
+            resizerTouchstart: null,
+            resizerEl: null,
+            beforeunloadHandler: null
+        };
+
         this.init();
     }
 
@@ -15,7 +31,6 @@ class WritingHandler {
         this.initializeResizer();
         this.initializeAutoSave();
         this.updateWordCounts();
-        console.log('✅ Writing handler initialized');
     }
 
     bindEvents() {
@@ -31,46 +46,62 @@ class WritingHandler {
         // Submit button
         const submitBtn = document.getElementById('deliver-button');
         if (submitBtn) {
-            submitBtn.addEventListener('click', (e) => {
+            const submitHandler = (e) => {
                 e.preventDefault();
                 this.submitWriting();
-            });
+            };
+            submitBtn.addEventListener('click', submitHandler);
+            this._boundHandlers.submitBtn = submitBtn;
+            this._boundHandlers.submitHandler = submitHandler;
         }
 
         // Timer controls
         const timerToggle = document.getElementById('timer-toggle-btn');
         const timerReset = document.getElementById('timer-reset-btn');
-        
+
         if (timerToggle) {
-            timerToggle.addEventListener('click', () => this.toggleTimer());
+            const toggleHandler = () => this.toggleTimer();
+            timerToggle.addEventListener('click', toggleHandler);
+            this._boundHandlers.timerToggle = timerToggle;
+            this._boundHandlers.timerToggleHandler = toggleHandler;
         }
-        
+
         if (timerReset) {
-            timerReset.addEventListener('click', () => this.resetTimer());
+            const resetHandler = () => this.resetTimer();
+            timerReset.addEventListener('click', resetHandler);
+            this._boundHandlers.timerReset = timerReset;
+            this._boundHandlers.timerResetHandler = resetHandler;
         }
 
         // Word count updates with limit enforcement
         document.querySelectorAll('.writing-area').forEach(textarea => {
-            textarea.addEventListener('input', (e) => {
+            const inputHandler = (e) => {
                 const taskId = e.target.id.includes('1') ? 'task1' : 'task2';
                 this.updateWordCount(taskId);
-            });
-            
+            };
+            textarea.addEventListener('input', inputHandler);
+            this._boundHandlers.textareaListeners.push({ element: textarea, event: 'input', handler: inputHandler });
+
             // Disable copy and paste
-            textarea.addEventListener('copy', (e) => {
+            const copyHandler = (e) => {
                 e.preventDefault();
-                console.log('Copy disabled in writing test');
-            });
-            
-            textarea.addEventListener('paste', (e) => {
+            };
+            textarea.addEventListener('copy', copyHandler);
+            this._boundHandlers.textareaListeners.push({ element: textarea, event: 'copy', handler: copyHandler });
+
+            const pasteHandler = (e) => {
                 e.preventDefault();
                 console.log('Paste disabled in writing test');
-            });
-            
-            textarea.addEventListener('cut', (e) => {
+            };
+            textarea.addEventListener('paste', pasteHandler);
+            this._boundHandlers.textareaListeners.push({ element: textarea, event: 'paste', handler: pasteHandler });
+
+            const cutHandler = (e) => {
                 e.preventDefault();
                 console.log('Cut disabled in writing test');
-            });
+            };
+            textarea.addEventListener('cut', cutHandler);
+            this._boundHandlers.textareaListeners.push({ element: textarea, event: 'cut', handler: cutHandler });
         });
     }
 
@@ -106,14 +137,36 @@ class WritingHandler {
         let wordCount = text === '' ? 0 : text.split(/\s+/).length;
         const maxWords = 500; // 500 word limit
         
-        // Enforce 500 word limit - truncate if exceeds
+        // Enforce 500 word limit - show warning and prevent further input (do NOT delete existing text)
         if (wordCount > maxWords) {
-            const words = text.split(/\s+/);
-            text = words.slice(0, maxWords).join(' ');
-            textarea.value = text;
+            // Store the previous valid text if not already stored
+            if (!textarea.dataset.lastValidText) {
+                const words = text.split(/\s+/);
+                textarea.dataset.lastValidText = words.slice(0, maxWords).join(' ');
+            }
+            // Restore to the last valid text (prevents new words, keeps existing text)
+            textarea.value = textarea.dataset.lastValidText;
             wordCount = maxWords;
+        } else {
+            // Update the last valid text whenever we're within the limit
+            textarea.dataset.lastValidText = text;
         }
-        
+
+        // Show or hide the word limit warning message
+        let warningEl = textarea.parentElement.querySelector('.word-limit-warning');
+        if (wordCount >= maxWords) {
+            if (!warningEl) {
+                warningEl = document.createElement('div');
+                warningEl.className = 'word-limit-warning';
+                warningEl.style.cssText = 'color: #e74c3c; font-weight: bold; padding: 6px 10px; margin-top: 4px; background: #fdecea; border: 1px solid #e74c3c; border-radius: 4px; font-size: 13px;';
+                textarea.parentElement.appendChild(warningEl);
+            }
+            warningEl.textContent = 'Word limit reached (500 words). Please remove some words before adding new text.';
+            warningEl.style.display = 'block';
+        } else if (warningEl) {
+            warningEl.style.display = 'none';
+        }
+
         // Update main word count display with limit
         const limitMessage = wordCount >= maxWords ? ' (Limit reached)' : '';
         wordCountEl.textContent = `Word count: ${wordCount}/500${limitMessage}`;
@@ -234,25 +287,33 @@ class WritingHandler {
         const resizer = document.getElementById('resizer');
         const taskPanel = document.querySelector('.task-panel');
         const writingPanel = document.querySelector('.writing-panel');
-        
-        if (!resizer || !taskPanel || !writingPanel) return;
-        
-        let isResizing = false;
 
-        resizer.addEventListener('mousedown', (e) => {
-            isResizing = true;
-            document.addEventListener('mousemove', handleResize);
-            document.addEventListener('mouseup', stopResize);
-            e.preventDefault();
-        });
+        if (!resizer || !taskPanel || !writingPanel) return;
+
+        this._boundHandlers.resizerEl = resizer;
+        let isResizing = false;
 
         const handleResize = (e) => {
             if (!isResizing) return;
-            
+
             const container = document.querySelector('.panels-container');
             const containerRect = container.getBoundingClientRect();
             const percentage = ((e.clientX - containerRect.left) / containerRect.width) * 100;
-            
+
+            if (percentage > 20 && percentage < 80) {
+                taskPanel.style.flex = `0 0 ${percentage}%`;
+                writingPanel.style.flex = `0 0 ${100 - percentage}%`;
+            }
+        };
+
+        const handleTouchResize = (e) => {
+            if (!isResizing) return;
+
+            const touch = e.touches[0];
+            const container = document.querySelector('.panels-container');
+            const containerRect = container.getBoundingClientRect();
+            const percentage = ((touch.clientX - containerRect.left) / containerRect.width) * 100;
+
             if (percentage > 20 && percentage < 80) {
                 taskPanel.style.flex = `0 0 ${percentage}%`;
                 writingPanel.style.flex = `0 0 ${100 - percentage}%`;
@@ -263,29 +324,29 @@ class WritingHandler {
             isResizing = false;
             document.removeEventListener('mousemove', handleResize);
             document.removeEventListener('mouseup', stopResize);
+            document.removeEventListener('touchmove', handleTouchResize);
+            document.removeEventListener('touchend', stopResize);
         };
 
-        // Touch support for mobile
-        resizer.addEventListener('touchstart', (e) => {
+        const mousedownHandler = (e) => {
+            isResizing = true;
+            document.addEventListener('mousemove', handleResize);
+            document.addEventListener('mouseup', stopResize);
+            e.preventDefault();
+        };
+
+        const touchstartHandler = (e) => {
             isResizing = true;
             document.addEventListener('touchmove', handleTouchResize);
             document.addEventListener('touchend', stopResize);
             e.preventDefault();
-        });
-
-        const handleTouchResize = (e) => {
-            if (!isResizing) return;
-            
-            const touch = e.touches[0];
-            const container = document.querySelector('.panels-container');
-            const containerRect = container.getBoundingClientRect();
-            const percentage = ((touch.clientX - containerRect.left) / containerRect.width) * 100;
-            
-            if (percentage > 20 && percentage < 80) {
-                taskPanel.style.flex = `0 0 ${percentage}%`;
-                writingPanel.style.flex = `0 0 ${100 - percentage}%`;
-            }
         };
+
+        resizer.addEventListener('mousedown', mousedownHandler);
+        resizer.addEventListener('touchstart', touchstartHandler);
+
+        this._boundHandlers.resizerMousedown = mousedownHandler;
+        this._boundHandlers.resizerTouchstart = touchstartHandler;
     }
 
     initializeAutoSave() {
@@ -293,12 +354,13 @@ class WritingHandler {
         this.autosaveInterval = setInterval(() => {
             this.autoSave();
         }, 30000);
-        
-        // Save on page unload
-        window.addEventListener('beforeunload', () => {
+
+        // Save on page unload (store reference for cleanup)
+        this._boundHandlers.beforeunloadHandler = () => {
             this.autoSave();
-        });
-        
+        };
+        window.addEventListener('beforeunload', this._boundHandlers.beforeunloadHandler);
+
         // Load saved content
         this.loadSavedContent();
     }
@@ -400,8 +462,6 @@ class WritingHandler {
 
             alert('Writing section completed successfully!');
             window.location.href = '../../dashboard.html';
-
-            console.log('✅ Writing submitted successfully:', { task1Words, task2Words });
 
         } catch (error) {
             console.error('❌ Error submitting writing test:', error);
@@ -539,13 +599,60 @@ ${percentage >= 70 ? 'Well done!' : 'Keep practicing to improve your score.'}
         alert(results);
     }
 
-    // Cleanup method
+    // Cleanup method - removes ALL event listeners and intervals to prevent memory leaks
     destroy() {
+        // Clear intervals
         if (this.timerInterval) {
             clearInterval(this.timerInterval);
+            this.timerInterval = null;
         }
         if (this.autosaveInterval) {
             clearInterval(this.autosaveInterval);
+            this.autosaveInterval = null;
+        }
+
+        // Remove beforeunload listener
+        if (this._boundHandlers.beforeunloadHandler) {
+            window.removeEventListener('beforeunload', this._boundHandlers.beforeunloadHandler);
+            this._boundHandlers.beforeunloadHandler = null;
+        }
+
+        // Remove submit button listener
+        if (this._boundHandlers.submitBtn && this._boundHandlers.submitHandler) {
+            this._boundHandlers.submitBtn.removeEventListener('click', this._boundHandlers.submitHandler);
+            this._boundHandlers.submitBtn = null;
+            this._boundHandlers.submitHandler = null;
+        }
+
+        // Remove timer control listeners
+        if (this._boundHandlers.timerToggle && this._boundHandlers.timerToggleHandler) {
+            this._boundHandlers.timerToggle.removeEventListener('click', this._boundHandlers.timerToggleHandler);
+            this._boundHandlers.timerToggle = null;
+            this._boundHandlers.timerToggleHandler = null;
+        }
+        if (this._boundHandlers.timerReset && this._boundHandlers.timerResetHandler) {
+            this._boundHandlers.timerReset.removeEventListener('click', this._boundHandlers.timerResetHandler);
+            this._boundHandlers.timerReset = null;
+            this._boundHandlers.timerResetHandler = null;
+        }
+
+        // Remove all textarea listeners (input, copy, paste, cut)
+        for (const entry of this._boundHandlers.textareaListeners) {
+            entry.element.removeEventListener(entry.event, entry.handler);
+        }
+        this._boundHandlers.textareaListeners = [];
+
+        // Remove resizer listeners
+        if (this._boundHandlers.resizerEl) {
+            if (this._boundHandlers.resizerMousedown) {
+                this._boundHandlers.resizerEl.removeEventListener('mousedown', this._boundHandlers.resizerMousedown);
+                this._boundHandlers.resizerMousedown = null;
+            }
+            if (this._boundHandlers.resizerTouchstart) {
+                this._boundHandlers.resizerEl.removeEventListener('touchstart', this._boundHandlers.resizerTouchstart);
+                this._boundHandlers.resizerTouchstart = null;
+            }
+            this._boundHandlers.resizerEl = null;
         }
     }
 }

@@ -208,16 +208,16 @@
                                                 <span style="color: #666;"><strong>Example</strong></span>&nbsp;&nbsp;
                                                 <span style="text-decoration: underline; font-weight: bold;">All</span> countries in the world have countryside and cities. 
                                                 Cities are busy and many people live there. The countryside is different. You find small villages and the roads 
-                                                <span class="question-number-inline">(18)</span><input type="text" class="answer-input" id="q1" autocomplete="off"> have many cars on them.
+                                                <span class="question-number-inline">(18)</span><input type="text" class="answer-input" id="p4_q1" autocomplete="off"> have many cars on them.
                                             </div>
                                             <div style="margin-top: 20px;">
-                                                <span class="question-number-inline">(19)</span> There are a lot <input type="text" class="answer-input" id="q2" autocomplete="off"> plants and flowers in the countryside. 
+                                                <span class="question-number-inline">(19)</span> There are a lot <input type="text" class="answer-input" id="p4_q2" autocomplete="off"> plants and flowers in the countryside. 
                                                 Farmers grow different kinds of food in the fields. People 
-                                                <span class="question-number-inline">(20)</span> in villages stop to talk, and enjoy going <input type="text" class="answer-input" id="q3" autocomplete="off"> long walks.
+                                                <span class="question-number-inline">(20)</span> in villages stop to talk, and enjoy going <input type="text" class="answer-input" id="p4_q3" autocomplete="off"> long walks.
                                             </div>
                                             <div style="margin-top: 20px;">
-                                                <span class="question-number-inline">(21)</span> Some people <input type="text" class="answer-input" id="q4" autocomplete="off"> living in the countryside is boring because there aren't many things to do, 
-                                                <span class="question-number-inline">(22)</span> <input type="text" class="answer-input" id="q5" autocomplete="off"> some people love it because it is pretty and very quiet.
+                                                <span class="question-number-inline">(21)</span> Some people <input type="text" class="answer-input" id="p4_q4" autocomplete="off"> living in the countryside is boring because there aren't many things to do, 
+                                                <span class="question-number-inline">(22)</span> <input type="text" class="answer-input" id="p4_q5" autocomplete="off"> some people love it because it is pretty and very quiet.
                                             </div>
                                         </div>
 
@@ -453,17 +453,17 @@
             const inputs = document.querySelectorAll('.answer-input');
             inputs.forEach(input => {
                 // Load saved answer
-                const saved = localStorage.getItem(`movers_rw_p4_${input.id}`);
+                const saved = localStorage.getItem(`movers_rw_${input.id}`);
                 if(saved) input.value = saved;
                 
                 // Save on change
                 input.addEventListener('change', () => {
-                    localStorage.setItem(`movers_rw_p4_${input.id}`, input.value);
+                    localStorage.setItem(`movers_rw_${input.id}`, input.value);
                 });
                 
                 // Auto-save on input (debounced could be better but this is fine for now)
                 input.addEventListener('input', () => {
-                    localStorage.setItem(`movers_rw_p4_${input.id}`, input.value);
+                    localStorage.setItem(`movers_rw_${input.id}`, input.value);
                 });
             });
         });
