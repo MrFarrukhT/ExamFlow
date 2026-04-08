@@ -283,6 +283,82 @@ app.get('/test', async (req, res) => {
     }
 });
 
+// ============================================
+// STUDENT-FACING ENDPOINTS (no admin auth)
+// ============================================
+
+// Get a student's own submissions (no audio data, scoped by student_id)
+app.get('/my-submissions', async (req, res) => {
+    try {
+        const { student_id, level, mock_test } = req.query;
+        if (!student_id) {
+            return res.status(400).json({ success: false, message: 'student_id is required' });
+        }
+
+        const dbClient = await ensureConnection();
+        const conditions = ['student_id = $1'];
+        const params = [student_id];
+
+        if (level) {
+            conditions.push(`level = $${params.length + 1}`);
+            params.push(level);
+        }
+        if (mock_test) {
+            conditions.push(`mock_test = $${params.length + 1}`);
+            params.push(mock_test);
+        }
+
+        const query = `SELECT id, student_id, student_name, level, mock_test, skill, answers, score, grade,
+                               start_time, end_time, created_at, evaluated, evaluator_name, evaluation_date,
+                               evaluation_notes, audio_duration
+                        FROM cambridge_submissions
+                        WHERE ${conditions.join(' AND ')}
+                        ORDER BY created_at DESC`;
+
+        const result = await dbClient.query(query, params);
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Failed to fetch student submissions:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch submissions' });
+    }
+});
+
+// Get answer keys for a level/skill (student-facing, for answer checking)
+app.get('/my-answer-keys', async (req, res) => {
+    try {
+        const { level, skill, mock } = req.query;
+        if (!level || !skill) {
+            return res.status(400).json({ success: false, message: 'level and skill are required' });
+        }
+
+        const dbClient = await ensureConnection();
+        let query = 'SELECT answers FROM cambridge_answer_keys WHERE level = $1 AND skill = $2';
+        const params = [level, skill];
+
+        if (mock) {
+            query += ' AND mock = $3';
+            params.push(mock);
+        }
+
+        query += ' ORDER BY created_at DESC LIMIT 1';
+        const result = await dbClient.query(query, params);
+
+        if (result.rows.length === 0) {
+            return res.json({ success: true, answers: {}, count: 0 });
+        }
+
+        const answers = result.rows[0].answers || {};
+        res.json({ success: true, answers, count: Object.keys(answers).length, mock: mock || null });
+    } catch (error) {
+        console.error('Failed to fetch answer keys:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch answer keys' });
+    }
+});
+
+// ============================================
+// ADMIN-ONLY ENDPOINTS
+// ============================================
+
 // Save Cambridge test submission (rate limited)
 app.post('/cambridge-submissions', submissionLimiter, async (req, res) => {
     try {

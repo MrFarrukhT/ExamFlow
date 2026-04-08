@@ -1,5 +1,48 @@
 # Autopilot Journal
 
+## Session: 2026-04-08 22:30
+Persona: Nervous first-timer (never seen the platform before)
+System: Both (IELTS + Cambridge)
+
+### Phase 1: Journey Map
+- Gaps identified: 8
+- Key finding: Silent auto-save — students had zero feedback that their answers were being preserved
+- Key finding: No welcome/orientation — first-timers dropped straight into module selection with no context
+- Key finding: Timer color changes only — no explicit time warnings a student would notice
+- Key finding: Module cards gave duration but zero description of what's inside
+- Key finding: Progress counter and review modal already existed (exam-progress.js) — well wired
+
+### Phase 2: Creation
+- Built: 3 new features
+  - **Auto-save indicator** — subtle green "Answers saved" toast at bottom-left, shows every 30s during periodic save, throttled to avoid spam. Uses `role="status"` + `aria-live="polite"` for screen readers. Committed as f905363
+  - **Time warning toasts** — 3 tiers: "10 minutes remaining" (blue), "5 minutes remaining" (orange), "1 minute remaining!" (red). Each shows once, centered top, 4-second display. Uses `role="alert"`. Committed as 071db7f
+  - **Welcome guide overlay** — one-time orientation modal on both dashboards (IELTS + Cambridge). Explains modules, auto-save, timer warnings, submission flow, and reassures about data safety. Shows once per student via localStorage key. Committed as 530c1e4
+
+### Phase 3: Structure
+- Skipped — structure sound for first-timer flows. Dashboard → Test → Dashboard loop is clear and logical.
+
+### Phase 4: Heal
+- Fixed: 3 accessibility findings
+  - Added `role="dialog"`, `aria-modal`, `aria-labelledby`, `aria-required`, `aria-describedby`, `role="alert"` to invigilator password modals on both dashboards
+  - Added `aria-label="Innovative Centre logo"` and `role="img"` to launcher SVG
+  - Converted launcher feature list from `<div>` to semantic `<ul>/<li>` with `aria-hidden="true"` on decorative SVGs
+  - Committed as e3e3be3
+
+### Phase 5: Experience
+- Pages improved: 4 (via module description hints)
+  - **IELTS dashboard** — added `.module-hint` text to each card: "4 parts, 40 questions..." / "3 passages, 40 questions..." / "2 tasks. Task 1: describe a chart..."
+  - **Cambridge dashboard** — added context-appropriate hints for all module types across A1/A2 and B1/B2 layouts: "Audio cannot be paused" for listening, "You'll test your microphone first" for speaking
+  - Committed as edb2435
+
+### Phase 6: Scenario
+- Skipped (first-timer is not an adversarial persona — stress testing covered by cheater persona)
+
+### Session Stats
+Total commits: 7 (including checkpoint and hook-triggered)
+Total files changed: ~10 (session-manager.js, timer.js, welcome-guide.js, student-dashboard.html, dashboard-cambridge.html, dashboard.css, cambridge-dashboard.css, launcher.html, launcher.css)
+Persona journey coverage: Launcher → Login → Dashboard → Test (all modules) → Submit → Return
+---
+
 ## Session: 2026-04-08 21:00
 Persona: Staff rotation (Invigilator → Admin Scoring → Admin Management)
 System: Both (IELTS + Cambridge)

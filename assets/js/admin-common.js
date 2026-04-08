@@ -685,6 +685,29 @@ class AdminDashboard {
     }
 
     // ------------------------------------------------------------------
+    // Submission deletion
+    // ------------------------------------------------------------------
+
+    async deleteSubmission(submissionId) {
+        if (!confirm('Delete this submission? This cannot be undone.')) return;
+        try {
+            const response = await this._authFetch(
+                `${this.apiBase}${this.submissionsEndpoint}/${submissionId}`,
+                { method: 'DELETE' }
+            );
+            const data = await response.json();
+            if (data.success) {
+                this.loadSubmissions();
+            } else {
+                alert('Failed to delete: ' + (data.message || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Delete error:', error);
+            alert('Error deleting submission. Check server connection.');
+        }
+    }
+
+    // ------------------------------------------------------------------
     // Expose methods as window globals for inline onclick handlers
     // ------------------------------------------------------------------
 
@@ -726,6 +749,9 @@ class AdminDashboard {
         window.startScoringQueue = () => self.startScoringQueue();
         window.navigateScoring = (d) => self.navigateScoring(d);
         window.advanceAfterScore = () => self.advanceAfterScore();
+
+        // Submission management
+        window.deleteSubmission = (id) => self.deleteSubmission(id);
 
         // Expose state as getters so pagination onclick references like
         // goToPage(currentPage - 1) still work with bare variable names.

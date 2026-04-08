@@ -537,7 +537,7 @@
             for (let i = 1; i <= 40; i++) { const el = document.getElementById(`answer_${i}`); if (el) el.value = ''; }
             try {
                 this.updateAnswerStatus('\u23F3 Loading answers from database...');
-                const response = await fetch(`${this.apiBase}/cambridge-answers?level=${encodeURIComponent(level)}&skill=${skill}&mock=${mock}`);
+                const response = await this._authFetch(`${this.apiBase}/cambridge-answers?level=${encodeURIComponent(level)}&skill=${skill}&mock=${mock}`);
                 const data = await response.json();
                 if (data.success && data.answers && Object.keys(data.answers).length > 0) {
                     const useLPrefix = skill === 'listening';
@@ -579,7 +579,7 @@
             if (filledCount === 0) { this.updateAnswerStatus('\u274C No answers to save'); return; }
             try {
                 this.updateAnswerStatus('\u23F3 Saving answers to database...');
-                const response = await fetch(`${this.apiBase}/cambridge-answers`, {
+                const response = await this._authFetch(`${this.apiBase}/cambridge-answers`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ level, skill, mock, answers })
                 });
@@ -601,7 +601,7 @@
             const mock = document.getElementById('answerMockSelect').value;
             try {
                 this.updateAnswerStatus('\u23F3 Clearing answers from database...');
-                const response = await fetch(`${this.apiBase}/cambridge-answers?level=${encodeURIComponent(level)}&skill=${skill}&mock=${mock}`, { method: 'DELETE' });
+                const response = await this._authFetch(`${this.apiBase}/cambridge-answers?level=${encodeURIComponent(level)}&skill=${skill}&mock=${mock}`, { method: 'DELETE' });
                 const data = await response.json();
                 if (data.success) {
                     for (let i = 1; i <= 40; i++) { const el = document.getElementById(`answer_${i}`); if (el) el.value = ''; }
