@@ -6,7 +6,7 @@ import 'dotenv/config';
 import path from 'path';
 import { createRetryQueue } from './shared/database.js';
 import { createServer } from './shared/server-bootstrap.js';
-import { validateScore, validateGrade, validateScoreAndGrade, validateStudentInfo, stripHtmlTags } from './shared/validation.js';
+import { validateScore, validateGrade, validateScoreAndGrade, validateStudentInfo, stripHtmlTags, sanitizeAntiCheat } from './shared/validation.js';
 import { requireAdmin, rateLimit } from './shared/auth.js';
 
 const { app, db, ensureConnection, __dirname: serverDir, start } = createServer({
@@ -243,10 +243,12 @@ async function initializeCambridgeTables(client) {
 
 // Cambridge submission insert function
 async function insertCambridgeSubmission(dbClient, data) {
-    // Build anti-cheat metadata: client-side data + server-side flags
-    const antiCheatMeta = Object.assign({}, data.antiCheat || {});
-    if (data.durationFlag) antiCheatMeta.durationFlag = true;
-    const antiCheatJson = Object.keys(antiCheatMeta).length > 0 ? JSON.stringify(antiCheatMeta) : null;
+    // Sanitize client anti-cheat metadata: strips HTML, caps size (4KB), depth, key count.
+    // Removes server-managed keys so the client can't forge them.
+    const SERVER_AC_KEYS = ['durationFlag'];
+    const cleanAC = sanitizeAntiCheat(data.antiCheat, SERVER_AC_KEYS) || {};
+    if (data.durationFlag) cleanAC.durationFlag = true;
+    const antiCheatJson = Object.keys(cleanAC).length > 0 ? JSON.stringify(cleanAC) : null;
 
     const result = await dbClient.query(`
         INSERT INTO cambridge_submissions
@@ -617,9 +619,9 @@ app.post('/submit-speaking', submissionLimiter, async (req, res) => {
             }
 
             console.log(`🎤 Saving speaking test: ${level} Mock ${safeMockTest} for ${trimmedName} (${safeAudioSize}MB, ${safeDuration}s)`);
-            // Build anti-cheat metadata for speaking submission
-            const speakAntiCheat = Object.assign({}, req.body.antiCheat || {});
-            const speakAntiCheatJson = Object.keys(speakAntiCheat).length > 0 ? JSON.stringify(speakAntiCheat) : null;
+            // Sanitize anti-cheat metadata (strip HTML, cap size/depth)
+            const cleanSpeakAC = sanitizeAntiCheat(req.body.antiCheat) || {};
+            const speakAntiCheatJson = Object.keys(cleanSpeakAC).length > 0 ? JSON.stringify(cleanSpeakAC) : null;
             const result = await dbClient.query(`
                 INSERT INTO cambridge_submissions
                 (student_id, student_name, exam_type, level, mock_test, skill,

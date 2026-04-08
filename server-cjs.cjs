@@ -102,6 +102,39 @@ function stripHtmlTags(str) {
     return str.replace(/<[^>]*>/g, '');
 }
 
+// Sanitize and bound a client-supplied anti-cheat metadata object.
+// - Strips HTML from string values, caps size/depth, removes server-managed keys.
+function sanitizeAntiCheat(input, serverManagedKeys) {
+    serverManagedKeys = serverManagedKeys || [];
+    if (input == null || typeof input !== 'object' || Array.isArray(input)) return null;
+    const MAX_DEPTH = 4, MAX_KEYS = 50, MAX_STRING = 500, MAX_BYTES = 4096;
+    function clean(value, depth) {
+        if (value == null) return null;
+        if (typeof value === 'string') return stripHtmlTags(value).slice(0, MAX_STRING);
+        if (typeof value === 'number' || typeof value === 'boolean') return value;
+        if (depth >= MAX_DEPTH) return null;
+        if (Array.isArray(value)) {
+            return value.slice(0, MAX_KEYS).map(v => clean(v, depth + 1)).filter(v => v !== null);
+        }
+        if (typeof value === 'object') {
+            const out = {};
+            let count = 0;
+            for (const key of Object.keys(value)) {
+                if (count >= MAX_KEYS) break;
+                if (serverManagedKeys.indexOf(key) !== -1) continue;
+                const cleaned = clean(value[key], depth + 1);
+                if (cleaned !== null) { out[key] = cleaned; count++; }
+            }
+            return out;
+        }
+        return null;
+    }
+    const sanitized = clean(input, 0);
+    if (!sanitized || Object.keys(sanitized).length === 0) return null;
+    if (JSON.stringify(sanitized).length > MAX_BYTES) return null;
+    return sanitized;
+}
+
 // ============================================
 // EXPRESS SETUP
 // ============================================
@@ -439,7 +472,7 @@ const submissionLimiter = rateLimit({ windowMs: 60000, maxRequests: 10, message:
 const IELTS_TIME_LIMITS = { reading: 60, writing: 60, listening: 40, speaking: 20 };
 const VALID_IELTS_SKILLS = Object.keys(IELTS_TIME_LIMITS);
 
-// Ensure DB skill constraint includes speaking
+// Ensure DB skill constraint includes speaking + anti_cheat_data column
 (async () => {
     try {
         const db = await ensureConnection();
@@ -454,6 +487,19 @@ const VALID_IELTS_SKILLS = Object.keys(IELTS_TIME_LIMITS);
             END $$;
         `);
         console.log('✅ Skill constraint updated to include speaking');
+
+        // Add anti_cheat_data JSONB column for invigilator visibility into violations
+        await db.query(`
+            DO $$ BEGIN
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns
+                    WHERE table_name = 'test_submissions' AND column_name = 'anti_cheat_data'
+                ) THEN
+                    ALTER TABLE test_submissions ADD COLUMN anti_cheat_data JSONB;
+                END IF;
+            END $$;
+        `);
+        console.log('✅ anti_cheat_data column ready');
     } catch (e) { /* constraint may not exist yet */ }
 })();
 
@@ -529,15 +575,21 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
                     message: 'You have already submitted this test. Only one submission per test is allowed.'
                 });
             }
+            // Sanitize anti-cheat metadata: strips HTML, caps size/depth, removes server-managed keys
+            const SERVER_AC_KEYS = ['durationFlag'];
+            const cleanAC = sanitizeAntiCheat(submissionData.antiCheat, SERVER_AC_KEYS) || {};
+            if (submissionData.durationFlag) cleanAC.durationFlag = true;
+            const antiCheatJson = Object.keys(cleanAC).length > 0 ? JSON.stringify(cleanAC) : null;
+
             const result = await dbClient.query(`
                 INSERT INTO test_submissions
-                (student_id, student_name, mock_number, skill, answers, score, band_score, start_time, end_time)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                (student_id, student_name, mock_number, skill, answers, score, band_score, start_time, end_time, anti_cheat_data)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
                 RETURNING id
             `, [studentCheck.studentId, studentCheck.studentName, submissionData.mockNumber,
             submissionData.skill, JSON.stringify(submissionData.answers), submissionData.score,
-            submissionData.bandScore, submissionData.startTime, submissionData.endTime]);
-            console.log(`✅ Saved with ID: ${result.rows[0].id}`);
+            submissionData.bandScore, submissionData.startTime, submissionData.endTime, antiCheatJson]);
+            console.log(`✅ Saved with ID: ${result.rows[0].id}${antiCheatJson ? ' (with anti-cheat flags)' : ''}`);
             res.json({
                 success: true,
                 message: 'Test submission saved successfully',

@@ -7,7 +7,7 @@ import open from 'open';
 import OpenAI from 'openai';
 import { createRetryQueue } from './shared/database.js';
 import { createServer } from './shared/server-bootstrap.js';
-import { validateScore, validateStudentInfo, stripHtmlTags } from './shared/validation.js';
+import { validateScore, validateStudentInfo, stripHtmlTags, sanitizeAntiCheat } from './shared/validation.js';
 import { requireAdmin, rateLimit } from './shared/auth.js';
 
 // Initialize OpenAI client (will work if API key is configured)
@@ -58,10 +58,12 @@ const { app, ensureConnection, __dirname: serverDir, start } = createServer({
 
 // IELTS submission insert function
 async function insertIeltsSubmission(dbClient, data) {
-    // Build anti-cheat metadata: client-side data + server-side flags (durationFlag etc.)
-    const antiCheatMeta = Object.assign({}, data.antiCheat || {});
-    if (data.durationFlag) antiCheatMeta.durationFlag = true;
-    const antiCheatJson = Object.keys(antiCheatMeta).length > 0 ? JSON.stringify(antiCheatMeta) : null;
+    // Sanitize client anti-cheat metadata: strips HTML, caps size (4KB), depth, key count.
+    // Removes server-managed keys so the client can't forge them.
+    const SERVER_AC_KEYS = ['durationFlag'];
+    const cleanAC = sanitizeAntiCheat(data.antiCheat, SERVER_AC_KEYS) || {};
+    if (data.durationFlag) cleanAC.durationFlag = true;
+    const antiCheatJson = Object.keys(cleanAC).length > 0 ? JSON.stringify(cleanAC) : null;
 
     const result = await dbClient.query(`
         INSERT INTO test_submissions
@@ -285,8 +287,9 @@ app.get('/my-submissions', submissionLimiter, async (req, res) => {
             params.push(mockNum);
         }
 
+        // Note: anti_cheat_data deliberately excluded — invigilator-only data, not for student view
         const query = `SELECT id, student_id, student_name, skill, mock_number, answers, score, band_score,
-                              start_time, end_time, created_at, anti_cheat_data
+                              start_time, end_time, created_at
                        FROM test_submissions
                        WHERE ${conditions.join(' AND ')}
                        ORDER BY created_at DESC`;
