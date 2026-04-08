@@ -1,0 +1,76 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - heading "Innovative Centre" [level=1] [ref=e5]
+      - paragraph [ref=e6]: IELTS Admin Dashboard
+    - generic [ref=e7]:
+      - generic [ref=e8]: Database Offline
+      - button "Logout" [ref=e9] [cursor=pointer]
+  - generic [ref=e10]:
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]: "Search Student:"
+          - textbox "Search Student:" [ref=e15]:
+            - /placeholder: Student name or ID
+        - generic [ref=e16]:
+          - generic [ref=e17]: "Filter by Skill:"
+          - combobox "Filter by Skill:" [ref=e18]:
+            - option "All Skills" [selected]
+            - option "Reading"
+            - option "Writing"
+            - option "Listening"
+        - generic [ref=e19]:
+          - generic [ref=e20]: "Filter by Mock:"
+          - combobox "Filter by Mock:" [ref=e21]:
+            - option "All Mocks" [selected]
+            - option "Mock 1"
+            - option "Mock 2"
+            - option "Mock 3"
+            - option "Mock 4"
+            - option "Mock 5"
+            - option "Mock 6"
+            - option "Mock 7"
+            - option "Mock 8"
+            - option "Mock 9"
+            - option "Mock 10"
+        - generic [ref=e22]:
+          - generic [ref=e23]: "Date From:"
+          - textbox "Date From:" [ref=e24]: 2026-03-09
+        - generic [ref=e25]:
+          - generic [ref=e26]: "Date To:"
+          - textbox "Date To:" [ref=e27]: 2026-04-08
+        - generic [ref=e28]:
+          - generic [ref=e29]: "Score Status:"
+          - combobox "Score Status:" [ref=e30]:
+            - option "All Submissions" [selected]
+            - option "Scored"
+            - option "Unscored"
+      - generic [ref=e31]:
+        - button "🔍 Apply Filters" [ref=e32] [cursor=pointer]
+        - button "🔄 Clear Filters" [ref=e33] [cursor=pointer]
+        - button "📊 Refresh Data" [ref=e34] [cursor=pointer]
+        - button "📤 Export CSV" [ref=e35] [cursor=pointer]
+        - button "📅 View by Date" [ref=e36] [cursor=pointer]
+        - button "📅 Today's Submissions" [ref=e37] [cursor=pointer]
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]: "0"
+        - generic [ref=e41]: Total Submissions
+      - generic [ref=e42]:
+        - generic [ref=e43]: "0"
+        - generic [ref=e44]: Filtered Results
+      - generic [ref=e45]:
+        - generic [ref=e46]: "0"
+        - generic [ref=e47]: Average Score
+      - generic [ref=e48]:
+        - generic [ref=e49]: "0"
+        - generic [ref=e50]: Unique Students
+      - generic [ref=e51]:
+        - generic [ref=e52]: "0"
+        - generic [ref=e53]: Needs Scoring
+    - generic [ref=e55] [cursor=pointer]:
+      - generic [ref=e56]: 📝 Manage Answer Keys
+      - generic [ref=e57]: ▼
+    - heading "Test Submissions" [level=2] [ref=e58]
+    - generic [ref=e60]: Loading submissions...

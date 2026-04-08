@@ -7,7 +7,7 @@ import open from 'open';
 import OpenAI from 'openai';
 import { createRetryQueue } from './shared/database.js';
 import { createServer } from './shared/server-bootstrap.js';
-import { validateScore } from './shared/validation.js';
+import { validateScore, validateStudentInfo, stripHtmlTags } from './shared/validation.js';
 
 // Initialize OpenAI client (will work if API key is configured)
 const openai = process.env.OPENAI_API_KEY ? new OpenAI({
@@ -109,13 +109,9 @@ app.post('/submissions', async (req, res) => {
         const submissionData = req.body;
 
         // Validate required fields (Issue 4: malformed submissions silently queued)
-        const studentId = typeof submissionData.studentId === 'string' ? submissionData.studentId.trim() : '';
-        const studentName = typeof submissionData.studentName === 'string' ? submissionData.studentName.trim() : '';
-        if (!studentId || !studentName) {
-            return res.status(400).json({ success: false, message: 'Student ID and name are required' });
-        }
-        if (studentId.length > 200 || studentName.length > 200) {
-            return res.status(400).json({ success: false, message: 'Student ID and name must be at most 200 characters' });
+        const studentCheck = validateStudentInfo(submissionData.studentId, submissionData.studentName);
+        if (!studentCheck.valid) {
+            return res.status(400).json({ success: false, message: studentCheck.error });
         }
         if (!submissionData.skill) {
             return res.status(400).json({ success: false, message: 'Skill is required' });
@@ -312,11 +308,6 @@ app.post('/mock-answers', async (req, res) => {
             });
         }
 
-        // Strip HTML tags from answer values
-        function stripHtml(str) {
-            return typeof str === 'string' ? str.replace(/<[^>]*>/g, '') : str;
-        }
-
         const dbClient = await ensureConnection();
 
         // Begin transaction
@@ -345,12 +336,12 @@ app.post('/mock-answers', async (req, res) => {
                 let alternativeAnswers = null;
 
                 if (Array.isArray(answerValue)) {
-                    correctAnswer = stripHtml(answerValue[0]);
+                    correctAnswer = stripHtmlTags(answerValue[0]);
                     if (answerValue.length > 1) {
                         alternativeAnswers = JSON.stringify(answerValue.slice(1).map(stripHtml));
                     }
                 } else {
-                    correctAnswer = stripHtml(answerValue);
+                    correctAnswer = stripHtmlTags(answerValue);
                 }
 
                 valueClauses.push(`($${paramIndex}, $${paramIndex + 1}, $${paramIndex + 2}, $${paramIndex + 3}, $${paramIndex + 4}, CURRENT_TIMESTAMP)`);

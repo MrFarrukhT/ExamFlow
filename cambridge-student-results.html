@@ -713,7 +713,7 @@
 
         async function checkConnection() {
             try {
-                const response = await fetch(`${API_BASE}/health`);
+                const response = await fetch(`${API_BASE}/test`);
                 if (response.ok) {
                     document.getElementById('connectionStatus').textContent = 'Database Online';
                     document.getElementById('connectionStatus').className = 'connection-status connected';

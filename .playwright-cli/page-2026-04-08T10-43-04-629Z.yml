@@ -1,0 +1,265 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - heading "Innovative Centre" [level=1] [ref=e5]
+      - paragraph [ref=e6]: IELTS Admin Dashboard
+    - generic [ref=e7]:
+      - generic [ref=e8]: Database Online
+      - button "Logout" [ref=e9] [cursor=pointer]
+  - generic [ref=e10]:
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]: "Search Student:"
+          - textbox "Search Student:" [ref=e15]:
+            - /placeholder: Student name or ID
+        - generic [ref=e16]:
+          - generic [ref=e17]: "Filter by Skill:"
+          - combobox "Filter by Skill:" [ref=e18]:
+            - option "All Skills" [selected]
+            - option "Reading"
+            - option "Writing"
+            - option "Listening"
+        - generic [ref=e19]:
+          - generic [ref=e20]: "Filter by Mock:"
+          - combobox "Filter by Mock:" [ref=e21]:
+            - option "All Mocks" [selected]
+            - option "Mock 1"
+            - option "Mock 2"
+            - option "Mock 3"
+            - option "Mock 4"
+            - option "Mock 5"
+            - option "Mock 6"
+            - option "Mock 7"
+            - option "Mock 8"
+            - option "Mock 9"
+            - option "Mock 10"
+        - generic [ref=e22]:
+          - generic [ref=e23]: "Date From:"
+          - textbox "Date From:" [ref=e24]: 2026-03-09
+        - generic [ref=e25]:
+          - generic [ref=e26]: "Date To:"
+          - textbox "Date To:" [ref=e27]: 2026-04-08
+        - generic [ref=e28]:
+          - generic [ref=e29]: "Score Status:"
+          - combobox "Score Status:" [ref=e30]:
+            - option "All Submissions" [selected]
+            - option "Scored"
+            - option "Unscored"
+      - generic [ref=e31]:
+        - button "🔍 Apply Filters" [ref=e32] [cursor=pointer]
+        - button "🔄 Clear Filters" [ref=e33] [cursor=pointer]
+        - button "📊 Refresh Data" [ref=e34] [cursor=pointer]
+        - button "📤 Export CSV" [ref=e35] [cursor=pointer]
+        - button "📅 View by Date" [ref=e36] [cursor=pointer]
+        - button "📅 Today's Submissions" [ref=e37] [cursor=pointer]
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]: "11708"
+        - generic [ref=e41]: Total Submissions
+      - generic [ref=e42]:
+        - generic [ref=e43]: "2205"
+        - generic [ref=e44]: Filtered Results
+      - generic [ref=e45]:
+        - generic [ref=e46]: "8"
+        - generic [ref=e47]: Average Score
+      - generic [ref=e48]:
+        - generic [ref=e49]: "105"
+        - generic [ref=e50]: Unique Students
+      - generic [ref=e51]:
+        - generic [ref=e52]: "1279"
+        - generic [ref=e53]: Needs Scoring
+    - generic [ref=e55] [cursor=pointer]:
+      - generic [ref=e56]: 📝 Manage Answer Keys
+      - generic [ref=e57]: ▼
+    - heading "Test Submissions" [level=2] [ref=e58]
+    - generic [ref=e62]:
+      - generic [ref=e63]: Showing 1-15 of 2205 submissions
+      - generic [ref=e64]:
+        - button "First" [disabled] [ref=e65]
+        - button "Previous" [disabled] [ref=e66]
+        - generic [ref=e67]: Page 1 of 147
+        - generic [ref=e68]:
+          - generic [ref=e69]: "Go to:"
+          - spinbutton "Go to:" [ref=e70]
+          - button "Go" [ref=e71] [cursor=pointer]
+        - button "Next" [ref=e72] [cursor=pointer]
+        - button "Last" [ref=e73] [cursor=pointer]
+    - table [ref=e74]:
+      - rowgroup [ref=e75]:
+        - row "Student ID Name Mock Skill Score Band Date Duration Action" [ref=e76]:
+          - columnheader "Student ID" [ref=e77]
+          - columnheader "Name" [ref=e78]
+          - columnheader "Mock" [ref=e79]
+          - columnheader "Skill" [ref=e80]
+          - columnheader "Score" [ref=e81]
+          - columnheader "Band" [ref=e82]
+          - columnheader "Date" [ref=e83]
+          - columnheader "Duration" [ref=e84]
+          - columnheader "Action" [ref=e85]
+      - rowgroup [ref=e86]:
+        - row "XSS-TEST-001 <img src=x onerror=alert(1)> Mock 99 reading 5/40 N/A 4/8/2026 10:36 AM N/A 📋 Compare Answers" [ref=e87]:
+          - cell "XSS-TEST-001" [ref=e88]
+          - cell "<img src=x onerror=alert(1)>" [ref=e89]
+          - cell "Mock 99" [ref=e90]
+          - cell "reading" [ref=e91]
+          - cell "5/40" [ref=e92]
+          - cell "N/A" [ref=e93]
+          - cell "4/8/2026 10:36 AM" [ref=e94]
+          - cell "N/A" [ref=e95]
+          - cell "📋 Compare Answers" [ref=e96]:
+            - button "📋 Compare Answers" [ref=e97] [cursor=pointer]
+        - row "EXTRA Extra Mock 1 reading 5/40 5 4/8/2026 08:34 AM 0m 📋 Compare Answers" [ref=e98]:
+          - cell "EXTRA" [ref=e99]
+          - cell "Extra" [ref=e100]
+          - cell "Mock 1" [ref=e101]
+          - cell "reading" [ref=e102]
+          - cell "5/40" [ref=e103]
+          - cell "5" [ref=e104]
+          - cell "4/8/2026 08:34 AM" [ref=e105]
+          - cell "0m" [ref=e106]
+          - cell "📋 Compare Answers" [ref=e107]:
+            - button "📋 Compare Answers" [ref=e108] [cursor=pointer]
+        - row "RACE-TEST-001 Race Condition Mock 1 reading 10/40 5 4/8/2026 08:34 AM 30m 📋 Compare Answers" [ref=e109]:
+          - cell "RACE-TEST-001" [ref=e110]
+          - cell "Race Condition" [ref=e111]
+          - cell "Mock 1" [ref=e112]
+          - cell "reading" [ref=e113]
+          - cell "10/40" [ref=e114]
+          - cell "5" [ref=e115]
+          - cell "4/8/2026 08:34 AM" [ref=e116]
+          - cell "30m" [ref=e117]
+          - cell "📋 Compare Answers" [ref=e118]:
+            - button "📋 Compare Answers" [ref=e119] [cursor=pointer]
+        - row "RACE-TEST-001 Race Condition Mock 1 reading 10/40 5 4/8/2026 08:34 AM 30m 📋 Compare Answers" [ref=e120]:
+          - cell "RACE-TEST-001" [ref=e121]
+          - cell "Race Condition" [ref=e122]
+          - cell "Mock 1" [ref=e123]
+          - cell "reading" [ref=e124]
+          - cell "10/40" [ref=e125]
+          - cell "5" [ref=e126]
+          - cell "4/8/2026 08:34 AM" [ref=e127]
+          - cell "30m" [ref=e128]
+          - cell "📋 Compare Answers" [ref=e129]:
+            - button "📋 Compare Answers" [ref=e130] [cursor=pointer]
+        - row "RACE-TEST-001 Race Condition Mock 1 reading 10/40 5 4/8/2026 08:34 AM 30m 📋 Compare Answers" [ref=e131]:
+          - cell "RACE-TEST-001" [ref=e132]
+          - cell "Race Condition" [ref=e133]
+          - cell "Mock 1" [ref=e134]
+          - cell "reading" [ref=e135]
+          - cell "10/40" [ref=e136]
+          - cell "5" [ref=e137]
+          - cell "4/8/2026 08:34 AM" [ref=e138]
+          - cell "30m" [ref=e139]
+          - cell "📋 Compare Answers" [ref=e140]:
+            - button "📋 Compare Answers" [ref=e141] [cursor=pointer]
+        - row "0013 Rukhshona Kilicheva Mock 1 writing 4.5 4.5 4/8/2026 08:06 AM 59m 📋 Compare Answers" [ref=e142]:
+          - cell "0013" [ref=e143]
+          - cell "Rukhshona Kilicheva" [ref=e144]
+          - cell "Mock 1" [ref=e145]
+          - cell "writing" [ref=e146]
+          - cell "4.5" [ref=e147]
+          - cell "4.5" [ref=e148]
+          - cell "4/8/2026 08:06 AM" [ref=e149]
+          - cell "59m" [ref=e150]
+          - cell "📋 Compare Answers" [ref=e151]:
+            - button "📋 Compare Answers" [ref=e152] [cursor=pointer]
+        - row "0013 Rukhshona Kilicheva Mock 1 writing 4.5 4.5 4/8/2026 08:06 AM 59m 📋 Compare Answers" [ref=e153]:
+          - cell "0013" [ref=e154]
+          - cell "Rukhshona Kilicheva" [ref=e155]
+          - cell "Mock 1" [ref=e156]
+          - cell "writing" [ref=e157]
+          - cell "4.5" [ref=e158]
+          - cell "4.5" [ref=e159]
+          - cell "4/8/2026 08:06 AM" [ref=e160]
+          - cell "59m" [ref=e161]
+          - cell "📋 Compare Answers" [ref=e162]:
+            - button "📋 Compare Answers" [ref=e163] [cursor=pointer]
+        - row "0013 Rukhshona Kilicheva Mock 1 writing 4.5 4.5 4/8/2026 08:06 AM 59m 📋 Compare Answers" [ref=e164]:
+          - cell "0013" [ref=e165]
+          - cell "Rukhshona Kilicheva" [ref=e166]
+          - cell "Mock 1" [ref=e167]
+          - cell "writing" [ref=e168]
+          - cell "4.5" [ref=e169]
+          - cell "4.5" [ref=e170]
+          - cell "4/8/2026 08:06 AM" [ref=e171]
+          - cell "59m" [ref=e172]
+          - cell "📋 Compare Answers" [ref=e173]:
+            - button "📋 Compare Answers" [ref=e174] [cursor=pointer]
+        - row "0013 Rukhshona Kilicheva Mock 1 writing 4.5 4.5 4/8/2026 08:06 AM 59m 📋 Compare Answers" [ref=e175]:
+          - cell "0013" [ref=e176]
+          - cell "Rukhshona Kilicheva" [ref=e177]
+          - cell "Mock 1" [ref=e178]
+          - cell "writing" [ref=e179]
+          - cell "4.5" [ref=e180]
+          - cell "4.5" [ref=e181]
+          - cell "4/8/2026 08:06 AM" [ref=e182]
+          - cell "59m" [ref=e183]
+          - cell "📋 Compare Answers" [ref=e184]:
+            - button "📋 Compare Answers" [ref=e185] [cursor=pointer]
+        - row "0013 Rukhshona Kilicheva Mock 1 writing 4.5 4.5 4/8/2026 08:06 AM 59m 📋 Compare Answers" [ref=e186]:
+          - cell "0013" [ref=e187]
+          - cell "Rukhshona Kilicheva" [ref=e188]
+          - cell "Mock 1" [ref=e189]
+          - cell "writing" [ref=e190]
+          - cell "4.5" [ref=e191]
+          - cell "4.5" [ref=e192]
+          - cell "4/8/2026 08:06 AM" [ref=e193]
+          - cell "59m" [ref=e194]
+          - cell "📋 Compare Answers" [ref=e195]:
+            - button "📋 Compare Answers" [ref=e196] [cursor=pointer]
+        - row "0013 Rukhshona Kilicheva Mock 1 writing 4.5 4.5 4/8/2026 08:06 AM 59m 📋 Compare Answers" [ref=e197]:
+          - cell "0013" [ref=e198]
+          - cell "Rukhshona Kilicheva" [ref=e199]
+          - cell "Mock 1" [ref=e200]
+          - cell "writing" [ref=e201]
+          - cell "4.5" [ref=e202]
+          - cell "4.5" [ref=e203]
+          - cell "4/8/2026 08:06 AM" [ref=e204]
+          - cell "59m" [ref=e205]
+          - cell "📋 Compare Answers" [ref=e206]:
+            - button "📋 Compare Answers" [ref=e207] [cursor=pointer]
+        - row "0020 Abdullayev sarvar Mock 1 writing 5.5 5.5 4/8/2026 08:05 AM 60m 📋 Compare Answers" [ref=e208]:
+          - cell "0020" [ref=e209]
+          - cell "Abdullayev sarvar" [ref=e210]
+          - cell "Mock 1" [ref=e211]
+          - cell "writing" [ref=e212]
+          - cell "5.5" [ref=e213]
+          - cell "5.5" [ref=e214]
+          - cell "4/8/2026 08:05 AM" [ref=e215]
+          - cell "60m" [ref=e216]
+          - cell "📋 Compare Answers" [ref=e217]:
+            - button "📋 Compare Answers" [ref=e218] [cursor=pointer]
+        - row "0020 Abdullayev sarvar Mock 1 writing 5.5 5.5 4/8/2026 08:05 AM 60m 📋 Compare Answers" [ref=e219]:
+          - cell "0020" [ref=e220]
+          - cell "Abdullayev sarvar" [ref=e221]
+          - cell "Mock 1" [ref=e222]
+          - cell "writing" [ref=e223]
+          - cell "5.5" [ref=e224]
+          - cell "5.5" [ref=e225]
+          - cell "4/8/2026 08:05 AM" [ref=e226]
+          - cell "60m" [ref=e227]
+          - cell "📋 Compare Answers" [ref=e228]:
+            - button "📋 Compare Answers" [ref=e229] [cursor=pointer]
+        - row "0020 Abdullayev sarvar Mock 1 writing 5.5 5.5 4/8/2026 08:05 AM 60m 📋 Compare Answers" [ref=e230]:
+          - cell "0020" [ref=e231]
+          - cell "Abdullayev sarvar" [ref=e232]
+          - cell "Mock 1" [ref=e233]
+          - cell "writing" [ref=e234]
+          - cell "5.5" [ref=e235]
+          - cell "5.5" [ref=e236]
+          - cell "4/8/2026 08:05 AM" [ref=e237]
+          - cell "60m" [ref=e238]
+          - cell "📋 Compare Answers" [ref=e239]:
+            - button "📋 Compare Answers" [ref=e240] [cursor=pointer]
+        - row "0020 Abdullayev sarvar Mock 1 writing 5.5 5.5 4/8/2026 08:05 AM 60m 📋 Compare Answers" [ref=e241]:
+          - cell "0020" [ref=e242]
+          - cell "Abdullayev sarvar" [ref=e243]
+          - cell "Mock 1" [ref=e244]
+          - cell "writing" [ref=e245]
+          - cell "5.5" [ref=e246]
+          - cell "5.5" [ref=e247]
+          - cell "4/8/2026 08:05 AM" [ref=e248]
+          - cell "60m" [ref=e249]
+          - cell "📋 Compare Answers" [ref=e250]:
+            - button "📋 Compare Answers" [ref=e251] [cursor=pointer]

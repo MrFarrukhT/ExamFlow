@@ -6,7 +6,7 @@ import 'dotenv/config';
 import path from 'path';
 import { createRetryQueue } from './shared/database.js';
 import { createServer } from './shared/server-bootstrap.js';
-import { validateScore, validateGrade, validateScoreAndGrade, stripHtmlTags } from './shared/validation.js';
+import { validateScore, validateGrade, validateScoreAndGrade, validateStudentInfo, stripHtmlTags } from './shared/validation.js';
 
 const { app, db, ensureConnection, __dirname: serverDir, start } = createServer({
     port: 3003,
@@ -285,13 +285,9 @@ app.post('/cambridge-submissions', async (req, res) => {
         const submissionData = req.body;
 
         // Validate required fields (Issue 2: empty/whitespace names, Issue 4: malformed submissions)
-        const studentId = typeof submissionData.studentId === 'string' ? submissionData.studentId.trim() : '';
-        const studentName = typeof submissionData.studentName === 'string' ? submissionData.studentName.trim() : '';
-        if (!studentId || !studentName) {
-            return res.status(400).json({ success: false, message: 'Student ID and name are required' });
-        }
-        if (studentId.length > 200 || studentName.length > 200) {
-            return res.status(400).json({ success: false, message: 'Student ID and name must be at most 200 characters' });
+        const studentCheck = validateStudentInfo(submissionData.studentId, submissionData.studentName);
+        if (!studentCheck.valid) {
+            return res.status(400).json({ success: false, message: studentCheck.error });
         }
         if (!submissionData.level || !VALID_LEVELS.includes(submissionData.level)) {
             return res.status(400).json({ success: false, message: `Invalid level. Must be one of: ${VALID_LEVELS.join(', ')}` });
@@ -345,14 +341,12 @@ app.post('/submit-speaking', async (req, res) => {
         } = req.body;
 
         // Validate required fields (Issue 2: empty/whitespace names)
-        const trimmedId = typeof studentId === 'string' ? studentId.trim() : '';
-        const trimmedName = typeof studentName === 'string' ? studentName.trim() : '';
-        if (!trimmedId || !trimmedName) {
-            return res.status(400).json({ success: false, message: 'Student ID and name are required' });
+        const studentCheck = validateStudentInfo(studentId, studentName);
+        if (!studentCheck.valid) {
+            return res.status(400).json({ success: false, message: studentCheck.error });
         }
-        if (trimmedId.length > 200 || trimmedName.length > 200) {
-            return res.status(400).json({ success: false, message: 'Student ID and name must be at most 200 characters' });
-        }
+        const trimmedId = studentCheck.studentId;
+        const trimmedName = studentCheck.studentName;
 
         // Validate level and skill
         if (!VALID_LEVELS.includes(level)) {
@@ -453,17 +447,6 @@ app.get('/cambridge-submissions', async (req, res) => {
             message: 'Failed to fetch submissions',
             error: error.message
         });
-    }
-});
-
-// Health check endpoint
-app.get('/health', async (req, res) => {
-    try {
-        const dbClient = await ensureConnection();
-        await dbClient.query('SELECT 1');
-        res.json({ status: 'ok', database: 'connected' });
-    } catch (error) {
-        res.status(500).json({ status: 'error', database: 'disconnected' });
     }
 });
 
