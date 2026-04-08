@@ -414,52 +414,68 @@ app.post('/cambridge-submissions', submissionLimiter, async (req, res) => {
             return res.status(400).json(validationError);
         }
 
-        // Submission deduplication — prevent multiple submissions for same student+skill+level+mock
-        const dbClient = await ensureConnection();
-        const dupCheck = await dbClient.query(
-            `SELECT id FROM cambridge_submissions
-             WHERE student_id = $1 AND level = $2 AND skill = $3 AND mock_test = $4
-             LIMIT 1`,
-            [studentCheck.studentId, submissionData.level, submissionData.skill, submissionData.mockTest || '1']
-        );
-        if (dupCheck.rows.length > 0) {
-            console.warn(`⚠️ DUPLICATE SUBMISSION BLOCKED: Student ${studentCheck.studentId} already submitted ${submissionData.level} ${submissionData.skill} mock ${submissionData.mockTest || '1'}`);
-            return res.status(409).json({
+        // Server-side duration validation — require timestamps and reject suspicious durations
+        if (!submissionData.startTime || !submissionData.endTime) {
+            return res.status(400).json({ success: false, message: 'startTime and endTime are required' });
+        }
+        const start = new Date(submissionData.startTime);
+        const end = new Date(submissionData.endTime);
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+            return res.status(400).json({ success: false, message: 'Invalid startTime or endTime format' });
+        }
+        const elapsedMin = (end - start) / 60000;
+        if (elapsedMin <= 0) {
+            return res.status(400).json({ success: false, message: 'endTime must be after startTime' });
+        }
+        const levelLimits = CAMBRIDGE_TIME_LIMITS[submissionData.level] || {};
+        const limit = levelLimits[submissionData.skill] || 90;
+
+        // Hard reject: 3x the time limit
+        if (elapsedMin > limit * 3) {
+            console.warn(`🚨 SUBMISSION REJECTED: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.level} ${submissionData.skill} (limit: ${limit}min, max: ${limit * 3}min)`);
+            return res.status(400).json({
                 success: false,
-                message: 'You have already submitted this test. Only one submission per test is allowed.'
+                message: 'Submission rejected: test duration exceeded the maximum allowed time.'
             });
         }
 
-        // Server-side duration validation — flag and reject suspiciously long test durations
-        if (submissionData.startTime && submissionData.endTime) {
-            const start = new Date(submissionData.startTime);
-            const end = new Date(submissionData.endTime);
-            const elapsedMin = (end - start) / 60000;
-            const levelLimits = CAMBRIDGE_TIME_LIMITS[submissionData.level] || {};
-            const limit = levelLimits[submissionData.skill] || 90;
-
-            // Hard reject: 3x the time limit
-            if (elapsedMin > limit * 3) {
-                console.warn(`🚨 SUBMISSION REJECTED: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.level} ${submissionData.skill} (limit: ${limit}min, max: ${limit * 3}min)`);
-                return res.status(400).json({
-                    success: false,
-                    message: 'Submission rejected: test duration exceeded the maximum allowed time.'
-                });
-            }
-
-            // Soft flag: 2x the time limit — accept but mark for review
-            if (elapsedMin > limit * 2) {
-                console.warn(`⚠️ DURATION ALERT: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.level} ${submissionData.skill} (limit: ${limit}min)`);
-            }
+        // Soft flag: 2x the time limit — accept but mark for review
+        if (elapsedMin > limit * 2) {
+            console.warn(`⚠️ DURATION ALERT: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.level} ${submissionData.skill} (limit: ${limit}min)`);
         }
 
-        const savedId = await saveWithRetry(submissionData);
+        // Atomic dedup check + insert using advisory lock to prevent race conditions
+        const dbClient = await ensureConnection();
+        const mockTest = submissionData.mockTest || '1';
+        await dbClient.query('BEGIN');
+        try {
+            await dbClient.query('SELECT pg_advisory_xact_lock(hashtext($1))',
+                [`cam:${studentCheck.studentId}:${submissionData.level}:${submissionData.skill}:${mockTest}`]);
+            const dupCheck = await dbClient.query(
+                `SELECT id FROM cambridge_submissions
+                 WHERE student_id = $1 AND level = $2 AND skill = $3 AND mock_test = $4 LIMIT 1`,
+                [studentCheck.studentId, submissionData.level, submissionData.skill, mockTest]
+            );
+            if (dupCheck.rows.length > 0) {
+                await dbClient.query('COMMIT');
+                console.warn(`⚠️ DUPLICATE SUBMISSION BLOCKED: Student ${studentCheck.studentId} already submitted ${submissionData.level} ${submissionData.skill} mock ${mockTest}`);
+                return res.status(409).json({
+                    success: false,
+                    message: 'You have already submitted this test. Only one submission per test is allowed.'
+                });
+            }
+            const savedId = await insertCambridgeSubmission(dbClient, submissionData);
+            await dbClient.query('COMMIT');
 
-        res.json({
-            success: true,
-            message: 'Cambridge test submission saved successfully',
-            id: savedId
-        });
+            res.json({
+                success: true,
+                message: 'Cambridge test submission saved successfully',
+                id: savedId
+            });
+        } catch (txError) {
+            await dbClient.query('ROLLBACK').catch(() => {});
+            throw txError;
+        }
 
     } catch (error) {
         console.error('Cambridge submission save error:', error);
@@ -514,54 +530,52 @@ app.post('/submit-speaking', submissionLimiter, async (req, res) => {
         // Validate audioSize (must be non-negative if provided)
         const safeAudioSize = (typeof audioSize === 'number' && audioSize >= 0 && audioSize <= 100) ? audioSize : null;
 
-        // Submission deduplication — prevent multiple speaking submissions
+        // Atomic dedup check + insert using advisory lock to prevent race conditions
         const dbClient = await ensureConnection();
-        const dupCheck = await dbClient.query(
-            `SELECT id FROM cambridge_submissions
-             WHERE student_id = $1 AND level = $2 AND skill = $3 AND mock_test = $4
-             LIMIT 1`,
-            [trimmedId, level, skill, mockTest || '1']
-        );
-        if (dupCheck.rows.length > 0) {
-            console.warn(`⚠️ DUPLICATE SPEAKING SUBMISSION BLOCKED: Student ${trimmedId} already submitted ${level} ${skill} mock ${mockTest || '1'}`);
-            return res.status(409).json({
-                success: false,
-                message: 'You have already submitted this speaking test. Only one submission is allowed.'
+        const safeMockTest = mockTest || '1';
+        await dbClient.query('BEGIN');
+        try {
+            await dbClient.query('SELECT pg_advisory_xact_lock(hashtext($1))',
+                [`cam-spk:${trimmedId}:${level}:${skill}:${safeMockTest}`]);
+            const dupCheck = await dbClient.query(
+                `SELECT id FROM cambridge_submissions
+                 WHERE student_id = $1 AND level = $2 AND skill = $3 AND mock_test = $4 LIMIT 1`,
+                [trimmedId, level, skill, safeMockTest]
+            );
+            if (dupCheck.rows.length > 0) {
+                await dbClient.query('COMMIT');
+                console.warn(`⚠️ DUPLICATE SPEAKING SUBMISSION BLOCKED: Student ${trimmedId} already submitted ${level} ${skill} mock ${safeMockTest}`);
+                return res.status(409).json({
+                    success: false,
+                    message: 'You have already submitted this speaking test. Only one submission is allowed.'
+                });
+            }
+
+            console.log(`🎤 Saving speaking test: ${level} Mock ${safeMockTest} for ${trimmedName} (${safeAudioSize}MB, ${safeDuration}s)`);
+            const result = await dbClient.query(`
+                INSERT INTO cambridge_submissions
+                (student_id, student_name, exam_type, level, mock_test, skill,
+                 answers, audio_data, audio_size, audio_duration, audio_mime_type,
+                 start_time, end_time, evaluated)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+                RETURNING id
+            `, [
+                trimmedId, trimmedName, 'Cambridge', level, safeMockTest, skill,
+                JSON.stringify({}), audioData, safeAudioSize, safeDuration, safeMimeType,
+                startTime, endTime, false
+            ]);
+            await dbClient.query('COMMIT');
+
+            console.log(`✅ Speaking test saved with ID: ${result.rows[0].id}`);
+            res.json({
+                success: true,
+                message: 'Speaking test submitted successfully',
+                id: result.rows[0].id
             });
+        } catch (txError) {
+            await dbClient.query('ROLLBACK').catch(() => {});
+            throw txError;
         }
-
-        console.log(`🎤 Saving speaking test: ${level} Mock ${mockTest} for ${trimmedName} (${safeAudioSize}MB, ${safeDuration}s)`);
-        const result = await dbClient.query(`
-            INSERT INTO cambridge_submissions
-            (student_id, student_name, exam_type, level, mock_test, skill,
-             answers, audio_data, audio_size, audio_duration, audio_mime_type,
-             start_time, end_time, evaluated)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-            RETURNING id
-        `, [
-            trimmedId,
-            trimmedName,
-            'Cambridge',
-            level,
-            mockTest || '1',
-            skill,
-            JSON.stringify({}), // Empty answers object for speaking tests
-            audioData,
-            safeAudioSize,
-            safeDuration,
-            safeMimeType,
-            startTime,
-            endTime,
-            false // Not evaluated yet
-        ]);
-
-        console.log(`✅ Speaking test saved with ID: ${result.rows[0].id}`);
-
-        res.json({
-            success: true,
-            message: 'Speaking test submitted successfully',
-            id: result.rows[0].id
-        });
 
     } catch (error) {
         console.error('❌ Speaking submission failed:', error.message);

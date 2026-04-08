@@ -125,52 +125,68 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
             return res.status(400).json({ success: false, message: 'Skill is required' });
         }
 
-        // Submission deduplication — prevent multiple submissions for same student+skill+mock
-        const dbClient = await ensureConnection();
-        const dupCheck = await dbClient.query(
-            `SELECT id FROM test_submissions
-             WHERE student_id = $1 AND skill = $2 AND mock_number = $3
-             LIMIT 1`,
-            [studentCheck.studentId, submissionData.skill, submissionData.mockNumber || '1']
-        );
-        if (dupCheck.rows.length > 0) {
-            console.warn(`⚠️ DUPLICATE SUBMISSION BLOCKED: Student ${studentCheck.studentId} already submitted ${submissionData.skill} mock ${submissionData.mockNumber || '1'}`);
-            return res.status(409).json({
+        // Server-side duration validation — require timestamps and reject suspicious durations
+        if (!submissionData.startTime || !submissionData.endTime) {
+            return res.status(400).json({ success: false, message: 'startTime and endTime are required' });
+        }
+        const start = new Date(submissionData.startTime);
+        const end = new Date(submissionData.endTime);
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+            return res.status(400).json({ success: false, message: 'Invalid startTime or endTime format' });
+        }
+        const elapsedMin = (end - start) / 60000;
+        if (elapsedMin <= 0) {
+            return res.status(400).json({ success: false, message: 'endTime must be after startTime' });
+        }
+        const limit = IELTS_TIME_LIMITS[submissionData.skill] || 60;
+
+        // Hard reject: 3x the time limit (e.g., 3 hours for a 60-min test)
+        if (elapsedMin > limit * 3) {
+            console.warn(`🚨 SUBMISSION REJECTED: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.skill} (limit: ${limit}min, max: ${limit * 3}min)`);
+            return res.status(400).json({
                 success: false,
-                message: 'You have already submitted this test. Only one submission per test is allowed.'
+                message: 'Submission rejected: test duration exceeded the maximum allowed time.'
             });
         }
 
-        // Server-side duration validation — flag and reject suspiciously long test durations
-        if (submissionData.startTime && submissionData.endTime) {
-            const start = new Date(submissionData.startTime);
-            const end = new Date(submissionData.endTime);
-            const elapsedMin = (end - start) / 60000;
-            const limit = IELTS_TIME_LIMITS[submissionData.skill] || 60;
-
-            // Hard reject: 3x the time limit (e.g., 3 hours for a 60-min test)
-            if (elapsedMin > limit * 3) {
-                console.warn(`🚨 SUBMISSION REJECTED: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.skill} (limit: ${limit}min, max: ${limit * 3}min)`);
-                return res.status(400).json({
-                    success: false,
-                    message: 'Submission rejected: test duration exceeded the maximum allowed time.'
-                });
-            }
-
-            // Soft flag: 2x the time limit — accept but mark for review
-            if (elapsedMin > limit * 2) {
-                console.warn(`⚠️ DURATION ALERT: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.skill} (limit: ${limit}min)`);
-                submissionData.durationFlag = true;
-            }
+        // Soft flag: 2x the time limit — accept but mark for review
+        if (elapsedMin > limit * 2) {
+            console.warn(`⚠️ DURATION ALERT: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.skill} (limit: ${limit}min)`);
+            submissionData.durationFlag = true;
         }
 
-        const savedId = await saveWithRetry(submissionData);
+        // Atomic dedup check + insert using advisory lock to prevent race conditions
+        const dbClient = await ensureConnection();
+        const mockNum = submissionData.mockNumber || '1';
+        await dbClient.query('BEGIN');
+        try {
+            await dbClient.query('SELECT pg_advisory_xact_lock(hashtext($1))',
+                [`ielts:${studentCheck.studentId}:${submissionData.skill}:${mockNum}`]);
+            const dupCheck = await dbClient.query(
+                `SELECT id FROM test_submissions
+                 WHERE student_id = $1 AND skill = $2 AND mock_number = $3 LIMIT 1`,
+                [studentCheck.studentId, submissionData.skill, mockNum]
+            );
+            if (dupCheck.rows.length > 0) {
+                await dbClient.query('COMMIT');
+                console.warn(`⚠️ DUPLICATE SUBMISSION BLOCKED: Student ${studentCheck.studentId} already submitted ${submissionData.skill} mock ${mockNum}`);
+                return res.status(409).json({
+                    success: false,
+                    message: 'You have already submitted this test. Only one submission per test is allowed.'
+                });
+            }
+            const savedId = await insertIeltsSubmission(dbClient, submissionData);
+            await dbClient.query('COMMIT');
 
-        res.json({
-            success: true,
-            message: 'Test submission saved successfully',
-            id: savedId
-        });
+            res.json({
+                success: true,
+                message: 'Test submission saved successfully',
+                id: savedId
+            });
+        } catch (txError) {
+            await dbClient.query('ROLLBACK').catch(() => {});
+            throw txError;
+        }
 
     } catch (error) {
         console.error('Submission save error:', error);
