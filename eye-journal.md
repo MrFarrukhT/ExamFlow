@@ -966,14 +966,19 @@ Starting state: Footer nav counters showed wrong question totals (inherited from
 | B1-Preliminary-MOCK-2/* | 5-Delightful (speaking) / 4-Polished (rest) | Same content |
 | B1-Preliminary-MOCK-3/* | 5-Delightful (speaking) / 4-Polished (rest) | Same content |
 
+### Round 4
+**Explored:** writing.html wrapper and timer.js code review
+**Action:** Verified writing timer already works (deferred item was false positive)
+
+- Writing wrapper (writing.html) already initializes CambridgeTimer(45, 'Writing') identically to reading.html. Timer overlay appears at top-center via ExamTimer.createTimerUI(). Previous "missing timer" note was from testing Part 7.html directly (bypassing the wrapper).
+
 ### Deferred
 - Console errors from Inspera bundled JS (react-modal, moment-timezone, fontawesome fonts) — cannot fix
-- Writing wrapper (writing.html) has no visible timer — reading.html has one, writing needs same
 - MOCK-2 and MOCK-3 speaking tests use same content as MOCK-1 — ideally would have different topics
 
 ### Session Stats
 Pages explored: 12
-Rounds: 3
+Rounds: 4
 Polishes landed: 0
 Rebuilds landed: 1 (speaking test — 3 files)
 Elevations landed: 0
