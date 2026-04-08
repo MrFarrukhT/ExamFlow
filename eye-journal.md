@@ -784,21 +784,47 @@ Starting state: All B2 First files had wrong level names from copy-paste errors 
 | B2-First-MOCK-2/* | 4-Polished | Same fixes applied |
 | B2-First-MOCK-3/* | 4-Polished | Same fixes applied |
 
+### Round 3
+**Explored:** Speaking test page (visual verification of rebuilt content)
+**Action:** REBUILD speaking test from A2 Key 2-part to B2 First 4-part format
+
+- [T5] B2-First/speaking.html — Complete content rebuild from A2 Key format (2 parts: Interview + Talking Together) to proper B2 First FCE format (4 parts)
+  Mode: rebuild
+  Quality layer: 3-Efficient → 5-Delightful
+  Files: 3 folders × speaking.html
+
+  New content:
+  - Part 1: Interview (2 min) — 6 opinion/experience questions at B2 level
+  - Part 2: Long Turn (4 min) — Photo comparison tasks for Candidates A/B with visual placeholders, comparison questions, and follow-up questions
+  - Part 3: Collaborative Task (4 min) — Mind map layout with teal central question, 5 activity prompt chips with icons, decision question
+  - Part 4: Discussion (4 min) — 5 deeper questions developing Part 3 themes
+
+### Updated Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| B2-First/reading.html | 4-Polished | Correct title, timer, correct footer counters |
+| B2-First/writing.html | 3-Efficient | Correct title, Part 7 email + Part 8 choice |
+| B2-First/listening.html | 3-Efficient | Working audio (B1 placeholder), correct heading |
+| B2-First/speaking.html | 5-Delightful | Full 4-part FCE format, teal identity, visual mind map |
+| B2-First/Part 1-6.html | 4-Polished | Correct counters, no Part 7 ghost tab |
+| B2-First-MOCK-2/* | 5-Delightful (speaking) / 4-Polished (rest) | Same content |
+| B2-First-MOCK-3/* | 5-Delightful (speaking) / 4-Polished (rest) | Same content |
+
 ### Deferred
 - B2-First Part files reference `./A2 Key RW Digital Sample Test 1_26.04.23_files/` directory — actual directory on disk keeps this name
-- B2 First speaking.html — Content format is A2 Key (2 parts), needs rebuild to B2 First format (4 parts: Interview, Long Turn, Collaborative Task, Discussion)
 - No actual B2 First listening audio file exists — currently using B1 audio as placeholder
 - Console errors from Inspera bundled JS (react-modal, moment-timezone, fontawesome fonts) — cannot fix
+- MOCK-2 and MOCK-3 speaking tests use same content as MOCK-1 — ideally would have different topics
 
 ### Session Stats
 Pages explored: 8 (dashboard, reading Parts 1-6, writing Parts 7-8, listening, speaking)
-Rounds: 2
+Rounds: 3
 Polishes landed: 3 (console logs, CSS extraction, speaking colors)
-Rebuilds landed: 0
+Rebuilds landed: 1 (speaking test — 3 files)
 Elevations landed: 0
 Reverted: 1 (audio reference reverted to working file)
 Fixes landed: 84+ titles + 3 critical (audio, JS ranges, 18 HTML counters)
-Changes shipped: 75+ files modified
+Changes shipped: 78+ files modified
 
 ---
 
