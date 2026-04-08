@@ -358,6 +358,9 @@ app.post('/submit-speaking', async (req, res) => {
         if (!VALID_LEVELS.includes(level)) {
             return res.status(400).json({ success: false, message: `Invalid level. Must be one of: ${VALID_LEVELS.join(', ')}` });
         }
+        if (!skill || !VALID_SKILLS.includes(skill)) {
+            return res.status(400).json({ success: false, message: `Invalid skill. Must be one of: ${VALID_SKILLS.join(', ')}` });
+        }
 
         // Validate duration (must be non-negative if provided)
         const safeDuration = (typeof duration === 'number' && duration >= 0) ? duration : null;
@@ -1021,7 +1024,7 @@ app.delete('/cambridge-answers', async (req, res) => {
                 message: `Deleted answers for ${level} ${skill} Mock ${mockTest}`
             });
         } else {
-            res.json({
+            return res.status(404).json({
                 success: false,
                 message: 'Answer key not found'
             });

@@ -14,10 +14,6 @@
             document.getElementById('bell-modal').style.display = 'flex';
         }
 
-        function showOptionsModal() {
-            document.getElementById('options-modal').style.display = 'flex';
-        }
-
         function showNotesModal() {
             document.getElementById('notes-modal').style.display = 'flex';
             loadNotes();
@@ -105,19 +101,6 @@
                 setTimeout(() => {
                     window.location.href = '../../student-dashboard.html';
                 }, 500);
-            }
-        }
-
-        function toggleTimerVisibility() {
-            const timerContainer = document.querySelector('.timer-container');
-            const timerText = document.getElementById('timer-visibility-text');
-            
-            if (timerContainer.style.display === 'none') {
-                timerContainer.style.display = 'flex';
-                timerText.textContent = 'Hide or show remaining time';
-            } else {
-                timerContainer.style.display = 'none';
-                timerText.textContent = 'Show remaining time';
             }
         }
 

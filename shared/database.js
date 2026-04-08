@@ -1,5 +1,6 @@
 // Shared database connection management for IELTS and Cambridge servers
 import { Client } from 'pg';
+import crypto from 'crypto';
 
 export function createDatabaseManager(config) {
     let client = null;
@@ -89,7 +90,13 @@ export function createRetryQueue(ensureConnection, insertFn) {
     }
 
     // Start background retry every 90 seconds
-    setInterval(backgroundRetry, 90000);
+    setInterval(async () => {
+        try {
+            await backgroundRetry();
+        } catch (error) {
+            console.error('Background retry error:', error.message);
+        }
+    }, 90000);
 
     return { saveWithRetry };
 }
@@ -103,7 +110,7 @@ export function adminLoginHandler(req, res) {
 
     const adminPassword = process.env.ADMIN_PASSWORD || '';
     if (username === 'admin' && password === adminPassword) {
-        res.json({ success: true, token: 'admin-session-' + Date.now() });
+        res.json({ success: true, token: 'admin-session-' + crypto.randomBytes(32).toString('hex') });
     } else {
         res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
