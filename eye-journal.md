@@ -1167,3 +1167,46 @@ Elevations landed: 0
 Reverted: 0
 Fixes landed: 1 (Part 4 opacity × 3 mocks)
 Changes shipped: 36 files modified
+
+---
+
+## Session: 2026-04-08 (B1 Preliminary Writing — prompt #14)
+Persona: B1 level student writing exam responses (Parts 7-8)
+System: Cambridge (localhost:3003)
+Pages explored: Part 7.html (email task) and Part 8.html (article/story choice) across all 3 mocks
+Starting state: 5-Delightful overall — proper email-box prompts, 15-row textareas with word count, question-confirmation checkboxes for Part 8 choice. Two minor issues remained.
+
+### Round 1
+**Explored:** 6 files (Part 7 + Part 8 × 3 mocks), 2 findings
+**Action:** POLISH 2 small refinements
+
+- [T4] Part 7.html — Handwritten note color #0066cc → #0d9488 for brand consistency. Notes now match teal identity.
+  Mode: polish
+  Quality layer: 4-Polished → 5-Delightful
+  Files: 3 Part 7.html files (B1-Preliminary, MOCK-2, MOCK-3)
+
+- [T3] Part 7 & 8 textareas — `resize: none` → `resize: vertical`. Students can now grow the textarea if they need more room for longer responses (within the 100-word target).
+  Mode: polish
+  Quality layer: 3-Efficient → 4-Polished (more comfortable writing)
+  Files: 6 files (Part 7 + Part 8 × 3 mocks)
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| B1-Preliminary/Part 7.html (Email) | 5-Delightful | Teal handwritten notes, resizable textarea |
+| B1-Preliminary/Part 8.html (Choice) | 5-Delightful | Tab switching, confirmation, resizable textareas |
+| MOCK-2 & MOCK-3 | Same layers | All fixes applied |
+
+### Deferred
+- Inspera bloat in all Part files (~300 lines/file)
+- MOCK 1, 2, 3 have identical Part 7/8 prompts — could differentiate
+
+### Session Stats
+Pages explored: 6 files (Part 7 + Part 8 × 3 mocks)
+Rounds: 1
+Polishes landed: 2 (handwritten note + resize)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Fixes landed: 0
+Changes shipped: 6 files modified
