@@ -1,0 +1,206 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]: Part 1 · Multiple-choice cloze
+    - generic [ref=e4]: Questions 1–8 · Reading & Use of English
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - text: For questions
+      - strong [ref=e7]: 1–8
+      - text: ", read the text below and decide which answer ("
+      - strong [ref=e8]: A
+      - text: ","
+      - strong [ref=e9]: B
+      - text: ","
+      - strong [ref=e10]: C
+      - text: or
+      - strong [ref=e11]: D
+      - text: ) best fits each gap.
+    - heading "Bridges for wildlife" [level=2] [ref=e12]
+    - generic [ref=e13]:
+      - paragraph [ref=e14]:
+        - text: The act of annual migration is common to many species. They migrate towards more
+        - generic [ref=e15]: (1)
+        - text: climates, or return to breeding sites and feeding grounds. Roads and traffic, however, can
+        - generic [ref=e16]: (2)
+        - text: a significant threat to some species' survival. To
+        - generic [ref=e17]: (3)
+        - text: this problem, environmentalists and engineers around the world have put their heads together to devise 'wildlife bridges'.
+      - paragraph [ref=e18]:
+        - text: In Canada, grizzly bears, wolverines and toads are just a few of the species
+        - generic [ref=e19]: (4)
+        - text: use of grass-covered, cement bridges that cross the Trans-Canada Highway.
+        - generic [ref=e20]: (5)
+        - text: ", on Australia's Christmas Island, a five-metre-high bridge across a busy road enables red crabs to pass safely from the rainforest to the ocean. The bridge has significantly reduced their casualty"
+        - generic [ref=e21]: (6)
+        - text: and averted traffic chaos.
+      - paragraph [ref=e22]:
+        - text: In Sweden, plans are being
+        - generic [ref=e23]: (7)
+        - text: up for a series of bridges across a main highway, which will allow the country's 250,000 reindeer to reach the mountains. Engineers must take
+        - generic [ref=e24]: (8)
+        - text: of the fact that reindeer are easily frightened by traffic, and so make the bridge walls high enough to prevent the deer from jumping off.
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e27]: "1"
+        - text: Gap 1
+        - generic [ref=e28]:
+          - generic [ref=e29] [cursor=pointer]:
+            - radio "A supportive" [ref=e30]
+            - generic [ref=e31]: A
+            - generic [ref=e32]: supportive
+          - generic [ref=e33] [cursor=pointer]:
+            - radio "B favourable" [ref=e34]
+            - generic [ref=e35]: B
+            - generic [ref=e36]: favourable
+          - generic [ref=e37] [cursor=pointer]:
+            - radio "C hopeful" [ref=e38]
+            - generic [ref=e39]: C
+            - generic [ref=e40]: hopeful
+          - generic [ref=e41] [cursor=pointer]:
+            - radio "D worthwhile" [ref=e42]
+            - generic [ref=e43]: D
+            - generic [ref=e44]: worthwhile
+      - generic [ref=e45]:
+        - generic [ref=e46]: "2"
+        - text: Gap 2
+        - generic [ref=e47]:
+          - generic [ref=e48] [cursor=pointer]:
+            - radio "A raise" [ref=e49]
+            - generic [ref=e50]: A
+            - generic [ref=e51]: raise
+          - generic [ref=e52] [cursor=pointer]:
+            - radio "B pose" [ref=e53]
+            - generic [ref=e54]: B
+            - generic [ref=e55]: pose
+          - generic [ref=e56] [cursor=pointer]:
+            - radio "C create" [ref=e57]
+            - generic [ref=e58]: C
+            - generic [ref=e59]: create
+          - generic [ref=e60] [cursor=pointer]:
+            - radio "D establish" [ref=e61]
+            - generic [ref=e62]: D
+            - generic [ref=e63]: establish
+      - generic [ref=e64]:
+        - generic [ref=e65]: "3"
+        - text: Gap 3
+        - generic [ref=e66]:
+          - generic [ref=e67] [cursor=pointer]:
+            - radio "A address" [ref=e68]
+            - generic [ref=e69]: A
+            - generic [ref=e70]: address
+          - generic [ref=e71] [cursor=pointer]:
+            - radio "B oppose" [ref=e72]
+            - generic [ref=e73]: B
+            - generic [ref=e74]: oppose
+          - generic [ref=e75] [cursor=pointer]:
+            - radio "C challenge" [ref=e76]
+            - generic [ref=e77]: C
+            - generic [ref=e78]: challenge
+          - generic [ref=e79] [cursor=pointer]:
+            - radio "D approach" [ref=e80]
+            - generic [ref=e81]: D
+            - generic [ref=e82]: approach
+      - generic [ref=e83]:
+        - generic [ref=e84]: "4"
+        - text: Gap 4
+        - generic [ref=e85]:
+          - generic [ref=e86] [cursor=pointer]:
+            - radio "A putting" [ref=e87]
+            - generic [ref=e88]: A
+            - generic [ref=e89]: putting
+          - generic [ref=e90] [cursor=pointer]:
+            - radio "B gaining" [ref=e91]
+            - generic [ref=e92]: B
+            - generic [ref=e93]: gaining
+          - generic [ref=e94] [cursor=pointer]:
+            - radio "C making" [ref=e95]
+            - generic [ref=e96]: C
+            - generic [ref=e97]: making
+          - generic [ref=e98] [cursor=pointer]:
+            - radio "D getting" [ref=e99]
+            - generic [ref=e100]: D
+            - generic [ref=e101]: getting
+      - generic [ref=e102]:
+        - generic [ref=e103]: "5"
+        - text: Gap 5
+        - generic [ref=e104]:
+          - generic [ref=e105] [cursor=pointer]:
+            - radio "A Respectively" [ref=e106]
+            - generic [ref=e107]: A
+            - generic [ref=e108]: Respectively
+          - generic [ref=e109] [cursor=pointer]:
+            - radio "B Comparably" [ref=e110]
+            - generic [ref=e111]: B
+            - generic [ref=e112]: Comparably
+          - generic [ref=e113] [cursor=pointer]:
+            - radio "C Similarly" [ref=e114]
+            - generic [ref=e115]: C
+            - generic [ref=e116]: Similarly
+          - generic [ref=e117] [cursor=pointer]:
+            - radio "D Correspondingly" [ref=e118]
+            - generic [ref=e119]: D
+            - generic [ref=e120]: Correspondingly
+      - generic [ref=e121]:
+        - generic [ref=e122]: "6"
+        - text: Gap 6
+        - generic [ref=e123]:
+          - generic [ref=e124] [cursor=pointer]:
+            - radio "A quota" [ref=e125]
+            - generic [ref=e126]: A
+            - generic [ref=e127]: quota
+          - generic [ref=e128] [cursor=pointer]:
+            - radio "B percentage" [ref=e129]
+            - generic [ref=e130]: B
+            - generic [ref=e131]: percentage
+          - generic [ref=e132] [cursor=pointer]:
+            - radio "C scale" [ref=e133]
+            - generic [ref=e134]: C
+            - generic [ref=e135]: scale
+          - generic [ref=e136] [cursor=pointer]:
+            - radio "D rate" [ref=e137]
+            - generic [ref=e138]: D
+            - generic [ref=e139]: rate
+      - generic [ref=e140]:
+        - generic [ref=e141]: "7"
+        - text: Gap 7
+        - generic [ref=e142]:
+          - generic [ref=e143] [cursor=pointer]:
+            - radio "A shown" [ref=e144]
+            - generic [ref=e145]: A
+            - generic [ref=e146]: shown
+          - generic [ref=e147] [cursor=pointer]:
+            - radio "B backed" [ref=e148]
+            - generic [ref=e149]: B
+            - generic [ref=e150]: backed
+          - generic [ref=e151] [cursor=pointer]:
+            - radio "C drawn" [ref=e152]
+            - generic [ref=e153]: C
+            - generic [ref=e154]: drawn
+          - generic [ref=e155] [cursor=pointer]:
+            - radio "D worked" [ref=e156]
+            - generic [ref=e157]: D
+            - generic [ref=e158]: worked
+      - generic [ref=e159]:
+        - generic [ref=e160]: "8"
+        - text: Gap 8
+        - generic [ref=e161]:
+          - generic [ref=e162] [cursor=pointer]:
+            - radio "A advantage" [ref=e163]
+            - generic [ref=e164]: A
+            - generic [ref=e165]: advantage
+          - generic [ref=e166] [cursor=pointer]:
+            - radio "B account" [ref=e167]
+            - generic [ref=e168]: B
+            - generic [ref=e169]: account
+          - generic [ref=e170] [cursor=pointer]:
+            - radio "C control" [ref=e171]
+            - generic [ref=e172]: C
+            - generic [ref=e173]: control
+          - generic [ref=e174] [cursor=pointer]:
+            - radio "D effect" [ref=e175]
+            - generic [ref=e176]: D
+            - generic [ref=e177]: effect
+  - generic [ref=e178]:
+    - button "← Previous" [disabled] [ref=e179]
+    - generic [ref=e180]: Part 1 of 8
+    - button "Next →" [ref=e181] [cursor=pointer]
