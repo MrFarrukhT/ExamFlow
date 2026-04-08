@@ -1,5 +1,47 @@
 # Autopilot Journal
 
+## Session: 2026-04-08 12:30
+Persona: Cambridge A1 Movers student round 2 + cross-level security sweep
+System: Cambridge (all levels)
+
+### Phase 1: Journey Map
+- Full A1 Movers journey audited: Dashboard → R&W (6 parts) → Listening (5 parts) → Speaking → Results
+- CRITICAL gap found: Part 6.html had NO deliver button — students could answer 35 questions but never submit
+- Missing completed-status guards in reading-writing.html (A1-Movers and A2-Key)
+- XSS via unsanitized error.message in speaking.html across ALL levels (A1, A2, B1 — B2 was fixed in prior session)
+- No double-submit protection on speaking submit across ALL levels
+
+### Phase 2: Creation
+- Built: Deliver button + submit handler in A1 Movers Part 6.html
+  - Checkmark button in footer nav (matches A2-Key Part 7 pattern)
+  - Submit handler: consolidates answers → submits to DB → marks completed → redirects to dashboard
+  - Includes double-submit protection (committed as part of 834658f checkpoint)
+
+### Phase 3: Structure
+- Skipped — structure sound
+
+### Phase 4: Heal (cross-level security sweep)
+1. **A1 Movers reading-writing.html** — completed-status guard + autosave logging. Committed as 050d0af
+2. **A1 Movers speaking.html** — XSS fix (mic check + submission error) + double-submit. Committed as 050d0af
+3. **A2-Key speaking.html (3 mocks)** — XSS fix + double-submit. Committed as 050d0af
+4. **B1-Preliminary speaking.html (3 mocks)** — XSS fix + double-submit. Committed as 050d0af
+5. **A2-Key reading-writing.html (3 mocks)** — completed-status guard + autosave logging. Committed as 845d6a4
+
+### Phase 5: Experience
+- Skipped — no server running
+
+### Phase 6: Scenario
+- Verified by code review: all fixes structurally correct
+- Deliver button CSS class (footer__deliverButton___3FM07) confirmed available in player.css
+
+### Session Stats
+Total commits: 2 (050d0af, 845d6a4) + 1 pre-existing checkpoint
+Total files changed: 14 (1 A1 Part 6, 1 A1 reading-writing, 1 A1 speaking, 3 A2 speaking, 3 B1 speaking, 3 A2 reading-writing, 2 A2 reading-writing)
+Persona journey coverage: Full A1 Movers R&W submission flow + cross-level speaking security + cross-level completed guards
+Critical fix: A1 Movers students can now submit reading-writing tests
+
+---
+
 ## Session: 2026-04-08 12:00
 Persona: Cambridge B2 First student (full journey audit — answer keys, integrity, security)
 System: Cambridge
