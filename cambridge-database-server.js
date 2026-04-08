@@ -249,6 +249,14 @@ const VALID_SKILLS = ['reading', 'writing', 'listening', 'speaking', 'reading-wr
 // Rate limit on student-facing submission endpoints
 const submissionLimiter = rateLimit({ windowMs: 60000, maxRequests: 10, message: 'Too many submissions. Try again later.' });
 
+// Cambridge time limits per level (minutes) — used for duration validation
+const CAMBRIDGE_TIME_LIMITS = {
+    'A1-Movers': { reading: 50, writing: 50, listening: 30, speaking: 15, 'reading-writing': 60 },
+    'A2-Key': { reading: 60, writing: 60, listening: 30, speaking: 15, 'reading-writing': 60, 'reading-use-of-english': 60 },
+    'B1-Preliminary': { reading: 60, writing: 60, listening: 35, speaking: 15, 'reading-writing': 90, 'reading-use-of-english': 60 },
+    'B2-First': { reading: 75, writing: 80, listening: 40, speaking: 15, 'reading-use-of-english': 75 }
+};
+
 // ============================================
 // CAMBRIDGE-SPECIFIC ROUTES
 // ============================================
