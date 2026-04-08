@@ -393,6 +393,18 @@ app.post('/cambridge-submissions', submissionLimiter, async (req, res) => {
             return res.status(400).json(validationError);
         }
 
+        // Server-side duration validation — flag suspiciously long test durations
+        if (submissionData.startTime && submissionData.endTime) {
+            const start = new Date(submissionData.startTime);
+            const end = new Date(submissionData.endTime);
+            const elapsedMin = (end - start) / 60000;
+            const levelLimits = CAMBRIDGE_TIME_LIMITS[submissionData.level] || {};
+            const limit = levelLimits[submissionData.skill] || 90;
+            if (elapsedMin > limit * 2) {
+                console.warn(`⚠️ DURATION ALERT: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.level} ${submissionData.skill} (limit: ${limit}min)`);
+            }
+        }
+
         const savedId = await saveWithRetry(submissionData);
 
         res.json({
