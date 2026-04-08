@@ -1,15 +1,15 @@
 {
-  "lastRun": "2026-04-09 10:30",
-  "lastPersona": "cheater-round4-c1-postmessage",
-  "completedPersonas": ["ielts-student", "cambridge-a2-student", "invigilator", "admin-scoring", "admin-management", "nervous-first-timer", "cambridge-a1-movers-student", "cambridge-b1-preliminary-student", "cambridge-a2-key-student-round2", "staff-round-2", "cheater", "ielts-student-round2", "cambridge-b2-first-student", "cambridge-test-taker", "cambridge-b2-first-student-round2", "cambridge-a1-movers-student-round2", "nervous-first-timer-round2", "cambridge-student-progress-indicator", "ielts-student-results-page", "cambridge-student-review-modal", "cheater-round3", "invigilator-round3-anticheat", "admin-scoring-round3-anticheat", "c1-advanced-olympiada-launch", "olympiada-examtype-pipeline", "olympiada-postsubmit-filtering", "cheater-round4-c1-postmessage"],
-  "currentRotation": 27,
-  "totalSessions": 27,
+  "lastRun": "2026-04-09 11:00",
+  "lastPersona": "cheater-round5-olympiada-level-lock",
+  "completedPersonas": ["ielts-student", "cambridge-a2-student", "invigilator", "admin-scoring", "admin-management", "nervous-first-timer", "cambridge-a1-movers-student", "cambridge-b1-preliminary-student", "cambridge-a2-key-student-round2", "staff-round-2", "cheater", "ielts-student-round2", "cambridge-b2-first-student", "cambridge-test-taker", "cambridge-b2-first-student-round2", "cambridge-a1-movers-student-round2", "nervous-first-timer-round2", "cambridge-student-progress-indicator", "ielts-student-results-page", "cambridge-student-review-modal", "cheater-round3", "invigilator-round3-anticheat", "admin-scoring-round3-anticheat", "c1-advanced-olympiada-launch", "olympiada-examtype-pipeline", "olympiada-postsubmit-filtering", "cheater-round4-c1-postmessage", "cheater-round5-olympiada-level-lock"],
+  "currentRotation": 28,
+  "totalSessions": 28,
   "stats": {
     "featuresCreated": 34,
     "structuralDecisions": 1,
-    "codeHealed": 99,
+    "codeHealed": 102,
     "experienceImprovements": 22,
-    "scenariosTested": 68,
-    "totalCommits": 70
+    "scenariosTested": 70,
+    "totalCommits": 71
   }
 }

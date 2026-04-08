@@ -1,5 +1,78 @@
 # Autopilot Journal
 
+## Session: 2026-04-09 11:00
+Persona: Cheater round 5 — Olympiada level lock bypass
+System: Cambridge
+
+### Phase 1: Journey Map
+- Followed up on session 27's cheater pass with another C1/Olympiada-specific audit
+- Hypothesis: the Olympiada level lock (auto-set cambridgeLevel='C1-Advanced'
+  on login) was enforced only by client-side bootstrap and CSS-hidden cards
+- Gap: any tampering with localStorage or DevTools call to selectLevel('B2-First')
+  would let an Olympiada student take a non-C1 test under the Olympiada tag,
+  polluting analytics meant to separate Zarmet University from regular Cambridge
+
+### Phase 2: Creation
+- No new features — security hardening only
+
+### Phase 3: Structure
+- Skipped — sound
+
+### Phase 4: Heal — vulnerability + fix
+**Vulnerability**: Olympiada level lock had no enforcement layer beyond
+client-side CSS hiding and a one-time auto-select on login. A student could:
+1. Open DevTools and call `selectLevel('B2-First')` directly
+2. Or `localStorage.setItem('cambridgeLevel', 'B2-First')` then refresh
+3. Or POST a submission with examType='Olympiada' + level='B2-First'
+
+The CSS-hidden level cards weren't actually disabled — clicking them via
+JavaScript still worked.
+
+**Two-layer fix**:
+
+1. **Client (dashboard-cambridge.html selectLevel)**:
+   - If examType='Olympiada' and requested level≠C1-Advanced, force level to
+     C1-Advanced and log a warning to console
+   - Added a known-level whitelist to reject any unknown level string
+
+2. **Server (cambridge-database-server.js)**:
+   - POST /cambridge-submissions: reject (Olympiada, non-C1) pairs with
+     400 + console.warn (flags for invigilator review)
+   - POST /submit-speaking: same enforcement on the speaking endpoint
+   - Both endpoints log the violation so invigilators can correlate with
+     anti-cheat flags from session 22
+
+Committed as 26c62da (2 files, +32/-1 lines).
+
+### Phase 5: Experience
+- Skipped — no server running
+
+### Phase 6: Scenario
+- Verified by code review:
+  - selectLevel guard catches DevTools calls AND tampered cardOnclick events
+  - Server enforcement catches direct POST attacks (bypassing the client UI)
+  - Both layers log to console for forensic correlation
+  - Whitelist validation catches typos, future levels not yet added, and arbitrary strings
+
+### Session Stats
+Total commits: 1 (26c62da)
+Total files changed: 2 (dashboard-cambridge.html, cambridge-database-server.js)
++32/-1 lines
+Persona journey coverage: Olympiada level lock — both client and server enforcement
+
+### Why this matters (defense in depth)
+The original Olympiada launch had ONE layer of "enforcement":
+- CSS hides non-C1 cards in olympiada mode
+
+But CSS hiding ≠ enforcement. The fix adds two more layers:
+- JavaScript guards in selectLevel() (catches in-browser tampering)
+- Server-side validation (catches direct POST attacks)
+
+A real attacker would need to bypass all three to submit a non-C1 exam as
+Olympiada — which requires modifying server code, not just localStorage.
+
+---
+
 ## Session: 2026-04-09 10:30
 Persona: Cheater round 4 (audit C1-Advanced/Olympiada attack surface from sessions 24-26)
 System: Cambridge
