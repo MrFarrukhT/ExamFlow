@@ -1,5 +1,42 @@
 # Autopilot Journal
 
+## Session: 2026-04-08 13:30
+Persona: Cambridge student (feature parity with IELTS)
+System: Cambridge
+
+### Phase 1: Journey Map
+- Closes feature parity gap noted in nervous-first-timer round 2
+- Cambridge students had no way to see "X / Y answered" during a test
+- IELTS has exam-progress.js (40Q hardcoded); Cambridge needed an adapted version
+
+### Phase 2: Creation
+- Built: `assets/js/cambridge/cambridge-exam-progress.js` (~150 lines)
+  - Per-level/skill question count config (A1, A2, B1, B2)
+  - Reads `cambridge-{module}Answers` from localStorage
+  - Counts non-empty values, polls every 2 seconds
+  - Fixed-position badge top-right (next to centered timer)
+  - Color states: blue → orange (low) → green (all done)
+- Wired into all 29 Cambridge wrapper files (reading.html, writing.html, listening.html, reading-writing.html across A1, A2, B1, B2 + mocks)
+
+### Phase 3: Structure
+- Skipped — sound
+
+### Phase 4: Heal
+- Skipped — covered creation phase
+
+### Phase 5: Experience
+- Skipped — no server running
+
+### Phase 6: Scenario
+- Skipped — feature is additive, no regression risk
+
+### Session Stats
+Total commits: 1 (committed via scenario checkpoint a9fa82e)
+Total files changed: 30 (1 new JS, 29 wrappers)
+Persona journey coverage: Reading, Writing, Listening, Reading & Writing across all 4 Cambridge levels
+
+---
+
 ## Session: 2026-04-08 13:00
 Persona: Nervous first-timer round 2 (UX audit + feature parity)
 System: Both (IELTS + Cambridge)
