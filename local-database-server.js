@@ -143,6 +143,9 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
         if (!studentCheck.valid) {
             return res.status(400).json({ success: false, message: studentCheck.error });
         }
+        // Use sanitized values for downstream insert (strips null bytes/control chars)
+        submissionData.studentId = studentCheck.studentId;
+        submissionData.studentName = studentCheck.studentName;
         if (!submissionData.skill || !VALID_SKILLS.includes(submissionData.skill)) {
             return res.status(400).json({ success: false, message: `Invalid skill. Must be one of: ${VALID_SKILLS.join(', ')}` });
         }

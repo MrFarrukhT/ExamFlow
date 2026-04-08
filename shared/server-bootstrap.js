@@ -6,6 +6,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createDatabaseManager, adminLoginHandler } from './database.js';
+import { removeToken } from './auth.js';
 
 /**
  * Create a configured Express server with database, middleware, and lifecycle hooks.
@@ -94,6 +95,16 @@ export function createServer({ port, name, callerUrl, dbConfig, staticOptions, o
 
     // Admin login endpoint
     app.post('/admin-login', adminLoginHandler);
+
+    // Admin logout endpoint — invalidates the token server-side
+    app.post('/admin-logout', (req, res) => {
+        const authHeader = req.headers.authorization;
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            const token = authHeader.slice(7);
+            removeToken(token);
+        }
+        res.json({ success: true, message: 'Logged out' });
+    });
 
     // Invigilator password verification (server-side, password never sent to client)
     app.post('/verify-invigilator', (req, res) => {

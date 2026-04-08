@@ -56,11 +56,17 @@ export function validateScoreAndGrade(score, grade) {
 
 /**
  * Validate student ID and name (required, trimmed, max 200 chars).
+ * Strips null bytes and control characters that break PostgreSQL UTF8 storage
+ * or enable header injection.
  * Returns { valid, studentId?, studentName?, error? }.
  */
 export function validateStudentInfo(studentId, studentName) {
-    const id = typeof studentId === 'string' ? studentId.trim() : '';
-    const name = typeof studentName === 'string' ? studentName.trim() : '';
+    // Strip null bytes and control chars (except tab/newline which are usually trimmed)
+    const sanitize = (s) => typeof s === 'string'
+        ? s.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '').trim()
+        : '';
+    const id = sanitize(studentId);
+    const name = sanitize(studentName);
     if (!id || !name) {
         return { valid: false, error: 'Student ID and name are required' };
     }

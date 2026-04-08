@@ -86,8 +86,12 @@ function validateScore(score) {
 }
 
 function validateStudentInfo(studentId, studentName) {
-    const id = typeof studentId === 'string' ? studentId.trim() : '';
-    const name = typeof studentName === 'string' ? studentName.trim() : '';
+    // Strip null bytes and control chars (PG UTF8 rejects them, header injection vector)
+    const sanitize = (s) => typeof s === 'string'
+        ? s.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '').trim()
+        : '';
+    const id = sanitize(studentId);
+    const name = sanitize(studentName);
     if (!id || !name) return { valid: false, error: 'Student ID and name are required' };
     if (id.length > 200 || name.length > 200) return { valid: false, error: 'Student ID and name must be at most 200 characters' };
     return { valid: true, studentId: id, studentName: name };
@@ -380,6 +384,16 @@ app.post('/admin-login', (req, res) => {
     }
 });
 
+// Admin logout — invalidates the token server-side
+app.post('/admin-logout', (req, res) => {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        const token = authHeader.slice(7);
+        validTokens.delete(token);
+    }
+    res.json({ success: true, message: 'Logged out' });
+});
+
 // Invigilator password verification
 app.post('/verify-invigilator', (req, res) => {
     const { password } = req.body;
@@ -517,7 +531,7 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
                 (student_id, student_name, mock_number, skill, answers, score, band_score, start_time, end_time)
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
                 RETURNING id
-            `, [submissionData.studentId, submissionData.studentName, submissionData.mockNumber,
+            `, [studentCheck.studentId, studentCheck.studentName, submissionData.mockNumber,
             submissionData.skill, JSON.stringify(submissionData.answers), submissionData.score,
             submissionData.bandScore, submissionData.startTime, submissionData.endTime]);
             console.log(`✅ Saved with ID: ${result.rows[0].id}`);

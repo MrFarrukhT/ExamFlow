@@ -401,6 +401,9 @@ app.post('/cambridge-submissions', submissionLimiter, async (req, res) => {
         if (!studentCheck.valid) {
             return res.status(400).json({ success: false, message: studentCheck.error });
         }
+        // Use sanitized values for downstream insert (strips null bytes/control chars)
+        submissionData.studentId = studentCheck.studentId;
+        submissionData.studentName = studentCheck.studentName;
         if (!submissionData.level || !VALID_LEVELS.includes(submissionData.level)) {
             return res.status(400).json({ success: false, message: `Invalid level. Must be one of: ${VALID_LEVELS.join(', ')}` });
         }
@@ -531,6 +534,15 @@ app.post('/submit-speaking', submissionLimiter, async (req, res) => {
 
         // Validate audioSize (must be non-negative if provided)
         const safeAudioSize = (typeof audioSize === 'number' && audioSize >= 0 && audioSize <= 100) ? audioSize : null;
+
+        // Validate audioData type and length — prevents DoS via massive submissions
+        if (audioData != null && typeof audioData !== 'string') {
+            return res.status(400).json({ success: false, message: 'audioData must be a base64 string' });
+        }
+        const MAX_AUDIO_BYTES = 15 * 1024 * 1024; // 15MB raw base64 string ≈ 11MB decoded audio
+        if (typeof audioData === 'string' && audioData.length > MAX_AUDIO_BYTES) {
+            return res.status(413).json({ success: false, message: `audioData exceeds maximum size of ${MAX_AUDIO_BYTES} bytes` });
+        }
 
         // In-memory lock + DB dedup check — prevents race conditions with singleton Client
         const safeMockTest = mockTest || '1';
