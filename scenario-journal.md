@@ -1170,3 +1170,60 @@ None — R20 was a clean round. Autopilot's filter changes are pure client-side 
 
 ### Stats (Round 20)
 Tested: 6 | Passed: 5 | Note: 1 (workflow) | Deferred: 1 (browser test) | Fixed: 0
+
+---
+
+## Session: 2026-04-09 16:15
+Focus: Audit the autopilot's "cheater r4" security fix (postMessage URL injection) — verify it actually works and look for bypasses
+Trigger: Commit 4557887 added postMessage URL whitelist to all 10 Cambridge listening pages — security fix that warrants adversarial review
+
+### Scenarios
+
+- S1: Code review of the postMessage URL whitelist [Insider] → **CRITICAL FAIL** [CRITICAL]
+  - The autopilot wrote the regex correctly in C1-Advanced/listening.html (line 222):
+    `/^\.\/(?:Listening )?Part \d+\.html$/`
+  - But pasted a BROKEN version into all 10 other listening files (A1, A2, A2-MOCK-2, A2-MOCK-3, B1, B1-MOCK-2, B1-MOCK-3, B2, B2-MOCK-2, B2-MOCK-3):
+    `/^./(Listening )?Part d+.html$/`
+  - Missing escapes everywhere: `\.` → `.`, `\/` → `/`, `\d+` → `d+`
+  - **JavaScript SyntaxError**: Node refuses to parse it at all. The first `/^./` is interpreted as a complete regex literal, then the rest causes a syntax error.
+  - **Browser impact**: The entire `<script>` block fails to execute. ALL JavaScript on the listening page is dead — not just navigation. Timer, answer saving, audio control, postMessage handler — everything in that script tag.
+  - **Severity: CRITICAL**. 10 listening pages were broken in production for the duration of this commit.
+
+- S2: Verify the broken regex actually fails [Confirmation] → CONFIRMED via Node REPL
+  - `node -e "...broken regex..."` → `SyntaxError: Expected ':', got 'd'`
+  - C1-Advanced regex parses cleanly
+  - The bug is real and affects all 10 files
+
+- S3: Filename pattern audit [Discovery] → Found ANOTHER bug in the autopilot's intent
+  - A1, A2, B1, B2 use `Listening-Part-N.html` (with hyphens)
+  - C1-Advanced uses `Listening Part N.html` (with spaces)
+  - The autopilot's "correct" regex in C1-Advanced only handles the space format
+  - Even if the syntax error were fixed in the other 10 files, the regex would only match `./Listening Part N.html` — NOT `./Listening-Part-N.html`
+  - So the whitelist would have rejected ALL real navigation URLs anyway
+
+### Fix
+- **All 10 listening files**: Replaced the broken regex with a robust version that handles BOTH naming conventions:
+  ```js
+  return /^\.\/(?:Listening[- ])?Part[- ]\d+\.html$/.test(url);
+  ```
+  Matches:
+  - `./Part 1.html` (reading parts, all levels)
+  - `./Part 10.html` (multi-digit)
+  - `./Listening-Part-1.html` (A1-B2 listening)
+  - `./Listening Part 1.html` (C1 listening)
+  - Rejects: `javascript:`, `data:`, `http://`, `../etc/passwd`, `./evil.html`
+
+### Pattern Analysis
+- **Bulk copy-paste spreads bugs.** The autopilot wrote one correct file (C1-Advanced) and one broken version, then bulk-pasted the broken version into 10 files. A single syntax error became 10 broken pages.
+- **Security fixes are themselves attack surface.** The autopilot's well-intentioned hardening introduced a severe regression — broken JS on every listening page. Any code change is a potential bug, including security fixes. /scenario should always re-test the area a security fix touches.
+- **Regex literals need character-by-character review.** Forgetting backslash escapes silently changes semantics. `\.` → `.` (any char) and `\d` → `d` (literal d) are both valid JS syntactically, but produce wrong-but-runnable regexes. In this case the autopilot's mistakes happened to break the regex literal parsing entirely (because of the unescaped `/`), so the JS engine caught it via SyntaxError. If the autopilot had used a different separator pattern, the regex would have parsed but never matched anything — silent failure.
+- **The autopilot wrote one correct file FIRST**, suggesting the bug came from a transformation step (escape stripping during paste). This is a tooling-level bug — Edit/Write may strip backslash escapes from strings, OR the autopilot's prompt-driven editing didn't preserve them. Worth investigating in the autopilot agent's workflow.
+
+### Intelligence Update
+- Proven solid: postMessage URL whitelist now works correctly across all 11 Cambridge listening pages, robust regex handles both filename conventions
+- Critical regression caught: 10 listening pages had broken JS for the duration of commit 4557887
+- New weak pattern logged: bulk copy-paste of code (especially regex/string-escaped content) needs per-file syntax verification
+- Coverage: 123 scenarios across 21 rounds, 43 bugs found, 38 fixed
+
+### Stats (Round 21)
+Tested: 3 | Passed: 0 | Failed: 1 (critical, 10 files) | Confirmed: 1 | Discovery: 1 | Fixed: 1 (covers all 10 files) | Deferred: 0

@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-09 15:55",
-  "totalRuns": 20,
+  "lastRun": "2026-04-09 16:15",
+  "totalRuns": 21,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -95,7 +95,9 @@
     "examType-whitelist-cambridge-olympiada",
     "examType-not-exposed-via-my-submissions",
     "cross-exam-type-dedup-prevents-warmup-runs",
-    "c1-advanced-my-answer-keys-roundtrip-pass"
+    "c1-advanced-my-answer-keys-roundtrip-pass",
+    "postMessage-url-whitelist-correct-regex-all-11-files",
+    "postMessage-url-whitelist-handles-both-hyphen-and-space-naming"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
@@ -104,11 +106,12 @@
     "blocklist-deny-approach-needs-ongoing-maintenance",
     "submissions-list-unpaginated-5604-rows-fetched-per-dashboard-load",
     "rate-limiter-hits-map-grows-unboundedly",
-    "esm-cjs-drift-recurring-systemic-issue-no-occurrence-r17-r20",
-    "js-db-enum-drift-recurring-3-occurrences-no-occurrence-r19-r20",
+    "esm-cjs-drift-recurring-systemic-issue",
+    "js-db-enum-drift-recurring-3-occurrences",
     "loose-type-coercion-trusting-toString-or-comparison-operators",
     "student-names-not-secrets-physical-exam-context",
-    "olympiada-cambridge-mock-test-numbers-collision-workflow"
+    "olympiada-cambridge-mock-test-numbers-collision-workflow",
+    "autopilot-bulk-copy-paste-can-spread-syntax-errors-across-files"
   ],
   "untestedAreas": [
     "browser-based-c1-advanced-exam-flow"
@@ -133,7 +136,7 @@
       "reason": "Every enum addition requires a paired DB migration. Architect should add a code review checklist."
     },
     {
-      "title": "ESM↔CJS drift recurring (4 occurrences in R13-R16, none R17-R20)",
+      "title": "ESM↔CJS drift recurring (4 occurrences in R13-R16)",
       "severity": "HIGH",
       "since": "2026-04-09",
       "reason": "Pattern unsolved, just hasn't been triggered recently. Will return."
@@ -167,12 +170,18 @@
       "severity": "LOW",
       "since": "2026-04-09",
       "reason": "Dedup key omits exam_type, so a student cannot take Mock 1 as both Cambridge and Olympiada. Configuration concern, not a bug."
+    },
+    {
+      "title": "Autopilot bulk-paste can spread syntax errors across many files (R21 pattern)",
+      "severity": "MEDIUM",
+      "since": "2026-04-09",
+      "reason": "Workflow gap in autopilot agent. /scenario must always re-test areas the autopilot bulk-edits."
     }
   ],
   "stats": {
-    "scenariosTested": 120,
-    "bugsFound": 42,
-    "bugsFixed": 37,
-    "bugsDeferred": 9
+    "scenariosTested": 123,
+    "bugsFound": 43,
+    "bugsFixed": 38,
+    "bugsDeferred": 10
   }
 }
