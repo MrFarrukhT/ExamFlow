@@ -681,20 +681,46 @@ Changes shipped: 44 files modified
 | All Cambridge speaking.html | 5-Delightful | Teal identity consistent |
 | Cambridge/MOCKs-Cambridge/*/listening.html | 5-Delightful | Teal popup, favicon fixed |
 
+### Round 4
+**Explored:** 6 pages (MOCK 2 Parts 1/4/7, MOCK 3 Parts 1/4, title consistency check across all mocks), 1 finding
+**Action:** ELEVATE 1 (select dropdown filled-state)
+
+- [T0] a2-key-answer-sync.js + cambridge-bridge.js — Added .filled class on select.inline-choice-select elements (Part 4 cloze dropdowns). Green border + bg when student selects an answer.
+  Mode: elevate
+  Quality layer: 3-Efficient → 4-Polished
+  Files: assets/js/cambridge/a2-key-answer-sync.js, assets/js/cambridge/cambridge-bridge.js
+
+- Verified MOCK 2 and MOCK 3 content is distinct and functional (different passages, questions)
+- Verified all wrapper titles are correct across mocks
+
+### Final Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| Cambridge/dashboard-cambridge.html | 5-Delightful | Teal identity, modal, animations |
+| A2-Key/Part 1-3 (Reading MCQ) | 3-Efficient | Radio questions, auto-save |
+| A2-Key/Part 4 (Cloze Selects) | 4-Polished | Green filled-state on dropdowns |
+| A2-Key/Part 5 (Gap Fill) | 4-Polished | Green filled-state on text inputs |
+| A2-Key/Part 6-7 (Writing) | 4-Polished | Green filled-state on textareas |
+| A2-Key/Listening Part 1 | 3-Efficient | Picture MCQ |
+| A2-Key/Listening Part 2 | 4-Polished | Gap-fill with filled-state |
+| A2-Key/Listening Parts 3-5 | 3-Efficient | MCQ/matching |
+| All Cambridge speaking.html | 5-Delightful | Teal identity |
+| All listening.html wrappers | 5-Delightful | Teal popup, favicon fixed |
+| MOCK 2 & 3 | 3-Efficient | Content distinct, all wrappers correct |
+
 ### Deferred
-- Part 4 select dropdowns have no filled-state (need select-specific CSS)
-- Part 6 missing images (Part 6_files/img) — 404 errors
-- Mock test selection UI — no way for student to choose Mock 1/2/3 (invigilator-controlled)
+- Part 6 missing images (Part 6_files/img) — 404 errors, need source assets
+- Mock test selection UI — by design, invigilator-controlled
 
 ### Session Stats (cumulative)
-Pages explored: 20
-Rounds: 3
+Pages explored: 26
+Rounds: 4
 Polishes landed: 6
 Rebuilds landed: 0
-Elevations landed: 3
+Elevations landed: 4
 Reverted: 0
 Fixes landed: 1 (32 files)
-Changes shipped: 56 files modified
+Changes shipped: 58 files modified
 
 ---
 
