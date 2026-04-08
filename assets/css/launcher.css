@@ -130,6 +130,35 @@ body {
     }
 }
 
+.info-value.status-connecting {
+    color: #f39c12;
+}
+
+.status-connecting::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: #f39c12;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+    animation: blink 0.6s ease-in-out infinite;
+}
+
+.info-value.status-offline {
+    color: #e74c3c;
+}
+
+.status-offline::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: #e74c3c;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+}
+
 .launch-button {
     background: linear-gradient(135deg, #3498db, #2980b9);
     border: none;

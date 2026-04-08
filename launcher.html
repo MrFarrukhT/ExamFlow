@@ -231,9 +231,6 @@
             const modal = document.getElementById('invigilator-modal');
             if (modal) {
                 modal.classList.remove('hidden');
-                modal.style.display = 'flex';
-                modal.style.alignItems = 'center';
-                modal.style.justifyContent = 'center';
                 document.getElementById('invigilator-password').focus();
             }
         }
@@ -242,7 +239,6 @@
             const modal = document.getElementById('invigilator-modal');
             if (modal) {
                 modal.classList.add('hidden');
-                modal.style.display = '';
                 document.getElementById('invigilator-password').value = '';
                 document.getElementById('password-error').style.display = 'none';
             }
