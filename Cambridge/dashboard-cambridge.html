@@ -348,7 +348,14 @@
                 if (status === 'completed') {
                     completedCount++;
                     card.classList.add('completed');
-                    statusEl.textContent = 'Completed';
+                    const start = localStorage.getItem(`cambridge-${module}StartTime`);
+                    const end = localStorage.getItem(`cambridge-${module}EndTime`);
+                    let durationText = '';
+                    if (start && end) {
+                        const mins = Math.round((new Date(end) - new Date(start)) / 60000);
+                        durationText = ` (${mins} min)`;
+                    }
+                    statusEl.textContent = 'Completed' + durationText;
                     statusEl.className = 'status-badge completed';
                     button.textContent = 'Completed \u2713';
                     button.disabled = true;
