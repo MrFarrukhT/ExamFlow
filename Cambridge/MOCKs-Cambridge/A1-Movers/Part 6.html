@@ -319,6 +319,7 @@
                                         <button class="subQuestion scorable-item" data-part="6" data-question="6"><span>35</span></button>
                                     </div>
                                 </div>
+                                <button id="deliver-button" aria-label="Submit your answers" class="footer__deliverButton___3FM07" title="Submit test"><i class="fa fa fa-check" aria-hidden="true"></i></button>
                             </nav>
                         </footer>
                     </div>
@@ -428,6 +429,55 @@
         });
 
         console.log('🎓 Cambridge A1 Movers - Part 6 Loaded');
+
+        // Submit functionality for deliver button
+        (function() {
+            const deliverButton = document.getElementById('deliver-button');
+            if (deliverButton) {
+                deliverButton.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    if (this.disabled) return;
+
+                    if (confirm('Are you sure you want to submit your reading & writing test? This will mark the module as completed.')) {
+                        this.disabled = true;
+                        try {
+                            // Consolidate answers first
+                            if (typeof window.consolidateMoversAnswers === 'function') {
+                                window.consolidateMoversAnswers();
+                            }
+
+                            // Submit to database
+                            if (window.cambridgeAnswerManager && typeof window.cambridgeAnswerManager.submitTestToDatabase === 'function') {
+                                await window.cambridgeAnswerManager.submitTestToDatabase();
+                            }
+
+                            // Mark module as completed
+                            localStorage.setItem('cambridge-reading-writingStatus', 'completed');
+                            localStorage.setItem('cambridge-reading-writingEndTime', new Date().toISOString());
+
+                            alert('Test submitted successfully!');
+
+                            // Redirect to dashboard
+                            if (window.top && window.top !== window) {
+                                window.top.location.href = '../../dashboard-cambridge.html';
+                            } else {
+                                window.location.href = '../../dashboard-cambridge.html';
+                            }
+                        } catch (error) {
+                            console.error('Submission error:', error);
+                            alert('Test marked as completed. Note: Database submission may have failed.');
+                            localStorage.setItem('cambridge-reading-writingStatus', 'completed');
+                            localStorage.setItem('cambridge-reading-writingEndTime', new Date().toISOString());
+                            if (window.top && window.top !== window) {
+                                window.top.location.href = '../../dashboard-cambridge.html';
+                            } else {
+                                window.location.href = '../../dashboard-cambridge.html';
+                            }
+                        }
+                    }
+                });
+            }
+        })();
     </script>
     <script src="../../../assets/js/cambridge/disable-copy-paste.js"></script>
 </body>

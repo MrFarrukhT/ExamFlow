@@ -1065,3 +1065,55 @@ Elevations landed: 0
 Reverted: 0
 Fixes landed: 3 (merge conflicts ×6, opacity ×3, broken images ×3 = 14 files)
 Changes shipped: 14 files modified
+
+---
+
+## Session: 2026-04-08 (A2 Key Listening — prompt #12)
+Persona: A2 level student taking Listening test
+System: Cambridge (localhost:3003)
+Pages explored: listening.html wrapper, Listening-Part-1 through Part-5 (all 3 mocks)
+Starting state: Wrapper at 5-Delightful (teal popup), Parts at 3-Efficient. Material Blue (#2196F3, #1976D2) in question numbers, hover/selected states across all 15 Part files. Parts 3-5 lacked visual selected-state feedback.
+
+### Round 1
+**Explored:** 15 Listening Part files across 3 mocks, 3 findings
+**Action:** POLISH 2 (teal identity sweep) + ELEVATE 1 (selected-state + filled-state)
+
+- [T4] All 15 Listening Part files — Material Blue (#2196F3) → Cambridge teal (#0d9488) in question numbers, hover borders, selected backgrounds. Also #1976D2 → #0d9488 in Parts 2 and 5 heading colors.
+  Mode: polish
+  Quality layer: 3-Efficient → 4-Polished (consistent teal identity)
+  Files: 15 Listening-Part-*.html files across A2-Key, A2-Key-MOCK-2, A2-Key-MOCK-3
+
+- [T0] Listening Parts 3 & 4 (×3 mocks = 6 files) — Added selected-state CSS: `.choice-item:has(input:checked)` shows teal bg (#ccfbf1) + teal border. Also upgraded choice-item styling: border 1px→2px, radius 4px→8px, added transition + hover border.
+  Mode: elevate
+  Quality layer: 3-Efficient → 5-Delightful (students see which answer they picked)
+  Files: 6 Listening-Part-3.html and Listening-Part-4.html files
+
+- [T0] Listening Part 5 (×3 mocks = 3 files) — Added `.filled` class on dropdown selects when answer is chosen (green bg + teal border). Toggled in both saveAnswer() and loadSavedAnswers().
+  Mode: elevate
+  Quality layer: 3-Efficient → 4-Polished (dropdown answers visually confirmed)
+  Files: 3 Listening-Part-5.html files
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| A2-Key/listening.html | 5-Delightful | Teal popup, audio protection, nav messaging |
+| A2-Key/Listening-Part-1.html | 5-Delightful | Teal identity, image MCQ with selected state |
+| A2-Key/Listening-Part-2.html | 4-Polished | Teal identity, gap-fill with filled-state |
+| A2-Key/Listening-Part-3.html | 5-Delightful | Teal identity, selected-state on text MCQ |
+| A2-Key/Listening-Part-4.html | 5-Delightful | Teal identity, selected-state on text MCQ |
+| A2-Key/Listening-Part-5.html | 4-Polished | Teal identity, dropdown filled-state |
+| MOCK-2 & MOCK-3 | Same layers | All fixes applied |
+
+### Deferred
+- Audio auto-navigate timestamps (commented out in wrapper) — needs real audio timing data
+- Parts reference nonexistent audio-player element in auto-start code — dead code, not UX-facing
+
+### Session Stats
+Pages explored: 15 (5 Parts × 3 mocks)
+Rounds: 1
+Polishes landed: 1 (teal identity across 15 files)
+Rebuilds landed: 0
+Elevations landed: 2 (selected-state on Parts 3-4, filled-state on Part 5)
+Reverted: 0
+Fixes landed: 0
+Changes shipped: 24 files modified (15 teal + 6 choice CSS + 3 dropdown filled)
