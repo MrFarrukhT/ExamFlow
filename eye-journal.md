@@ -1007,3 +1007,61 @@ Elevations landed: 0
 Reverted: 0
 Fixes landed: 5 (43 files total: 1 JS + 15 HTML counters + 27 title/log/heading fixes)
 Changes shipped: 46 files modified
+
+---
+
+## Session: 2026-04-08 (A2 Key Reading & Writing — prompt #11)
+Persona: A2 level student taking Reading & Writing combined test
+System: Cambridge (localhost:3003)
+Pages explored: Part 1-7.html (all 3 mocks), reading-writing.html wrapper
+Starting state: Merge conflicts in Part 1.html (6 files), Part 4 flash-of-blank, Part 6 broken images, Part 7 tiny textarea
+
+### Round 1
+**Explored:** 21 Part files across 3 A2 Key mocks + 6 B2 First Part 1 files, 4 findings
+**Action:** FIX 3 bugs + POLISH 1 UX improvement (across 14 files)
+
+- [T1] Part 1.html — Git merge conflict markers (<<<<<<< HEAD / ======= / >>>>>>>) in CSS block (6 files: A2-Key ×3, B2-First ×3). Page renders broken CSS, students may see layout glitches.
+  Mode: fix (critical bug)
+  Quality layer: 0-Broken → 4-Polished
+  Files: 6 Part 1.html files across A2-Key and B2-First mocks
+
+- [T1] Part 4.html — Missing `opacity: 1 !important` override for body[unresolved]. Students see flash of blank page on Part 4 load.
+  Mode: fix (bug)
+  Quality layer: 1-Functional → 3-Efficient
+  Files: A2-Key/Part 4.html, A2-Key-MOCK-2/Part 4.html, A2-Key-MOCK-3/Part 4.html
+
+- [T3] Part 6.html — Preloaded Part 7 images (3x) reference nonexistent `Part 6_files/` directory. 3 × 404 errors per page load, broken image placeholders visible if student scrolls.
+  Mode: fix (bug)
+  Quality layer: 2-Clear → 4-Polished
+  Files: A2-Key/Part 6.html, A2-Key-MOCK-2/Part 6.html, A2-Key-MOCK-3/Part 6.html
+
+- [T3] Part 7.html — Writing textarea too small (5 rows, 117px) for a "write 35+ words" picture story task. Enlarged to 10 rows/200px with proper styling to match Part 6.
+  Mode: polish
+  Quality layer: 3-Efficient → 4-Polished
+  Files: A2-Key/Part 7.html, A2-Key-MOCK-2/Part 7.html, A2-Key-MOCK-3/Part 7.html
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| A2-Key/Part 1.html | 4-Polished | Merge conflict resolved, fixed header CSS |
+| A2-Key/Part 4.html | 3-Efficient | No more blank flash on load |
+| A2-Key/Part 6.html (Writing) | 4-Polished | No broken images, clean preRender |
+| A2-Key/Part 7.html (Writing) | 4-Polished | Proper textarea size for story writing |
+| B2-First/Part 1.html | 4-Polished | Merge conflict resolved |
+| A2-Key/Part 2,3,5 | 5-Delightful | Unchanged (already at layer 5) |
+
+### Deferred
+- All Part files (21 A2 Key + others) — ~300 lines of inspera bloat per file (dynamicRubrics JSON, marketplaceProperties, TrackJS, service worker code). Architecture debt, not UX-facing.
+- Navigation script duplicated in every Part file (identical ~100 lines per file)
+- Part 6 missing actual story images (Part 6_files/ dir) — would need source assets from Cambridge
+- server files (cambridge-database-server.js, local-database-server.js) have uncommitted changes from previous session
+
+### Session Stats
+Pages explored: 21+ (7 Parts × 3 mocks)
+Rounds: 1
+Polishes landed: 1 (Part 7 textarea)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Fixes landed: 3 (merge conflicts ×6, opacity ×3, broken images ×3 = 14 files)
+Changes shipped: 14 files modified
