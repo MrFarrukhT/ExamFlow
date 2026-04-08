@@ -346,12 +346,22 @@
             let answers = JSON.parse(localStorage.getItem('cambridge-listeningAnswers') || '{}');
             answers[`L${questionNum}`] = answer;
             localStorage.setItem('cambridge-listeningAnswers', JSON.stringify(answers));
-            
+
             const btn = document.querySelector(`[data-ordernumber="${questionNum}"]`);
             if (btn && answer !== '') {
                 btn.classList.add('answered');
             } else if (btn) {
                 btn.classList.remove('answered');
+            }
+
+            // Toggle filled visual state on dropdown
+            const select = document.getElementById(`answer_${questionNum}`);
+            if (select) {
+                if (answer && answer !== '') {
+                    select.classList.add('filled');
+                } else {
+                    select.classList.remove('filled');
+                }
             }
         }
 
@@ -363,6 +373,7 @@
                     const select = document.getElementById(`answer_${i}`);
                     if (select) {
                         select.value = answer;
+                        select.classList.add('filled');
                     }
                     const btn = document.querySelector(`[data-ordernumber="${i}"]`);
                     if (btn) {

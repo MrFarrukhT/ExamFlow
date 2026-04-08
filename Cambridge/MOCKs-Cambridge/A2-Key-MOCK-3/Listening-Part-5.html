@@ -85,6 +85,10 @@
             outline: none;
             border-color: #0d9488;
         }
+        .dropdown-select.filled {
+            border-color: #0d9488;
+            background-color: #f0fdf4;
+        }
     </style>
     <!-- Highlight and Notes Persistence -->
     <script src="../../../assets/js/cambridge/highlight-manager.js"></script>
@@ -349,6 +353,16 @@
             } else if (btn) {
                 btn.classList.remove('answered');
             }
+
+            // Toggle filled visual state on dropdown
+            const select = document.getElementById(`answer_${questionNum}`);
+            if (select) {
+                if (answer && answer !== '') {
+                    select.classList.add('filled');
+                } else {
+                    select.classList.remove('filled');
+                }
+            }
         }
 
         function loadSavedAnswers() {
@@ -359,6 +373,7 @@
                     const select = document.getElementById(`answer_${i}`);
                     if (select) {
                         select.value = answer;
+                        select.classList.add('filled');
                     }
                     const btn = document.querySelector(`[data-ordernumber="${i}"]`);
                     if (btn) {

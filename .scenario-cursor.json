@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-08 10:31",
-  "totalRuns": 6,
+  "lastRun": "2026-04-08 17:04",
+  "totalRuns": 7,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -48,23 +48,29 @@
     "exam-flow-e2e-browser-verified",
     "dashboard-xss-rendering-browser-verified",
     "invigilator-panel-behavioral-verified",
-    "dead-code-removal-safe-no-references"
+    "dead-code-removal-safe-no-references",
+    "timestamp-required-on-submissions",
+    "negative-elapsed-time-rejected",
+    "invalid-date-format-rejected",
+    "dedup-race-condition-fixed-inmemory-lock",
+    "rate-limiter-not-bypassable-via-headers"
   ],
   "weakPatterns": [
     "no-rate-limiting-on-admin-login",
-    "no-duplicate-submission-prevention",
     "predictable-admin-token",
     "answer-keys-writable-without-auth",
     "mock-answers-writable-without-auth",
     "cors-allows-all-origins",
     "invigilator-password-hardcoded-client-side",
-    "css-selector-injection-invigilator-localstorage"
+    "css-selector-injection-invigilator-localstorage",
+    "client-controlled-timestamps-spoofable",
+    "anti-cheat-metadata-spoofable"
   ],
   "untestedAreas": [
     "ai-score-suggestion-abuse",
-    "concurrent-multi-student-exam",
     "writing-test-submission-flow",
-    "listening-test-audio-flow"
+    "listening-test-audio-flow",
+    "normal-exam-flow-with-required-timestamps"
   ],
   "deferredFindings": [
     {
@@ -78,12 +84,6 @@
       "severity": "MEDIUM",
       "since": "2026-04-08",
       "reason": "Needs JWT overhaul"
-    },
-    {
-      "title": "Double submissions accepted (no dedup)",
-      "severity": "HIGH",
-      "since": "2026-04-08",
-      "reason": "Needs unique constraint or idempotency key"
     },
     {
       "title": "Answer keys writable without authentication",
@@ -102,12 +102,24 @@
       "severity": "MEDIUM",
       "since": "2026-04-08",
       "reason": "Low impact without auth system"
+    },
+    {
+      "title": "Client-controlled timestamps are fundamentally spoofable",
+      "severity": "HIGH",
+      "since": "2026-04-08",
+      "reason": "Requires server-side session/start tracking (architectural)"
+    },
+    {
+      "title": "Anti-cheat metadata is client-side and spoofable",
+      "severity": "MEDIUM",
+      "since": "2026-04-08",
+      "reason": "Server can sanitize but cannot verify; inherent to client-side anti-cheat"
     }
   ],
   "stats": {
-    "scenariosTested": 36,
-    "bugsFound": 18,
-    "bugsFixed": 12,
-    "bugsDeferred": 6
+    "scenariosTested": 43,
+    "bugsFound": 22,
+    "bugsFixed": 15,
+    "bugsDeferred": 7
   }
 }
