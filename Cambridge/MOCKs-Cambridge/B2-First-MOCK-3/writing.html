@@ -59,8 +59,8 @@
 
     localStorage.setItem(`cambridge-${module}Status`, 'in-progress');
     
-    if (!localStorage.getItem('writingAnswers')) {
-      localStorage.setItem('writingAnswers', JSON.stringify({}));
+    if (!localStorage.getItem('cambridge-writingAnswers')) {
+      localStorage.setItem('cambridge-writingAnswers', JSON.stringify({}));
     }
 
     // Initialize timer for Writing test - 45 minutes
