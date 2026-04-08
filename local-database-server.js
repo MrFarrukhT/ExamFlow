@@ -228,6 +228,101 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
     }
 });
 
+// ============================================
+// STUDENT-FACING ENDPOINTS (no admin auth, rate limited, scoped by student_id)
+// ============================================
+
+// Get a student's own submissions (no admin auth, scoped to their student_id)
+app.get('/my-submissions', submissionLimiter, async (req, res) => {
+    try {
+        const { student_id, mock_number } = req.query;
+        if (!student_id) {
+            return res.status(400).json({ success: false, message: 'student_id is required' });
+        }
+
+        const dbClient = await ensureConnection();
+        const conditions = ['student_id = $1'];
+        const params = [String(student_id)];
+
+        if (mock_number) {
+            const mockNum = parseInt(mock_number, 10);
+            if (isNaN(mockNum) || mockNum < 1) {
+                return res.status(400).json({ success: false, message: 'mock_number must be a positive integer' });
+            }
+            conditions.push(`mock_number = $${params.length + 1}`);
+            params.push(mockNum);
+        }
+
+        const query = `SELECT id, student_id, student_name, skill, mock_number, answers, score, band_score,
+                              start_time, end_time, created_at
+                       FROM test_submissions
+                       WHERE ${conditions.join(' AND ')}
+                       ORDER BY created_at DESC`;
+
+        const result = await dbClient.query(query, params);
+        res.json({ success: true, submissions: result.rows });
+    } catch (error) {
+        console.error('Failed to fetch student submissions:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch submissions' });
+    }
+});
+
+// Get answer keys for a mock + skill (student-facing, requires prior submission)
+app.get('/my-answer-keys', submissionLimiter, async (req, res) => {
+    try {
+        const { mock, skill, student_id } = req.query;
+        if (!mock || !skill) {
+            return res.status(400).json({ success: false, message: 'mock and skill are required' });
+        }
+        if (!student_id) {
+            return res.status(400).json({ success: false, message: 'student_id is required' });
+        }
+        if (!VALID_SKILLS.includes(skill)) {
+            return res.status(400).json({ success: false, message: 'Invalid skill' });
+        }
+        const mockNum = parseInt(mock, 10);
+        if (isNaN(mockNum) || mockNum < 1) {
+            return res.status(400).json({ success: false, message: 'mock must be a positive integer' });
+        }
+
+        const dbClient = await ensureConnection();
+
+        // Verify the student has submitted this skill+mock before revealing answer keys
+        const submissionCheck = await dbClient.query(
+            `SELECT id FROM test_submissions
+             WHERE student_id = $1 AND skill = $2 AND mock_number = $3
+             LIMIT 1`,
+            [String(student_id), skill, mockNum]
+        );
+
+        if (submissionCheck.rows.length === 0) {
+            return res.status(403).json({
+                success: false,
+                message: 'Answer keys are only available after you have submitted this test'
+            });
+        }
+
+        const result = await dbClient.query(
+            'SELECT question_number, correct_answer FROM mock_answers WHERE mock_number = $1 AND skill = $2 ORDER BY question_number',
+            [mockNum, skill]
+        );
+
+        const answers = {};
+        result.rows.forEach(row => {
+            answers[String(row.question_number)] = row.correct_answer;
+        });
+
+        res.json({ success: true, answers, count: result.rows.length, mock: mockNum, skill });
+    } catch (error) {
+        console.error('Failed to fetch answer keys:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch answer keys' });
+    }
+});
+
+// ============================================
+// ADMIN-ONLY ENDPOINTS
+// ============================================
+
 // Get all submissions (admin only — exposes all student data)
 app.get('/submissions', requireAdmin, async (req, res) => {
     try {

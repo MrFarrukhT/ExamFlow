@@ -42,6 +42,9 @@
                     <h2 class="completion-title">All Sections Complete</h2>
                     <p class="completion-message">You have finished all test modules. Please remain seated and wait for your invigilator's instructions.</p>
                     <div class="completion-summary" id="completionSummary"></div>
+                    <div style="margin-top:1rem;">
+                        <a href="my-results.html" class="module-button" style="display:inline-block; max-width:280px; text-align:center; text-decoration:none;">View My Answers &amp; Results</a>
+                    </div>
                 </div>
 
                 <!-- Modules Section -->
@@ -142,6 +145,21 @@
             const completed = modules.filter(module =>
                 localStorage.getItem(`${module}Status`) === 'completed'
             ).length;
+
+            // Show "View Submitted Answers" link as soon as any module is completed
+            if (completed > 0 && completed < modules.length) {
+                let resultsLink = document.getElementById('viewSubmittedAnswersLink');
+                if (!resultsLink) {
+                    resultsLink = document.createElement('div');
+                    resultsLink.id = 'viewSubmittedAnswersLink';
+                    resultsLink.style.cssText = 'text-align:center; margin: 1rem 0 2rem;';
+                    resultsLink.innerHTML = '<a href="my-results.html" style="display:inline-block; padding: 0.6rem 1.4rem; background: #e3f2fd; color: #1565c0; text-decoration: none; border-radius: 6px; font-size: 0.9rem; font-weight: 500; border: 1px solid #bbdefb;">View My Submitted Answers &rarr;</a>';
+                    const modulesSection = document.querySelector('.modules-section');
+                    if (modulesSection && modulesSection.parentNode) {
+                        modulesSection.parentNode.insertBefore(resultsLink, modulesSection);
+                    }
+                }
+            }
 
             // Show completion banner when all modules are done
             if (completed === modules.length) {
