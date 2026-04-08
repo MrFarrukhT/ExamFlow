@@ -1,0 +1,81 @@
+- generic [active] [ref=e1]:
+  - iframe [ref=e2]:
+    - generic [ref=f3e4]:
+      - banner [ref=f3e5]:
+        - generic [ref=f3e6]:
+          - generic [ref=f3e7]:
+            - img "header.logo"
+          - generic [ref=f3e8]:
+            - generic [ref=f3e9]:
+              - generic [ref=f3e10]:
+                - status [ref=f3e11]: Connected
+                - generic [ref=f3e13]: 
+              - button "Messages" [ref=f3e14]:
+                - generic [ref=f3e15]:
+                  - generic [ref=f3e16]: Messages
+                  - generic [ref=f3e17]: 
+              - button "Options" [ref=f3e18]:
+                - generic [ref=f3e19]:
+                  - generic [ref=f3e20]: Options
+                  - generic [ref=f3e21]: 
+              - button "Show notes" [ref=f3e22]:
+                - generic [ref=f3e23]:
+                  - generic [ref=f3e24]: Show notes
+                  - generic [ref=f3e25]: 
+            - generic [ref=f3e28]:
+              - generic [ref=f3e29]: Candidate ID
+              - generic [ref=f3e30]: "2001"
+      - generic [ref=f3e34]:
+        - generic [ref=f3e36]:
+          - heading "Part 1" [level=3] [ref=f3e37]
+          - generic [ref=f3e38]:
+            - text: You must answer this question.
+            - text: Write your answer in about 100 words on the answer sheet.
+            - strong [ref=f3e39]: Question 1
+            - text: Read this email from your English-speaking friend, Sam, and the notes you have made.
+        - main [ref=f3e41]:
+          - generic [ref=f3e42]:
+            - group [ref=f3e43]:
+              - generic [ref=f3e47]:
+                - generic [ref=f3e48]:
+                  - generic [ref=f3e49]:
+                    - generic [ref=f3e50]:
+                      - paragraph [ref=f3e51]:
+                        - strong [ref=f3e52]: EMAIL
+                      - paragraph [ref=f3e53]:
+                        - strong [ref=f3e54]: "From:"
+                        - text: Sam
+                      - paragraph [ref=f3e55]:
+                        - strong [ref=f3e56]: "Subject:"
+                        - text: Trip to the beach
+                    - generic [ref=f3e57]:
+                      - paragraph [ref=f3e58]: Hi
+                      - paragraph [ref=f3e59]: I'm really pleased you're coming with me on a daytrip to the beach next week. → -Me too!
+                      - paragraph [ref=f3e60]: When we arrive, we could either go out on a boat for a couple of hours or go for a long walk by the sea. What would you prefer? → Explain
+                      - paragraph [ref=f3e61]: In the afternoon, we could help an environmental group who are going to pick up plastic from the beach area. Are you interested in doing this? → Tell Sam
+                      - paragraph [ref=f3e62]: When we get back in the evening after our trip, would you like to have a meal at my house? → Sorry, but...
+                      - paragraph [ref=f3e63]:
+                        - text: See you soon!
+                        - text: Sam
+                  - paragraph [ref=f3e64]:
+                    - strong [ref=f3e65]: Write your email to Sam using all the notes.
+                - generic [ref=f3e69]:
+                  - textbox "You are currently on the text editor. The text will be saved automatically" [ref=f3e70]
+                  - generic [ref=f3e72]: "Words: 0"
+            - generic [ref=f3e74]: 
+      - contentinfo [ref=f3e76]:
+        - navigation "Previous / next question" [ref=f3e77]:
+          - button "Previous" [disabled] [ref=f3e78]:
+            - generic [ref=f3e79]: 
+          - button "Next" [ref=f3e80]:
+            - generic [ref=f3e81]: 
+        - navigation "Questions" [ref=f3e82]:
+          - tablist [ref=f3e83]:
+            - tab [ref=f3e84]:
+              - generic [ref=f3e85]: Part 1
+          - tablist [ref=f3e86]:
+            - tab [ref=f3e87]:
+              - generic [ref=f3e88]: Part 2
+          - button "Review your answers" [ref=f3e89]:
+            - generic [ref=f3e90]: 
+  - generic [ref=e5]: 44:55

@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovative Centre - IELTS Admin Dashboard</title>
+    <link rel="stylesheet" href="assets/css/admin-common.css">
+    <style>
+        /* IELTS Theme Override */
+        :root {
+            --admin-primary: #667eea;
+            --admin-primary-dark: #5a67d8;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .container {
+            max-width: 1600px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4a5eca, #5a42a0);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #4a5eca, #5a42a0);
+        }
+
+        .admin-content {
+            display: none;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .skill-listening { background: #e8f5e8; color: #388e3c; }
+
+        .answer-management h3 {
+            color: #2c3e50;
+        }
+
+        .mock-skill-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .date-group-count {
+            background: #007bff;
+        }
+
+        .date-group-submission:hover {
+            border-color: #007bff;
+            box-shadow: 0 2px 8px rgba(0,123,255,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .mock-skill-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <h1>Innovative Centre</h1>
+                <p>IELTS Admin Dashboard</p>
+            </div>
+            <div class="header-right">
+                <span id="connectionStatus" class="connection-status disconnected">Database Offline</span>
+                <button class="logout-btn" onclick="logout()" style="display: none;" id="logoutBtn">Logout</button>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <div class="login-form" id="loginForm" aria-label="Admin login form">
+            <form onsubmit="login(event)">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" required aria-required="true" value="admin">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" required aria-required="true">
+                </div>
+                <button type="submit" class="btn" id="loginBtn">Login</button>
+                <div class="error-message" id="errorMessage" role="alert"></div>
+                <div class="success-message" id="successMessage" role="alert"></div>
+            </form>
+        </div>
+
+        <!-- Admin Content -->
+        <div class="admin-content" id="adminContent">
+            <!-- Search and Filter Controls -->
+            <div class="controls-section">
+                <div class="controls-grid">
+                    <div class="control-group">
+                        <label for="searchStudent">Search Student:</label>
+                        <input type="text" id="searchStudent" placeholder="Student name or ID">
+                    </div>
+                    <div class="control-group">
+                        <label for="filterSkill">Filter by Skill:</label>
+                        <select id="filterSkill">
+                            <option value="">All Skills</option>
+                            <option value="reading">Reading</option>
+                            <option value="writing">Writing</option>
+                            <option value="listening">Listening</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="filterMock">Filter by Mock:</label>
+                        <select id="filterMock">
+                            <option value="">All Mocks</option>
+                            <option value="1">Mock 1</option>
+                            <option value="2">Mock 2</option>
+                            <option value="3">Mock 3</option>
+                            <option value="4">Mock 4</option>
+                            <option value="5">Mock 5</option>
+                            <option value="6">Mock 6</option>
+                            <option value="7">Mock 7</option>
+                            <option value="8">Mock 8</option>
+                            <option value="9">Mock 9</option>
+                            <option value="10">Mock 10</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="dateFrom">Date From:</label>
+                        <input type="date" id="dateFrom">
+                    </div>
+                    <div class="control-group">
+                        <label for="dateTo">Date To:</label>
+                        <input type="date" id="dateTo">
+                    </div>
+                    <div class="control-group">
+                        <label for="filterScored">Score Status:</label>
+                        <select id="filterScored">
+                            <option value="">All Submissions</option>
+                            <option value="scored">Scored</option>
+                            <option value="unscored">Unscored</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="controls-buttons">
+                    <button class="btn btn-info" onclick="applyFilters()">🔍 Apply Filters</button>
+                    <button class="btn btn-warning" onclick="clearFilters()">🔄 Clear Filters</button>
+                    <button class="btn btn-success" onclick="loadSubmissions()">📊 Refresh Data</button>
+                    <button class="btn" onclick="exportData()">📤 Export CSV</button>
+                    <button class="btn" onclick="toggleDateGroupView()" id="dateGroupToggle">📅 View by Date</button>
+                    <button class="btn btn-success" onclick="filterTodaySubmissions()">📅 Today's Submissions</button>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalSubmissions">0</div>
+                    <div class="stat-label">Total Submissions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="filteredSubmissions">0</div>
+                    <div class="stat-label">Filtered Results</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="averageScore">0</div>
+                    <div class="stat-label">Average Score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalStudents">0</div>
+                    <div class="stat-label">Unique Students</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="unscoredCount">0</div>
+                    <div class="stat-label">Needs Scoring</div>
+                </div>
+            </div>
+
+            <!-- Answer Management Section -->
+            <div class="answer-management">
+                <div class="answer-management-header" onclick="toggleAnswerManagement()">
+                    <span>📝 Manage Answer Keys</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                
+                <div class="answer-management-content" id="answerManagementContent">
+                    <div class="mock-skill-selector">
+                        <div class="control-group">
+                            <label for="answerMockSelect">Mock Test:</label>
+                            <select id="answerMockSelect" onchange="loadAnswerSet()">
+                                <option value="1">Mock Test 1</option>
+                                <option value="2">Mock Test 2</option>
+                                <option value="3">Mock Test 3</option>
+                                <option value="4">Mock Test 4</option>
+                                <option value="5">Mock Test 5</option>
+                                <option value="6">Mock Test 6</option>
+                                <option value="7">Mock Test 7</option>
+                                <option value="8">Mock Test 8</option>
+                                <option value="9">Mock Test 9</option>
+                                <option value="10">Mock Test 10</option>
+                            </select>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="answerSkillSelect">Skill:</label>
+                            <select id="answerSkillSelect" onchange="loadAnswerSet()">
+                                <option value="reading">Reading</option>
+                                <option value="listening">Listening</option>
+                            </select>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label>&nbsp;</label>
+                            <div class="answer-actions">
+                                <button class="btn-answer btn-load-answers" onclick="loadAnswerSet()">📥 Load</button>
+                                <button class="btn-answer btn-save-answers" onclick="saveAnswerSet()">💾 Save</button>
+                                <button class="btn-answer btn-clear-answers" onclick="clearAnswerSet()">🗑️ Clear</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="answerStatus" style="margin-bottom: 15px; font-weight: 600;"></div>
+
+                    <div class="answer-grid" id="answerGrid">
+                        <!-- Answer inputs will be generated here -->
+                    </div>
+                </div>
+            </div>
+
+            <h2>Test Submissions</h2>
+            
+            <!-- Pagination Info and Controls -->
+            <div class="pagination-controls" id="paginationControls" style="display: none; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                    <div class="pagination-info">
+                        <span id="paginationInfo">Showing 1-15 of 0 submissions</span>
+                    </div>
+                    <div class="pagination-buttons" style="display: flex; gap: 10px; align-items: center;">
+                        <button class="btn" onclick="goToPage(1)" id="firstPageBtn" style="padding: 8px 12px;">First</button>
+                        <button class="btn" onclick="goToPage(currentPage - 1)" id="prevPageBtn" style="padding: 8px 12px;">Previous</button>
+                        <span style="margin: 0 10px; font-weight: 600;">
+                            Page <span id="currentPageSpan">1</span> of <span id="totalPagesSpan">1</span>
+                        </span>
+                        <div class="page-jump-input">
+                            <label for="pageJumpInput">Go to:</label>
+                            <input type="number" id="pageJumpInput" min="1" placeholder="1" onkeypress="handlePageJumpEnter(event)">
+                            <button class="btn page-jump-btn" onclick="jumpToPage()">Go</button>
+                        </div>
+                        <button class="btn" onclick="goToPage(currentPage + 1)" id="nextPageBtn" style="padding: 8px 12px;">Next</button>
+                        <button class="btn" onclick="goToPage(totalPages)" id="lastPageBtn" style="padding: 8px 12px;">Last</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="submissionsContainer">
+                <div class="loading">Loading submissions...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Answer Comparison Modal -->
+    <div id="answerModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Answer Comparison</h2>
+                <span class="close" onclick="closeModal()" role="button" aria-label="Close answer comparison dialog">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="modalContent">
+                    <!-- Content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function escapeHtml(text) {
+            const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
+            return String(text).replace(/[&<>"']/g, m => map[m]);
+        }
+
+        const API_BASE = 'http://localhost:3002';
+        let authToken = localStorage.getItem('adminToken');
+        let currentSubmissions = [];
+        let filteredSubmissions = [];
+        let correctAnswers = {};
+        
+        // Pagination variables
+        let currentPage = 1;
+        let itemsPerPage = 15;
+        let totalPages = 0;
+        let isDateGroupView = false;
+
+        // Check database connection on load
+        checkDatabaseConnection();
+
+        // Check if already logged in
+        if (authToken) {
+            showAdminPanel();
+        }
+
+        // Load correct answers
+        loadCorrectAnswers();
+
+        async function checkDatabaseConnection() {
+            try {
+                const response = await fetch(`${API_BASE}/test`);
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('connectionStatus').textContent = 'Database Online';
+                    document.getElementById('connectionStatus').className = 'connection-status connected';
+                } else {
+                    throw new Error('Database not responding');
+                }
+            } catch (error) {
+                document.getElementById('connectionStatus').textContent = 'Database Offline';
+                document.getElementById('connectionStatus').className = 'connection-status disconnected';
+            }
+        }
+
+        async function login(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Logging in...';
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+
+            try {
+                const response = await fetch('/admin-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    localStorage.setItem('adminToken', result.token);
+                    authToken = result.token;
+                    successMessage.textContent = 'Login successful!';
+                    successMessage.style.display = 'block';
+                    setTimeout(showAdminPanel, 1000);
+                } else {
+                    errorMessage.textContent = 'Invalid credentials.';
+                    errorMessage.style.display = 'block';
+                }
+            } catch (err) {
+                errorMessage.textContent = 'Server unavailable. Please ensure the server is running.';
+                errorMessage.style.display = 'block';
+            }
+
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Login';
+        }
+
+        function showAdminPanel() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('adminContent').style.display = 'block';
+            document.getElementById('logoutBtn').style.display = 'block';
+
+            // Set up automatic date-based filtering
+            initializeDateBasedFiltering();
+
+            // Set default date range (last 30 days)
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+            document.getElementById('dateTo').value = today.toISOString().split('T')[0];
+            document.getElementById('dateFrom').value = thirtyDaysAgo.toISOString().split('T')[0];
+
+            // Initialize answer management interface
+            initializeAnswerManagement();
+
+            // Load all saved answers from localStorage
+            loadCorrectAnswers();
+
+            loadSubmissions();
+        }
+
+        function initializeDateBasedFiltering() {
+            const today = new Date();
+            
+            // Auto-set today's date as the default "To" date for filtering
+            const todayISO = today.toISOString().split('T')[0];
+            document.getElementById('dateTo').value = todayISO;
+        }
+
+        // Function to get submissions organized by date
+        function getSubmissionsByDate(submissions) {
+            const submissionsByDate = {};
+            
+            submissions.forEach(submission => {
+                const submissionDate = new Date(submission.created_at);
+                const dateKey = submissionDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+                const displayDate = submissionDate.toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: '2-digit', 
+                    year: 'numeric'
+                });
+                
+                if (!submissionsByDate[dateKey]) {
+                    submissionsByDate[dateKey] = {
+                        displayDate: displayDate,
+                        submissions: []
+                    };
+                }
+                
+                submissionsByDate[dateKey].submissions.push(submission);
+            });
+            
+            return submissionsByDate;
+        }
+
+        async function loadCorrectAnswers() {
+            try {
+                // First priority: Load from database API
+                console.log('Loading answers from database...');
+                for (let mockNum = 1; mockNum <= 10; mockNum++) {
+                    for (const skill of ['reading', 'listening']) {
+                        try {
+                            const response = await fetch(`${API_BASE}/mock-answers?mock=${mockNum}&skill=${skill}`);
+                            const data = await response.json();
+                            
+                            if (data.success && data.answers && Object.keys(data.answers).length > 0) {
+                                if (!correctAnswers[`mock${mockNum}`]) {
+                                    correctAnswers[`mock${mockNum}`] = {};
+                                }
+                                correctAnswers[`mock${mockNum}`][skill] = data.answers;
+                                console.log(`Loaded ${skill} answers for Mock ${mockNum} from database (${data.count} answers)`);
+                            }
+                        } catch (error) {
+                            console.warn(`Could not load Mock ${mockNum} ${skill} from database:`, error.message);
+                        }
+                    }
+                }
+
+                // Second priority: Load from localStorage (for any missing answers)
+                console.log('Loading missing answers from localStorage...');
+                for (let mockNum = 1; mockNum <= 10; mockNum++) {
+                    for (const skill of ['reading', 'listening']) {
+                        // Only load from localStorage if not already loaded from database
+                        if (!correctAnswers[`mock${mockNum}`] || !correctAnswers[`mock${mockNum}`][skill]) {
+                            const key = `answers_mock${mockNum}_${skill}`;
+                            const savedAnswers = localStorage.getItem(key);
+                            
+                            if (savedAnswers) {
+                                try {
+                                    const answers = JSON.parse(savedAnswers);
+                                    if (!correctAnswers[`mock${mockNum}`]) {
+                                        correctAnswers[`mock${mockNum}`] = {};
+                                    }
+                                    correctAnswers[`mock${mockNum}`][skill] = answers;
+                                    console.log(`Loaded ${skill} answers for Mock ${mockNum} from localStorage`);
+                                } catch (error) {
+                                    console.warn(`Error parsing stored answers for Mock ${mockNum} ${skill}:`, error);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Third priority: Load from JavaScript files as fallback (only for Mock 1)
+                console.log('Loading fallback answers from JavaScript files...');
+                const scripts = [
+                    'MOCKs/MOCK 1/answers/reading-answers.js',
+                    'MOCKs/MOCK 1/answers/writing-answers.js',
+                    'MOCKs/MOCK 1/answers/listening-answers.js'
+                ];
+
+                for (const scriptPath of scripts) {
+                    try {
+                        const response = await fetch(scriptPath);
+                        const scriptText = await response.text();
+
+                        // Extract skill type from path
+                        const skill = scriptPath.split('/').pop().split('-')[0];
+
+                        // Only load from file if not already loaded from database or localStorage
+                        const mockKey = 'mock1';
+                        if (!correctAnswers[mockKey] || !correctAnswers[mockKey][skill]) {
+                            // Execute the script in a safe context
+                            const tempWindow = {};
+                            new Function('window', scriptText)(tempWindow);
+
+                            if (tempWindow.testAnswers) {
+                                if (!correctAnswers[mockKey]) {
+                                    correctAnswers[mockKey] = {};
+                                }
+                                correctAnswers[mockKey][skill] = tempWindow.testAnswers;
+                                console.log(`Loaded ${skill} answers for Mock 1 from file`);
+                            }
+                        }
+                    } catch (error) {
+                        console.warn(`Could not load answers for ${scriptPath}:`, error);
+                    }
+                }
+
+                console.log('Loaded correct answers:', correctAnswers);
+            } catch (error) {
+                console.error('Error loading correct answers:', error);
+            }
+        }
+
+        async function loadSubmissions() {
+            const container = document.getElementById('submissionsContainer');
+            container.innerHTML = '<div class="loading">Loading submissions...</div>';
+
+            try {
+                await checkDatabaseConnection();
+
+                const response = await fetch(`${API_BASE}/submissions`);
+                const data = await response.json();
+
+                if (data.success) {
+                    currentSubmissions = data.submissions;
+                    applyFilters();
+                } else {
+                    container.innerHTML = `<div class="error-message" style="display: block;">Failed to load submissions: ${data.message}</div>`;
+                }
+            } catch (error) {
+                console.error('Load submissions error:', error);
+                container.innerHTML = `
+                    <div class="error-message" style="display: block;">
+                        Failed to load submissions. Please ensure the database server is running.<br>
+                        <strong>Start it with:</strong> <code>node local-database-server.js</code>
+                    </div>`;
+            }
+        }
+
+        function applyFilters() {
+            const searchStudent = document.getElementById('searchStudent').value.toLowerCase();
+            const filterSkill = document.getElementById('filterSkill').value;
+            const filterMock = document.getElementById('filterMock').value;
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+            const filterScored = document.getElementById('filterScored').value;
+
+            filteredSubmissions = currentSubmissions.filter(submission => {
+                // Search filter
+                if (searchStudent &&
+                    !submission.student_name.toLowerCase().includes(searchStudent) &&
+                    !submission.student_id.toLowerCase().includes(searchStudent)) {
+                    return false;
+                }
+
+                // Skill filter
+                if (filterSkill && submission.skill !== filterSkill) {
+                    return false;
+                }
+
+                // Mock filter
+                if (filterMock && submission.mock_number.toString() !== filterMock) {
+                    return false;
+                }
+
+                // Date filters
+                const submissionDate = new Date(submission.created_at);
+                if (dateFrom && submissionDate < new Date(dateFrom)) {
+                    return false;
+                }
+                if (dateTo && submissionDate > new Date(dateTo + 'T23:59:59')) {
+                    return false;
+                }
+
+                // Scored filter
+                if (filterScored === 'scored') {
+                    if (submission.skill === 'writing') {
+                        // For writing, check if band_score exists
+                        if (!submission.band_score) {
+                            return false;
+                        }
+                    } else {
+                        // For reading/listening, check if score exists
+                        if (!submission.score) {
+                            return false;
+                        }
+                    }
+                }
+                if (filterScored === 'unscored') {
+                    if (submission.skill === 'writing') {
+                        // For writing, check if band_score is missing
+                        if (submission.band_score) {
+                            return false;
+                        }
+                    } else {
+                        // For reading/listening, check if score is missing
+                        if (submission.score) {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            });
+
+            resetPagination(); // Reset to page 1 when applying new filters
+            displaySubmissions(filteredSubmissions);
+            updateStats(currentSubmissions, filteredSubmissions);
+        }
+
+        function clearFilters() {
+            document.getElementById('searchStudent').value = '';
+            document.getElementById('filterSkill').value = '';
+            document.getElementById('filterMock').value = '';
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            document.getElementById('filterScored').value = '';
+
+            applyFilters();
+        }
+
+        function displaySubmissions(submissions) {
+            const container = document.getElementById('submissionsContainer');
+            const paginationControls = document.getElementById('paginationControls');
+
+            if (submissions.length === 0) {
+                container.innerHTML = '<div class="no-submissions">No submissions match your filters.</div>';
+                paginationControls.style.display = 'none';
+                return;
+            }
+
+            if (isDateGroupView) {
+                displaySubmissionsByDate(submissions);
+                paginationControls.style.display = 'none';
+                return;
+            }
+
+            // Calculate pagination
+            totalPages = Math.ceil(submissions.length / itemsPerPage);
+            
+            // Ensure currentPage is within bounds
+            if (currentPage > totalPages) currentPage = 1;
+            if (currentPage < 1) currentPage = 1;
+            
+            // Get submissions for current page
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedSubmissions = submissions.slice(startIndex, endIndex);
+
+            // Update pagination info
+            updatePaginationControls(submissions.length, startIndex, Math.min(endIndex, submissions.length));
+
+            const table = `
+                <table class="submissions-table">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Mock</th>
+                            <th>Skill</th>
+                            <th>Score</th>
+                            <th>Band</th>
+                            <th>Date</th>
+                            <th>Duration</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${paginatedSubmissions.map(submission => `
+                            <tr>
+                                <td>${escapeHtml(submission.student_id)}</td>
+                                <td>${escapeHtml(submission.student_name)}</td>
+                                <td>Mock ${submission.mock_number}</td>
+                                <td><span class="skill-badge skill-${submission.skill}">${submission.skill}</span></td>
+                                <td class="${getScoreClass(submission.score)}">${getScoreDisplay(submission)}</td>
+                                <td>${submission.band_score || 'N/A'}</td>
+                                <td>${formatDate(submission.created_at)}</td>
+                                <td>${calculateDuration(submission.start_time, submission.end_time)}</td>
+                                <td>
+                                    <button class="btn btn-info" style="padding: 6px 12px; font-size: 12px;"
+                                            onclick="openAnswerComparison('${submission.id}')">
+                                        📋 Compare Answers
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            container.innerHTML = table;
+            paginationControls.style.display = 'block';
+        }
+
+        function displaySubmissionsByDate(submissions) {
+            const container = document.getElementById('submissionsContainer');
+            const submissionsByDate = getSubmissionsByDate(submissions);
+            
+            // Sort dates in descending order (most recent first)
+            const sortedDates = Object.keys(submissionsByDate).sort((a, b) => new Date(b) - new Date(a));
+            
+            let html = '<div class="date-group-container">';
+            
+            if (sortedDates.length === 0) {
+                html += '<div class="no-submissions">No submissions found for the selected date range.</div>';
+            } else {
+                sortedDates.forEach((dateKey, index) => {
+                    const dateInfo = submissionsByDate[dateKey];
+                    const submissionCount = dateInfo.submissions.length;
+                    const isCollapsed = index > 0; // Collapse all except the first (most recent) date
+                    
+                    html += `
+                        <div class="date-group ${isCollapsed ? 'collapsed' : ''}" id="dateGroup_${dateKey}">
+                            <div class="date-group-header" onclick="toggleDateGroup('${dateKey}')">
+                                <div class="date-group-header-left">
+                                    <span class="date-group-toggle">▼</span>
+                                    <span>📅 ${dateInfo.displayDate}</span>
+                                </div>
+                                <span class="date-group-count">${submissionCount} submission${submissionCount !== 1 ? 's' : ''}</span>
+                            </div>
+                            <div class="date-group-submissions">
+                    `;
+                    
+                    dateInfo.submissions.forEach(submission => {
+                        html += `
+                            <div class="date-group-submission" onclick="openAnswerComparison('${submission.id}')" style="cursor: pointer;">
+                                <div class="submission-info">
+                                    <div class="submission-name">${escapeHtml(submission.student_name)} (${escapeHtml(submission.student_id)})</div>
+                                    <div class="submission-details">
+                                        <span class="skill-badge skill-${submission.skill}">${submission.skill}</span>
+                                        <span>Mock ${submission.mock_number}</span>
+                                        <span class="${getScoreClass(submission.score)}">${getScoreDisplay(submission)}</span>
+                                        <span style="color: #6c757d; font-size: 13px;">${formatDate(submission.created_at).split(' ')[1]}</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-info" style="padding: 4px 8px; font-size: 11px;" 
+                                        onclick="event.stopPropagation(); openAnswerComparison('${submission.id}')">
+                                    View
+                                </button>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function toggleDateGroupView() {
+            isDateGroupView = !isDateGroupView;
+            const button = document.getElementById('dateGroupToggle');
+            
+            if (isDateGroupView) {
+                button.textContent = '📋 View as Table';
+                button.style.background = '#28a745';
+            } else {
+                button.textContent = '📅 View by Date';
+                button.style.background = '#667eea';
+            }
+            
+            displaySubmissions(filteredSubmissions);
+        }
+
+        function filterTodaySubmissions() {
+            const today = new Date();
+            const todayISO = today.toISOString().split('T')[0];
+            
+            // Set both date fields to today
+            document.getElementById('dateFrom').value = todayISO;
+            document.getElementById('dateTo').value = todayISO;
+            
+            // Clear other filters
+            document.getElementById('searchStudent').value = '';
+            document.getElementById('filterSkill').value = '';
+            document.getElementById('filterMock').value = '';
+            document.getElementById('filterScored').value = '';
+            
+            // Apply filters
+            applyFilters();
+        }
+
+        function updatePaginationControls(totalItems, startIndex, endIndex) {
+            // Update pagination info
+            document.getElementById('paginationInfo').textContent = 
+                `Showing ${startIndex + 1}-${endIndex} of ${totalItems} submissions`;
+            document.getElementById('currentPageSpan').textContent = currentPage;
+            document.getElementById('totalPagesSpan').textContent = totalPages;
+
+            // Update button states
+            const firstBtn = document.getElementById('firstPageBtn');
+            const prevBtn = document.getElementById('prevPageBtn');
+            const nextBtn = document.getElementById('nextPageBtn');
+            const lastBtn = document.getElementById('lastPageBtn');
+
+            firstBtn.disabled = currentPage === 1;
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+            lastBtn.disabled = currentPage === totalPages;
+
+            // Update page jump input max value
+            const pageJumpInput = document.getElementById('pageJumpInput');
+            if (pageJumpInput) {
+                pageJumpInput.max = totalPages;
+                pageJumpInput.placeholder = currentPage.toString();
+            }
+        }
+
+        function jumpToPage() {
+            const pageInput = document.getElementById('pageJumpInput');
+            const pageNumber = parseInt(pageInput.value);
+            
+            if (pageNumber && pageNumber >= 1 && pageNumber <= totalPages) {
+                goToPage(pageNumber);
+                pageInput.value = ''; // Clear input after successful jump
+            } else {
+                alert(`Please enter a valid page number between 1 and ${totalPages}`);
+                pageInput.focus();
+            }
+        }
+
+        function handlePageJumpEnter(event) {
+            if (event.key === 'Enter') {
+                jumpToPage();
+            }
+        }
+
+        function toggleDateGroup(dateKey) {
+            const dateGroup = document.getElementById(`dateGroup_${dateKey}`);
+            if (dateGroup) {
+                dateGroup.classList.toggle('collapsed');
+            }
+        }
+
+        function goToPage(pageNumber) {
+            if (pageNumber >= 1 && pageNumber <= totalPages) {
+                currentPage = pageNumber;
+                displaySubmissions(filteredSubmissions);
+            }
+        }
+
+        function resetPagination() {
+            currentPage = 1;
+        }
+
+        function updateStats(allSubmissions, filteredSubs) {
+            const totalSubmissions = allSubmissions.length;
+            const filteredCount = filteredSubs.length;
+            
+            // Only calculate average for reading/listening tests with scores
+            const scoredTests = filteredSubs.filter(s => s.skill !== 'writing' && s.score);
+            const scores = scoredTests.map(s => s.score);
+            const averageScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+            
+            const uniqueStudents = new Set(filteredSubs.map(s => s.student_id)).size;
+            
+            // Count unscored submissions properly for each skill type
+            const unscoredCount = filteredSubs.filter(s => {
+                if (s.skill === 'writing') {
+                    return !s.band_score;
+                } else {
+                    return !s.score;
+                }
+            }).length;
+
+            document.getElementById('totalSubmissions').textContent = totalSubmissions;
+            document.getElementById('filteredSubmissions').textContent = filteredCount;
+            document.getElementById('averageScore').textContent = averageScore;
+            document.getElementById('totalStudents').textContent = uniqueStudents;
+            document.getElementById('unscoredCount').textContent = unscoredCount;
+        }
+
+        function getScoreClass(score) {
+            if (!score) return 'score-poor';
+            if (score >= 30) return 'score-good';
+            if (score >= 20) return 'score-average';
+            return 'score-poor';
+        }
+
+        function getScoreDisplay(submission) {
+            if (submission.skill === 'writing') {
+                // Writing tests don't have numerical scores, only band scores
+                return submission.band_score || 'Not Graded';
+            } else {
+                // Reading and Listening have numerical scores out of 40
+                return submission.score ? `${submission.score}/40` : 'Unscored/40';
+            }
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+        }
+
+        function calculateDuration(startTime, endTime) {
+            if (!startTime || !endTime) return 'N/A';
+            const start = new Date(startTime);
+            const end = new Date(endTime);
+            const durationMs = end - start;
+            const minutes = Math.round(durationMs / (1000 * 60));
+            return `${minutes}m`;
+        }
+
+        function openAnswerComparison(submissionId) {
+            const submission = currentSubmissions.find(s => s.id == submissionId);
+            if (!submission) {
+                alert('Submission not found');
+                return;
+            }
+
+            const skill = submission.skill;
+            const mockNumber = submission.mock_number;
+            
+            // Load correct answers from the new structure: correctAnswers[mockX][skill]
+            const mockKey = `mock${mockNumber}`;
+            const correctAnswersForSkill = (correctAnswers[mockKey] && correctAnswers[mockKey][skill]) ? 
+                correctAnswers[mockKey][skill] : {};
+            
+            const studentAnswers = submission.answers || {};
+
+            document.getElementById('modalTitle').textContent =
+                `${submission.student_name} (${submission.student_id}) - ${skill.toUpperCase()} - Mock ${submission.mock_number}`;
+
+            let modalContent = '';
+
+            if (skill === 'writing') {
+                modalContent = generateWritingComparison(studentAnswers, correctAnswersForSkill, submission);
+            } else {
+                modalContent = generateAnswerComparison(studentAnswers, correctAnswersForSkill, submission);
+            }
+
+            document.getElementById('modalContent').innerHTML = modalContent;
+            document.getElementById('answerModal').style.display = 'block';
+        }
+
+        function generateAnswerComparison(studentAnswers, correctAnswers, submission) {
+            let correctCount = 0;
+            let totalQuestions = 0;
+
+            // Improved answer matching function
+            function isAnswerCorrect(studentAnswer, correctAnswer) {
+                if (!studentAnswer || !correctAnswer || studentAnswer === 'No Answer' || correctAnswer === 'N/A') {
+                    return false;
+                }
+
+                // Normalize answers: case-insensitive, trim spaces
+                const normalizeAnswer = (answer) => {
+                    return answer.toString().toLowerCase().trim()
+                        // Remove content in parentheses (optional parts)
+                        .replace(/\([^)]*\)/g, '')
+                        .trim();
+                };
+
+                const normalizedStudent = normalizeAnswer(studentAnswer);
+
+                if (Array.isArray(correctAnswer)) {
+                    return correctAnswer.some(ans => {
+                        const normalizedCorrect = normalizeAnswer(ans);
+                        return normalizedStudent === normalizedCorrect;
+                    });
+                } else {
+                    const normalizedCorrect = normalizeAnswer(correctAnswer);
+                    return normalizedStudent === normalizedCorrect;
+                }
+            }
+
+            const comparisonRows = [];
+            
+            // Get all unique question numbers, avoiding duplicates
+            const studentQuestions = Object.keys(studentAnswers).map(key => key.replace(/^q/, ''));
+            const correctQuestions = Object.keys(correctAnswers).map(key => key.replace(/^q/, ''));
+            const allQuestions = [...new Set([...studentQuestions, ...correctQuestions])].sort((a, b) => {
+                return parseInt(a) - parseInt(b);
+            });
+
+            for (const questionNum of allQuestions) {
+                // Try different key formats to find answers
+                const studentAnswer = studentAnswers[questionNum] || 
+                                    studentAnswers[`q${questionNum}`] || 
+                                    studentAnswers[`${questionNum}`] || 'No Answer';
+                
+                const correctAnswer = correctAnswers[questionNum] || 
+                                    correctAnswers[`q${questionNum}`] || 
+                                    correctAnswers[`${questionNum}`] || 'N/A';
+
+                let isCorrect = false;
+                if (correctAnswer !== 'N/A' && studentAnswer !== 'No Answer') {
+                    totalQuestions++;
+                    isCorrect = isAnswerCorrect(studentAnswer, correctAnswer);
+                    if (isCorrect) correctCount++;
+                }
+
+                const displayCorrect = Array.isArray(correctAnswer) ? correctAnswer.join(' / ') : correctAnswer;
+                const rowClass = correctAnswer === 'N/A' ? '' : (isCorrect ? 'correct-match' : 'incorrect-match');
+
+                comparisonRows.push(`
+                    <div class="answer-row ${rowClass}">
+                        <div class="question-id">Q${questionNum}:</div>
+                        <div style="display: flex; gap: 20px; flex: 1;">
+                            <div style="flex: 1;"><strong>Student:</strong> ${escapeHtml(studentAnswer)}</div>
+                            <div style="flex: 1;"><strong>Correct:</strong> ${escapeHtml(displayCorrect)}</div>
+                        </div>
+                    </div>
+                `);
+            }
+
+            return `
+                <div class="answer-comparison">
+                    <div style="grid-column: 1 / -1;">
+                        <div class="score-section">
+                            <h3>Scoring</h3>
+                            <p><strong>Automatic Score:</strong> ${correctCount}/${totalQuestions} correct answers</p>
+                            <div class="score-input">
+                                <label><strong>Final Score (0-40):</strong></label>
+                                <input type="number" id="finalScore" min="0" max="40" value="${submission.score || correctCount}" />
+                                <label><strong>Band Score:</strong></label>
+                                <input type="text" id="bandScore" value="${submission.band_score || ''}" placeholder="e.g. 6.5" />
+                                <button class="btn btn-success" onclick="saveScore('${submission.id}')">Save Score</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <div class="answers-header">Answer Comparison (Green = Correct, Red = Incorrect)</div>
+                        <div class="answers-content">
+                            ${comparisonRows.join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateWritingComparison(studentAnswers, correctAnswers, submission) {
+            const task1 = studentAnswers.task_1 || studentAnswers.task1 || 'No answer provided';
+            const task2 = studentAnswers.task_2 || studentAnswers.task2 || 'No answer provided';
+
+            const task1Words = studentAnswers.task_1?.word_count ||
+                               (typeof task1 === 'string' ? task1.split(/\s+/).filter(word => word.length > 0).length : 0);
+            const task2Words = studentAnswers.task_2?.word_count ||
+                               (typeof task2 === 'string' ? task2.split(/\s+/).filter(word => word.length > 0).length : 0);
+
+            const task1Text = typeof task1 === 'object' ? task1.text || task1 : task1;
+            const task2Text = typeof task2 === 'object' ? task2.text || task2 : task2;
+
+            return `
+                <div style="display: grid; gap: 20px;">
+                    <div class="score-section">
+                        <h3>Writing Assessment</h3>
+                        <div class="score-input" style="flex-wrap: wrap; gap: 10px;">
+                            <label><strong>Overall Band Score (0-9):</strong></label>
+                            <input type="text" id="writingBandScore" value="${submission.band_score || ''}" placeholder="e.g. 6.5" />
+                            <button class="btn" style="background: #17a2b8;" onclick="getAISuggestion('${submission.id}')">
+                                <span id="aiButtonText">Get AI Suggestion</span>
+                            </button>
+                            <button class="btn btn-success" onclick="saveWritingScore('${submission.id}')">Save Band Score</button>
+                        </div>
+                        <div id="aiSuggestionResult" style="margin-top: 15px; display: none;">
+                            <div style="background: #e7f3ff; padding: 12px 18px; border-radius: 6px; border: 1px solid #b3d9ff;">
+                                <div style="display: flex; gap: 25px; align-items: center; flex-wrap: wrap;">
+                                    <div style="text-align: center;">
+                                        <div style="font-size: 12px; color: #666; margin-bottom: 3px;">Task 1</div>
+                                        <div style="font-size: 20px; font-weight: bold; color: #1976d2;" id="aiTask1Score">-</div>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <div style="font-size: 12px; color: #666; margin-bottom: 3px;">Task 2</div>
+                                        <div style="font-size: 20px; font-weight: bold; color: #7b1fa2;" id="aiTask2Score">-</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 8px 15px; background: #fff; border-radius: 6px; border: 2px solid #28a745;">
+                                        <div style="font-size: 12px; color: #666; margin-bottom: 3px;">Overall</div>
+                                        <div style="font-size: 24px; font-weight: bold; color: #28a745;" id="aiSuggestedScore">-</div>
+                                    </div>
+                                    <button onclick="acceptAISuggestion()" style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Accept Overall</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="student-answers">
+                            <div class="answers-header">
+                                Task 1 - ${task1Words} words
+                                <span style="color: ${task1Words >= 150 ? '#28a745' : '#dc3545'}; font-size: 0.9em;">
+                                    (${task1Words >= 150 ? '✓' : '⚠'} Min: 150)
+                                </span>
+                            </div>
+                            <div class="answers-content">
+                                <div style="white-space: pre-wrap; line-height: 1.6; font-family: 'Times New Roman', serif; font-size: 14px;">${escapeHtml(task1Text)}</div>
+                            </div>
+                        </div>
+                        <div class="student-answers">
+                            <div class="answers-header">
+                                Task 2 - ${task2Words} words
+                                <span style="color: ${task2Words >= 250 ? '#28a745' : '#dc3545'}; font-size: 0.9em;">
+                                    (${task2Words >= 250 ? '✓' : '⚠'} Min: 250)
+                                </span>
+                            </div>
+                            <div class="answers-content">
+                                <div style="white-space: pre-wrap; line-height: 1.6; font-family: 'Times New Roman', serif; font-size: 14px;">${escapeHtml(task2Text)}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                        <h4>Writing Assessment Criteria:</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
+                            <div>
+                                <strong>Task 1 (Academic):</strong>
+                                <ul style="margin: 5px 0 0 20px; font-size: 0.9em;">
+                                    <li>Task Achievement</li>
+                                    <li>Coherence & Cohesion</li>
+                                    <li>Lexical Resource</li>
+                                    <li>Grammatical Range & Accuracy</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <strong>Task 2 (Essay):</strong>
+                                <ul style="margin: 5px 0 0 20px; font-size: 0.9em;">
+                                    <li>Task Response</li>
+                                    <li>Coherence & Cohesion</li>
+                                    <li>Lexical Resource</li>
+                                    <li>Grammatical Range & Accuracy</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function saveScore(submissionId) {
+            const finalScore = document.getElementById('finalScore').value;
+            const bandScore = document.getElementById('bandScore').value;
+
+            if (!finalScore || finalScore < 0 || finalScore > 40) {
+                alert('Please enter a valid score between 0 and 40');
+                return;
+            }
+
+            try {
+                // Update score in database (you might need to add this endpoint to your server)
+                const response = await fetch(`${API_BASE}/update-score`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        submissionId: submissionId,
+                        score: parseInt(finalScore),
+                        bandScore: bandScore
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Score saved successfully!');
+                    closeModal();
+                    loadSubmissions(); // Refresh the data
+                } else {
+                    alert('Failed to save score. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error saving score:', error);
+                alert('Error saving score. Please try again.');
+            }
+        }
+
+        async function saveWritingScore(submissionId) {
+            const bandScore = document.getElementById('writingBandScore').value;
+
+            if (!bandScore || isNaN(parseFloat(bandScore)) || parseFloat(bandScore) < 0 || parseFloat(bandScore) > 9) {
+                alert('Please enter a valid band score between 0 and 9 (e.g., 6.5)');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/update-score`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        submissionId: submissionId,
+                        score: null, // Writing tests don't have numerical scores
+                        bandScore: bandScore
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Band score saved successfully!');
+                    closeModal();
+                    loadSubmissions(); // Refresh the data
+                } else {
+                    alert('Failed to save band score. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error saving band score:', error);
+                alert('Error saving band score. Please try again.');
+            }
+        }
+
+        // AI Score Suggestion Functions
+        async function getAISuggestion(submissionId) {
+            const submission = currentSubmissions.find(s => s.id == submissionId);
+            if (!submission) {
+                alert('Submission not found');
+                return;
+            }
+
+            // Extract task texts from the submission answers
+            const task1Text = submission.answers?.task_1?.text ||
+                             (typeof submission.answers?.task_1 === 'string' ? submission.answers.task_1 : '') ||
+                             submission.answers?.task1?.text ||
+                             (typeof submission.answers?.task1 === 'string' ? submission.answers.task1 : '');
+
+            const task2Text = submission.answers?.task_2?.text ||
+                             (typeof submission.answers?.task_2 === 'string' ? submission.answers.task_2 : '') ||
+                             submission.answers?.task2?.text ||
+                             (typeof submission.answers?.task2 === 'string' ? submission.answers.task2 : '');
+
+            const buttonText = document.getElementById('aiButtonText');
+            const resultDiv = document.getElementById('aiSuggestionResult');
+
+            // Show loading state
+            buttonText.textContent = 'Getting suggestion...';
+            resultDiv.style.display = 'none';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/ai-score-suggestion`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        task1: task1Text,
+                        task2: task2Text
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('aiTask1Score').textContent = data.task1Band;
+                    document.getElementById('aiTask2Score').textContent = data.task2Band;
+                    document.getElementById('aiSuggestedScore').textContent = data.overallBand;
+                    resultDiv.style.display = 'block';
+                } else {
+                    alert('Failed to get AI suggestion: ' + data.message);
+                }
+            } catch (error) {
+                console.error('AI suggestion error:', error);
+                alert('Error getting AI suggestion. Make sure the server is running and the OpenAI API key is configured in .env file.');
+            } finally {
+                buttonText.textContent = 'Get AI Suggestion';
+            }
+        }
+
+        function acceptAISuggestion() {
+            const suggestedScore = document.getElementById('aiSuggestedScore').textContent;
+            if (suggestedScore && suggestedScore !== '-') {
+                document.getElementById('writingBandScore').value = suggestedScore;
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('answerModal').style.display = 'none';
+        }
+
+        function exportData() {
+            const csvContent = generateCSV(filteredSubmissions);
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `test_submissions_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function generateCSV(submissions) {
+            const headers = ['Student ID', 'Student Name', 'Mock Number', 'Skill', 'Score', 'Band Score', 'Start Time', 'End Time', 'Created At'];
+            const rows = submissions.map(s => [
+                s.student_id,
+                s.student_name,
+                s.mock_number,
+                s.skill,
+                s.score || '',
+                s.band_score || '',
+                s.start_time || '',
+                s.end_time || '',
+                s.created_at
+            ]);
+
+            return [headers, ...rows].map(row =>
+                row.map(field => `"${field}"`).join(',')
+            ).join('\n');
+        }
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            authToken = null;
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('adminContent').style.display = 'none';
+            document.getElementById('logoutBtn').style.display = 'none';
+            document.getElementById('username').value = 'admin';
+            document.getElementById('password').value = '';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('answerModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Answer Management Functions
+        let currentAnswerData = {};
+
+        function initializeAnswerGrid() {
+            const grid = document.getElementById('answerGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 1; i <= 40; i++) {
+                const inputGroup = document.createElement('div');
+                inputGroup.className = 'answer-input-group';
+                inputGroup.innerHTML = `
+                    <label>Q${i}:</label>
+                    <input type="text" id="answer_${i}" placeholder="Enter answer ${i}" />
+                `;
+                grid.appendChild(inputGroup);
+            }
+            
+            updateAnswerStatus('Ready to input answers');
+        }
+
+        async function loadAnswerSet() {
+            const mockNum = document.getElementById('answerMockSelect').value;
+            const skill = document.getElementById('answerSkillSelect').value;
+            
+            // Clear current inputs
+            for (let i = 1; i <= 40; i++) {
+                const input = document.getElementById(`answer_${i}`);
+                if (input) input.value = '';
+            }
+            
+            try {
+                updateAnswerStatus('⏳ Loading answers from database...');
+                
+                // Load from database API
+                const response = await fetch(`${API_BASE}/mock-answers?mock=${mockNum}&skill=${skill}`);
+                const data = await response.json();
+                
+                if (data.success && data.answers) {
+                    // Fill the input fields
+                    for (let i = 1; i <= 40; i++) {
+                        const input = document.getElementById(`answer_${i}`);
+                        const answerKey = skill === 'listening' ? `q${i}` : `${i}`;
+                        
+                        if (input && data.answers[answerKey]) {
+                            // Handle both array and string answers
+                            const answerValue = Array.isArray(data.answers[answerKey]) ? 
+                                data.answers[answerKey].join(', ') : data.answers[answerKey];
+                            input.value = answerValue;
+                        }
+                    }
+                    
+                    // Update global correctAnswers object
+                    if (!correctAnswers[`mock${mockNum}`]) {
+                        correctAnswers[`mock${mockNum}`] = {};
+                    }
+                    correctAnswers[`mock${mockNum}`][skill] = data.answers;
+                    
+                    updateAnswerStatus(`✅ Loaded ${data.count}/40 answers for Mock ${mockNum} - ${skill.toUpperCase()}`);
+                } else {
+                    updateAnswerStatus(`📝 No saved answers found for Mock ${mockNum} - ${skill.toUpperCase()}`);
+                }
+            } catch (error) {
+                console.error('Error loading answers:', error);
+                updateAnswerStatus(`❌ Error loading answers: ${error.message}`);
+                
+                // Fallback to localStorage
+                try {
+                    const key = `answers_mock${mockNum}_${skill}`;
+                    const savedAnswers = localStorage.getItem(key);
+                    if (savedAnswers) {
+                        const answers = JSON.parse(savedAnswers);
+                        for (let i = 1; i <= 40; i++) {
+                            const input = document.getElementById(`answer_${i}`);
+                            const answerKey = skill === 'listening' ? `q${i}` : `${i}`;
+                            if (input && answers[answerKey]) {
+                                const answerValue = Array.isArray(answers[answerKey]) ? 
+                                    answers[answerKey].join(', ') : answers[answerKey];
+                                input.value = answerValue;
+                            }
+                        }
+                        updateAnswerStatus(`� Loaded answers from local storage for Mock ${mockNum} - ${skill.toUpperCase()}`);
+                    }
+                } catch (fallbackError) {
+                    console.error('Fallback to localStorage also failed:', fallbackError);
+                }
+            }
+        }
+
+        async function saveAnswerSet() {
+            const mockNum = document.getElementById('answerMockSelect').value;
+            const skill = document.getElementById('answerSkillSelect').value;
+            
+            const answers = {};
+            let filledCount = 0;
+            
+            for (let i = 1; i <= 40; i++) {
+                const input = document.getElementById(`answer_${i}`);
+                if (input && input.value.trim()) {
+                    const answerKey = skill === 'listening' ? `q${i}` : `${i}`;
+                    let answerValue = input.value.trim();
+                    
+                    // For listening, wrap single answers in array for consistency
+                    if (skill === 'listening' && !answerValue.includes(',')) {
+                        // Check if it's a multiple choice (single letter) or text answer
+                        if (answerValue.length === 1 && /[A-J]/i.test(answerValue)) {
+                            answers[answerKey] = answerValue.toUpperCase();
+                        } else {
+                            answers[answerKey] = [answerValue.toLowerCase()];
+                        }
+                    } else if (skill === 'listening' && answerValue.includes(',')) {
+                        // Multiple acceptable answers
+                        answers[answerKey] = answerValue.split(',').map(a => a.trim().toLowerCase());
+                    } else {
+                        answers[answerKey] = answerValue;
+                    }
+                    filledCount++;
+                }
+            }
+            
+            if (filledCount === 0) {
+                updateAnswerStatus('❌ No answers to save');
+                return;
+            }
+            
+            try {
+                updateAnswerStatus('⏳ Saving answers to database...');
+                
+                // Save to database API
+                const response = await fetch(`${API_BASE}/mock-answers`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        mock: mockNum,
+                        skill: skill,
+                        answers: answers
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update the global correctAnswers object
+                    if (!correctAnswers[`mock${mockNum}`]) {
+                        correctAnswers[`mock${mockNum}`] = {};
+                    }
+                    correctAnswers[`mock${mockNum}`][skill] = answers;
+                    
+                    // Also save to localStorage as backup
+                    const key = `answers_mock${mockNum}_${skill}`;
+                    localStorage.setItem(key, JSON.stringify(answers));
+                    
+                    updateAnswerStatus(`✅ ${data.message}`);
+                } else {
+                    updateAnswerStatus(`❌ Failed to save: ${data.message}`);
+                }
+                
+            } catch (error) {
+                console.error('Error saving answers:', error);
+                updateAnswerStatus(`❌ Error saving answers: ${error.message}`);
+                
+                // Fallback to localStorage
+                try {
+                    const key = `answers_mock${mockNum}_${skill}`;
+                    localStorage.setItem(key, JSON.stringify(answers));
+                    
+                    if (!correctAnswers[`mock${mockNum}`]) {
+                        correctAnswers[`mock${mockNum}`] = {};
+                    }
+                    correctAnswers[`mock${mockNum}`][skill] = answers;
+                    
+                    updateAnswerStatus(`📋 Saved ${filledCount}/40 answers locally for Mock ${mockNum} - ${skill.toUpperCase()}`);
+                } catch (fallbackError) {
+                    console.error('Fallback to localStorage also failed:', fallbackError);
+                    updateAnswerStatus(`❌ Failed to save answers both online and locally`);
+                }
+            }
+        }
+
+        async function clearAnswerSet() {
+            if (confirm('Are you sure you want to clear all answers? This action will delete them from the database and cannot be undone.')) {
+                const mockNum = document.getElementById('answerMockSelect').value;
+                const skill = document.getElementById('answerSkillSelect').value;
+                
+                try {
+                    updateAnswerStatus('⏳ Clearing answers from database...');
+                    
+                    // Clear from database
+                    const response = await fetch(`${API_BASE}/mock-answers?mock=${mockNum}&skill=${skill}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Clear input fields
+                        for (let i = 1; i <= 40; i++) {
+                            const input = document.getElementById(`answer_${i}`);
+                            if (input) input.value = '';
+                        }
+                        
+                        // Clear from global correctAnswers
+                        if (correctAnswers[`mock${mockNum}`] && correctAnswers[`mock${mockNum}`][skill]) {
+                            delete correctAnswers[`mock${mockNum}`][skill];
+                        }
+                        
+                        // Clear from localStorage backup
+                        const key = `answers_mock${mockNum}_${skill}`;
+                        localStorage.removeItem(key);
+                        
+                        updateAnswerStatus(`✅ ${data.message}`);
+                    } else {
+                        updateAnswerStatus(`❌ Failed to clear: ${data.message}`);
+                    }
+                    
+                } catch (error) {
+                    console.error('Error clearing answers:', error);
+                    updateAnswerStatus(`❌ Error clearing answers: ${error.message}`);
+                    
+                    // Still clear the local fields
+                    for (let i = 1; i <= 40; i++) {
+                        const input = document.getElementById(`answer_${i}`);
+                        if (input) input.value = '';
+                    }
+                    updateAnswerStatus('🗑️ Cleared local fields (database may still contain data)');
+                }
+            }
+        }
+
+        function updateAnswerStatus(message) {
+            const status = document.getElementById('answerStatus');
+            if (status) {
+                status.textContent = message;
+                status.style.color = message.includes('✅') ? '#28a745' : 
+                                   message.includes('❌') ? '#dc3545' : '#007bff';
+            }
+        }
+
+        // Initialize answer management when admin panel loads
+        function initializeAnswerManagement() {
+            initializeAnswerGrid();
+            
+            // Add event listeners for dropdown changes
+            document.getElementById('answerMockSelect').addEventListener('change', loadAnswerSet);
+            document.getElementById('answerSkillSelect').addEventListener('change', loadAnswerSet);
+            
+            loadAnswerSet(); // Load default (Mock 1, Reading)
+        }
+
+        // Toggle Answer Management Section
+        function toggleAnswerManagement() {
+            const header = document.querySelector('.answer-management-header');
+            const content = document.getElementById('answerManagementContent');
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                header.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                header.classList.add('open');
+            }
+        }
+
+        // Auto-refresh every 60 seconds
+        setInterval(() => {
+            if (authToken && document.getElementById('adminContent').style.display !== 'none') {
+                loadSubmissions();
+            }
+        }, 60000);
+    </script>
+</body>
+</html>
