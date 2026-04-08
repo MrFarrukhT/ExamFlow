@@ -396,6 +396,31 @@ body {
     color: white;
 }
 
+/* --- Scoring Queue Navigation (inside modal header) --- */
+.scoring-nav {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+.scoring-nav-btn {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.4);
+    padding: 5px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.scoring-nav-btn:hover {
+    background: rgba(255,255,255,0.35);
+}
+
 .modal-body {
     flex: 1;
     overflow-y: auto;
