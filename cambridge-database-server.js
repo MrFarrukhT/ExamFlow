@@ -344,7 +344,7 @@ app.get('/my-answer-keys', async (req, res) => {
         const params = [level, skill];
 
         if (mock) {
-            query += ' AND mock = $3';
+            query += ' AND mock_test = $3';
             params.push(mock);
         }
 
