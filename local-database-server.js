@@ -124,6 +124,22 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
             return res.status(400).json({ success: false, message: 'Skill is required' });
         }
 
+        // Submission deduplication — prevent multiple submissions for same student+skill+mock
+        const dbClient = await ensureConnection();
+        const dupCheck = await dbClient.query(
+            `SELECT id FROM test_submissions
+             WHERE student_id = $1 AND skill = $2 AND mock_number = $3
+             LIMIT 1`,
+            [studentCheck.studentId, submissionData.skill, submissionData.mockNumber || '1']
+        );
+        if (dupCheck.rows.length > 0) {
+            console.warn(`⚠️ DUPLICATE SUBMISSION BLOCKED: Student ${studentCheck.studentId} already submitted ${submissionData.skill} mock ${submissionData.mockNumber || '1'}`);
+            return res.status(409).json({
+                success: false,
+                message: 'You have already submitted this test. Only one submission per test is allowed.'
+            });
+        }
+
         // Server-side duration validation — flag suspiciously long test durations
         if (submissionData.startTime && submissionData.endTime) {
             const start = new Date(submissionData.startTime);

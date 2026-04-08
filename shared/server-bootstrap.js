@@ -33,6 +33,14 @@ export function createServer({ port, name, callerUrl, dbConfig, onReady }) {
     app.use(express.json({ limit: '50mb' }));
     app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
+    // Catch JSON parse errors so raw stack traces don't leak to clients
+    app.use((err, req, res, next) => {
+        if (err.type === 'entity.parse.failed') {
+            return res.status(400).json({ success: false, message: 'Invalid JSON in request body' });
+        }
+        next(err);
+    });
+
     // Block access to sensitive files before static middleware
     // Normalize path to defeat encoding, case, and separator bypasses
     const blockedPaths = [

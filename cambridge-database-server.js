@@ -413,6 +413,22 @@ app.post('/cambridge-submissions', submissionLimiter, async (req, res) => {
             return res.status(400).json(validationError);
         }
 
+        // Submission deduplication — prevent multiple submissions for same student+skill+level+mock
+        const dbClient = await ensureConnection();
+        const dupCheck = await dbClient.query(
+            `SELECT id FROM cambridge_submissions
+             WHERE student_id = $1 AND level = $2 AND skill = $3 AND mock_test = $4
+             LIMIT 1`,
+            [studentCheck.studentId, submissionData.level, submissionData.skill, submissionData.mockTest || '1']
+        );
+        if (dupCheck.rows.length > 0) {
+            console.warn(`⚠️ DUPLICATE SUBMISSION BLOCKED: Student ${studentCheck.studentId} already submitted ${submissionData.level} ${submissionData.skill} mock ${submissionData.mockTest || '1'}`);
+            return res.status(409).json({
+                success: false,
+                message: 'You have already submitted this test. Only one submission per test is allowed.'
+            });
+        }
+
         // Server-side duration validation — flag suspiciously long test durations
         if (submissionData.startTime && submissionData.endTime) {
             const start = new Date(submissionData.startTime);
@@ -486,9 +502,23 @@ app.post('/submit-speaking', submissionLimiter, async (req, res) => {
         // Validate audioSize (must be non-negative if provided)
         const safeAudioSize = (typeof audioSize === 'number' && audioSize >= 0 && audioSize <= 100) ? audioSize : null;
 
-        console.log(`🎤 Saving speaking test: ${level} Mock ${mockTest} for ${trimmedName} (${safeAudioSize}MB, ${safeDuration}s)`);
-
+        // Submission deduplication — prevent multiple speaking submissions
         const dbClient = await ensureConnection();
+        const dupCheck = await dbClient.query(
+            `SELECT id FROM cambridge_submissions
+             WHERE student_id = $1 AND level = $2 AND skill = $3 AND mock_test = $4
+             LIMIT 1`,
+            [trimmedId, level, skill, mockTest || '1']
+        );
+        if (dupCheck.rows.length > 0) {
+            console.warn(`⚠️ DUPLICATE SPEAKING SUBMISSION BLOCKED: Student ${trimmedId} already submitted ${level} ${skill} mock ${mockTest || '1'}`);
+            return res.status(409).json({
+                success: false,
+                message: 'You have already submitted this speaking test. Only one submission is allowed.'
+            });
+        }
+
+        console.log(`🎤 Saving speaking test: ${level} Mock ${mockTest} for ${trimmedName} (${safeAudioSize}MB, ${safeDuration}s)`);
         const result = await dbClient.query(`
             INSERT INTO cambridge_submissions
             (student_id, student_name, exam_type, level, mock_test, skill,
