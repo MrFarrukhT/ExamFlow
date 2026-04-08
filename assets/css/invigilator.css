@@ -43,11 +43,11 @@ body {
 
 /* Header theme classes */
 .header.ielts-theme {
-    background: linear-gradient(135deg, #28a745, #20873a);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .header.cambridge-theme {
-    background: linear-gradient(135deg, #0066cc, #0052a3);
+    background: linear-gradient(135deg, #0d9488, #065f46);
 }
 
 /* Header navigation buttons */
