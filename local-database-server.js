@@ -162,6 +162,30 @@ app.get('/submissions', requireAdmin, async (req, res) => {
     }
 });
 
+// Delete a submission (admin only)
+app.delete('/submissions/:id', requireAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const submissionId = parseInt(id, 10);
+        if (isNaN(submissionId) || submissionId <= 0) {
+            return res.status(400).json({ success: false, message: 'Invalid submission ID' });
+        }
+        const dbClient = await ensureConnection();
+        const result = await dbClient.query(
+            'DELETE FROM test_submissions WHERE id = $1 RETURNING id',
+            [submissionId]
+        );
+        if (result.rowCount === 0) {
+            return res.status(404).json({ success: false, message: 'Submission not found' });
+        }
+        console.log(`🗑️ Deleted submission ${submissionId}`);
+        res.json({ success: true, message: `Submission ${submissionId} deleted` });
+    } catch (error) {
+        console.error('❌ Failed to delete submission:', error);
+        res.status(500).json({ success: false, message: 'Failed to delete submission', error: error.message });
+    }
+});
+
 // Update score for a submission (admin only)
 app.post('/update-score', requireAdmin, async (req, res) => {
     try {

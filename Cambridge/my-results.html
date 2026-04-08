@@ -411,11 +411,11 @@
 
         async function loadResults() {
             try {
-                // Fetch submissions and answer keys in parallel
+                // Fetch submissions and answer keys in parallel — each wrapped so one failure doesn't kill the rest
                 const [submissions, rwKeys, listenKeys] = await Promise.all([
-                    fetchJSON(`${API_BASE}/cambridge-submissions?student_id=${encodeURIComponent(studentId)}&level=${encodeURIComponent(level)}&mock_test=${encodeURIComponent(mockTest)}`),
-                    fetchJSON(`${API_BASE}/cambridge-answers?level=${encodeURIComponent(level)}&skill=reading-writing&mock=${encodeURIComponent(mockTest)}`),
-                    fetchJSON(`${API_BASE}/cambridge-answers?level=${encodeURIComponent(level)}&skill=listening&mock=${encodeURIComponent(mockTest)}`)
+                    fetchJSON(`${API_BASE}/cambridge-submissions?student_id=${encodeURIComponent(studentId)}&level=${encodeURIComponent(level)}&mock_test=${encodeURIComponent(mockTest)}`).catch(() => []),
+                    fetchJSON(`${API_BASE}/cambridge-answers?level=${encodeURIComponent(level)}&skill=reading-writing&mock=${encodeURIComponent(mockTest)}`).catch(() => ({ success: false })),
+                    fetchJSON(`${API_BASE}/cambridge-answers?level=${encodeURIComponent(level)}&skill=listening&mock=${encodeURIComponent(mockTest)}`).catch(() => ({ success: false }))
                 ]);
 
                 document.getElementById('loadingState').style.display = 'none';

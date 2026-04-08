@@ -462,7 +462,7 @@
                 for (let mockNum = 1; mockNum <= 10; mockNum++) {
                     for (const skill of ['reading', 'listening']) {
                         try {
-                            const response = await fetch(`${this.apiBase}/mock-answers?mock=${mockNum}&skill=${skill}`);
+                            const response = await this._authFetch(`${this.apiBase}/mock-answers?mock=${mockNum}&skill=${skill}`);
                             const data = await response.json();
                             if (data.success && data.answers && Object.keys(data.answers).length > 0) {
                                 if (!this.correctAnswers[`mock${mockNum}`]) this.correctAnswers[`mock${mockNum}`] = {};
@@ -518,7 +518,7 @@
             for (let i = 1; i <= 40; i++) { const el = document.getElementById(`answer_${i}`); if (el) el.value = ''; }
             try {
                 this.updateAnswerStatus('\u23F3 Loading answers from database...');
-                const response = await fetch(`${this.apiBase}/mock-answers?mock=${mockNum}&skill=${skill}`);
+                const response = await this._authFetch(`${this.apiBase}/mock-answers?mock=${mockNum}&skill=${skill}`);
                 const data = await response.json();
                 if (data.success && data.answers) {
                     for (let i = 1; i <= 40; i++) {
@@ -574,7 +574,7 @@
             if (filledCount === 0) { this.updateAnswerStatus('\u274C No answers to save'); return; }
             try {
                 this.updateAnswerStatus('\u23F3 Saving answers to database...');
-                const response = await fetch(`${this.apiBase}/mock-answers`, {
+                const response = await this._authFetch(`${this.apiBase}/mock-answers`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ mock: mockNum, skill, answers })
                 });
@@ -603,7 +603,7 @@
             const skill = document.getElementById('answerSkillSelect').value;
             try {
                 this.updateAnswerStatus('\u23F3 Clearing answers from database...');
-                const response = await fetch(`${this.apiBase}/mock-answers?mock=${mockNum}&skill=${skill}`, { method: 'DELETE' });
+                const response = await this._authFetch(`${this.apiBase}/mock-answers?mock=${mockNum}&skill=${skill}`, { method: 'DELETE' });
                 const data = await response.json();
                 if (data.success) {
                     for (let i = 1; i <= 40; i++) { const el = document.getElementById(`answer_${i}`); if (el) el.value = ''; }

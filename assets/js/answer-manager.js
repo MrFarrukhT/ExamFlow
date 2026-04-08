@@ -445,7 +445,7 @@ class AnswerManager {
                 saved_locally: !success,
                 created_at: new Date().toISOString()
             });
-            localStorage.setItem('test_submissions_database', JSON.stringify(submissions));
+            localStorage.setItem('cambridge_submissions_database', JSON.stringify(submissions));
             this.saveCurrentTestToHistory();
             return true;
         } catch (error) {
