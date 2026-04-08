@@ -632,7 +632,7 @@
 
         // ── IELTS-only: openAnswerComparison ──
         function openAnswerComparison(submissionId) {
-            const submission = dashboard.currentSubmissions.find(s => s.id == submissionId);
+            const submission = dashboard.currentSubmissions.find(s => String(s.id) === String(submissionId));
             if (!submission) { alert('Submission not found'); return; }
             const skill = submission.skill;
             const mockKey = `mock${submission.mock_number}`;
