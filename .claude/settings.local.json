@@ -54,7 +54,13 @@
       "Bash(node -c assets/js/cambridge/highlight-manager.js)",
       "Bash(node -c local-database-server.js)",
       "Bash(node -c cambridge-database-server.js)",
-      "Bash(node --check \"e:/Test-System-v2/assets/js/core.js\")"
+      "Bash(node --check \"e:/Test-System-v2/assets/js/core.js\")",
+      "Bash(git tag:*)",
+      "Bash(git rev-list:*)",
+      "Bash(git cat-file:*)",
+      "Bash(sort -t' ' -k3 -rn)",
+      "Bash(node --check local-database-server.js)",
+      "Bash(node --check cambridge-database-server.js)"
     ],
     "additionalDirectories": [
       "e:\\Test-System-v2",
