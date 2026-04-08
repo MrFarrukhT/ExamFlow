@@ -229,10 +229,18 @@ app.get('/mock-answers', async (req, res) => {
             });
         }
 
+        const mockNum = parseInt(mock, 10);
+        if (isNaN(mockNum) || mockNum <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Mock number must be a positive integer'
+            });
+        }
+
         const dbClient = await ensureConnection();
         const result = await dbClient.query(
             'SELECT * FROM mock_answers WHERE mock_number = $1 AND skill = $2 ORDER BY question_number',
-            [parseInt(mock), skill]
+            [mockNum, skill]
         );
 
         // Convert to the format expected by the frontend
@@ -279,6 +287,14 @@ app.post('/mock-answers', async (req, res) => {
             });
         }
 
+        const mockNum = parseInt(mock, 10);
+        if (isNaN(mockNum) || mockNum <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Mock number must be a positive integer'
+            });
+        }
+
         // Validate answers is an object with reasonable size
         if (typeof answers !== 'object' || Array.isArray(answers) || Object.keys(answers).length > 200) {
             return res.status(400).json({
@@ -310,7 +326,7 @@ app.post('/mock-answers', async (req, res) => {
             // Clear existing answers for this mock/skill combination
             await dbClient.query(
                 'DELETE FROM mock_answers WHERE mock_number = $1 AND skill = $2',
-                [parseInt(mock), skill]
+                [mockNum, skill]
             );
 
             // Insert new answers (batch INSERT)
@@ -338,7 +354,7 @@ app.post('/mock-answers', async (req, res) => {
                 }
 
                 valueClauses.push(`($${paramIndex}, $${paramIndex + 1}, $${paramIndex + 2}, $${paramIndex + 3}, $${paramIndex + 4}, CURRENT_TIMESTAMP)`);
-                params.push(parseInt(mock), skill, questionNumber, correctAnswer, alternativeAnswers);
+                params.push(mockNum, skill, questionNumber, correctAnswer, alternativeAnswers);
                 paramIndex += 5;
                 insertedCount++;
             }
@@ -390,10 +406,18 @@ app.delete('/mock-answers', async (req, res) => {
             });
         }
 
+        const mockNum = parseInt(mock, 10);
+        if (isNaN(mockNum) || mockNum <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Mock number must be a positive integer'
+            });
+        }
+
         const dbClient = await ensureConnection();
         const result = await dbClient.query(
             'DELETE FROM mock_answers WHERE mock_number = $1 AND skill = $2',
-            [parseInt(mock), skill]
+            [mockNum, skill]
         );
 
         console.log(`🗑️ Deleted ${result.rowCount} answers for Mock ${mock} - ${skill.toUpperCase()}`);

@@ -122,6 +122,13 @@ class IELTSUniversalFunctions {
     get currentTextSize() { return this.optionsMenu.currentTextSize; }
 }
 
+// Global wrapper for inline onclick="toggleOptionsMenu()" in HTML files
+window.toggleOptionsMenu = function() {
+    if (window.ieltsUniversal && typeof window.ieltsUniversal.showOptionsMenu === 'function') {
+        window.ieltsUniversal.showOptionsMenu();
+    }
+};
+
 // Initialize universal functions when DOM is loaded
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {

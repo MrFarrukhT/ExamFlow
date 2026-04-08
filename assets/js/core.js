@@ -1396,38 +1396,6 @@ async function loadAnswers() {
         // highlightText, addNote, clearHighlight, clearAllHighlights
         // are now exposed by ContextMenuManager in context-menu.js
         
-        // Explanation toggle function for Part 2
-        window.toggleExplanation = function() {
-            const explanationSection = document.getElementById('part-2-explanation');
-            const button = document.getElementById('show-explanation-btn');
-            
-            if (explanationSection.classList.contains('hidden')) {
-                explanationSection.classList.remove('hidden');
-                button.textContent = 'Hide Explanation';
-                button.style.backgroundColor = '#dc3545';
-            } else {
-                explanationSection.classList.add('hidden');
-                button.textContent = 'Show Explanation';
-                button.style.backgroundColor = '#4a90e2';
-            }
-        };
-        
-        // Explanation toggle function for Part 3
-        window.toggleExplanationPart3 = function() {
-            const explanationSection = document.getElementById('part-3-explanation');
-            const button = document.getElementById('show-explanation-btn-part3');
-            
-            if (explanationSection.classList.contains('hidden')) {
-                explanationSection.classList.remove('hidden');
-                button.textContent = 'Hide Explanation';
-                button.style.backgroundColor = '#dc3545';
-            } else {
-                explanationSection.classList.add('hidden');
-                button.textContent = 'Show Explanation';
-                button.style.backgroundColor = '#4a90e2';
-            }
-        };
-
         // --- START THE APP ---
         initialize();
 
@@ -1588,27 +1556,6 @@ async function loadAnswers() {
                 });
             }
         }
-
-        // Global function for selecting cells
-        window.selectCell = function(cell, questionNum, value) {
-            
-            // Remove selected class from all cells in the same row
-            const row = cell.closest('tr');
-            const cellsInRow = row.querySelectorAll('.clickable-cell');
-            cellsInRow.forEach(c => {
-                c.classList.remove('selected');
-                c.removeAttribute('data-selected');
-                c.removeAttribute('data-answer');
-            });
-            
-            // Add selected class to clicked cell
-            cell.classList.add('selected');
-            cell.setAttribute('data-selected', 'true');
-            cell.setAttribute('data-answer', value);
-            
-            updateAllIndicators();
-        };
-
 
 
         // Note: switchToPart function is defined earlier in the code

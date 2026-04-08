@@ -318,11 +318,11 @@ app.post('/cambridge-submissions', async (req, res) => {
         });
 
     } catch (error) {
-        console.log('⏰ Submission queued for background retry');
-        res.json({
-            success: true,
-            message: 'Cambridge test submission queued - will retry until successful',
-            queued: true
+        console.error('Cambridge submission save error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to save Cambridge submission',
+            error: error.message
         });
     }
 });

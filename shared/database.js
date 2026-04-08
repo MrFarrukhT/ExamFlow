@@ -96,6 +96,11 @@ export function createRetryQueue(ensureConnection, insertFn) {
 
 export function adminLoginHandler(req, res) {
     const { username, password } = req.body;
+
+    if (!username || !password || typeof username !== 'string' || typeof password !== 'string') {
+        return res.status(400).json({ success: false, message: 'Username and password are required' });
+    }
+
     const adminPassword = process.env.ADMIN_PASSWORD || '';
     if (username === 'admin' && password === adminPassword) {
         res.json({ success: true, token: 'admin-session-' + Date.now() });
