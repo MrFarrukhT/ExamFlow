@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-08 03:33",
-  "totalRuns": 1,
+  "lastRun": "2026-04-08 03:50",
+  "totalRuns": 2,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -10,26 +10,32 @@
     "cambridge-xss-evaluator-sanitization",
     "submission-body-validation",
     "empty-whitespace-name-rejection",
-    "null-byte-search-sanitization"
+    "null-byte-search-sanitization",
+    "sensitive-file-path-blocking",
+    "answer-key-xss-sanitization",
+    "answer-key-level-skill-validation",
+    "speaking-mimetype-sanitization",
+    "speaking-duration-audiosize-validation",
+    "concurrent-score-update-last-write-wins",
+    "path-traversal-blocked"
   ],
   "weakPatterns": [
     "no-rate-limiting-on-admin-login",
     "no-duplicate-submission-prevention",
-    "predictable-admin-token"
+    "predictable-admin-token",
+    "answer-keys-writable-without-auth",
+    "mock-answers-writable-without-auth"
   ],
   "untestedAreas": [
     "exam-timer-manipulation",
     "browser-back-button-after-submit",
     "multi-tab-concurrent-exam",
-    "speaking-audio-upload-abuse",
     "admin-dashboard-xss-rendering",
-    "mock-answers-manipulation",
-    "cambridge-answer-keys-injection",
-    "pagination-edges",
-    "concurrent-score-updates",
     "session-timeout-mid-exam",
     "ai-score-suggestion-abuse",
-    "file-path-traversal-static-serve"
+    "ielts-mock-answers-validation",
+    "admin-dashboard-javascript-behavior",
+    "invigilator-panel-flows"
   ],
   "deferredFindings": [
     {
@@ -49,12 +55,24 @@
       "severity": "HIGH",
       "since": "2026-04-08",
       "reason": "Needs unique constraint or client-side idempotency key — needs design decision"
+    },
+    {
+      "title": "Answer keys writable without authentication",
+      "severity": "HIGH",
+      "since": "2026-04-08",
+      "reason": "By design (no auth), but anyone on the network can tamper with grading keys"
+    },
+    {
+      "title": "AI score suggestion untested (OpenAI quota exceeded)",
+      "severity": "MEDIUM",
+      "since": "2026-04-08",
+      "reason": "Need working API key to test prompt injection"
     }
   ],
   "stats": {
-    "scenariosTested": 8,
-    "bugsFound": 7,
-    "bugsFixed": 4,
-    "bugsDeferred": 3
+    "scenariosTested": 14,
+    "bugsFound": 11,
+    "bugsFixed": 7,
+    "bugsDeferred": 5
   }
 }
