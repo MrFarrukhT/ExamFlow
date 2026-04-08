@@ -154,6 +154,7 @@
                     <button class="btn" onclick="exportData()">📤 Export CSV</button>
                     <button class="btn" onclick="toggleDateGroupView()" id="dateGroupToggle">📅 View by Date</button>
                     <button class="btn btn-success" onclick="filterTodaySubmissions()">📅 Today's Submissions</button>
+                    <button class="btn btn-warning" onclick="startScoringQueue()" style="background:#e65100;">📝 Start Scoring</button>
                 </div>
             </div>
 
@@ -272,6 +273,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">Answer Comparison</h2>
+                <div id="scoringNav" class="scoring-nav"></div>
                 <span class="close" onclick="closeModal()" role="button" aria-label="Close answer comparison dialog">&times;</span>
             </div>
             <div class="modal-body">
