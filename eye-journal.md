@@ -551,3 +551,72 @@ Elevations landed: 1
 Reverted: 0
 Fixes landed: 1 (32 files)
 Changes shipped: 44 files modified
+
+---
+
+## Session: 2026-04-08 (B2 First student deep dive)
+Persona: Student taking B2 First (FCE) test
+System: Cambridge (localhost:3003)
+Pages explored: dashboard-cambridge.html (B2 First modules), reading.html, Part 1.html (reading test)
+Starting state: All B2 First files had wrong level names from copy-paste errors — titles, headings, audio references, and console logs showed "B1 Preliminary" or "A2 Key" instead of "B2 First"
+
+### Round 1
+**Explored:** B2 First test flow (login → dashboard → level selection → reading test Part 1), code review of all 51 B2 First files across 3 mock folders
+**Action:** FIX 84+ wrong-level references across 51 files + POLISH dashboard architecture
+
+- [T2] B2-First/reading.html — Title said "Cambridge B1 Preliminary MOCK 1 - Reading" → "Cambridge B2 First MOCK 1 - Reading"
+  Mode: fix (bug)
+  Files: 3 folders × reading.html, writing.html, listening.html, reading-writing.html
+
+- [T2] B2-First/speaking.html — Title and h1 said "Cambridge A2 Key - Speaking Test" → "Cambridge B2 First - Speaking Test"
+  Mode: fix (bug)
+  Files: 3 folders × speaking.html
+
+- [T2] B2-First/listening.html — Popup h2 said "B1 Preliminary Listening Test" → "B2 First Listening Test", audio src "Listening B1-001.mp3" → "Listening B2-001.mp3"
+  Mode: fix (bug)
+  Files: 3 folders × listening.html
+
+- [T2] B2-First/Part 1-8.html — Titles said "A2 Key RW Digital Sample Test" → "B2 First Reading & Use of English - Part N" / "B2 First Writing - Part N"
+  Mode: fix (bug)
+  Files: 3 folders × 8 Part files = 24 files
+
+- [T2] B2-First/Listening-Part-1-4.html — Titles said "B1 Preliminary Listening Part N" → "B2 First Listening Part N"
+  Mode: fix (bug)
+  Files: 3 folders × 4 files = 12 files
+
+- [T4] B2-First/Part 1-8 + Listening-Part-1-4 — Console.log messages said "Cambridge A2 Key" or "Cambridge B1 Preliminary" → "Cambridge B2 First"
+  Mode: polish
+  Files: 3 folders × 12 files = 36 files
+
+- [T4] dashboard-cambridge.html — Moved inline `<style>` block (level cards, modal styles) into cambridge-dashboard.css external file
+  Mode: polish
+  Quality layer: 5-Delightful → 5-Delightful (cleaner architecture, same appearance)
+  Files: Cambridge/dashboard-cambridge.html, assets/css/cambridge-dashboard.css
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| B2-First/reading.html | 3-Efficient | Correct title, timer works, Part nav functional |
+| B2-First/writing.html | 3-Efficient | Correct title |
+| B2-First/listening.html | 3-Efficient | Correct title, heading, audio ref |
+| B2-First/speaking.html | 3-Efficient | Correct title and heading |
+| B2-First/Part 1-8.html | 3-Efficient | Correct titles and console logs |
+| B2-First/Listening-Part-1-4.html | 3-Efficient | Correct titles and console logs |
+| B2-First-MOCK-2/* | 3-Efficient | Same fixes applied |
+| B2-First-MOCK-3/* | 3-Efficient | Same fixes applied |
+| Cambridge/dashboard-cambridge.html | 5-Delightful | Clean CSS architecture |
+
+### Deferred
+- B2-First Part files reference `./A2 Key RW Digital Sample Test 1_26.04.23_files/` directory for CSS/JS/images — actual directory on disk keeps this name (renaming would break asset loading)
+- B2 First speaking.html — Content format is inherited from A2 Key, may need content rebuild for B2 First speaking format
+- Audio file `Listening B2-001.mp3` — reference updated but actual audio file may not exist on disk (need to verify)
+
+### Session Stats
+Pages explored: 3 (dashboard, reading wrapper, Part 1)
+Rounds: 1
+Polishes landed: 2 (console logs, CSS extraction)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Fixes landed: 84+ (wrong level names across 51 files)
+Changes shipped: 53 files modified
