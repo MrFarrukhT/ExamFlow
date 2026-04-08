@@ -464,7 +464,7 @@
             try {
                 // Use student-facing endpoints (no admin auth required)
                 const fetches = [
-                    fetchJSON(`${API_BASE}/my-submissions?student_id=${encodeURIComponent(studentId)}&level=${encodeURIComponent(level)}&mock_test=${encodeURIComponent(mockTest)}`).catch(() => []),
+                    fetchJSON(`${API_BASE}/my-submissions?student_id=${encodeURIComponent(studentId)}&level=${encodeURIComponent(level)}&mock_test=${encodeURIComponent(mockTest)}`).catch(() => ({ success: false, submissions: [] })),
                     fetchJSON(`${API_BASE}/my-answer-keys?level=${encodeURIComponent(level)}&skill=listening&mock=${encodeURIComponent(mockTest)}&student_id=${encodeURIComponent(studentId)}`).catch(() => ({ success: false }))
                 ];
 
@@ -476,7 +476,11 @@
                 }
 
                 const results = await Promise.all(fetches);
-                const submissions = results[0];
+                // Response is now {success, submissions} (was raw array). Handle both for safety.
+                const subsResp = results[0];
+                const submissions = Array.isArray(subsResp)
+                    ? subsResp
+                    : (subsResp && Array.isArray(subsResp.submissions) ? subsResp.submissions : []);
                 const listenKeysResp = results[1];
 
                 document.getElementById('loadingState').style.display = 'none';
@@ -484,7 +488,7 @@
 
                 // Parse submissions by skill (latest per skill)
                 const bySkill = {};
-                (Array.isArray(submissions) ? submissions : []).forEach(s => {
+                submissions.forEach(s => {
                     if (!bySkill[s.skill] || new Date(s.created_at) > new Date(bySkill[s.skill].created_at)) {
                         bySkill[s.skill] = s;
                     }

@@ -306,10 +306,14 @@ app.get('/my-submissions', submissionLimiter, async (req, res) => {
         if (!student_id) {
             return res.status(400).json({ success: false, message: 'student_id is required' });
         }
+        // Fail-fast on invalid level enum to prevent silent empty results
+        if (level && !VALID_LEVELS.includes(level)) {
+            return res.status(400).json({ success: false, message: `Invalid level. Must be one of: ${VALID_LEVELS.join(', ')}` });
+        }
 
         const dbClient = await ensureConnection();
         const conditions = ['student_id = $1'];
-        const params = [student_id];
+        const params = [String(student_id)];
 
         if (level) {
             conditions.push(`level = $${params.length + 1}`);
@@ -317,7 +321,7 @@ app.get('/my-submissions', submissionLimiter, async (req, res) => {
         }
         if (mock_test) {
             conditions.push(`mock_test = $${params.length + 1}`);
-            params.push(mock_test);
+            params.push(String(mock_test));
         }
 
         const query = `SELECT id, student_id, student_name, level, mock_test, skill, answers, score, grade,
@@ -328,7 +332,8 @@ app.get('/my-submissions', submissionLimiter, async (req, res) => {
                         ORDER BY created_at DESC`;
 
         const result = await dbClient.query(query, params);
-        res.json(result.rows);
+        // Wrap in {success, submissions} for consistency with IELTS /my-submissions
+        res.json({ success: true, submissions: result.rows });
     } catch (error) {
         console.error('Failed to fetch student submissions:', error);
         res.status(500).json({ success: false, message: 'Failed to fetch submissions' });
@@ -336,7 +341,7 @@ app.get('/my-submissions', submissionLimiter, async (req, res) => {
 });
 
 // Get answer keys for a level/skill (student-facing, for answer checking)
-// Security: requires student_id and verifies the student has already submitted for this skill
+// Security: requires student_id, validates level/skill, scoped to specific mock
 app.get('/my-answer-keys', submissionLimiter, async (req, res) => {
     try {
         const { level, skill, mock, student_id } = req.query;
@@ -346,16 +351,28 @@ app.get('/my-answer-keys', submissionLimiter, async (req, res) => {
         if (!student_id) {
             return res.status(400).json({ success: false, message: 'student_id is required' });
         }
+        // Fail-fast on invalid enums to prevent silent dead-end queries
+        if (!VALID_LEVELS.includes(level)) {
+            return res.status(400).json({ success: false, message: `Invalid level. Must be one of: ${VALID_LEVELS.join(', ')}` });
+        }
+        if (!VALID_SKILLS.includes(skill)) {
+            return res.status(400).json({ success: false, message: `Invalid skill. Must be one of: ${VALID_SKILLS.join(', ')}` });
+        }
 
         const dbClient = await ensureConnection();
 
-        // Verify the student has submitted for this skill before revealing answer keys
-        const submissionCheck = await dbClient.query(
-            `SELECT id FROM cambridge_submissions
-             WHERE student_id = $1 AND level = $2 AND skill = $3
-             LIMIT 1`,
-            [student_id, level, skill]
-        );
+        // Verify the student submitted THIS specific mock — not just any mock for this skill+level.
+        // Without mock-scoping, a student who submitted Mock 1 reading could view Mock 2/3 answer
+        // keys before taking those tests (cheating vector across mocks).
+        const submissionCheckParams = [String(student_id), level, skill];
+        let submissionCheckQuery = `SELECT id FROM cambridge_submissions
+                                    WHERE student_id = $1 AND level = $2 AND skill = $3`;
+        if (mock) {
+            submissionCheckQuery += ` AND mock_test = $4`;
+            submissionCheckParams.push(String(mock));
+        }
+        submissionCheckQuery += ` LIMIT 1`;
+        const submissionCheck = await dbClient.query(submissionCheckQuery, submissionCheckParams);
 
         if (submissionCheck.rows.length === 0) {
             return res.status(403).json({
@@ -369,7 +386,7 @@ app.get('/my-answer-keys', submissionLimiter, async (req, res) => {
 
         if (mock) {
             query += ' AND mock_test = $3';
-            params.push(mock);
+            params.push(String(mock));
         }
 
         query += ' ORDER BY updated_at DESC LIMIT 1';
