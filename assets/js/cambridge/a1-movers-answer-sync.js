@@ -131,22 +131,47 @@
       document.head.appendChild(style);
   }
 
+  // Add/remove .filled class on text inputs for visual feedback
+  function updateInputFilledState(input) {
+    if (input && (input.classList.contains('answer-input') || input.classList.contains('gap-input'))) {
+      if (input.value && input.value.trim()) {
+        input.classList.add('filled');
+      } else {
+        input.classList.remove('filled');
+      }
+    }
+  }
+
+  // Mark all inputs that already have saved values
+  function initInputFilledStates() {
+    document.querySelectorAll('.answer-input, .gap-input').forEach(updateInputFilledState);
+  }
+
   // Listen for changes to update UI immediately
   function initListeners() {
     // Listen for any input change (radio or text)
     document.addEventListener('change', (e) => {
-        // We wait a brief moment to allow the inline script to save to localStorage
         setTimeout(() => {
             updateFooterUI();
-            consolidateAnswers(); // Also consolidate on every change
+            consolidateAnswers();
         }, 50);
+        updateInputFilledState(e.target);
     });
-    
+
+    // Also listen on 'input' for real-time updates as student types
+    document.addEventListener('input', (e) => {
+        setTimeout(() => {
+            updateFooterUI();
+            consolidateAnswers();
+        }, 50);
+        updateInputFilledState(e.target);
+    });
+
     // Listen for localStorage changes (cross-tab syncing)
     window.addEventListener('storage', (e) => {
         if (e.key && e.key.startsWith('movers_rw_')) {
             updateFooterUI();
-            consolidateAnswers(); // Also consolidate when another tab saves
+            consolidateAnswers();
         }
     });
   }
@@ -191,11 +216,12 @@
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         initListeners();
-        setTimeout(updateFooterUI, 200); // Delay slightly to ensure DOM is ready
+        setTimeout(() => { updateFooterUI(); initInputFilledStates(); }, 200);
     });
   } else {
     initListeners();
     updateFooterUI();
+    initInputFilledStates();
   }
 
 })();

@@ -916,11 +916,27 @@ body.dark-mode .subQuestion.answered {
 }
 
 /* Better answer input focus for all Cambridge tests */
-.answer-input:focus {
+.answer-input:focus,
+.gap-input:focus {
     border-bottom-color: #0066cc !important;
     border-bottom-width: 2px !important;
     box-shadow: 0 2px 0 0 rgba(0, 102, 204, 0.3) !important;
     outline: none !important;
+}
+
+/* Filled-state feedback — shows student which inputs have answers */
+.answer-input.filled,
+.gap-input.filled {
+    border-bottom-color: #16a34a !important;
+    background-color: #f0fdf4 !important;
+    color: #15803d !important;
+}
+
+body.dark-mode .answer-input.filled,
+body.dark-mode .gap-input.filled {
+    border-bottom-color: #22c55e !important;
+    background-color: #052e16 !important;
+    color: #86efac !important;
 }
 
 /* Smooth content transitions when switching parts */

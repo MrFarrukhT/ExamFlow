@@ -322,7 +322,7 @@
 <script src="../../../assets/js/universal-functions.js"></script>
     <script src="../../../assets/js/cambridge/cambridge-bridge.js"></script>
     <script src="../../../assets/js/distraction-free.js"></script>
-    <script src="../../../assets/js/cambridge/cambridge-answer-manager.js"></script>
+    <script src="../../../assets/js/answer-manager.js"></script>
     <script src="../../../assets/js/cambridge/a1-movers-answer-sync.js"></script>
     <script>
         window.currentPart = 5;
@@ -419,8 +419,8 @@
                 const saved = localStorage.getItem(`movers_rw_${input.id}`);
                 if(saved) input.value = saved;
                 
-                // Save on change
-                input.addEventListener('change', () => {
+                // Save on change and input
+                input.addEventListener('input', () => {
                     localStorage.setItem(`movers_rw_${input.id}`, input.value);
                 });
             });

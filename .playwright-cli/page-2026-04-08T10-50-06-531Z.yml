@@ -1,0 +1,202 @@
+- generic [ref=e1]:
+  - iframe [active] [ref=e2]:
+    - generic [ref=f1e4]:
+      - banner [ref=f1e5]:
+        - generic [ref=f1e6]:
+          - generic [ref=f1e7]:
+            - img "header.logo"
+          - generic [ref=f1e8]:
+            - generic [ref=f1e9]:
+              - generic [ref=f1e10]:
+                - status [ref=f1e11]: Connected
+                - generic [ref=f1e13]: 
+              - button "Messages" [ref=f1e14]:
+                - generic [ref=f1e15]:
+                  - generic [ref=f1e16]: Messages
+                  - generic [ref=f1e17]: 
+              - button "Options" [ref=f1e18]:
+                - generic [ref=f1e19]:
+                  - generic [ref=f1e20]: Options
+                  - generic [ref=f1e21]: 
+              - button "Show notes" [ref=f1e22]:
+                - generic [ref=f1e23]:
+                  - generic [ref=f1e24]: Show notes
+                  - generic [ref=f1e25]: 
+            - generic [ref=f1e28]:
+              - generic [ref=f1e29]: Candidate ID
+              - generic [ref=f1e30]: STU001
+      - generic [ref=f1e32]:
+        - generic [ref=f1e34]:
+          - heading "Questions 14–18" [level=3] [ref=f1e35]
+          - generic [ref=f1e36]: For each question, choose the correct answer.
+        - generic [ref=f1e37]:
+          - region [ref=f1e38]:
+            - generic [ref=f1e39]: Stimulus for Questions 14–18
+            - generic [ref=f1e45]:
+              - heading "A family of dancers" [level=2] [ref=f1e46]
+              - paragraph [ref=f1e47]: The women in the Watson family are all crazy about ballet. These days, Alice Watson gives ballet lessons, but for many years, she was a dancer with the National Ballet Company. Her mother, Hannah, also had a full-time job there, making costumes for the dancers.
+              - paragraph [ref=f1e48]: Alice’s daughter Demi started learning ballet as soon as she could walk. ‘I never taught her,’ says Alice, ‘because she never let me.’ Now aged sixteen, Demi is a member of the ballet company where her mother was the star dancer for many years.
+              - paragraph [ref=f1e49]: Alice’s husband, Jack, is an electrician. They met while he was working at a theatre where she was dancing and got married soon after. ‘When Demi started dancing, the house was too small for her and Alice to practise in so I made the garage into a dance studio. Now the living room is nice and quiet when I’m watching television!’ he says.
+              - paragraph [ref=f1e50]: Last month, Demi was invited to dance in the ballet Swan Lake. Of course, Alice and Hannah were in the audience and even Jack was there, which made it very special for Demi. Jack says, ‘I’m not that interested in ballet myself but it’s fantastic seeing Demi taking her first steps with Alice’s old company!’ Demi was wearing a dress that Hannah made for Alice many years before.
+              - paragraph [ref=f1e51]: ‘It was very exciting for all of us,’ says Hannah. ‘Demi’s way of dancing is very like Alice’s. I know I’m her grandmother, but I think she has a great future!’
+          - separator [ref=f1e54]:
+            - generic [ref=f1e55]: 
+          - region [ref=f1e56]:
+            - generic [ref=f1e57]: Questions 14–18
+            - main [ref=f1e59]:
+              - generic [ref=f1e60]:
+                - group [ref=f1e61]:
+                  - generic [ref=f1e65]:
+                    - radiogroup "14 What is Alice Watson’s job now?" [ref=f1e67]:
+                      - paragraph [ref=f1e69]:
+                        - generic [ref=f1e70]: "14"
+                        - strong [ref=f1e72]: What is Alice Watson’s job now?
+                      - list [ref=f1e73]:
+                        - listitem [ref=f1e74]:
+                          - radio "dancer" [ref=f1e75]
+                          - generic [ref=f1e77]: dancer
+                        - listitem [ref=f1e78]:
+                          - radio "teacher" [ref=f1e79]
+                          - generic [ref=f1e81]: teacher
+                        - listitem [ref=f1e82]:
+                          - radio "dress-maker" [ref=f1e83]
+                          - generic [ref=f1e85]: dress-maker
+                      - button "Flag question 14":
+                        - generic [ref=f1e86]: Flag question 14
+                    - radiogroup "15 Demi had her first ballet lessons" [ref=f1e88]:
+                      - paragraph [ref=f1e90]:
+                        - generic [ref=f1e91]: "15"
+                        - strong [ref=f1e93]: Demi had her first ballet lessons
+                      - list [ref=f1e94]:
+                        - listitem [ref=f1e95]:
+                          - radio "at a very young age." [ref=f1e96]
+                          - generic [ref=f1e98]: at a very young age.
+                        - listitem [ref=f1e99]:
+                          - radio "at the National Ballet Company." [ref=f1e100]
+                          - generic [ref=f1e102]: at the National Ballet Company.
+                        - listitem [ref=f1e103]:
+                          - radio "from her mother." [ref=f1e104]
+                          - generic [ref=f1e106]: from her mother.
+                      - button "Flag question 15":
+                        - generic [ref=f1e107]: Flag question 15
+                    - radiogroup "16 Jack helped his wife and daughter by" [ref=f1e109]:
+                      - paragraph [ref=f1e111]:
+                        - generic [ref=f1e112]: "16"
+                        - strong [ref=f1e114]: Jack helped his wife and daughter by
+                      - list [ref=f1e115]:
+                        - listitem [ref=f1e116]:
+                          - radio "moving to a larger house." [ref=f1e117]
+                          - generic [ref=f1e119]: moving to a larger house.
+                        - listitem [ref=f1e120]:
+                          - radio "letting them use the living room for dancing." [ref=f1e121]
+                          - generic [ref=f1e123]: letting them use the living room for dancing.
+                        - listitem [ref=f1e124]:
+                          - radio "making a place for them to practise in." [ref=f1e125]
+                          - generic [ref=f1e127]: making a place for them to practise in.
+                      - button "Flag question 16":
+                        - generic [ref=f1e128]: Flag question 16
+                    - radiogroup "17 What was the best thing about the Swan Lake show for Demi?" [ref=f1e130]:
+                      - paragraph [ref=f1e132]:
+                        - generic [ref=f1e133]: "17"
+                        - strong [ref=f1e135]: What was the best thing about the Swan Lake show for Demi?
+                      - list [ref=f1e136]:
+                        - listitem [ref=f1e137]:
+                          - radio "It was her first show with the company." [ref=f1e138]
+                          - generic [ref=f1e140]: It was her first show with the company.
+                        - listitem [ref=f1e141]:
+                          - radio "All her family were there." [ref=f1e142]
+                          - generic [ref=f1e144]: All her family were there.
+                        - listitem [ref=f1e145]:
+                          - radio "She was wearing a new dress." [ref=f1e146]
+                          - generic [ref=f1e148]: She was wearing a new dress.
+                      - button "Flag question 17":
+                        - generic [ref=f1e149]: Flag question 17
+                    - radiogroup "18 Hannah says that Demi" [ref=f1e151]:
+                      - paragraph [ref=f1e153]:
+                        - generic [ref=f1e154]: "18"
+                        - strong [ref=f1e156]: Hannah says that Demi
+                      - list [ref=f1e157]:
+                        - listitem [ref=f1e158]:
+                          - radio "will be a star one day." [ref=f1e159]
+                          - generic [ref=f1e161]: will be a star one day.
+                        - listitem [ref=f1e162]:
+                          - radio "is her favourite granddaughter." [ref=f1e163]
+                          - generic [ref=f1e165]: is her favourite granddaughter.
+                        - listitem [ref=f1e166]:
+                          - radio "dances better than Alice did." [ref=f1e167]
+                          - generic [ref=f1e169]: dances better than Alice did.
+                      - button "Flag question 18":
+                        - generic [ref=f1e170]: Flag question 18
+                - generic [ref=f1e172]:     
+      - contentinfo [ref=f1e174]:
+        - navigation "Previous / next question" [ref=f1e175]:
+          - button "Previous" [ref=f1e176]:
+            - generic [ref=f1e177]: 
+          - button "Next" [ref=f1e178]:
+            - generic [ref=f1e179]: 
+        - navigation "Questions" [ref=f1e180]:
+          - tablist [ref=f1e181]:
+            - tab "Part 1. 0 of 6 questions attempted." [ref=f1e182]:
+              - generic [ref=f1e183]:
+                - text: Part 1
+                - generic [ref=f1e184]: 0 of 6
+                - generic [ref=f1e185]: Part 1. 0 of 6 questions attempted.
+          - tablist [ref=f1e186]:
+            - tab "Part 2. 0 of 7 questions attempted." [ref=f1e187]:
+              - generic [ref=f1e188]:
+                - text: Part 2
+                - generic [ref=f1e189]: 0 of 7
+                - generic [ref=f1e190]: Part 2. 0 of 7 questions attempted.
+          - tablist [ref=f1e191]:
+            - tab [ref=f1e192]:
+              - generic [ref=f1e193]:
+                - text: Part 3
+                - generic [ref=f1e194]: 0 of 5
+            - generic [ref=f1e195]:
+              - button "Question 14 Not attempted Active" [ref=f1e196]:
+                - generic [ref=f1e197]: Question 14
+                - text: "14"
+                - generic [ref=f1e198]: Not attempted Active
+              - button "Question 15 Not attempted" [ref=f1e199]:
+                - generic [ref=f1e200]: Question 15
+                - text: "15"
+                - generic [ref=f1e201]: Not attempted
+              - button "Question 16 Not attempted" [ref=f1e202]:
+                - generic [ref=f1e203]: Question 16
+                - text: "16"
+                - generic [ref=f1e204]: Not attempted
+              - button "Question 17 Not attempted" [ref=f1e205]:
+                - generic [ref=f1e206]: Question 17
+                - text: "17"
+                - generic [ref=f1e207]: Not attempted
+              - button "Question 18 Not attempted" [ref=f1e208]:
+                - generic [ref=f1e209]: Question 18
+                - text: "18"
+                - generic [ref=f1e210]: Not attempted
+          - tablist [ref=f1e211]:
+            - tab "Part 4. 0 of 6 questions attempted." [ref=f1e212]:
+              - generic [ref=f1e213]:
+                - text: Part 4
+                - generic [ref=f1e214]: 0 of 6
+                - generic [ref=f1e215]: Part 4. 0 of 6 questions attempted.
+          - tablist [ref=f1e216]:
+            - tab "Part 5. 0 of 6 questions attempted." [ref=f1e217]:
+              - generic [ref=f1e218]:
+                - text: Part 5
+                - generic [ref=f1e219]: 0 of 6
+                - generic [ref=f1e220]: Part 5. 0 of 6 questions attempted.
+          - tablist [ref=f1e221]:
+            - tab "Part 6. 0 of 1 questions attempted." [ref=f1e222]:
+              - generic [ref=f1e223]:
+                - text: Part 6
+                - generic [ref=f1e224]: 0 of 1
+                - generic [ref=f1e225]: Part 6. 0 of 1 questions attempted.
+          - tablist [ref=f1e226]:
+            - tab "Part 7. 0 of 1 questions attempted." [ref=f1e227]:
+              - generic [ref=f1e228]:
+                - text: Part 7
+                - generic [ref=f1e229]: 0 of 1
+                - generic [ref=f1e230]: Part 7. 0 of 1 questions attempted.
+          - button "Review your answers" [ref=f1e231]:
+            - generic [ref=f1e232]: 
+  - generic [ref=e5]: 58:10

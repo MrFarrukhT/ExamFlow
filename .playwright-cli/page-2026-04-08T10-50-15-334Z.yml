@@ -1,0 +1,98 @@
+- generic [ref=e1]:
+  - iframe [active] [ref=e2]:
+    - generic [ref=f1e4]:
+      - banner [ref=f1e5]:
+        - generic [ref=f1e6]:
+          - generic [ref=f1e7]:
+            - img "header.logo"
+          - generic [ref=f1e8]:
+            - generic [ref=f1e9]:
+              - generic [ref=f1e10]:
+                - status [ref=f1e11]: Connected
+                - generic [ref=f1e13]: 
+              - button "Messages" [ref=f1e14]:
+                - generic [ref=f1e15]:
+                  - generic [ref=f1e16]: Messages
+                  - generic [ref=f1e17]: 
+              - button "Options" [ref=f1e18]:
+                - generic [ref=f1e19]:
+                  - generic [ref=f1e20]: Options
+                  - generic [ref=f1e21]: 
+              - button "Show notes" [ref=f1e22]:
+                - generic [ref=f1e23]:
+                  - generic [ref=f1e24]: Show notes
+                  - generic [ref=f1e25]: 
+            - generic [ref=f1e28]:
+              - generic [ref=f1e29]: Candidate ID
+              - generic [ref=f1e30]: STU001
+      - generic [ref=f1e34]:
+        - generic [ref=f1e36]:
+          - heading "Question 31" [level=3] [ref=f1e37]
+          - generic [ref=f1e38]: Write 25 words or more.
+        - main [ref=f1e40]:
+          - generic [ref=f1e41]:
+            - group [ref=f1e42]:
+              - generic [ref=f1e46]:
+                - generic [ref=f1e47]:
+                  - paragraph [ref=f1e48]: You want to go shopping with your English friend, Sam, on Saturday.
+                  - paragraph [ref=f1e49]: Write an email to Sam.
+                  - paragraph [ref=f1e50]: "In your email:"
+                  - list [ref=f1e51]:
+                    - listitem [ref=f1e52]: suggest a time to meet
+                    - listitem [ref=f1e53]: say where you want to go
+                    - listitem [ref=f1e54]: tell Sam what you want to buy
+                - generic [ref=f1e58]:
+                  - textbox "You are currently on the text editor. The text will be saved automatically" [ref=f1e59]
+                  - generic [ref=f1e61]: "Words: 0"
+            - generic [ref=f1e63]: 
+      - contentinfo [ref=f1e65]:
+        - navigation "Previous / next question" [ref=f1e66]:
+          - button "Previous" [ref=f1e67]:
+            - generic [ref=f1e68]: 
+          - button "Next" [ref=f1e69]:
+            - generic [ref=f1e70]: 
+        - navigation "Questions" [ref=f1e71]:
+          - tablist [ref=f1e72]:
+            - tab "Part 1. 0 of 6 questions attempted." [ref=f1e73]:
+              - generic [ref=f1e74]:
+                - text: Part 1
+                - generic [ref=f1e75]: 0 of 6
+                - generic [ref=f1e76]: Part 1. 0 of 6 questions attempted.
+          - tablist [ref=f1e77]:
+            - tab "Part 2. 0 of 7 questions attempted." [ref=f1e78]:
+              - generic [ref=f1e79]:
+                - text: Part 2
+                - generic [ref=f1e80]: 0 of 7
+                - generic [ref=f1e81]: Part 2. 0 of 7 questions attempted.
+          - tablist [ref=f1e82]:
+            - tab "Part 3. 0 of 5 questions attempted." [ref=f1e83]:
+              - generic [ref=f1e84]:
+                - text: Part 3
+                - generic [ref=f1e85]: 0 of 5
+                - generic [ref=f1e86]: Part 3. 0 of 5 questions attempted.
+          - tablist [ref=f1e87]:
+            - tab "Part 4. 0 of 6 questions attempted." [ref=f1e88]:
+              - generic [ref=f1e89]:
+                - text: Part 4
+                - generic [ref=f1e90]: 0 of 6
+                - generic [ref=f1e91]: Part 4. 0 of 6 questions attempted.
+          - tablist [ref=f1e92]:
+            - tab "Part 5. 0 of 6 questions attempted." [ref=f1e93]:
+              - generic [ref=f1e94]:
+                - text: Part 5
+                - generic [ref=f1e95]: 0 of 6
+                - generic [ref=f1e96]: Part 5. 0 of 6 questions attempted.
+          - tablist [ref=f1e97]:
+            - tab [ref=f1e98]:
+              - generic [ref=f1e99]:
+                - text: Part 6
+                - generic [ref=f1e100]: 0 of 1
+          - tablist [ref=f1e101]:
+            - tab "Part 7. 0 of 1 questions attempted." [ref=f1e102]:
+              - generic [ref=f1e103]:
+                - text: Part 7
+                - generic [ref=f1e104]: 0 of 1
+                - generic [ref=f1e105]: Part 7. 0 of 1 questions attempted.
+          - button "Review your answers" [ref=f1e106]:
+            - generic [ref=f1e107]: 
+  - generic [ref=e5]: 58:01

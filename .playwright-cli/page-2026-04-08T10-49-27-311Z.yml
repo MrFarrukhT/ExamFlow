@@ -1,0 +1,244 @@
+- generic [ref=e1]:
+  - iframe [active] [ref=e2]:
+    - generic [ref=f1e4]:
+      - banner [ref=f1e5]:
+        - generic [ref=f1e6]:
+          - generic [ref=f1e7]:
+            - img "header.logo"
+          - generic [ref=f1e8]:
+            - generic [ref=f1e9]:
+              - generic [ref=f1e10]:
+                - status [ref=f1e11]: Connected
+                - generic [ref=f1e13]: 
+              - button "Messages" [ref=f1e14]:
+                - generic [ref=f1e15]:
+                  - generic [ref=f1e16]: Messages
+                  - generic [ref=f1e17]: 
+              - button "Options" [ref=f1e18]:
+                - generic [ref=f1e19]:
+                  - generic [ref=f1e20]: Options
+                  - generic [ref=f1e21]: 
+              - button "Show notes" [ref=f1e22]:
+                - generic [ref=f1e23]:
+                  - generic [ref=f1e24]: Show notes
+                  - generic [ref=f1e25]: 
+            - generic [ref=f1e28]:
+              - generic [ref=f1e29]: Candidate ID
+              - generic [ref=f1e30]: STU001
+      - generic [ref=f1e32]:
+        - generic [ref=f1e34]:
+          - heading "Questions 7–13" [level=3] [ref=f1e35]
+          - generic [ref=f1e36]: For each question, choose the correct answer.
+        - generic [ref=f1e37]:
+          - region [ref=f1e38]:
+            - generic [ref=f1e39]: Stimulus for Questions 7–13
+            - generic [ref=f1e45]:
+              - heading "Young blog writers" [level=2] [ref=f1e46]
+              - paragraph [ref=f1e47]:
+                - strong [ref=f1e48]: Tasha
+              - paragraph [ref=f1e49]: Last year I wrote for my college magazine, which I found really difficult, but I don’t think it’s hard to write a good blog. Mine is about things from daily life that make me laugh. My older brother also has a blog, but we’re writing about different subjects. We don’t discuss what we’re planning, but we read each other’s blogs sometimes. I like giving advice to people who write in asking for it – it’s good to know I’ve helped.
+              - paragraph [ref=f1e50]:
+                - strong [ref=f1e51]: Danni
+              - paragraph [ref=f1e52]: I started writing my popular film blog because I love movies. I like it when readers send me articles by email about a film they’ve seen, and I put these on my blog for everyone to read. I’m still at college, so I’m careful about spending too long on my blog, which is difficult as writing well takes time. I don’t think I’ll write it for much longer. I’m busy, and it’s time to do something new.
+              - paragraph [ref=f1e53]:
+                - strong [ref=f1e54]: Chrissie
+              - paragraph [ref=f1e55]: I began writing on a school magazine. I stopped after a few years, but I missed it, so I started my own – I’m still writing it now! The blog’s new for me, and I write about daily life. I get ideas from friends or my sister when I can’t decide what to write about – we always think of something interesting, sad or serious. At first, almost nobody visited my site, but now more do, I’ve had some lovely comments.
+          - separator [ref=f1e58]:
+            - generic [ref=f1e59]: 
+          - region [ref=f1e60]:
+            - generic [ref=f1e61]: Questions 7–13
+            - main [ref=f1e63]:
+              - generic [ref=f1e64]:
+                - group [ref=f1e65]:
+                  - generic [ref=f1e69]:
+                    - radiogroup "7 Who writes both a magazine and a blog?" [ref=f1e71]:
+                      - paragraph [ref=f1e73]:
+                        - generic [ref=f1e74]: "7"
+                        - strong [ref=f1e76]: Who writes both a magazine and a blog?
+                      - list [ref=f1e77]:
+                        - listitem [ref=f1e78]:
+                          - radio "Tasha" [ref=f1e79]
+                          - generic [ref=f1e81]: Tasha
+                        - listitem [ref=f1e82]:
+                          - radio "Danni" [ref=f1e83]
+                          - generic [ref=f1e85]: Danni
+                        - listitem [ref=f1e86]:
+                          - radio "Chrissie" [ref=f1e87]
+                          - generic [ref=f1e89]: Chrissie
+                      - button "Flag question 7":
+                        - generic [ref=f1e90]: Flag question 7
+                    - radiogroup "8 Who says that studying and writing a blog at the same time can be hard?" [ref=f1e92]:
+                      - paragraph [ref=f1e94]:
+                        - generic [ref=f1e95]: "8"
+                        - strong [ref=f1e97]: Who says that studying and writing a blog at the same time can be hard?
+                      - list [ref=f1e98]:
+                        - listitem [ref=f1e99]:
+                          - radio "Tasha" [ref=f1e100]
+                          - generic [ref=f1e102]: Tasha
+                        - listitem [ref=f1e103]:
+                          - radio "Danni" [ref=f1e104]
+                          - generic [ref=f1e106]: Danni
+                        - listitem [ref=f1e107]:
+                          - radio "Chrissie" [ref=f1e108]
+                          - generic [ref=f1e110]: Chrissie
+                      - button "Flag question 8":
+                        - generic [ref=f1e111]: Flag question 8
+                    - radiogroup "9 Who answers questions from other people who read her blog?" [ref=f1e113]:
+                      - paragraph [ref=f1e115]:
+                        - generic [ref=f1e116]: "9"
+                        - strong [ref=f1e118]: Who answers questions from other people who read her blog?
+                      - list [ref=f1e119]:
+                        - listitem [ref=f1e120]:
+                          - radio "Tasha" [ref=f1e121]
+                          - generic [ref=f1e123]: Tasha
+                        - listitem [ref=f1e124]:
+                          - radio "Danni" [ref=f1e125]
+                          - generic [ref=f1e127]: Danni
+                        - listitem [ref=f1e128]:
+                          - radio "Chrissie" [ref=f1e129]
+                          - generic [ref=f1e131]: Chrissie
+                      - button "Flag question 9":
+                        - generic [ref=f1e132]: Flag question 9
+                    - radiogroup "10 Who plans to stop writing her blog soon?" [ref=f1e134]:
+                      - paragraph [ref=f1e136]:
+                        - generic [ref=f1e137]: "10"
+                        - strong [ref=f1e139]: Who plans to stop writing her blog soon?
+                      - list [ref=f1e140]:
+                        - listitem [ref=f1e141]:
+                          - radio "Tasha" [ref=f1e142]
+                          - generic [ref=f1e144]: Tasha
+                        - listitem [ref=f1e145]:
+                          - radio "Danni" [ref=f1e146]
+                          - generic [ref=f1e148]: Danni
+                        - listitem [ref=f1e149]:
+                          - radio "Chrissie" [ref=f1e150]
+                          - generic [ref=f1e152]: Chrissie
+                      - button "Flag question 10":
+                        - generic [ref=f1e153]: Flag question 10
+                    - radiogroup "11 Who didn’t have many people reading her blog in the beginning?" [ref=f1e155]:
+                      - paragraph [ref=f1e157]:
+                        - generic [ref=f1e158]: "11"
+                        - strong [ref=f1e160]: Who didn’t have many people reading her blog in the beginning?
+                      - list [ref=f1e161]:
+                        - listitem [ref=f1e162]:
+                          - radio "Tasha" [ref=f1e163]
+                          - generic [ref=f1e165]: Tasha
+                        - listitem [ref=f1e166]:
+                          - radio "Danni" [ref=f1e167]
+                          - generic [ref=f1e169]: Danni
+                        - listitem [ref=f1e170]:
+                          - radio "Chrissie" [ref=f1e171]
+                          - generic [ref=f1e173]: Chrissie
+                      - button "Flag question 11":
+                        - generic [ref=f1e174]: Flag question 11
+                    - radiogroup "12 Who asks a member of her family to help her write her blog?" [ref=f1e176]:
+                      - paragraph [ref=f1e178]:
+                        - generic [ref=f1e179]: "12"
+                        - strong [ref=f1e181]: Who asks a member of her family to help her write her blog?
+                      - list [ref=f1e182]:
+                        - listitem [ref=f1e183]:
+                          - radio "Tasha" [ref=f1e184]
+                          - generic [ref=f1e186]: Tasha
+                        - listitem [ref=f1e187]:
+                          - radio "Danni" [ref=f1e188]
+                          - generic [ref=f1e190]: Danni
+                        - listitem [ref=f1e191]:
+                          - radio "Chrissie" [ref=f1e192]
+                          - generic [ref=f1e194]: Chrissie
+                      - button "Flag question 12":
+                        - generic [ref=f1e195]: Flag question 12
+                    - radiogroup "13 Who says writing a blog is easier than some other types of writing?" [ref=f1e197]:
+                      - paragraph [ref=f1e199]:
+                        - generic [ref=f1e200]: "13"
+                        - strong [ref=f1e202]: Who says writing a blog is easier than some other types of writing?
+                      - list [ref=f1e203]:
+                        - listitem [ref=f1e204]:
+                          - radio "Tasha" [ref=f1e205]
+                          - generic [ref=f1e207]: Tasha
+                        - listitem [ref=f1e208]:
+                          - radio "Danni" [ref=f1e209]
+                          - generic [ref=f1e211]: Danni
+                        - listitem [ref=f1e212]:
+                          - radio "Chrissie" [ref=f1e213]
+                          - generic [ref=f1e215]: Chrissie
+                - generic [ref=f1e217]:       
+      - contentinfo [ref=f1e219]:
+        - navigation "Previous / next question" [ref=f1e220]:
+          - button "Previous" [ref=f1e221]:
+            - generic [ref=f1e222]: 
+          - button "Next" [ref=f1e223]:
+            - generic [ref=f1e224]: 
+        - navigation "Questions" [ref=f1e225]:
+          - tablist [ref=f1e226]:
+            - tab "Part 1. 0 of 6 questions attempted." [ref=f1e227]:
+              - generic [ref=f1e228]:
+                - text: Part 1
+                - generic [ref=f1e229]: 0 of 6
+                - generic [ref=f1e230]: Part 1. 0 of 6 questions attempted.
+          - tablist [ref=f1e231]:
+            - tab [ref=f1e232]:
+              - generic [ref=f1e233]:
+                - text: Part 2
+                - generic [ref=f1e234]: 0 of 7
+            - generic [ref=f1e235]:
+              - button "Question 7 Not attempted Active" [ref=f1e236]:
+                - generic [ref=f1e237]: Question 7
+                - text: "7"
+                - generic [ref=f1e238]: Not attempted Active
+              - button "Question 8 Not attempted" [ref=f1e239]:
+                - generic [ref=f1e240]: Question 8
+                - text: "8"
+                - generic [ref=f1e241]: Not attempted
+              - button "Question 9 Not attempted" [ref=f1e242]:
+                - generic [ref=f1e243]: Question 9
+                - text: "9"
+                - generic [ref=f1e244]: Not attempted
+              - button "Question 10 Not attempted" [ref=f1e245]:
+                - generic [ref=f1e246]: Question 10
+                - text: "10"
+                - generic [ref=f1e247]: Not attempted
+              - button "Question 11 Not attempted" [ref=f1e248]:
+                - generic [ref=f1e249]: Question 11
+                - text: "11"
+                - generic [ref=f1e250]: Not attempted
+              - button "Question 12 Not attempted" [ref=f1e251]:
+                - generic [ref=f1e252]: Question 12
+                - text: "12"
+                - generic [ref=f1e253]: Not attempted
+              - button "Question 13 Not attempted" [ref=f1e254]:
+                - generic [ref=f1e255]: Question 13
+                - text: "13"
+                - generic [ref=f1e256]: Not attempted
+          - tablist [ref=f1e257]:
+            - tab "Part 3. 0 of 5 questions attempted." [ref=f1e258]:
+              - generic [ref=f1e259]:
+                - text: Part 3
+                - generic [ref=f1e260]: 0 of 5
+                - generic [ref=f1e261]: Part 3. 0 of 5 questions attempted.
+          - tablist [ref=f1e262]:
+            - tab "Part 4. 0 of 6 questions attempted." [ref=f1e263]:
+              - generic [ref=f1e264]:
+                - text: Part 4
+                - generic [ref=f1e265]: 0 of 6
+                - generic [ref=f1e266]: Part 4. 0 of 6 questions attempted.
+          - tablist [ref=f1e267]:
+            - tab "Part 5. 0 of 6 questions attempted." [ref=f1e268]:
+              - generic [ref=f1e269]:
+                - text: Part 5
+                - generic [ref=f1e270]: 0 of 6
+                - generic [ref=f1e271]: Part 5. 0 of 6 questions attempted.
+          - tablist [ref=f1e272]:
+            - tab "Part 6. 0 of 1 questions attempted." [ref=f1e273]:
+              - generic [ref=f1e274]:
+                - text: Part 6
+                - generic [ref=f1e275]: 0 of 1
+                - generic [ref=f1e276]: Part 6. 0 of 1 questions attempted.
+          - tablist [ref=f1e277]:
+            - tab "Part 7. 0 of 1 questions attempted." [ref=f1e278]:
+              - generic [ref=f1e279]:
+                - text: Part 7
+                - generic [ref=f1e280]: 0 of 1
+                - generic [ref=f1e281]: Part 7. 0 of 1 questions attempted.
+          - button "Review your answers" [ref=f1e282]:
+            - generic [ref=f1e283]: 
+  - generic [ref=e5]: 58:49

@@ -1,0 +1,31 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - img "Innovative Centre" [ref=e5]
+      - generic [ref=e6]:
+        - generic [ref=e7]: "Mock Test: 1"
+        - link "Invigilator" [ref=e8] [cursor=pointer]:
+          - /url: "#"
+  - main [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - heading "Welcome, Test Student" [level=1] [ref=e12]
+        - paragraph [ref=e13]: "ID: 12"
+      - generic [ref=e14]:
+        - heading "Select a Module to Begin" [level=2] [ref=e15]
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - heading "Listening" [level=3] [ref=e18]
+            - paragraph [ref=e19]: ~30 minutes
+            - generic [ref=e20]: Not Started
+            - button "Start Listening" [ref=e21] [cursor=pointer]
+          - generic [ref=e22]:
+            - heading "Reading" [level=3] [ref=e23]
+            - paragraph [ref=e24]: 60 minutes
+            - generic [ref=e25]: Not Started
+            - button "Start Reading" [ref=e26] [cursor=pointer]
+          - generic [ref=e27]:
+            - heading "Writing" [level=3] [ref=e28]
+            - paragraph [ref=e29]: 60 minutes
+            - generic [ref=e30]: Not Started
+            - button "Start Writing" [ref=e31] [cursor=pointer]

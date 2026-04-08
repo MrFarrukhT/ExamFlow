@@ -19,7 +19,7 @@ body {
 
 /* Header Styles */
 .dashboard-header {
-    background: linear-gradient(135deg, #0066cc, #0052a3);
+    background: linear-gradient(135deg, #0d9488, #0f766e);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding: 1rem 0;
     position: sticky;
@@ -143,7 +143,7 @@ body {
 /* Module Cards */
 .module-card {
     background: #f8fbff;
-    border: 2px solid #0066cc;
+    border: 2px solid #0d9488;
     border-radius: 8px;
     padding: 1.5rem 1.25rem;
     text-align: center;
@@ -155,11 +155,11 @@ body {
 
 .module-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0, 102, 204, 0.15);
+    box-shadow: 0 8px 20px rgba(13, 148, 136, 0.15);
 }
 
 .module-card.in-progress {
-    border-color: #0066cc;
+    border-color: #0d9488;
     background: #f8fbff;
 }
 
@@ -198,7 +198,7 @@ body {
 }
 
 .status-badge.in-progress {
-    background: #0066cc;
+    background: #0d9488;
     color: #ffffff;
 }
 
@@ -209,7 +209,7 @@ body {
 
 /* Module Button */
 .module-button {
-    background: linear-gradient(135deg, #0066cc, #0052a3);
+    background: linear-gradient(135deg, #0d9488, #0f766e);
     color: white;
     border: none;
     padding: 0.75rem 2rem;
@@ -223,8 +223,8 @@ body {
 }
 
 .module-button:hover:not(:disabled) {
-    background: linear-gradient(135deg, #0052a3, #003d7a);
-    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+    background: linear-gradient(135deg, #0f766e, #115e59);
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
 }
 
 .module-button:active:not(:disabled) {
@@ -323,3 +323,36 @@ body {
         font-size: 1.2rem;
     }
 }
+
+/* Entrance animations */
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.welcome-section {
+    animation: fadeSlideUp 0.5s ease-out;
+}
+
+.level-selection-section,
+.modules-section {
+    animation: fadeSlideUp 0.5s ease-out 0.1s both;
+}
+
+.level-card {
+    animation: fadeSlideUp 0.5s ease-out both;
+}
+
+.level-card:nth-child(1) { animation-delay: 0.15s; }
+.level-card:nth-child(2) { animation-delay: 0.25s; }
+.level-card:nth-child(3) { animation-delay: 0.35s; }
+.level-card:nth-child(4) { animation-delay: 0.45s; }
+
+.module-card {
+    animation: fadeSlideUp 0.5s ease-out both;
+}
+
+.module-card:nth-child(1) { animation-delay: 0.15s; }
+.module-card:nth-child(2) { animation-delay: 0.25s; }
+.module-card:nth-child(3) { animation-delay: 0.35s; }
+.module-card:nth-child(4) { animation-delay: 0.45s; }
