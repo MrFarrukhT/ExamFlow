@@ -113,7 +113,8 @@ async function handleTestCompletion() {
     if (currentModule === 'reading' || currentModule === 'listening') {
         const totalQuestions = 40;
         const answersStr = localStorage.getItem(`${currentModule}Answers`);
-        const answers = answersStr ? JSON.parse(answersStr) : {};
+        let answers = {};
+        try { answers = answersStr ? JSON.parse(answersStr) : {}; } catch (e) { /* ignore parse error */ }
         const answered = Object.values(answers).filter(v => v !== null && v !== undefined && String(v).trim() !== '').length;
         const unanswered = totalQuestions - answered;
         if (unanswered > 0) {
@@ -176,7 +177,8 @@ async function collectTestData(currentModule) {
     const endTime = new Date().toISOString();
 
     const answersString = localStorage.getItem(`${currentModule}Answers`);
-    const answers = answersString ? JSON.parse(answersString) : {};
+    let answers = {};
+    try { answers = answersString ? JSON.parse(answersString) : {}; } catch (e) { console.error('Failed to parse answers:', e); }
 
     // Calculate score if possible (for reading/listening tests)
     let score = null;

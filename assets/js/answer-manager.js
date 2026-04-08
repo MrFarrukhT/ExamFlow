@@ -2,6 +2,16 @@
 // Handles IELTS and Cambridge answer storage, history, and export
 // ADR-022: Merged from answer-manager.js + cambridge-answer-manager.js
 
+function _safeParseJSON(str, fallback) {
+    if (!str) return fallback;
+    try {
+        return JSON.parse(str);
+    } catch (e) {
+        console.error('Failed to parse stored data:', e);
+        return fallback;
+    }
+}
+
 class AnswerManager {
     constructor(examType = 'ielts') {
         this.examType = examType;
@@ -28,7 +38,7 @@ class AnswerManager {
     saveAnswer(questionNum, answer, module) {
         try {
             const storageKey = `${module}Answers`;
-            const answers = JSON.parse(localStorage.getItem(storageKey) || '{}');
+            const answers = _safeParseJSON(localStorage.getItem(storageKey), {});
             answers[questionNum] = answer;
             localStorage.setItem(storageKey, JSON.stringify(answers));
             return true;
@@ -41,7 +51,7 @@ class AnswerManager {
     getAnswer(questionNum, module) {
         try {
             const storageKey = `${module}Answers`;
-            const answers = JSON.parse(localStorage.getItem(storageKey) || '{}');
+            const answers = _safeParseJSON(localStorage.getItem(storageKey), {});
             return answers[questionNum] || '';
         } catch (error) {
             console.error('Error getting answer:', error);
@@ -76,7 +86,7 @@ class AnswerManager {
             testEntry.studentInfo.level = localStorage.getItem('cambridgeLevel') || 'Unknown';
         }
 
-        const history = JSON.parse(localStorage.getItem(this.historyKey) || '[]');
+        const history = _safeParseJSON(localStorage.getItem(this.historyKey), []);
         history.unshift(testEntry);
         if (history.length > this.maxHistoryEntries) {
             history.splice(this.maxHistoryEntries);
@@ -90,7 +100,7 @@ class AnswerManager {
     }
 
     getTestHistory() {
-        return JSON.parse(localStorage.getItem(this.historyKey) || '[]');
+        return _safeParseJSON(localStorage.getItem(this.historyKey), []);
     }
 
     // --- Module data retrieval ---
@@ -109,7 +119,7 @@ class AnswerManager {
                 status: localStorage.getItem(`${mod}Status`),
                 startTime: localStorage.getItem(`${mod}StartTime`),
                 endTime: localStorage.getItem(`${mod}EndTime`),
-                answers: JSON.parse(localStorage.getItem(`${mod}Answers`) || '{}')
+                answers: _safeParseJSON(localStorage.getItem(`${mod}Answers`), {})
             };
         }
         return modules;
@@ -130,13 +140,13 @@ class AnswerManager {
                     status: localStorage.getItem(`${p}reading-writingStatus`),
                     startTime: localStorage.getItem(`${p}reading-writingStartTime`),
                     endTime: localStorage.getItem(`${p}reading-writingEndTime`),
-                    answers: JSON.parse(localStorage.getItem(`${p}reading-writingAnswers`) || '{}')
+                    answers: _safeParseJSON(localStorage.getItem(`${p}reading-writingAnswers`), {})
                 },
                 listening: {
                     status: localStorage.getItem(`${p}listeningStatus`),
                     startTime: localStorage.getItem(`${p}listeningStartTime`),
                     endTime: localStorage.getItem(`${p}listeningEndTime`),
-                    answers: JSON.parse(localStorage.getItem(`${p}listeningAnswers`) || '{}')
+                    answers: _safeParseJSON(localStorage.getItem(`${p}listeningAnswers`), {})
                 }
             };
         }
@@ -146,19 +156,19 @@ class AnswerManager {
                 status: localStorage.getItem(`${p}readingStatus`),
                 startTime: localStorage.getItem(`${p}readingStartTime`),
                 endTime: localStorage.getItem(`${p}readingEndTime`),
-                answers: JSON.parse(localStorage.getItem(`${p}readingAnswers`) || '{}')
+                answers: _safeParseJSON(localStorage.getItem(`${p}readingAnswers`), {})
             },
             writing: {
                 status: localStorage.getItem(`${p}writingStatus`),
                 startTime: localStorage.getItem(`${p}writingStartTime`),
                 endTime: localStorage.getItem(`${p}writingEndTime`),
-                answers: JSON.parse(localStorage.getItem(`${p}writingAnswers`) || '{}')
+                answers: _safeParseJSON(localStorage.getItem(`${p}writingAnswers`), {})
             },
             listening: {
                 status: localStorage.getItem(`${p}listeningStatus`),
                 startTime: localStorage.getItem(`${p}listeningStartTime`),
                 endTime: localStorage.getItem(`${p}listeningEndTime`),
-                answers: JSON.parse(localStorage.getItem(`${p}listeningAnswers`) || '{}')
+                answers: _safeParseJSON(localStorage.getItem(`${p}listeningAnswers`), {})
             }
         };
     }

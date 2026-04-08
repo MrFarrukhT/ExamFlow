@@ -144,8 +144,10 @@
                 const banner = document.getElementById('completionBanner');
                 banner.style.display = 'block';
 
-                // Build summary
-                const summaryLines = modules.map(m => {
+                // Build summary using DOM APIs (avoid innerHTML)
+                const summaryEl = document.getElementById('completionSummary');
+                summaryEl.textContent = '';
+                modules.forEach(m => {
                     const start = localStorage.getItem(`${m}StartTime`);
                     const end = localStorage.getItem(`${m}EndTime`);
                     const label = m.charAt(0).toUpperCase() + m.slice(1);
@@ -154,9 +156,15 @@
                         const mins = Math.round((new Date(end) - new Date(start)) / 60000);
                         duration = ` (${mins} min)`;
                     }
-                    return `<div class="summary-item"><span class="summary-check">&#10003;</span> ${label}${duration}</div>`;
+                    const item = document.createElement('div');
+                    item.className = 'summary-item';
+                    const check = document.createElement('span');
+                    check.className = 'summary-check';
+                    check.textContent = '\u2713';
+                    item.appendChild(check);
+                    item.appendChild(document.createTextNode(' ' + label + duration));
+                    summaryEl.appendChild(item);
                 });
-                document.getElementById('completionSummary').innerHTML = summaryLines.join('');
 
                 // Update section title
                 document.querySelector('.section-title').textContent = 'All Modules Completed';
