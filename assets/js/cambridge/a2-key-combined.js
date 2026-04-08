@@ -29,7 +29,7 @@
 
   function countAttempted(range){
     try{
-      var raw = localStorage.getItem('reading-writingAnswers');
+      var raw = localStorage.getItem('cambridge-reading-writingAnswers');
       var obj = raw ? JSON.parse(raw) : {};
       var n = 0; Object.keys(obj).forEach(function(k){ var q=parseInt(k,10); if(!isNaN(q) && q>=range.min && q<=range.max && obj[k]) n++; });
       return n;

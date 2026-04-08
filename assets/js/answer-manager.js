@@ -498,7 +498,7 @@ class AnswerManager {
 }
 
 // Auto-detect exam type from localStorage and create global instance
-const _detectedExamType = localStorage.getItem('examType') === 'cambridge' ? 'cambridge' : 'ielts';
+const _detectedExamType = (localStorage.getItem('examType') || '').toLowerCase() === 'cambridge' ? 'cambridge' : 'ielts';
 window.answerManager = new AnswerManager(_detectedExamType);
 // Backward compatibility: Cambridge code references window.cambridgeAnswerManager
 if (_detectedExamType === 'cambridge') {
