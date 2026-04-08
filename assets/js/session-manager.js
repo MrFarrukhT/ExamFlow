@@ -108,7 +108,20 @@ async function handleTestCompletion() {
     const examType = localStorage.getItem('examType');
     const dashboardPath = examType === 'Cambridge' ? '../../dashboard-cambridge.html' : '../../student-dashboard.html';
 
-    if (confirm('Are you sure you want to submit this section? You will not be able to return to it.')) {
+    // Count unanswered questions for a more informative confirmation
+    let confirmMsg = 'Are you sure you want to submit this section? You will not be able to return to it.';
+    if (currentModule === 'reading' || currentModule === 'listening') {
+        const totalQuestions = 40;
+        const answersStr = localStorage.getItem(`${currentModule}Answers`);
+        const answers = answersStr ? JSON.parse(answersStr) : {};
+        const answered = Object.values(answers).filter(v => v !== null && v !== undefined && String(v).trim() !== '').length;
+        const unanswered = totalQuestions - answered;
+        if (unanswered > 0) {
+            confirmMsg = `You have ${unanswered} unanswered question${unanswered > 1 ? 's' : ''} out of ${totalQuestions}.\n\nAre you sure you want to submit? You will not be able to return to this section.`;
+        }
+    }
+
+    if (confirm(confirmMsg)) {
         // Stop periodic saves and mark submission in progress to prevent race conditions
         _isSubmitting = true;
         if (_periodicSaveIntervalId) {

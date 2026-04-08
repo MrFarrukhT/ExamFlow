@@ -31,10 +31,18 @@
             <div class="container">
                 <!-- Welcome Section -->
                 <div class="welcome-section">
-                    <h1 id="welcomeText" class="welcome-title">Welcome, f a</h1>
-                    <p id="studentDetails" class="student-id">ID: 21</p>
+                    <h1 id="welcomeText" class="welcome-title">Welcome</h1>
+                    <p id="studentDetails" class="student-id"></p>
                 </div>
                 
+                <!-- Completion Banner (hidden by default, shown when all modules done) -->
+                <div id="completionBanner" class="completion-banner" style="display: none;">
+                    <div class="completion-icon">&#10003;</div>
+                    <h2 class="completion-title">All Sections Complete</h2>
+                    <p class="completion-message">You have finished all test modules. Please remain seated and wait for your invigilator's instructions.</p>
+                    <div class="completion-summary" id="completionSummary"></div>
+                </div>
+
                 <!-- Modules Section -->
                 <div class="modules-section">
                     <h2 class="section-title">Select a Module to Begin</h2>
@@ -126,9 +134,33 @@
         }
 
         function updateUI() {
-            const completed = ['listening', 'reading', 'writing'].filter(module => 
+            const modules = ['listening', 'reading', 'writing'];
+            const completed = modules.filter(module =>
                 localStorage.getItem(`${module}Status`) === 'completed'
             ).length;
+
+            // Show completion banner when all modules are done
+            if (completed === modules.length) {
+                const banner = document.getElementById('completionBanner');
+                banner.style.display = 'block';
+
+                // Build summary
+                const summaryLines = modules.map(m => {
+                    const start = localStorage.getItem(`${m}StartTime`);
+                    const end = localStorage.getItem(`${m}EndTime`);
+                    const label = m.charAt(0).toUpperCase() + m.slice(1);
+                    let duration = '';
+                    if (start && end) {
+                        const mins = Math.round((new Date(end) - new Date(start)) / 60000);
+                        duration = ` (${mins} min)`;
+                    }
+                    return `<div class="summary-item"><span class="summary-check">&#10003;</span> ${label}${duration}</div>`;
+                });
+                document.getElementById('completionSummary').innerHTML = summaryLines.join('');
+
+                // Update section title
+                document.querySelector('.section-title').textContent = 'All Modules Completed';
+            }
         }
 
         // Module button handlers
