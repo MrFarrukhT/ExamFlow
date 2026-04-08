@@ -1,7 +1,122 @@
 {
   "version": 1,
-  "lastRunAt": null,
-  "lastRunCommit": null,
-  "runs": [],
-  "findings": []
+  "lastRunAt": "2026-04-08T09:15:00Z",
+  "lastRunCommit": "0a63654",
+  "runs": [
+    {
+      "id": "heal-2026-04-08-r1",
+      "type": "heal",
+      "startedAt": "2026-04-08T09:10:00Z",
+      "domains": ["security", "api", "database", "architecture", "frontend"],
+      "round": 1,
+      "fixed": 5,
+      "reverted": 0,
+      "deferred": 7
+    }
+  ],
+  "findings": [
+    {
+      "fingerprint": "security:cambridge-database-server.js:sql-missing-param",
+      "severity": "CRITICAL",
+      "title": "SQL injection — missing parameter binding in search query",
+      "file": "cambridge-database-server.js",
+      "status": "fixed",
+      "fixedInCommit": "0a63654",
+      "foundAt": "2026-04-08T09:10:00Z"
+    },
+    {
+      "fingerprint": "security:cambridge-admin-dashboard.html:xss-student-name",
+      "severity": "CRITICAL",
+      "title": "Stored XSS via unsanitized student_name/student_id in innerHTML",
+      "file": "cambridge-admin-dashboard.html",
+      "status": "fixed",
+      "fixedInCommit": "0a63654",
+      "foundAt": "2026-04-08T09:10:00Z"
+    },
+    {
+      "fingerprint": "security:ielts-admin-dashboard.html:xss-student-data",
+      "severity": "CRITICAL",
+      "title": "Stored XSS via unsanitized student_name/student_id in innerHTML",
+      "file": "ielts-admin-dashboard.html",
+      "status": "fixed",
+      "fixedInCommit": "0a63654",
+      "foundAt": "2026-04-08T09:10:00Z"
+    },
+    {
+      "fingerprint": "frontend:listening.js:results-table-xss",
+      "severity": "CRITICAL",
+      "title": "XSS via unsanitized userAnswer/correctAnswer in results table innerHTML",
+      "file": "assets/js/listening/listening.js",
+      "status": "fixed",
+      "fixedInCommit": "0a63654",
+      "foundAt": "2026-04-08T09:10:00Z"
+    },
+    {
+      "fingerprint": "frontend:cambridge-bridge.js:notes-xss",
+      "severity": "CRITICAL",
+      "title": "XSS via unsanitized note data in notes sidebar innerHTML",
+      "file": "assets/js/cambridge/cambridge-bridge.js",
+      "status": "fixed",
+      "fixedInCommit": "0a63654",
+      "foundAt": "2026-04-08T09:10:00Z"
+    },
+    {
+      "fingerprint": "security:ielts-admin-dashboard.html:eval-remote-script",
+      "severity": "CRITICAL",
+      "title": "eval() with dynamically loaded script content",
+      "file": "ielts-admin-dashboard.html",
+      "status": "open",
+      "foundAt": "2026-04-08T09:10:00Z"
+    },
+    {
+      "fingerprint": "frontend:core.js:passage-highlight-xss",
+      "severity": "CRITICAL",
+      "title": "XSS via unsanitized data in passage highlighting innerHTML",
+      "file": "assets/js/core.js",
+      "status": "open",
+      "foundAt": "2026-04-08T09:10:00Z"
+    },
+    {
+      "fingerprint": "security:index.html:hardcoded-password",
+      "severity": "CRITICAL",
+      "title": "Hardcoded invigilator password in client-side code",
+      "file": "index.html",
+      "status": "open",
+      "note": "Needs architecture — requires server-side auth",
+      "foundAt": "2026-04-08T09:10:00Z"
+    },
+    {
+      "fingerprint": "security:cambridge-launcher.html:hardcoded-password",
+      "severity": "CRITICAL",
+      "title": "Same hardcoded password in Cambridge launcher",
+      "file": "Cambridge/launcher-cambridge.html",
+      "status": "open",
+      "note": "Needs architecture — requires server-side auth",
+      "foundAt": "2026-04-08T09:10:00Z"
+    },
+    {
+      "fingerprint": "api:local-database-server.js:post-submissions-error-handling",
+      "severity": "HIGH",
+      "title": "POST /submissions returns success:true on error",
+      "file": "local-database-server.js",
+      "status": "open",
+      "foundAt": "2026-04-08T09:10:00Z"
+    },
+    {
+      "fingerprint": "database:local-database-server:n-plus-one-mock-answers",
+      "severity": "HIGH",
+      "title": "N+1 query pattern in mock answers insertion",
+      "file": "local-database-server.js",
+      "status": "open",
+      "foundAt": "2026-04-08T09:10:00Z"
+    },
+    {
+      "fingerprint": "architecture:universal-functions:unreachable-init",
+      "severity": "MEDIUM",
+      "title": "Unreachable DOMContentLoaded handler in universal-functions.js",
+      "file": "assets/js/universal-functions.js",
+      "status": "open",
+      "foundAt": "2026-04-08T09:10:00Z"
+    }
+  ]
 }
