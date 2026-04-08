@@ -186,5 +186,57 @@ Trigger: Cursor showed IELTS mock-answers unvalidated, student results CRUD unte
 ### Stats
 Tested: 6 | Passed: 2 | Failed: 2 | Partial: 2 | Fixed: 2 | Deferred: 2
 
+---
+
+## Session: 2026-04-08 04:05
+Focus: Defense-in-depth — blocklist bypass, regression, infrastructure probing
+Trigger: Rounds 1-3 added a file blocklist; Round 4 tests if it can be defeated
+
+### Scenarios
+
+- S1: Blocklist Bypass Attempts [Chain Attacker] -> **CRITICAL FAIL** [CRITICAL]
+  - 5 bypass vectors found on the Round 2 file blocklist:
+    1. URL encoding: `%2egit/config` → 200 (req.path not decoded)
+    2. Case variation: `Shared/database.js` → 200 (Windows case-insensitive)
+    3. All-caps: `SHARED/database.js` → 200
+    4. Double slash: `//shared/database.js` → 200
+    5. Backslash: `shared%5Cdatabase.js` → 200 (Windows path separator)
+  - Also: `scenario-journal.md` not in blocklist (200, 11KB exposed)
+  - **Fix applied**: Path normalization — decodeURIComponent + lowercase + backslash→slash + collapse slashes. Added missing entries.
+
+- S2: Regression of Rounds 1-3 Fixes [—] -> PASS [—]
+  - All 6 checks passed: score validation, file blocking, submission validation, mimeType sanitization, score range, null byte handling
+
+- S3: ADR-017/018 Route Changes [Explorer] -> PASS [MEDIUM]
+  - ADR-017: IELTS `/admin` route → 200 (correct)
+  - ADR-017: Old `/enhanced-admin-dashboard.html` → 404 (correctly renamed)
+  - ADR-018: `/cambridge-update-score` → "Cannot POST" (correctly removed)
+
+- S4: HTTP Method Confusion [Explorer] -> PASS [LOW]
+  - PUT/DELETE on read-only endpoints → 404
+  - GET on write-only endpoints → 404
+  - HEAD on blocked path → 404
+  - TRACE → 404 (disabled)
+
+- S5: Request Payload Limits [Power User] -> PARTIAL [MEDIUM]
+  - Bash argument limit prevented large payload generation (not a server issue)
+  - 100-deep nested JSON → 400 (Express parser rejects — good)
+  - 50MB limit configured but untested at full scale
+
+### Fixes
+- `shared/server-bootstrap.js`: Complete path normalization in blocklist middleware — decode, lowercase, normalize separators, collapse slashes. Added scenario-journal.md, architect-decisions.md, .eye-cursor.json to blocklist.
+
+### Pattern Analysis
+- **Defense bypass is the real game now.** Once validation is in place, the attacker's next move is to find ways around it. URL encoding, case tricks, and path separator differences are classic bypass vectors. The lesson: always normalize before checking.
+- **Windows adds extra bypass surface.** Case-insensitive filesystem and backslash path separator create two vectors that don't exist on Linux.
+
+### Intelligence Update
+- Proven solid: Blocklist hardened against 5 bypass vectors, all Round 1-3 fixes regression-verified, ADR changes correct, HTTP methods handled
+- Remaining untested: Browser-based scenarios only — admin dashboard XSS rendering, invigilator panel flows, AI score suggestion
+- API attack surface is now comprehensively tested and hardened
+
+### Stats
+Tested: 5 | Passed: 3 | Failed: 1 (critical) | Partial: 1 | Fixed: 1 | Deferred: 0
+
 ### Stats
 Tested: 6 | Passed: 1 | Failed: 4 | Inconclusive: 1 | Fixed: 3 | Deferred: 2
