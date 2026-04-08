@@ -1,5 +1,78 @@
 # Autopilot Journal
 
+## Session: 2026-04-09 10:30
+Persona: Cheater round 4 (audit C1-Advanced/Olympiada attack surface from sessions 24-26)
+System: Cambridge
+
+### Phase 1: Journey Map
+- Sessions 24-26 added significant new code (C1-Advanced wrappers, Part stubs,
+  Olympiada exam type, examType pipeline, admin filters). All untested for security.
+- Threat model: a technically-skilled student trying to inject XSS, escalate via
+  postMessage, tamper with localStorage to forge state, or bypass server validation.
+
+### Phase 2: Creation
+- No new features — security audit only
+
+### Phase 3: Structure
+- Skipped — sound
+
+### Phase 4: Heal — CRITICAL postMessage URL injection
+**ALL 11 Cambridge listening.html wrappers** had this vulnerable handler:
+```js
+if (e.data.type === 'navigate') {
+    partFrame.src = e.data.url;  // ← unvalidated
+}
+```
+
+The same-origin check blocks cross-origin senders, but Part files ARE same-origin
+so any same-origin script could navigate the iframe to:
+- `javascript:alert(document.cookie)` (XSS)
+- `data:text/html,<script>...</script>` (arbitrary execution)
+- `https://attacker.com/phish` (open redirect)
+- `../../../etc/passwd` (traversal)
+
+Fix: added `isAllowedPartUrl()` whitelist function in each wrapper that requires:
+- relative path (no colon → no scheme)
+- no ".." (no traversal)
+- matches `/^\.\/(Listening )?Part \d+\.html$/`
+
+10/10 unit-test cases pass via standalone node script before deployment.
+
+Bonus: c1-test.js submitTest() — added cambridgeAnswerManager.submitTestToDatabase()
+defensive call. Made async + button-disable to prevent double-submit.
+
+Note: My initial assumption that `c1-test.js submitTest()` was the active C1 submit
+path was wrong. The actual C1 Reading Part files use the B2-First-style deliver
+button architecture (separate from c1-test.js buildNav). The defensive fix to
+c1-test.js still matters because window.C1Test is a public API and future Part
+files may use buildNav with isLast:true.
+
+Committed as 4557887 (12 files, +161/-3 lines).
+
+### Phase 5: Experience
+- Skipped — no server running
+
+### Phase 6: Scenario
+- Standalone node test of isAllowedPartUrl with 10 cases:
+  - 4 legitimate URLs allowed (./Listening Part 1-4.html, ./Part 1-8.html)
+  - 6 attack vectors blocked (javascript:, data:, traversal, external, query string injection)
+- All tests passed before deploying the whitelist
+
+### Session Stats
+Total commits: 1 (4557887)
+Total files changed: 12 (11 listening wrappers + c1-test.js)
++161/-3 lines
+Persona journey coverage: All 11 Cambridge listening wrappers + the C1Test public API
+
+### Why this matters
+This vulnerability existed BEFORE the C1-Advanced launch — all Cambridge listening
+tests had it. The Olympiada launch made it more exploitable because more code
+paths now flow through these wrappers. Catching it during the post-launch cheater
+pass (rather than waiting for an exploit in the wild) is exactly the value of
+the autopilot loop.
+
+---
+
 ## Session: 2026-04-09 10:00
 Persona: Olympiada post-submission (student results + admin filtering)
 System: Cambridge
