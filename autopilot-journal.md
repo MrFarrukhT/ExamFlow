@@ -1,5 +1,75 @@
 # Autopilot Journal
 
+## Session: 2026-04-09 12:30
+Persona: Cheater round 7 — Cambridge score tampering parity fix
+System: Cambridge
+
+### Phase 1: Journey Map
+- Session 30 fixed IELTS client-side scoring trust. Same vulnerability
+  class likely exists on Cambridge — verify and patch.
+
+### Phase 2: Creation
+- No new features — security parity fix only
+
+### Phase 3: Structure
+- Skipped — sound
+
+### Phase 4: Heal
+**Cambridge scoring model is different from IELTS**:
+- IELTS: client computes score from window.correctAnswers, sends in body,
+  server stores as-is (session 30 fixed by recomputing server-side)
+- Cambridge: tests are admin-graded via /update-score. Client sends
+  score: null and admin sets it later via the admin dashboard
+
+But a malicious client could intercept the POST and inject `score: 100`
+into the body. The validateScoreAndGrade helper allows 0-200, so it
+would pass validation even though A1 Movers maxes at 35 and B2 First
+maxes at ~32 R + 25 L.
+
+**Fix in POST /cambridge-submissions**:
+- If submissionData.score or .grade are non-null on a STUDENT submission,
+  treat it as tampering:
+  - Log a `🚨 SCORE TAMPERING DETECTED` warn with student id + claimed
+    values
+  - Add `scoreTamper: true`, `clientScore`, `clientGrade` to antiCheat
+    metadata (carries through session 22's anti-cheat pipeline to
+    invigilator + admin views)
+  - Force both fields to null before calling insertCambridgeSubmission
+
+The /update-score admin endpoint still works normally — admins can grade
+legitimately because that endpoint requires admin auth (session 5 fix).
+
+Speaking endpoint (/submit-speaking) is already safe by design — it
+doesn't accept score in its destructured req.body.
+
+Committed as fd7b8f9.
+
+### Phase 5: Experience
+- Skipped — no server running
+
+### Phase 6: Scenario
+- Verified by code review:
+  - The check fires only on non-null score/grade (legitimate null submissions
+    pass through unchanged)
+  - antiCheat metadata pipeline (session 22) carries the new flag through
+    to the invigilator + admin display layers
+  - validateScoreAndGrade still runs after the force-null for safety
+
+### Session Stats
+Total commits: 1 (fd7b8f9)
+Total files changed: 1 (cambridge-database-server.js, +16/-1 lines)
+Persona journey coverage: Cambridge submission scoring path
+
+### Symmetry note
+Sessions 30+31 together close the score-tampering vector across BOTH
+exam systems:
+- IELTS: server recomputes from mock_answers (session 30)
+- Cambridge: server forces null + flags tamper attempt (session 31)
+Both flag tampering via the same anti_cheat_data column from session 22,
+so invigilators see consistent enforcement across both systems.
+
+---
+
 ## Session: 2026-04-09 12:00
 Persona: Cheater round 6 — IELTS server-side score recomputation
 System: IELTS
