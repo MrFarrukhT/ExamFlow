@@ -418,3 +418,67 @@ Elevations landed: 4
 Reverted: 0
 Fixes landed: 1
 Changes shipped: 20
+
+---
+
+## Session: 2026-04-08 (A1 Movers deep dive)
+Persona: Student taking A1 Movers test
+System: Cambridge (localhost:3003)
+Pages explored: reading-writing.html, Part 1-6.html, speaking.html, listening.html
+Starting state: Functional test pages but several wrong labels, inconsistent save behavior, no visual answer feedback
+
+### Round 1
+**Explored:** 8 pages (all A1 Movers test files), 7 findings
+**Action:** FIX 3 bugs + POLISH 2 changes + ELEVATE 1 enhancement
+
+- [T1] speaking.html — Title and heading said "Cambridge A2 Key" instead of "Cambridge A1 Movers"
+  Mode: fix (bug)
+  Quality layer: 1-Functional → 3-Efficient
+  Files: Cambridge/MOCKs-Cambridge/A1-Movers/speaking.html
+
+- [T3] reading-writing.html — Default level fallback was 'A2-Key' instead of 'A1-Movers' (wrong timer duration)
+  Mode: fix (bug)
+  Quality layer: 2-Clear → 3-Efficient
+  Files: Cambridge/MOCKs-Cambridge/A1-Movers/reading-writing.html
+
+- [T3] Part 1.html — Answer inputs only saved on 'change' event, not 'input' (data loss risk mid-typing)
+  Mode: fix (bug)
+  Files: Cambridge/MOCKs-Cambridge/A1-Movers/Part 1.html
+
+- [T3] Part 5.html — Same issue: answer inputs only saved on 'change', not 'input'
+  Mode: polish
+  Files: Cambridge/MOCKs-Cambridge/A1-Movers/Part 5.html
+
+- [T0] a1-movers-answer-sync.js — Added 'input' event listener for real-time footer counter updates (was only on 'change')
+  Mode: polish
+  Files: assets/js/cambridge/a1-movers-answer-sync.js
+
+- [T0] All Parts — Added .filled visual state on answer-input and gap-input elements (green border + light green bg when answered)
+  Mode: elevate
+  Quality layer: 3-Efficient → 4-Polished (students can see which questions they've answered)
+  Files: assets/css/universal-popup-styles.css, assets/js/cambridge/a1-movers-answer-sync.js
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| A1-Movers/speaking.html | 3-Efficient | Correct title; content still uses A2 Key format |
+| A1-Movers/reading-writing.html | 3-Efficient | Correct default level fallback |
+| A1-Movers/Part 1-5.html | 4-Polished | Live save, filled-state feedback |
+| A1-Movers/Part 6.html | 3-Efficient | Has filled-state but contains inspera bloat |
+| A1-Movers/listening.html | 3-Efficient | Not touched this session |
+
+### Deferred
+- speaking.html — Content format is A2 Key (2 parts), needs rebuild to A1 Movers format (4 parts: Find the Differences, Story Telling, Odd One Out, Personal Questions)
+- Part 6.html — Contains massive unused inspera player JS blob (~500 lines of dynamic rubric JSON) — should be cleaned
+- All Parts — Navigation script is duplicated in every Part file (identical 100+ lines). Should be extracted to shared JS file
+- listening.html — Needs same live-save and filled-state improvements as reading-writing
+
+### Session Stats
+Pages explored: 8
+Rounds: 1
+Polishes landed: 2
+Rebuilds landed: 0
+Elevations landed: 1
+Reverted: 0
+Fixes landed: 3
+Changes shipped: 6
