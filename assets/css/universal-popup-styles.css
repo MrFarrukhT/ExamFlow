@@ -19,7 +19,7 @@
     right: 0;
     bottom: 0;
     background-color: #f5f5f5;
-    z-index: 2000;
+    z-index: var(--z-modal);
     display: none;
     align-items: flex-start;
     justify-content: center;
@@ -289,7 +289,7 @@
     border: 1px solid #ccc;
     border-radius: 6px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    z-index: 10000;
+    z-index: var(--z-critical);
     min-width: 160px;
     display: none;
 }
