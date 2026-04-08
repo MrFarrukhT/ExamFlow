@@ -1,5 +1,62 @@
 # Autopilot Journal
 
+## Session: 2026-04-09 09:30
+Persona: Olympiada submission pipeline (data integrity follow-up to session 24)
+System: Cambridge
+
+### Phase 1: Journey Map
+- Session 24 unblocked the C1-Advanced/Olympiada launch but I missed a critical
+  data integrity bug: every Olympiada submission was being saved to the database
+  with `exam_type='Cambridge'` because the value was hardcoded in TWO places on the
+  server, AND the client wasn't even sending it.
+
+### Phase 2: Creation
+- No new features — pipeline integrity fix only
+
+### Phase 3: Structure
+- Skipped — sound
+
+### Phase 4: Heal — full pipeline fix (4 layers)
+1. **Server: insertCambridgeSubmission** — was hardcoding `'Cambridge'` for the
+   exam_type column. Now reads `data.examType`, validates against
+   `['Cambridge', 'Olympiada']` whitelist, falls back to `'Cambridge'`.
+2. **Server: /submit-speaking INSERT** — same hardcoding bug. Same fix.
+3. **Client: answer-manager.js submitTestToDatabase()** — wasn't including
+   examType in the POST body at all. Now includes it from localStorage.
+4. **Client: 11 speaking.html files** — submissionData object didn't include
+   examType. Bulk-fixed via node script across all 11 levels/mocks.
+
+Result: Olympiada submissions are now correctly tagged with exam_type='Olympiada'
+in the database, enabling future filtering, analytics, and billing separation
+by exam type.
+
+Committed as 7705de1 (13 files, +21/-2 lines).
+
+### Phase 5: Experience
+- Skipped — no server running
+
+### Phase 6: Scenario
+- Verified by code review:
+  - examType validation whitelist prevents arbitrary values being stored
+  - Length-cap (50 chars) prevents oversized strings
+  - Server-side validation matches the database schema (VARCHAR(50))
+  - Fallback to 'Cambridge' preserves existing behavior for non-Olympiada flows
+
+### Session Stats
+Total commits: 1 (7705de1)
+Total files changed: 13 (server, answer-manager, 11 speaking.html files)
+Persona journey coverage: Submission pipeline integrity for Olympiada — full path
+from client localStorage → submission body → server validation → database column
+
+### Why this matters
+Without this fix, Zarmet University's Olympiada launch would have looked
+successful from the student perspective (submissions go through, results
+display correctly) but admin reporting would be broken from day 1. There
+would be no way to count Olympiada participants, score them separately,
+or invoice the university for their distinct usage.
+
+---
+
 ## Session: 2026-04-09 09:00
 Persona: Cambridge C1-Advanced student / Zarmet University Olympiada (NEW PERSONA)
 System: Cambridge
