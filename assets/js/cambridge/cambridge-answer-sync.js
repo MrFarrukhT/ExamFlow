@@ -66,6 +66,29 @@
   // Detect question ranges based on exam level from URL path
   function detectRangesFromLevel() {
     var path = window.location.pathname;
+    if (path.indexOf('C1-Advanced') !== -1) {
+      // C1 Advanced — 8 reading parts, 4 listening parts
+      // Reading: 56 questions across 8 parts (8/8/8/6/6/4/6/10)
+      // Listening: 30 questions across 4 parts (6/8/6/10)
+      if (path.toLowerCase().indexOf('listening') !== -1) {
+        return [
+          { part: 1, min: 1,  max: 6  },
+          { part: 2, min: 7,  max: 14 },
+          { part: 3, min: 15, max: 20 },
+          { part: 4, min: 21, max: 30 }
+        ];
+      }
+      return [
+        { part: 1, min: 1,  max: 8  },
+        { part: 2, min: 9,  max: 16 },
+        { part: 3, min: 17, max: 24 },
+        { part: 4, min: 25, max: 30 },
+        { part: 5, min: 31, max: 36 },
+        { part: 6, min: 37, max: 40 },
+        { part: 7, min: 41, max: 46 },
+        { part: 8, min: 47, max: 56 }
+      ];
+    }
     if (path.indexOf('B1-Preliminary') !== -1 || path.indexOf('B2-First') !== -1) {
       return [
         { part: 1, min: 1,  max: 5 },

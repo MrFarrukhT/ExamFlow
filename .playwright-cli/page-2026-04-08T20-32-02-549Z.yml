@@ -1,0 +1,81 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic "Zarmet University" [ref=e5]:
+          - generic [ref=e6]: ZU
+          - generic [ref=e7]:
+            - text: Zarmet University
+            - generic [ref=e8]: English Olympiada
+        - generic [ref=e9]: Cambridge General English
+        - generic [ref=e10]:
+          - generic [ref=e11]: C1 Advanced
+          - link "Invigilator" [ref=e12] [cursor=pointer]:
+            - /url: "#"
+    - main [ref=e13]:
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - heading "Welcome, Test Student" [level=1] [ref=e16]
+          - paragraph [ref=e17]: "ID: 12345"
+        - text: ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓
+        - generic [ref=e18]:
+          - generic [ref=e19]:
+            - generic [ref=e20]: C1 Advanced
+            - button "Change Level" [ref=e21] [cursor=pointer]
+          - heading "Select a Module to Begin" [level=2] [ref=e22]
+          - generic [ref=e23]:
+            - generic [ref=e24]:
+              - heading "Reading & Use of English" [level=3] [ref=e25]
+              - paragraph [ref=e26]: ~60 minutes
+              - paragraph [ref=e27]: Read texts and answer comprehension questions across multiple parts.
+              - generic [ref=e28]: Not Started
+              - button "Start Reading" [ref=e29] [cursor=pointer]
+            - generic [ref=e30]:
+              - heading "Writing" [level=3] [ref=e31]
+              - paragraph [ref=e32]: ~45 minutes
+              - paragraph [ref=e33]: Write responses to prompts. Follow the word count guidance for each task.
+              - generic [ref=e34]: Not Started
+              - button "Start Writing" [ref=e35] [cursor=pointer]
+            - generic [ref=e36]:
+              - heading "Listening" [level=3] [ref=e37]
+              - paragraph [ref=e38]: ~40 minutes
+              - paragraph [ref=e39]: Listen to audio recordings and answer questions. Audio cannot be paused.
+              - generic [ref=e40]: Not Started
+              - button "Start Listening" [ref=e41] [cursor=pointer]
+            - generic [ref=e42]:
+              - heading "Speaking" [level=3] [ref=e43]
+              - paragraph [ref=e44]: ~15 minutes
+              - paragraph [ref=e45]: Record yourself answering questions. You'll test your microphone first.
+              - generic [ref=e46]: Not Started
+              - button "Start Speaking" [ref=e47] [cursor=pointer]
+  - dialog "Welcome guide" [ref=e48]:
+    - generic [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e51]: 👋
+        - heading "Welcome to Your Cambridge English Test" [level=2] [ref=e52]
+        - paragraph [ref=e53]: Here's what you need to know before you begin
+      - list [ref=e54]:
+        - listitem [ref=e55]:
+          - generic [ref=e56]: 📄
+          - generic [ref=e57]:
+            - generic [ref=e58]: Your Test Modules
+            - generic [ref=e59]: You will complete the modules shown on your dashboard (timing varies by level). You can do them in any order.
+        - listitem [ref=e60]:
+          - generic [ref=e61]: 💾
+          - generic [ref=e62]:
+            - generic [ref=e63]: Your Answers Are Saved Automatically
+            - generic [ref=e64]: Every 30 seconds, your work is saved. You'll see a small confirmation at the bottom of the screen. Don't worry about losing your answers.
+        - listitem [ref=e65]:
+          - generic [ref=e66]: ⏲
+          - generic [ref=e67]:
+            - generic [ref=e68]: Watch the Timer
+            - generic [ref=e69]: Each module is timed. You'll get warnings at 10 minutes, 5 minutes, and 1 minute before time runs out.
+        - listitem [ref=e70]:
+          - generic [ref=e71]: ✅
+          - generic [ref=e72]:
+            - generic [ref=e73]: Submit When Ready
+            - generic [ref=e74]: When you finish a module, click Submit. You'll see a summary of your answers before confirming. After submitting, you'll return here to start the next module.
+      - generic [ref=e75]:
+        - generic [ref=e76]: 🔒
+        - generic [ref=e77]: If anything goes wrong (internet drops, page refreshes), your answers are safely stored on this device. Just log back in and continue where you left off.
+      - button "Got it — let's start" [active] [ref=e78] [cursor=pointer]

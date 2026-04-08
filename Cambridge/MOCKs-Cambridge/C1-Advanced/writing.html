@@ -75,8 +75,8 @@
       try {
         const frame = document.getElementById('part-frame');
         const doc = frame.contentDocument;
-        if (doc && doc.defaultView && doc.defaultView.__C1_forceSaveAll) {
-          doc.defaultView.__C1_forceSaveAll();
+        if (doc && doc.defaultView && doc.defaultView.__A2_forceSaveAll) {
+          doc.defaultView.__A2_forceSaveAll();
           if (typeof showCambridgeSaveIndicator === 'function' && doc.defaultView) showCambridgeSaveIndicator();
         }
       } catch(e) { console.warn('Autosave failed:', e); }

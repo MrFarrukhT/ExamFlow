@@ -1,0 +1,81 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "header.logo"
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - status [ref=e11]: Connected
+            - generic [ref=e13]: 
+          - button "Messages" [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: Messages
+              - generic [ref=e17]: 
+          - button "Options" [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: Options
+              - generic [ref=e21]: 
+          - button "Show notes" [ref=e22]:
+            - generic [ref=e23]:
+              - generic [ref=e24]: Show notes
+              - generic [ref=e25]: 
+        - generic [ref=e28]:
+          - generic [ref=e29]: Candidate ID
+          - generic [ref=e30]: "12345"
+  - generic [ref=e34]:
+    - generic [ref=e36]:
+      - heading "Part 1 — Essay (compulsory)" [level=3] [ref=e37]
+      - generic [ref=e38]: You must answer this question. Write your answer in 220–260 words in an appropriate style.
+    - main [ref=e40]:
+      - group [ref=e42]:
+        - generic [ref=e47]:
+          - heading "Part 1 — Essay (compulsory)" [level=2] [ref=e48]
+          - paragraph [ref=e49]:
+            - text: You must answer this question. Write your answer in
+            - strong [ref=e50]: 220–260 words
+            - text: in an appropriate style.
+          - paragraph [ref=e51]: "Your class has listened to a podcast about factors that contribute to people’s understanding of history. You have made the notes below:"
+          - paragraph [ref=e52]:
+            - strong [ref=e53]: "Factors that contribute to people’s understanding of history:"
+          - list [ref=e54]:
+            - listitem [ref=e55]: school lessons
+            - listitem [ref=e56]: public monuments
+            - listitem [ref=e57]: museums
+          - paragraph [ref=e58]:
+            - emphasis [ref=e59]: "Some opinions expressed in the podcast:"
+          - list [ref=e60]:
+            - listitem [ref=e61]: "\"Some teachers make learning history really interesting.\""
+            - listitem [ref=e62]: "\"Statues in public areas show what local people think is important.\""
+            - listitem [ref=e63]: "\"You can visit many museums online.\""
+          - paragraph [ref=e64]:
+            - text: Write an
+            - strong [ref=e65]: essay
+            - text: for your tutor discussing
+            - strong [ref=e66]: two
+            - text: of the factors in your notes. You should identify which factor you think contributes more to people’s understanding of history, and provide reasons to justify your choice.
+          - paragraph [ref=e67]: You may, if you wish, make use of the opinions expressed in the podcast, but you should use your own words as far as possible.
+          - generic [ref=e68]:
+            - textbox "Write your essay here…" [ref=e69]
+            - paragraph [ref=e70]: "Word count: 0 / target 220–260"
+  - contentinfo [ref=e73]:
+    - navigation "Previous / next question" [ref=e74]:
+      - button "Previous" [disabled] [ref=e75]:
+        - generic [ref=e76]: 
+      - button "Next" [ref=e77]:
+        - generic [ref=e78]: 
+    - navigation "Questions" [ref=e79]:
+      - tablist [ref=e80]:
+        - tab "Part 1. 0 of 1 questions attempted." [ref=e81]:
+          - generic [ref=e82]:
+            - text: Part 1
+            - generic [ref=e83]: 0 of 1
+            - generic [ref=e84]: Part 1. 0 of 1 questions attempted.
+      - tablist [ref=e85]:
+        - tab "Part 2. 0 of 1 questions attempted." [ref=e86]:
+          - generic [ref=e87]:
+            - text: Part 2
+            - generic [ref=e88]: 0 of 1
+            - generic [ref=e89]: Part 2. 0 of 1 questions attempted.
+      - button "Review your answers" [ref=e90]:
+        - generic [ref=e91]: 

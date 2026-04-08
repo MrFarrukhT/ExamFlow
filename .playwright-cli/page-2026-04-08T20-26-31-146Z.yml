@@ -1,0 +1,326 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "header.logo"
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - status [ref=e11]: Connected
+            - generic [ref=e13]: 
+          - button "Messages" [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: Messages
+              - generic [ref=e17]: 
+          - button "Options" [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: Options
+              - generic [ref=e21]: 
+          - button "Show notes" [ref=e22]:
+            - generic [ref=e23]:
+              - generic [ref=e24]: Show notes
+              - generic [ref=e25]: 
+        - generic [ref=e28]:
+          - generic [ref=e29]: Candidate ID
+          - generic [ref=e30]: "12345"
+  - generic [ref=e34]:
+    - generic [ref=e36]:
+      - heading "Part 1 — Multiple-choice cloze (Questions 1–8)" [level=3] [ref=e37]
+      - generic [ref=e38]: For questions 1–8, read the text below and decide which answer (A, B, C or D) best fits each gap.
+    - main [ref=e40]:
+      - group [ref=e42]:
+        - generic [ref=e47]:
+          - heading "Bridges for wildlife" [level=2] [ref=e48]
+          - paragraph [ref=e49]: The act of annual migration is common to many species. They migrate towards more favourable climates, or return to breeding sites and feeding grounds. Roads and traffic, however, can pose a significant threat to some species' survival. To address this problem, environmentalists and engineers around the world have put their heads together to devise 'wildlife bridges'.
+          - paragraph [ref=e50]: In Canada, grizzly bears, wolverines and toads are just a few of the species making use of grass-covered, cement bridges that cross the Trans-Canada Highway. Similarly, on Australia's Christmas Island, a five-metre-high bridge across a busy road enables red crabs to pass safely from the rainforest to the ocean. The bridge has significantly reduced their casualty rate and averted traffic chaos.
+          - paragraph [ref=e51]: In Sweden, plans are being drawn up for a series of bridges across a main highway, which will allow the country's 250,000 reindeer to reach the mountains. Engineers must take account of the fact that reindeer are easily frightened by traffic, and so make the bridge walls high enough to prevent the deer from jumping off.
+    - main [ref=e54]:
+      - generic [ref=e55]:
+        - group [ref=e56]:
+          - 'radiogroup "1 Choose the word that best fits gap 1: \"…more ___ climates…\"" [ref=e62]':
+            - paragraph [ref=e64]:
+              - generic [ref=e65]: "1"
+              - strong [ref=e67]:
+                - text: "Choose the word that best fits gap 1:"
+                - emphasis [ref=e68]: "\"…more ___ climates…\""
+            - list [ref=e69]:
+              - listitem [ref=e70]:
+                - radio "supportive" [ref=e71]
+                - generic [ref=e73]: supportive
+              - listitem [ref=e74]:
+                - radio "favourable" [ref=e75]
+                - generic [ref=e77]: favourable
+              - listitem [ref=e78]:
+                - radio "hopeful" [ref=e79]
+                - generic [ref=e81]: hopeful
+              - listitem [ref=e82]:
+                - radio "worthwhile" [ref=e83]
+                - generic [ref=e85]: worthwhile
+            - button "Flag question 1":
+              - generic [ref=e86]: Flag question 1
+        - generic [ref=e88]: 
+    - main [ref=e90]:
+      - generic [ref=e91]:
+        - group [ref=e92]:
+          - 'radiogroup "2 Choose the word that best fits gap 2: \"…can ___ a significant threat…\"" [ref=e98]':
+            - paragraph [ref=e100]:
+              - generic [ref=e101]: "2"
+              - strong [ref=e103]:
+                - text: "Choose the word that best fits gap 2:"
+                - emphasis [ref=e104]: "\"…can ___ a significant threat…\""
+            - list [ref=e105]:
+              - listitem [ref=e106]:
+                - radio "raise" [ref=e107]
+                - generic [ref=e109]: raise
+              - listitem [ref=e110]:
+                - radio "pose" [ref=e111]
+                - generic [ref=e113]: pose
+              - listitem [ref=e114]:
+                - radio "create" [ref=e115]
+                - generic [ref=e117]: create
+              - listitem [ref=e118]:
+                - radio "establish" [ref=e119]
+                - generic [ref=e121]: establish
+            - button "Flag question 2":
+              - generic [ref=e122]: Flag question 2
+        - generic [ref=e124]: 
+    - main [ref=e126]:
+      - generic [ref=e127]:
+        - group [ref=e128]:
+          - 'radiogroup "3 Choose the word that best fits gap 3: \"To ___ this problem…\"" [ref=e134]':
+            - paragraph [ref=e136]:
+              - generic [ref=e137]: "3"
+              - strong [ref=e139]:
+                - text: "Choose the word that best fits gap 3:"
+                - emphasis [ref=e140]: "\"To ___ this problem…\""
+            - list [ref=e141]:
+              - listitem [ref=e142]:
+                - radio "address" [ref=e143]
+                - generic [ref=e145]: address
+              - listitem [ref=e146]:
+                - radio "oppose" [ref=e147]
+                - generic [ref=e149]: oppose
+              - listitem [ref=e150]:
+                - radio "challenge" [ref=e151]
+                - generic [ref=e153]: challenge
+              - listitem [ref=e154]:
+                - radio "approach" [ref=e155]
+                - generic [ref=e157]: approach
+            - button "Flag question 3":
+              - generic [ref=e158]: Flag question 3
+        - generic [ref=e160]: 
+    - main [ref=e162]:
+      - generic [ref=e163]:
+        - group [ref=e164]:
+          - 'radiogroup "4 Choose the word that best fits gap 4: \"…species ___ use of grass-covered bridges…\"" [ref=e170]':
+            - paragraph [ref=e172]:
+              - generic [ref=e173]: "4"
+              - strong [ref=e175]:
+                - text: "Choose the word that best fits gap 4:"
+                - emphasis [ref=e176]: "\"…species ___ use of grass-covered bridges…\""
+            - list [ref=e177]:
+              - listitem [ref=e178]:
+                - radio "putting" [ref=e179]
+                - generic [ref=e181]: putting
+              - listitem [ref=e182]:
+                - radio "gaining" [ref=e183]
+                - generic [ref=e185]: gaining
+              - listitem [ref=e186]:
+                - radio "making" [ref=e187]
+                - generic [ref=e189]: making
+              - listitem [ref=e190]:
+                - radio "getting" [ref=e191]
+                - generic [ref=e193]: getting
+            - button "Flag question 4":
+              - generic [ref=e194]: Flag question 4
+        - generic [ref=e196]: 
+    - main [ref=e198]:
+      - generic [ref=e199]:
+        - group [ref=e200]:
+          - 'radiogroup "5 Choose the word that best fits gap 5: \"___, on Australia’s Christmas Island…\"" [ref=e206]':
+            - paragraph [ref=e208]:
+              - generic [ref=e209]: "5"
+              - strong [ref=e211]:
+                - text: "Choose the word that best fits gap 5:"
+                - emphasis [ref=e212]: "\"___, on Australia’s Christmas Island…\""
+            - list [ref=e213]:
+              - listitem [ref=e214]:
+                - radio "Respectively" [ref=e215]
+                - generic [ref=e217]: Respectively
+              - listitem [ref=e218]:
+                - radio "Comparably" [ref=e219]
+                - generic [ref=e221]: Comparably
+              - listitem [ref=e222]:
+                - radio "Similarly" [ref=e223]
+                - generic [ref=e225]: Similarly
+              - listitem [ref=e226]:
+                - radio "Correspondingly" [ref=e227]
+                - generic [ref=e229]: Correspondingly
+            - button "Flag question 5":
+              - generic [ref=e230]: Flag question 5
+        - generic [ref=e232]: 
+    - main [ref=e234]:
+      - generic [ref=e235]:
+        - group [ref=e236]:
+          - 'radiogroup "6 Choose the word that best fits gap 6: \"…their casualty ___ and averted traffic chaos.\"" [ref=e242]':
+            - paragraph [ref=e244]:
+              - generic [ref=e245]: "6"
+              - strong [ref=e247]:
+                - text: "Choose the word that best fits gap 6:"
+                - emphasis [ref=e248]: "\"…their casualty ___ and averted traffic chaos.\""
+            - list [ref=e249]:
+              - listitem [ref=e250]:
+                - radio "quota" [ref=e251]
+                - generic [ref=e253]: quota
+              - listitem [ref=e254]:
+                - radio "percentage" [ref=e255]
+                - generic [ref=e257]: percentage
+              - listitem [ref=e258]:
+                - radio "scale" [ref=e259]
+                - generic [ref=e261]: scale
+              - listitem [ref=e262]:
+                - radio "rate" [ref=e263]
+                - generic [ref=e265]: rate
+            - button "Flag question 6":
+              - generic [ref=e266]: Flag question 6
+        - generic [ref=e268]: 
+    - main [ref=e270]:
+      - generic [ref=e271]:
+        - group [ref=e272]:
+          - 'radiogroup "7 Choose the word that best fits gap 7: \"…plans are being ___ up…\"" [ref=e278]':
+            - paragraph [ref=e280]:
+              - generic [ref=e281]: "7"
+              - strong [ref=e283]:
+                - text: "Choose the word that best fits gap 7:"
+                - emphasis [ref=e284]: "\"…plans are being ___ up…\""
+            - list [ref=e285]:
+              - listitem [ref=e286]:
+                - radio "shown" [ref=e287]
+                - generic [ref=e289]: shown
+              - listitem [ref=e290]:
+                - radio "backed" [ref=e291]
+                - generic [ref=e293]: backed
+              - listitem [ref=e294]:
+                - radio "drawn" [ref=e295]
+                - generic [ref=e297]: drawn
+              - listitem [ref=e298]:
+                - radio "worked" [ref=e299]
+                - generic [ref=e301]: worked
+            - button "Flag question 7":
+              - generic [ref=e302]: Flag question 7
+        - generic [ref=e304]: 
+    - main [ref=e306]:
+      - generic [ref=e307]:
+        - group [ref=e308]:
+          - 'radiogroup "8 Choose the word that best fits gap 8: \"Engineers must take ___ of the fact…\"" [ref=e314]':
+            - paragraph [ref=e316]:
+              - generic [ref=e317]: "8"
+              - strong [ref=e319]:
+                - text: "Choose the word that best fits gap 8:"
+                - emphasis [ref=e320]: "\"Engineers must take ___ of the fact…\""
+            - list [ref=e321]:
+              - listitem [ref=e322]:
+                - radio "advantage" [ref=e323]
+                - generic [ref=e325]: advantage
+              - listitem [ref=e326]:
+                - radio "account" [ref=e327]
+                - generic [ref=e329]: account
+              - listitem [ref=e330]:
+                - radio "control" [ref=e331]
+                - generic [ref=e333]: control
+              - listitem [ref=e334]:
+                - radio "effect" [ref=e335]
+                - generic [ref=e337]: effect
+            - button "Flag question 8":
+              - generic [ref=e338]: Flag question 8
+        - generic [ref=e340]: 
+  - contentinfo [ref=e342]:
+    - navigation "Previous / next question" [ref=e343]:
+      - button "Previous" [disabled] [ref=e344]:
+        - generic [ref=e345]: 
+      - button "Next" [ref=e346]:
+        - generic [ref=e347]: 
+    - navigation "Questions" [ref=e348]:
+      - tablist [ref=e349]:
+        - tab "Part 1. 0 of 8 questions attempted." [ref=e350]:
+          - generic [ref=e351]:
+            - text: Part 1
+            - generic [ref=e352]: 0 of 8
+            - generic [ref=e353]: Part 1. 0 of 8 questions attempted.
+        - generic [ref=e354]:
+          - button "Question 1 Not attempted Active" [ref=e355]:
+            - generic [ref=e356]: Question 1
+            - text: "1"
+            - generic [ref=e357]: Not attempted Active
+          - button "Question 2 Not attempted" [ref=e358]:
+            - generic [ref=e359]: Question 2
+            - text: "2"
+            - generic [ref=e360]: Not attempted
+          - button "Question 3 Not attempted" [ref=e361]:
+            - generic [ref=e362]: Question 3
+            - text: "3"
+            - generic [ref=e363]: Not attempted
+          - button "Question 4 Not attempted" [ref=e364]:
+            - generic [ref=e365]: Question 4
+            - text: "4"
+            - generic [ref=e366]: Not attempted
+          - button "Question 5 Not attempted" [ref=e367]:
+            - generic [ref=e368]: Question 5
+            - text: "5"
+            - generic [ref=e369]: Not attempted
+          - button "Question 6 Not attempted" [ref=e370]:
+            - generic [ref=e371]: Question 6
+            - text: "6"
+            - generic [ref=e372]: Not attempted
+          - button "Question 7 Not attempted" [ref=e373]:
+            - generic [ref=e374]: Question 7
+            - text: "7"
+            - generic [ref=e375]: Not attempted
+          - button "Question 8 Not attempted" [ref=e376]:
+            - generic [ref=e377]: Question 8
+            - text: "8"
+            - generic [ref=e378]: Not attempted
+      - tablist [ref=e379]:
+        - tab "Part 2. 0 of 8 questions attempted." [ref=e380]:
+          - generic [ref=e381]:
+            - text: Part 2
+            - generic [ref=e382]: 0 of 8
+            - generic [ref=e383]: Part 2. 0 of 8 questions attempted.
+      - tablist [ref=e384]:
+        - tab "Part 3. 0 of 8 questions attempted." [ref=e385]:
+          - generic [ref=e386]:
+            - text: Part 3
+            - generic [ref=e387]: 0 of 8
+            - generic [ref=e388]: Part 3. 0 of 8 questions attempted.
+      - tablist [ref=e389]:
+        - tab "Part 4. 0 of 6 questions attempted." [ref=e390]:
+          - generic [ref=e391]:
+            - text: Part 4
+            - generic [ref=e392]: 0 of 6
+            - generic [ref=e393]: Part 4. 0 of 6 questions attempted.
+      - tablist [ref=e394]:
+        - tab "Part 5. 0 of 6 questions attempted." [ref=e395]:
+          - generic [ref=e396]:
+            - text: Part 5
+            - generic [ref=e397]: 0 of 6
+            - generic [ref=e398]: Part 5. 0 of 6 questions attempted.
+      - tablist [ref=e399]:
+        - tab "Part 6. 0 of 4 questions attempted." [ref=e400]:
+          - generic [ref=e401]:
+            - text: Part 6
+            - generic [ref=e402]: 0 of 4
+            - generic [ref=e403]: Part 6. 0 of 4 questions attempted.
+      - tablist [ref=e404]:
+        - tab "Part 7. 0 of 6 questions attempted." [ref=e405]:
+          - generic [ref=e406]:
+            - text: Part 7
+            - generic [ref=e407]: 0 of 6
+            - generic [ref=e408]: Part 7. 0 of 6 questions attempted.
+      - tablist [ref=e409]:
+        - tab "Part 8. 0 of 10 questions attempted." [ref=e410]:
+          - generic [ref=e411]:
+            - text: Part 8
+            - generic [ref=e412]: 0 of 10
+            - generic [ref=e413]: Part 8. 0 of 10 questions attempted.
+      - button "Review your answers" [ref=e414]:
+        - generic [ref=e415]: 
