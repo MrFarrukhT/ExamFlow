@@ -370,7 +370,7 @@
     
   }
 
-  // Handle immediate saves (radio buttons)
+  // Handle immediate saves (radio buttons, selects)
   function onChange(e){
     var t = e.target;
     if (!t) return;
@@ -378,6 +378,12 @@
       var q = getQuestionNumberFromInput(t);
       if (q == null) return;
       if (t.checked) saveAnswer(q, t.value, true);
+    }
+    if (t.matches && t.matches('select')){
+      updateFilledState(t);
+      var q = getQuestionNumberFromInput(t);
+      if (q == null) return;
+      saveAnswer(q, t.value, true);
     }
   }
 
@@ -482,7 +488,8 @@
   function injectFilledStyles(){
     if (document.getElementById('ic-a2key-filled-style')) return;
     var css = '.textEntryInteractionValue.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}' +
-      'textarea.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}';
+      'textarea.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}' +
+      'select.inline-choice-select.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}';
     var s = document.createElement('style'); s.id='ic-a2key-filled-style'; s.appendChild(document.createTextNode(css));
     (document.head || document.documentElement).appendChild(s);
   }

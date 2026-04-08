@@ -1244,11 +1244,12 @@ class CambridgeBridge {
     // ==================== FILLED-STATE FEEDBACK ====================
 
     setupFilledState() {
-        // Inject CSS for filled inputs/textareas
+        // Inject CSS for filled inputs/textareas/selects
         if (!document.getElementById('ic-filled-style')) {
             const css = '.textEntryInteractionValue.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}' +
                 'textarea.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}' +
-                'input[type="text"].filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}';
+                'input[type="text"].filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}' +
+                'select.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}';
             const s = document.createElement('style');
             s.id = 'ic-filled-style';
             s.appendChild(document.createTextNode(css));
@@ -1263,10 +1264,21 @@ class CambridgeBridge {
             }
         }, true);
 
-        // Apply filled state to any inputs that already have content
+        // Toggle .filled on change events (selects, radios)
+        document.addEventListener('change', (e) => {
+            const t = e.target;
+            if (t && t.matches && t.matches('select')) {
+                t.classList.toggle('filled', !!t.value);
+            }
+        }, true);
+
+        // Apply filled state to any inputs/selects that already have content
         setTimeout(() => {
             document.querySelectorAll('input[type="text"], textarea').forEach(el => {
                 if (el.value && el.value.trim()) el.classList.add('filled');
+            });
+            document.querySelectorAll('select').forEach(el => {
+                if (el.value) el.classList.add('filled');
             });
         }, 500);
     }
