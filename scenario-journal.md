@@ -1289,3 +1289,66 @@ None — the level lock is correctly implemented across both submission endpoint
 
 ### Stats (Round 22)
 Tested: 7 + exhaustive | Passed: 7 | Failed: 0 | Fixed: 0 | Deferred: 0
+
+---
+
+## Session: 2026-04-09 16:50
+Focus: Verify autopilot's IELTS r3 commit (writing anti-cheat parity + Olympiada robustness)
+Trigger: Commit 236e286 added antiCheat collection to IELTS writing-handler.js + extended Cambridge family routing
+
+### Scenarios
+
+- S1: IELTS writing now stores anti_cheat_data [Regression] → PASS
+  - Submitted IELTS writing with antiCheat: {tabSwitches:2, fullscreenExits:1, distractionFreeEnabled:true}
+  - All three values stored correctly via R16/R17 sanitization pipeline
+  - Anti-cheat parity achieved — IELTS writing now matches reading/listening behavior
+
+- S2: IELTS writing sanitization regression [Cheater] → BUG (data quality, not security)
+  - Submitted bypass payloads: tabSwitches='<script>', fullscreenExits=[1,2,3], customNote='<img src=x onerror=alert(1)>', durationFlag:false
+  - Schema-typed counters dropped (string and array) ✓
+  - durationFlag stripped (server-managed key) ✓
+  - **`customNote` stored as empty string `""`** — XSS payload stripped to nothing, but the empty key was preserved as data clutter
+  - **Fix applied**: sanitizeAntiCheat clean() now drops strings that are empty or whitespace-only after stripHtmlTags+trim. Synced to both shared/validation.js and server-cjs.cjs.
+
+- S3: Olympiada examType in IELTS path [Chain Attacker] → PASS
+  - IELTS server doesn't have exam_type column — the field is silently ignored
+  - No data corruption, submission goes into test_submissions normally
+  - Cross-server confusion not exploitable
+
+- S4: IELTS writing endpoint with strange skill values [Explorer] → PASS
+  - 'READING' (case mismatch) → 400 with valid options listed
+  - null → 400
+  - 'reading writing' (multi-word) → 400
+  - VALID_IELTS_SKILLS enforcement still working
+
+- S5: Stress — 30 concurrent submissions [Power User] → PASS
+  - 5 of 30 stored, 25 rate-limited
+  - Rate limiter working correctly under stress (10/min/IP cumulative across all my round 23 tests)
+  - No server crashes, no data corruption
+
+- S6: Untested admin endpoints audit [Insider] → PASS
+  - Mapped Cambridge endpoint surface — found `/cambridge-student-results` (CRUD), `/cambridge-answers` (DELETE by level/skill/mock)
+  - All require admin auth, all parameterized
+  - DELETE /cambridge-answers is single-key delete (level+skill+mock), not bulk — limited blast radius
+
+### Fixes
+- `shared/validation.js`: clean() string branch now drops empty/whitespace-after-stripping values
+- `server-cjs.cjs`: same fix synced
+
+### Verification
+- '<img src=x>' → null (was '')
+- '   ' (whitespace) → null (was '   ')
+- 'tab switch detected' → preserved
+- 'a<b>c' → 'ac' (partial sanitization preserved)
+
+### Pattern Analysis
+- **Pure client-side commits still warrant testing.** R23's autopilot commit was 100% client-side JS (no server changes). The bug I caught wasn't introduced by the client change — it was pre-existing in the R16 sanitizer, exposed by the new code path that exercises it more aggressively. Always test the data flow end-to-end after any new code path is added.
+- **Defense-in-depth caught data clutter.** R16/R17 schema enforcement correctly handled the malicious payloads (drop the type-confused fields). The empty-string survival was a separate cleanup concern that the schema-based path doesn't touch (custom fields use generic clean()).
+- **No drift this round.** R20-R23 all clean of ESM↔CJS drift. 6-round streak.
+
+### Intelligence Update
+- Proven solid: IELTS writing anti-cheat parity, sanitizeAntiCheat now drops empty strings, IELTS skill enum still strict, rate limiter holds under stress, admin endpoint surface mapped
+- Coverage: 137 scenarios across 23 rounds, 44 bugs found, 39 fixed
+
+### Stats (Round 23)
+Tested: 6 | Passed: 5 | Bug: 1 (data quality) | Fixed: 1 | Deferred: 0

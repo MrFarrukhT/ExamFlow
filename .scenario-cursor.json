@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-09 16:30",
-  "totalRuns": 22,
+  "lastRun": "2026-04-09 16:50",
+  "totalRuns": 23,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -87,6 +87,7 @@
     "anti-cheat-schema-boolean-fields-strict",
     "anti-cheat-schema-date-fields-validated",
     "anti-cheat-unknown-fields-fall-through-to-generic",
+    "anti-cheat-empty-strings-dropped-r23",
     "admin-dashboard-rendering-uses-escapeHtml-consistently",
     "c1-advanced-level-db-constraint-fixed",
     "c1-advanced-all-skills-submit-successfully",
@@ -100,7 +101,9 @@
     "postMessage-url-whitelist-handles-both-hyphen-and-space-naming",
     "olympiada-level-lock-c1-only-enforced-both-endpoints",
     "olympiada-level-lock-no-array-or-case-bypass",
-    "olympiada-level-lock-exam-type-immutable-after-insert"
+    "olympiada-level-lock-exam-type-immutable-after-insert",
+    "ielts-writing-anti-cheat-parity-stored",
+    "ielts-rate-limiter-holds-under-30-concurrent-stress"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
@@ -109,7 +112,7 @@
     "blocklist-deny-approach-needs-ongoing-maintenance",
     "submissions-list-unpaginated-5604-rows-fetched-per-dashboard-load",
     "rate-limiter-hits-map-grows-unboundedly",
-    "esm-cjs-drift-recurring-systemic-issue",
+    "esm-cjs-drift-no-occurrence-r17-r23-but-pattern-unsolved",
     "js-db-enum-drift-recurring-3-occurrences",
     "loose-type-coercion-trusting-toString-or-comparison-operators",
     "student-names-not-secrets-physical-exam-context",
@@ -139,10 +142,10 @@
       "reason": "Every enum addition requires a paired DB migration. Architect should add a code review checklist."
     },
     {
-      "title": "ESM↔CJS drift recurring (4 occurrences in R13-R16)",
+      "title": "ESM↔CJS drift recurring (4 occurrences in R13-R16, none R17-R23)",
       "severity": "HIGH",
       "since": "2026-04-09",
-      "reason": "Pattern unsolved, just hasn't been triggered recently. Will return."
+      "reason": "Pattern unsolved, just hasn't been triggered recently. 7-round clean streak."
     },
     {
       "title": "Submissions list returns 5604+ rows unpaginated",
@@ -182,9 +185,9 @@
     }
   ],
   "stats": {
-    "scenariosTested": 130,
-    "bugsFound": 43,
-    "bugsFixed": 38,
+    "scenariosTested": 137,
+    "bugsFound": 44,
+    "bugsFixed": 39,
     "bugsDeferred": 10
   }
 }
