@@ -45,9 +45,9 @@
 
                 <div class="entry-form">
                     <div class="form-group" id="idGroup">
-                        <input type="text" id="studentId" placeholder="Student ID" required aria-required="true" aria-describedby="studentIdError" maxlength="4" pattern="[0-9]{1,4}" inputmode="numeric" autocomplete="off">
+                        <input type="text" id="studentId" placeholder="Student ID" required aria-required="true" aria-describedby="studentIdError" maxlength="10" pattern="[0-9]{1,10}" inputmode="numeric" autocomplete="off">
                         <label for="studentId">Student ID</label>
-                        <small id="studentIdError" class="form-error" role="alert">Student ID must be numbers only (max 4 digits)</small>
+                        <small id="studentIdError" class="form-error" role="alert">Student ID must be numbers only (max 10 digits)</small>
                     </div>
 
                     <div class="form-group" id="nameGroup">
@@ -96,10 +96,10 @@
             error.classList.remove('visible');
         }
 
-        // Real-time validation for Student ID (numbers only, max 4 digits)
+        // Real-time validation for Student ID (numbers only, max 10 digits)
         document.getElementById('studentId').addEventListener('input', function(e) {
             let value = e.target.value.replace(/[^0-9]/g, '');
-            if (value.length > 4) value = value.substring(0, 4);
+            if (value.length > 10) value = value.substring(0, 10);
             e.target.value = value;
             clearError('idGroup', 'studentIdError');
         });
