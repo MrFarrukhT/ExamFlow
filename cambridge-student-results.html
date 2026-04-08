@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Innovative Centre - Cambridge Student Results</title>
+    <title>Cambridge Student Results | Innovative Centre</title>
     <link rel="stylesheet" href="assets/css/admin-common.css">
     <style>
+        /* Cambridge Student Results — override admin-common.css blue → Cambridge teal */
+        :root {
+            --admin-primary: #0d9488;
+            --admin-primary-dark: #0f766e;
+        }
+
         /* Cambridge Student Results — page-specific styles */
         body {
-            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+            background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
         }
 
         .container {
@@ -16,7 +22,7 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #0066cc, #0052a3);
+            background: linear-gradient(135deg, #0d9488, #0f766e);
         }
 
         .admin-content {
@@ -83,7 +89,7 @@
         }
 
         .results-table tr:hover {
-            background: #f0f7ff;
+            background: #f0fdf4;
         }
 
         .results-table td:first-child,
@@ -105,7 +111,7 @@
         .scale-score {
             font-size: 1.3em;
             font-weight: bold;
-            color: #0066cc;
+            color: #0d9488;
         }
 
         .cefr-badge {
@@ -233,7 +239,7 @@
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #0066cc;
+            border-color: #0d9488;
         }
 
         .form-group input:disabled {
@@ -250,7 +256,7 @@
 
         .skills-section h3 {
             margin-bottom: 15px;
-            color: #0066cc;
+            color: #0d9488;
             font-size: 1.1em;
         }
 
@@ -289,7 +295,7 @@
 
         .skill-input input:focus {
             outline: none;
-            border-color: #0066cc;
+            border-color: #0d9488;
         }
 
         .skill-input span {
@@ -299,12 +305,12 @@
 
         .calculated-value {
             font-weight: bold;
-            color: #0066cc;
+            color: #0d9488;
             font-size: 1.1em;
         }
 
         .overall-section {
-            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            background: linear-gradient(135deg, #ccfbf1, #99f6e4);
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
@@ -312,7 +318,7 @@
 
         .overall-section h3 {
             margin-bottom: 15px;
-            color: #0d47a1;
+            color: #0f766e;
         }
 
         .overall-grid {
@@ -337,7 +343,7 @@
         .overall-value {
             font-size: 1.8em;
             font-weight: bold;
-            color: #0066cc;
+            color: #0d9488;
         }
 
         .overall-value.passed {
