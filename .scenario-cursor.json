@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-08 18:55",
-  "totalRuns": 14,
+  "lastRun": "2026-04-09 14:10",
+  "totalRuns": 15,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -71,7 +71,12 @@
     "ielts-cjs-my-answer-keys-synced",
     "ielts-cjs-my-answer-keys-mock-scoped",
     "ielts-cjs-my-submissions-mock-number-validated",
-    "cambridge-review-modal-no-attack-surface"
+    "cambridge-review-modal-no-attack-surface",
+    "impersonation-defense-name-id-required",
+    "impersonation-case-sensitive-blocked",
+    "impersonation-whitespace-variations-blocked",
+    "impersonation-no-enumeration-via-response-shape",
+    "ielts-cjs-impersonation-defense-synced"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
@@ -80,8 +85,8 @@
     "blocklist-deny-approach-needs-ongoing-maintenance",
     "submissions-list-unpaginated",
     "rate-limiter-hits-map-grows-unboundedly",
-    "esm-cjs-drift-creates-silent-feature-gaps",
-    "student-id-idor-by-design"
+    "esm-cjs-drift-recurring-systemic-issue",
+    "student-names-not-secrets-physical-exam-context"
   ],
   "untestedAreas": [],
   "deferredFindings": [
@@ -92,10 +97,16 @@
       "reason": "By design (no auth on answer keys), but grade manipulation risk"
     },
     {
-      "title": "Student-facing endpoints trust client-supplied student_id (IDOR)",
-      "severity": "HIGH",
-      "since": "2026-04-08",
-      "reason": "By design — matches existing 'no student auth, controlled by invigilator' pattern"
+      "title": "Student names+IDs are not secrets (impersonation possible if attacker knows both)",
+      "severity": "MEDIUM",
+      "since": "2026-04-09",
+      "reason": "Names visible in physical exam settings; true auth needs per-student passwords/QR tokens"
+    },
+    {
+      "title": "ESM↔CJS drift recurring — autopilot edits ESM but skips server-cjs.cjs",
+      "severity": "MEDIUM",
+      "since": "2026-04-09",
+      "reason": "3 rounds in a row found this pattern. Architect should automate sync or deprecate one server."
     },
     {
       "title": "CORS allows all origins",
@@ -117,9 +128,9 @@
     }
   ],
   "stats": {
-    "scenariosTested": 84,
-    "bugsFound": 35,
-    "bugsFixed": 30,
-    "bugsDeferred": 5
+    "scenariosTested": 90,
+    "bugsFound": 36,
+    "bugsFixed": 31,
+    "bugsDeferred": 6
   }
 }

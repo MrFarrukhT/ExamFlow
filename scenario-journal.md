@@ -825,3 +825,60 @@ Trigger: New autopilot commit (Cambridge review modal — UI only, no attack sur
 
 ### Stats (Round 14)
 Tested: 6 | Passed: 4 | Failed: 0 | Confirmed: 1 | Fixed: 1 (sync) | Deferred: 0
+
+---
+
+## Session: 2026-04-09 14:10
+Focus: Test the autopilot's impersonation defense (cheater r3) and verify it's actually deployed
+Trigger: Commit 5734410 changed /my-submissions and /my-answer-keys to require student_id+student_name on both servers — claims to fix IDOR
+
+### Scenarios
+
+- S1: Old-style ID-only request rejected [Regression] → PASS on Cambridge
+  - Cambridge `/my-submissions?student_id=005` → 400 "student_id and student_name are required"
+  - The autopilot's fix is correctly enforced after server restart
+
+- S2: ID+correct name impersonation [Insider] → CONFIRMED
+  - With knowledge of both student_id="005" and student_name="Farrukh Test", full data returned
+  - **Inherent limitation**: Names are visible in physical exam settings (sign-in sheets, class rosters, dashboards)
+  - The fix raises the bar from "guess one ID" to "must know both fields", but doesn't make the system secure against attackers who have visual/physical access
+  - Documented as known limitation, not a fix candidate
+
+- S3: Case sensitivity bypass [Chain Attacker] → PASS (blocked)
+  - "FARRUKH TEST" → empty array
+  - "farrukh test" → empty array
+  - PostgreSQL `=` is case-sensitive on text columns; bypass blocked
+
+- S4: Whitespace bypass [Chain Attacker] → PASS (blocked)
+  - "Farrukh  Test" (double space) → empty array
+  - "Farrukh Test " (trailing space) → empty array
+  - Stored names are trimmed; query input is matched exactly
+
+- S5: Enumeration via response shape [Chain Attacker] → PASS
+  - "Wrong name for real ID" → `{success: true, submissions: []}`
+  - "Real student with no submissions" → `{success: true, submissions: []}`
+  - Identical responses — no information leak about which is which
+
+- S6: IELTS CJS server sync status [Regression] → **CRITICAL FAIL**
+  - **The autopilot's fix landed in ESM source but NOT in server-cjs.cjs**
+  - IELTS CJS server `/my-submissions?student_id=S9-GUARD` (no name) STILL returned full data
+  - Same ESM↔CJS drift gap as Round 14 — third occurrence
+  - **Fix applied**: Synced impersonation defense to server-cjs.cjs (both endpoints)
+  - Verified: Old-style → 400, ID+correct name → data, ID+wrong name → empty array
+
+### Fixes
+- `server-cjs.cjs`: Synced impersonation defense from ESM source — both /my-submissions and /my-answer-keys now require student_id+student_name, with identityCheck pre-query that returns same shape on no-match (no enumeration leak)
+
+### Pattern Analysis
+- **Drift is now systemic.** Three rounds in a row found the same pattern: autopilot edits ESM source, doesn't sync server-cjs.cjs. This isn't a one-off — it's a recurring failure mode in the development workflow. Either: (a) automate the sync via post-commit hook, (b) make CJS auto-generated from ESM, or (c) deprecate one server. The architect should address this.
+- **Names are not secrets.** The autopilot's impersonation fix raises the bar but is not a true authentication boundary. In a classroom setting, names + IDs are public information (sign-in sheets, displayed on screens, class rosters). True authentication would require a per-student secret (password, code, QR token) — but that's an architectural change beyond scenario scope.
+- **Enumeration safety via uniform responses.** The fix correctly returns identical response shapes for "no name match" and "no submissions yet", preventing attackers from confirming ID validity through response distinction. This is a small but important detail the autopilot got right.
+
+### Intelligence Update
+- Proven solid: Cambridge impersonation fix (case-sensitive, whitespace-strict, no enum leak), IELTS CJS now synced with same defense, identityCheck pre-query pattern works correctly
+- New systemic issue: ESM↔CJS drift recurs every time autopilot adds/changes endpoints. Now logged as a top weak pattern.
+- Remaining defer: Names+IDs are public info — true student auth would need passwords or QR tokens (architectural)
+- Coverage: 90 scenarios across 15 rounds, 36 bugs found, 31 fixed
+
+### Stats (Round 15)
+Tested: 6 | Passed: 4 | Failed: 1 (critical drift) | Confirmed: 1 (limit) | Fixed: 1 | Deferred: 0
