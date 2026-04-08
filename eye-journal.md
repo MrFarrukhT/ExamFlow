@@ -1506,3 +1506,40 @@ Elevations landed: 0
 Reverted: 0
 Fixes landed: 0
 Changes shipped: 1 file modified
+
+---
+
+## Session: 2026-04-09 (Cambridge Student Results — prompt #22)
+Persona: Admin reviewing student results and CEFR levels
+System: Cambridge admin (localhost:3003/cambridge-student-results.html)
+Pages explored: cambridge-student-results.html (1333 lines)
+Starting state: Same blue branding pattern as the dashboard. 8+ instances of #0066cc, plus Material Blue light gradient on overall section, blue row hover. Otherwise functional with results table, CEFR badges, scoring modal.
+
+### Round 1
+**Explored:** 1 page, 6 findings
+**Action:** POLISH 6 (full teal identity sweep)
+
+- [T4] cambridge-student-results.html — Added :root CSS variable override (--admin-primary teal). Replaced 8 instances of #0066cc with #0d9488 across scale-score, focus borders, headings, calculated values. Body/header gradients to teal. Overall section gradient #e3f2fd→#bbdefb → #ccfbf1→#99f6e4 (teal mint). Row hover #f0f7ff → #f0fdf4. Dark blue #0d47a1 → #0f766e in overall section heading. Page title cleaned up.
+  Mode: polish
+  Quality layer: 3-Efficient → 5-Delightful (consistent teal identity)
+  Files: cambridge-student-results.html
+
+- Preserved CEFR A1 badge text color (#0d47a1) as functional level color, not branding.
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| cambridge-student-results.html | 5-Delightful | Teal identity, CEFR colors preserved, results table intact |
+
+### Deferred
+- cambridge-speaking-evaluations.html may have same blue branding (prompt #23 next)
+
+### Session Stats
+Pages explored: 1
+Rounds: 1
+Polishes landed: 6 (consolidated into 1 commit)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Fixes landed: 0
+Changes shipped: 1 file modified
