@@ -683,3 +683,49 @@ Elevations landed: 0
 Reverted: 0
 Fixes landed: 84+ (wrong level names across 51 files)
 Changes shipped: 53 files modified
+
+---
+
+## Session: 2026-04-08 (B1 Preliminary student deep dive)
+Persona: Student taking B1 Preliminary (PET) test
+System: Cambridge (localhost:3003)
+Pages explored: index.html?exam=cambridge, dashboard-cambridge.html, reading.html (Parts 1-6), Part 7.html, Part 8.html (Writing), Listening-Part-1 through 4
+Starting state: Footer nav counters showed wrong question totals (inherited from A2 Key template), answer sync JS used A2 Key ranges as fallback
+
+### Round 1
+**Explored:** 12 pages (login, dashboard, 6 reading parts, 2 writing parts, 4 listening parts), 6 findings
+**Action:** FIX 2 bugs (JS + HTML counters across 15 files + 1 JS file)
+
+- [T2] a2-key-answer-sync.js — Answer sync used A2 Key question ranges as fallback for ALL levels. Added detectRangesFromLevel() that detects B1-Preliminary from URL path and uses correct ranges: Part 1-4: 5 questions each, Part 5-6: 6 questions each. JS now dynamically corrects counters on page load.
+  Mode: fix (bug)
+  Quality layer: 2-Clear → 4-Polished (students see correct question counts)
+  Files: assets/js/cambridge/a2-key-answer-sync.js
+
+- [T2] Part 1-5.html (3 mocks × 5 files = 15 files) — Fixed hardcoded attemptedCount spans and sr-only text in footer nav. Part 2: "0 of 7" → "0 of 5", Part 4: "0 of 6" → "0 of 5", Part 6: "0 of 1" → "0 of 6". Part 6.html already had correct values.
+  Mode: fix (bug)
+  Quality layer: 2-Clear → 4-Polished
+  Files: B1-Preliminary/Part 1-5.html, B1-Preliminary-MOCK-2/Part 1-5.html, B1-Preliminary-MOCK-3/Part 1-5.html
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| B1-Preliminary/Part 1-6.html (Reading) | 4-Polished | Correct counters, functional MCQ/cloze/matching |
+| B1-Preliminary/Part 7-8.html (Writing) | 3-Efficient | Clean email + article prompts |
+| B1-Preliminary/Listening-Part-1-4.html | 3-Efficient | MCQ, gap-fill, image-based questions all work |
+| B1-Preliminary-MOCK-2/* | 4-Polished | Same counter fixes applied |
+| B1-Preliminary-MOCK-3/* | 4-Polished | Same counter fixes applied |
+
+### Deferred
+- Part page titles still say "A2 Key RW Digital Sample Test" — needs title fix like B2 First session
+- Writing test (Parts 7-8) — no timer overlay visible (reading.html wrapper provides timer, but writing module wrapper may need same)
+- Console errors from Inspera bundled JS (react-modal, moment-timezone, fontawesome fonts) — cannot fix (external CDN references)
+
+### Session Stats
+Pages explored: 12
+Rounds: 1
+Polishes landed: 0
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Fixes landed: 2 (16 files total: 1 JS + 15 HTML)
+Changes shipped: 16 files modified
