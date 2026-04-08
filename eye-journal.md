@@ -1210,3 +1210,43 @@ Elevations landed: 0
 Reverted: 0
 Fixes landed: 0
 Changes shipped: 6 files modified
+
+---
+
+## Session: 2026-04-08 (B1 Preliminary Listening — prompt #15)
+Persona: B1 level student taking Listening test
+System: Cambridge (localhost:3003)
+Pages explored: Listening-Part-1 to 4 across all 3 mocks
+Starting state: 4-Polished after teal sweep. Part 1 already had selected-state. Parts 2 & 4 (MCQ) lacked visual feedback when student picks an answer. Part 3 is gap-fill (covered by cambridge-bridge.js setupFilledState).
+
+### Round 1
+**Explored:** 12 Listening Part files across 3 mocks, 1 finding
+**Action:** ELEVATE 1 (selected-state on MCQ Parts 2 & 4)
+
+- [T0] Listening Parts 2 & 4 (×3 mocks = 6 files) — Added `.choice-item:has(input:checked)` selected-state with teal bg/border. Also upgraded styling: padding 10px→12px 15px, border 1px→2px, radius 4px→8px, added 0.2s transition + teal hover border.
+  Mode: elevate
+  Quality layer: 4-Polished → 5-Delightful (visible answer feedback)
+  Files: 6 Listening-Part-2.html and Listening-Part-4.html files
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| B1-Preliminary/Listening-Part-1.html | 5-Delightful | Image MCQ with selected-state |
+| B1-Preliminary/Listening-Part-2.html | 5-Delightful | Text MCQ with selected-state |
+| B1-Preliminary/Listening-Part-3.html | 4-Polished | Gap-fill (text inputs) — covered by setupFilledState |
+| B1-Preliminary/Listening-Part-4.html | 5-Delightful | Text MCQ with selected-state |
+| MOCK-2 & MOCK-3 | Same layers | All fixes applied |
+
+### Deferred
+- Inspera bloat in Listening Part files
+- Audio reliability — would require backend audio file integrity checks
+
+### Session Stats
+Pages explored: 12 (4 Parts × 3 mocks)
+Rounds: 1
+Polishes landed: 0
+Rebuilds landed: 0
+Elevations landed: 1 (selected-state on Parts 2 & 4)
+Reverted: 0
+Fixes landed: 0
+Changes shipped: 6 files modified
