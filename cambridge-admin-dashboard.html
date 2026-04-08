@@ -87,11 +87,11 @@
             <form onsubmit="login(event)">
                 <div class="form-group">
                     <label for="username">Username:</label>
-                    <input type="text" id="username" required aria-required="true" value="admin">
+                    <input type="text" id="username" required aria-required="true" value="admin" autocomplete="username">
                 </div>
                 <div class="form-group">
                     <label for="password">Password:</label>
-                    <input type="password" id="password" required aria-required="true">
+                    <input type="password" id="password" required aria-required="true" autocomplete="current-password" autofocus>
                 </div>
                 <button type="submit" class="btn" id="loginBtn">Login</button>
                 <div class="error-message" id="errorMessage" role="alert"></div>

@@ -152,17 +152,19 @@ These prompts are used by `/eye` in auto-cycle mode. Each prompt targets a speci
 **Walk:** Pending evaluations → audio playback → scoring form → evaluation notes → submit evaluation
 **Focus:** Audio player quality, scoring form layout, evaluation workflow efficiency
 
-### 24. Enhanced Admin Dashboard
-**URL:** `http://localhost:3003/enhanced-admin-dashboard.html`
-**Persona:** Admin using the enhanced dashboard for analytics
-**Walk:** Analytics overview → charts → submission trends → level breakdown → exports
-**Focus:** Data visualization, chart readability, actionable insights
+### 24. IELTS Admin Dashboard
+**URL:** `http://localhost:3002/ielts-admin-dashboard.html`
+**Persona:** Admin managing IELTS submissions
+**Walk:** Login → submission filters → individual submission view → scoring → answer management
+**Focus:** Data hierarchy, filter effectiveness, scoring workflow, brand consistency
+**Note:** Renamed from enhanced-admin-dashboard.html in ADR-017. No analytics/charts (the "enhanced" name was a misnomer).
 
-### 25. Admin Panel (IELTS)
-**URL:** `http://localhost:3000/`
-**Persona:** Admin managing IELTS submissions via dedicated panel
-**Walk:** Login → dashboard → submission management → mock answer management
-**Focus:** Admin login flow, CRUD operations, data management UX
+### 25. Admin Login Flow
+**URL:** `http://localhost:3002/ielts-admin-dashboard.html` and `http://localhost:3003/cambridge-admin-dashboard.html`
+**Persona:** Admin signing in to manage submissions
+**Walk:** Land on dashboard → see login form → autofocus password field → submit → see admin content
+**Focus:** Autofocus, autocomplete (password manager support), error states, login button feedback
+**Note:** No standalone admin server at port 3000 — both dashboards include their own login.
 
 ---
 
