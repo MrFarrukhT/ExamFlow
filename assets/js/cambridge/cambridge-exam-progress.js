@@ -12,7 +12,8 @@
         'A1-Movers':       { 'reading-writing': 35, 'listening': 25, 'speaking': null },
         'A2-Key':          { 'reading-writing': 30, 'listening': 25, 'speaking': null },
         'B1-Preliminary':  { 'reading': 32, 'writing': 2, 'listening': 25, 'speaking': null, 'reading-writing': 32 },
-        'B2-First':        { 'reading': 32, 'writing': 2, 'listening': 25, 'speaking': null }
+        'B2-First':        { 'reading': 32, 'writing': 2, 'listening': 25, 'speaking': null },
+        'C1-Advanced':     { 'reading': 56, 'writing': 2, 'listening': 30, 'speaking': null }
     };
 
     function getTotalQuestions() {

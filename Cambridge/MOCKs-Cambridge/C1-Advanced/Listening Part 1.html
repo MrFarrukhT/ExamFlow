@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C1 Advanced - Listening Part 1</title>
+  <link rel="stylesheet" href="./c1-test.css">
+  <script src="../../../assets/js/cambridge/session-verify.js"></script>
+</head>
+<body>
+  <div class="c1-header">
+    <div class="part-label">Listening &middot; Part 1 &middot; Multiple choice</div>
+    <div class="part-info">Questions 1–6 &middot; Listen to three short extracts</div>
+  </div>
+
+  <div class="c1-shell">
+    <div class="c1-instructions">
+      You will hear three short extracts. For questions <strong>1–6</strong>, choose the answer
+      (<strong>A</strong>, <strong>B</strong> or <strong>C</strong>) which fits best according to what you hear.
+      There are two questions for each extract.
+    </div>
+
+    <div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:12px 16px;border-radius:6px;margin:16px 0;font-size:14px;color:#92400e;">
+      <strong>📢 Audio:</strong> The audio for this listening test plays in the background. Use the audio controls in the wrapper page if available.
+    </div>
+
+    <h3 style="margin-top:24px;">Extract One</h3>
+    <p><em>You hear two friends discussing a book they have both read.</em></p>
+
+    <div class="c1-questions" id="q1-container"></div>
+    <div class="c1-questions" id="q2-container"></div>
+
+    <h3 style="margin-top:24px;">Extract Two</h3>
+    <p><em>You hear two colleagues talking about a recent training course.</em></p>
+
+    <div class="c1-questions" id="q3-container"></div>
+    <div class="c1-questions" id="q4-container"></div>
+
+    <h3 style="margin-top:24px;">Extract Three</h3>
+    <p><em>You hear a radio interview with an expert in city planning.</em></p>
+
+    <div class="c1-questions" id="q5-container"></div>
+    <div class="c1-questions" id="q6-container"></div>
+  </div>
+
+  <script src="./c1-test.js"></script>
+  <script>
+    const questions = [
+      { num: 1, container: 'q1-container', stem: 'What does the woman find most surprising about the book?', options: [
+        { letter: 'A', text: 'the unusual setting' },
+        { letter: 'B', text: 'the unexpected ending' },
+        { letter: 'C', text: 'the complex characters' }
+      ]},
+      { num: 2, container: 'q2-container', stem: 'Both speakers agree that the author', options: [
+        { letter: 'A', text: 'has improved since their previous work.' },
+        { letter: 'B', text: 'should write more in the same genre.' },
+        { letter: 'C', text: 'creates believable dialogue.' }
+      ]},
+      { num: 3, container: 'q3-container', stem: 'How did the man feel about the training course?', options: [
+        { letter: 'A', text: 'inspired by the practical exercises' },
+        { letter: 'B', text: 'frustrated by the pace' },
+        { letter: 'C', text: 'uncertain about its relevance' }
+      ]},
+      { num: 4, container: 'q4-container', stem: 'The woman suggests that future courses should', options: [
+        { letter: 'A', text: 'include more group work.' },
+        { letter: 'B', text: 'focus on real workplace scenarios.' },
+        { letter: 'C', text: 'be shorter in duration.' }
+      ]},
+      { num: 5, container: 'q5-container', stem: 'According to the expert, the main challenge facing modern cities is', options: [
+        { letter: 'A', text: 'inadequate public transport.' },
+        { letter: 'B', text: 'rising population density.' },
+        { letter: 'C', text: 'a lack of green spaces.' }
+      ]},
+      { num: 6, container: 'q6-container', stem: 'The expert\'s tone when discussing future projects could best be described as', options: [
+        { letter: 'A', text: 'cautiously optimistic.' },
+        { letter: 'B', text: 'openly critical.' },
+        { letter: 'C', text: 'mildly resigned.' }
+      ]}
+    ];
+
+    questions.forEach(q => {
+      const container = document.getElementById(q.container);
+      C1Test.renderMultipleChoice(container, q.num, q.stem, q.options);
+    });
+
+    // Single listening part for now (isLast: true → submit button)
+    C1Test.buildNav({
+      prevUrl: null,
+      nextUrl: null,
+      isLast: true,
+      progressText: 'Listening Part 1 of 1'
+    });
+  </script>
+</body>
+</html>

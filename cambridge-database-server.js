@@ -265,7 +265,8 @@ async function insertCambridgeSubmission(dbClient, data) {
 const { saveWithRetry } = createRetryQueue(ensureConnection, insertCambridgeSubmission);
 
 // Valid Cambridge levels and skills for submission validation
-const VALID_LEVELS = ['A1-Movers', 'A2-Key', 'B1-Preliminary', 'B2-First'];
+// C1-Advanced added for Zarmet University Olympiada (uses Cambridge dashboard infrastructure)
+const VALID_LEVELS = ['A1-Movers', 'A2-Key', 'B1-Preliminary', 'B2-First', 'C1-Advanced'];
 const VALID_SKILLS = ['reading', 'writing', 'listening', 'speaking', 'reading-writing', 'reading-use-of-english'];
 
 // Rate limit on student-facing submission endpoints
@@ -279,7 +280,8 @@ const CAMBRIDGE_TIME_LIMITS = {
     'A1-Movers': { reading: 50, writing: 50, listening: 30, speaking: 15, 'reading-writing': 60 },
     'A2-Key': { reading: 60, writing: 60, listening: 30, speaking: 15, 'reading-writing': 60, 'reading-use-of-english': 60 },
     'B1-Preliminary': { reading: 60, writing: 60, listening: 35, speaking: 15, 'reading-writing': 90, 'reading-use-of-english': 60 },
-    'B2-First': { reading: 75, writing: 80, listening: 40, speaking: 15, 'reading-use-of-english': 75 }
+    'B2-First': { reading: 75, writing: 80, listening: 40, speaking: 15, 'reading-use-of-english': 75 },
+    'C1-Advanced': { reading: 90, writing: 90, listening: 40, speaking: 15, 'reading-use-of-english': 90 }
 };
 
 // ============================================

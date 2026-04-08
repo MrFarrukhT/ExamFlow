@@ -5,10 +5,11 @@
     var studentId = localStorage.getItem('studentId');
     var studentName = localStorage.getItem('studentName');
     var examType = localStorage.getItem('examType');
-    if (!studentId || !studentName || examType !== 'Cambridge') {
+    if (!studentId || !studentName || (examType !== 'Cambridge' && examType !== 'Olympiada')) {
       alert('Please log in first to access the test.');
-      // Redirect to Cambridge login — use absolute path so it works at any nesting depth
-      window.location.href = '/index.html?exam=cambridge';
+      // Redirect to appropriate login — use absolute path so it works at any nesting depth
+      var target = (examType === 'Olympiada') ? '/index.html?exam=olympiada' : '/index.html?exam=cambridge';
+      window.location.href = target;
     }
   } catch(e) {
     // Non-blocking

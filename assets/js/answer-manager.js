@@ -458,7 +458,7 @@ class AnswerManager {
             const submissions = JSON.parse(existingData);
             submissions.push({
                 id: Date.now(),
-                examType: 'Cambridge',
+                examType: localStorage.getItem('examType') || 'Cambridge',
                 studentId: testData.studentInfo.id,
                 studentName: testData.studentInfo.name,
                 level: testData.studentInfo.level,

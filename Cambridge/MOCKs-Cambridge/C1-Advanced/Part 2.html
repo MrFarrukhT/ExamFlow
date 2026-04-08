@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C1 Advanced - Reading Part 2</title>
+  <link rel="stylesheet" href="./c1-test.css">
+  <script src="../../../assets/js/cambridge/session-verify.js"></script>
+</head>
+<body>
+  <div class="c1-header">
+    <div class="part-label">Part 2 &middot; Open cloze</div>
+    <div class="part-info">Questions 9–16 &middot; Reading &amp; Use of English</div>
+  </div>
+
+  <div class="c1-shell">
+    <div class="c1-instructions">
+      For questions <strong>9–16</strong>, read the text below and think of the word which best fits each gap. Use only <strong>one word</strong> in each gap.
+    </div>
+
+    <h2 class="c1-passage-title">The Museum of Modern Art &mdash; MoMA</h2>
+
+    <div class="c1-passage" id="passage"></div>
+    <div class="c1-questions" id="questions"></div>
+  </div>
+
+  <script src="./c1-test.js"></script>
+  <script>
+    const passageEl = document.getElementById('passage');
+
+    // Build inline-gap passage so the input boxes appear inside the text
+    function buildPassage() {
+      const segments = [
+        { type: 'p', parts: [
+          'When it opened in New York in 1929, MoMA prioritised contemporary rather than traditional art, and was quite ',
+          { gap: 9 },
+          ' other art museums. The public\u2019s response was overwhelmingly enthusiastic, as was that of the art world generally. Over the next ten years, MoMA required more space and relocated several times. It ended ',
+          { gap: 10 },
+          ' moving into the Manhattan building it still occupies to ',
+          { gap: 11 },
+          ' day.'
+        ]},
+        { type: 'p', parts: [
+          'Despite MoMA having more space, it struggles to house all of its collection, which has grown from just eight prints and one drawing to an impressive 200,000 works. These ',
+          { gap: 12 },
+          ' include only paintings, sculptures, prints and photographs, but also media and performance art works and architectural models. ',
+          { gap: 13 },
+          ' is more, MoMA also owns approximately two million film stills. To ensure that fresh material is always ',
+          { gap: 14 },
+          ' display, the exhibitions are regularly changed.'
+        ]},
+        { type: 'p', parts: [
+          'MoMA is dedicated ',
+          { gap: 15 },
+          ' its role as an educational institution. For this reason, every department maintains a study centre available to students. Furthermore, its archives are, ',
+          { gap: 16 },
+          ' a doubt, more comprehensive than those of any other modern art museum.'
+        ]}
+      ];
+
+      segments.forEach(seg => {
+        const p = document.createElement('p');
+        seg.parts.forEach(part => {
+          if (typeof part === 'string') {
+            p.appendChild(document.createTextNode(part));
+          } else if (part.gap) {
+            p.appendChild(C1Test.renderTextInput(part.gap, String(part.gap)));
+          }
+        });
+        passageEl.appendChild(p);
+      });
+    }
+
+    buildPassage();
+
+    // Below the passage we also list the question numbers as a reference
+    const list = document.getElementById('questions');
+    list.innerHTML = '<p style="font-family: \'Segoe UI\', system-ui, sans-serif; color:#6b7280; font-size:0.9rem; margin:0;">Type your answers directly into the gaps in the passage above. Each gap takes <strong>one word</strong> only.</p>';
+
+    C1Test.buildNav({
+      prevUrl: 'Part 1.html',
+      nextUrl: 'Part 3.html',
+      isLast: false,
+      progressText: 'Part 2 of 8'
+    });
+  </script>
+</body>
+</html>

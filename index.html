@@ -157,8 +157,10 @@
         var _examType = (function() {
             var params = new URLSearchParams(window.location.search);
             var examParam = (params.get('exam') || '').toLowerCase();
+            if (examParam === 'olympiada') return 'Olympiada';
             if (examParam === 'cambridge') return 'Cambridge';
             var stored = (localStorage.getItem('examType') || '');
+            if (stored === 'Olympiada') return 'Olympiada';
             if (stored === 'Cambridge') return 'Cambridge';
             return 'IELTS';
         })();
@@ -167,6 +169,13 @@
         if (_examType === 'Cambridge') {
             document.getElementById('examBadge').textContent = 'Cambridge General English';
             document.querySelector('.exam-subtitle').textContent = 'Cambridge General English Assessment';
+        } else if (_examType === 'Olympiada') {
+            document.getElementById('examBadge').textContent = 'Olympiada · C1';
+            document.querySelector('.welcome-title').textContent = 'Welcome, Olympiada Candidate';
+            document.querySelector('.exam-subtitle').textContent = 'Zarmet University · English Language Olympiada';
+            // Hide "Back to exam selection" — Olympiada is a standalone entry
+            var backLink = document.querySelector('.footer-text a[href="launcher.html"]');
+            if (backLink) backLink.parentNode.style.display = 'none';
         }
 
         function showError(groupId, errorId) {
@@ -233,7 +242,11 @@
             localStorage.setItem('testStartTime', new Date().toISOString());
 
             // Redirect to appropriate dashboard
-            if (_examType === 'Cambridge') {
+            if (_examType === 'Olympiada') {
+                // Olympiada uses the Cambridge dashboard with C1-Advanced pre-locked
+                localStorage.setItem('cambridgeLevel', 'C1-Advanced');
+                window.location.href = 'Cambridge/dashboard-cambridge.html?exam=olympiada';
+            } else if (_examType === 'Cambridge') {
                 window.location.href = 'Cambridge/dashboard-cambridge.html';
             } else {
                 window.location.href = 'student-dashboard.html';

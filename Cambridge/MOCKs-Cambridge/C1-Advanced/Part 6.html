@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C1 Advanced - Reading Part 6</title>
+  <link rel="stylesheet" href="./c1-test.css">
+  <script src="../../../assets/js/cambridge/session-verify.js"></script>
+</head>
+<body>
+  <div class="c1-header">
+    <div class="part-label">Part 6 &middot; Cross-text multiple matching</div>
+    <div class="part-info">Questions 37–40 &middot; Reading &amp; Use of English</div>
+  </div>
+
+  <div class="c1-shell">
+    <div class="c1-instructions">
+      You are going to read four extracts from articles in which park rangers discuss national parks. For questions <strong>37–40</strong>, choose the answer (<strong>A</strong>, <strong>B</strong>, <strong>C</strong> or <strong>D</strong>). Each answer may be chosen more than once.
+    </div>
+
+    <h2 class="c1-passage-title">National parks</h2>
+
+    <div class="c1-extract">
+      <h4>Park ranger A</h4>
+      <p>Many types of human activity, including hiking, cycling and horse-riding, have an impact on nature. Even small trails used by ecotourists and birdwatchers scare away some sensitive wildlife species or cause them to alter their behaviour. However, visitors help fund the operation of national parks and provide vital income for local people in many parts of the world. Therefore, putting a cap on how many come or banning their sporting activities is not a viable proposition. Introducing 'no-go' zones within a park, on the other hand, would protect wildlife while allowing visitors to enjoy the rest of the park. Such zones could be in more remote locations, away from roads. The majority of national parks already had roads running through them before they were given national park status. Closing these would prove unpopular, and in any case they are necessary infrastructure for both staff and visitors.</p>
+    </div>
+
+    <div class="c1-extract">
+      <h4>Park ranger B</h4>
+      <p>National parks expose people to nature and increase the likelihood that they\u2019ll support environmental protection measures. If we introduce ceilings on how many can enjoy the parks, we risk losing that support. Having said that, I do think some changes are called for. Thanks to photo-sharing websites, picturesque vistas are being completely spoiled by crowds of tourists desperate to take the perfect selfie, and ecology should always be at the forefront of what we do. There are other issues too. Rather than continuing to allow outdoor sports such as off-road cycling in national parks, we need to identify more suitable spaces. And even for less damaging visitor pastimes, human activity must be restricted to particular sectors of the parks, using signage and physical barriers, while retaining the remainder for wildlife to live without human disturbance.</p>
+    </div>
+
+    <div class="c1-extract">
+      <h4>Park ranger C</h4>
+      <p>The activities people do in national parks are changing, and park authorities need to keep up with that, whether it means introducing mountain bike trails or improving wi-fi access so tourists can use the internet. And park managers need to embrace the data which technology can provide. For example, GPS tagging shows that half of all photos by visitors are taken in less than 1% of each park. In other words, most visitors use a small, highly trafficked area of each park. Therefore, there\u2019s no need to set up visitor-free areas — there are plenty of those already. Roads are another matter, however. Existing ones need to be re-routed to avoid national parks, and new ones constructed outside park boundaries. Of course, this means other transport links must be improved. We have to allow as many people to visit as want to. If people can\u2019t go to national parks, they won\u2019t want to protect them, and we\u2019ll lose the parks completely.</p>
+    </div>
+
+    <div class="c1-extract">
+      <h4>Park ranger D</h4>
+      <p>Can national parks continue to embrace ever-increasing levels of tourism while retaining what makes them unique? I can\u2019t see how. At one US national park, for example, a site which used to attract a few thousand visitors annually now gets two million a year, mainly because of tourists posting pictures of it online. This isn\u2019t an isolated case, and the consequences are disastrous — something we need to communicate to visitors. The time has come to draw a line. Parks must decide on a maximum number of people who can enter on a daily basis, both to protect wildlife and habitats and to ensure these continue to be pleasant places for people to visit. We also need to look at visitor activities. For example, forests maintained for commercial harvest offer a more appropriate setting for sports such as cross country cycling than national parks. Roads through national parks should also be closed so that traffic no longer goes through them, and visitors encouraged to travel to parks by other means.</p>
+    </div>
+
+    <div class="c1-questions" id="questions"></div>
+  </div>
+
+  <script src="./c1-test.js"></script>
+  <script>
+    const questions = [
+      { num: 37, stem: 'Which park ranger shares an opinion with D about mountain biking in national parks?' },
+      { num: 38, stem: 'Which park ranger has a different view from C about roads in national parks?' },
+      { num: 39, stem: 'Which park ranger expresses a different view from the others about limiting visitor numbers to national parks?' },
+      { num: 40, stem: 'Which park ranger shares D\u2019s view about the impact of social media on national parks?' }
+    ];
+
+    const opts = [
+      { letter: 'A', text: 'Park ranger A' },
+      { letter: 'B', text: 'Park ranger B' },
+      { letter: 'C', text: 'Park ranger C' },
+      { letter: 'D', text: 'Park ranger D' }
+    ];
+
+    const container = document.getElementById('questions');
+    questions.forEach(q => C1Test.renderMultipleChoice(container, q.num, q.stem, opts));
+
+    C1Test.buildNav({
+      prevUrl: 'Part 5.html',
+      nextUrl: 'Part 7.html',
+      isLast: false,
+      progressText: 'Part 6 of 8'
+    });
+  </script>
+</body>
+</html>

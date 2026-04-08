@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C1 Advanced - Reading Part 8</title>
+  <link rel="stylesheet" href="./c1-test.css">
+  <script src="../../../assets/js/cambridge/session-verify.js"></script>
+</head>
+<body>
+  <div class="c1-header">
+    <div class="part-label">Part 8 &middot; Multiple matching</div>
+    <div class="part-info">Questions 47–56 &middot; Reading &amp; Use of English</div>
+  </div>
+
+  <div class="c1-shell">
+    <div class="c1-instructions">
+      You are going to read an interview with a famous architect. For questions <strong>47–56</strong>, choose from the sections (<strong>A–D</strong>). The sections may be chosen more than once.
+    </div>
+
+    <h2 class="c1-passage-title">An interview with Frank Gehry, world-famous architect</h2>
+    <p style="font-style:italic; color:#6b7280; margin-bottom:24px;">Rowan Moore spoke to the award-winning genius behind iconic buildings such as the Guggenheim Museum in Spain and the Walt Disney Concert Hall in Los Angeles on his 90th birthday.</p>
+
+    <div class="c1-section">
+      <span class="section-letter">A</span><strong>Section A</strong>
+      <p>'I\u2019ve taken up flying,' says the American-Canadian architect Frank Gehry, as he sits opposite me in his Los Angeles office. 'A little bit.' Then he tells the story of how, in his youth, his cousin had a plane and would take him up in it. How he\u2019d wanted to do this again, and ended up flying with Harrison Ford, the Hollywood superstar. This story is typical Gehry. It shows his sociable nature. He has a fascination with celebrity and high achievers, as many photographs around his office attest. Fame is definitely a thing with Gehry, but an ambiguous one. 'I find it very comforting to be here in Los Angeles because there are no spotlights except on the Hollywood film industry here. It gives people like me a kind of cloud cover,' he says. It\u2019s not untypical that a boast ('I\u2019ve taken up flying') is followed by deprecation ('A little bit'). Most of all, the plane story captures his addiction to adventure — physical, emotional and imaginative. Many people credit this trait as driving the spirit of experimentation and playfulness that is evident in Gehry\u2019s architecture, which, while sometimes criticised for its crudeness and unfinished look, can never be ignored. The sense of fun is ever-present in his buildings that often seem to blur or transcend categories.</p>
+    </div>
+
+    <div class="c1-section">
+      <span class="section-letter">B</span><strong>Section B</strong>
+      <p>His love of adventure and leaps into the unknown can also be seen in work Gehry did early on in his career with schoolchildren, in collaboration with his teacher sister, which was captured in a documentary directed by Jon Boorstin. The children built an imaginary city out of painted blocks and cardboard — coincidentally a sort of haphazard anticipation of the architecture Gehry would later do. They debated planning issues and elected a mayor. The ensuing heated discussions were all too chaotic for the children\u2019s regular teacher (Gehry now regrets his lack of tact when dealing with her), who cancelled the project. 'The point she missed,' Gehry says in the film, 'is that the conflict, when they start arguing with each other, is the real involvement in the city planning process that they were robbed of.' This work with the schoolchildren is one of a number of \u2018cliff jumps\u2019 in Gehry\u2019s life.</p>
+    </div>
+
+    <div class="c1-section">
+      <span class="section-letter">C</span><strong>Section C</strong>
+      <p>The most pivotal jump concerns the house in Santa Monica where Gehry lived until recently with his wife, Berta, which he remodelled in the 1970s with all the disrespect for convention for which he was not yet world-famous — jagged angles, rough edges, and unglamorous materials such as plywood and corrugated metal. At that time, Gehry had built up a sizeable portfolio designing not-bad but not-exceptional commercial projects — apartment blocks, offices, shopping centres — with a sideline doing houses and studios for his artist friends. In 1980, he hosted a dinner at his house to celebrate the opening of one of his distinctly bland and uninspiring shopping centres. His developer client looked around the house. 'Is this what you like?' he asked. Gehry said he did. 'Well, if you like this you can\u2019t possibly like the shopping centre. Why are you doing it?' So Gehry, aged a little past 50, stopped working on all his commercial projects. He chose, almost, to start over again.</p>
+    </div>
+
+    <div class="c1-section">
+      <span class="section-letter">D</span><strong>Section D</strong>
+      <p>As midlife crises go, it was one of the more creative and productive ones. If Gehry struggled for a while, he would eventually build up a reputation based on small- to medium-sized projects: more houses, a law school, a library, an ice rink. With the opening of the Bilbao Guggenheim in 1997, his success became both popular and global. This celebrated constellation of titanium and stone gave its name to a phenomenon — the \u2018Bilbao effect\u2019 — whereby beaten-up old cities would try to reverse their fortunes with spectacular architecture that would attract new visitors. It became the icon of what would be called iconic architecture. Other landmarks followed, such as the Walt Disney Concert Hall in downtown Los Angeles. (In fact, it was commissioned before Bilbao, but drawn out by, among other things, Gehry\u2019s efforts to convince clients and funders that he really should be allowed to build it.) By the time the Hollywood director Sydney Pollack made a feature-length documentary about him in 2005, it was common to call Gehry a \u2018genius\u2019, a \u2018modern master\u2019 or \u2018the greatest architect in the world\u2019.</p>
+    </div>
+
+    <div class="c1-questions" id="questions"></div>
+  </div>
+
+  <script src="./c1-test.js"></script>
+  <script>
+    const questions = [
+      { num: 47, stem: 'Which section mentions the mixed feelings Gehry has about being the focus of attention?' },
+      { num: 48, stem: 'Which section mentions the economic impact of Gehry\u2019s work?' },
+      { num: 49, stem: 'Which section mentions how Gehry decided to abandon his previous approach to architecture?' },
+      { num: 50, stem: 'Which section mentions an instance where Gehry showed a lack of interpersonal skills?' },
+      { num: 51, stem: 'Which section mentions Gehry\u2019s concern to avoid appearing immodest?' },
+      { num: 52, stem: 'Which section mentions Gehry\u2019s indifference to established architectural rules?' },
+      { num: 53, stem: 'Which section mentions a time when Gehry successfully used his powers of persuasion?' },
+      { num: 54, stem: 'Which section mentions a period in Gehry\u2019s career when he produced less than inspiring work?' },
+      { num: 55, stem: 'Which section mentions an experiment that Gehry felt was misunderstood?' },
+      { num: 56, stem: 'Which section mentions how Gehry\u2019s comments reveal fundamental aspects of his character?' }
+    ];
+
+    const opts = [
+      { letter: 'A', text: 'Section A' },
+      { letter: 'B', text: 'Section B' },
+      { letter: 'C', text: 'Section C' },
+      { letter: 'D', text: 'Section D' }
+    ];
+
+    const container = document.getElementById('questions');
+    questions.forEach(q => C1Test.renderMultipleChoice(container, q.num, q.stem, opts));
+
+    C1Test.buildNav({
+      prevUrl: 'Part 7.html',
+      nextUrl: null,
+      isLast: true,
+      progressText: 'Part 8 of 8 (final)'
+    });
+  </script>
+</body>
+</html>

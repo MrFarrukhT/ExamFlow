@@ -603,7 +603,8 @@ class ExamTimer {
             'A1-Movers': { 'reading-writing': 35, 'listening': 30, 'speaking': 7 },
             'A2-Key':    { 'reading-writing': 60, 'listening': 30, 'speaking': 10 },
             'B1-Preliminary': { 'reading': 45, 'writing': 45, 'reading-writing': 90, 'listening': 40, 'speaking': 12 },
-            'B2-First':  { 'reading': 75, 'writing': 80, 'listening': 40, 'speaking': 14 }
+            'B2-First':  { 'reading': 75, 'writing': 80, 'listening': 40, 'speaking': 14 },
+            'C1-Advanced': { 'reading': 90, 'writing': 90, 'listening': 40, 'speaking': 15 }
         };
         return durations[level]?.[module] || 60;
     }

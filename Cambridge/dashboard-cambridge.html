@@ -6,6 +6,64 @@
     <title>Cambridge General English - Test Dashboard</title>
     <link rel="stylesheet" href="../assets/css/cambridge-dashboard.css">
     <link rel="icon" href="../assets/icons/innovativecentre.png">
+    <style id="olympiada-dashboard-theme">
+        /* Olympiada (Zarmet University) overrides — applied when html.olympiada is set */
+        html.olympiada .header-logo { display: none; }
+        html.olympiada .zarmet-header-mark { display: inline-flex !important; }
+        .zarmet-header-mark { display: none; align-items: center; gap: 10px; color: #fff; font-family: 'Georgia', 'Segoe UI', serif; }
+        .zarmet-header-mark .shield {
+            width: 44px; height: 44px;
+            background: linear-gradient(135deg, #ea580c, #7c2d12);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-weight: 800; font-size: 16px; letter-spacing: 1px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+        }
+        .zarmet-header-mark .name { font-size: 0.95rem; font-weight: 700; line-height: 1.1; }
+        .zarmet-header-mark .name small { display: block; font-size: 0.7rem; opacity: 0.85; font-weight: 500; margin-top: 2px; }
+
+        html.olympiada .dashboard-header { background: linear-gradient(135deg, #7c2d12, #431407) !important; }
+        html.olympiada .exam-badge-header {
+            background: rgba(254, 215, 170, 0.18);
+            border: 1px solid rgba(254, 215, 170, 0.35);
+            color: #fed7aa;
+        }
+        html.olympiada .level-badge-large {
+            background: linear-gradient(135deg, #ea580c, #c2410c) !important;
+            color: #fff !important;
+        }
+        html.olympiada .module-button,
+        html.olympiada .change-level-btn,
+        html.olympiada .view-results-btn {
+            background: linear-gradient(135deg, #ea580c, #c2410c) !important;
+        }
+        html.olympiada .module-button:hover,
+        html.olympiada .change-level-btn:hover {
+            background: linear-gradient(135deg, #c2410c, #9a3412) !important;
+        }
+        /* Hide non-C1 levels in Olympiada mode */
+        html.olympiada .level-card[data-level="A1-Movers"],
+        html.olympiada .level-card[data-level="A2-Key"],
+        html.olympiada .level-card[data-level="B1-Preliminary"],
+        html.olympiada .level-card[data-level="B2-First"] { display: none !important; }
+    </style>
+    <script>
+        // Detect olympiada mode early so theme is applied before paint
+        (function () {
+            try {
+                var p = new URLSearchParams(window.location.search);
+                var examParam = (p.get('exam') || '').toLowerCase();
+                var stored = (localStorage.getItem('examType') || '').toLowerCase();
+                if (examParam === 'olympiada' || stored === 'olympiada') {
+                    document.documentElement.classList.add('olympiada');
+                    document.title = 'Zarmet University - Olympiada Dashboard';
+                    // Force level to C1-Advanced in Olympiada mode
+                    localStorage.setItem('examType', 'Olympiada');
+                    localStorage.setItem('cambridgeLevel', 'C1-Advanced');
+                }
+            } catch (e) {}
+        })();
+    </script>
 </head>
 <body>
     <!-- Load distraction-free mode first -->
@@ -19,6 +77,10 @@
         <header class="dashboard-header">
             <div class="header-content">
                 <img src="../assets/icons/Logo Big.png" alt="Innovative Centre" class="header-logo">
+                <div class="zarmet-header-mark" aria-label="Zarmet University">
+                    <div class="shield">ZU</div>
+                    <div class="name">Zarmet University<small>English Olympiada</small></div>
+                </div>
                 <div class="exam-badge-header">Cambridge General English</div>
                 <div class="header-right">
                     <div class="test-info">
@@ -91,6 +153,19 @@
                                 <li>Speaking</li>
                             </ul>
                         </div>
+
+                        <!-- C1 Advanced -->
+                        <div class="level-card" data-level="C1-Advanced" onclick="selectLevel('C1-Advanced')">
+                            <div class="level-badge-large">C1</div>
+                            <h3 class="level-title">Advanced (CAE)</h3>
+                            <p class="level-description">Advanced level English</p>
+                            <ul class="level-parts">
+                                <li>Reading & Use of English</li>
+                                <li>Writing</li>
+                                <li>Listening</li>
+                                <li>Speaking</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
@@ -149,15 +224,21 @@
             const studentId = localStorage.getItem('studentId');
             const studentName = localStorage.getItem('studentName');
             const examType = localStorage.getItem('examType');
+            const isOlympiada = examType === 'Olympiada';
 
-            if (!studentId || !studentName || examType !== 'Cambridge') {
-                window.location.href = '../index.html?exam=cambridge';
+            if (!studentId || !studentName || (examType !== 'Cambridge' && examType !== 'Olympiada')) {
+                window.location.href = isOlympiada ? '../index.html?exam=olympiada' : '../index.html?exam=cambridge';
                 return;
             }
 
             document.getElementById('welcomeText').textContent = `Welcome, ${studentName}`;
             document.getElementById('studentDetails').textContent = `ID: ${studentId}`;
-            
+
+            // Olympiada locks the level to C1-Advanced — auto-select on entry
+            if (isOlympiada) {
+                localStorage.setItem('cambridgeLevel', 'C1-Advanced');
+            }
+
             // Also store in sessionStorage for speaking test
             sessionStorage.setItem('cambridge_student_info', JSON.stringify({
                 studentId: studentId,
@@ -263,9 +344,10 @@
                 });
             } else {
                 // Separate Reading, Writing, Listening, Speaking
+                const showUseOfEnglish = (level === 'B2-First' || level === 'C1-Advanced');
                 modulesGrid.innerHTML = `
                     <div class="module-card" id="readingCard" data-module="reading">
-                        <h3 class="module-title">Reading${level === 'B2-First' ? ' & Use of English' : ''}</h3>
+                        <h3 class="module-title">Reading${showUseOfEnglish ? ' & Use of English' : ''}</h3>
                         <p class="module-duration">~60 minutes</p>
                         <p class="module-hint">Read texts and answer comprehension questions across multiple parts.</p>
                         <span class="status-badge" id="readingStatus">Not Started</span>
@@ -290,7 +372,7 @@
 
                     <div class="module-card" id="speakingCard" data-module="speaking">
                         <h3 class="module-title">Speaking</h3>
-                        <p class="module-duration">~${level === 'B1-Preliminary' ? '12' : '14'} minutes</p>
+                        <p class="module-duration">~${level === 'B1-Preliminary' ? '12' : (level === 'C1-Advanced' ? '15' : '14')} minutes</p>
                         <p class="module-hint">Record yourself answering questions. You'll test your microphone first.</p>
                         <span class="status-badge" id="speakingStatus">Not Started</span>
                         <button class="module-button" id="speakingButton">Start Speaking</button>

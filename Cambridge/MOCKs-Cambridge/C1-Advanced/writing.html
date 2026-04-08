@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cambridge C1 Advanced - Writing</title>
+  <link rel="icon" href="../../../assets/icons/innovativecentre.png">
+
+  <script src="../../../assets/js/cambridge/session-verify.js"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      color: #000;
+      font-family: system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      max-width: 100vw !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    .part-frame {
+      width: 100%;
+      height: 100vh;
+      border: 0;
+      background: #ffffff;
+      display: block;
+      max-width: 100% !important;
+      overflow: hidden;
+    }
+  </style>
+  <link rel="stylesheet" href="../../../assets/css/universal-popup-styles.css">
+</head>
+<body>
+  <iframe id="part-frame" class="part-frame" src="./Writing Part 1.html"></iframe>
+
+  <script src="../../../assets/js/distraction-free.js"></script>
+  <script src="../../../assets/js/answer-manager.js"></script>
+  <script src="../../../assets/js/timer.js"></script>
+  <script src="../../../assets/js/cambridge/cambridge-exam-progress.js"></script>
+
+  <script>
+    CambridgeTimer.destroyAllTimers();
+
+    const module = 'writing';
+    const moduleStatus = localStorage.getItem(`cambridge-${module}Status`);
+
+    if (moduleStatus === 'completed') {
+      alert('This test has already been completed. Returning to dashboard.');
+      window.location.href = '../../dashboard-cambridge.html';
+      throw new Error('Test already completed');
+    }
+
+    const isNewTest = !localStorage.getItem(`cambridge-${module}StartTime`) || moduleStatus !== 'in-progress';
+
+    if (isNewTest) {
+      CambridgeTimer.clearTimerState(module);
+      localStorage.removeItem(`cambridge-${module}StartTime`);
+      localStorage.removeItem(`cambridge-${module}EndTime`);
+      localStorage.setItem(`cambridge-${module}StartTime`, new Date().toISOString());
+    }
+
+    localStorage.setItem(`cambridge-${module}Status`, 'in-progress');
+
+    if (!localStorage.getItem('cambridge-writingAnswers')) {
+      localStorage.setItem('cambridge-writingAnswers', JSON.stringify({}));
+    }
+
+    // C1 Advanced Writing: 90 minutes
+    const timer = new CambridgeTimer(90, 'Writing');
+
+    // Autosave answers periodically
+    setInterval(() => {
+      try {
+        const frame = document.getElementById('part-frame');
+        const doc = frame.contentDocument;
+        if (doc && doc.defaultView && doc.defaultView.__C1_forceSaveAll) {
+          doc.defaultView.__C1_forceSaveAll();
+          if (typeof showCambridgeSaveIndicator === 'function' && doc.defaultView) showCambridgeSaveIndicator();
+        }
+      } catch(e) { console.warn('Autosave failed:', e); }
+    }, 3000);
+  </script>
+</body>
+</html>

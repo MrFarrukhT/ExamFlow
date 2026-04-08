@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C1 Advanced - Writing</title>
+  <link rel="stylesheet" href="./c1-test.css">
+  <script src="../../../assets/js/cambridge/session-verify.js"></script>
+</head>
+<body>
+  <div class="c1-header">
+    <div class="part-label">Writing Test &middot; 2 Tasks</div>
+    <div class="part-info">90 minutes &middot; Both tasks compulsory</div>
+  </div>
+
+  <div class="c1-shell">
+    <div class="c1-instructions">
+      <strong>Part 1 — Essay (compulsory)</strong>: Write your answer in <strong>220–260 words</strong>.<br>
+      <strong>Part 2 — Choose ONE task</strong>: Write your answer in <strong>220–260 words</strong>.
+    </div>
+
+    <h2 class="c1-passage-title">Part 1: Essay</h2>
+    <div class="c1-passage">
+      <p><strong>Task:</strong> Your class has watched a panel discussion about how schools can prepare students for the workplace. You have made the notes below.</p>
+      <p><em>Some opinions expressed in the discussion:</em></p>
+      <ul>
+        <li>"Practical skills should be taught alongside academic subjects."</li>
+        <li>"Schools should teach communication and teamwork."</li>
+        <li>"Students need real-world work experience before they leave school."</li>
+      </ul>
+      <p>Write an <strong>essay</strong> discussing <strong>two</strong> of the points in your notes. You should explain which preparation you think is most important, giving reasons to support your opinion.</p>
+    </div>
+    <div id="task1-container"></div>
+
+    <h2 class="c1-passage-title" style="margin-top:32px;">Part 2: Task 2</h2>
+    <div class="c1-passage">
+      <p><strong>Task:</strong> A travel magazine has invited readers to send in <strong>reviews</strong> of a museum or art gallery they have visited recently. Your review should describe the museum or gallery, explain what you found most interesting about it, and say whether you would recommend it to other visitors.</p>
+      <p>Write your <strong>review</strong>.</p>
+    </div>
+    <div id="task2-container"></div>
+  </div>
+
+  <script src="./c1-test.js"></script>
+  <script>
+    // Task 1: Essay (220-260 words)
+    document.getElementById('task1-container').appendChild(
+      C1Test.renderTextarea(1, 220, 260, 'Write your essay here…')
+    );
+
+    // Task 2: Review (220-260 words)
+    document.getElementById('task2-container').appendChild(
+      C1Test.renderTextarea(2, 220, 260, 'Write your review here…')
+    );
+
+    // Single page = isLast (only writing part for now)
+    C1Test.buildNav({
+      prevUrl: null,
+      nextUrl: null,
+      isLast: true,
+      progressText: 'Writing Test'
+    });
+  </script>
+</body>
+</html>

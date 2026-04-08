@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C1 Advanced - Reading Part 1</title>
+  <link rel="stylesheet" href="./c1-test.css">
+  <script src="../../../assets/js/cambridge/session-verify.js"></script>
+</head>
+<body>
+  <div class="c1-header">
+    <div class="part-label">Part 1 &middot; Multiple-choice cloze</div>
+    <div class="part-info">Questions 1–8 &middot; Reading &amp; Use of English</div>
+  </div>
+
+  <div class="c1-shell">
+    <div class="c1-instructions">
+      For questions <strong>1–8</strong>, read the text below and decide which answer (<strong>A</strong>, <strong>B</strong>, <strong>C</strong> or <strong>D</strong>) best fits each gap.
+    </div>
+
+    <h2 class="c1-passage-title">Bridges for wildlife</h2>
+
+    <div class="c1-passage">
+      <p>
+        The act of annual migration is common to many species. They migrate towards more
+        <span class="c1-gap">(1)</span> climates, or return to breeding sites and feeding grounds.
+        Roads and traffic, however, can <span class="c1-gap">(2)</span> a significant threat to some species' survival.
+        To <span class="c1-gap">(3)</span> this problem, environmentalists and engineers around the world
+        have put their heads together to devise 'wildlife bridges'.
+      </p>
+      <p>
+        In Canada, grizzly bears, wolverines and toads are just a few of the species
+        <span class="c1-gap">(4)</span> use of grass-covered, cement bridges that cross the Trans-Canada Highway.
+        <span class="c1-gap">(5)</span>, on Australia's Christmas Island, a five-metre-high bridge across a busy road
+        enables red crabs to pass safely from the rainforest to the ocean. The bridge has significantly reduced
+        their casualty <span class="c1-gap">(6)</span> and averted traffic chaos.
+      </p>
+      <p>
+        In Sweden, plans are being <span class="c1-gap">(7)</span> up for a series of bridges across a main highway,
+        which will allow the country's 250,000 reindeer to reach the mountains. Engineers must take
+        <span class="c1-gap">(8)</span> of the fact that reindeer are easily frightened by traffic, and so make
+        the bridge walls high enough to prevent the deer from jumping off.
+      </p>
+    </div>
+
+    <div class="c1-questions" id="questions"></div>
+  </div>
+
+  <script src="./c1-test.js"></script>
+  <script>
+    const questions = [
+      { num: 1, stem: 'Gap 1', options: [
+        { letter: 'A', text: 'supportive' },
+        { letter: 'B', text: 'favourable' },
+        { letter: 'C', text: 'hopeful' },
+        { letter: 'D', text: 'worthwhile' }
+      ]},
+      { num: 2, stem: 'Gap 2', options: [
+        { letter: 'A', text: 'raise' },
+        { letter: 'B', text: 'pose' },
+        { letter: 'C', text: 'create' },
+        { letter: 'D', text: 'establish' }
+      ]},
+      { num: 3, stem: 'Gap 3', options: [
+        { letter: 'A', text: 'address' },
+        { letter: 'B', text: 'oppose' },
+        { letter: 'C', text: 'challenge' },
+        { letter: 'D', text: 'approach' }
+      ]},
+      { num: 4, stem: 'Gap 4', options: [
+        { letter: 'A', text: 'putting' },
+        { letter: 'B', text: 'gaining' },
+        { letter: 'C', text: 'making' },
+        { letter: 'D', text: 'getting' }
+      ]},
+      { num: 5, stem: 'Gap 5', options: [
+        { letter: 'A', text: 'Respectively' },
+        { letter: 'B', text: 'Comparably' },
+        { letter: 'C', text: 'Similarly' },
+        { letter: 'D', text: 'Correspondingly' }
+      ]},
+      { num: 6, stem: 'Gap 6', options: [
+        { letter: 'A', text: 'quota' },
+        { letter: 'B', text: 'percentage' },
+        { letter: 'C', text: 'scale' },
+        { letter: 'D', text: 'rate' }
+      ]},
+      { num: 7, stem: 'Gap 7', options: [
+        { letter: 'A', text: 'shown' },
+        { letter: 'B', text: 'backed' },
+        { letter: 'C', text: 'drawn' },
+        { letter: 'D', text: 'worked' }
+      ]},
+      { num: 8, stem: 'Gap 8', options: [
+        { letter: 'A', text: 'advantage' },
+        { letter: 'B', text: 'account' },
+        { letter: 'C', text: 'control' },
+        { letter: 'D', text: 'effect' }
+      ]}
+    ];
+
+    const container = document.getElementById('questions');
+    questions.forEach(q => C1Test.renderMultipleChoice(container, q.num, q.stem, q.options));
+
+    C1Test.buildNav({
+      prevUrl: null,
+      nextUrl: 'Part 2.html',
+      isLast: false,
+      progressText: 'Part 1 of 8'
+    });
+  </script>
+</body>
+</html>

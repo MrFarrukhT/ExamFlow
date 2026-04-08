@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C1 Advanced - Reading Part 4</title>
+  <link rel="stylesheet" href="./c1-test.css">
+  <script src="../../../assets/js/cambridge/session-verify.js"></script>
+</head>
+<body>
+  <div class="c1-header">
+    <div class="part-label">Part 4 &middot; Key word transformation</div>
+    <div class="part-info">Questions 25–30 &middot; Reading &amp; Use of English</div>
+  </div>
+
+  <div class="c1-shell">
+    <div class="c1-instructions">
+      For questions <strong>25–30</strong>, complete the second sentence so that it has a similar meaning to the first sentence, using the word given. <strong>Do not change the word given.</strong> You must use between three and six words, including the word given.
+    </div>
+
+    <div class="c1-questions" id="questions"></div>
+  </div>
+
+  <script src="./c1-test.js"></script>
+  <script>
+    const items = [
+      {
+        num: 25,
+        original: 'If you don\u2019t complete the form correctly, it will be rejected.',
+        keyword: 'RESULT',
+        before: 'Failure to complete the form correctly will',
+        after: 'rejection.'
+      },
+      {
+        num: 26,
+        original: 'By the end of the meeting, we hadn\u2019t made any progress.',
+        keyword: 'CONCLUSION',
+        before: 'The meeting came',
+        after: 'any progress being made.'
+      },
+      {
+        num: 27,
+        original: 'John would have begun his journey earlier if he hadn\u2019t had a headache.',
+        keyword: 'PREVENTED',
+        before: 'Having a headache was',
+        after: 'off on his journey earlier.'
+      },
+      {
+        num: 28,
+        original: 'Never leave your bag unattended at the airport.',
+        keyword: 'CIRCUMSTANCES',
+        before: 'Under',
+        after: 'left unattended at the airport.'
+      },
+      {
+        num: 29,
+        original: 'I regret tolerating John\u2019s rudeness for so long.',
+        keyword: 'PUT',
+        before: 'I wish I',
+        after: 'John\u2019s rudeness for so long.'
+      },
+      {
+        num: 30,
+        original: 'Only time will tell whether the team\u2019s new manager will stay in post for long.',
+        keyword: 'SEEN',
+        before: 'It remains',
+        after: 'long the team\u2019s new manager will stay in post.'
+      }
+    ];
+
+    const container = document.getElementById('questions');
+    items.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'c1-question';
+      div.innerHTML =
+        '<span class="q-num">' + item.num + '</span>' +
+        '<span class="q-stem">' + item.original + '</span>' +
+        '<div style="margin: 12px 0 0 44px; font-family: \'Segoe UI\', system-ui, sans-serif;">' +
+        '<span class="c1-keyword">' + item.keyword + '</span></div>' +
+        '<div style="margin: 12px 0 0 44px; font-family: \'Segoe UI\', system-ui, sans-serif; font-size: 0.95rem;" id="line-' + item.num + '"></div>';
+      container.appendChild(div);
+
+      const line = document.getElementById('line-' + item.num);
+      line.appendChild(document.createTextNode(item.before + ' '));
+      line.appendChild(C1Test.renderTextInput(item.num, '3–6 words', true));
+      line.appendChild(document.createTextNode(' ' + item.after));
+    });
+
+    C1Test.buildNav({
+      prevUrl: 'Part 3.html',
+      nextUrl: 'Part 5.html',
+      isLast: false,
+      progressText: 'Part 4 of 8'
+    });
+  </script>
+</body>
+</html>
