@@ -473,15 +473,43 @@ Starting state: Functional test pages but several wrong labels, inconsistent sav
 - All Parts — Navigation script is duplicated in every Part file (identical 100+ lines). Should be extracted to shared JS file
 - listening.html — Needs same live-save and filled-state improvements as reading-writing
 
+### Round 2
+**Explored:** 5 pages (Listening Parts 1-5), 6 findings
+**Action:** POLISH 5 changes
+
+- [T3] Listening-Part-2.html — Changed onchange to oninput for live answer saving
+  Mode: polish
+  Files: Cambridge/MOCKs-Cambridge/A1-Movers/Listening-Part-2.html
+
+- [T3] Listening-Part-5.html — Changed onchange to oninput for live answer saving
+  Mode: polish
+  Files: Cambridge/MOCKs-Cambridge/A1-Movers/Listening-Part-5.html
+
+- [T3] universal-popup-styles.css — Added .q-input and .color-input to focus + filled CSS
+  Mode: polish
+  Files: assets/css/universal-popup-styles.css
+
+- [T0] Listening Parts 2 & 5 — Added .filled class toggle for visual answer feedback
+  Mode: polish
+  Files: Listening-Part-2.html, Listening-Part-5.html
+
+### Quality Map (updated)
+| Page | Layer | Notes |
+|------|-------|-------|
+| A1-Movers/Part 1-5.html | 4-Polished | Live save, filled-state feedback |
+| A1-Movers/Listening-Part-2.html | 4-Polished | Live save, filled-state feedback |
+| A1-Movers/Listening-Part-5.html | 4-Polished | Live save, filled-state feedback |
+| A1-Movers/Listening-Part-1,3,4.html | 3-Efficient | Non-text interactions, functional |
+
 ### Session Stats
-Pages explored: 8
-Rounds: 1
-Polishes landed: 2
+Pages explored: 13
+Rounds: 2
+Polishes landed: 7
 Rebuilds landed: 0
 Elevations landed: 1
 Reverted: 0
 Fixes landed: 3
-Changes shipped: 6
+Changes shipped: 11
 
 ---
 
