@@ -465,14 +465,14 @@
                 // Use student-facing endpoints (no admin auth required)
                 const fetches = [
                     fetchJSON(`${API_BASE}/my-submissions?student_id=${encodeURIComponent(studentId)}&level=${encodeURIComponent(level)}&mock_test=${encodeURIComponent(mockTest)}`).catch(() => []),
-                    fetchJSON(`${API_BASE}/my-answer-keys?level=${encodeURIComponent(level)}&skill=listening&mock=${encodeURIComponent(mockTest)}`).catch(() => ({ success: false }))
+                    fetchJSON(`${API_BASE}/my-answer-keys?level=${encodeURIComponent(level)}&skill=listening&mock=${encodeURIComponent(mockTest)}&student_id=${encodeURIComponent(studentId)}`).catch(() => ({ success: false }))
                 ];
 
                 if (isSeparateRW()) {
-                    fetches.push(fetchJSON(`${API_BASE}/my-answer-keys?level=${encodeURIComponent(level)}&skill=reading&mock=${encodeURIComponent(mockTest)}`).catch(() => ({ success: false })));
-                    fetches.push(fetchJSON(`${API_BASE}/my-answer-keys?level=${encodeURIComponent(level)}&skill=writing&mock=${encodeURIComponent(mockTest)}`).catch(() => ({ success: false })));
+                    fetches.push(fetchJSON(`${API_BASE}/my-answer-keys?level=${encodeURIComponent(level)}&skill=reading&mock=${encodeURIComponent(mockTest)}&student_id=${encodeURIComponent(studentId)}`).catch(() => ({ success: false })));
+                    fetches.push(fetchJSON(`${API_BASE}/my-answer-keys?level=${encodeURIComponent(level)}&skill=writing&mock=${encodeURIComponent(mockTest)}&student_id=${encodeURIComponent(studentId)}`).catch(() => ({ success: false })));
                 } else {
-                    fetches.push(fetchJSON(`${API_BASE}/my-answer-keys?level=${encodeURIComponent(level)}&skill=reading-writing&mock=${encodeURIComponent(mockTest)}`).catch(() => ({ success: false })));
+                    fetches.push(fetchJSON(`${API_BASE}/my-answer-keys?level=${encodeURIComponent(level)}&skill=reading-writing&mock=${encodeURIComponent(mockTest)}&student_id=${encodeURIComponent(studentId)}`).catch(() => ({ success: false })));
                 }
 
                 const results = await Promise.all(fetches);

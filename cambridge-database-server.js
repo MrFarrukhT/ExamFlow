@@ -296,7 +296,7 @@ app.get('/test', async (req, res) => {
 // ============================================
 
 // Get a student's own submissions (no audio data, scoped by student_id)
-app.get('/my-submissions', async (req, res) => {
+app.get('/my-submissions', submissionLimiter, async (req, res) => {
     try {
         const { student_id, level, mock_test } = req.query;
         if (!student_id) {
@@ -332,14 +332,34 @@ app.get('/my-submissions', async (req, res) => {
 });
 
 // Get answer keys for a level/skill (student-facing, for answer checking)
-app.get('/my-answer-keys', async (req, res) => {
+// Security: requires student_id and verifies the student has already submitted for this skill
+app.get('/my-answer-keys', submissionLimiter, async (req, res) => {
     try {
-        const { level, skill, mock } = req.query;
+        const { level, skill, mock, student_id } = req.query;
         if (!level || !skill) {
             return res.status(400).json({ success: false, message: 'level and skill are required' });
         }
+        if (!student_id) {
+            return res.status(400).json({ success: false, message: 'student_id is required' });
+        }
 
         const dbClient = await ensureConnection();
+
+        // Verify the student has submitted for this skill before revealing answer keys
+        const submissionCheck = await dbClient.query(
+            `SELECT id FROM cambridge_submissions
+             WHERE student_id = $1 AND level = $2 AND skill = $3
+             LIMIT 1`,
+            [student_id, level, skill]
+        );
+
+        if (submissionCheck.rows.length === 0) {
+            return res.status(403).json({
+                success: false,
+                message: 'Answer keys are only available after you have submitted this test'
+            });
+        }
+
         let query = 'SELECT answers FROM cambridge_answer_keys WHERE level = $1 AND skill = $2';
         const params = [level, skill];
 
