@@ -258,12 +258,24 @@ Starting state: Functional but utilitarian — invisible footer button, no anima
 - Listening — Inline styles on answer inputs need CSS class migration
 - Invigilator — Level display inline styles need CSS class migration
 
+### Round 9
+**Explored:** 1 page (Cambridge/index.html — Cambridge Student Login), 7 findings
+**Action:** FIX 1 + POLISH 4 + ELEVATE 2 (clears deferred item from round 2)
+
+- [T1] cambridge-entry.css — Added missing :root CSS variables
+- [T3] Cambridge/index.html — "Admin Login" → "Invigilator Login"
+- [T3] Cambridge/index.html — Replaced alert() with inline errors + shake
+- [T4] Cambridge/index.html — Modal moved from inline styles to CSS classes
+- [T4] cambridge-entry.css — Form error styles + improved focus glow
+- [T0] cambridge-entry.css — Staggered form entrance animation
+- [T0] Cambridge/index.html — Login button loading state
+
 ### Session Stats
-Pages explored: 8
-Rounds: 7
-Polishes landed: 28
+Pages explored: 9
+Rounds: 8
+Polishes landed: 33
 Rebuilds landed: 0
-Elevations landed: 13
+Elevations landed: 15
 Reverted: 0
 Changes shipped: 41
 Changes shipped: 37
