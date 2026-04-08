@@ -41,6 +41,7 @@ class ExamTimer {
         this.styleElement = null;
         this.alertShown = false;
         this.completionHandled = false;
+        this._warningsShown = {}; // Track which time warnings have been displayed
 
         // Embedded mode options
         this._displayElement = options.displayElement || null;
@@ -296,12 +297,70 @@ class ExamTimer {
                 }
             }
 
+            // Time warnings for nervous first-timers
+            this.checkTimeWarnings();
+
             // Time's up
             if (this.timeRemaining === 0 && elapsed > 0 && !this.alertShown) {
                 this.alertShown = true;
                 this.onTimeUp();
             }
         }, 1000);
+    }
+
+    checkTimeWarnings() {
+        const warnings = [
+            { at: 600, label: '10 minutes remaining', level: 'info' },
+            { at: 300, label: '5 minutes remaining', level: 'warning' },
+            { at: 60,  label: '1 minute remaining!', level: 'urgent' }
+        ];
+        for (const w of warnings) {
+            if (this.timeRemaining <= w.at && this.timeRemaining > w.at - 2 && !this._warningsShown[w.at]) {
+                this._warningsShown[w.at] = true;
+                this.showTimeWarning(w.label, w.level);
+            }
+        }
+    }
+
+    showTimeWarning(message, level) {
+        const colors = { info: '#1976d2', warning: '#f57c00', urgent: '#d32f2f' };
+        const icons = { info: '\u23F0', warning: '\u26A0', urgent: '\u26A0' };
+
+        const toast = document.createElement('div');
+        toast.setAttribute('role', 'alert');
+        toast.style.cssText = `
+            position: fixed;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: ${colors[level] || colors.info};
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: system-ui, -apple-system, sans-serif;
+            z-index: 1000000;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+            text-align: center;
+        `;
+        toast.textContent = `${icons[level]} ${message}`;
+
+        document.body.appendChild(toast);
+
+        requestAnimationFrame(() => {
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateX(-50%) translateY(0)';
+        });
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(-50%) translateY(-20px)';
+            setTimeout(() => { if (toast.parentNode) toast.remove(); }, 300);
+        }, 4000);
     }
 
     updateDisplay() {
