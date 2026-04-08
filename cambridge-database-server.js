@@ -348,7 +348,7 @@ app.get('/my-answer-keys', async (req, res) => {
             params.push(mock);
         }
 
-        query += ' ORDER BY created_at DESC LIMIT 1';
+        query += ' ORDER BY updated_at DESC LIMIT 1';
         const result = await dbClient.query(query, params);
 
         if (result.rows.length === 0) {
