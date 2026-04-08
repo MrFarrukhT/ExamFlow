@@ -64,7 +64,11 @@
       "Bash(GIT_CURL_VERBOSE=1 git push origin 6f02a39:refs/heads/main)",
       "Bash(GIT_TRACE=1 GIT_TRANSFER_TRACE=1 git push origin 6f02a39:refs/heads/main)",
       "Bash(node --check \"e:/Test-System-v2/assets/js/writing/writing-handler.js\")",
-      "Bash(GIT_TRACE=1 git push origin 6f02a39:refs/heads/main)"
+      "Bash(GIT_TRACE=1 git push origin 6f02a39:refs/heads/main)",
+      "Bash(gh repo:*)",
+      "Bash(git remote:*)",
+      "Bash(node --check assets/js/core.js)",
+      "Bash(node --check assets/js/timer.js)"
     ],
     "additionalDirectories": [
       "e:\\Test-System-v2",

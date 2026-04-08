@@ -21,7 +21,7 @@
             timeInSeconds = 3600; // 60 minutes for reading/writing tests
         }
         
-        let timerInterval;
+        let timer;
         let draggedItem = null;
         let activeQuestionElement = null;
         let selectedDragItem = null;
@@ -127,7 +127,16 @@ async function loadAnswers() {
             loadAnswers();
             
             // Continue with rest of initialization
-            startTimer();
+            timer = new TestTimer({
+                durationSeconds: timeInSeconds,
+                displayElement: timerDisplay,
+                toggleButton: timerToggleButton,
+                resetButton: timerResetButton,
+                onTimeUp: () => checkAnswers(),
+                playIcon: playIcon,
+                pauseIcon: pauseIcon
+            });
+            timer.start();
             preventAutocomplete();
             initializeDragAndDrop();
             setupCheckboxLimits();
@@ -140,10 +149,10 @@ async function loadAnswers() {
                 deliverButton.addEventListener('click', checkAnswers);
             }
             if (timerToggleButton) {
-                timerToggleButton.addEventListener('click', toggleTimer);
+                timerToggleButton.addEventListener('click', () => timer.toggle());
             }
             if (timerResetButton) {
-                timerResetButton.addEventListener('click', resetTimer);
+                timerResetButton.addEventListener('click', () => timer.reset());
             }
 
             // Auto-close dropdowns for Questions 20-23 on selection
@@ -305,7 +314,7 @@ async function loadAnswers() {
             deliverButton.disabled = true;
             deliverButton.style.cursor = 'not-allowed';
             
-            clearInterval(timerInterval);
+            if (timer) timer.pause();
             let score = 0;
             const totalQuestions = 40;
             const resultsDetailsContainer = document.getElementById('results-details');
@@ -1287,70 +1296,7 @@ async function loadAnswers() {
         }
         
         // --- MISC HELPERS ---
-        
-        function startTimer() {
-            if (timerInterval) clearInterval(timerInterval); // Ensure no multiple intervals
-            timerInterval = setInterval(() => {
-                timeInSeconds--;
-                const minutes = Math.floor(timeInSeconds / 60);
-                const seconds = timeInSeconds % 60;
-                if (timerDisplay) {
-                    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                    const container = timerDisplay.closest('.timer-container');
-                    if (container) {
-                        container.classList.toggle('warning', timeInSeconds <= 600 && timeInSeconds > 300);
-                        container.classList.toggle('critical', timeInSeconds <= 300 && timeInSeconds > 60);
-                        container.classList.toggle('urgent', timeInSeconds <= 60 && timeInSeconds > 0);
-                    }
-                }
-                if (timeInSeconds <= 0) {
-                    clearInterval(timerInterval);
-                    if (timerDisplay) {
-                        timerDisplay.textContent = "Time's up!";
-                    }
-                    checkAnswers(); // Auto-submit when time runs out
-                }
-            }, 1000);
-            if (timerToggleButton) {
-                timerToggleButton.innerHTML = pauseIcon;
-            }
-        }
 
-        function pauseTimer() {
-            clearInterval(timerInterval);
-            if (timerToggleButton) {
-                timerToggleButton.innerHTML = playIcon;
-            }
-        }
-
-        function toggleTimer() {
-            // Check based on the icon currently displayed
-            if (timerToggleButton && timerToggleButton.innerHTML.includes('M6 19h4V5H6v14z')) { // Check for pause icon shape
-                pauseTimer();
-            } else {
-                startTimer();
-            }
-        }
-
-        function resetTimer() {
-            // Reset timer to appropriate duration based on skill type
-            const skill = document.body.getAttribute('data-skill');
-            if (skill === 'listening') {
-                timeInSeconds = 2400; // 40 minutes for listening test
-            } else {
-                timeInSeconds = 3600; // 60 minutes for reading/writing tests
-            }
-            const minutes = Math.floor(timeInSeconds / 60);
-            const seconds = timeInSeconds % 60;
-            if (timerDisplay) {
-                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }
-            startTimer();
-            if (timerToggleButton) {
-                timerToggleButton.innerHTML = pauseIcon;
-            }
-        }
-        
         function setupCheckboxLimits() {
             const checkboxGroups = [
                 { name: 'q20-21', limit: 2 },
