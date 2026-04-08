@@ -1,5 +1,65 @@
 # Autopilot Journal
 
+## Session: 2026-04-08 15:00
+Persona: Cheater round 3 (validate sessions 18-20 attack surfaces)
+System: Both (IELTS + Cambridge)
+
+### Phase 1: Journey Map
+- Sessions 18, 19, 20 added significant new attack surface:
+  - cambridge-exam-progress.js (progress indicator + review modal interceptor)
+  - IELTS /my-submissions and /my-answer-keys endpoints
+  - IELTS my-results.html
+- Cheater pass: validate these new surfaces against impersonation, XSS, bypass
+
+### Phase 2: Creation
+- No new features — security audit only
+
+### Phase 3: Structure
+- Skipped — sound
+
+### Phase 4: Heal — CRITICAL VULNERABILITY FOUND AND FIXED
+**Student impersonation on /my-submissions and /my-answer-keys (BOTH systems)**
+
+The endpoints accepted any `student_id` from query string without verification.
+A logged-in student who knew another student's ID could read all their
+submitted answers and access answer keys after that student submitted.
+
+Fix applied to all 4 endpoints (IELTS x2 + Cambridge x2):
+- Now require BOTH student_id AND student_name
+- Combo must match a real submission row in the database
+- Identity check returns empty array (not 403) to avoid leaking which IDs exist
+- Frontends (both my-results.html files) updated to send student_name
+
+This raises the bar significantly: a student would need to know BOTH the ID
+and exact name of another student to read their data. The proper long-term
+fix is server-side session tokens, but this is a strong interim mitigation
+that doesn't require auth refactoring.
+
+Committed as 5734410.
+
+### Phase 5: Experience
+- Cambridge review modal interceptor audit:
+  - Bypass via DevTools (e.g., setting data-cambridge-reviewed flag) is possible
+  - This is a UX safeguard, not a security feature — students just opt out of their own review
+  - No fix needed
+- my-results.html XSS audit (both IELTS and Cambridge):
+  - All innerHTML interpolations use escapeHtml() or formatAnswer()
+  - Summary cards use computed numbers/hardcoded labels
+  - Evaluator name/notes are escaped
+  - CLEAN — no fix needed
+
+### Phase 6: Scenario
+- Verified by code review and threat modeling
+- No live curl tests (server not running)
+
+### Session Stats
+Total commits: 1 (5734410)
+Total files changed: 4 (local-database-server.js, cambridge-database-server.js, my-results.html, Cambridge/my-results.html)
+Persona journey coverage: All sessions 18-20 surfaces audited
+Critical fix: student impersonation on both /my-submissions endpoints
+
+---
+
 ## Session: 2026-04-08 14:30
 Persona: Cambridge student (in-test review modal — final parity gap)
 System: Cambridge
