@@ -205,14 +205,14 @@ class ExamTimer {
                 font-size: 18px; color: #555; margin-bottom: 30px; line-height: 1.6;
             }
             .times-up-button {
-                background: linear-gradient(135deg, #0066cc, #0052a3);
+                background: linear-gradient(135deg, #0d9488, #0f766e);
                 color: white; border: none; padding: 15px 40px;
                 font-size: 16px; font-weight: bold; border-radius: 8px;
                 cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
             }
             .times-up-button:hover {
                 transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(0, 102, 204, 0.4);
+                box-shadow: 0 6px 20px rgba(13, 148, 136, 0.4);
             }
             .times-up-button:active { transform: translateY(0); }
         `;
@@ -323,7 +323,7 @@ class ExamTimer {
     }
 
     showTimeWarning(message, level) {
-        const colors = { info: '#1976d2', warning: '#f57c00', urgent: '#d32f2f' };
+        const colors = { info: '#0d9488', warning: '#f57c00', urgent: '#d32f2f' };
         const icons = { info: '\u23F0', warning: '\u26A0', urgent: '\u26A0' };
 
         const toast = document.createElement('div');
@@ -431,7 +431,8 @@ class ExamTimer {
             </div>
         `;
         document.body.appendChild(modal);
-        setTimeout(() => { if (modal.parentElement) modal.remove(); }, 10000);
+        // No auto-dismiss — student must click "I Understand" to acknowledge.
+        // Test has already been auto-submitted by onTimeUp callback at this point.
     }
 
     // ── Embedded mode controls (IELTS-style) ─────────────────────
