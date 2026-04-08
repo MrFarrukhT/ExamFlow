@@ -1335,3 +1335,45 @@ Elevations landed: 0
 Reverted: 0
 Fixes landed: 0
 Changes shipped: 6 files modified
+
+---
+
+## Session: 2026-04-09 (B2 First Use of English — prompt #18)
+Persona: B2 level student taking Use of English (Parts 1-4 of Reading & UoE paper)
+System: Cambridge (localhost:3003)
+Pages explored: B2 First Parts 1-4, reading-answers.json
+Starting state: MAJOR FINDING — Parts 1-4 contain placeholder content from other levels (image MCQs, multi-matching about swimming, etc.) instead of proper Use of English content (MCQ Cloze, Open Cloze, Word Formation, Key Word Transformations). The reading-answers.json confirms the intended structure but all answer values are "?" placeholders.
+
+### Round 1
+**Explored:** Parts 1-4 + answers JSON, 1 actionable finding (3 deferred for content authoring)
+**Action:** POLISH 1 (Part 1 rubric clarification)
+
+- [T2] Part 1.html (×3 mocks) — Generic rubric "Questions 1–5 / For each question, choose the correct answer" updated to "Part 1 — Use of English: Vocabulary in Context (Questions 1–5) / For each text or sign below, choose the answer (A, B or C) which best matches its meaning." Tells students this is the Use of English vocabulary section.
+  Mode: polish
+  Quality layer: 2-Clear → 4-Polished
+  Files: 3 Part 1.html files
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| B2-First/Part 1 (Vocab) | 4-Polished | Image MCQ, clarified rubric |
+| B2-First/Part 2 (Grammar) | 2-Clear | Multi-matching content (wrong type) — needs rebuild |
+| B2-First/Part 3 (Word Formation) | 2-Clear | Reading comprehension content (wrong type) — needs rebuild |
+| B2-First/Part 4 (Gapped Text) | 3-Efficient | Has dropdowns (correct type), opacity bug fixed yesterday |
+
+### Deferred (MAJOR — content authoring task)
+- B2 First Part 1: Should be Multiple Choice Cloze with text + 8 gaps (4 word options each). Currently image-based MCQ.
+- B2 First Part 2: Should be Open Cloze (write one word per gap). Currently multi-matching about swimming.
+- B2 First Part 3: Should be Word Formation (transform CAPITAL word). Currently reading comprehension about Zoe Stephens.
+- B2 First Part 4: Currently Gapped Text (correct format) but content may need verification.
+- All 3 mocks need authored Use of English content with answer keys. Deferred — outside /eye scope (content authoring, not UX).
+
+### Session Stats
+Pages explored: 4 (Parts 1-4 of B2 First MOCK 1) + reading-answers.json
+Rounds: 1
+Polishes landed: 1 (Part 1 rubric × 3 mocks)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Fixes landed: 0
+Changes shipped: 3 files modified
