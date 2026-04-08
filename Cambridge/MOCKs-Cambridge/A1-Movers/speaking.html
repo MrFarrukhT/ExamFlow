@@ -206,6 +206,28 @@
             color: white;
         }
 
+        .ready-banner {
+            background: linear-gradient(135deg, #ccfbf1, #f0fdf4);
+            border-left: 4px solid #0d9488;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #0f766e;
+            font-size: 15px;
+            line-height: 1.5;
+            animation: slideDown 0.4s ease-out;
+        }
+        .ready-banner strong {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 4px;
+            color: #0d9488;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .recording-indicator {
             display: none;
             align-items: center;
@@ -354,6 +376,11 @@
 
         <!-- Test Content (Initially Hidden) -->
         <div id="testContent" style="display: none;">
+            <!-- Ready instruction banner (replaces alert) -->
+            <div class="ready-banner">
+                <strong>📖 You're ready to begin</strong>
+                Read through the questions below carefully. When you feel ready, click <strong>Start Recording</strong> to begin your speaking test. Good luck!
+            </div>
             <!-- Status Bar -->
             <div class="status-bar">
                 <div class="status-info">
@@ -554,8 +581,7 @@
             document.getElementById('micCheckSection').style.display = 'none';
             document.getElementById('testContent').style.display = 'block';
             
-            // Show instructions
-            alert('You can now read through the speaking test questions.\n\nWhen you are ready, click "Start Recording" to begin.\n\nGood luck!');
+            // Banner inside testContent now provides this guidance — no alert needed
         });
 
         // Start Recording
