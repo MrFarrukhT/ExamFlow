@@ -101,8 +101,8 @@
         }catch(e){
           console.error('Error submitting to database:', e);
         }
-        localStorage.setItem('reading-writingStatus','completed');
-        localStorage.setItem('reading-writingEndTime', new Date().toISOString());
+        localStorage.setItem('cambridge-reading-writingStatus','completed');
+        localStorage.setItem('cambridge-reading-writingEndTime', new Date().toISOString());
         alert('Test submitted successfully!');
         window.location.href='../../dashboard-cambridge.html';
       }
