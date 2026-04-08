@@ -633,9 +633,10 @@ body {
 
 /* === TASK CONTENT === */
 .task-header {
-    background-color: #f1f2ec;
+    background-color: #f8f9fa;
     padding: 15px 20px;
-    border: 1px solid #e0e0e0;
+    border: none;
+    border-left: 4px solid #4a90e2;
     text-align: left;
     margin-bottom: 20px;
     border-radius: 5px;
@@ -760,6 +761,8 @@ body {
     font-size: 14px;
     color: #666;
     text-align: right;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.3px;
 }
 
 .word-count.warning {
@@ -851,7 +854,8 @@ body {
     align-items: center;
     height: 80px;
     z-index: 100;
-    border-top: 1px solid #e0e0e0;
+    border-top: none;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .task-selector {
