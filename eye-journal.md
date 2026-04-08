@@ -529,19 +529,36 @@ Starting state: Functional test pages but several wrong labels, inconsistent sav
 | A1-Movers/speaking.html | 3-Efficient | Correct title; content still uses A2 Key format |
 | A1-Movers/reading-writing.html | 3-Efficient | Correct default level fallback |
 
+### Round 4
+**Explored:** 1 page (speaking.html), visual verification in browser
+**Action:** REBUILD speaking test content from A2 Key → A1 Movers format
+
+- [T1] speaking.html — Replaced A2 Key speaking format (2 parts: Interview + Talking Together) with correct A1 Movers format (4 parts: Find the Differences, Picture Story, Odd One Out, Personal Questions). Updated duration 8-10min → 5-7min. Age-appropriate questions for young learners.
+  Mode: rebuild
+  Quality layer: 1-Functional → 4-Polished
+  Files: Cambridge/MOCKs-Cambridge/A1-Movers/speaking.html
+
+### Quality Map (final)
+| Page | Layer | Notes |
+|------|-------|-------|
+| A1-Movers/Part 1-6.html | 4-Polished | All complete |
+| A1-Movers/Listening-Part-1-5.html | 3-4 Polished | Text parts at 4, interaction parts at 3 |
+| A1-Movers/speaking.html | 4-Polished | Correct A1 Movers format |
+| A1-Movers/reading-writing.html | 3-Efficient | Correct level fallback |
+| A1-Movers/listening.html | 3-Efficient | Wrapper functional |
+
 ### Deferred (remaining)
-- speaking.html — Content format is A2 Key (2 parts), needs rebuild to A1 Movers format (4 parts)
-- All Parts — Navigation script duplicated in every file (architecture debt)
+- All Parts — Navigation script duplicated in every file (architecture debt, not UX-facing)
 
 ### Session Stats
-Pages explored: 14
-Rounds: 3
+Pages explored: 15
+Rounds: 4
 Polishes landed: 9
-Rebuilds landed: 1
+Rebuilds landed: 2
 Elevations landed: 1
 Reverted: 0
 Fixes landed: 3
-Changes shipped: 11
+Changes shipped: 12
 
 ---
 
