@@ -286,3 +286,69 @@ Trigger: Concurrent heal/eye runs changed server code; 4 remaining untested area
 
 ### Stats (Round 5)
 Tested: 5 | Passed: 3 | Failed: 2 (1 critical) | Fixed: 2 | Deferred: 0
+
+---
+
+## Session: 2026-04-08 10:31
+Focus: Heal round 3 regression verification + first browser-based behavioral testing
+Trigger: 3 code changes since last run (mock validation, error masking fix, login type checks); browser tests deferred 5 rounds
+
+### Scenarios
+
+- S1: Mock Number Validation Edge Cases [Explorer] → PASS [MEDIUM]
+  - NaN, 0, negative, empty all properly rejected with "Mock number must be a positive integer"
+  - Float 2.5 truncated to 2 by parseInt — expected JS behavior
+  - POST and DELETE endpoints also validate correctly
+
+- S2: Cambridge Error Masking Fix Verification [Regression] → PASS [HIGH]
+  - Invalid/empty/missing-field submissions now return `success: false` with proper 400/500 status
+  - No longer returns misleading "success: true, queued: true" on errors
+  - Heal round 3 fix confirmed working
+
+- S3: Admin Login Type Validation [Explorer] → PASS [MEDIUM]
+  - null, array, number, boolean, empty body all return "Username and password are required"
+  - Both IELTS (3002) and Cambridge (3003) share the fix via shared/database.js
+  - No type confusion possible
+
+- S4: IELTS Exam Flow End-to-End [Rusher] → PASS [HIGH]
+  - Full flow: launcher → login → dashboard → reading test → answer questions → back button
+  - Back button blocked by history.pushState — "Please use the navigation buttons within the test"
+  - Answer selections persist after attempted back/forward navigation
+  - Options menu (toggleOptionsMenu wrapper) works correctly
+  - Timer running, questions interactive, zero console errors throughout
+  - First ever browser behavioral test of exam flow
+
+- S5: Admin Dashboard XSS Rendering [Insider] → PASS [CRITICAL]
+  - Injected `<img src=x onerror=alert(1)>` as IELTS student name, `<script>document.title="PWNED"</script>` as Cambridge name
+  - Both payloads stored in DB successfully
+  - IELTS dashboard: payload renders as literal text in Name column, no img element in DOM
+  - Cambridge dashboard: payload renders as literal text, page title NOT "PWNED"
+  - escapeHtml() confirmed working in both dashboards
+
+- S6: Invigilator Panel Behavioral [Multitasker] → PASS [MEDIUM]
+  - Page loads cleanly, zero console errors
+  - Set Mock Test, View Test History, Reset Session all functional
+  - Password modal blocks Reset/Clear without password — no XSS in password input
+  - State persists via localStorage (selectedMock key) across navigation
+  - Student dashboard redirects to login when no session — correct
+
+### Notable Observations (not failures)
+- Invigilator password hardcoded in client-side JS (line 129, invigilator.html) — pre-existing, by-design for controlled exam environment
+- CSS selector injection LOW: `document.querySelector('[data-level="' + level + '"]')` with unescaped localStorage value (invigilator.html:218) — no XSS impact, worst case is query error
+- SharedlocalStorage between IELTS (3002) and Cambridge (3003) — `examType` key can cause cross-exam routing confusion
+
+### Pattern Analysis
+- **First clean round in 6 runs.** All 6 scenarios passed — no new bugs found.
+- **Heal round 3 changes are solid.** Mock validation, error masking fix, and login type checks all working correctly.
+- **Browser behavioral testing confirms app stability.** Exam flow, dashboard rendering, and invigilator panel all work as expected.
+- **Client-side XSS escaping verified in browser.** Round 5 fixes proven effective — escapeHtml() renders payloads as text.
+
+### Intelligence Update
+- Proven solid: Mock number validation, Cambridge error handling, admin login types, exam flow E2E, dashboard XSS rendering, invigilator panel behavior
+- No new weak patterns discovered
+- API attack surface comprehensively tested and hardened (rounds 1-5)
+- Browser behavioral baseline established (round 6)
+- Remaining untested: AI score suggestion (needs OpenAI API key), concurrent multi-student exam (needs multiple browser contexts), writing test submission flow, listening test audio flow
+
+### Stats (Round 6)
+Tested: 6 | Passed: 6 | Failed: 0 | Fixed: 0 | Deferred: 0

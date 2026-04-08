@@ -1,0 +1,170 @@
+- generic [ref=e1]:
+  - iframe [active] [ref=e2]:
+    - generic [ref=f1e4]:
+      - banner [ref=f1e5]:
+        - generic [ref=f1e6]:
+          - generic [ref=f1e7]:
+            - img "header.logo"
+          - generic [ref=f1e8]:
+            - generic [ref=f1e9]:
+              - generic [ref=f1e10]:
+                - status [ref=f1e11]: Connected
+                - generic [ref=f1e13]: 
+              - button "Messages" [ref=f1e14]:
+                - generic [ref=f1e15]:
+                  - generic [ref=f1e16]: Messages
+                  - generic [ref=f1e17]: 
+              - button "Options" [ref=f1e18]:
+                - generic [ref=f1e19]:
+                  - generic [ref=f1e20]: Options
+                  - generic [ref=f1e21]: 
+              - button "Show notes" [ref=f1e22]:
+                - generic [ref=f1e23]:
+                  - generic [ref=f1e24]: Show notes
+                  - generic [ref=f1e25]: 
+            - generic [ref=f1e28]:
+              - generic [ref=f1e29]: Candidate ID
+              - generic [ref=f1e30]: "12"
+      - generic [ref=f1e34]:
+        - generic [ref=f1e36]:
+          - heading "Questions 21–26" [level=3] [ref=f1e37]
+          - generic [ref=f1e38]: For each question, choose the correct answer.
+        - main [ref=f1e40]:
+          - generic [ref=f1e41]:
+            - group [ref=f1e42]:
+              - generic [ref=f1e46]:
+                - heading "Canned food" [level=2] [ref=f1e47]
+                - paragraph [ref=f1e48]:
+                  - text: All through history, people have looked for ways of keeping food for long periods of time. The invention of cans for food in 1810 changed life for people like soldiers and explorers. It
+                  - button "21 Flag question 21" [ref=f1e50]:
+                    - combobox [ref=f1e52]:
+                      - option "21" [selected]
+                      - option "A. led"
+                      - option "B. involved"
+                      - option "C. meant"
+                      - option "D. included"
+                    - button "Flag question 21":
+                      - generic [ref=f1e53]: Flag question 21
+                  - text: that a whole meal could be
+                  - button "22 Flag question 22" [ref=f1e55]:
+                    - combobox [ref=f1e57]:
+                      - option "22" [selected]
+                      - option "A. provided"
+                      - option "B. fetched"
+                      - option "C. accompanied"
+                      - option "D. taken"
+                    - button "Flag question 22":
+                      - generic [ref=f1e58]: Flag question 22
+                  - text: with them when they travelled, and kept safely. It was
+                  - button "23 Flag question 23" [ref=f1e60]:
+                    - combobox [ref=f1e62]:
+                      - option "23" [selected]
+                      - option "A. especially"
+                      - option "B. perfectly"
+                      - option "C. exactly"
+                      - option "D. completely"
+                    - button "Flag question 23":
+                      - generic [ref=f1e63]: Flag question 23
+                  - text: useful for sailors on long sea journeys where fresh food could not be found easily. Previously, they had lived for months on biscuits, and meat kept in salt, and this
+                  - button "24 Flag question 24" [ref=f1e65]:
+                    - combobox [ref=f1e67]:
+                      - option "24" [selected]
+                      - option "A. attacked"
+                      - option "B. worried"
+                      - option "C. affected"
+                      - option "D. influenced"
+                    - button "Flag question 24":
+                      - generic [ref=f1e68]: Flag question 24
+                  - text: their health. The first canning factory
+                  - button "25 Flag question 25" [ref=f1e70]:
+                    - combobox [ref=f1e72]:
+                      - option "25" [selected]
+                      - option "A. opened"
+                      - option "B. began"
+                      - option "C. introduced"
+                      - option "D. happened"
+                    - button "Flag question 25":
+                      - generic [ref=f1e73]: Flag question 25
+                  - text: in 1813, but canned food was expensive. A century later, an American called Henry Heinz started a company which
+                  - button "26 Flag question 26" [ref=f1e75]:
+                    - combobox [ref=f1e77]:
+                      - option "26" [selected]
+                      - option "A. gave"
+                      - option "B. developed"
+                      - option "C. put"
+                      - option "D. produced"
+                    - button "Flag question 26":
+                      - generic [ref=f1e78]: Flag question 26
+                  - text: canned food in large quantities, at low cost. His cans changed family life; people no longer needed to shop daily, and the average time spent preparing meals was cut in half. Nowadays, canned food is still very popular.
+            - generic [ref=f1e80]:      
+      - contentinfo [ref=f1e82]:
+        - navigation "Previous / next question" [ref=f1e83]:
+          - button "Previous" [ref=f1e84]:
+            - generic [ref=f1e85]: 
+          - button "Next" [ref=f1e86]:
+            - generic [ref=f1e87]: 
+        - navigation "Questions" [ref=f1e88]:
+          - tablist [ref=f1e89]:
+            - tab "Part 1. 0 of 5 questions attempted." [ref=f1e140]:
+              - generic [ref=f1e141]:
+                - text: Part 1
+                - generic [ref=f1e142]: 1 of 6
+                - generic [ref=f1e143]: Part 1. 0 of 5 questions attempted.
+          - tablist [ref=f1e94]:
+            - tab "Part 2. 0 of 5 questions attempted." [ref=f1e144]:
+              - generic [ref=f1e145]:
+                - text: Part 2
+                - generic [ref=f1e146]: 0 of 7
+                - generic [ref=f1e147]: Part 2. 0 of 5 questions attempted.
+          - tablist [ref=f1e99]:
+            - tab "Part 3. 0 of 5 questions attempted." [ref=f1e148]:
+              - generic [ref=f1e149]:
+                - text: Part 3
+                - generic [ref=f1e150]: 0 of 5
+                - generic [ref=f1e151]: Part 3. 0 of 5 questions attempted.
+          - tablist [ref=f1e104]:
+            - tab "Part 4. 0 of 5 questions attempted." [ref=f1e152]:
+              - generic [ref=f1e153]:
+                - text: Part 4
+                - generic [ref=f1e154]: 0 of 6
+                - generic [ref=f1e155]: Part 4. 0 of 5 questions attempted.
+          - tablist [ref=f1e109]:
+            - tab "Part 5. 0 of 6 questions attempted." [ref=f1e156]:
+              - generic [ref=f1e157]:
+                - text: Part 5
+                - generic [ref=f1e158]: 0 of 6
+                - generic [ref=f1e159]: Part 5. 0 of 6 questions attempted.
+            - generic [ref=f1e114]:
+              - button "Question 21 Not attempted Active" [ref=f1e115]:
+                - generic [ref=f1e116]: Question 21
+                - text: "21"
+                - generic [ref=f1e117]: Not attempted Active
+              - button "Question 22 Not attempted" [ref=f1e118]:
+                - generic [ref=f1e119]: Question 22
+                - text: "22"
+                - generic [ref=f1e120]: Not attempted
+              - button "Question 23 Not attempted" [ref=f1e121]:
+                - generic [ref=f1e122]: Question 23
+                - text: "23"
+                - generic [ref=f1e123]: Not attempted
+              - button "Question 24 Not attempted" [ref=f1e124]:
+                - generic [ref=f1e125]: Question 24
+                - text: "24"
+                - generic [ref=f1e126]: Not attempted
+              - button "Question 25 Not attempted" [ref=f1e127]:
+                - generic [ref=f1e128]: Question 25
+                - text: "25"
+                - generic [ref=f1e129]: Not attempted
+              - button "Question 26 Not attempted" [ref=f1e130]:
+                - generic [ref=f1e131]: Question 26
+                - text: "26"
+                - generic [ref=f1e132]: Not attempted
+          - tablist [ref=f1e133]:
+            - tab "Part 6. 0 of 1 questions attempted." [ref=f1e160]:
+              - generic [ref=f1e161]:
+                - text: Part 6
+                - generic [ref=f1e162]: 0 of 1
+                - generic [ref=f1e163]: Part 6. 0 of 1 questions attempted.
+          - button "Review your answers" [ref=f1e138]:
+            - generic [ref=f1e139]: 
+  - generic [ref=e5]: 39:11

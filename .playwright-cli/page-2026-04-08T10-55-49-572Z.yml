@@ -1,0 +1,105 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "header.logo"
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - status [ref=e11]: Connected
+            - generic [ref=e13]: 
+          - button "Messages" [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: Messages
+              - generic [ref=e17]: 
+          - button "Options" [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: Options
+              - generic [ref=e21]: 
+          - button "Show notes" [ref=e22]:
+            - generic [ref=e23]:
+              - generic [ref=e24]: Show notes
+              - generic [ref=e25]: 
+        - generic [ref=e28]:
+          - generic [ref=e29]: Candidate ID
+          - generic [ref=e30]: TEST001
+  - generic [ref=e34]:
+    - generic [ref=e36]:
+      - heading "Part 1" [level=3] [ref=e37]
+      - generic [ref=e38]: Look and read. Choose the correct words and write them on the lines. There is one example.
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - img "a forest"
+        - generic [ref=e42]:
+          - img "a beard"
+        - generic [ref=e43]:
+          - img "islands"
+        - generic [ref=e44]:
+          - img "a stomach"
+        - generic [ref=e45]:
+          - img "eyes"
+        - generic [ref=e46]:
+          - img "shoulders"
+        - generic [ref=e47]:
+          - img "mountains"
+        - generic [ref=e48]:
+          - img "a waterfall"
+      - generic [ref=e49]:
+        - generic [ref=e50]:
+          - generic [ref=e51]:
+            - strong [ref=e52]: Example
+            - text: There are often lots of different kinds of trees in this place.
+          - generic [ref=e53]: a forest
+        - generic [ref=e54]:
+          - generic [ref=e55]: "1"
+          - generic [ref=e56]: Some men have this on their face below their mouth.
+          - textbox [ref=e57]
+        - generic [ref=e58]:
+          - generic [ref=e59]: "2"
+          - generic [ref=e60]: This is part of a river that drops down quickly.
+          - textbox [ref=e61]
+        - generic [ref=e62]:
+          - generic [ref=e63]: "3"
+          - generic [ref=e64]: These are at the top of your arms. You have two of them.
+          - textbox [ref=e65]
+        - generic [ref=e66]:
+          - generic [ref=e67]: "4"
+          - generic [ref=e68]: When you eat, all the food goes into this part of your body.
+          - textbox [ref=e69]
+        - generic [ref=e70]:
+          - generic [ref=e71]: "5"
+          - generic [ref=e72]: These are very big, and some people like climbing them.
+          - textbox [ref=e73]
+  - contentinfo [ref=e75]:
+    - navigation [ref=e76]:
+      - button "Previous" [disabled] [ref=e77]:
+        - generic [ref=e78]: 
+      - button "Next" [ref=e79]:
+        - generic [ref=e80]: 
+    - navigation "Questions" [ref=e81]:
+      - generic [ref=e82]:
+        - button "Part 1" [ref=e83]:
+          - text: Part 1
+          - generic [ref=e84]: 0 of 5
+        - generic [ref=e85]:
+          - button "1" [ref=e86]
+          - button "2" [ref=e87]
+          - button "3" [ref=e88]
+          - button "4" [ref=e89]
+          - button "5" [ref=e90]
+      - button "Part 2" [ref=e92]:
+        - text: Part 2
+        - generic [ref=e93]: 0 of 6
+      - button "Part 3" [ref=e95]:
+        - text: Part 3
+        - generic [ref=e96]: 0 of 6
+      - button "Part 4" [ref=e98]:
+        - text: Part 4
+        - generic [ref=e99]: 0 of 5
+      - button "Part 5" [ref=e101]:
+        - text: Part 5
+        - generic [ref=e102]: 0 of 7
+      - button "Part 6" [ref=e104]:
+        - text: Part 6
+        - generic [ref=e105]: 0 of 6

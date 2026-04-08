@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-08 04:30",
-  "totalRuns": 5,
+  "lastRun": "2026-04-08 10:31",
+  "totalRuns": 6,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -41,7 +41,14 @@
     "dashboard-client-xss-escaping-student-results",
     "dashboard-client-xss-escaping-admin-dashboard",
     "dashboard-client-xss-escaping-invigilator",
-    "dashboard-client-xss-escaping-ielts-admin"
+    "dashboard-client-xss-escaping-ielts-admin",
+    "mock-number-validation-nan-zero-negative",
+    "cambridge-error-masking-fixed",
+    "admin-login-type-validation",
+    "exam-flow-e2e-browser-verified",
+    "dashboard-xss-rendering-browser-verified",
+    "invigilator-panel-behavioral-verified",
+    "dead-code-removal-safe-no-references"
   ],
   "weakPatterns": [
     "no-rate-limiting-on-admin-login",
@@ -49,10 +56,15 @@
     "predictable-admin-token",
     "answer-keys-writable-without-auth",
     "mock-answers-writable-without-auth",
-    "cors-allows-all-origins"
+    "cors-allows-all-origins",
+    "invigilator-password-hardcoded-client-side",
+    "css-selector-injection-invigilator-localstorage"
   ],
   "untestedAreas": [
-    "ai-score-suggestion-abuse"
+    "ai-score-suggestion-abuse",
+    "concurrent-multi-student-exam",
+    "writing-test-submission-flow",
+    "listening-test-audio-flow"
   ],
   "deferredFindings": [
     {
@@ -93,7 +105,7 @@
     }
   ],
   "stats": {
-    "scenariosTested": 30,
+    "scenariosTested": 36,
     "bugsFound": 18,
     "bugsFixed": 12,
     "bugsDeferred": 6

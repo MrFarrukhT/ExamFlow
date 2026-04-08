@@ -1,0 +1,87 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "header.logo"
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - status [ref=e11]: Connected
+            - generic [ref=e13]: 
+          - button "Messages" [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: Messages
+              - generic [ref=e17]: 
+          - button "Options" [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: Options
+              - generic [ref=e21]: 
+          - button "Show notes" [ref=e22]:
+            - generic [ref=e23]:
+              - generic [ref=e24]: Show notes
+              - generic [ref=e25]: 
+        - generic [ref=e28]:
+          - generic [ref=e29]: Candidate ID
+          - generic [ref=e30]: TEST001
+  - generic [ref=e34]:
+    - generic [ref=e36]:
+      - heading "Part 3" [level=3] [ref=e37]
+      - generic [ref=e38]: Read the story. Choose a word from the box. Write the correct word next to numbers 1–5. There is one example.
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - paragraph [ref=e41]: It was Jane's birthday. She opened Grandma's present.
+        - paragraph [ref=e42]: It was a ticket to ride a horse at a farm.
+        - paragraph [ref=e43]:
+          - text: "'I'm (12)"
+          - textbox [ref=e44]
+          - text: of horses. I don't want to go. It's difficult to ride them and they are very big.' She started to (13)
+          - textbox [ref=e45]
+          - text: .
+        - paragraph [ref=e46]: Mum said, 'It's exciting, not difficult or dangerous, and horses are beautiful. But you don't have to do it.'
+        - paragraph [ref=e47]: "'But I've got to because Grandma wants me to do it,' said Jane."
+        - paragraph [ref=e48]:
+          - text: On Saturday, Jane's dad (14)
+          - textbox [ref=e49]
+          - text: her to her first lesson.
+        - paragraph [ref=e50]:
+          - text: A woman, Alice, showed Jane the horse. 'This horse is called Star,' she said. Dad and Alice helped Jane to get on Star's (15)
+          - textbox [ref=e51]
+          - text: and they all walked slowly down a quiet road. When they came back Jane (16)
+          - textbox [ref=e52]
+          - text: and said, 'Dad, that was so cool!'
+        - paragraph [ref=e53]: At home Jane phoned Grandma. 'I had a riding lesson today on a horse who was called Star and I loved it, thank you.'
+      - generic [ref=e54]:
+        - 'img "Word bank with pictures: present, dream, happy, afraid, farm, cry, smiled, drove, back"'
+      - generic [ref=e55]:
+        - generic [ref=e56]: (17) Now choose the best name for the story. Tick one box.
+        - generic [ref=e57]:
+          - generic [ref=e58]:
+            - radio "A girl enjoys riding a horse" [ref=e59]
+            - text: A girl enjoys riding a horse
+          - generic [ref=e60]:
+            - radio "A birthday party" [ref=e61]
+            - text: A birthday party
+          - generic [ref=e62]:
+            - radio "Grandma goes for a walk" [ref=e63]
+            - text: Grandma goes for a walk
+  - contentinfo [ref=e65]:
+    - navigation [ref=e66]:
+      - button "Previous" [ref=e67]:
+        - generic [ref=e68]: 
+      - button "Next" [ref=e69]:
+        - generic [ref=e70]: 
+    - navigation "Questions" [ref=e71]:
+      - button "Part 1" [ref=e73]
+      - button "Part 2" [ref=e75]
+      - generic [ref=e76]:
+        - button "Part 3" [ref=e77]
+        - generic [ref=e78]:
+          - button "12" [ref=e79]
+          - button "13" [ref=e80]
+          - button "14" [ref=e81]
+          - button "15" [ref=e82]
+          - button "16" [ref=e83]
+          - button "17" [ref=e84]
+      - button "Part 4" [ref=e86]
+      - button "Part 5" [ref=e88]
+      - button "Part 6" [ref=e90]
