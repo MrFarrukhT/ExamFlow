@@ -1,5 +1,6 @@
-// Local server to connect tests directly to Neon database
-// Run this with: node server-cjs.js
+// IELTS Local Database Server — CJS packaged version for pkg distribution
+// Synced with local-database-server.js (ESM) as of ADR-029
+// Run this with: node server-cjs.cjs
 
 const { Client } = require('pg');
 const express = require('express');
@@ -10,7 +11,10 @@ const crypto = require('crypto');
 const { machineIdSync } = require('node-machine-id');
 const open = require('open');
 
-// Global Error Handling for Debugging
+// ============================================
+// ERROR HANDLING (CJS-specific)
+// ============================================
+
 function logError(error) {
     const errorMsg = `\n[${new Date().toISOString()}] ERROR: ${error.stack || error}\n`;
     try {
@@ -23,26 +27,103 @@ function logError(error) {
 
 process.on('uncaughtException', (error) => {
     logError(error);
-    // Keep process alive if possible, or exit gracefully
-    // process.exit(1); 
 });
 
 process.on('unhandledRejection', (reason, promise) => {
     logError(reason);
 });
 
+// ============================================
+// INLINE SHARED MODULES (CJS can't import ESM)
+// Mirrored from: shared/auth.js, shared/validation.js
+// ============================================
+
+// --- Auth (from shared/auth.js) ---
+const validTokens = new Set();
+
+function registerToken(token) {
+    validTokens.add(token);
+}
+
+function requireAdmin(req, res, next) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Authentication required' });
+    }
+    const token = authHeader.slice(7);
+    if (!validTokens.has(token)) {
+        return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+    }
+    next();
+}
+
+function rateLimit({ windowMs = 60000, maxRequests = 30, message = 'Too many requests' } = {}) {
+    const hits = new Map();
+    return (req, res, next) => {
+        const ip = req.ip || req.connection.remoteAddress;
+        const now = Date.now();
+        let entry = hits.get(ip);
+        if (!entry || now > entry.resetTime) {
+            entry = { count: 0, resetTime: now + windowMs };
+            hits.set(ip, entry);
+        }
+        entry.count++;
+        if (entry.count > maxRequests) {
+            return res.status(429).json({ success: false, message });
+        }
+        next();
+    };
+}
+
+// --- Validation (from shared/validation.js) ---
+function validateScore(score) {
+    if (score === null || score === undefined || score === '') return { valid: true };
+    const parsed = Number(score);
+    if (!Number.isInteger(parsed)) return { valid: false, error: 'Score must be an integer' };
+    if (parsed < 0 || parsed > 200) return { valid: false, error: 'Score must be between 0 and 200' };
+    return { valid: true, value: parsed };
+}
+
+function validateStudentInfo(studentId, studentName) {
+    const id = typeof studentId === 'string' ? studentId.trim() : '';
+    const name = typeof studentName === 'string' ? studentName.trim() : '';
+    if (!id || !name) return { valid: false, error: 'Student ID and name are required' };
+    if (id.length > 200 || name.length > 200) return { valid: false, error: 'Student ID and name must be at most 200 characters' };
+    return { valid: true, studentId: id, studentName: name };
+}
+
+function stripHtmlTags(str) {
+    if (typeof str !== 'string') return str;
+    return str.replace(/<[^>]*>/g, '');
+}
+
+// ============================================
+// EXPRESS SETUP
+// ============================================
+
 const app = express();
-const PORT = 3002; // Using 3002 to avoid conflicts
+const PORT = 3002;
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Licensing Configuration
+// Handle JSON parse errors
+app.use((err, req, res, next) => {
+    if (err.type === 'entity.parse.failed') {
+        return res.status(400).json({ success: false, message: 'Invalid JSON in request body' });
+    }
+    next(err);
+});
+
+// ============================================
+// LICENSE MANAGEMENT (CJS-specific for pkg)
+// ============================================
+
 const LICENSE_FILE = 'license.key';
-const SALT = 'INNOVATIVE_CENTRE_SECURE_SALT_2024'; // Secret salt for hash generation
+const SALT = 'INNOVATIVE_CENTRE_SECURE_SALT_2024';
 
-// Helper to get Machine ID
 function getMachineId() {
     try {
         return machineIdSync();
@@ -51,32 +132,25 @@ function getMachineId() {
     }
 }
 
-// Helper to validate license
 function isLicenseValid() {
     try {
         if (!fs.existsSync(LICENSE_FILE)) return false;
-
         const savedKey = fs.readFileSync(LICENSE_FILE, 'utf8').trim();
         const currentMachineId = getMachineId();
-
-        // Generate expected key: SHA256(MachineID + SALT)
         const expectedKey = crypto.createHash('sha256')
             .update(currentMachineId + SALT)
             .digest('hex')
             .toUpperCase()
             .substring(0, 16)
             .match(/.{1,4}/g)
-            .join('-'); // Format: XXXX-XXXX-XXXX-XXXX
-
+            .join('-');
         return savedKey === expectedKey;
     } catch (e) {
         return false;
     }
 }
 
-// Middleware to enforce license
 const checkLicense = (req, res, next) => {
-    // Allow license-related endpoints and static assets
     if (req.path === '/license.html' ||
         req.path.startsWith('/api/machine-id') ||
         req.path.startsWith('/api/activate') ||
@@ -85,24 +159,20 @@ const checkLicense = (req, res, next) => {
         req.path.endsWith('.js')) {
         return next();
     }
-
     if (isLicenseValid()) {
         next();
     } else {
-        // If it's an API call, return 403
-        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+        if (req.xhr || (req.headers.accept && req.headers.accept.indexOf('json') > -1)) {
             res.status(403).json({ success: false, message: 'License required' });
         } else {
-            // If it's a page load, redirect to license page
             res.redirect('/license.html');
         }
     }
 };
 
-// Apply license check
 app.use(checkLicense);
 
-// License Endpoints
+// License endpoints
 app.get('/api/machine-id', (req, res) => {
     res.json({ machineId: getMachineId() });
 });
@@ -110,7 +180,6 @@ app.get('/api/machine-id', (req, res) => {
 app.post('/api/activate', (req, res) => {
     const { key } = req.body;
     const currentMachineId = getMachineId();
-
     const expectedKey = crypto.createHash('sha256')
         .update(currentMachineId + SALT)
         .digest('hex')
@@ -118,7 +187,6 @@ app.post('/api/activate', (req, res) => {
         .substring(0, 16)
         .match(/.{1,4}/g)
         .join('-');
-
     if (key === expectedKey) {
         fs.writeFileSync(LICENSE_FILE, key);
         res.json({ success: true });
@@ -127,12 +195,62 @@ app.post('/api/activate', (req, res) => {
     }
 });
 
-// Database connection with auto-reconnect
+// ============================================
+// PATH SECURITY (from shared/server-bootstrap.js)
+// ============================================
+
+const blockedPaths = [
+    /^\/\.git(\/|$)/,
+    /^\/\.claude(\/|$)/,
+    /^\/\.env/,
+    /^\/\.scenario-cursor\.json$/,
+    /^\/\.eye-cursor\.json$/,
+    /^\/node_modules(\/|$)/,
+    /^\/shared(\/|$)/,
+    /^\/package(-lock)?\.json$/,
+    /^\/(local-database-server|cambridge-database-server|server-cjs|server-bundled|keygen)\.js$/,
+    /^\/server-cjs\.cjs$/,
+    /^\/scenario-journal\.md$/,
+    /^\/architect-decisions\.md$/,
+    /^\/\.gitignore$/,
+    /^\/tsconfig/,
+    /^\/\.eslint/,
+];
+
+app.use((req, res, next) => {
+    let normalized;
+    try {
+        normalized = decodeURIComponent(req.path);
+    } catch {
+        normalized = req.path;
+    }
+    normalized = normalized.toLowerCase().replace(/\\/g, '/').replace(/\/+/g, '/');
+    if (blockedPaths.some(re => re.test(normalized))) {
+        return res.status(404).send('Not found');
+    }
+    next();
+});
+
+// ============================================
+// STATIC FILE SERVING
+// ============================================
+
+if (process.pkg) {
+    app.use(express.static(path.join(__dirname, 'public'), { index: false }));
+    app.use(express.static(__dirname, { index: false }));
+} else {
+    app.use(express.static('./', { index: false }));
+}
+
+// ============================================
+// DATABASE CONNECTION
+// ============================================
+
 let client;
 let isConnecting = false;
 
 const DATABASE_CONFIG = {
-    connectionString: 'postgresql://neondb_owner:npg_2yHMSvBcN6rI@ep-old-tooth-agav7q24-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
+    connectionString: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_2yHMSvBcN6rI@ep-old-tooth-agav7q24-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
     ssl: {
         require: true,
         rejectUnauthorized: false
@@ -140,31 +258,19 @@ const DATABASE_CONFIG = {
 };
 
 async function createDatabaseConnection() {
-    if (isConnecting) {
-        return;
-    }
-
+    if (isConnecting) return;
     isConnecting = true;
-
     try {
         if (client) {
-            try {
-                await client.end();
-            } catch (e) {
-                // Ignore errors when ending old connection
-            }
+            try { await client.end(); } catch (e) { /* ignore */ }
         }
-
         client = new Client(DATABASE_CONFIG);
-
         client.on('error', (err) => {
             console.error('🔄 Database connection lost, will reconnect on next request...', err.message);
             client = null;
         });
-
         await client.connect();
         console.log('✅ Database connected successfully');
-
     } catch (error) {
         console.error('❌ Database connection failed:', error.message);
         client = null;
@@ -181,24 +287,107 @@ async function ensureConnection() {
     return client;
 }
 
-// Middleware (Moved to top)
-// app.use(cors());
-// app.use(express.json());
+// ============================================
+// BACKGROUND RETRY QUEUE
+// ============================================
 
-// Serve static files - handle both local dev and packaged environment
-// In pkg, process.pkg is true.
-if (process.pkg) {
-    // When packaged, we want to serve files from the snapshot
-    app.use(express.static(path.join(__dirname, 'public')));
-    app.use(express.static(__dirname));
-} else {
-    // In development, serve from current directory
-    app.use(express.static('./'));
+const failedSubmissions = [];
+
+async function backgroundRetrySystem() {
+    if (failedSubmissions.length === 0) return;
+    console.log(`🔄 Background retry: ${failedSubmissions.length} submissions pending...`);
+    const toRetry = [...failedSubmissions];
+    failedSubmissions.length = 0;
+
+    for (const submission of toRetry) {
+        try {
+            const dbClient = await ensureConnection();
+            const result = await dbClient.query(`
+                INSERT INTO test_submissions
+                (student_id, student_name, mock_number, skill, answers, score, band_score, start_time, end_time)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                RETURNING id
+            `, [submission.data.studentId, submission.data.studentName, submission.data.mockNumber,
+            submission.data.skill, JSON.stringify(submission.data.answers), submission.data.score,
+            submission.data.bandScore, submission.data.startTime, submission.data.endTime]);
+            console.log(`✅ Background retry success! ID: ${result.rows[0].id}`);
+        } catch (error) {
+            console.log('❌ Background retry failed, will try again in 90s');
+            failedSubmissions.push(submission);
+        }
+    }
 }
 
-// Root redirect to launcher
+setInterval(backgroundRetrySystem, 90000);
+
+async function saveWithRetry(data, maxRetries = 3) {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+            const dbClient = await ensureConnection();
+            const result = await dbClient.query(`
+                INSERT INTO test_submissions
+                (student_id, student_name, mock_number, skill, answers, score, band_score, start_time, end_time)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                RETURNING id
+            `, [data.studentId, data.studentName, data.mockNumber, data.skill,
+            JSON.stringify(data.answers), data.score, data.bandScore, data.startTime, data.endTime]);
+            console.log(`✅ Saved with ID: ${result.rows[0].id}`);
+            return result.rows[0].id;
+        } catch (error) {
+            console.error(`❌ Attempt ${attempt} failed:`, error.message);
+            if (attempt < maxRetries) {
+                console.log('🔄 Retrying in 2 seconds...');
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+        }
+    }
+    console.log('📋 Adding to background retry queue (will retry every 90s)');
+    failedSubmissions.push({ data, timestamp: new Date().toISOString() });
+    throw new Error('Immediate save failed - added to background retry queue');
+}
+
+// ============================================
+// SHARED ROUTES (admin login, invigilator)
+// ============================================
+
+// Root redirect
 app.get('/', (req, res) => {
     res.redirect('/launcher.html');
+});
+
+// Admin dashboard
+app.get('/admin', (req, res) => {
+    res.sendFile(path.resolve('ielts-admin-dashboard.html'));
+});
+
+// Admin login
+app.post('/admin-login', (req, res) => {
+    const { username, password } = req.body;
+    if (!username || !password || typeof username !== 'string' || typeof password !== 'string') {
+        return res.status(400).json({ success: false, message: 'Username and password are required' });
+    }
+    const adminPassword = process.env.ADMIN_PASSWORD || '';
+    if (username === 'admin' && password === adminPassword) {
+        const token = 'admin-session-' + crypto.randomBytes(32).toString('hex');
+        registerToken(token);
+        res.json({ success: true, token });
+    } else {
+        res.status(401).json({ success: false, message: 'Invalid credentials' });
+    }
+});
+
+// Invigilator password verification
+app.post('/verify-invigilator', (req, res) => {
+    const { password } = req.body;
+    if (!password || typeof password !== 'string') {
+        return res.status(400).json({ success: false, message: 'Password is required' });
+    }
+    const correctPassword = process.env.INVIGILATOR_PASSWORD || '';
+    if (password === correctPassword) {
+        res.json({ success: true });
+    } else {
+        res.status(401).json({ success: false, message: 'Incorrect password' });
+    }
 });
 
 // Test endpoint
@@ -221,449 +410,286 @@ app.get('/test', async (req, res) => {
     }
 });
 
-// Queue for failed submissions
-const failedSubmissions = [];
+// ============================================
+// IELTS-SPECIFIC ROUTES
+// ============================================
 
-// Background retry system - runs every 90 seconds
-async function backgroundRetrySystem() {
-    if (failedSubmissions.length === 0) {
-        return; // No failed submissions to retry
-    }
+const submissionLimiter = rateLimit({ windowMs: 60000, maxRequests: 10, message: 'Too many submissions. Try again later.' });
+const IELTS_TIME_LIMITS = { reading: 60, writing: 60, listening: 40, speaking: 20 };
 
-    console.log(`🔄 Background retry: ${failedSubmissions.length} submissions pending...`);
-
-    const toRetry = [...failedSubmissions]; // Copy the array
-    failedSubmissions.length = 0; // Clear original array
-
-    for (const submission of toRetry) {
-        try {
-            console.log(`📝 Retrying: ${submission.data.skill} test for ${submission.data.studentName}`);
-
-            const dbClient = await ensureConnection();
-            const result = await dbClient.query(`
-                INSERT INTO test_submissions
-                (student_id, student_name, mock_number, skill, answers, score, band_score, start_time, end_time)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-                RETURNING id
-            `, [submission.data.studentId, submission.data.studentName, submission.data.mockNumber,
-            submission.data.skill, JSON.stringify(submission.data.answers), submission.data.score,
-            submission.data.bandScore, submission.data.startTime, submission.data.endTime]);
-
-            console.log(`✅ Background retry success! ID: ${result.rows[0].id}`);
-
-        } catch (error) {
-            console.log(`❌ Background retry failed, will try again in 90s`);
-            failedSubmissions.push(submission); // Put it back in queue
-        }
-    }
-}
-
-// Start background retry system (runs every 90 seconds)
-setInterval(backgroundRetrySystem, 90000);
-
-// Simple immediate retry function (3 quick attempts)
-async function saveWithRetry(data, maxRetries = 3) {
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-        try {
-            console.log(`📝 Attempt ${attempt}: Saving ${data.skill} test for ${data.studentName}`);
-
-            const dbClient = await ensureConnection();
-            const result = await dbClient.query(`
-                INSERT INTO test_submissions
-                (student_id, student_name, mock_number, skill, answers, score, band_score, start_time, end_time)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-                RETURNING id
-            `, [data.studentId, data.studentName, data.mockNumber, data.skill,
-            JSON.stringify(data.answers), data.score, data.bandScore, data.startTime, data.endTime]);
-
-            console.log(`✅ Saved with ID: ${result.rows[0].id}`);
-            return result.rows[0].id;
-
-        } catch (error) {
-            console.error(`❌ Attempt ${attempt} failed:`, error.message);
-
-            if (attempt < maxRetries) {
-                console.log(`🔄 Retrying in 2 seconds...`);
-                await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
-            }
-        }
-    }
-
-    // If all immediate retries failed, add to background queue
-    console.log(`📋 Adding to background retry queue (will retry every 90s)`);
-    failedSubmissions.push({
-        data: data,
-        timestamp: new Date().toISOString()
-    });
-
-    throw new Error('Immediate save failed - added to background retry queue');
-}
-
-// Save test submission
-app.post('/submissions', async (req, res) => {
+// Save test submission (rate-limited, validated, deduplicated)
+app.post('/submissions', submissionLimiter, async (req, res) => {
     try {
         const submissionData = req.body;
-        const savedId = await saveWithRetry(submissionData);
 
+        // Validate required fields
+        const studentCheck = validateStudentInfo(submissionData.studentId, submissionData.studentName);
+        if (!studentCheck.valid) {
+            return res.status(400).json({ success: false, message: studentCheck.error });
+        }
+        if (!submissionData.skill) {
+            return res.status(400).json({ success: false, message: 'Skill is required' });
+        }
+
+        // Submission deduplication
+        const dbClient = await ensureConnection();
+        const dupCheck = await dbClient.query(
+            `SELECT id FROM test_submissions
+             WHERE student_id = $1 AND skill = $2 AND mock_number = $3
+             LIMIT 1`,
+            [studentCheck.studentId, submissionData.skill, submissionData.mockNumber || '1']
+        );
+        if (dupCheck.rows.length > 0) {
+            console.warn(`⚠️ DUPLICATE SUBMISSION BLOCKED: Student ${studentCheck.studentId} already submitted ${submissionData.skill} mock ${submissionData.mockNumber || '1'}`);
+            return res.status(409).json({
+                success: false,
+                message: 'You have already submitted this test. Only one submission per test is allowed.'
+            });
+        }
+
+        // Duration validation
+        if (submissionData.startTime && submissionData.endTime) {
+            const start = new Date(submissionData.startTime);
+            const end = new Date(submissionData.endTime);
+            const elapsedMin = (end - start) / 60000;
+            const limit = IELTS_TIME_LIMITS[submissionData.skill] || 60;
+
+            if (elapsedMin > limit * 3) {
+                console.warn(`🚨 SUBMISSION REJECTED: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.skill} (limit: ${limit}min)`);
+                return res.status(400).json({
+                    success: false,
+                    message: 'Submission rejected: test duration exceeded the maximum allowed time.'
+                });
+            }
+
+            if (elapsedMin > limit * 2) {
+                console.warn(`⚠️ DURATION ALERT: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.skill}`);
+                submissionData.durationFlag = true;
+            }
+        }
+
+        const savedId = await saveWithRetry(submissionData);
         res.json({
             success: true,
             message: 'Test submission saved successfully',
             id: savedId
         });
-
     } catch (error) {
-        // Even if immediate save failed, we queued it for background retry
-        console.log('⏰ Submission queued for background retry');
-        res.json({
-            success: true,
-            message: 'Test submission queued - will retry until successful',
-            queued: true
-        });
-    }
-});
-
-// Get all submissions
-app.get('/submissions', async (req, res) => {
-    try {
-        const dbClient = await ensureConnection();
-        const result = await dbClient.query(`
-            SELECT * FROM test_submissions
-            ORDER BY created_at DESC
-        `);
-
-        res.json({
-            success: true,
-            submissions: result.rows
-        });
-    } catch (error) {
-        console.error('Failed to fetch submissions:', error);
+        console.error('Submission save error:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to fetch submissions',
+            message: 'Failed to save submission',
             error: error.message
         });
     }
 });
 
-// Update score for a submission
-app.post('/update-score', async (req, res) => {
+// Get all submissions (admin only)
+app.get('/submissions', requireAdmin, async (req, res) => {
+    try {
+        const dbClient = await ensureConnection();
+        const result = await dbClient.query('SELECT * FROM test_submissions ORDER BY created_at DESC');
+        res.json({ success: true, submissions: result.rows });
+    } catch (error) {
+        console.error('Failed to fetch submissions:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch submissions', error: error.message });
+    }
+});
+
+// Delete a submission (admin only)
+app.delete('/submissions/:id', requireAdmin, async (req, res) => {
+    try {
+        const submissionId = parseInt(req.params.id, 10);
+        if (isNaN(submissionId) || submissionId <= 0) {
+            return res.status(400).json({ success: false, message: 'Invalid submission ID' });
+        }
+        const dbClient = await ensureConnection();
+        const result = await dbClient.query('DELETE FROM test_submissions WHERE id = $1 RETURNING id', [submissionId]);
+        if (result.rowCount === 0) {
+            return res.status(404).json({ success: false, message: 'Submission not found' });
+        }
+        console.log(`🗑️ Deleted submission ${submissionId}`);
+        res.json({ success: true, message: `Submission ${submissionId} deleted` });
+    } catch (error) {
+        console.error('❌ Failed to delete submission:', error);
+        res.status(500).json({ success: false, message: 'Failed to delete submission', error: error.message });
+    }
+});
+
+// Update score (admin only, validated)
+app.post('/update-score', requireAdmin, async (req, res) => {
     try {
         const { submissionId, score, bandScore } = req.body;
-
         if (!submissionId) {
-            return res.status(400).json({
-                success: false,
-                message: 'Submission ID is required'
-            });
+            return res.status(400).json({ success: false, message: 'Submission ID is required' });
         }
-
-        console.log(`📊 Updating score for submission ${submissionId}: ${score}/40, Band: ${bandScore}`);
+        const scoreResult = validateScore(score);
+        if (!scoreResult.valid) {
+            return res.status(400).json({ success: false, message: scoreResult.error });
+        }
 
         const dbClient = await ensureConnection();
         const result = await dbClient.query(`
-            UPDATE test_submissions
-            SET score = $1, band_score = $2
-            WHERE id = $3
+            UPDATE test_submissions SET score = $1, band_score = $2 WHERE id = $3
             RETURNING id, score, band_score
         `, [score, bandScore, submissionId]);
 
         if (result.rows.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: 'Submission not found'
-            });
+            return res.status(404).json({ success: false, message: 'Submission not found' });
         }
-
         console.log(`✅ Score updated for submission ${submissionId}`);
-
-        res.json({
-            success: true,
-            message: 'Score updated successfully',
-            submission: result.rows[0]
-        });
-
+        res.json({ success: true, message: 'Score updated successfully', submission: result.rows[0] });
     } catch (error) {
         console.error('❌ Score update failed:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to update score',
-            error: error.message
-        });
+        res.status(500).json({ success: false, message: 'Failed to update score', error: error.message });
     }
 });
 
-// Mock Answers API endpoints
+// ============================================
+// MOCK ANSWERS API (admin only)
+// ============================================
 
-// GET /mock-answers?mock=1&skill=reading - Get answers for specific mock and skill
-app.get('/mock-answers', async (req, res) => {
+const VALID_IELTS_SKILLS = ['reading', 'listening', 'writing', 'speaking'];
+
+app.get('/mock-answers', requireAdmin, async (req, res) => {
     try {
         const { mock, skill } = req.query;
-
         if (!mock || !skill) {
-            return res.status(400).json({
-                success: false,
-                message: 'Mock number and skill are required'
-            });
+            return res.status(400).json({ success: false, message: 'Mock number and skill are required' });
+        }
+        const mockNum = parseInt(mock, 10);
+        if (isNaN(mockNum) || mockNum <= 0) {
+            return res.status(400).json({ success: false, message: 'Mock number must be a positive integer' });
         }
 
         const dbClient = await ensureConnection();
         const result = await dbClient.query(
             'SELECT * FROM mock_answers WHERE mock_number = $1 AND skill = $2 ORDER BY question_number',
-            [parseInt(mock), skill]
+            [mockNum, skill]
         );
 
-        // Convert to the format expected by the frontend
         const answers = {};
         result.rows.forEach(row => {
             const questionKey = skill === 'listening' ? `q${row.question_number}` : `${row.question_number}`;
-
-            // Handle alternative answers
             let answerValue = row.correct_answer;
             if (row.alternative_answers && row.alternative_answers.length > 0) {
                 answerValue = [row.correct_answer, ...row.alternative_answers];
             }
-
             answers[questionKey] = answerValue;
         });
 
-        console.log(`📚 Retrieved ${result.rows.length} answers for Mock ${mock} - ${skill.toUpperCase()}`);
-
-        res.json({
-            success: true,
-            answers: answers,
-            count: result.rows.length
-        });
-
+        res.json({ success: true, answers, count: result.rows.length });
     } catch (error) {
         console.error('❌ Failed to get mock answers:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to retrieve answers',
-            error: error.message
-        });
+        res.status(500).json({ success: false, message: 'Failed to retrieve answers', error: error.message });
     }
 });
 
-// POST /mock-answers - Save answers for specific mock and skill
-app.post('/mock-answers', async (req, res) => {
+app.post('/mock-answers', requireAdmin, async (req, res) => {
     try {
         const { mock, skill, answers } = req.body;
-
         if (!mock || !skill || !answers) {
-            return res.status(400).json({
-                success: false,
-                message: 'Mock number, skill, and answers are required'
-            });
+            return res.status(400).json({ success: false, message: 'Mock number, skill, and answers are required' });
+        }
+        const mockNum = parseInt(mock, 10);
+        if (isNaN(mockNum) || mockNum <= 0) {
+            return res.status(400).json({ success: false, message: 'Mock number must be a positive integer' });
+        }
+        if (typeof answers !== 'object' || Array.isArray(answers) || Object.keys(answers).length > 200) {
+            return res.status(400).json({ success: false, message: 'Answers must be an object with at most 200 entries' });
+        }
+        if (!VALID_IELTS_SKILLS.includes(skill)) {
+            return res.status(400).json({ success: false, message: `Invalid skill. Must be one of: ${VALID_IELTS_SKILLS.join(', ')}` });
         }
 
         const dbClient = await ensureConnection();
-
-        // Begin transaction
         await dbClient.query('BEGIN');
 
         try {
-            // Clear existing answers for this mock/skill combination
-            await dbClient.query(
-                'DELETE FROM mock_answers WHERE mock_number = $1 AND skill = $2',
-                [parseInt(mock), skill]
-            );
+            await dbClient.query('DELETE FROM mock_answers WHERE mock_number = $1 AND skill = $2', [mockNum, skill]);
 
-            // Insert new answers
+            const valueClauses = [];
+            const params = [];
+            let paramIndex = 1;
             let insertedCount = 0;
-            for (const [questionKey, answerValue] of Object.entries(answers)) {
-                // Extract question number from key (remove 'q' prefix if present)
-                const questionNumber = parseInt(questionKey.replace(/^q/, ''));
 
+            for (const [questionKey, answerValue] of Object.entries(answers)) {
+                const questionNumber = parseInt(questionKey.replace(/^q/, ''));
                 if (isNaN(questionNumber)) continue;
 
-                let correctAnswer;
-                let alternativeAnswers = null;
-
+                let correctAnswer, alternativeAnswers = null;
                 if (Array.isArray(answerValue)) {
-                    correctAnswer = answerValue[0];
+                    correctAnswer = stripHtmlTags(answerValue[0]);
                     if (answerValue.length > 1) {
-                        alternativeAnswers = JSON.stringify(answerValue.slice(1));
+                        alternativeAnswers = JSON.stringify(answerValue.slice(1).map(stripHtmlTags));
                     }
                 } else {
-                    correctAnswer = answerValue;
+                    correctAnswer = stripHtmlTags(answerValue);
                 }
 
-                await dbClient.query(
-                    `INSERT INTO mock_answers 
-                     (mock_number, skill, question_number, correct_answer, alternative_answers, updated_at) 
-                     VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP)`,
-                    [parseInt(mock), skill, questionNumber, correctAnswer, alternativeAnswers]
-                );
-
+                valueClauses.push(`($${paramIndex}, $${paramIndex + 1}, $${paramIndex + 2}, $${paramIndex + 3}, $${paramIndex + 4}, CURRENT_TIMESTAMP)`);
+                params.push(mockNum, skill, questionNumber, correctAnswer, alternativeAnswers);
+                paramIndex += 5;
                 insertedCount++;
             }
 
-            // Commit transaction
+            if (insertedCount > 0) {
+                await dbClient.query(
+                    `INSERT INTO mock_answers (mock_number, skill, question_number, correct_answer, alternative_answers, updated_at) VALUES ${valueClauses.join(', ')}`,
+                    params
+                );
+            }
+
             await dbClient.query('COMMIT');
-
-            console.log(`💾 Saved ${insertedCount} answers for Mock ${mock} - ${skill.toUpperCase()}`);
-
-            res.json({
-                success: true,
-                message: `Saved ${insertedCount} answers for Mock ${mock} - ${skill.toUpperCase()}`,
-                count: insertedCount
-            });
-
+            res.json({ success: true, message: `Saved ${insertedCount} answers for Mock ${mock} - ${skill.toUpperCase()}`, count: insertedCount });
         } catch (error) {
             await dbClient.query('ROLLBACK');
             throw error;
         }
-
     } catch (error) {
         console.error('❌ Failed to save mock answers:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to save answers',
-            error: error.message
-        });
+        res.status(500).json({ success: false, message: 'Failed to save answers', error: error.message });
     }
 });
 
-// DELETE /mock-answers?mock=1&skill=reading - Delete answers for specific mock and skill
-app.delete('/mock-answers', async (req, res) => {
+app.delete('/mock-answers', requireAdmin, async (req, res) => {
     try {
         const { mock, skill } = req.query;
-
         if (!mock || !skill) {
-            return res.status(400).json({
-                success: false,
-                message: 'Mock number and skill are required'
-            });
+            return res.status(400).json({ success: false, message: 'Mock number and skill are required' });
+        }
+        const mockNum = parseInt(mock, 10);
+        if (isNaN(mockNum) || mockNum <= 0) {
+            return res.status(400).json({ success: false, message: 'Mock number must be a positive integer' });
         }
 
         const dbClient = await ensureConnection();
-        const result = await dbClient.query(
-            'DELETE FROM mock_answers WHERE mock_number = $1 AND skill = $2',
-            [parseInt(mock), skill]
-        );
-
-        console.log(`🗑️ Deleted ${result.rowCount} answers for Mock ${mock} - ${skill.toUpperCase()}`);
-
-        res.json({
-            success: true,
-            message: `Deleted ${result.rowCount} answers for Mock ${mock} - ${skill.toUpperCase()}`,
-            count: result.rowCount
-        });
-
+        const result = await dbClient.query('DELETE FROM mock_answers WHERE mock_number = $1 AND skill = $2', [mockNum, skill]);
+        res.json({ success: true, message: `Deleted ${result.rowCount} answers for Mock ${mock} - ${skill.toUpperCase()}`, count: result.rowCount });
     } catch (error) {
         console.error('❌ Failed to delete mock answers:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to delete answers',
-            error: error.message
-        });
+        res.status(500).json({ success: false, message: 'Failed to delete answers', error: error.message });
     }
 });
 
 // ============================================
-// CAMBRIDGE TEST SYSTEM ENDPOINTS
+// SERVER STARTUP (CJS-specific with license)
 // ============================================
 
-// Save Cambridge test submission
-app.post('/api/cambridge-submissions', async (req, res) => {
-    try {
-        const data = req.body;
-        console.log(`📝 Cambridge: Saving ${data.module} for ${data.studentName} (${data.level})`);
-
-        const dbClient = await ensureConnection();
-        const result = await dbClient.query(`
-            INSERT INTO cambridge_submissions
-            (student_id, student_name, level, module, answers, score, start_time, end_time)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-            RETURNING id
-        `, [data.studentId, data.studentName, data.level, data.module,
-        JSON.stringify(data.answers), data.score || 0, data.startTime, data.endTime]);
-
-        console.log(`✅ Cambridge submission saved with ID: ${result.rows[0].id}`);
-
-        res.json({
-            success: true,
-            message: 'Cambridge test saved successfully',
-            id: result.rows[0].id
-        });
-
-    } catch (error) {
-        console.error('❌ Cambridge save failed:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to save Cambridge submission',
-            error: error.message
-        });
-    }
-});
-
-// Get all Cambridge submissions
-app.get('/api/cambridge-submissions', async (req, res) => {
-    try {
-        const { level, module } = req.query;
-        let query = 'SELECT * FROM cambridge_submissions';
-        const params = [];
-        const conditions = [];
-
-        if (level) {
-            params.push(level);
-            conditions.push(`level = $${params.length}`);
-        }
-        if (module) {
-            params.push(module);
-            conditions.push(`module = $${params.length}`);
-        }
-        if (conditions.length > 0) {
-            query += ' WHERE ' + conditions.join(' AND ');
-        }
-        query += ' ORDER BY submission_time DESC';
-
-        const dbClient = await ensureConnection();
-        const result = await dbClient.query(query, params);
-
-        res.json({
-            success: true,
-            submissions: result.rows,
-            count: result.rows.length
-        });
-    } catch (error) {
-        console.error('Failed to fetch Cambridge submissions:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to fetch submissions',
-            error: error.message
-        });
-    }
-});
-
-// Initialize and start server
 async function startServer() {
     try {
         console.log('🚀 Starting local database server...');
-
-        // Initialize database connection
         await createDatabaseConnection();
 
-        // Start server
         app.listen(PORT, async () => {
-            console.log(`
-🎉 Local Database Server running!
+            console.log(`\n🎉 Local Database Server running on http://localhost:${PORT}\n`);
+            console.log(`📍 Server: http://localhost:${PORT}`);
+            console.log(`🔗 Test connection: http://localhost:${PORT}/test`);
+            console.log(`📊 View submissions: http://localhost:${PORT}/submissions\n`);
+            console.log('💡 Your tests will now save to the database automatically!');
+            console.log('🔄 Database connection will auto-recover if lost!\n');
 
-📍 Server: http://localhost:${PORT}
-🔗 Test connection: http://localhost:${PORT}/test
-📊 View submissions: http://localhost:${PORT}/submissions
-
-💡 Your tests will now save to the database automatically!
-🔄 Database connection will auto-recover if lost!
-
-To test manually:
-curl http://localhost:${PORT}/test
-            `);
-
-            // Auto-launch browser
             console.log('🚀 Launching IELTS Test System...');
-
-            // Determine start URL based on license status
             const startUrl = isLicenseValid()
                 ? `http://localhost:${PORT}/launcher.html`
                 : `http://localhost:${PORT}/license.html`;
@@ -676,11 +702,8 @@ curl http://localhost:${PORT}/test
                             arguments: ['--new-window', '--start-fullscreen', '--disable-web-security', '--disable-features=VizDisplayCompositor']
                         }
                     });
-                } else {
-                    console.log('⚠️ Open module not loaded yet');
                 }
             } catch (e) {
-                // Fallback to Edge if Chrome fails
                 try {
                     if (open) {
                         await open(startUrl, {
@@ -695,36 +718,22 @@ curl http://localhost:${PORT}/test
                 }
             }
         });
-
     } catch (error) {
         console.error('❌ Failed to start server:', error);
         console.log('⚠️ Server will start anyway, database will connect on first request');
-
-        // Start server even if database connection fails
         app.listen(PORT, () => {
-            console.log(`
-🎉 Local Database Server running! (Database will connect on first request)
-
-📍 Server: http://localhost:${PORT}
-🔗 Test connection: http://localhost:${PORT}/test
-📊 View submissions: http://localhost:${PORT}/submissions
-            `);
+            console.log(`\n🎉 Local Database Server running on http://localhost:${PORT} (Database will connect on first request)\n`);
         });
     }
 }
 
-// Handle shutdown
+// Graceful shutdown
 process.on('SIGINT', async () => {
     console.log('\n🛑 Shutting down server...');
     if (client) {
-        try {
-            await client.end();
-        } catch (e) {
-            // Ignore errors during shutdown
-        }
+        try { await client.end(); } catch (e) { /* ignore */ }
     }
     process.exit(0);
 });
 
-// Start the server
 startServer();

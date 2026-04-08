@@ -527,8 +527,8 @@
                     const rwSub = bySkill['reading-writing'];
                     const rwKeyMap = (rwKeysResp && rwKeysResp.success) ? rwKeysResp.answers : {};
 
-                    const rwAnswers = (rwSub && rwSub.answers) || tryParseJSON(localStorage.getItem('cambridge-reading-writingAnswers'));
-                    const listenAnswers = (listenSub && listenSub.answers) || listenAnswersLocal;
+                    const rwAnswers = extractAnswers(rwSub, 'reading-writing') || tryParseJSON(localStorage.getItem('cambridge-reading-writingAnswers'));
+                    const listenAnswers = extractAnswers(listenSub, 'listening') || listenAnswersLocal;
 
                     buildSummary(rwSub, listenSub, speakSub, rwAnswers, listenAnswers, rwKeyMap, listenKeyMap);
 
