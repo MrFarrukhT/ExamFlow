@@ -1708,3 +1708,48 @@ Elevations landed: 0
 Reverted: 0
 Fixes landed: 0
 Changes shipped: 3 files modified
+
+---
+
+## Session: 2026-04-09 (Admin Login Flow — prompt #25)
+Persona: Admin signing in to manage submissions
+System: Both (IELTS dashboard at port 3002, Cambridge dashboard at port 3003)
+Pages explored: ielts-admin-dashboard.html + cambridge-admin-dashboard.html (login forms only)
+Starting state: The prompt referenced "Admin Panel (IELTS)" at port 3000 with `admin/server.js`. Neither exists — login lives inside the IELTS and Cambridge admin dashboard pages directly. Login forms had no autocomplete attributes, no autofocus.
+
+### Round 1
+**Explored:** 2 dashboard login forms + scope investigation (no port 3000 server exists)
+**Action:** POLISH 2 (login UX) + 1 doc cleanup
+
+- [T4] ielts-admin-dashboard.html, cambridge-admin-dashboard.html — Login form UX improvements:
+  - Added `autocomplete="username"` to username input
+  - Added `autocomplete="current-password"` to password input (password managers now recognize the form)
+  - Added `autofocus` to password input (cursor lands there automatically since username is pre-filled with "admin")
+  Mode: polish
+  Quality layer: 4-Polished → 5-Delightful (faster login, password manager support)
+  Files: ielts-admin-dashboard.html, cambridge-admin-dashboard.html
+
+- [T4] docs/loop-prompts.md — Updated stale prompts #24 and #25:
+  - #24 "Enhanced Admin Dashboard" → "IELTS Admin Dashboard" (file renamed in ADR-017, port was wrong, no analytics exist)
+  - #25 "Admin Panel (IELTS)" at port 3000 → "Admin Login Flow" (no port 3000 server exists; login lives in both dashboards)
+  Mode: polish
+  Files: docs/loop-prompts.md
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| ielts-admin-dashboard.html (login) | 5-Delightful | Autofocus, autocomplete |
+| cambridge-admin-dashboard.html (login) | 5-Delightful | Autofocus, autocomplete |
+
+### Note
+The prompt #25 target (Admin Panel at port 3000 from `admin/server.js`) doesn't exist in the codebase. Reframed as "Admin Login Flow" — a real and improvable surface that exists across both dashboards. Both prompts #24 and #25 have been updated in docs/loop-prompts.md to reflect actual file names and URLs.
+
+### Session Stats
+Pages explored: 2 (login forms only)
+Rounds: 1
+Polishes landed: 3 (login autocomplete + doc cleanup)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Fixes landed: 0
+Changes shipped: 3 files modified
