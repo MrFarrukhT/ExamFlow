@@ -65,8 +65,7 @@ All endpoints return `{ success: boolean, message?: string, ... }` unless noted 
 |--------|------|-------------|
 | POST | `/cambridge-submissions` | Save Cambridge test submission |
 | GET | `/cambridge-submissions?level=X&skill=X` | Get submissions (filters optional) |
-| PATCH | `/cambridge-submissions/:id/score` | Update score (REST) |
-| POST | `/cambridge-update-score` | Update score (legacy) |
+| PATCH | `/cambridge-submissions/:id/score` | Update score |
 | PATCH | `/cambridge-submissions/:id/evaluate` | Evaluate speaking test |
 | POST | `/submit-speaking` | Submit speaking test with audio |
 

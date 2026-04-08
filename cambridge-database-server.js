@@ -632,58 +632,7 @@ app.patch('/cambridge-submissions/:id/evaluate', async (req, res) => {
     }
 });
 
-// Update score for a Cambridge submission (POST method for backwards compatibility)
-app.post('/cambridge-update-score', async (req, res) => {
-    try {
-        const { submissionId, score, grade } = req.body;
 
-        if (!submissionId) {
-            return res.status(400).json({
-                success: false,
-                message: 'Submission ID is required'
-            });
-        }
-
-        // Validate score and grade
-        const validationError = validateScoreAndGrade(score, grade);
-        if (validationError) {
-            return res.status(400).json(validationError);
-        }
-
-        console.log(`📊 Updating score for Cambridge submission ${submissionId}: ${score}, Grade: ${grade}`);
-
-        const dbClient = await ensureConnection();
-        const result = await dbClient.query(`
-            UPDATE cambridge_submissions
-            SET score = $1, grade = $2
-            WHERE id = $3
-            RETURNING id, score, grade
-        `, [score, grade, submissionId]);
-
-        if (result.rows.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: 'Submission not found'
-            });
-        }
-
-        console.log(`✅ Score updated for Cambridge submission ${submissionId}`);
-
-        res.json({
-            success: true,
-            message: 'Score updated successfully',
-            submission: result.rows[0]
-        });
-
-    } catch (error) {
-        console.error('❌ Score update failed:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to update score',
-            error: error.message
-        });
-    }
-});
 
 // Get Cambridge answer keys
 app.get('/cambridge-answers', async (req, res) => {
