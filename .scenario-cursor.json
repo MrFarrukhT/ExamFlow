@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-08 03:50",
-  "totalRuns": 2,
+  "lastRun": "2026-04-08 03:55",
+  "totalRuns": 3,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -17,14 +17,24 @@
     "speaking-mimetype-sanitization",
     "speaking-duration-audiosize-validation",
     "concurrent-score-update-last-write-wins",
-    "path-traversal-blocked"
+    "path-traversal-blocked",
+    "ielts-mock-answers-xss-sanitization",
+    "ielts-mock-answers-count-limit",
+    "ielts-mock-answers-skill-validation",
+    "student-results-name-xss-sanitization",
+    "student-results-empty-name-rejection",
+    "student-results-score-range-validation",
+    "student-results-level-validation",
+    "admin-login-edge-cases"
   ],
   "weakPatterns": [
     "no-rate-limiting-on-admin-login",
     "no-duplicate-submission-prevention",
     "predictable-admin-token",
     "answer-keys-writable-without-auth",
-    "mock-answers-writable-without-auth"
+    "mock-answers-writable-without-auth",
+    "cors-allows-all-origins",
+    "error-messages-expose-db-engine"
   ],
   "untestedAreas": [
     "exam-timer-manipulation",
@@ -33,7 +43,6 @@
     "admin-dashboard-xss-rendering",
     "session-timeout-mid-exam",
     "ai-score-suggestion-abuse",
-    "ielts-mock-answers-validation",
     "admin-dashboard-javascript-behavior",
     "invigilator-panel-flows"
   ],
@@ -42,37 +51,49 @@
       "title": "No rate limiting on admin login endpoint",
       "severity": "HIGH",
       "since": "2026-04-08",
-      "reason": "Needs middleware or external package — beyond scenario fix scope"
+      "reason": "Needs middleware or external package"
     },
     {
       "title": "Admin token is predictable (admin-session-{timestamp})",
       "severity": "MEDIUM",
       "since": "2026-04-08",
-      "reason": "Needs JWT overhaul — architectural change"
+      "reason": "Needs JWT overhaul"
     },
     {
       "title": "Double submissions accepted (no dedup)",
       "severity": "HIGH",
       "since": "2026-04-08",
-      "reason": "Needs unique constraint or client-side idempotency key — needs design decision"
+      "reason": "Needs unique constraint or idempotency key"
     },
     {
       "title": "Answer keys writable without authentication",
       "severity": "HIGH",
       "since": "2026-04-08",
-      "reason": "By design (no auth), but anyone on the network can tamper with grading keys"
+      "reason": "By design (no auth), but grade manipulation risk"
     },
     {
       "title": "AI score suggestion untested (OpenAI quota exceeded)",
       "severity": "MEDIUM",
       "since": "2026-04-08",
       "reason": "Need working API key to test prompt injection"
+    },
+    {
+      "title": "CORS allows all origins (Access-Control-Allow-Origin: *)",
+      "severity": "MEDIUM",
+      "since": "2026-04-08",
+      "reason": "Any website can make API calls; low impact without auth"
+    },
+    {
+      "title": "Error messages expose PostgreSQL engine and column types",
+      "severity": "LOW",
+      "since": "2026-04-08",
+      "reason": "Information disclosure but no direct exploit"
     }
   ],
   "stats": {
-    "scenariosTested": 14,
-    "bugsFound": 11,
-    "bugsFixed": 7,
-    "bugsDeferred": 5
+    "scenariosTested": 20,
+    "bugsFound": 15,
+    "bugsFixed": 9,
+    "bugsDeferred": 7
   }
 }

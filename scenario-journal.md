@@ -129,3 +129,62 @@ Trigger: Round 1 cursor listed 12 untested areas; no new code changes to test
 
 ### Stats
 Tested: 6 | Passed: 1 | Failed: 4 | Inconclusive: 1 | Fixed: 3 | Deferred: 2
+
+---
+
+## Session: 2026-04-08 03:55
+Focus: Validation parity — IELTS mock-answers + Cambridge student results + infrastructure
+Trigger: Cursor showed IELTS mock-answers unvalidated, student results CRUD untested
+
+### Scenarios
+
+- S1: IELTS Mock Answers Validation [State Corruptor] -> **FAIL** [HIGH]
+  - XSS in answer values stored (no sanitization)
+  - 1000-key answers accepted (no limit)
+  - Invalid skill blocked by DB CHECK — PASS
+  - **Fix applied**: HTML stripping, 200-entry limit, skill enum validation
+
+- S2: Cambridge Student Results Validation [Explorer] -> **FAIL** [HIGH]
+  - XSS in student_name stored via POST and PATCH
+  - Negative scores (-999) and huge scores (99999) accepted
+  - Empty student_id/student_name accepted
+  - Invalid level blocked by DB CHECK — PASS
+  - **Fix applied**: Name sanitization, empty rejection, numeric range 0-300, level validation
+
+- S3: Error Message Information Leakage [Insider] -> PARTIAL [MEDIUM]
+  - Error messages expose PostgreSQL: "invalid input syntax for type integer"
+  - No stack traces or file paths leaked
+  - **Deferred**: Low impact, informational only
+
+- S4: CORS Policy [Chain Attacker] -> NOTED [MEDIUM]
+  - `Access-Control-Allow-Origin: *` on both servers
+  - All HTTP methods allowed from any origin
+  - **Deferred**: Low practical impact without auth system
+
+- S5: Admin Login Edge Cases [Explorer] -> PASS [MEDIUM]
+  - All edge cases handled: no body, array, type confusion, null, 10KB password
+  - Consistent "Invalid credentials" — no crashes
+
+- S6: Cambridge Submissions Filter Bypass [Insider] -> PARTIAL [LOW]
+  - No-filter GET returns all 5565 submissions unpaginated
+  - SQL injection in filters blocked by parameterized queries
+  - Audio data included in list responses (minor perf concern)
+
+### Fixes
+- `local-database-server.js`: IELTS mock-answers XSS stripping, 200-entry limit, skill enum
+- `cambridge-database-server.js`: Student results POST/PATCH validation — name sanitization, empty rejection, score ranges, level enum
+
+### Pattern Analysis
+- **Every endpoint that accepts user text needs HTML stripping.** This is now the third round where stored XSS was found in a new endpoint. The pattern: any endpoint accepting string input must call `stripHtmlTags()`.
+- **Validation parity between IELTS and Cambridge is a recurring theme.** When one server gets hardened, check if the other has the same gap.
+
+### Intelligence Update
+- Proven solid: IELTS mock-answers validation, student results validation, admin login edge cases
+- All API-level curl-testable scenarios now exhausted for existing endpoints
+- For next run: Browser-based behavioral testing is the highest remaining value — exam flows, admin dashboard rendering of stored data, invigilator panel
+
+### Stats
+Tested: 6 | Passed: 2 | Failed: 2 | Partial: 2 | Fixed: 2 | Deferred: 2
+
+### Stats
+Tested: 6 | Passed: 1 | Failed: 4 | Inconclusive: 1 | Fixed: 3 | Deferred: 2
