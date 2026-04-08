@@ -1,5 +1,50 @@
 # Autopilot Journal
 
+## Session: 2026-04-08 12:00
+Persona: Cambridge B2 First student (full journey audit — answer keys, integrity, security)
+System: Cambridge
+
+### Phase 1: Journey Map
+- Full journey mapped: Login → Dashboard → B2-First selection → Reading (75min, Parts 1-6) → Writing (80min, Parts 7-8) → Listening (40min, Parts 1-4) → Speaking (14min, 4 parts) → Dashboard completion → View Results
+- Gaps identified: 6
+- Key finding: All 3 listening-answers.json files mislabeled as "A2 Key Listening" with wrong structure (5 parts, 26 Qs vs actual 4 parts, 25 Qs)
+- Key finding: No reading answer key JSON files existed for any mock
+- Key finding: Orphaned reading-writing.html files in all 3 B2-First mock folders (only valid for A1/A2 combined tests)
+- Key finding: reading.html and writing.html missing completed-status guards (students could re-enter finished tests)
+- Key finding: XSS via unsanitized error.message in speaking.html innerHTML
+- Key finding: No double-submit protection on speaking.html submit button
+
+### Phase 2: Creation
+- Created: reading-answers.json templates for all 3 mocks (6 parts, 32 Qs each)
+- Structure matches actual B2 First Reading & Use of English paper
+- Answers marked as "?" — admin must fill in via admin dashboard
+
+### Phase 3: Structure
+- Removed orphaned reading-writing.html from B2-First, B2-First-MOCK-2, B2-First-MOCK-3
+- These were A1/A2 combined-module wrappers, never linked from dashboard for B1/B2 levels
+
+### Phase 4: Heal (5 fixes across 9 files)
+1. **Listening answer key structure** — Fixed from A2 Key format (5 parts, 26 Qs) to correct B2 First format (4 parts, 25 Qs) with proper labels. All 3 mocks. Committed as 250cde3
+2. **Completed-status guard** — reading.html and writing.html now redirect to dashboard if module already completed, matching B1-Preliminary and listening.html pattern. All 3 mocks. Committed as 6b76b25
+3. **XSS in speaking.html** — Sanitized error.message before innerHTML injection (mic check + submission error handlers). All 3 mocks. Committed as 6b76b25
+4. **Double-submit protection** — Submit button in speaking.html now disabled after click + shows "Submitting..." text. All 3 mocks. Committed as 6b76b25
+5. **Silent error swallowing** — Autosave catch blocks in reading.html and writing.html now log warnings instead of silently failing. All 3 mocks. Committed as 6b76b25
+
+### Phase 5: Experience
+- Skipped — no server running for Playwright walk-through. Code-level audit only.
+
+### Phase 6: Scenario
+- Verified by code review: all fixes confirmed correct structurally
+- Audio file reference (B1 label in B2 folder) noted but left as-is — file exists and works, only naming is wrong
+
+### Session Stats
+Total commits: 3 (250cde3, ee7efe0, 6b76b25)
+Total files changed: 18 (6 answer JSON files, 3 removed reading-writing.html, 6 reading/writing wrappers, 3 speaking.html)
+Persona journey coverage: Answer keys (all 3 mocks) → Test integrity (completed guards) → Security (XSS, double-submit) → Dead code cleanup
+Remaining: Audio files named "B1" in B2 folders (cosmetic — files work correctly)
+
+---
+
 ## Session: 2026-04-08 22:00
 Persona: Cambridge Test Taker (all levels — A1, A2, B1, B2)
 System: Cambridge (http://localhost:3003)
