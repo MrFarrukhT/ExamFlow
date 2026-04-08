@@ -943,17 +943,40 @@ Starting state: Footer nav counters showed wrong question totals (inherited from
 | B1-Preliminary-MOCK-2/* | 4-Polished | Same fixes applied |
 | B1-Preliminary-MOCK-3/* | 4-Polished | Same fixes applied |
 
+### Round 3
+**Explored:** Speaking test (visual verification of rebuilt content), all 4 parts verified in browser
+**Action:** REBUILD speaking test from A2 Key 2-part to B1 Preliminary (PET) 4-part format
+
+- [T5] speaking.html (3 mocks) — Complete content rebuild to proper B1 Preliminary format:
+  - Part 1: Interview (2-3 min) — 6 B1-level personal questions
+  - Part 2: Simulated Discussion (2-3 min) — party planning scenario with mind-map layout (teal gradient bubble + 5 emoji chips)
+  - Part 3: Extended Turn (2-3 min/candidate) — photo description tasks with dashed-border placeholders, cross-candidate follow-ups
+  - Part 4: General Conversation (3 min) — 5 discussion questions on food & socialising theme
+  Mode: rebuild
+  Quality layer: 3-Efficient → 5-Delightful
+  Files: 3 folders × speaking.html
+
+### Updated Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| B1-Preliminary/Part 1-6.html (Reading) | 4-Polished | Correct titles, counters, console logs |
+| B1-Preliminary/Part 7-8.html (Writing) | 4-Polished | Correct titles and console logs |
+| B1-Preliminary/Listening-Part-1-4.html | 3-Efficient | Already had correct titles |
+| B1-Preliminary/speaking.html | 5-Delightful | Full 4-part PET format, teal identity, mind map |
+| B1-Preliminary-MOCK-2/* | 5-Delightful (speaking) / 4-Polished (rest) | Same content |
+| B1-Preliminary-MOCK-3/* | 5-Delightful (speaking) / 4-Polished (rest) | Same content |
+
 ### Deferred
 - Console errors from Inspera bundled JS (react-modal, moment-timezone, fontawesome fonts) — cannot fix
-- Speaking test content format inherited from A2 Key (2 parts) — needs rebuild for B1 format
 - Writing wrapper (writing.html) has no visible timer — reading.html has one, writing needs same
+- MOCK-2 and MOCK-3 speaking tests use same content as MOCK-1 — ideally would have different topics
 
 ### Session Stats
 Pages explored: 12
-Rounds: 2
+Rounds: 3
 Polishes landed: 0
-Rebuilds landed: 0
+Rebuilds landed: 1 (speaking test — 3 files)
 Elevations landed: 0
 Reverted: 0
 Fixes landed: 5 (43 files total: 1 JS + 15 HTML counters + 27 title/log/heading fixes)
-Changes shipped: 43 files modified
+Changes shipped: 46 files modified
