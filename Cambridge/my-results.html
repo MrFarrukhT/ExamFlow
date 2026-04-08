@@ -425,6 +425,11 @@
 
         let studentId, studentName, level, mockTest;
 
+        // B1/B2 have separate reading + writing; A1/A2 have combined reading-writing
+        function isSeparateRW() {
+            return level === 'B1-Preliminary' || level === 'B2-First';
+        }
+
         document.addEventListener('DOMContentLoaded', init);
 
         function init() {
@@ -445,114 +450,207 @@
             loadResults();
         }
 
+        // Strip skill prefix from submission answer keys (e.g. "reading_1" -> "1")
+        function extractAnswers(submission, skill) {
+            if (!submission || !submission.answers) return null;
+            const cleaned = {};
+            for (const [k, v] of Object.entries(submission.answers)) {
+                cleaned[k.replace(new RegExp('^' + skill + '_'), '')] = v;
+            }
+            return Object.keys(cleaned).length > 0 ? cleaned : null;
+        }
+
         async function loadResults() {
             try {
-                // Fetch submissions and answer keys in parallel — each wrapped so one failure doesn't kill the rest
-                const [submissions, rwKeys, listenKeys] = await Promise.all([
-                    fetchJSON(`${API_BASE}/cambridge-submissions?student_id=${encodeURIComponent(studentId)}&level=${encodeURIComponent(level)}&mock_test=${encodeURIComponent(mockTest)}`).catch(() => []),
-                    fetchJSON(`${API_BASE}/cambridge-answers?level=${encodeURIComponent(level)}&skill=reading-writing&mock=${encodeURIComponent(mockTest)}`).catch(() => ({ success: false })),
-                    fetchJSON(`${API_BASE}/cambridge-answers?level=${encodeURIComponent(level)}&skill=listening&mock=${encodeURIComponent(mockTest)}`).catch(() => ({ success: false }))
-                ]);
+                // Use student-facing endpoints (no admin auth required)
+                const fetches = [
+                    fetchJSON(`${API_BASE}/my-submissions?student_id=${encodeURIComponent(studentId)}&level=${encodeURIComponent(level)}&mock_test=${encodeURIComponent(mockTest)}`).catch(() => []),
+                    fetchJSON(`${API_BASE}/my-answer-keys?level=${encodeURIComponent(level)}&skill=listening&mock=${encodeURIComponent(mockTest)}`).catch(() => ({ success: false }))
+                ];
+
+                if (isSeparateRW()) {
+                    fetches.push(fetchJSON(`${API_BASE}/my-answer-keys?level=${encodeURIComponent(level)}&skill=reading&mock=${encodeURIComponent(mockTest)}`).catch(() => ({ success: false })));
+                    fetches.push(fetchJSON(`${API_BASE}/my-answer-keys?level=${encodeURIComponent(level)}&skill=writing&mock=${encodeURIComponent(mockTest)}`).catch(() => ({ success: false })));
+                } else {
+                    fetches.push(fetchJSON(`${API_BASE}/my-answer-keys?level=${encodeURIComponent(level)}&skill=reading-writing&mock=${encodeURIComponent(mockTest)}`).catch(() => ({ success: false })));
+                }
+
+                const results = await Promise.all(fetches);
+                const submissions = results[0];
+                const listenKeysResp = results[1];
 
                 document.getElementById('loadingState').style.display = 'none';
                 document.getElementById('resultsContent').style.display = 'block';
 
-                // Parse submissions by skill
+                // Parse submissions by skill (latest per skill)
                 const bySkill = {};
-                const subArray = Array.isArray(submissions) ? submissions : [];
-                subArray.forEach(s => {
+                (Array.isArray(submissions) ? submissions : []).forEach(s => {
                     if (!bySkill[s.skill] || new Date(s.created_at) > new Date(bySkill[s.skill].created_at)) {
                         bySkill[s.skill] = s;
                     }
                 });
 
-                const rwSub = bySkill['reading-writing'];
                 const listenSub = bySkill['listening'];
                 const speakSub = bySkill['speaking'];
-
-                // If nothing submitted at all, check localStorage fallback
-                const rwAnswersLocal = tryParseJSON(localStorage.getItem('cambridge-reading-writingAnswers'));
+                const listenKeyMap = (listenKeysResp && listenKeysResp.success) ? listenKeysResp.answers : {};
                 const listenAnswersLocal = tryParseJSON(localStorage.getItem('cambridge-listeningAnswers'));
 
-                const rwAnswers = (rwSub && rwSub.answers) || rwAnswersLocal || null;
-                const listenAnswers = (listenSub && listenSub.answers) || listenAnswersLocal || null;
+                if (isSeparateRW()) {
+                    // B1/B2: separate reading + writing sections
+                    const readKeysResp = results[2];
+                    const writeKeysResp = results[3];
+                    const readSub = bySkill['reading'];
+                    const writeSub = bySkill['writing'];
 
-                const rwKeyMap = (rwKeys && rwKeys.success) ? rwKeys.answers : {};
-                const listenKeyMap = (listenKeys && listenKeys.success) ? listenKeys.answers : {};
+                    const readKeyMap = (readKeysResp && readKeysResp.success) ? readKeysResp.answers : {};
+                    const writeKeyMap = (writeKeysResp && writeKeysResp.success) ? writeKeysResp.answers : {};
 
-                // Build summary
-                buildSummary(rwSub, listenSub, speakSub, rwAnswers, listenAnswers, rwKeyMap, listenKeyMap);
+                    const readAnswers = extractAnswers(readSub, 'reading') || tryParseJSON(localStorage.getItem('cambridge-readingAnswers'));
+                    const writeAnswers = extractAnswers(writeSub, 'writing') || tryParseJSON(localStorage.getItem('cambridge-writingAnswers'));
+                    const listenAnswers = extractAnswers(listenSub, 'listening') || listenAnswersLocal;
 
-                // Render each section
-                if (rwAnswers && Object.keys(rwAnswers).length > 0) {
-                    renderAnswerSection('rw', rwAnswers, rwKeyMap, rwSub, level);
-                }
+                    buildSummaryB1B2(readSub, writeSub, listenSub, speakSub, readAnswers, writeAnswers, listenAnswers, readKeyMap, writeKeyMap, listenKeyMap);
 
-                if (listenAnswers && Object.keys(listenAnswers).length > 0) {
-                    renderAnswerSection('listening', listenAnswers, listenKeyMap, listenSub, level);
-                }
+                    if (readAnswers && Object.keys(readAnswers).length > 0)
+                        renderAnswerSection('reading', readAnswers, readKeyMap, readSub, level);
+                    if (writeAnswers && Object.keys(writeAnswers).length > 0)
+                        renderAnswerSection('writing', writeAnswers, writeKeyMap, writeSub, level);
+                    if (listenAnswers && Object.keys(listenAnswers).length > 0)
+                        renderAnswerSection('listening', listenAnswers, listenKeyMap, listenSub, level);
 
-                renderSpeakingSection(speakSub);
+                    renderSpeakingSection(speakSub);
 
-                // If nothing at all
-                if (!rwAnswers && !listenAnswers && !speakSub) {
-                    document.getElementById('resultsContent').innerHTML = `
-                        <div class="empty-state">
-                            <p>No answers found yet.</p>
-                            <p style="font-size:0.9rem; color:#999;">Complete your test modules first, then come back here to review your answers.</p>
-                            <a href="dashboard-cambridge.html" class="module-button" style="display:inline-block; margin-top:1.5rem; max-width:260px; text-align:center; text-decoration:none;">Go to Dashboard</a>
-                        </div>`;
+                    if (!readAnswers && !writeAnswers && !listenAnswers && !speakSub) showEmptyState();
+                } else {
+                    // A1/A2: combined reading-writing section
+                    const rwKeysResp = results[2];
+                    const rwSub = bySkill['reading-writing'];
+                    const rwKeyMap = (rwKeysResp && rwKeysResp.success) ? rwKeysResp.answers : {};
+
+                    const rwAnswers = (rwSub && rwSub.answers) || tryParseJSON(localStorage.getItem('cambridge-reading-writingAnswers'));
+                    const listenAnswers = (listenSub && listenSub.answers) || listenAnswersLocal;
+
+                    buildSummary(rwSub, listenSub, speakSub, rwAnswers, listenAnswers, rwKeyMap, listenKeyMap);
+
+                    if (rwAnswers && Object.keys(rwAnswers).length > 0)
+                        renderAnswerSection('rw', rwAnswers, rwKeyMap, rwSub, level);
+                    if (listenAnswers && Object.keys(listenAnswers).length > 0)
+                        renderAnswerSection('listening', listenAnswers, listenKeyMap, listenSub, level);
+
+                    renderSpeakingSection(speakSub);
+
+                    if (!rwAnswers && !listenAnswers && !speakSub) showEmptyState();
                 }
 
             } catch (err) {
                 console.error('Failed to load results:', err);
                 document.getElementById('loadingState').style.display = 'none';
+                showLocalFallback();
+            }
+        }
 
-                // Fallback: show localStorage answers even if server is down
+        function showEmptyState() {
+            document.getElementById('resultsContent').innerHTML = `
+                <div class="empty-state">
+                    <p>No answers found yet.</p>
+                    <p style="font-size:0.9rem; color:#999;">Complete your test modules first, then come back here to review your answers.</p>
+                    <a href="dashboard-cambridge.html" class="module-button" style="display:inline-block; margin-top:1.5rem; max-width:260px; text-align:center; text-decoration:none;">Go to Dashboard</a>
+                </div>`;
+        }
+
+        function showLocalFallback() {
+            const listenLocal = tryParseJSON(localStorage.getItem('cambridge-listeningAnswers'));
+
+            if (isSeparateRW()) {
+                const readLocal = tryParseJSON(localStorage.getItem('cambridge-readingAnswers'));
+                const writeLocal = tryParseJSON(localStorage.getItem('cambridge-writingAnswers'));
+
+                if (readLocal || writeLocal || listenLocal) {
+                    document.getElementById('errorState').style.display = 'block';
+                    document.getElementById('errorState').textContent = 'Could not reach the server. Showing your locally saved answers (scores unavailable).';
+                    document.getElementById('resultsContent').style.display = 'block';
+                    if (readLocal && Object.keys(readLocal).length > 0) renderAnswerSection('reading', readLocal, {}, null, level);
+                    if (writeLocal && Object.keys(writeLocal).length > 0) renderAnswerSection('writing', writeLocal, {}, null, level);
+                    if (listenLocal && Object.keys(listenLocal).length > 0) renderAnswerSection('listening', listenLocal, {}, null, level);
+                    buildSummaryB1B2(null, null, null, null, readLocal, writeLocal, listenLocal, {}, {}, {});
+                } else {
+                    showServerError();
+                }
+            } else {
                 const rwLocal = tryParseJSON(localStorage.getItem('cambridge-reading-writingAnswers'));
-                const listenLocal = tryParseJSON(localStorage.getItem('cambridge-listeningAnswers'));
-
                 if (rwLocal || listenLocal) {
                     document.getElementById('errorState').style.display = 'block';
                     document.getElementById('errorState').textContent = 'Could not reach the server. Showing your locally saved answers (scores unavailable).';
                     document.getElementById('resultsContent').style.display = 'block';
-
-                    if (rwLocal && Object.keys(rwLocal).length > 0) {
-                        renderAnswerSection('rw', rwLocal, {}, null, level);
-                    }
-                    if (listenLocal && Object.keys(listenLocal).length > 0) {
-                        renderAnswerSection('listening', listenLocal, {}, null, level);
-                    }
+                    if (rwLocal && Object.keys(rwLocal).length > 0) renderAnswerSection('rw', rwLocal, {}, null, level);
+                    if (listenLocal && Object.keys(listenLocal).length > 0) renderAnswerSection('listening', listenLocal, {}, null, level);
                     buildSummary(null, null, null, rwLocal, listenLocal, {}, {});
                 } else {
-                    document.getElementById('errorState').style.display = 'block';
-                    document.getElementById('errorState').innerHTML = 'Could not load your results. Please check that the server is running and <a href="dashboard-cambridge.html">try again</a>.';
+                    showServerError();
                 }
             }
+        }
+
+        function showServerError() {
+            document.getElementById('errorState').style.display = 'block';
+            document.getElementById('errorState').innerHTML = 'Could not load your results. Please check that the server is running and <a href="dashboard-cambridge.html">try again</a>.';
+        }
+
+        function buildSummaryB1B2(readSub, writeSub, listenSub, speakSub, readAnswers, writeAnswers, listenAnswers, readKeys, writeKeys, listenKeys) {
+            const cards = document.getElementById('summaryCards');
+            cards.innerHTML = '';
+
+            const readCount = readAnswers ? Object.keys(readAnswers).length : 0;
+            const writeCount = writeAnswers ? Object.keys(writeAnswers).length : 0;
+            const listenCount = listenAnswers ? Object.keys(listenAnswers).length : 0;
+
+            let readCorrect = 0, listenCorrect = 0;
+            const hasReadKeys = readKeys && Object.keys(readKeys).length > 0;
+            const hasListenKeys = listenKeys && Object.keys(listenKeys).length > 0;
+
+            if (hasReadKeys && readAnswers) {
+                for (const [k, v] of Object.entries(readAnswers)) if (isCorrect(v, readKeys[normalizeAnswerKey(k)])) readCorrect++;
+            }
+            if (hasListenKeys && listenAnswers) {
+                for (const [k, v] of Object.entries(listenAnswers)) if (isCorrect(v, listenKeys[normalizeAnswerKey(k)])) listenCorrect++;
+            }
+
+            const totalAnswered = readCount + writeCount + listenCount;
+            const totalCorrect = readCorrect + listenCorrect;
+            const hasAnyKeys = hasReadKeys || hasListenKeys;
+            const totalKeyQuestions = (hasReadKeys ? Object.keys(readKeys).length : 0) + (hasListenKeys ? Object.keys(listenKeys).length : 0);
+
+            addSummaryCard(cards, totalAnswered, 'Questions Answered', false);
+            if (hasAnyKeys) {
+                addSummaryCard(cards, totalCorrect + ' / ' + totalKeyQuestions, 'Correct Answers', true);
+                const pct = totalKeyQuestions > 0 ? Math.round((totalCorrect / totalKeyQuestions) * 100) : 0;
+                addSummaryCard(cards, pct + '%', 'Score', true);
+            }
+
+            let submittedModules = 0;
+            if (readSub) submittedModules++;
+            if (writeSub) submittedModules++;
+            if (listenSub) submittedModules++;
+            if (speakSub) submittedModules++;
+            addSummaryCard(cards, submittedModules + ' / 4', 'Modules Submitted', false);
         }
 
         function buildSummary(rwSub, listenSub, speakSub, rwAnswers, listenAnswers, rwKeys, listenKeys) {
             const cards = document.getElementById('summaryCards');
             cards.innerHTML = '';
 
-            // Count answered
             const rwCount = rwAnswers ? Object.keys(rwAnswers).length : 0;
             const listenCount = listenAnswers ? Object.keys(listenAnswers).length : 0;
 
-            // Count correct (only if keys exist)
             let rwCorrect = 0, listenCorrect = 0;
             let hasRwKeys = rwKeys && Object.keys(rwKeys).length > 0;
             let hasListenKeys = listenKeys && Object.keys(listenKeys).length > 0;
 
             if (hasRwKeys && rwAnswers) {
-                for (const [k, v] of Object.entries(rwAnswers)) {
-                    if (isCorrect(v, rwKeys[normalizeAnswerKey(k)])) rwCorrect++;
-                }
+                for (const [k, v] of Object.entries(rwAnswers)) if (isCorrect(v, rwKeys[normalizeAnswerKey(k)])) rwCorrect++;
             }
             if (hasListenKeys && listenAnswers) {
-                for (const [k, v] of Object.entries(listenAnswers)) {
-                    if (isCorrect(v, listenKeys[normalizeAnswerKey(k)])) listenCorrect++;
-                }
+                for (const [k, v] of Object.entries(listenAnswers)) if (isCorrect(v, listenKeys[normalizeAnswerKey(k)])) listenCorrect++;
             }
 
             const totalAnswered = rwCount + listenCount;
@@ -568,7 +666,6 @@
                 addSummaryCard(cards, pct + '%', 'Score', true);
             }
 
-            // Module count
             let submittedModules = 0;
             if (rwSub) submittedModules++;
             if (listenSub) submittedModules++;
