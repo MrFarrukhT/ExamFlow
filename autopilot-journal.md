@@ -1,5 +1,78 @@
 # Autopilot Journal
 
+## Session: 2026-04-09 11:30
+Persona: IELTS student round 3 — regression audit after Cambridge/Olympiada burst
+System: IELTS
+
+### Phase 1: Journey Map
+- Last 5 sessions (24-28) were all C1-Advanced/Olympiada/cheater work
+- IELTS hadn't been touched dedicated since session 13 (round 2)
+- Hypothesis: shared-code changes (answer-manager.js, distraction-free.js,
+  session-manager.js) may have introduced regressions or missed parity
+
+### Phase 2: Creation
+- No new features — regression audit only
+
+### Phase 3: Structure
+- Skipped — sound
+
+### Phase 4: Heal — 2 silent regressions found
+1. **Writing submissions had no anti-cheat data**
+   IELTS reading and listening submissions go through session-manager.js
+   which already includes `antiCheat` from distractionFreeMode. But writing
+   has its own submission path (writing-handler.js prepareWritingData) that
+   never collected anti-cheat data.
+
+   Result: all IELTS writing submissions had `anti_cheat_data = NULL` in
+   the database. The session 22 anti-cheat pipeline was silently broken
+   for writing-only.
+
+   Fix: prepareWritingData now collects antiCheat from distractionFreeMode
+   and includes it in the submission body alongside reading/listening.
+
+2. **session-manager.js missed Olympiada exam type**
+   Two checks hardcoded `examType === 'Cambridge'`:
+   - Dashboard redirect path
+   - Choice of answer manager (Cambridge vs IELTS branches)
+
+   session-manager.js is currently only loaded by IELTS test pages, so
+   Olympiada wouldn't normally hit these branches — but defense in depth:
+   if an Olympiada student ever ends up on an IELTS-style page (edge cases
+   like cross-exam contamination), they'd be redirected to the wrong
+   dashboard and use the wrong answer manager.
+
+   Fix: Both checks now treat 'Olympiada' as Cambridge-family.
+
+Committed as 236e286 (2 files, +14/-3 lines).
+
+### Phase 5: Experience
+- Skipped — no server running
+
+### Phase 6: Scenario
+- Verified by code review:
+  - distraction-free.js getAntiCheatData() is the same function used by both
+    paths, so writing submissions will get identical metadata to reading/listening
+  - The Cambridge-family check is OR'd, no behavior change for legitimate IELTS
+    submissions (examType='IELTS' falls through to the IELTS branch as before)
+
+### Session Stats
+Total commits: 1 (236e286)
+Total files changed: 2 (writing-handler.js, session-manager.js)
++14/-3 lines
+Persona journey coverage: IELTS writing submission + IELTS/Cambridge branching
+
+### Why this matters
+The session 22 invigilator panel + session 23 admin scoring panel both display
+anti-cheat flags from the database. With writing.html silently dropping
+anti-cheat data, invigilators wouldn't see ANY violations on IELTS writing
+submissions even when the student was clearly cheating. This was a silent
+data-loss bug similar to the one found in session 22 for the entire pipeline.
+
+The pattern repeats: when a creation phase touches shared code, an audit pass
+on the OTHER side of that shared code is essential to catch parity gaps.
+
+---
+
 ## Session: 2026-04-09 11:00
 Persona: Cheater round 5 — Olympiada level lock bypass
 System: Cambridge

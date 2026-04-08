@@ -1,15 +1,15 @@
 {
-  "lastRun": "2026-04-09 11:00",
-  "lastPersona": "cheater-round5-olympiada-level-lock",
-  "completedPersonas": ["ielts-student", "cambridge-a2-student", "invigilator", "admin-scoring", "admin-management", "nervous-first-timer", "cambridge-a1-movers-student", "cambridge-b1-preliminary-student", "cambridge-a2-key-student-round2", "staff-round-2", "cheater", "ielts-student-round2", "cambridge-b2-first-student", "cambridge-test-taker", "cambridge-b2-first-student-round2", "cambridge-a1-movers-student-round2", "nervous-first-timer-round2", "cambridge-student-progress-indicator", "ielts-student-results-page", "cambridge-student-review-modal", "cheater-round3", "invigilator-round3-anticheat", "admin-scoring-round3-anticheat", "c1-advanced-olympiada-launch", "olympiada-examtype-pipeline", "olympiada-postsubmit-filtering", "cheater-round4-c1-postmessage", "cheater-round5-olympiada-level-lock"],
-  "currentRotation": 28,
-  "totalSessions": 28,
+  "lastRun": "2026-04-09 11:30",
+  "lastPersona": "ielts-student-round3-regression",
+  "completedPersonas": ["ielts-student", "cambridge-a2-student", "invigilator", "admin-scoring", "admin-management", "nervous-first-timer", "cambridge-a1-movers-student", "cambridge-b1-preliminary-student", "cambridge-a2-key-student-round2", "staff-round-2", "cheater", "ielts-student-round2", "cambridge-b2-first-student", "cambridge-test-taker", "cambridge-b2-first-student-round2", "cambridge-a1-movers-student-round2", "nervous-first-timer-round2", "cambridge-student-progress-indicator", "ielts-student-results-page", "cambridge-student-review-modal", "cheater-round3", "invigilator-round3-anticheat", "admin-scoring-round3-anticheat", "c1-advanced-olympiada-launch", "olympiada-examtype-pipeline", "olympiada-postsubmit-filtering", "cheater-round4-c1-postmessage", "cheater-round5-olympiada-level-lock", "ielts-student-round3-regression"],
+  "currentRotation": 29,
+  "totalSessions": 29,
   "stats": {
     "featuresCreated": 34,
     "structuralDecisions": 1,
-    "codeHealed": 102,
+    "codeHealed": 104,
     "experienceImprovements": 22,
     "scenariosTested": 70,
-    "totalCommits": 71
+    "totalCommits": 72
   }
 }
