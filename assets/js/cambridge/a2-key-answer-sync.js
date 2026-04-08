@@ -75,18 +75,6 @@
         { part: 6, min: 27, max: 32 }
       ];
     }
-    if (path.indexOf('B2-First') !== -1) {
-      return [
-        { part: 1, min: 1,  max: 8 },
-        { part: 2, min: 9,  max: 16 },
-        { part: 3, min: 17, max: 22 },
-        { part: 4, min: 23, max: 30 },
-        { part: 5, min: 31, max: 36 },
-        { part: 6, min: 37, max: 42 },
-        { part: 7, min: 43, max: 43 },
-        { part: 8, min: 44, max: 44 }
-      ];
-    }
     // Default: A2 Key / A1 Movers ranges
     return [
       { part: 1, min: 1,  max: 6 },
@@ -355,16 +343,18 @@
           var textInput = qWrapper.querySelector('input[type="text"]');
           if (textInput) {
             textInput.value = val;
+            updateFilledState(textInput);
             // Trigger input event to update any word count or validation
             var evt = new Event('input', { bubbles: true });
             textInput.dispatchEvent(evt);
             restoredCount++;
           }
-          
+
           // Restore textareas (Part 6-7)
           var textarea = qWrapper.querySelector('textarea');
           if (textarea) {
             textarea.value = val;
+            updateFilledState(textarea);
             // Trigger input event to update word count
             var evt2 = new Event('input', { bubbles: true });
             textarea.dispatchEvent(evt2);
@@ -391,11 +381,22 @@
     }
   }
 
+  // Toggle .filled visual state on text inputs and textareas
+  function updateFilledState(el){
+    if (!el || !el.classList) return;
+    if (el.value && el.value.trim()) {
+      el.classList.add('filled');
+    } else {
+      el.classList.remove('filled');
+    }
+  }
+
   // Handle real-time autosave (text inputs, textareas) with debouncing
   function onInput(e){
     var t = e.target;
     if (!t) return;
     if (t.matches && t.matches('input[type="text"], textarea')){
+      updateFilledState(t);
       var q = getQuestionNumberFromInput(t);
       if (q == null) {
         return;

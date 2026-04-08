@@ -19,7 +19,13 @@
       '#main-screen-content{margin-top:0 !important;padding-top:0 !important;}' +
       /* Ensure body is visible to avoid flash/blank */
       'body{transition:opacity ease-in .2s;opacity:1 !important;display:block !important;overflow:auto !important;position:relative !important;}' +
-      'body[unresolved]{opacity:1 !important;}';
+      'body[unresolved]{opacity:1 !important;}' +
+      /* Filled-state feedback for text inputs (Part 5) and textareas (Parts 6-7) */
+      '.textEntryInteractionValue.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}' +
+      'textarea.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}' +
+      /* Reduce excessive top spacing between header and content */
+      '.rubric__rubricContainer___2l5dP{margin-top:0 !important;}' +
+      '#sectionContent{padding-top:8px !important;}';
     var s = doc.createElement('style'); s.id='ic-a2key-style'; s.type='text/css'; s.appendChild(doc.createTextNode(css));
     (doc.head || doc.documentElement).appendChild(s);
   }
