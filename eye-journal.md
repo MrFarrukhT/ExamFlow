@@ -372,12 +372,43 @@ Starting state: Both launchers functional and polished from previous cycle, but 
 | MOCKs/*/writing.html | 5-Delightful | Consistent nav shadow, task accent, stable word count |
 | MOCKs/*/listening.html | 5-Delightful | JS error fixed, consistent nav shadow |
 
+### Round 6
+**Explored:** 1 page (ielts-admin-dashboard.html), 3 findings
+**Action:** POLISH 2 changes
+
+- [T4] ielts-admin-dashboard.html — Title "Enhanced Admin Dashboard" → "IELTS Admin Dashboard"
+  Mode: polish
+  Files: ielts-admin-dashboard.html
+
+- [T4] ielts-admin-dashboard.html — Header gradient: dark charcoal → purple matching page background
+  Mode: polish
+  Files: ielts-admin-dashboard.html
+
+### Round 7
+**Explored:** 1 page (invigilator.html), 3 findings
+**Action:** POLISH 1 CSS change (brand consistency)
+
+- [T4] invigilator.css — IELTS theme: green → purple/blue matching brand identity. Cambridge theme: blue → teal matching new identity.
+  Mode: polish
+  Files: assets/css/invigilator.css
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| launcher.html | 6-Innovative | Live status, Cambridge identity, unified architecture |
+| index.html | 6-Innovative | Professional copy, teal consistency, gradient overlay |
+| MOCKs/*/reading.html | 5-Delightful | Comfortable line-height, badge headers, nav shadow |
+| MOCKs/*/writing.html | 5-Delightful | Consistent nav shadow, task accent, stable word count |
+| MOCKs/*/listening.html | 5-Delightful | JS error fixed, consistent nav shadow |
+| ielts-admin-dashboard.html | 4-Polished | Clean title, matching gradient |
+| invigilator.html | 5-Delightful | Consistent brand colors across themes |
+
 ### Session Stats
-Pages explored: 6
-Rounds: 5
-Polishes landed: 14
+Pages explored: 8
+Rounds: 7
+Polishes landed: 17
 Rebuilds landed: 1
 Elevations landed: 4
 Reverted: 0
 Fixes landed: 1
-Changes shipped: 15
+Changes shipped: 19
