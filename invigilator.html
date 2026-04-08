@@ -42,9 +42,9 @@
         <div class="header" id="headerBlock">
             <h1 id="headerTitle">Invigilator Control Panel</h1>
             <p id="headerSubtitle">Configure and manage tests</p>
-            <div style="margin-top: 15px;">
-                <button onclick="goBackToTest()" style="background:#28a745;color:white;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;font-size:14px;margin-right:10px;">&larr; Back to Test</button>
-                <button onclick="goToIndex()" style="background:#6c757d;color:white;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;font-size:14px;">&larr; Back to Index</button>
+            <div class="header-nav">
+                <button class="header-nav-btn primary" onclick="goBackToTest()">&larr; Back to Test</button>
+                <button class="header-nav-btn" onclick="goToIndex()">&larr; Back to Index</button>
             </div>
         </div>
         <!-- Level Display: Cambridge only -->
@@ -146,14 +146,14 @@
             var t = document.getElementById('headerTitle');
             var s = document.getElementById('headerSubtitle');
             if (isCambridge) {
-                h.style.background = 'linear-gradient(135deg, #0066cc, #0052a3)';
+                h.classList.add('cambridge-theme');
                 t.textContent = 'Cambridge Invigilator Control Panel';
                 s.textContent = 'Monitor test sessions and manage test data';
                 document.getElementById('levelSection').style.display = 'block';
                 document.getElementById('mockWarningBox').style.display = 'block';
                 document.getElementById('appContainer').classList.add('cambridge-mode');
             } else {
-                h.style.background = 'linear-gradient(135deg, #28a745, #20873a)';
+                h.classList.add('ielts-theme');
                 t.textContent = 'IELTS Invigilator Control Panel';
                 s.textContent = 'Configure and manage tests';
             }
