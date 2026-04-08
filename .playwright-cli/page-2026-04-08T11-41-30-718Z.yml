@@ -1,0 +1,16 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - heading "Cambridge B1 Preliminary - Speaking Test" [level=1] [ref=e4]
+      - paragraph [ref=e5]: "Test Student (ID: B1-2024-001) | B1-Preliminary | Mock Test 1"
+    - generic [ref=e6]:
+      - heading "🎤 Microphone Check" [level=2] [ref=e7]
+      - paragraph [ref=e8]: Before starting the test, we need to check your microphone is working properly.
+      - generic [ref=e9]:
+        - strong [ref=e10]: "Instructions:"
+        - text: Click "Test Microphone" and speak into your microphone. You should see the level bar move. Make sure your voice is clear and audible.
+      - generic [ref=e13]: Speak to test your microphone
+      - generic [ref=e14]:
+        - button "🎤 Test Microphone" [ref=e15] [cursor=pointer]
+        - button "✓ Start Speaking Test" [ref=e16] [cursor=pointer]
+  - generic [ref=e19]: 11:36
