@@ -14,10 +14,12 @@ function _safeParseJSON(str, fallback) {
 
 // ── Autosave indicator (shared by IELTS + Cambridge) ────────────
 // Shows a subtle "Answers saved" toast so students know their work is safe.
+// Throttled to once per 12 seconds — frequent enough to reassure students
+// during active typing without becoming visual noise.
 let _lastCambridgeSaveIndicator = 0;
 function showCambridgeSaveIndicator() {
     const now = Date.now();
-    if (now - _lastCambridgeSaveIndicator < 25000) return;
+    if (now - _lastCambridgeSaveIndicator < 12000) return;
     _lastCambridgeSaveIndicator = now;
     const existing = document.getElementById('autosave-indicator');
     if (existing) existing.remove();
@@ -31,6 +33,11 @@ function showCambridgeSaveIndicator() {
     requestAnimationFrame(() => { el.style.transform = 'translateY(0)'; el.style.opacity = '1'; });
     setTimeout(() => { el.style.transform = 'translateY(20px)'; el.style.opacity = '0'; setTimeout(() => { if (el.parentNode) el.remove(); }, 300); }, 2500);
 }
+
+// Friendly alias — the indicator is shared, not Cambridge-specific.
+// New code should prefer `showSaveIndicator`. The old name is kept for
+// backward compatibility with the 22 existing call sites.
+const showSaveIndicator = showCambridgeSaveIndicator;
 
 class AnswerManager {
     constructor(examType = 'ielts') {
