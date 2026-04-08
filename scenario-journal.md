@@ -585,3 +585,66 @@ None needed — clean round.
 
 ### Stats (Round 10)
 Tested: 6 | Passed: 5 | Noted: 1 | Failed: 0 | Fixed: 0 | Deferred: 0
+
+---
+
+## Session: 2026-04-08 18:10
+Focus: Session management + payload/header injection (creative attacks beyond API endpoint coverage)
+Trigger: No new code to test; switched to systemic concerns — token lifecycle, payload limits, character sanitization
+
+### Scenarios
+
+- S1: Token Persistence After Logout [Insider] → **FAIL** [MEDIUM]
+  - Client `logout()` only clears localStorage; no server call
+  - No /admin-logout endpoint exists (404)
+  - Stolen tokens remain valid in `validTokens` Set until server restart
+  - **Fix applied**: Added POST /admin-logout to both server-bootstrap.js and server-cjs.cjs
+
+- S2: Token Accumulation Memory [Power User] → NOTED
+  - validTokens Set grows on every login, never shrinks (until logout endpoint)
+  - Now mitigated by S1 fix (logout calls delete)
+  - Rate limiter `hits` Map also grows unboundedly per-IP — minor concern, not exploitable
+
+- S3: Header Injection in Student Name [State Corruptor] → **PARTIAL FAIL** [MEDIUM]
+  - Newlines (\r\n) in student name accepted but stored, no actual HTTP header injection
+  - Null byte (\x00) caused PostgreSQL 500 error: "invalid byte sequence for encoding UTF8"
+  - RTL override (\u202e) accepted (cosmetic only)
+  - **Fix applied**: validateStudentInfo strips null bytes + control chars before DB insert
+  - **Bonus fix**: IELTS submission was using `submissionData.studentName` (raw) instead of `studentCheck.studentName` (sanitized) — sanitization wasn't actually being used. Fixed in all 3 servers.
+
+- S4: JSON Payload Limits [Power User] → PASS
+  - 100KB and 1MB payloads accepted (within 50MB Express limit)
+  - No DoS vector at these sizes; large payloads are expected for writing tests
+
+- S5: Speaking Audio Massive Payload [Power User] → **FAIL** [MEDIUM]
+  - 5MB base64 audio accepted, no length validation
+  - 20MB would also work (up to Express 50MB limit)
+  - DoS vector: fill DB with massive submissions
+  - audioSize field is just metadata — actual validation is missing
+  - **Fix applied**: Added 15MB max length check + type validation on audioData in Cambridge speaking endpoint
+
+- S6: AI Score Endpoint Hardening [Code Review] → DEFERRED
+  - Endpoint only exists in ESM source, not CJS server (not exploitable currently)
+  - Issues: no auth, prompt injection via task1/task2, no rate limit, JSON.parse without try
+  - Will fix when ESM server is run
+
+### Fixes
+- `shared/validation.js`: validateStudentInfo strips null bytes (\x00) and control chars
+- `shared/server-bootstrap.js`: Added /admin-logout endpoint, imports removeToken
+- `server-cjs.cjs`: Added /admin-logout endpoint, sync sanitization logic, use sanitized values in INSERT
+- `local-database-server.js`: Assign sanitized values back to submissionData before INSERT
+- `cambridge-database-server.js`: Same sanitization assignment + audioData length/type validation (15MB max)
+
+### Pattern Analysis
+- **Sanitization is useless if you don't use the sanitized output.** All 3 server submission handlers called validateStudentInfo but then used the raw submissionData fields in the INSERT query. This pattern bug means the previous "name validation" was only catching empty/long names, not actually preventing null byte attacks. Always assign sanitized values back to the input object or use the validated copy.
+- **Tokens without expiry == permanent backdoor.** The validTokens Set held every token ever issued. A token leaked from a screenshot or browser history would work forever. Now mitigated by client-server logout symmetry.
+- **Audio uploads need length checks at app layer, not just framework layer.** Express 50MB limit is too generous for individual fields. Per-field validation is more granular.
+
+### Intelligence Update
+- Proven solid: Admin logout works (server-side token invalidation), null byte sanitization across all submission paths, audio data length capped at 15MB
+- New weak pattern caught: "validate then ignore" — validation results not propagated to downstream code
+- Validated values now flow correctly through all 3 servers
+- Coverage: 68 scenarios across 11 rounds, 30 bugs found, 23 fixed
+
+### Stats (Round 11)
+Tested: 6 | Passed: 1 | Failed: 3 | Partial: 1 | Noted: 1 | Fixed: 3 | Deferred: 1

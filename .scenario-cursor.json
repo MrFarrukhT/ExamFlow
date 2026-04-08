@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-08 17:55",
-  "totalRuns": 10,
+  "lastRun": "2026-04-08 18:10",
+  "totalRuns": 11,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -49,7 +49,11 @@
     "forged-token-rejected",
     "admin-delete-parseInt-parameterized",
     "admin-score-update-validated",
-    "r9-blocklist-regression-pass"
+    "admin-logout-endpoint-invalidates-token",
+    "null-byte-control-char-sanitization-in-names",
+    "sanitized-values-used-in-insert",
+    "audio-data-length-capped-15mb",
+    "json-payload-1mb-accepted"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
@@ -58,7 +62,8 @@
     "anti-cheat-metadata-spoofable",
     "blocklist-deny-approach-needs-ongoing-maintenance",
     "ai-score-endpoint-no-auth-prompt-injection",
-    "submissions-list-unpaginated"
+    "submissions-list-unpaginated",
+    "rate-limiter-hits-map-grows-unboundedly"
   ],
   "untestedAreas": [],
   "deferredFindings": [
@@ -72,7 +77,7 @@
       "title": "AI score endpoint: no auth, prompt injection, no rate limit",
       "severity": "MEDIUM",
       "since": "2026-04-08",
-      "reason": "Endpoint only in ESM source, not CJS. Fix proactively."
+      "reason": "Endpoint only in ESM source, not CJS. Fix proactively when ESM server runs."
     },
     {
       "title": "CORS allows all origins",
@@ -94,9 +99,9 @@
     }
   ],
   "stats": {
-    "scenariosTested": 62,
-    "bugsFound": 27,
-    "bugsFixed": 20,
+    "scenariosTested": 68,
+    "bugsFound": 30,
+    "bugsFixed": 23,
     "bugsDeferred": 5
   }
 }
