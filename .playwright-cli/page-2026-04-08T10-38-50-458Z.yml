@@ -1,0 +1,42 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - heading "IELTS Invigilator Control Panel" [level=1] [ref=e4]
+    - paragraph [ref=e5]: Configure and manage tests
+    - generic [ref=e6]:
+      - button "← Back to Test" [ref=e7] [cursor=pointer]
+      - button "← Back to Index" [ref=e8] [cursor=pointer]
+  - text: 🔒 🔒 🔒 🔒
+  - generic [ref=e9]:
+    - heading "Mock Test Configuration" [level=3] [ref=e10]
+    - generic [ref=e11]:
+      - generic [ref=e12]: "Select Mock Test:"
+      - combobox "Select Mock Test:" [ref=e13]:
+        - option "Mock Test 1"
+        - option "Mock Test 2"
+        - option "Mock Test 3"
+        - option "Mock Test 4"
+        - option "Mock Test 5" [selected]
+        - option "Mock Test 6"
+        - option "Mock Test 7"
+        - option "Mock Test 8"
+        - option "Mock Test 9"
+        - option "Mock Test 10"
+      - button "Set Mock Test" [ref=e14] [cursor=pointer]
+    - paragraph [ref=e15]: "Currently Selected: Mock Test 5"
+  - generic [ref=e16]:
+    - heading "Test Results & Data Management" [level=3] [ref=e17]
+    - generic [ref=e18]:
+      - button "Download Current Test (TXT)" [ref=e19] [cursor=pointer]
+      - button "Export Current Test (JSON)" [ref=e20] [cursor=pointer]
+      - button "View Test History" [ref=e21] [cursor=pointer]
+      - button "Reset Current Session" [ref=e22] [cursor=pointer]
+      - button "Clear All Data" [ref=e23] [cursor=pointer]
+  - generic [ref=e24]:
+    - heading "Current Session" [level=3] [ref=e25]
+    - paragraph [ref=e30]: No active session
+  - generic [ref=e32]:
+    - heading "Enter Invigilator Password" [level=4] [ref=e33]
+    - textbox "Enter password" [active] [ref=e34]
+    - generic [ref=e35]:
+      - button "Confirm" [ref=e36] [cursor=pointer]
+      - button "Cancel" [ref=e37] [cursor=pointer]

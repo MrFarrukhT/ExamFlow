@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "lastRunAt": "2026-04-08T09:30:00Z",
-  "lastRunCommit": "992ea5c",
+  "lastRunAt": "2026-04-08T10:40:00Z",
+  "lastRunCommit": "3a2ce2a",
   "runs": [
     {
       "id": "heal-2026-04-08-r1",
@@ -32,6 +32,16 @@
       "fixed": 5,
       "reverted": 0,
       "deferred": 2
+    },
+    {
+      "id": "heal-2026-04-08-r4",
+      "type": "heal",
+      "startedAt": "2026-04-08T10:35:00Z",
+      "domains": ["security", "api", "database", "architecture", "frontend"],
+      "round": 4,
+      "fixed": 5,
+      "reverted": 0,
+      "deferred": 8
     }
   ],
   "findings": [
@@ -187,6 +197,114 @@
       "status": "fixed",
       "fixedInCommit": "992ea5c",
       "foundAt": "2026-04-08T09:25:00Z"
+    },
+    {
+      "fingerprint": "api:database.js:setinterval-promise",
+      "severity": "HIGH",
+      "title": "Unhandled Promise Rejection in setInterval backgroundRetry",
+      "file": "shared/database.js",
+      "status": "fixed",
+      "fixedInCommit": "3a2ce2a",
+      "foundAt": "2026-04-08T10:35:00Z"
+    },
+    {
+      "fingerprint": "security:database.js:weak-token",
+      "severity": "MEDIUM",
+      "title": "Weak session token generation — predictable timestamp-based token",
+      "file": "shared/database.js",
+      "status": "fixed",
+      "fixedInCommit": "3a2ce2a",
+      "foundAt": "2026-04-08T10:35:00Z"
+    },
+    {
+      "fingerprint": "api:cambridge-database-server.js:submit-speaking-skill",
+      "severity": "MEDIUM",
+      "title": "Missing skill validation in speaking submission endpoint",
+      "file": "cambridge-database-server.js",
+      "status": "fixed",
+      "fixedInCommit": "3a2ce2a",
+      "foundAt": "2026-04-08T10:35:00Z"
+    },
+    {
+      "fingerprint": "api:cambridge-database-server.js:delete-answers-404",
+      "severity": "MEDIUM",
+      "title": "HTTP 200 with failure response for missing answer key",
+      "file": "cambridge-database-server.js",
+      "status": "fixed",
+      "fixedInCommit": "3a2ce2a",
+      "foundAt": "2026-04-08T10:35:00Z"
+    },
+    {
+      "fingerprint": "frontend:listening.js:dead-showoptionsmodal",
+      "severity": "MEDIUM",
+      "title": "Dead function: showOptionsModal never called",
+      "file": "assets/js/listening/listening.js",
+      "status": "fixed",
+      "fixedInCommit": "3a2ce2a",
+      "foundAt": "2026-04-08T10:35:00Z"
+    },
+    {
+      "fingerprint": "frontend:listening.js:dead-toggletimervisibility",
+      "severity": "MEDIUM",
+      "title": "Dead function: toggleTimerVisibility never called",
+      "file": "assets/js/listening/listening.js",
+      "status": "fixed",
+      "fixedInCommit": "3a2ce2a",
+      "foundAt": "2026-04-08T10:35:00Z"
+    },
+    {
+      "fingerprint": "security:servers:unauth-admin-endpoints",
+      "severity": "HIGH",
+      "title": "Missing authentication on admin PATCH/POST/DELETE endpoints",
+      "file": "cambridge-database-server.js, local-database-server.js",
+      "status": "open",
+      "note": "Needs architecture — requires auth middleware + frontend token headers",
+      "foundAt": "2026-04-08T10:35:00Z"
+    },
+    {
+      "fingerprint": "database:servers:unbounded-select-queries",
+      "severity": "HIGH",
+      "title": "Unbounded SELECT queries on submissions/results endpoints",
+      "file": "cambridge-database-server.js, local-database-server.js",
+      "status": "open",
+      "note": "Needs pagination design before adding LIMIT",
+      "foundAt": "2026-04-08T10:35:00Z"
+    },
+    {
+      "fingerprint": "architecture:servers:duplicate-validation-logic",
+      "severity": "MEDIUM",
+      "title": "Duplicate validation logic across IELTS and Cambridge servers",
+      "file": "local-database-server.js, cambridge-database-server.js",
+      "status": "open",
+      "note": "Needs refactoring to use shared/validation.js consistently",
+      "foundAt": "2026-04-08T10:35:00Z"
+    },
+    {
+      "fingerprint": "architecture:core.js:god-file",
+      "severity": "MEDIUM",
+      "title": "Core.js is a 1562-line god file",
+      "file": "assets/js/core.js",
+      "status": "open",
+      "note": "Needs migration — split into focused modules",
+      "foundAt": "2026-04-08T10:35:00Z"
+    },
+    {
+      "fingerprint": "security:server-bootstrap.js:cors-wildcard",
+      "severity": "MEDIUM",
+      "title": "Overly permissive CORS — wildcard origin",
+      "file": "shared/server-bootstrap.js",
+      "status": "open",
+      "note": "Needs architecture — requires allowed origins config",
+      "foundAt": "2026-04-08T10:35:00Z"
+    },
+    {
+      "fingerprint": "api:cambridge-database-server.js:response-format-consistency",
+      "severity": "MEDIUM",
+      "title": "Inconsistent response format — raw arrays vs envelope",
+      "file": "cambridge-database-server.js",
+      "status": "open",
+      "note": "Needs frontend coordination — changing format would break admin dashboard",
+      "foundAt": "2026-04-08T10:35:00Z"
     }
   ]
 }

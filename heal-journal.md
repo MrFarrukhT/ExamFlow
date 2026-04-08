@@ -25,10 +25,23 @@ Starting state: 0 open findings in ledger
 - [MEDIUM] Dead code: toggleExplanation, toggleExplanationPart3, selectCell → fixed — `assets/js/core.js`
 - [MEDIUM] Unvalidated mock parameter passed to parseInt → fixed — `local-database-server.js`
 
+### Round 4
+- [HIGH] Unhandled Promise Rejection in setInterval backgroundRetry → fixed — `shared/database.js`
+- [MEDIUM] Weak session token generation (predictable timestamp) → fixed — `shared/database.js`
+- [MEDIUM] Missing skill validation in speaking submission → fixed — `cambridge-database-server.js`
+- [MEDIUM] HTTP 200 with failure response for missing answer key → fixed — `cambridge-database-server.js`
+- [MEDIUM] Dead functions: showOptionsModal, toggleTimerVisibility → fixed — `assets/js/listening/listening.js`
+
 ### Deferred
 - Hardcoded invigilator password — needs architecture (server-side auth)
 - Same hardcoded password in Cambridge launcher — needs architecture
+- Missing authentication on admin endpoints — needs auth middleware + frontend changes
+- Unbounded SELECT queries — needs pagination design
+- Duplicate validation logic across servers — needs shared module refactoring
+- Core.js god file (1562 lines) — needs migration to split modules
+- Overly permissive CORS wildcard — needs allowed origins config
+- Inconsistent response format (raw arrays vs envelope) — needs frontend coordination
 
 ### Stats
-Rounds: 3 | Fixed: 15 | Reverted: 0 | Deferred: 2
-Ending state: 2 open findings in ledger
+Rounds: 4 | Fixed: 20 | Reverted: 0 | Deferred: 8
+Ending state: 8 open findings in ledger

@@ -1,0 +1,108 @@
+- generic [active] [ref=e1]:
+  - iframe [ref=e2]:
+    - generic [ref=f1e4]:
+      - banner [ref=f1e5]:
+        - generic [ref=f1e6]:
+          - generic [ref=f1e7]:
+            - img "header.logo"
+          - generic [ref=f1e8]:
+            - generic [ref=f1e9]:
+              - generic [ref=f1e10]:
+                - status [ref=f1e11]: Connected
+                - generic [ref=f1e13]: 
+              - button "Messages" [ref=f1e14]:
+                - generic [ref=f1e15]:
+                  - generic [ref=f1e16]: Messages
+                  - generic [ref=f1e17]: 
+              - button "Options" [ref=f1e18]:
+                - generic [ref=f1e19]:
+                  - generic [ref=f1e20]: Options
+                  - generic [ref=f1e21]: 
+              - button "Show notes" [ref=f1e22]:
+                - generic [ref=f1e23]:
+                  - generic [ref=f1e24]: Show notes
+                  - generic [ref=f1e25]: 
+            - generic [ref=f1e28]:
+              - generic [ref=f1e29]: Candidate ID
+              - generic [ref=f1e30]: "1234"
+      - generic [ref=f1e34]:
+        - generic [ref=f1e36]:
+          - heading "Part 1" [level=3] [ref=f1e37]
+          - generic [ref=f1e38]: Look and read. Choose the correct words and write them on the lines. There is one example.
+        - generic [ref=f1e39]:
+          - generic [ref=f1e40]:
+            - generic [ref=f1e41]:
+              - img "a forest"
+            - generic [ref=f1e42]:
+              - img "a beard"
+            - generic [ref=f1e43]:
+              - img "islands"
+            - generic [ref=f1e44]:
+              - img "a stomach"
+            - generic [ref=f1e45]:
+              - img "eyes"
+            - generic [ref=f1e46]:
+              - img "shoulders"
+            - generic [ref=f1e47]:
+              - img "mountains"
+            - generic [ref=f1e48]:
+              - img "a waterfall"
+          - generic [ref=f1e49]:
+            - generic [ref=f1e50]:
+              - generic [ref=f1e51]:
+                - strong [ref=f1e52]: Example
+                - text: There are often lots of different kinds of trees in this place.
+              - generic [ref=f1e53]: a forest
+            - generic [ref=f1e54]:
+              - generic [ref=f1e55]: "1"
+              - generic [ref=f1e56]: Some men have this on their face below their mouth.
+              - textbox [ref=f1e57]
+            - generic [ref=f1e58]:
+              - generic [ref=f1e59]: "2"
+              - generic [ref=f1e60]: This is part of a river that drops down quickly.
+              - textbox [ref=f1e61]
+            - generic [ref=f1e62]:
+              - generic [ref=f1e63]: "3"
+              - generic [ref=f1e64]: These are at the top of your arms. You have two of them.
+              - textbox [ref=f1e65]
+            - generic [ref=f1e66]:
+              - generic [ref=f1e67]: "4"
+              - generic [ref=f1e68]: When you eat, all the food goes into this part of your body.
+              - textbox [ref=f1e69]
+            - generic [ref=f1e70]:
+              - generic [ref=f1e71]: "5"
+              - generic [ref=f1e72]: These are very big, and some people like climbing them.
+              - textbox [ref=f1e73]
+      - contentinfo [ref=f1e75]:
+        - navigation [ref=f1e76]:
+          - button "Previous" [disabled] [ref=f1e77]:
+            - generic [ref=f1e78]: 
+          - button "Next" [ref=f1e79]:
+            - generic [ref=f1e80]: 
+        - navigation "Questions" [ref=f1e81]:
+          - generic [ref=f1e82]:
+            - button "Part 1" [ref=f1e83]:
+              - text: Part 1
+              - generic [ref=f1e84]: 0 of 5
+            - generic [ref=f1e85]:
+              - button "1" [ref=f1e86]
+              - button "2" [ref=f1e87]
+              - button "3" [ref=f1e88]
+              - button "4" [ref=f1e89]
+              - button "5" [ref=f1e90]
+          - button "Part 2" [ref=f1e92]:
+            - text: Part 2
+            - generic [ref=f1e93]: 0 of 6
+          - button "Part 3" [ref=f1e95]:
+            - text: Part 3
+            - generic [ref=f1e96]: 0 of 6
+          - button "Part 4" [ref=f1e98]:
+            - text: Part 4
+            - generic [ref=f1e99]: 0 of 5
+          - button "Part 5" [ref=f1e101]:
+            - text: Part 5
+            - generic [ref=f1e102]: 0 of 7
+          - button "Part 6" [ref=f1e104]:
+            - text: Part 6
+            - generic [ref=f1e105]: 0 of 6
+  - generic [ref=e5]: 1:00:00
