@@ -127,16 +127,53 @@ Starting state: Functional but utilitarian — invisible footer button, no anima
 | index.html | 5-Delightful | Floating labels, inline validation, entrance animations |
 | MOCKs/*/reading.html | 4-Polished | Timer warnings, better nav, smooth transitions |
 
+### Round 4
+**Explored:** 1 page (MOCKs/MOCK 1/writing.html — IELTS Writing Test), 7 findings
+**Action:** POLISH 4 fixes + ELEVATE 2 enhancements (CSS + JS, benefits all 10 mocks)
+
+- [T4] writing-handler.js — Timer now uses CSS classes (warning/critical/urgent) instead of inline style.color
+  Mode: polish
+  Files: assets/js/writing/writing-handler.js, assets/css/writing.css
+
+- [T3] writing-handler.js — Replaced alert() time-up with inline "Time's up!" notification
+  Mode: polish
+  Files: assets/js/writing/writing-handler.js
+
+- [T4] writing.css — Fixed hidden scrollbars on both panels (was scrollbar-width: none)
+  Mode: polish
+  Files: assets/css/writing.css
+
+- [T3] writing.css — Textarea fills available viewport height (calc), smoother focus transition
+  Mode: polish
+  Files: assets/css/writing.css
+
+- [T0] writing.css — Fade-in animation when switching between Task 1 and Task 2
+  Mode: elevate
+  Files: assets/css/writing.css
+
+- [T0] writing.css — Timer pulse animation at 1 minute remaining
+  Mode: elevate
+  Files: assets/css/writing.css
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| launcher.html | 5-Delightful | Animations, glow, loading state, clean modal |
+| Cambridge/launcher-cambridge.html | 5-Delightful | Same improvements applied |
+| index.html | 5-Delightful | Floating labels, inline validation, entrance animations |
+| MOCKs/*/reading.html | 4-Polished | Timer warnings, better nav, smooth transitions |
+| MOCKs/*/writing.html | 4-Polished | Timer CSS classes, visible scrollbars, task fade |
+
 ### Deferred
 - Cambridge/index.html — Same login improvements needed (floating labels, inline validation)
-- Reading test — FontAwesome CDN causes slow load; consider local copy
-- Reading test — Inline table styles in MOCK 1 Q14-26 need CSS class migration
+- Reading/Writing — FontAwesome CDN causes slow load; consider local copy
+- Writing test — No auto-save indicator visible to student
 
 ### Session Stats
-Pages explored: 4
-Rounds: 3
-Polishes landed: 14
+Pages explored: 5
+Rounds: 4
+Polishes landed: 18
 Rebuilds landed: 0
-Elevations landed: 9
+Elevations landed: 11
 Reverted: 0
-Changes shipped: 23
+Changes shipped: 29

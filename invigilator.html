@@ -6,73 +6,107 @@
     <title>Invigilator Panel</title>
     <link rel="stylesheet" href="assets/css/invigilator.css">
     <link rel="icon" href="assets/icons/innovativecentre.png">
+    <style>
+        .level-card-readonly {
+            background: linear-gradient(135deg, #90a4ae, #607d8b);
+            color: white; padding: 15px; border-radius: 8px; margin-bottom: 10px;
+            cursor: not-allowed; opacity: 0.8; transition: all 0.3s; position: relative;
+        }
+        .level-card-readonly::after {
+            content: "\1F512"; position: absolute; top: 10px; right: 15px; font-size: 18px; opacity: 0.7;
+        }
+        .level-card-readonly.current-level {
+            border: 3px solid #4caf50; box-shadow: 0 0 20px rgba(76,175,80,0.4);
+            opacity: 1; background: linear-gradient(135deg, #0066cc, #0052a3);
+        }
+        .level-card-readonly.current-level::after {
+            content: "\2713 ACTIVE"; font-size: 12px; font-weight: bold;
+            background: #4caf50; padding: 4px 8px; border-radius: 4px;
+        }
+        .level-badge {
+            display: inline-block; padding: 5px 15px; background: rgba(255,255,255,0.2);
+            border-radius: 20px; margin-right: 10px; font-weight: bold;
+        }
+        .cambridge-mode .mock-selection select { border-color: #0066cc; min-width: 200px; }
+        .cambridge-mode .mock-selection button { background: #0066cc; }
+        .cambridge-mode .mock-selection button:hover {
+            background: #0052a3; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,102,204,0.3);
+        }
+    </style>
 </head>
 <body>
-    <!-- Load distraction-free mode first -->
     <script src="assets/js/distraction-free.js"></script>
     <script src="assets/js/answer-manager.js"></script>
     <script src="assets/js/cambridge/cambridge-answer-manager.js"></script>
-    <div class="container">
-        <div class="header">
-            <h1>Invigilator Control Panel</h1>
-            <p>Configure and manage tests</p>
+    <div class="container" id="appContainer">
+        <div class="header" id="headerBlock">
+            <h1 id="headerTitle">Invigilator Control Panel</h1>
+            <p id="headerSubtitle">Configure and manage tests</p>
             <div style="margin-top: 15px;">
-                <button onclick="goBackToTest()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px; margin-right: 10px;">
-                    ← Back to Test
-                </button>
-                <button onclick="goToIndex()" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px;">
-                    ← Back to Index
-                </button>
+                <button onclick="goBackToTest()" style="background:#28a745;color:white;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;font-size:14px;margin-right:10px;">&larr; Back to Test</button>
+                <button onclick="goToIndex()" style="background:#6c757d;color:white;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;font-size:14px;">&larr; Back to Index</button>
             </div>
         </div>
-        
-        <div class="panel-section">
+        <!-- Level Display: Cambridge only -->
+        <div class="panel-section" id="levelSection" style="display: none;">
+            <h3>Test Level Information</h3>
+            <div style="background:#e3f2fd;border-left:4px solid #2196f3;padding:15px;border-radius:5px;margin-bottom:15px;">
+                <p style="margin:0;color:#1565c0;font-size:14px;"><strong>Note:</strong> Test level is selected by the student in the Dashboard and cannot be changed from here to maintain test integrity.</p>
+            </div>
+            <div class="level-display">
+                <div class="level-card-readonly" data-level="A1-Movers">
+                    <span class="level-badge">A1</span> <strong>Movers</strong> - Basic level English
+                    <div style="font-size:12px;margin-top:5px;opacity:0.9;">Modules: Reading & Writing (combined), Listening</div>
+                </div>
+                <div class="level-card-readonly" data-level="A2-Key">
+                    <span class="level-badge">A2</span> <strong>Key (KET)</strong> - Elementary level English
+                    <div style="font-size:12px;margin-top:5px;opacity:0.9;">Modules: Reading & Writing (combined), Listening</div>
+                </div>
+                <div class="level-card-readonly" data-level="B1-Preliminary">
+                    <span class="level-badge">B1</span> <strong>Preliminary (PET)</strong> - Intermediate level English
+                    <div style="font-size:12px;margin-top:5px;opacity:0.9;">Modules: Reading, Writing, Listening</div>
+                </div>
+                <div class="level-card-readonly" data-level="B2-First">
+                    <span class="level-badge">B2</span> <strong>First (FCE)</strong> - Upper-intermediate level English
+                    <div style="font-size:12px;margin-top:5px;opacity:0.9;">Modules: Reading & Use of English, Writing, Listening</div>
+                </div>
+            </div>
+            <p id="currentLevel" style="margin-top:15px;padding:12px;background:#e8f5e9;border-radius:5px;font-weight:bold;color:#2e7d32;font-size:16px;">Current Student Level: Not Set</p>
+        </div>
+        <!-- Mock Test Configuration -->
+        <div class="panel-section" id="mockSection">
             <h3>Mock Test Configuration</h3>
+            <div id="mockWarningBox" style="background:#fff3e0;border-left:4px solid #ff9800;padding:12px;border-radius:5px;margin-bottom:15px;display:none;">
+                <p style="margin:0;color:#e65100;font-size:13px;"><strong>Warning:</strong> Mock test should be set BEFORE the student starts the test. Changing it after test start may cause data integrity issues.</p>
+            </div>
             <div class="mock-selection">
                 <label for="mockSelect">Select Mock Test:</label>
-                <select id="mockSelect">
-                    <option value="1">Mock Test 1</option>
-                    <option value="2">Mock Test 2</option>
-                    <option value="3">Mock Test 3</option>
-                    <option value="4">Mock Test 4</option>
-                    <option value="5">Mock Test 5</option>
-                    <option value="6">Mock Test 6</option>
-                    <option value="7">Mock Test 7</option>
-                    <option value="8">Mock Test 8</option>
-                    <option value="9">Mock Test 9</option>
-                    <option value="10">Mock Test 10</option>
-                </select>
+                <select id="mockSelect"></select>
                 <button id="setMockButton">Set Mock Test</button>
             </div>
-            <p id="currentMock">Currently Selected: Mock Test 1</p>
+            <p id="currentMock" style="margin-top:10px;padding:8px;border-radius:5px;">Currently Selected: Mock Test 1</p>
+            <p id="mockLockStatus" style="margin-top:8px;padding:8px;background:#f5f5f5;border-radius:5px;color:#666;font-size:13px;display:none;">Mock test is locked (test in progress)</p>
         </div>
-        
+        <!-- Data Management -->
         <div class="panel-section">
             <h3>Test Results & Data Management</h3>
             <div class="data-controls">
-                <button id="downloadCurrentTxt" class="export-btn">📄 Download Current Test (TXT)</button>
-                <button id="downloadCurrentJson" class="export-btn">📋 Export Current Test (JSON)</button>
-                <button id="viewHistory" class="history-btn">🗂️ View Test History</button>
-                <button id="resetSession" class="reset-btn">🔄 Reset Current Session</button>
-                <button id="resetAllData" class="danger-btn">⚠️ Clear All Data</button>
+                <button id="downloadCurrentTxt" class="export-btn">Download Current Test (TXT)</button>
+                <button id="downloadCurrentJson" class="export-btn">Export Current Test (JSON)</button>
+                <button id="viewHistory" class="history-btn">View Test History</button>
+                <button id="resetSession" class="reset-btn">Reset Current Session</button>
+                <button id="resetAllData" class="danger-btn">Clear All Data</button>
             </div>
-            
-            <!-- Test History Panel -->
             <div id="historyPanel" class="history-panel" style="display: none;">
-                <h4>Test History (Last 3 Tests)</h4>
-                <div id="historyList" class="history-list">
-                    <!-- History items will be populated here -->
-                </div>
+                <h4>Test History</h4>
+                <div id="historyList" class="history-list"></div>
             </div>
         </div>
-        
+        <!-- Current Session -->
         <div class="panel-section">
             <h3>Current Session</h3>
-            <div id="sessionInfo">
-                <p>No active session</p>
-            </div>
+            <div id="sessionInfo"><p>No active session</p></div>
         </div>
-        
         <!-- Password Modal -->
         <div id="passwordModal" class="modal" style="display: none;">
             <div class="modal-content">
@@ -87,394 +121,298 @@
     </div>
 
     <script>
-        const INVIGILATOR_PASSWORD = "InV!#2025$SecurePass"; // Strong password - change this for production
-        
+        const INVIGILATOR_PASSWORD = "InV!#2025$SecurePass";
+        const examType = localStorage.getItem('examType') || 'IELTS';
+        const isCambridge = examType === 'Cambridge';
+
         document.addEventListener('DOMContentLoaded', function() {
+            applyExamTheme();
+            populateMockOptions();
             updateCurrentMock();
             updateSessionInfo();
-            
-            // Initialize all event listeners
+            if (isCambridge) updateCurrentLevel();
             initializeEventListeners();
         });
-        
-        function initializeEventListeners() {
-            // Mock test selection
-            const setMockButton = document.getElementById('setMockButton');
-            if (setMockButton) {
-                setMockButton.addEventListener('click', function() {
-                    const selectedMock = document.getElementById('mockSelect').value;
-                    localStorage.setItem('selectedMock', selectedMock);
-                    updateCurrentMock();
-                    alert(`Mock Test ${selectedMock} has been set successfully!`);
-                });
-            }
 
-            // New answer management buttons
-            const downloadCurrentTxt = document.getElementById('downloadCurrentTxt');
-            if (downloadCurrentTxt) {
-                downloadCurrentTxt.addEventListener('click', function() {
-                    const studentId = localStorage.getItem('studentId');
-                    if (!studentId) {
-                        alert('No current test data to download!');
-                        return;
-                    }
-                    
-                    const examType = localStorage.getItem('examType');
-                    
-                    if (examType === 'Cambridge' && window.cambridgeAnswerManager) {
-                        window.cambridgeAnswerManager.downloadCurrentTestTxt();
-                        alert('Cambridge test results downloaded as TXT file!');
-                    } else if (window.answerManager) {
-                        window.answerManager.downloadCurrentTestTxt();
-                        alert('IELTS test results downloaded as TXT file!');
-                    } else {
-                        alert('Answer management system not loaded!');
-                    }
-                });
-            } else {
-                console.error('downloadCurrentTxt button not found!');
-            }
+        // Auto-refresh every 5 seconds
+        setInterval(function() {
+            updateSessionInfo();
+            if (isCambridge) { updateCurrentLevel(); updateCurrentMock(); }
+        }, 5000);
 
-            const downloadCurrentJson = document.getElementById('downloadCurrentJson');
-            if (downloadCurrentJson) {
-                downloadCurrentJson.addEventListener('click', function() {
-                    exportDataAsJson();
-                });
+        // ── Theme ───────────────────────────────────────────────────
+        function applyExamTheme() {
+            var h = document.getElementById('headerBlock');
+            var t = document.getElementById('headerTitle');
+            var s = document.getElementById('headerSubtitle');
+            if (isCambridge) {
+                h.style.background = 'linear-gradient(135deg, #0066cc, #0052a3)';
+                t.textContent = 'Cambridge Invigilator Control Panel';
+                s.textContent = 'Monitor test sessions and manage test data';
+                document.getElementById('levelSection').style.display = 'block';
+                document.getElementById('mockWarningBox').style.display = 'block';
+                document.getElementById('appContainer').classList.add('cambridge-mode');
             } else {
-                console.error('downloadCurrentJson button not found!');
-            }
-
-            const viewHistory = document.getElementById('viewHistory');
-            if (viewHistory) {
-                viewHistory.addEventListener('click', function() {
-                    toggleHistoryPanel();
-                });
-            } else {
-                console.error('viewHistory button not found!');
-            }
-
-            const resetSession = document.getElementById('resetSession');
-            if (resetSession) {
-                resetSession.addEventListener('click', function() {
-                    if (confirm('Reset current session? This will clear the current test data but keep historical records.')) {
-                        const examType = localStorage.getItem('examType');
-                        
-                        // Save current session to history before clearing
-                        if (localStorage.getItem('studentId')) {
-                            if (examType === 'Cambridge' && window.cambridgeAnswerManager) {
-                                window.cambridgeAnswerManager.saveCurrentTestToHistory();
-                                window.cambridgeAnswerManager.clearCurrentTestSession();
-                            } else if (window.answerManager) {
-                                window.answerManager.saveCurrentTestToHistory();
-                                window.answerManager.clearCurrentTestSession();
-                            } else {
-                                // Fallback if answer managers aren't loaded
-                                const keysToRemove = [
-                                    'studentId', 'studentName', 'selectedMock', 'testStartTime', 'examType',
-                                    'cambridgeLevel',
-                                    'listeningStatus', 'listeningStartTime', 'listeningEndTime', 'listeningAnswers',
-                                    'readingStatus', 'readingStartTime', 'readingEndTime', 'readingAnswers',
-                                    'writingStatus', 'writingStartTime', 'writingEndTime', 'writingAnswers',
-                                    'reading-writingStatus', 'reading-writingStartTime', 'reading-writingEndTime', 'reading-writingAnswers',
-                                    'distractionFreeMode'
-                                ];
-                                keysToRemove.forEach(key => localStorage.removeItem(key));
-                            }
-                        }
-                        
-                        alert('Current session reset successfully!');
-                        updateSessionInfo();
-                        // Hide history panel if it's open
-                        const panel = document.getElementById('historyPanel');
-                        if (panel && panel.style.display !== 'none') {
-                            toggleHistoryPanel();
-                        }
-                    }
-                });
-            } else {
-                console.error('resetSession button not found!');
-            }
-
-            const resetAllData = document.getElementById('resetAllData');
-            if (resetAllData) {
-                resetAllData.addEventListener('click', function() {
-                    showPasswordModal('reset_all');
-                });
-            } else {
-                console.error('resetAllData button not found!');
-            }
-            
-            // Legacy button support (if they exist)
-            const exportButton = document.getElementById('exportButton');
-            if (exportButton) {
-                exportButton.addEventListener('click', function() {
-                    showPasswordModal('export');
-                });
-            }
-            
-            const resetButton = document.getElementById('resetButton');
-            if (resetButton) {
-                resetButton.addEventListener('click', function() {
-                    showPasswordModal('reset');
-                });
+                h.style.background = 'linear-gradient(135deg, #28a745, #20873a)';
+                t.textContent = 'IELTS Invigilator Control Panel';
+                s.textContent = 'Configure and manage tests';
             }
         }
+
+        // ── Mock Options ────────────────────────────────────────────
+        function populateMockOptions() {
+            var sel = document.getElementById('mockSelect');
+            sel.innerHTML = '';
+            if (isCambridge) {
+                var level = localStorage.getItem('cambridgeLevel') || '';
+                addOpt(sel, '1', 'Mock Test 1');
+                if (level !== 'A1-Movers') { addOpt(sel, '2', 'Mock Test 2'); addOpt(sel, '3', 'Mock Test 3'); }
+            } else {
+                for (var i = 1; i <= 10; i++) addOpt(sel, String(i), 'Mock Test ' + i);
+            }
+        }
+        function addOpt(sel, val, txt) { var o = document.createElement('option'); o.value = val; o.textContent = txt; sel.appendChild(o); }
+        function getMockKey() { return isCambridge ? 'selectedCambridgeMock' : 'selectedMock'; }
 
         function updateCurrentMock() {
-            const selectedMock = localStorage.getItem('selectedMock') || '1';
-            document.getElementById('mockSelect').value = selectedMock;
-            document.getElementById('currentMock').textContent = `Currently Selected: Mock Test ${selectedMock}`;
+            var sel = document.getElementById('mockSelect');
+            var mock = localStorage.getItem(getMockKey()) || '1';
+            var exists = false;
+            for (var i = 0; i < sel.options.length; i++) { if (sel.options[i].value === mock) { exists = true; break; } }
+            if (!exists) { mock = '1'; localStorage.setItem(getMockKey(), '1'); }
+            sel.value = mock;
+            document.getElementById('currentMock').textContent = 'Currently Selected: Mock Test ' + mock;
+            // Mock-lock
+            var locked = checkIfTestInProgress();
+            var lockEl = document.getElementById('mockLockStatus');
+            var btn = document.getElementById('setMockButton');
+            lockEl.style.display = locked ? 'block' : 'none';
+            btn.style.opacity = locked ? '0.8' : '1';
+            if (isCambridge) btn.style.background = locked ? '#ff9800' : '#0066cc';
         }
 
+        function checkIfTestInProgress() {
+            var mods = isCambridge ? ['reading','writing','listening','reading-writing','speaking'] : ['listening','reading','writing'];
+            var prefix = isCambridge ? 'cambridge-' : '';
+            for (var i = 0; i < mods.length; i++) {
+                var s = localStorage.getItem(prefix + mods[i] + 'Status');
+                if (s === 'in-progress' || s === 'completed') return true;
+            }
+            return !!(localStorage.getItem('studentId') && localStorage.getItem('testStartTime'));
+        }
+
+        // ── Level (Cambridge) ───────────────────────────────────────
+        function updateCurrentLevel() {
+            var level = localStorage.getItem('cambridgeLevel') || 'Not Set';
+            var el = document.getElementById('currentLevel');
+            populateMockOptions();
+            document.querySelectorAll('.level-card-readonly').forEach(function(c) { c.classList.remove('current-level'); });
+            if (level !== 'Not Set') {
+                el.textContent = 'Current Student Level: ' + level;
+                el.style.background = '#e8f5e9'; el.style.color = '#2e7d32';
+                var card = document.querySelector('[data-level="' + level + '"]');
+                if (card) card.classList.add('current-level');
+            } else {
+                el.textContent = "Current Student Level: Not Set (Student hasn't selected a level yet)";
+                el.style.background = '#fff3cd'; el.style.color = '#856404';
+            }
+        }
+
+        // ── Session Info ────────────────────────────────────────────
         function updateSessionInfo() {
-            const studentId = localStorage.getItem('studentId');
-            const studentName = localStorage.getItem('studentName');
-            const examType = localStorage.getItem('examType');
-            const sessionInfo = document.getElementById('sessionInfo');
-            
-            if (studentId && studentName) {
-                let modules, totalModules, testInfo;
-                
-                if (examType === 'Cambridge') {
-                    const level = localStorage.getItem('cambridgeLevel') || 'Unknown';
-                    testInfo = `Cambridge ${level}`;
-                    
-                    // Determine modules based on level
-                    if (level === 'A1-Movers' || level === 'A2-Key') {
-                        modules = ['reading-writing', 'listening'];
-                        totalModules = 2;
-                    } else {
-                        modules = ['reading', 'writing', 'listening'];
-                        totalModules = 3;
-                    }
-                } else {
-                    const mockTest = localStorage.getItem('selectedMock') || '1';
-                    testInfo = `IELTS Mock Test ${mockTest}`;
-                    modules = ['listening', 'reading', 'writing'];
-                    totalModules = 3;
-                }
-                
-                const completed = modules.filter(module => 
-                    localStorage.getItem(`${module}Status`) === 'completed'
-                ).length;
-                
-                sessionInfo.innerHTML = `
-                    <p><strong>Student:</strong> ${studentName}</p>
-                    <p><strong>ID:</strong> ${studentId}</p>
-                    <p><strong>Test:</strong> ${testInfo}</p>
-                    <p><strong>Progress:</strong> ${completed}/${totalModules} modules completed</p>
-                `;
+            var sid = localStorage.getItem('studentId'), name = localStorage.getItem('studentName');
+            var div = document.getElementById('sessionInfo');
+            if (!sid || !name) { div.innerHTML = '<p>No active session</p>'; return; }
+            if (isCambridge) {
+                var level = localStorage.getItem('cambridgeLevel') || 'Not Selected';
+                var mock = localStorage.getItem('selectedCambridgeMock') || '1';
+                var start = localStorage.getItem('testStartTime');
+                var mods = getModules(level);
+                div.innerHTML = '<p><strong>Student ID:</strong> ' + sid + '</p>' +
+                    '<p><strong>Name:</strong> ' + name + '</p>' +
+                    '<p><strong>Level:</strong> ' + level + '</p>' +
+                    '<p><strong>Mock Test:</strong> ' + mock + '</p>' +
+                    '<p><strong>Test Started:</strong> ' + (start ? new Date(start).toLocaleString() : 'N/A') + '</p>' +
+                    '<h4 style="margin-top:15px;">Module Status:</h4>' +
+                    mods.map(function(m) {
+                        var st = localStorage.getItem('cambridge-' + m + 'Status') || 'not-started';
+                        var ic = st === 'completed' ? '\u2705' : st === 'in-progress' ? '\u23F3' : '\u2B55';
+                        return '<p>' + ic + ' <strong>' + fmtMod(m) + ':</strong> ' + st + '</p>';
+                    }).join('');
             } else {
-                sessionInfo.innerHTML = '<p>No active session</p>';
+                var mock = localStorage.getItem('selectedMock') || '1';
+                var mods = ['listening','reading','writing'];
+                var done = mods.filter(function(m) { return localStorage.getItem(m + 'Status') === 'completed'; }).length;
+                div.innerHTML = '<p><strong>Student:</strong> ' + name + '</p>' +
+                    '<p><strong>ID:</strong> ' + sid + '</p>' +
+                    '<p><strong>Test:</strong> IELTS Mock Test ' + mock + '</p>' +
+                    '<p><strong>Progress:</strong> ' + done + '/' + mods.length + ' modules completed</p>';
             }
         }
+        function getModules(lvl) { return (lvl === 'A1-Movers' || lvl === 'A2-Key') ? ['reading-writing','listening'] : ['reading','writing','listening']; }
+        function fmtMod(m) { return {'reading-writing':'Reading & Writing','reading':'Reading','writing':'Writing','listening':'Listening'}[m] || m; }
 
-        function showPasswordModal(action) {
-            const modal = document.getElementById('passwordModal');
-            modal.style.display = 'flex';
-            document.getElementById('passwordInput').value = '';
-            document.getElementById('passwordInput').focus();
-            
-            document.getElementById('confirmPassword').onclick = function() {
-                const password = document.getElementById('passwordInput').value;
-                if (password === INVIGILATOR_PASSWORD) {
-                    modal.style.display = 'none';
-                    if (action === 'export') {
-                        exportDataAsJson();
-                    } else if (action === 'reset') {
-                        resetData();
-                    } else if (action === 'reset_all') {
-                        resetData();
-                    }
-                } else {
-                    alert('Incorrect password!');
+        // ── Event Listeners ─────────────────────────────────────────
+        function initializeEventListeners() {
+            document.getElementById('setMockButton').addEventListener('click', function() {
+                if (checkIfTestInProgress()) {
+                    if (!confirm('WARNING: A test is currently in progress!\n\nChanging the mock test number now will cause the submitted results to be recorded under a different mock test number than what the student actually completed.\n\nThis is a DATA INTEGRITY ISSUE and should NOT be done unless you understand the consequences.\n\nDo you want to proceed anyway?')) return;
                 }
-            };
-            
-            document.getElementById('cancelPassword').onclick = function() {
-                modal.style.display = 'none';
-            };
+                var val = document.getElementById('mockSelect').value;
+                localStorage.setItem(getMockKey(), val);
+                updateCurrentMock();
+                alert((isCambridge ? 'Cambridge ' : '') + 'Mock Test ' + val + ' has been set successfully!');
+            });
+            document.getElementById('downloadCurrentTxt').addEventListener('click', function() {
+                if (!localStorage.getItem('studentId')) { alert('No current test data to download!'); return; }
+                if (isCambridge && window.cambridgeAnswerManager) window.cambridgeAnswerManager.downloadCurrentTestTxt();
+                else if (!isCambridge && window.answerManager) window.answerManager.downloadCurrentTestTxt();
+                else alert('Answer management system not loaded!');
+            });
+            document.getElementById('downloadCurrentJson').addEventListener('click', exportDataAsJson);
+            document.getElementById('viewHistory').addEventListener('click', toggleHistoryPanel);
+            document.getElementById('resetSession').addEventListener('click', function() { requirePassword(resetCurrentSession); });
+            document.getElementById('resetAllData').addEventListener('click', function() { requirePassword(resetAllData); });
         }
 
+        // ── Password Modal ──────────────────────────────────────────
+        function requirePassword(callback) {
+            var modal = document.getElementById('passwordModal');
+            var input = document.getElementById('passwordInput');
+            var ok = document.getElementById('confirmPassword');
+            var no = document.getElementById('cancelPassword');
+            modal.style.display = 'flex'; input.value = ''; input.focus();
+            ok.onclick = function() {
+                if (input.value === INVIGILATOR_PASSWORD) { modal.style.display = 'none'; callback(); }
+                else { alert('Incorrect password!'); input.value = ''; }
+            };
+            no.onclick = function() { modal.style.display = 'none'; };
+            input.onkeypress = function(e) { if (e.key === 'Enter') ok.click(); };
+        }
+
+        // ── History ─────────────────────────────────────────────────
         function toggleHistoryPanel() {
-            const panel = document.getElementById('historyPanel');
-            if (panel.style.display === 'none') {
-                panel.style.display = 'block';
-                loadTestHistory();
-                document.getElementById('viewHistory').textContent = '🔼 Hide History';
-            } else {
-                panel.style.display = 'none';
-                document.getElementById('viewHistory').textContent = '🗂️ View Test History';
-            }
+            var panel = document.getElementById('historyPanel'), btn = document.getElementById('viewHistory');
+            if (panel.style.display === 'none') { panel.style.display = 'block'; loadTestHistory(); btn.textContent = 'Hide History'; }
+            else { panel.style.display = 'none'; btn.textContent = 'View Test History'; }
         }
-
         function loadTestHistory() {
-            const historyList = document.getElementById('historyList');
-            
-            // Load both IELTS and Cambridge histories
-            let ieltsHistory = [];
-            let cambridgeHistory = [];
-            
-            if (window.answerManager) {
-                ieltsHistory = window.answerManager.getTestSummary();
-            }
-            
-            if (window.cambridgeAnswerManager) {
-                cambridgeHistory = window.cambridgeAnswerManager.getTestSummary();
-            }
-            
-            // Combine and sort by date
-            const allHistory = [...ieltsHistory, ...cambridgeHistory];
-            
-            if (allHistory.length === 0) {
-                historyList.innerHTML = '<p>No test history available</p>';
-                return;
-            }
-
-            // Sort by completion date (newest first)
-            allHistory.sort((a, b) => {
-                const dateA = new Date(a.completionDate + ' ' + a.completionTime);
-                const dateB = new Date(b.completionDate + ' ' + b.completionTime);
-                return dateB - dateA;
-            });
-
-            let historyHTML = '';
-            allHistory.forEach((test, index) => {
-                const examType = test.examType || 'IELTS';
-                const testLabel = examType === 'Cambridge' 
-                    ? `${test.level}` 
-                    : `Mock Test ${test.mockTest}`;
-                const totalModules = examType === 'Cambridge' ? (test.level === 'A1-Movers' || test.level === 'A2-Key' ? 2 : 3) : 3;
-                
-                historyHTML += `
-                    <div class="history-item">
-                        <div class="history-info">
-                            <strong>${test.studentName}</strong> (ID: ${test.studentId})
-                            <br><span style="background: ${examType === 'Cambridge' ? '#0066cc' : '#28a745'}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; margin-right: 5px;">${examType}</span> ${testLabel} | ${test.completionDate} ${test.completionTime}
-                            <br>Modules Completed: ${test.modulesCompleted}/${totalModules}
-                        </div>
-                        <div class="history-actions">
-                            <button onclick="downloadHistoricalTest('${test.id}', '${examType}')" class="small-btn">📄 Download TXT</button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            historyList.innerHTML = historyHTML;
-        }
-
-        function downloadHistoricalTest(testId, examType) {
-            if (examType === 'Cambridge' && window.cambridgeAnswerManager) {
-                window.cambridgeAnswerManager.downloadHistoricalTestTxt(testId);
-                alert('Historical test downloaded!');
-            } else if (window.answerManager) {
-                window.answerManager.downloadHistoricalTestTxt(testId);
-                alert('Historical test downloaded!');
+            var list = document.getElementById('historyList');
+            if (isCambridge) {
+                if (typeof CambridgeAnswerManager !== 'function') { list.innerHTML = '<p>Cambridge answer manager not loaded</p>'; return; }
+                var hist = new CambridgeAnswerManager().getTestHistory();
+                if (!hist || !hist.length) { list.innerHTML = '<p style="color:#666;font-style:italic;">No test history available</p>'; return; }
+                list.innerHTML = hist.map(function(t, i) {
+                    var info = t.studentInfo || {};
+                    return '<div class="history-item"><div class="history-info">' +
+                        '<h5>Test ' + (i+1) + ' - ' + (info.level||'') + '</h5>' +
+                        '<p><strong>Student:</strong> ' + (info.name||'Unknown') + ' (ID: ' + (info.id||'') + ')</p>' +
+                        '<p><strong>Completed:</strong> ' + (t.savedAt ? new Date(t.savedAt).toLocaleString() : 'N/A') + '</p>' +
+                        '</div><div class="history-actions">' +
+                        '<button onclick="downloadHistoricalTest(\'' + t.id + '\',\'Cambridge\')" class="small-btn">Download</button>' +
+                        '</div></div>';
+                }).join('');
+            } else {
+                var ih = window.answerManager ? window.answerManager.getTestSummary() : [];
+                var ch = window.cambridgeAnswerManager ? window.cambridgeAnswerManager.getTestSummary() : [];
+                var all = ih.concat(ch);
+                if (!all.length) { list.innerHTML = '<p>No test history available</p>'; return; }
+                all.sort(function(a,b) { return new Date(b.completionDate+' '+b.completionTime) - new Date(a.completionDate+' '+a.completionTime); });
+                list.innerHTML = all.map(function(t) {
+                    var tp = t.examType || 'IELTS';
+                    var lbl = tp === 'Cambridge' ? t.level : 'Mock Test ' + t.mockTest;
+                    var tot = tp === 'Cambridge' ? (t.level==='A1-Movers'||t.level==='A2-Key' ? 2 : 3) : 3;
+                    var clr = tp === 'Cambridge' ? '#0066cc' : '#28a745';
+                    return '<div class="history-item"><div class="history-info">' +
+                        '<strong>' + t.studentName + '</strong> (ID: ' + t.studentId + ')' +
+                        '<br><span style="background:'+clr+';color:white;padding:2px 8px;border-radius:4px;font-size:0.8rem;margin-right:5px;">'+tp+'</span> '+lbl+' | '+t.completionDate+' '+t.completionTime +
+                        '<br>Modules Completed: ' + t.modulesCompleted + '/' + tot +
+                        '</div><div class="history-actions">' +
+                        '<button onclick="downloadHistoricalTest(\''+t.id+'\',\''+tp+'\')" class="small-btn">Download TXT</button>' +
+                        '</div></div>';
+                }).join('');
             }
         }
+        function downloadHistoricalTest(id, type) {
+            if (type === 'Cambridge') { var m = window.cambridgeAnswerManager || (typeof CambridgeAnswerManager==='function' ? new CambridgeAnswerManager() : null); if (m) m.downloadHistoricalTestTxt(id); }
+            else if (window.answerManager) window.answerManager.downloadHistoricalTestTxt(id);
+        }
 
+        // ── Export JSON ─────────────────────────────────────────────
         function exportDataAsJson() {
-            const studentId = localStorage.getItem('studentId');
-            const studentName = localStorage.getItem('studentName');
-            const selectedMock = localStorage.getItem('selectedMock');
-            
-            if (!studentId || !studentName) {
-                alert('No test data to export!');
-                return;
+            var sid = localStorage.getItem('studentId'), name = localStorage.getItem('studentName');
+            if (!sid || !name) { alert('No test data to export!'); return; }
+            var data;
+            if (isCambridge && typeof CambridgeAnswerManager === 'function') {
+                data = new CambridgeAnswerManager().getCurrentTestData();
+            } else {
+                var mock = localStorage.getItem('selectedMock');
+                data = {
+                    studentInfo: { id: sid, name: name, mockTest: mock, testStartTime: localStorage.getItem('testStartTime') },
+                    modules: {
+                        listening: { status: localStorage.getItem('listeningStatus'), startTime: localStorage.getItem('listeningStartTime'), answers: JSON.parse(localStorage.getItem('listeningAnswers') || '{}') },
+                        reading:   { status: localStorage.getItem('readingStatus'),   startTime: localStorage.getItem('readingStartTime'),   answers: JSON.parse(localStorage.getItem('readingAnswers') || '{}') },
+                        writing:   { status: localStorage.getItem('writingStatus'),   startTime: localStorage.getItem('writingStartTime'),   answers: JSON.parse(localStorage.getItem('writingAnswers') || '{}') }
+                    },
+                    exportTime: new Date().toISOString()
+                };
             }
-            
-            const exportData = {
-                studentInfo: {
-                    id: studentId,
-                    name: studentName,
-                    mockTest: selectedMock,
-                    testStartTime: localStorage.getItem('testStartTime')
-                },
-                modules: {
-                    listening: {
-                        status: localStorage.getItem('listeningStatus'),
-                        startTime: localStorage.getItem('listeningStartTime'),
-                        answers: JSON.parse(localStorage.getItem('listeningAnswers') || '{}')
-                    },
-                    reading: {
-                        status: localStorage.getItem('readingStatus'),
-                        startTime: localStorage.getItem('readingStartTime'),
-                        answers: JSON.parse(localStorage.getItem('readingAnswers') || '{}')
-                    },
-                    writing: {
-                        status: localStorage.getItem('writingStatus'),
-                        startTime: localStorage.getItem('writingStartTime'),
-                        answers: JSON.parse(localStorage.getItem('writingAnswers') || '{}')
-                    }
-                },
-                exportTime: new Date().toISOString()
-            };
-            
-            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `Test_${studentId}_${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
+            var fn = (isCambridge ? 'Cambridge' : 'IELTS') + '_Test_' + sid + '_' + new Date().toISOString().split('T')[0] + '.json';
+            var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a'); a.href = url; a.download = fn;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
             alert('Test results exported successfully!');
         }
 
-        function resetData() {
-            if (confirm('Are you sure you want to CLEAR ALL DATA including test history? This action cannot be undone.')) {
-                if (window.answerManager) {
-                    window.answerManager.clearAllData();
+        // ── Reset / Clear ───────────────────────────────────────────
+        function resetCurrentSession() {
+            if (!confirm('Are you sure you want to reset the current session? This will clear all progress but keep history.')) return;
+            if (isCambridge) {
+                var mgr = window.cambridgeAnswerManager || (typeof CambridgeAnswerManager==='function' ? new CambridgeAnswerManager() : null);
+                if (mgr) mgr.saveCurrentTestToHistory();
+                ['studentId','studentName','cambridgeLevel','testStartTime','examType',
+                 'cambridge-readingStatus','cambridge-writingStatus','cambridge-listeningStatus','cambridge-reading-writingStatus',
+                 'cambridge-readingStartTime','cambridge-writingStartTime','cambridge-listeningStartTime','cambridge-reading-writingStartTime',
+                 'cambridge-readingEndTime','cambridge-writingEndTime','cambridge-listeningEndTime','cambridge-reading-writingEndTime',
+                 'cambridge-readingAnswers','cambridge-writingAnswers','cambridge-listeningAnswers','cambridge-reading-writingAnswers'
+                ].forEach(function(k) { localStorage.removeItem(k); });
+            } else {
+                if (localStorage.getItem('studentId') && window.answerManager) {
+                    window.answerManager.saveCurrentTestToHistory();
+                    window.answerManager.clearCurrentTestSession();
                 } else {
-                    // Fallback - clear everything
-                    localStorage.clear();
+                    ['studentId','studentName','selectedMock','testStartTime','examType',
+                     'listeningStatus','listeningStartTime','listeningEndTime','listeningAnswers',
+                     'readingStatus','readingStartTime','readingEndTime','readingAnswers',
+                     'writingStatus','writingStartTime','writingEndTime','writingAnswers',
+                     'reading-writingStatus','reading-writingStartTime','reading-writingEndTime','reading-writingAnswers',
+                     'distractionFreeMode'
+                    ].forEach(function(k) { localStorage.removeItem(k); });
                 }
-                updateSessionInfo();
-                alert('All data including test history has been cleared successfully!');
             }
+            alert('Session reset successfully! History has been saved.');
+            updateSessionInfo();
+            if (isCambridge) updateCurrentLevel();
+        }
+        function resetAllData() {
+            if (!confirm('WARNING: This will delete ALL test data including history! Are you absolutely sure?')) return;
+            if (!confirm('This action cannot be undone. Continue?')) return;
+            if (!isCambridge && window.answerManager) window.answerManager.clearAllData();
+            else localStorage.clear();
+            alert('All data has been cleared!');
+            updateSessionInfo();
+            if (isCambridge) updateCurrentLevel();
         }
 
-        // Enter key support in password modal
-        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('confirmPassword').click();
-            }
-        });
-
-        // Navigation functions
+        // ── Navigation ──────────────────────────────────────────────
         function goBackToTest() {
-            // Check if there's an active session and redirect to dashboard, otherwise go to index
-            const studentId = localStorage.getItem('studentId');
-            const examType = localStorage.getItem('examType');
-            
-            if (studentId) {
-                // Redirect to appropriate dashboard based on exam type
-                if (examType === 'Cambridge') {
-                    window.location.href = 'Cambridge/dashboard-cambridge.html';
-                } else {
-                    window.location.href = 'dashboard.html';
-                }
-            } else {
-                // No active session - redirect to appropriate index
-                if (examType === 'Cambridge') {
-                    window.location.href = 'Cambridge/index.html';
-                } else {
-                    window.location.href = 'index.html';
-                }
-            }
+            var sid = localStorage.getItem('studentId');
+            if (isCambridge) window.location.href = sid ? 'Cambridge/dashboard-cambridge.html' : 'Cambridge/launcher-cambridge.html';
+            else window.location.href = sid ? 'dashboard.html' : 'index.html';
         }
-
         function goToIndex() {
-            // Go to the appropriate index page based on exam type
-            const examType = localStorage.getItem('examType');
-            
-            if (examType === 'Cambridge') {
-                window.location.href = 'Cambridge/launcher-cambridge.html';
-            } else {
-                window.location.href = 'index.html';
-            }
+            window.location.href = isCambridge ? 'Cambridge/launcher-cambridge.html' : 'index.html';
         }
     </script>
 </body>
