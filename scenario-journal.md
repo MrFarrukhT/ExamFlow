@@ -1227,3 +1227,65 @@ Trigger: Commit 4557887 added postMessage URL whitelist to all 10 Cambridge list
 
 ### Stats (Round 21)
 Tested: 3 | Passed: 0 | Failed: 1 (critical, 10 files) | Confirmed: 1 | Discovery: 1 | Fixed: 1 (covers all 10 files) | Deferred: 0
+
+---
+
+## Session: 2026-04-09 16:30
+Focus: Audit the autopilot's "cheater r5" Olympiada level lock (commit 26c62da) — verify enforcement, look for bypasses
+Trigger: New server-side validation rule rejecting Olympiada with non-C1 levels — high-value attack target
+
+### Scenarios
+
+- S1: Olympiada + B2-First [Cheater] → PASS (correctly rejected)
+  - 400 with clear message "Olympiada exam is locked to C1-Advanced"
+  - Server log shows the violation warning
+
+- S2: Olympiada + C1-Advanced [Regression] → PASS
+  - Legit case accepted, stored with exam_type=Olympiada and level=C1-Advanced
+
+- S3: Cambridge + C1-Advanced [Regression] → PASS
+  - Cambridge students can still take C1 (regular practice)
+
+- S4: examType=['Olympiada'] + B2-First [Chain Attacker] → PASS (not a bypass)
+  - Strict equality `=== 'Olympiada'` rejects array → level lock check skipped
+  - Sanitizer's strict typeof check defaults array to 'Cambridge'
+  - Result: stored as exam_type=Cambridge, level=B2-First — legitimate Cambridge submission, not Olympiada
+  - The cheater cannot get exam_type=Olympiada via array bypass
+
+- S5: examType='OLYMPIADA' + B2-First [Cheater] → PASS (not a bypass)
+  - Same as S4: case-sensitive whitelist defaults to 'Cambridge'
+  - Stored as Cambridge, no Olympiada classification gained
+
+- S6: Speaking endpoint variant [Cheater] → PASS
+  - /submit-speaking has the same level lock check, correctly rejects Olympiada + non-C1
+  - Code review confirmed both submission endpoints use the same `=== 'Olympiada' && level !== 'C1-Advanced'` pattern
+
+- S7: Admin score update — can it change exam_type? [Insider] → PASS
+  - Code review of `/cambridge-submissions/:id/score` and `/cambridge-submissions/:id/evaluate`
+  - Both UPDATE statements only touch score, grade, and evaluation columns
+  - exam_type cannot be retroactively modified via admin endpoints
+
+- Exhaustive verification: Olympiada + every level [Stress test] → PASS
+  - A1-Movers + Olympiada → rejected
+  - A2-Key + Olympiada → rejected
+  - B1-Preliminary + Olympiada → rejected
+  - B2-First + Olympiada → rejected
+  - C1-Advanced + Olympiada → accepted
+  - All 5 levels behave as designed
+
+### Fixes
+None — the level lock is correctly implemented across both submission endpoints. R22 was a clean round.
+
+### Pattern Analysis
+- **Defense-in-depth pays off.** The level lock check could have been bypassed via type confusion (R19 found this pattern in examType handling), but the autopilot's separate sanitizer in insertCambridgeSubmission also uses strict typeof. The two-layer defense means a single check failure doesn't cascade.
+- **Strict equality + strict typeof = consistent semantics.** The R19 fix to use `typeof === 'string'` in the sanitizer pays dividends here: any non-string examType gets defaulted before it can be stored, even if upstream checks miss it.
+- **No drift this round.** Olympiada is Cambridge-only — IELTS doesn't have exam_type, no CJS sync needed. The autopilot scoped the change correctly.
+
+### Intelligence Update
+- Proven solid: Olympiada level lock (both submission and speaking endpoints), no bypass via array/case/whitespace, defense-in-depth via sanitizer fallback
+- All 4 deferred architectural findings still stand
+- 2 systemic patterns (ESM↔CJS drift, JS↔DB enum drift) — neither triggered this round
+- Coverage: 130 scenarios across 22 rounds, 43 bugs found, 38 fixed
+
+### Stats (Round 22)
+Tested: 7 + exhaustive | Passed: 7 | Failed: 0 | Fixed: 0 | Deferred: 0

@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-09 16:15",
-  "totalRuns": 21,
+  "lastRun": "2026-04-09 16:30",
+  "totalRuns": 22,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -97,7 +97,10 @@
     "cross-exam-type-dedup-prevents-warmup-runs",
     "c1-advanced-my-answer-keys-roundtrip-pass",
     "postMessage-url-whitelist-correct-regex-all-11-files",
-    "postMessage-url-whitelist-handles-both-hyphen-and-space-naming"
+    "postMessage-url-whitelist-handles-both-hyphen-and-space-naming",
+    "olympiada-level-lock-c1-only-enforced-both-endpoints",
+    "olympiada-level-lock-no-array-or-case-bypass",
+    "olympiada-level-lock-exam-type-immutable-after-insert"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
@@ -179,7 +182,7 @@
     }
   ],
   "stats": {
-    "scenariosTested": 123,
+    "scenariosTested": 130,
     "bugsFound": 43,
     "bugsFixed": 38,
     "bugsDeferred": 10
