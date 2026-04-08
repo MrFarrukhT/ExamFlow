@@ -62,21 +62,50 @@
     }catch(e){}
   }
 
+  // Detect question ranges based on exam level from URL path
+  function detectRangesFromLevel() {
+    var path = window.location.pathname;
+    if (path.indexOf('B1-Preliminary') !== -1) {
+      return [
+        { part: 1, min: 1,  max: 5 },
+        { part: 2, min: 6,  max: 10 },
+        { part: 3, min: 11, max: 15 },
+        { part: 4, min: 16, max: 20 },
+        { part: 5, min: 21, max: 26 },
+        { part: 6, min: 27, max: 32 }
+      ];
+    }
+    if (path.indexOf('B2-First') !== -1) {
+      return [
+        { part: 1, min: 1,  max: 8 },
+        { part: 2, min: 9,  max: 16 },
+        { part: 3, min: 17, max: 22 },
+        { part: 4, min: 23, max: 30 },
+        { part: 5, min: 31, max: 36 },
+        { part: 6, min: 37, max: 42 },
+        { part: 7, min: 43, max: 43 },
+        { part: 8, min: 44, max: 44 }
+      ];
+    }
+    // Default: A2 Key / A1 Movers ranges
+    return [
+      { part: 1, min: 1,  max: 6 },
+      { part: 2, min: 7,  max: 13 },
+      { part: 3, min: 14, max: 18 },
+      { part: 4, min: 19, max: 24 },
+      { part: 5, min: 25, max: 30 },
+      { part: 6, min: 31, max: 31 },
+      { part: 7, min: 32, max: 32 }
+    ];
+  }
+
   function updateFooterCounter(){
     // Update the "X of Y" counter in the footer navigation
     // This works by updating the attemptedCount spans without rebuilding the entire footer
     try{
-      var ranges = window.A2KeyManifest && Array.isArray(window.A2KeyManifest.ranges) 
+      var ranges = window.A2KeyManifest && Array.isArray(window.A2KeyManifest.ranges)
         ? window.A2KeyManifest.ranges.slice()
-        : [
-            { part: 1, min: 1,  max: 6 },
-            { part: 2, min: 7,  max: 13 },
-            { part: 3, min: 14, max: 18 },
-            { part: 4, min: 19, max: 24 },
-            { part: 5, min: 25, max: 30 },
-            { part: 6, min: 31, max: 31 },
-            { part: 7, min: 32, max: 32 }
-          ];
+        : detectRangesFromLevel();
       
       var answers = loadAnswers();
       
