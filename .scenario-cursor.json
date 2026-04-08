@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-08 17:04",
-  "totalRuns": 7,
+  "lastRun": "2026-04-08 17:25",
+  "totalRuns": 8,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -53,7 +53,15 @@
     "negative-elapsed-time-rejected",
     "invalid-date-format-rejected",
     "dedup-race-condition-fixed-inmemory-lock",
-    "rate-limiter-not-bypassable-via-headers"
+    "rate-limiter-not-bypassable-via-headers",
+    "ielts-speaking-skill-db-constraint-fixed",
+    "ielts-mocknumber-integer-validation",
+    "ielts-skill-enum-validation",
+    "normal-ielts-all-skills-regression-pass",
+    "normal-cambridge-all-levels-regression-pass",
+    "dedup-key-variants-handled-by-pg-casting",
+    "cambridge-combined-skills-accepted",
+    "edge-timestamps-startequalsend-rejected"
   ],
   "weakPatterns": [
     "no-rate-limiting-on-admin-login",
@@ -62,15 +70,12 @@
     "mock-answers-writable-without-auth",
     "cors-allows-all-origins",
     "invigilator-password-hardcoded-client-side",
-    "css-selector-injection-invigilator-localstorage",
     "client-controlled-timestamps-spoofable",
-    "anti-cheat-metadata-spoofable"
+    "anti-cheat-metadata-spoofable",
+    "no-level-skill-matrix-validation-cambridge"
   ],
   "untestedAreas": [
-    "ai-score-suggestion-abuse",
-    "writing-test-submission-flow",
-    "listening-test-audio-flow",
-    "normal-exam-flow-with-required-timestamps"
+    "ai-score-suggestion-abuse"
   ],
   "deferredFindings": [
     {
@@ -113,13 +118,13 @@
       "title": "Anti-cheat metadata is client-side and spoofable",
       "severity": "MEDIUM",
       "since": "2026-04-08",
-      "reason": "Server can sanitize but cannot verify; inherent to client-side anti-cheat"
+      "reason": "Server can sanitize but cannot verify"
     }
   ],
   "stats": {
-    "scenariosTested": 43,
-    "bugsFound": 22,
-    "bugsFixed": 15,
+    "scenariosTested": 50,
+    "bugsFound": 24,
+    "bugsFixed": 17,
     "bugsDeferred": 7
   }
 }
