@@ -338,7 +338,7 @@ app.post('/mock-answers', async (req, res) => {
                 if (Array.isArray(answerValue)) {
                     correctAnswer = stripHtmlTags(answerValue[0]);
                     if (answerValue.length > 1) {
-                        alternativeAnswers = JSON.stringify(answerValue.slice(1).map(stripHtml));
+                        alternativeAnswers = JSON.stringify(answerValue.slice(1).map(stripHtmlTags));
                     }
                 } else {
                     correctAnswer = stripHtmlTags(answerValue);
