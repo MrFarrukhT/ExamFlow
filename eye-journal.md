@@ -718,20 +718,55 @@ Starting state: All B2 First files had wrong level names from copy-paste errors 
 | B2-First-MOCK-3/* | 3-Efficient | Same fixes applied |
 | Cambridge/dashboard-cambridge.html | 5-Delightful | Clean CSS architecture |
 
+### Round 2
+**Explored:** Reading Parts 1-6 (visual + code), Writing Parts 7-8 (visual), Listening (audio files), Speaking (code review)
+**Action:** FIX 3 critical issues + POLISH 1 color change
+
+- [T1] B2-First/listening.html — Audio src "Listening B2-001.mp3" did not exist on disk! Reverted to "Listening B1-001.mp3" which exists. Listening test was completely broken (no audio).
+  Mode: fix (critical bug)
+  Quality layer: 0-Broken → 3-Efficient
+  Files: 3 folders × listening.html
+
+- [T2] a2-key-answer-sync.js — Added B2-First detection to question range logic. Footer counters were using A2 Key defaults (Part 2: 7, Part 4: 6, Part 6: 1) instead of correct B2 First counts (Part 2: 5, Part 4: 5, Part 6: 6).
+  Mode: fix (bug)
+  Quality layer: 2-Clear → 4-Polished
+  Files: assets/js/cambridge/a2-key-answer-sync.js
+
+- [T2] Part 1-6.html (3 folders × 6 files) — Fixed hardcoded footer counters and removed orphaned Part 7 tab from reading navigation.
+  Mode: fix (bug)
+  Files: 18 Part HTML files across 3 mock folders
+
+- [T4] B2-First/speaking.html — Colors from Material blue/purple → Cambridge teal
+  Mode: polish
+  Quality layer: 3-Efficient → 4-Polished (consistent identity)
+  Files: 3 folders × speaking.html
+
+### Updated Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| B2-First/reading.html | 4-Polished | Correct title, timer, correct footer counters |
+| B2-First/writing.html | 3-Efficient | Correct title, Part 7 email + Part 8 choice |
+| B2-First/listening.html | 3-Efficient | Working audio (B1 placeholder), correct heading |
+| B2-First/speaking.html | 4-Polished | Teal colors; content still A2 Key format |
+| B2-First/Part 1-6.html | 4-Polished | Correct counters, no Part 7 ghost tab |
+| B2-First-MOCK-2/* | 4-Polished | Same fixes applied |
+| B2-First-MOCK-3/* | 4-Polished | Same fixes applied |
+
 ### Deferred
-- B2-First Part files reference `./A2 Key RW Digital Sample Test 1_26.04.23_files/` directory for CSS/JS/images — actual directory on disk keeps this name (renaming would break asset loading)
-- B2 First speaking.html — Content format is inherited from A2 Key, may need content rebuild for B2 First speaking format
-- Audio file `Listening B2-001.mp3` — reference updated but actual audio file may not exist on disk (need to verify)
+- B2-First Part files reference `./A2 Key RW Digital Sample Test 1_26.04.23_files/` directory — actual directory on disk keeps this name
+- B2 First speaking.html — Content format is A2 Key (2 parts), needs rebuild to B2 First format (4 parts: Interview, Long Turn, Collaborative Task, Discussion)
+- No actual B2 First listening audio file exists — currently using B1 audio as placeholder
+- Console errors from Inspera bundled JS (react-modal, moment-timezone, fontawesome fonts) — cannot fix
 
 ### Session Stats
-Pages explored: 3 (dashboard, reading wrapper, Part 1)
-Rounds: 1
-Polishes landed: 2 (console logs, CSS extraction)
+Pages explored: 8 (dashboard, reading Parts 1-6, writing Parts 7-8, listening, speaking)
+Rounds: 2
+Polishes landed: 3 (console logs, CSS extraction, speaking colors)
 Rebuilds landed: 0
 Elevations landed: 0
-Reverted: 0
-Fixes landed: 84+ (wrong level names across 51 files)
-Changes shipped: 53 files modified
+Reverted: 1 (audio reference reverted to working file)
+Fixes landed: 84+ titles + 3 critical (audio, JS ranges, 18 HTML counters)
+Changes shipped: 75+ files modified
 
 ---
 
