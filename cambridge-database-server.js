@@ -524,7 +524,22 @@ app.post('/cambridge-submissions', submissionLimiter, async (req, res) => {
             return res.status(400).json({ success: false, message: 'Answers are required' });
         }
 
-        // Validate score and grade if provided
+        // SECURITY: student-side submissions never carry a real score.
+        // Cambridge tests are admin-graded via /update-score (admin auth required).
+        // If a malicious client tampered with the body to forge a score, log it as
+        // an anti-cheat violation and force it back to null. This prevents the
+        // dashboard "Completed (X/Y)" badge from displaying a fraudulent score.
+        if (submissionData.score != null || submissionData.grade != null) {
+            console.warn(`🚨 SCORE TAMPERING DETECTED: Student ${submissionData.studentId} sent score=${submissionData.score} grade=${submissionData.grade} on student-submission endpoint. Forcing to null (admin-graded only).`);
+            submissionData.antiCheat = Object.assign({}, submissionData.antiCheat || {}, {
+                scoreTamper: true,
+                clientScore: submissionData.score,
+                clientGrade: submissionData.grade
+            });
+            submissionData.score = null;
+            submissionData.grade = null;
+        }
+        // Validate score and grade if provided (still runs for safety / future flexibility)
         const validationError = validateScoreAndGrade(submissionData.score, submissionData.grade);
         if (validationError) {
             return res.status(400).json(validationError);
