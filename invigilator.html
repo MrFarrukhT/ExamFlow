@@ -96,6 +96,7 @@
             <div class="header-nav">
                 <button class="header-nav-btn primary" onclick="goBackToTest()">&larr; Back to Test</button>
                 <button class="header-nav-btn" onclick="goToIndex()">&larr; Back to Index</button>
+                <button class="header-nav-btn" onclick="goToAdmin()">Admin Dashboard &rarr;</button>
             </div>
         </div>
         <!-- Level Display: Cambridge only -->
@@ -123,6 +124,35 @@
                 </div>
             </div>
             <p id="currentLevel" style="margin-top:15px;padding:12px;background:#e8f5e9;border-radius:5px;font-weight:bold;color:#2e7d32;font-size:16px;">Current Student Level: Not Set</p>
+        </div>
+        <!-- Room Activity — Server-side submissions feed -->
+        <div class="panel-section" id="roomActivitySection">
+            <h3>Room Activity — Today's Submissions</h3>
+            <div class="room-stats" id="roomStats">
+                <div class="room-stat-card">
+                    <div class="room-stat-number" id="statStudents">—</div>
+                    <div class="room-stat-label">Students</div>
+                </div>
+                <div class="room-stat-card">
+                    <div class="room-stat-number" id="statSubmissions">—</div>
+                    <div class="room-stat-label">Submissions</div>
+                </div>
+                <div class="room-stat-card">
+                    <div class="room-stat-number" id="statScored">—</div>
+                    <div class="room-stat-label">Scored</div>
+                </div>
+                <div class="room-stat-card pending">
+                    <div class="room-stat-number" id="statPending">—</div>
+                    <div class="room-stat-label">Pending</div>
+                </div>
+            </div>
+            <div id="roomActivityList" class="room-activity-list">
+                <p class="room-loading">Connecting to server...</p>
+            </div>
+            <div class="room-refresh-bar">
+                <span id="roomLastUpdate" class="room-last-update">—</span>
+                <button class="small-btn" onclick="loadRoomActivity()">Refresh</button>
+            </div>
         </div>
         <!-- Mock Test Configuration -->
         <div class="panel-section" id="mockSection">
@@ -157,35 +187,6 @@
         <div class="panel-section">
             <h3>Current Session</h3>
             <div id="sessionInfo"><p>No active session</p></div>
-        </div>
-        <!-- Room Activity — Server-side submissions feed -->
-        <div class="panel-section" id="roomActivitySection">
-            <h3>📡 Room Activity — Today's Submissions</h3>
-            <div class="room-stats" id="roomStats">
-                <div class="room-stat-card">
-                    <div class="room-stat-number" id="statStudents">—</div>
-                    <div class="room-stat-label">Students</div>
-                </div>
-                <div class="room-stat-card">
-                    <div class="room-stat-number" id="statSubmissions">—</div>
-                    <div class="room-stat-label">Submissions</div>
-                </div>
-                <div class="room-stat-card">
-                    <div class="room-stat-number" id="statScored">—</div>
-                    <div class="room-stat-label">Scored</div>
-                </div>
-                <div class="room-stat-card pending">
-                    <div class="room-stat-number" id="statPending">—</div>
-                    <div class="room-stat-label">Pending</div>
-                </div>
-            </div>
-            <div id="roomActivityList" class="room-activity-list">
-                <p class="room-loading">Connecting to server...</p>
-            </div>
-            <div class="room-refresh-bar">
-                <span id="roomLastUpdate" class="room-last-update">—</span>
-                <button class="small-btn" onclick="loadRoomActivity()">↻ Refresh</button>
-            </div>
         </div>
 
         <!-- Password Modal -->
@@ -327,12 +328,22 @@
                     }).join('');
             } else {
                 var mock = localStorage.getItem('selectedMock') || '1';
+                var start = localStorage.getItem('testStartTime');
                 var mods = ['listening','reading','writing'];
                 var done = mods.filter(function(m) { return localStorage.getItem(m + 'Status') === 'completed'; }).length;
-                div.innerHTML = '<p><strong>Student:</strong> ' + escapeHtml(name) + '</p>' +
-                    '<p><strong>ID:</strong> ' + escapeHtml(sid) + '</p>' +
+                var pct = Math.round((done / mods.length) * 100);
+                div.innerHTML = '<p><strong>Student:</strong> ' + escapeHtml(name) + ' <span style="color:#6c757d;">(' + escapeHtml(sid) + ')</span></p>' +
                     '<p><strong>Test:</strong> IELTS Mock Test ' + escapeHtml(mock) + '</p>' +
-                    '<p><strong>Progress:</strong> ' + done + '/' + mods.length + ' modules completed</p>';
+                    '<p><strong>Started:</strong> ' + (start ? escapeHtml(new Date(start).toLocaleString()) : 'N/A') + '</p>' +
+                    '<div style="margin:12px 0 8px;"><strong>Progress:</strong> ' + done + '/' + mods.length +
+                    '<div style="background:#e9ecef;border-radius:6px;height:8px;margin-top:6px;overflow:hidden;">' +
+                    '<div style="background:#667eea;height:100%;width:' + pct + '%;border-radius:6px;transition:width 0.3s;"></div></div></div>' +
+                    '<h4 style="margin-top:12px;">Module Status:</h4>' +
+                    mods.map(function(m) {
+                        var st = localStorage.getItem(m + 'Status') || 'not-started';
+                        var ic = st === 'completed' ? '\u2705' : st === 'in-progress' ? '\u23F3' : '\u2B55';
+                        return '<p>' + ic + ' <strong>' + fmtMod(m) + ':</strong> ' + escapeHtml(st) + '</p>';
+                    }).join('');
             }
         }
         function getModules(lvl) { return (lvl === 'A1-Movers' || lvl === 'A2-Key') ? ['reading-writing','listening'] : ['reading','writing','listening']; }
@@ -586,6 +597,9 @@
         }
         function goToIndex() {
             window.location.href = isCambridge ? 'launcher.html?exam=cambridge' : 'index.html';
+        }
+        function goToAdmin() {
+            window.location.href = isCambridge ? 'cambridge-admin-dashboard.html' : 'ielts-admin-dashboard.html';
         }
     </script>
 </body>
