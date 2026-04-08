@@ -1,5 +1,45 @@
 # Autopilot Journal
 
+## Session: 2026-04-09 05:30
+Persona: Cheater — trying to exploit every weakness
+System: Both (IELTS + Cambridge)
+
+### Phase 1: Journey Map
+- Full attack surface mapped across both IELTS (port 3002) and Cambridge (port 3003) servers
+- 12+ critical/high vulnerabilities identified
+- Key findings: ALL admin endpoints had ZERO auth, answer keys openly accessible, invigilator password in page source, timer purely client-side, anti-cheat trivially bypassed
+
+### Phase 2: Creation
+- Built: `shared/auth.js` — `requireAdmin` middleware, `rateLimit` middleware, token management
+- Built: `/verify-invigilator` server-side endpoint in `shared/server-bootstrap.js`
+
+### Phase 4: Heal (Security Hardening)
+- Applied `requireAdmin` to 18 endpoints across both servers (answer keys, scores, results, submissions listing)
+- Admin login now registers tokens server-side for validation
+- `_authFetch()` helper on `AdminDashboard` class + all 4 admin pages updated with auth headers
+- Rate limiting (10 req/min) on student submission endpoints
+- Invigilator password removed from 5 client-side files, replaced with server-side API verification
+- Server-side duration validation (flags submissions exceeding 2x allowed time)
+
+### Phase 5: Experience (Anti-Cheat)
+- Tab visibility + window blur detection (counts switches, stores in localStorage)
+- Additional keyboard blocking (Ctrl+Shift+C, Ctrl+P, Ctrl+S)
+- Copy/paste prevention on non-writing inputs
+- Visual warning banner on tab switch return
+
+### Phase 6: Scenario (Verified)
+- 10 attack vectors tested, all blocked:
+  - 6 sensitive endpoints → 401 without auth
+  - Student submissions still work (rate limited)
+  - Sensitive server files → 404
+
+### Session Stats
+Total commits: 5 (cd57c59, 489735e, 56ed0f9, 82b2a0e + checkpoint)
+Total files changed: ~15
+Persona journey coverage: Full attack surface — API auth, password exposure, timer manipulation, anti-cheat, rate limiting
+
+---
+
 ## Session: 2026-04-09 05:00
 Persona: Staff rotation round 2 (Invigilator + Admin Scoring + Admin Management — deeper pass)
 System: Both (IELTS + Cambridge)
