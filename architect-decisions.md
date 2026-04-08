@@ -1,5 +1,39 @@
 # Architecture Decisions
 
+## Session: 2026-04-08 (Round 4)
+
+### ADR-016: Unify Launcher Pages
+**Status:** Executed
+**Impact:** Low | **Effort:** 30 min | **Risk:** Low
+**Summary:** Merged IELTS and Cambridge launchers into single `launcher.html` with exam-type detection via `?exam=cambridge` URL param. `Cambridge/launcher-cambridge.html` is now a redirect stub. Cambridge gains live status check.
+**Result:** Executed in commit d013ba4. 236 lines removed.
+
+### ADR-017: Fix IELTS Admin Route + Rename Dashboard Files
+**Status:** Executed
+**Impact:** Medium | **Effort:** 15 min | **Risk:** Low
+**Summary:** Added missing `/admin` route to IELTS server (was orphaned). Renamed `dashboard.html` → `student-dashboard.html` and `enhanced-admin-dashboard.html` → `ielts-admin-dashboard.html`. Updated all references (6 JS files, 2 HTML files, 1 bat file).
+**Result:** Executed in commit a7ef868.
+
+### ADR-018: Remove Legacy Cambridge Score Endpoint
+**Status:** Executed
+**Impact:** Low | **Effort:** 5 min | **Risk:** None
+**Summary:** Deleted dead `POST /cambridge-update-score` endpoint (~47 lines). No frontend code called it. `PATCH /cambridge-submissions/:id/score` is the canonical endpoint.
+**Result:** Executed in commit ca3f735. 53 lines removed.
+
+### ADR-019: Unify Timer into Shared Module
+**Status:** Executed
+**Impact:** Medium | **Effort:** 1 hour | **Risk:** Medium
+**Summary:** Created unified `ExamTimer` class in `assets/js/timer.js` merging TestTimer (139 lines) and CambridgeTimer (616 lines). Supports overlay mode (Cambridge) and embedded mode (IELTS) with configurable localStorage prefix. Both old classes kept as backward-compatible wrappers. 43 Cambridge HTML files updated.
+**Result:** Executed in commit 8e76e04. 661 lines removed, old cambridge-timer.js deleted.
+
+### ADR-020: Extract Shared Validation to Server Module
+**Status:** Executed
+**Impact:** Medium | **Effort:** 30 min | **Risk:** Low
+**Summary:** Created `shared/validation.js` with validateScore, validateGrade, validateScoreAndGrade, validateStudentInfo, stripHtmlTags, errorResponse. Cambridge server imports from shared (~60 lines removed). IELTS `/update-score` now validates score input.
+**Result:** Executed. ~60 lines of inline validation removed from Cambridge server.
+
+---
+
 ## Session: 2026-04-08 (Round 3)
 
 ### ADR-011: Complete Cambridge Admin Tab Navigation
