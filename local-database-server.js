@@ -185,8 +185,7 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
         }
 
         // In-memory lock + DB dedup check — prevents race conditions with singleton Client
-        const mockNum = submissionData.mockNumber || '1';
-        const dedupKey = `ielts:${studentCheck.studentId}:${submissionData.skill}:${mockNum}`;
+        const dedupKey = `ielts:${studentCheck.studentId}:${submissionData.skill}:${submissionData.mockNumber}`;
         if (submissionLocks.has(dedupKey)) {
             return res.status(409).json({ success: false, message: 'Submission already in progress. Please wait.' });
         }
@@ -196,10 +195,10 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
             const dupCheck = await dbClient.query(
                 `SELECT id FROM test_submissions
                  WHERE student_id = $1 AND skill = $2 AND mock_number = $3 LIMIT 1`,
-                [studentCheck.studentId, submissionData.skill, mockNum]
+                [studentCheck.studentId, submissionData.skill, submissionData.mockNumber]
             );
             if (dupCheck.rows.length > 0) {
-                console.warn(`⚠️ DUPLICATE SUBMISSION BLOCKED: Student ${studentCheck.studentId} already submitted ${submissionData.skill} mock ${mockNum}`);
+                console.warn(`⚠️ DUPLICATE SUBMISSION BLOCKED: Student ${studentCheck.studentId} already submitted ${submissionData.skill} mock ${submissionData.mockNumber}`);
                 return res.status(409).json({
                     success: false,
                     message: 'You have already submitted this test. Only one submission per test is allowed.'
