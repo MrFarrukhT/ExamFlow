@@ -606,6 +606,18 @@
         let allSubmissions = [];
         let currentSubmission = null;
 
+        // Auth helper — reuse admin token from localStorage
+        function authFetch(url, options = {}) {
+            const token = localStorage.getItem('cambridgeAdminToken') || localStorage.getItem('adminToken');
+            if (token) {
+                if (!options.headers) options.headers = {};
+                if (typeof options.headers === 'object' && !(options.headers instanceof Headers)) {
+                    options.headers['Authorization'] = 'Bearer ' + token;
+                }
+            }
+            return fetch(url, options);
+        }
+
         // Load submissions on page load
         window.addEventListener('DOMContentLoaded', loadSubmissions);
 
@@ -614,7 +626,7 @@
 
         async function loadSubmissions() {
             try {
-                const response = await fetch('http://localhost:3003/cambridge-submissions?skill=speaking');
+                const response = await authFetch('http://localhost:3003/cambridge-submissions?skill=speaking');
                 const data = await response.json();
                 
                 allSubmissions = data;
@@ -809,7 +821,7 @@
             }
 
             try {
-                const response = await fetch(`http://localhost:3003/cambridge-submissions/${currentSubmission.id}/evaluate`, {
+                const response = await authFetch(`http://localhost:3003/cambridge-submissions/${currentSubmission.id}/evaluate`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json'

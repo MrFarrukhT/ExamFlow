@@ -417,6 +417,12 @@
         const MOVERS_STRUCTURE = { 1: 5, 2: 6, 3: 6, 4: 5, 5: 7, 6: 6 };
         const API_BASE = 'http://localhost:3003';
 
+        // Normalize student submission keys to match answer key format
+        // e.g. "reading-writing_q1" → "q1", "listening_L2" → "L2"
+        function normalizeAnswerKey(key) {
+            return key.replace(/^(reading-writing|reading|writing|listening|speaking)_/, '');
+        }
+
         let studentId, studentName, level, mockTest;
 
         document.addEventListener('DOMContentLoaded', init);
@@ -540,12 +546,12 @@
 
             if (hasRwKeys && rwAnswers) {
                 for (const [k, v] of Object.entries(rwAnswers)) {
-                    if (isCorrect(v, rwKeys[k])) rwCorrect++;
+                    if (isCorrect(v, rwKeys[normalizeAnswerKey(k)])) rwCorrect++;
                 }
             }
             if (hasListenKeys && listenAnswers) {
                 for (const [k, v] of Object.entries(listenAnswers)) {
-                    if (isCorrect(v, listenKeys[k])) listenCorrect++;
+                    if (isCorrect(v, listenKeys[normalizeAnswerKey(k)])) listenCorrect++;
                 }
             }
 
@@ -629,7 +635,8 @@
                 }
 
                 const studentAnswer = answers[key] || '';
-                const correctAnswer = hasKeys ? (answerKeys[key] || '') : '';
+                const normalizedKey = normalizeAnswerKey(key);
+                const correctAnswer = hasKeys ? (answerKeys[normalizedKey] || answerKeys[key] || '') : '';
                 const correct = hasKeys && correctAnswer ? isCorrect(studentAnswer, correctAnswer) : null;
 
                 const row = document.createElement('div');
@@ -638,7 +645,7 @@
                 row.innerHTML = `
                     <span class="q-number">Q${qNum}</span>
                     <span class="student-answer">${escapeHtml(studentAnswer) || '<em style="color:#bbb">No answer</em>'}</span>
-                    <span class="correct-answer">${hasKeys ? (escapeHtml(correctAnswer) || '\u2014') : '<em style="color:#bbb">No answer key</em>'}</span>
+                    <span class="correct-answer">${hasKeys ? (formatAnswer(correctAnswer) || '\u2014') : '<em style="color:#bbb">No answer key</em>'}</span>
                     <span class="result-icon ${correct === true ? 'check' : correct === false ? 'cross' : 'dash'}">${correct === true ? '\u2713' : correct === false ? '\u2717' : '\u2014'}</span>
                 `;
 
@@ -699,19 +706,30 @@
 
         function isCorrect(studentAnswer, correctAnswer) {
             if (!correctAnswer) return null;
-            const normalize = (s) => String(s || '').trim().toLowerCase().replace(/[.,;:!?'"()\-\/\\]/g, '').replace(/\s+/g, ' ');
+            const normalize = (s) => String(s || '').trim().toLowerCase().replace(/[.,;:!?'"()\-\\]/g, '').replace(/\s+/g, ' ');
 
-            // Support multiple accepted answers separated by |
-            if (typeof correctAnswer === 'string' && correctAnswer.includes('|')) {
-                return correctAnswer.split('|').some(a => normalize(a) === normalize(studentAnswer));
-            }
-
-            // Support array of accepted answers
+            // Collect all accepted variants
+            let accepted = [];
             if (Array.isArray(correctAnswer)) {
-                return correctAnswer.some(a => normalize(a) === normalize(studentAnswer));
+                accepted = correctAnswer;
+            } else if (typeof correctAnswer === 'string') {
+                // Support "Mary/mary" or "a|b" as alternative answers
+                if (correctAnswer.includes('|')) accepted = correctAnswer.split('|');
+                else if (correctAnswer.includes('/')) accepted = correctAnswer.split('/');
+                else accepted = [correctAnswer];
+            } else {
+                accepted = [correctAnswer];
             }
 
-            return normalize(studentAnswer) === normalize(correctAnswer);
+            const studentNorm = normalize(studentAnswer);
+            return accepted.some(a => normalize(a) === studentNorm);
+        }
+
+        function formatAnswer(answer) {
+            if (!answer) return '';
+            if (Array.isArray(answer)) return answer.map(a => escapeHtml(a)).join(' / ');
+            if (typeof answer === 'string' && answer.includes('|')) return answer.split('|').map(a => escapeHtml(a.trim())).join(' / ');
+            return escapeHtml(answer);
         }
 
         function escapeHtml(str) {

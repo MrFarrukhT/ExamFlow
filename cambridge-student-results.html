@@ -572,6 +572,19 @@
         }
 
         const API_BASE = 'http://localhost:3003';
+
+        // Auth helper — reuse admin token from localStorage
+        function authFetch(url, options = {}) {
+            const token = localStorage.getItem('cambridgeAdminToken') || localStorage.getItem('adminToken');
+            if (token) {
+                if (!options.headers) options.headers = {};
+                if (typeof options.headers === 'object' && !(options.headers instanceof Headers)) {
+                    options.headers['Authorization'] = 'Bearer ' + token;
+                }
+            }
+            return fetch(url, options);
+        }
+
         let allResults = [];
         let filteredResults = [];
         let currentPage = 1;
@@ -733,11 +746,11 @@
 
             try {
                 // First, load existing results from cambridge_student_results
-                const resultsResponse = await fetch(`${API_BASE}/cambridge-student-results`);
+                const resultsResponse = await authFetch(`${API_BASE}/cambridge-student-results`);
                 const existingResults = resultsResponse.ok ? await resultsResponse.json() : [];
 
                 // Then, load all submissions to get the list of students who took tests
-                const submissionsResponse = await fetch(`${API_BASE}/cambridge-submissions`);
+                const submissionsResponse = await authFetch(`${API_BASE}/cambridge-submissions`);
                 if (!submissionsResponse.ok) throw new Error('Failed to fetch submissions');
 
                 const submissions = await submissionsResponse.json();
@@ -1348,7 +1361,7 @@
                     `${API_BASE}/cambridge-student-results/${editId}` :
                     `${API_BASE}/cambridge-student-results`;
 
-                const response = await fetch(url, {
+                const response = await authFetch(url, {
                     method: editId ? 'PATCH' : 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
@@ -1373,7 +1386,7 @@
             if (!confirm('Are you sure you want to delete this result?')) return;
 
             try {
-                const response = await fetch(`${API_BASE}/cambridge-student-results/${id}`, {
+                const response = await authFetch(`${API_BASE}/cambridge-student-results/${id}`, {
                     method: 'DELETE'
                 });
 
