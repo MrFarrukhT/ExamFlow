@@ -33,25 +33,28 @@ class CambridgeBridge {
     setup() {
         // 1. Map Cambridge header elements to IELTS structure
         this.setupHeaderAdapters();
-        
+
         // 2. Create popup overlay if missing
         this.ensurePopupStructure();
-        
+
         // 3. Setup context menu for highlighting
         this.setupContextMenuAdapter();
-        
+
         // 4. Setup answer tracking across parts
         this.setupAnswerTracking();
-        
+
         // 5. Load saved highlights and notes
         this.loadHighlightsAndNotes();
-        
+
         // 6. Setup cross-page state management
         this.setupCrossPageState();
-        
+
         // 7. Wire up Cambridge-specific events
         this.wireUpCambridgeEvents();
-        
+
+        // 8. Filled-state visual feedback on text inputs/textareas
+        this.setupFilledState();
+
         this.initialized = true;
     }
 
@@ -1201,9 +1204,10 @@ class CambridgeBridge {
             const input = document.getElementById(key) || document.querySelector(`[name="${key}"]`);
             if (input) {
                 input.value = value;
+                if (value && value.trim()) input.classList.add('filled');
             }
         });
-        
+
         this.updateAnswerIndicators();
     }
 
@@ -1235,6 +1239,36 @@ class CambridgeBridge {
                 }
             }
         }
+    }
+
+    // ==================== FILLED-STATE FEEDBACK ====================
+
+    setupFilledState() {
+        // Inject CSS for filled inputs/textareas
+        if (!document.getElementById('ic-filled-style')) {
+            const css = '.textEntryInteractionValue.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}' +
+                'textarea.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}' +
+                'input[type="text"].filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}';
+            const s = document.createElement('style');
+            s.id = 'ic-filled-style';
+            s.appendChild(document.createTextNode(css));
+            (document.head || document.documentElement).appendChild(s);
+        }
+
+        // Toggle .filled on input events
+        document.addEventListener('input', (e) => {
+            const t = e.target;
+            if (t && t.matches && t.matches('input[type="text"], textarea')) {
+                t.classList.toggle('filled', !!(t.value && t.value.trim()));
+            }
+        }, true);
+
+        // Apply filled state to any inputs that already have content
+        setTimeout(() => {
+            document.querySelectorAll('input[type="text"], textarea').forEach(el => {
+                if (el.value && el.value.trim()) el.classList.add('filled');
+            });
+        }, 500);
     }
 
     // ==================== CROSS-PAGE STATE ====================
