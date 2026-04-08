@@ -95,6 +95,28 @@ body {
 /* --- Login / Admin Content --- */
 .login-form, .admin-content {
     padding: 40px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Admin tabs active state */
+.admin-tabs a.active {
+    position: relative;
+}
+
+.admin-tabs a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--admin-primary);
+    border-radius: 3px 3px 0 0;
 }
 
 /* --- Form Groups --- */
@@ -118,9 +140,11 @@ body {
     transition: border-color 0.3s;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
     outline: none;
     border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
 }
 
 /* --- Buttons --- */
