@@ -1,0 +1,337 @@
+/* ============================================================
+   Cambridge C1 Advanced — Official-exam layout overrides
+   Loaded by every C1 Reading/Listening/Writing part page so the
+   shell matches the published Inspera Cambridge English UI.
+   ============================================================ */
+
+/* === Two-column "split reading" (Parts 5, 6, 7, 8) =========
+   The first .QuestionDisplay__questionDisplayWrapper inside
+   #sectionContent contains the passage; subsequent wrappers
+   are the questions. We turn #sectionContent into a 2-col
+   grid where the passage occupies the entire left column and
+   questions stack down the right column.
+   ============================================================ */
+body[data-c1-layout="split-reading"] #sectionContent {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 32px;
+    align-items: start;
+}
+
+body[data-c1-layout="split-reading"]
+    .DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE {
+    grid-column: 1 / -1;
+}
+
+/* The first question wrapper after the rubric is the passage.
+   It pins to column 1 and spans every row of questions. */
+body[data-c1-layout="split-reading"]
+    .DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE
+    + .QuestionDisplay__questionDisplayWrapper___1n_b0 {
+    grid-column: 1;
+    grid-row: 2 / span 99;
+    position: sticky;
+    top: 96px;
+    max-height: calc(100vh - 220px);
+    overflow-y: auto;
+    padding-right: 16px;
+    border-right: 1px solid #e0e0e0;
+}
+
+/* All other question wrappers go in column 2, stacked. */
+body[data-c1-layout="split-reading"]
+    .DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE
+    + .QuestionDisplay__questionDisplayWrapper___1n_b0
+    ~ .QuestionDisplay__questionDisplayWrapper___1n_b0 {
+    grid-column: 2;
+    margin-bottom: 24px !important;
+}
+
+/* Tighter padding on questions in the right column */
+body[data-c1-layout="split-reading"]
+    .QuestionDisplay__questionDisplayWrapper___1n_b0
+    ~ .QuestionDisplay__questionDisplayWrapper___1n_b0
+    .QuestionDisplay__questionBody___ZOMJ7 {
+    padding: 8px 0;
+}
+
+/* Mobile fallback */
+@media (max-width: 1024px) {
+    body[data-c1-layout="split-reading"] #sectionContent {
+        display: block !important;
+    }
+    body[data-c1-layout="split-reading"]
+        .DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE
+        + .QuestionDisplay__questionDisplayWrapper___1n_b0 {
+        position: static;
+        max-height: none;
+        border-right: none;
+        padding-right: 0;
+    }
+}
+
+/* === Two-column writing (Writing Parts 1, 2) ================
+   Prompt text on the left, large textarea on the right.
+   ============================================================ */
+body[data-c1-layout="split-writing"] #sectionContent {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 32px;
+    align-items: start;
+}
+
+body[data-c1-layout="split-writing"]
+    .DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE {
+    grid-column: 1 / -1;
+}
+
+body[data-c1-layout="split-writing"]
+    .DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE
+    + .QuestionDisplay__questionDisplayWrapper___1n_b0 {
+    grid-column: 1;
+}
+
+body[data-c1-layout="split-writing"]
+    .DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE
+    + .QuestionDisplay__questionDisplayWrapper___1n_b0
+    ~ .QuestionDisplay__questionDisplayWrapper___1n_b0 {
+    grid-column: 2;
+    position: sticky;
+    top: 96px;
+}
+
+/* Bordered callout boxes used in Writing Part 1 prompts */
+.c1-writing-callout {
+    border: 1px solid #888;
+    padding: 12px 16px;
+    margin: 12px 0;
+    background: #fff;
+}
+.c1-writing-callout strong {
+    display: block;
+    margin-bottom: 6px;
+}
+
+/* The textarea pane on the right of Writing Parts */
+.c1-writing-pane {
+    background: #fff;
+    border: 1px solid #c8c8c8;
+    border-radius: 2px;
+    padding: 12px;
+    min-height: 460px;
+    display: flex;
+    flex-direction: column;
+}
+.c1-writing-pane textarea {
+    flex: 1;
+    width: 100%;
+    border: none;
+    outline: none;
+    resize: vertical;
+    min-height: 380px;
+    font-family: Georgia, serif;
+    font-size: 1rem;
+    line-height: 1.55;
+    padding: 4px;
+}
+.c1-writing-wordcount {
+    text-align: right;
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 6px;
+    border-top: 1px solid #eee;
+    padding-top: 4px;
+}
+.c1-writing-qselect {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+}
+.c1-writing-qselect select {
+    padding: 4px 8px;
+    border: 1px solid #888;
+    border-radius: 2px;
+}
+
+@media (max-width: 1024px) {
+    body[data-c1-layout="split-writing"] #sectionContent {
+        display: block !important;
+    }
+    body[data-c1-layout="split-writing"]
+        .DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE
+        + .QuestionDisplay__questionDisplayWrapper___1n_b0
+        ~ .QuestionDisplay__questionDisplayWrapper___1n_b0 {
+        position: static;
+    }
+}
+
+/* === Listening Part 4 — Task 1/Task 2 multi-match =========
+   Each task has 5 horizontal speaker rows (Speaker N + input)
+   on the left and a vertical letter list (A–H) on the right.
+   ============================================================ */
+.c1-l4-task {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 24px;
+    margin-bottom: 32px;
+    padding: 12px 0;
+    border-top: 1px solid #d6d6d6;
+}
+.c1-l4-task__title {
+    grid-column: 1 / -1;
+    margin: 0 0 12px 0;
+    font-size: 1.05em;
+    color: #1e3a5f;
+}
+.c1-l4-task__hint {
+    grid-column: 1 / -1;
+    margin: 0 0 12px 0;
+    color: #555;
+    font-size: 0.9em;
+}
+.c1-l4-speakers {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.c1-l4-speaker-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 36px;
+}
+.c1-l4-speaker-row label {
+    font-weight: 700;
+    min-width: 80px;
+    color: #333;
+}
+.c1-l4-speaker-row input[type="text"] {
+    flex: 0 0 220px;
+    padding: 6px 12px;
+    border: 1px solid #1e3a5f;
+    border-radius: 2px;
+    text-align: center;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1em;
+}
+.c1-l4-options {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.c1-l4-options .c1-l4-opt {
+    padding: 6px 12px;
+    border: 1px solid #d6d6d6;
+    border-radius: 2px;
+    background: #fafafa;
+    color: #222;
+    font-size: 0.95em;
+}
+.c1-l4-options .c1-l4-opt b {
+    display: inline-block;
+    min-width: 18px;
+    color: #1e3a5f;
+    margin-right: 6px;
+}
+
+/* === Part 7 — gapped text with paragraph bank sidebar ====== */
+.c1-gap-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    column-gap: 24px;
+    align-items: start;
+}
+.c1-gap-passage h2 { margin-top: 0; }
+.c1-gap-input {
+    display: inline-block;
+    border: 1px solid #1e3a5f;
+    border-radius: 2px;
+    padding: 4px 8px;
+    margin: 4px 0;
+    font-size: 0.95em;
+    width: 60px;
+    text-align: center;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: #fff;
+    vertical-align: middle;
+}
+.c1-paragraph-bank {
+    border-left: 1px solid #d6d6d6;
+    padding-left: 16px;
+    position: sticky;
+    top: 96px;
+    max-height: calc(100vh - 220px);
+    overflow-y: auto;
+}
+.c1-paragraph-bank h3 {
+    margin-top: 0;
+    color: #1e3a5f;
+    font-size: 1em;
+    border-bottom: 1px solid #d6d6d6;
+    padding-bottom: 8px;
+}
+.c1-paragraph-bank .c1-bank-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.92em;
+    line-height: 1.5;
+    color: #333;
+}
+.c1-paragraph-bank .c1-bank-item b {
+    color: #1e3a5f;
+    margin-right: 4px;
+}
+
+@media (max-width: 1024px) {
+    .c1-gap-layout { display: block; }
+    .c1-paragraph-bank { position: static; max-height: none; border-left: none; border-top: 1px solid #d6d6d6; padding-left: 0; padding-top: 16px; margin-top: 16px; }
+}
+
+/* === Part 1 — inline popover MC ============================ */
+.c1-popover-gap {
+    display: inline-block;
+    position: relative;
+    margin: 0 4px;
+    vertical-align: middle;
+}
+.c1-popover-gap select {
+    border: 1px solid #1e3a5f;
+    border-radius: 2px;
+    padding: 4px 22px 4px 8px;
+    font-size: 0.95em;
+    background: #fff;
+    min-width: 80px;
+    text-align: center;
+    font-weight: 700;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, #1e3a5f 50%),
+                      linear-gradient(135deg, #1e3a5f 50%, transparent 50%);
+    background-position: calc(100% - 12px) 50%, calc(100% - 7px) 50%;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+}
+.c1-popover-gap select:focus {
+    outline: 2px solid #007a87;
+    outline-offset: 1px;
+}
+
+/* The number badge that shows beside an unanswered popover */
+.c1-popover-num {
+    display: inline-block;
+    background: #1e3a5f;
+    color: #fff;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-size: 0.78em;
+    margin-right: 4px;
+    vertical-align: middle;
+}

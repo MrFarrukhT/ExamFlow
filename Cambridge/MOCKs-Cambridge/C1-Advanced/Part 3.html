@@ -666,8 +666,58 @@
             height: auto !important;
         }
 
+        /* === C1 Part 3: passage + Keyword List sidebar === */
+        .c1-with-keyword-list {
+            display: grid !important;
+            grid-template-columns: minmax(0, 1fr) 220px;
+            gap: 24px;
+            align-items: start;
+        }
+        .c1-with-keyword-list .c1-passage-col {
+            min-width: 0;
+        }
+        .c1-keyword-list {
+            border-left: 1px solid #d6d6d6;
+            padding: 0 0 0 16px;
+            font-family: Arial, sans-serif;
+            font-size: 0.92em;
+            position: sticky;
+            top: 96px;
+        }
+        .c1-keyword-list__title {
+            margin: 0 0 8px 0;
+            padding: 4px 8px;
+            background: #e8eef5;
+            color: #1e3a5f;
+            font-weight: 700;
+            font-size: 0.92em;
+            border-radius: 2px;
+        }
+        .c1-keyword-list__items {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .c1-keyword-list__items li {
+            padding: 4px 8px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
+            letter-spacing: 0.3px;
+        }
+        .c1-keyword-list__items li .c1-kw-num {
+            display: inline-block;
+            min-width: 24px;
+            color: #888;
+            font-weight: 400;
+        }
+        @media (max-width: 900px) {
+            .c1-with-keyword-list { grid-template-columns: 1fr; }
+            .c1-keyword-list { position: static; border-left: none; border-top: 1px solid #d6d6d6; padding: 16px 0 0 0; }
+        }
+
     </style>
     
+    <link rel="stylesheet" href="../../../assets/css/cambridge-c1-official-layout.css">
     <!-- Highlight and Notes Persistence -->
     <script src="../../../assets/js/cambridge/highlight-manager.js"></script>
     <script src="../../../assets/js/cambridge/notes-manager.js"></script>
@@ -680,13 +730,27 @@
         <div id="wrapper"><div class="App__app___3nDjL zoom-small" id="app" role="presentation"><div aria-hidden="false" class="App__mainScreen___3HaXz"><div class="App__mainScreenContent___1tXox" id="main-screen-content"><header class="header__header___3v_A5 header__compact___2hXxm " id="header"><div class="header__topbar___2CQ4O" id="headerTopBar"><div class="header__logo___3xoBS"><img src="./A2 Key RW Digital Sample Test 1_26.04.23_files/ceq.png" alt="header.logo"></div><div class="header__subToolbar___TmVu0"><div class="header__connectionAndButtonContainer___1t_Gd"><div class="header__connectionStatusContainer___3YItW"><div aria-live="polite" class="header__connectionStatus___3hqqN"><span role="status" class="sr-only">Connected</span></div><div class="header__icon___1ECrT"><i class="fa fa-wifi" aria-hidden="true"></i></div></div><button class="header__messagesButton___2Texb" id="messagesMenuButton"><span class="header__icon___1ECrT"><span class="sr-only">Messages</span><i class="fa fa-bell-o fa-3" aria-hidden="true"></i></span></button><button class="header__optionsButton___1BF6Z" id="optionsMenuButton"><span class="header__icon___1ECrT"><span class="sr-only">Options</span><i class="fa fa-bars fa-3" aria-hidden="true"></i></span></button><button class="header__optionsButton___1BF6Z" aria-label="Show notes" id="toggleSidebarButton" aria-expanded="false"><span class="header__icon___1ECrT"><span class="sr-only">Show notes</span><i class="fa fa-pencil-square-o fa-3" aria-hidden="true"></i></span></button></div><div class="header__centralBar___3GpJy"><div class="header__subHeaderWrapper___3FyBR"><div class="header__statusText___1fRqd"><div class="header__name___1Cw2x">Candidate ID</div><div></div></div></div></div><div class="header__statusColor___3HOPa"></div></div></div></header><div id="appContentContainer" class="App__contentContainer___2Nu-R"><div class="DisplayTypeContainer__displayTypeContainer___3B6yh has-section-level-dynamic-rubric" style=""><div class="DisplayTypeContainer__sectionContent___2HSJ0 gap-match-scroll-adjustment" id="sectionContent"><div class="DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE"><div class="question-rubric QuestionDisplay__questionRubricBlock___1k0iL QuestionDisplay__dynamicRubric___13XsP QuestionDisplay__sectionLevelDynamicRubric___2zEDl"><h3 class="scorableItemHeadline">Part 3 — Word formation (Questions 17–24)</h3><div class="QuestionDisplay__rubricContent___1byNW">For questions 17&ndash;24, read the text below. Use the word given in capitals at the end of each line to form a word that fits in the gap in the same line.</div></div></div><div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper current numbering-per-interaction wide-and-left-align multiple-inline-gap-match gap-match-multi-interaction-view"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-c1-passage-17" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_passage_17" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_passage_17">
       <div class="container generic">
          
-      <div class="container inlineChoice">
+      <div class="container inlineChoice c1-with-keyword-list">
+       <div class="c1-passage-col">
          <h2>Hundreds of people rush to view a special bird</h2>
          <p class="double-line-spacing ">Hundreds of birdwatchers recently rushed to a park in Washington DC, in the US, to catch a glimpse of a new arrival.</p>
-         <p class="double-line-spacing ">Despite the <span id="c1-17-cont" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-c1_17"><label for="c1ia1017"><input id="c1ia1017" autocomplete="off" class="textEntryInteractionValue" maxlength="40" name="c1ia1017" spellcheck="false" size="14" type="text" placeholder="17" aria-label="Insert answer for question 17" tabindex="17" value=""></label></span></span><span style="display:inline-block;background:#1e3a5f;color:#fff;padding:2px 10px;border-radius:3px;font-weight:700;font-family:Arial,sans-serif;font-size:0.85em;margin-left:6px;letter-spacing:0.5px;vertical-align:middle;">COMMON</span> low winter temperatures, people came out to see a Painted Bunting, a small, brightly coloured bird that usually spends the winter in the warmer climate of Florida. The bird was a male — highly distinctive with its brilliant blue head, red breast and flashes of green and red on its back.</p>
-         <p class="double-line-spacing ">The bird's <span id="c1-18-cont" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-c1_18"><label for="c1ia1018"><input id="c1ia1018" autocomplete="off" class="textEntryInteractionValue" maxlength="40" name="c1ia1018" spellcheck="false" size="14" type="text" placeholder="18" aria-label="Insert answer for question 18" tabindex="18" value=""></label></span></span><span style="display:inline-block;background:#1e3a5f;color:#fff;padding:2px 10px;border-radius:3px;font-weight:700;font-family:Arial,sans-serif;font-size:0.85em;margin-left:6px;letter-spacing:0.5px;vertical-align:middle;">PRESENT</span> was announced on a birdwatchers' website and would have been <span id="c1-19-cont" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-c1_19"><label for="c1ia1019"><input id="c1ia1019" autocomplete="off" class="textEntryInteractionValue" maxlength="40" name="c1ia1019" spellcheck="false" size="14" type="text" placeholder="19" aria-label="Insert answer for question 19" tabindex="19" value=""></label></span></span><span style="display:inline-block;background:#1e3a5f;color:#fff;padding:2px 10px;border-radius:3px;font-weight:700;font-family:Arial,sans-serif;font-size:0.85em;margin-left:6px;letter-spacing:0.5px;vertical-align:middle;">THINK</span> just a few years ago. The <span id="c1-20-cont" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-c1_20"><label for="c1ia1020"><input id="c1ia1020" autocomplete="off" class="textEntryInteractionValue" maxlength="40" name="c1ia1020" spellcheck="false" size="14" type="text" placeholder="20" aria-label="Insert answer for question 20" tabindex="20" value=""></label></span></span><span style="display:inline-block;background:#1e3a5f;color:#fff;padding:2px 10px;border-radius:3px;font-weight:700;font-family:Arial,sans-serif;font-size:0.85em;margin-left:6px;letter-spacing:0.5px;vertical-align:middle;">EXCEPT</span> sighting can probably be attributed to the <span id="c1-21-cont" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-c1_21"><label for="c1ia1021"><input id="c1ia1021" autocomplete="off" class="textEntryInteractionValue" maxlength="40" name="c1ia1021" spellcheck="false" size="14" type="text" placeholder="21" aria-label="Insert answer for question 21" tabindex="21" value=""></label></span></span><span style="display:inline-block;background:#1e3a5f;color:#fff;padding:2px 10px;border-radius:3px;font-weight:700;font-family:Arial,sans-serif;font-size:0.85em;margin-left:6px;letter-spacing:0.5px;vertical-align:middle;">DISRUPT</span> that climate change is causing for hundreds of bird species.</p>
-         <p class="double-line-spacing "><span id="c1-22-cont" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-c1_22"><label for="c1ia1022"><input id="c1ia1022" autocomplete="off" class="textEntryInteractionValue" maxlength="40" name="c1ia1022" spellcheck="false" size="14" type="text" placeholder="22" aria-label="Insert answer for question 22" tabindex="22" value=""></label></span></span><span style="display:inline-block;background:#1e3a5f;color:#fff;padding:2px 10px;border-radius:3px;font-weight:700;font-family:Arial,sans-serif;font-size:0.85em;margin-left:6px;letter-spacing:0.5px;vertical-align:middle;">COUNT</span> species all over the world are being pushed towards cooler areas as conditions heat up, or are losing suitable habitats altogether. Researchers warn that two thirds of North American bird species are now at risk of extinction. However, thanks to reports from community scientists all across the country, data about bird populations and their locations can be <span id="c1-23-cont" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-c1_23"><label for="c1ia1023"><input id="c1ia1023" autocomplete="off" class="textEntryInteractionValue" maxlength="40" name="c1ia1023" spellcheck="false" size="14" type="text" placeholder="23" aria-label="Insert answer for question 23" tabindex="23" value=""></label></span></span><span style="display:inline-block;background:#1e3a5f;color:#fff;padding:2px 10px;border-radius:3px;font-weight:700;font-family:Arial,sans-serif;font-size:0.85em;margin-left:6px;letter-spacing:0.5px;vertical-align:middle;">VISUAL</span> on maps in real time, and conservation efforts planned <span id="c1-24-cont" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-c1_24"><label for="c1ia1024"><input id="c1ia1024" autocomplete="off" class="textEntryInteractionValue" maxlength="40" name="c1ia1024" spellcheck="false" size="14" type="text" placeholder="24" aria-label="Insert answer for question 24" tabindex="24" value=""></label></span></span><span style="display:inline-block;background:#1e3a5f;color:#fff;padding:2px 10px;border-radius:3px;font-weight:700;font-family:Arial,sans-serif;font-size:0.85em;margin-left:6px;letter-spacing:0.5px;vertical-align:middle;">ACCORD</span>.</p>
-      </div>
+         <p class="double-line-spacing ">Despite the <span id="c1-17-cont" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-c1_17"><label for="c1ia1017"><input id="c1ia1017" autocomplete="off" class="textEntryInteractionValue" maxlength="40" name="c1ia1017" spellcheck="false" size="14" type="text" placeholder="17" aria-label="Insert answer for question 17" tabindex="17" value=""></label></span></span> low winter temperatures, people came out to see a Painted Bunting, a small, brightly coloured bird that usually spends the winter in the warmer climate of Florida. The bird was a male — highly distinctive with its brilliant blue head, red breast and flashes of green and red on its back.</p>
+         <p class="double-line-spacing ">The bird's <span id="c1-18-cont" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-c1_18"><label for="c1ia1018"><input id="c1ia1018" autocomplete="off" class="textEntryInteractionValue" maxlength="40" name="c1ia1018" spellcheck="false" size="14" type="text" placeholder="18" aria-label="Insert answer for question 18" tabindex="18" value=""></label></span></span> was announced on a birdwatchers' website and would have been <span id="c1-19-cont" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-c1_19"><label for="c1ia1019"><input id="c1ia1019" autocomplete="off" class="textEntryInteractionValue" maxlength="40" name="c1ia1019" spellcheck="false" size="14" type="text" placeholder="19" aria-label="Insert answer for question 19" tabindex="19" value=""></label></span></span> just a few years ago. The <span id="c1-20-cont" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-c1_20"><label for="c1ia1020"><input id="c1ia1020" autocomplete="off" class="textEntryInteractionValue" maxlength="40" name="c1ia1020" spellcheck="false" size="14" type="text" placeholder="20" aria-label="Insert answer for question 20" tabindex="20" value=""></label></span></span> sighting can probably be attributed to the <span id="c1-21-cont" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-c1_21"><label for="c1ia1021"><input id="c1ia1021" autocomplete="off" class="textEntryInteractionValue" maxlength="40" name="c1ia1021" spellcheck="false" size="14" type="text" placeholder="21" aria-label="Insert answer for question 21" tabindex="21" value=""></label></span></span> that climate change is causing for hundreds of bird species.</p>
+         <p class="double-line-spacing "><span id="c1-22-cont" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-c1_22"><label for="c1ia1022"><input id="c1ia1022" autocomplete="off" class="textEntryInteractionValue" maxlength="40" name="c1ia1022" spellcheck="false" size="14" type="text" placeholder="22" aria-label="Insert answer for question 22" tabindex="22" value=""></label></span></span> species all over the world are being pushed towards cooler areas as conditions heat up, or are losing suitable habitats altogether. Researchers warn that two thirds of North American bird species are now at risk of extinction. However, thanks to reports from community scientists all across the country, data about bird populations and their locations can be <span id="c1-23-cont" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-c1_23"><label for="c1ia1023"><input id="c1ia1023" autocomplete="off" class="textEntryInteractionValue" maxlength="40" name="c1ia1023" spellcheck="false" size="14" type="text" placeholder="23" aria-label="Insert answer for question 23" tabindex="23" value=""></label></span></span> on maps in real time, and conservation efforts planned <span id="c1-24-cont" class="interaction-container"><span class="textEntry__textEntryInteraction___3-HXo interaction " id="scorableItem-c1_24"><label for="c1ia1024"><input id="c1ia1024" autocomplete="off" class="textEntryInteractionValue" maxlength="40" name="c1ia1024" spellcheck="false" size="14" type="text" placeholder="24" aria-label="Insert answer for question 24" tabindex="24" value=""></label></span></span>.</p>
+       </div>
+       <aside class="c1-keyword-list" aria-label="Keyword List">
+         <h3 class="c1-keyword-list__title">Keyword List</h3>
+         <ol class="c1-keyword-list__items">
+           <li><span class="c1-kw-num">17</span> COMMON</li>
+           <li><span class="c1-kw-num">18</span> PRESENT</li>
+           <li><span class="c1-kw-num">19</span> THINK</li>
+           <li><span class="c1-kw-num">20</span> EXCEPT</li>
+           <li><span class="c1-kw-num">21</span> DISRUPT</li>
+           <li><span class="c1-kw-num">22</span> COUNT</li>
+           <li><span class="c1-kw-num">23</span> VISUAL</li>
+           <li><span class="c1-kw-num">24</span> ACCORD</li>
+         </ol>
+       </aside>
       </div>
    </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div></div></div></div></div></div></div><div class="App__footerWrapper___2el50"><footer class="footer__footer___1NlzQ"><div class="footer__navButtons___Gtvxu   " role="navigation" aria-label="Previous / next question" id="footer-nav-wrapper" tabindex="-1"><button class="footer__previousBtn___3pfYh footer__arrowIconBtn___3AiJS" id="footer-nav-button-previous" aria-label="Previous"><i class="fa fa-arrow-left" aria-hidden="true"></i></button><button class="footer__promotedNextBtn___Qf9LU footer__arrowIconBtn___3AiJS" id="footer-nav-button-next" aria-label="Next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div><nav class="nav-row perScorableItem" aria-label="Questions"><div class="footer__questionWrapper___1tZ46 multiple" role="tablist"><button role="tab" class="footer__questionNo___3WNct
                                 " data-sectionid="c1-section-1" tabindex="0"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">1</span><span class="attemptedCount" aria-hidden="true">0 of 8</span><span class="sr-only">Part 
