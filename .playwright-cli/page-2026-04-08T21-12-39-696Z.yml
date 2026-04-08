@@ -1,0 +1,150 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "header.logo"
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - status [ref=e11]: Connected
+            - generic [ref=e13]: 
+          - button "Messages" [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: Messages
+              - generic [ref=e17]: 
+          - button "Options" [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: Options
+              - generic [ref=e21]: 
+          - button "Show notes" [ref=e22]:
+            - generic [ref=e23]:
+              - generic [ref=e24]: Show notes
+              - generic [ref=e25]: 
+        - generic [ref=e28]:
+          - generic [ref=e29]: Candidate ID
+          - generic [ref=e30]: TEST-C1
+  - generic [ref=e34]:
+    - generic [ref=e36]:
+      - heading "Part 7 — Gapped text (Questions 41–46)" [level=3] [ref=e37]
+      - generic [ref=e38]: You are going to read an article about recording an audiobook. Six paragraphs have been removed from the article. Choose from the paragraphs A–G the one which fits each gap (41–46). There is one extra paragraph which you do not need to use.
+    - main [ref=e40]:
+      - group [ref=e42]:
+        - generic [ref=e47]:
+          - generic [ref=e48]:
+            - heading "What it was like to record my own audiobook" [level=2] [ref=e49]
+            - paragraph [ref=e50]: It was around noon on the third gruelling day of recording the audiobook of my novel, The Gargoyle Hunters, when the disembodied voice of my director burst into my headset to inform me that my empty stomach was making noises loud enough to be picked up by the hypersensitive microphone.
+            - paragraph [ref=e51]:
+              - textbox "Insert paragraph letter for gap 41" [ref=e53]:
+                - /placeholder: "41"
+            - paragraph [ref=e54]: As it turned out, that had been deceptively simple. All the audiobook producer asked me to do was record myself reading the opening pages of my book in the comfort of my own home. But so I was sure she was in a position to fully evaluate my ability, I also recorded a comic sequence from another section of the novel, involving some verbal sparring between two teenage boys.
+            - paragraph [ref=e55]:
+              - textbox "Insert paragraph letter for gap 42" [ref=e57]:
+                - /placeholder: "42"
+            - paragraph [ref=e58]: I was thrilled to hear it, but little did I know that reading into your phone for 16 minutes on a lazy Sunday at home in no way prepares you for the arduous ordeal of being locked in a tiny recording booth for six or seven hours a day — reading, reading, reading, with only the voice of a distant director for occasional company.
+            - paragraph [ref=e59]:
+              - textbox "Insert paragraph letter for gap 43" [ref=e61]:
+                - /placeholder: "43"
+            - paragraph [ref=e62]: This familiarity with the material wasn’t enough, however. Before the promise of lunch was even a glimmer on the horizon, weariness set in, and it dawned on me that this was going to be an exhausting, long-distance slog during which, paradoxically, it was essential that I sounded alert and energetic the entire time.
+            - paragraph [ref=e63]:
+              - textbox "Insert paragraph letter for gap 44" [ref=e65]:
+                - /placeholder: "44"
+            - paragraph [ref=e66]: To make matters more difficult, I was fighting a nasty cold. Still, I’m a hard worker, and as the hours and days progressed, I began to figure out the craft of audiobook narration. I became acutely sensitized to the subtleties of mouth moisture, which generated sensations and sounds I had never in my life spent a moment considering.
+            - paragraph [ref=e67]:
+              - textbox "Insert paragraph letter for gap 45" [ref=e69]:
+                - /placeholder: "45"
+            - paragraph [ref=e70]: It occurred to me that my efforts in this regard were pretty analogous to what we novelists do. The whole idea is to hide the struggle of creation from the reader so that the words on the page appear to have arrived there with fluency and ease.
+            - paragraph [ref=e71]:
+              - textbox "Insert paragraph letter for gap 46" [ref=e73]:
+                - /placeholder: "46"
+            - paragraph [ref=e74]: "I was always very grateful for these tips, and overall, the experience of narrating my own audiobook proved immensely satisfying. As a complete novice with no technical training, I was never going to turn myself into an experienced narrator overnight. But I did have one ace up my sleeve: I happened to know the author’s intention behind every line."
+          - complementary "Paragraph bank" [ref=e75]:
+            - heading "Paragraphs A–G" [level=3] [ref=e76]
+            - generic [ref=e77]: A It was my concern about having a stranger narrate episodes such as this that led me to try out for the job in the first place. I had a very specific way I wanted the dialogue to sound, and I wasn’t entirely comfortable handing that task over to an unknown voice actor who might not share my take on it. A few days after I sent in my clips, the producer emailed me back to say she was willing to take me on.
+            - generic [ref=e78]: B Now, however, I began to pay a lot of attention to them. I developed my own routines around when I needed to sip water, suck on a lozenge, or clear my throat. I found I was at pains to conceal from my listeners the unpleasant realities behind the performance.
+            - generic [ref=e79]: C It seemed my solo performance had inadvertently become a duet. I hugged a pillow to my abdomen to mask the rumbling, and managed to complete the chapter. The truth is that the marathon task of recording my own audiobook over four long days was proving far more demanding than I had expected from my audition.
+            - generic [ref=e80]: D To give me the freedom I needed to generate this sense of flow, the director kept silent and let me plug away, breaking in only when my clothing rustled or my digestive system gurgled in open revolt. But she was a trained actress whose understanding of enunciation proved invaluable, as she always knew just which syllable I should emphasize in order to stop tripping over a word or phrase.
+            - generic [ref=e81]: E I turned up on the first day in that naïve state, and sailed through the first couple of chapters. Friends had predicted that performing my own work would be a strange experience, but I always read and re-read my prose aloud as I write. In fact I had probably read each page of my novel aloud 20 or 30 times before I ever leaned forward to speak into that microphone.
+            - generic [ref=e82]: F These I listened to and mimicked endlessly in my free time. On the final day, I walked into the sound studio and told the director that I wanted to re-record those specific lines of the book.
+            - generic [ref=e83]: G I began to appreciate that an almost athletic performance was required if we were to complete the reading in four days — the time normally allotted for an actual professional audiobook narrator. A fairly cracking pace would be required. Author or no, there was no glamour here.
+  - contentinfo [ref=e86]:
+    - navigation "Previous / next question" [ref=e87]:
+      - button "Previous" [ref=e88]:
+        - generic [ref=e89]: 
+      - button "Next" [ref=e90]:
+        - generic [ref=e91]: 
+    - navigation "Questions" [ref=e92]:
+      - tablist [ref=e93]:
+        - tab "Part 1. 0 of 8 questions attempted." [ref=e94]:
+          - generic [ref=e95]:
+            - text: Part 1
+            - generic [ref=e96]: 0 of 8
+            - generic [ref=e97]: Part 1. 0 of 8 questions attempted.
+      - tablist [ref=e98]:
+        - tab "Part 2. 0 of 8 questions attempted." [ref=e99]:
+          - generic [ref=e100]:
+            - text: Part 2
+            - generic [ref=e101]: 0 of 8
+            - generic [ref=e102]: Part 2. 0 of 8 questions attempted.
+      - tablist [ref=e103]:
+        - tab "Part 3. 0 of 8 questions attempted." [ref=e104]:
+          - generic [ref=e105]:
+            - text: Part 3
+            - generic [ref=e106]: 0 of 8
+            - generic [ref=e107]: Part 3. 0 of 8 questions attempted.
+      - tablist [ref=e108]:
+        - tab "Part 4. 0 of 6 questions attempted." [ref=e109]:
+          - generic [ref=e110]:
+            - text: Part 4
+            - generic [ref=e111]: 0 of 6
+            - generic [ref=e112]: Part 4. 0 of 6 questions attempted.
+      - tablist [ref=e113]:
+        - tab "Part 5. 0 of 6 questions attempted." [ref=e114]:
+          - generic [ref=e115]:
+            - text: Part 5
+            - generic [ref=e116]: 0 of 6
+            - generic [ref=e117]: Part 5. 0 of 6 questions attempted.
+      - tablist [ref=e118]:
+        - tab "Part 6. 0 of 4 questions attempted." [ref=e119]:
+          - generic [ref=e120]:
+            - text: Part 6
+            - generic [ref=e121]: 0 of 4
+            - generic [ref=e122]: Part 6. 0 of 4 questions attempted.
+      - tablist [ref=e123]:
+        - tab "Part 7. 0 of 6 questions attempted." [ref=e124]:
+          - generic [ref=e125]:
+            - text: Part 7
+            - generic [ref=e126]: 0 of 6
+            - generic [ref=e127]: Part 7. 0 of 6 questions attempted.
+        - generic [ref=e128]:
+          - button "Question 41 Not attempted Active" [ref=e129]:
+            - generic [ref=e130]: Question 41
+            - text: "41"
+            - generic [ref=e131]: Not attempted Active
+          - button "Question 42 Not attempted" [ref=e132]:
+            - generic [ref=e133]: Question 42
+            - text: "42"
+            - generic [ref=e134]: Not attempted
+          - button "Question 43 Not attempted" [ref=e135]:
+            - generic [ref=e136]: Question 43
+            - text: "43"
+            - generic [ref=e137]: Not attempted
+          - button "Question 44 Not attempted" [ref=e138]:
+            - generic [ref=e139]: Question 44
+            - text: "44"
+            - generic [ref=e140]: Not attempted
+          - button "Question 45 Not attempted" [ref=e141]:
+            - generic [ref=e142]: Question 45
+            - text: "45"
+            - generic [ref=e143]: Not attempted
+          - button "Question 46 Not attempted" [ref=e144]:
+            - generic [ref=e145]: Question 46
+            - text: "46"
+            - generic [ref=e146]: Not attempted
+      - tablist [ref=e147]:
+        - tab "Part 8. 0 of 10 questions attempted." [ref=e148]:
+          - generic [ref=e149]:
+            - text: Part 8
+            - generic [ref=e150]: 0 of 10
+            - generic [ref=e151]: Part 8. 0 of 10 questions attempted.
+      - button "Review your answers" [ref=e152]:
+        - generic [ref=e153]: 
