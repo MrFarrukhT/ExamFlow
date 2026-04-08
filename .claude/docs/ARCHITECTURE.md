@@ -42,12 +42,19 @@ Web-based language exam testing platform for administering Cambridge English and
 
 ```
 assets/
-  css/           → reading.css, writing.css, listening.css, etc.
+  css/           → reading.css, writing.css, listening.css, admin-common.css, etc.
   js/
-    core.js            → Timer, drag-drop, answer validation
+    core.js            → Drag-drop, answer validation, passage/question management
     session-manager.js → Session/state persistence
-    answer-manager.js  → Answer handling & auto-save
-    cambridge/         → Cambridge-specific modules
+    answer-manager.js  → Unified IELTS/Cambridge answer handling (auto-detects exam type)
+    admin-common.js    → Shared AdminDashboard class for admin pages
+    timer.js           → Unified ExamTimer (overlay + embedded modes)
+    context-menu.js    → Text highlighting, notes
+    options-menu.js    → Contrast/text size preferences
+    modal-manager.js   → Popup overlays and toast notifications
+    distraction-free.js → Fullscreen enforcement, key blocking
+    universal-functions.js → Shared utilities
+    cambridge/         → Cambridge-specific modules (bridge, layout, sync)
     reading/           → Reading test modules
     writing/           → Writing test modules
     listening/         → Listening test modules

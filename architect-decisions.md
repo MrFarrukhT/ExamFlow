@@ -1,5 +1,39 @@
 # Architecture Decisions
 
+## Session: 2026-04-08 (Round 5)
+
+### ADR-021: Extract Shared Admin JavaScript Library
+**Status:** Executed (pre-existing)
+**Impact:** High | **Effort:** 2-3 hours | **Risk:** Medium
+**Summary:** Created `assets/js/admin-common.js` (665 lines) with `AdminDashboard` class containing all shared admin functions: login, pagination, filtering, date-grouped views, modal management, CSV export, answer management scaffolding. Both dashboards now import the shared class and only contain exam-specific overrides (IELTS: 840 lines, Cambridge: 874 lines — down from 1,587 and 1,752).
+**Result:** Executed. ~1,300 lines of duplicated inline JS eliminated.
+
+### ADR-022: Unify Answer Managers
+**Status:** Executed
+**Impact:** Medium | **Effort:** 30 min | **Risk:** Low
+**Summary:** Merged `answer-manager.js` (280 lines) and `cambridge-answer-manager.js` (472 lines) into a single unified `AnswerManager` class (370 lines) that auto-detects exam type from localStorage. Backward-compatible `window.cambridgeAnswerManager` alias preserved. 153 Cambridge HTML files updated to load unified module.
+**Result:** Executed. Old cambridge-answer-manager.js deleted. 382 lines saved.
+
+### ADR-023: Integrate Shared Validation & Clean Dead Server Code
+**Status:** Executed
+**Impact:** Low-Medium | **Effort:** 15 min | **Risk:** Low
+**Summary:** Wired up `validateStudentInfo()` in 3 submission endpoints across both servers (was extracted in ADR-020 but never called). Replaced IELTS local `stripHtml()` with shared `stripHtmlTags`. Removed redundant Cambridge `GET /health` endpoint. Updated admin dashboards to use `/test` for connection checks.
+**Result:** Executed. ~35 lines of inline validation removed, shared module fully utilized.
+
+### ADR-024: Remove Orphaned Files
+**Status:** Executed
+**Impact:** Low | **Effort:** 5 min | **Risk:** None
+**Summary:** Deleted 3 unreferenced files: `Cambridge/index.html` (redirect stub), `Cambridge/launcher-cambridge.html` (redirect stub), `assets/js/database-direct.js` (unused DatabaseConnector class).
+**Result:** Executed. 112 lines of dead code removed.
+
+### ADR-025: Extract Shared Answer Key Route Factory
+**Status:** Rejected (schema mismatch)
+**Impact:** Medium | **Effort:** 1 hour | **Risk:** Low
+**Summary:** Originally proposed extracting a shared factory for GET/POST/DELETE answer key endpoints. After deep inspection, IELTS uses row-per-question storage (`mock_answers` table with individual rows) while Cambridge uses JSONB blob storage (`cambridge_answer_keys` table with single row). The fundamentally different schemas make a shared factory counterproductive.
+**Result:** Rejected — forced abstraction over incompatible storage models would reduce clarity without meaningful code savings.
+
+---
+
 ## Session: 2026-04-08 (Round 4)
 
 ### ADR-016: Unify Launcher Pages
