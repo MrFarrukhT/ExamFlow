@@ -804,7 +804,7 @@
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ submissionId, score: null, bandScore })
                 });
-                if (response.ok) { alert('Band score saved successfully!'); closeModal(); loadSubmissions(); }
+                if (response.ok) { advanceAfterScore(); }
                 else { alert('Failed to save band score. Please try again.'); }
             } catch (error) { console.error('Error saving band score:', error); alert('Error saving band score. Please try again.'); }
         }

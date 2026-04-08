@@ -180,7 +180,15 @@ body {
 .module-duration {
     color: #757575;
     font-size: 0.9rem;
+    margin-bottom: 0.35rem;
+}
+
+.module-hint {
+    color: #888;
+    font-size: 0.82rem;
+    line-height: 1.4;
     margin-bottom: 1rem;
+    padding: 0 0.5rem;
 }
 
 /* Status Badge */
