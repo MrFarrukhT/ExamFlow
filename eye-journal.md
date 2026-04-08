@@ -810,6 +810,33 @@ Starting state: All B2 First files had wrong level names from copy-paste errors 
 | B2-First-MOCK-2/* | 5-Delightful (speaking) / 4-Polished (rest) | Same content |
 | B2-First-MOCK-3/* | 5-Delightful (speaking) / 4-Polished (rest) | Same content |
 
+### Round 4
+**Explored:** Visual verification of teal identity across Part 1-8 + Listening Part 1-4
+**Action:** POLISH — Replace all Material Blue (#2196F3, #1976D2, #0066cc) with Cambridge teal (#0d9488)
+
+- [T4] Part 1-8.html — Question numbers, radio/checkbox borders, link colors changed from Material Blue to Cambridge teal
+  Mode: polish
+  Quality layer: 4-Polished → 5-Delightful (consistent brand identity)
+  Files: 3 folders × 8 Part files = 24 files
+
+- [T4] Listening-Part-1-4.html — Same blue-to-teal color replacement
+  Mode: polish
+  Quality layer: 3-Efficient → 4-Polished
+  Files: 3 folders × 4 files = 12 files
+
+### Final Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| B2-First/reading.html | 5-Delightful | Teal identity, correct counters, timer |
+| B2-First/writing.html | 4-Polished | Teal accents, clean email + choice tasks |
+| B2-First/listening.html | 4-Polished | Teal popup, working audio |
+| B2-First/speaking.html | 5-Delightful | Full 4-part FCE, mind map, teal identity |
+| B2-First/Part 1-6.html | 5-Delightful | Teal identity throughout |
+| B2-First/Part 7-8.html | 5-Delightful | Teal identity throughout |
+| B2-First/Listening-Part-1-4.html | 4-Polished | Teal identity |
+| B2-First-MOCK-2/* | Same layers | All fixes applied |
+| B2-First-MOCK-3/* | Same layers | All fixes applied |
+
 ### Deferred
 - B2-First Part files reference `./A2 Key RW Digital Sample Test 1_26.04.23_files/` directory — actual directory on disk keeps this name
 - No actual B2 First listening audio file exists — currently using B1 audio as placeholder
@@ -817,14 +844,14 @@ Starting state: All B2 First files had wrong level names from copy-paste errors 
 - MOCK-2 and MOCK-3 speaking tests use same content as MOCK-1 — ideally would have different topics
 
 ### Session Stats
-Pages explored: 8 (dashboard, reading Parts 1-6, writing Parts 7-8, listening, speaking)
-Rounds: 3
-Polishes landed: 3 (console logs, CSS extraction, speaking colors)
+Pages explored: 8+ (dashboard, reading Parts 1-6, writing Parts 7-8, listening Parts 1-4, speaking)
+Rounds: 4
+Polishes landed: 4 (console logs, CSS extraction, speaking colors, teal identity sweep)
 Rebuilds landed: 1 (speaking test — 3 files)
 Elevations landed: 0
 Reverted: 1 (audio reference reverted to working file)
 Fixes landed: 84+ titles + 3 critical (audio, JS ranges, 18 HTML counters)
-Changes shipped: 78+ files modified
+Changes shipped: 114+ files modified
 
 ---
 
