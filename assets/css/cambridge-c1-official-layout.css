@@ -239,9 +239,10 @@ body[data-c1-layout="split-writing"]
 }
 
 /* === Part 7 — gapped text with paragraph bank sidebar ====== */
+.container.generic.c1-gap-layout,
 .c1-gap-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) !important;
     column-gap: 24px;
     align-items: start;
 }

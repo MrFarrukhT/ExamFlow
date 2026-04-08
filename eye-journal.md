@@ -1,5 +1,99 @@
 # Eye Journal
 
+## Session: 2026-04-09 (round 2) — C1 Advanced parity with official Cambridge screenshots
+Persona: Olympiada candidate sitting C1 Advanced
+System: Cambridge (Olympiada → C1 Advanced)
+Pages explored: Part 1-8 + Listening Part 1-4 + Writing Part 1-2 (14 pages) compared against 15 official Cambridge C1 Advanced screenshots in /cae/examples/{1-8,l1-l5,w1-w2}.png
+Starting state: Round 1 (earlier today) put all 14 part pages into the B2-First Inspera shell, but the *content layout inside* each part still didn't match the official Cambridge format — separate MC questions instead of inline gaps, no Keyword List sidebar in Part 3, single-column reading instead of split-screen, etc.
+
+### Round 2 — make the inside of each part EXACTLY match official Inspera UI
+
+**Discrepancies found vs official screenshots (14 findings):**
+- [T5] Part 1 — was 8 separate MC widgets quoting the gap; official has the passage with **inline numbered popover gaps** (click → A/B/C/D dropdown).
+- [T5] Part 3 — had inline navy keyword chips beside each input; official has the passage with **only numbered text inputs** plus a separate **Keyword List sidebar on the right** (numbers 17–24 with the source words).
+- [T4] Part 4 — had `25.` numeric prefix, navy chip styling for the keyword, and 24px indent; official has plain text, **bold uppercase keyword on its own line**, and the second sentence flush left.
+- [T5] Part 5 — passage and 6 MC questions stacked single-column; official is **two-column split** (passage left, questions right).
+- [T5] Part 6 — same problem; official is **two-column split** (4 reviewer texts left, 4 questions with reviewer A/B/C/D right).
+- [T5] Part 7 — `[Gap N]` text markers + 6 separate MC questions; official has **inline text input boxes inside the passage** (gaps 41–46) with a **paragraph A–G bank in a sidebar on the right**.
+- [T5] Part 8 — single-column passage above questions; official is **two-column split** (Frank Gehry sections A–D left, 10 multi-match questions right).
+- [T5] Listening Part 4 — 10 separate MC widgets, each with all 7 options A–G repeated; official has **Task 1 (5 speaker rows + A–G option list)** stacked above **Task 2 (5 speaker rows + A–G option list)** sharing a single horizontal layout per task.
+- [T5] Writing Part 1 — single column with prompt + textarea stacked; official is **two-column** (Question 1 prompt with **bordered callout boxes** for the notes/opinions on the left, large textarea + word counter on the right).
+- [T5] Writing Part 2 — same single-column layout; official is **two-column** with three boxed question prompts on the left and an **"Answering this question?" Undecided dropdown** + textarea + word counter on the right.
+
+**Action:** REBUILD 11 pages, POLISH 1 page (Part 4), CREATE 1 shared CSS file
+
+**Files touched:**
+1. NEW `assets/css/cambridge-c1-official-layout.css` (340 lines) — shared layout primitives:
+   - `body[data-c1-layout="split-reading"]` → CSS Grid that pins the passage wrapper to column 1 and stacks all subsequent question wrappers in column 2 (used by Parts 5, 6, 8)
+   - `body[data-c1-layout="split-writing"]` → similar but for Writing Parts (prompt left, textarea right)
+   - `.c1-l4-task` → Task 1/Task 2 multi-match layout for Listening Part 4 (5 speaker rows + A–G option list per task)
+   - `.c1-gap-layout` + `.c1-paragraph-bank` → Part 7 gap layout (inline inputs in passage + sticky paragraph A–G bank on the right)
+   - `.c1-popover-gap` → Part 1 inline numbered select dropdowns
+   - `.c1-writing-pane` + `.c1-writing-callout` + `.c1-writing-qselect` → Writing Parts components
+2. `Cambridge/MOCKs-Cambridge/C1-Advanced/Part 1.html` — passage rewritten with 8 inline `<select>` popovers wrapped in `scorableItem-c1_N` spans; the 8 separate MC question wrappers deleted.
+3. `Part 3.html` — inline keyword chips removed (8 spans, one per question); passage wrapped in `c1-with-keyword-list` grid; new `<aside class="c1-keyword-list">` sidebar appended with the 8 source words. Inline `<style>` block extended with the sidebar CSS (compound `.container.inlineChoice.c1-with-keyword-list` selector to override the global `.container.generic { display: block !important }` rule).
+4. `Part 4.html` — `<strong>25.</strong>` style prefixes removed from all 6 questions; navy chip CSS replaced with plain `font-weight:700` (so the keyword renders as bold uppercase only); 24px indent removed.
+5. `Part 5.html`, `Part 6.html`, `Part 8.html` — `<body>` got `data-c1-layout="split-reading"` so the shared grid CSS turns the existing structure into a two-column split with the passage pinned on the left.
+6. `Part 7.html` — `[ Gap N ]` text markers replaced with `<input class="c1-gap-input" placeholder="N">` wrapped in `scorableItem-c1_N` spans; passage wrapped in `c1-gap-layout` grid; "Removed paragraphs" h3 transformed into `<aside class="c1-paragraph-bank">` with each A–G converted from `<p><strong>X.</strong>...</p>` to `<div class="c1-bank-item"><b>X</b>...</div>`; the 6 separate Q41–Q46 wrappers deleted.
+7. `Listening Part 4.html` — 10 separate MC question wrappers deleted; replaced with two `.c1-l4-task` blocks (Task 1 = Q21–Q25, Task 2 = Q26–Q30), each containing 5 `c1-l4-speaker-row` items (label + scorableItem + text input) and a `c1-l4-options` list (the actual A–G option labels were extracted from the original DOM so the answer keys still match).
+8. `Writing Part 1.html`, `Writing Part 2.html` — inner content split into two question wrappers: the first contains the prompt with `c1-writing-callout` boxes (Factors/Opinions for W1, Q2/Q3/Q4 prompts for W2), the second contains a `c1-writing-pane` with the textarea, word counter, and (W2 only) the "Answering this question?" Undecided/2/3/4 select. The shared `body[data-c1-layout="split-writing"]` grid handles the two-column layout.
+9. All 14 C1 part HTML files got a `<link rel="stylesheet" href="../../../assets/css/cambridge-c1-official-layout.css">` injected via a one-time Node script (`e:/tmp/c1-add-css.js`).
+
+**Generator scripts (one-time, in `e:/tmp/`):**
+- `c1-add-css.js` — adds the shared CSS link + body data-attribute to all 14 part files
+- `c1-part1-rebuild.js` — rewrites Part 1 with inline popover gaps + deletes the 8 MC wrappers
+- `c1-part7-restructure.js` + `c1-part7-bank.js` — Part 7 gap layout + paragraph bank
+- `c1-listening4-rebuild.js` — Task 1/Task 2 rebuild
+- `c1-writing-rebuild.js` — Writing Parts two-column rebuild
+
+### Verification screenshots (round 2)
+| Page | Screenshot | Result |
+|------|-----------|--------|
+| Part 1 (popover MC) | eye-c1v2-part1-popovers.png | 8 inline numbered selects in passage; first 3 set to "B – favourable", "B – pose", "B – oppose" — matches official screenshot 1 |
+| Part 3 (keyword sidebar) | eye-c1v2-part3-keyword-sidebar.png | Keyword List right sidebar with 17 COMMON … 24 ACCORD; passage has only numbered inputs — matches official screenshot 3 |
+| Part 4 (key word) | eye-c1v2-part4-keyword.png | Plain text "RESULT" / "CONCLUSION" bold uppercase, no chip, no `25.` prefix, no indent — matches official screenshot 4 |
+| Part 5 (split MC) | eye-c1v2-part5-split.png | Two-column: athletes-pressure passage left, Q31–Q36 with A/B/C/D right — matches official screenshot 5 |
+| Part 6 (cross-text MM) | eye-c1v2-part6-split.png | Two-column: 4 park ranger texts left, Q37–Q40 with A–D right — matches official screenshot 6 |
+| Part 7 (gap layout) | eye-c1v2-part7-fixed.png | Two-column: audiobook passage with inline 41–46 gap inputs left, Paragraphs A–G bank right — matches official screenshot 7 |
+| Part 8 (multi-match) | eye-c1v2-part8.png | Two-column: Frank Gehry interview sections left, Q47–Q56 with A–D right — matches official screenshot 8 |
+| Listening Part 4 | eye-c1v2-listening4.png | Task 1 (5 speakers + A–G list) over Task 2 (5 speakers + A–G list) — matches official l5.png |
+| Writing Part 1 | eye-c1v2-writing1.png | Question 1 prompt + 2 callout boxes left, large textarea right — matches official w1.png |
+| Writing Part 2 | eye-c1v2-writing2.png | 3 boxed question prompts left, "Answering this question? Undecided" dropdown + textarea right — matches official w2.png |
+| Listening Part 1 | eye-c1v2-listening1.png | Three-extract MC layout with proper Cambridge styling — matches official l2.png |
+
+### CSS specificity gotcha (worth remembering)
+The existing inline `<style>` blocks in every part file have `.container.generic { display: block !important; width: 100% !important }`. Any new layout class that lives on a `.container.generic` element loses to this rule because they have equal specificity (1 class) and the older rule has !important. Fix: use a compound selector like `.container.generic.c1-gap-layout` (specificity 2 classes) — that's why the round-2 CSS for Part 7 and Part 3 needed the doubled-up selectors.
+
+### Quality Map (after round 2)
+| Page | Layer (before round 2 → after round 2) | Notes |
+|------|---------------------------------------|-------|
+| C1 Reading Part 1 | 4-Polished → 5-Delightful | Inline popover gaps now match official Inspera UI |
+| C1 Reading Part 2 | 4-Polished (unchanged) | Already had inline open-cloze inputs from round 1 |
+| C1 Reading Part 3 | 4-Polished → 5-Delightful | Keyword List sidebar matches official |
+| C1 Reading Part 4 | 4-Polished → 5-Delightful | Plain bold keyword, no chip, no prefix |
+| C1 Reading Part 5–8 | 4-Polished → 5-Delightful | Two-column split-reading layouts |
+| C1 Listening Part 4 | 4-Polished → 5-Delightful | Task 1/Task 2 multi-match layout |
+| C1 Writing Part 1, 2 | 4-Polished → 5-Delightful | Two-column with callout boxes + word counter |
+
+### Deferred (next round)
+- **Part 1 popover affordance**: the official Inspera UI uses a true popover (click number → floating A/B/C/D panel), my fallback is a styled native `<select>`. Functionally equivalent, visually 90% — could be polished to a custom popover later.
+- **Listening Part 1 audio popup overlay**: still rendered by the listening.html wrapper, not the part page itself. Verified visually but could be moved into the part page for self-contained behaviour.
+- **Listening Part 2 sentence completion**: should be inline numbered text inputs (8 gaps) — I didn't touch this round; need to verify it still matches l3.png.
+- **Listening Part 3 interview MCs**: 5 stacked MCs (15–19) with 4 options each — should already match l4.png; verify.
+
+### Session Stats (round 2)
+Pages explored: 14 part pages
+Discrepancies found: 11 (10 T5 rebuilds + 1 T4 polish)
+Polishes landed: 1 (Part 4 styling)
+Rebuilds landed: 10 (Parts 1, 3, 5, 6, 7, 8, Listening 4, Writing 1, Writing 2, plus the shared CSS infra used by 5 of those)
+Elevations landed: 0 (this round was again about parity, not enhancement)
+Reverted: 0
+Files touched: 15 (14 part files + 1 new shared CSS file)
+Generator scripts written: 5 (one-time tools in e:/tmp/)
+Verified screenshots: 11
+
+---
+
 ## Session: 2026-04-09 — C1 Advanced rebuild
 Persona: Olympiada candidate (Zarmet University) sitting the C1 Advanced test
 System: Cambridge (Olympiada entry → C1 Advanced)
