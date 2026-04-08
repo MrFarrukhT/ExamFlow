@@ -1891,3 +1891,53 @@ Elevations landed: 1 (modal acknowledgment)
 Reverted: 0
 Fixes landed: 0
 Changes shipped: 1 file modified
+
+---
+
+## Session: 2026-04-09 (Auto-Save & Answer Persistence — prompt #27)
+Persona: Student whose browser might disconnect
+System: Both (assets/js/answer-manager.js + cambridge-answer-sync.js)
+Pages explored: answer-manager.js (534 lines), cambridge-answer-sync.js (561 lines), 23 wrappers
+Starting state: Solid auto-save flow — Cambridge wrappers call __forceSaveAll() every 3s, then call showCambridgeSaveIndicator() to show toast. Toast was throttled to once per 25s = students saving 8+ answers without seeing confirmation. Function name was misleading ("Cambridge" but used by both per the comment).
+
+### Round 1
+**Explored:** answer-manager.js, cambridge-answer-sync.js, 23 wrapper files calling save indicator
+**Action:** ELEVATE 1 (throttle reduction) + POLISH 1 (function alias)
+
+- [T0] answer-manager.js — Reduced save indicator throttle from 25s to 12s. Students now see "Answers saved" confirmation every ~4 saves instead of every ~8. Frequent enough to reassure during active typing without becoming visual noise.
+  Mode: elevate (UX correctness)
+  Quality layer: 4-Polished → 5-Delightful (visible reassurance during active testing)
+  Files: assets/js/answer-manager.js
+
+- [T4] answer-manager.js — Added friendly alias `showSaveIndicator` for `showCambridgeSaveIndicator`. Function is shared by IELTS+Cambridge but the name suggested Cambridge-only. Alias gives new code a clearer name without breaking the 22 existing call sites.
+  Mode: polish
+  Files: assets/js/answer-manager.js
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| assets/js/answer-manager.js | 5-Delightful | Faster save indicator, cleaner alias |
+| assets/js/cambridge/cambridge-answer-sync.js | 4-Polished | Solid debounced saves with backward compat |
+
+### Verified working
+- 3-second autosave loop in Cambridge wrappers
+- Debounced text input saves (500ms typing delay)
+- Background periodic save (5s)
+- Footer counter updates after save
+- Answer migration from old part1_q1 → 1 keys
+- localStorage persistence survives browser refresh
+
+### Deferred (would need backend work)
+- Submission retry queue for failed saves
+- Network-failure save indicator
+- IELTS pages don't currently call showSaveIndicator — could add to writing.html
+
+### Session Stats
+Pages explored: 2 JS modules + spot-check of 2 wrapper files
+Rounds: 1
+Polishes landed: 1 (alias)
+Rebuilds landed: 0
+Elevations landed: 1 (throttle reduction)
+Reverted: 0
+Fixes landed: 0
+Changes shipped: 1 file modified
