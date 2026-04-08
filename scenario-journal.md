@@ -473,3 +473,61 @@ Trigger: Round 7 made timestamps mandatory; 4 untested areas in cursor; no new c
 
 ### Stats (Round 8)
 Tested: 7 | Passed: 5 | Partial: 1 | Fixed: 2 | Deferred: 0
+
+---
+
+## Session: 2026-04-08 17:40
+Focus: Deep adversarial — creative attacks untried in rounds 1-8 (blocklist regression, auth gaps, admin tokens)
+Trigger: No new code; comprehensive API coverage reached; switched to lateral/creative attack vectors
+
+### Scenarios
+
+- S1: Blocklist Bypass Regression [Chain Attacker] → **FAIL** [HIGH]
+  - 3 newly exposed files: `autopilot-cursor.json`, `autopilot-journal.md`, `error.log`
+  - These were added by autopilot runs after the R4 blocklist hardening
+  - `.playwright-cli/` directory also unblocked
+  - **Fix applied**: Added all 4 patterns to blocklist in both server-bootstrap.js and server-cjs.cjs
+
+- S2: Admin Endpoint Auth Audit [Insider] → PASS
+  - All data endpoints (GET/DELETE/PATCH) return 401 without auth token
+  - GET /admin returns 200 (static HTML, by design — no auth on pages)
+  - requireAdmin middleware properly protects all API endpoints
+
+- S3: DELETE/PATCH Route Coverage [Insider] → PASS
+  - POST /update-score: 401 (auth required) — exists and protected
+  - All other mutation routes properly gated or non-existent (404)
+
+- S4: Admin Token Analysis [Chain Attacker] → **CRITICAL FINDING** + FIX
+  - Token format is `admin-session-` + `crypto.randomBytes(32).toString('hex')` — **NOT predictable**
+  - Previous cursor note "predictable admin-session-{timestamp}" was INCORRECT — code already uses secure random
+  - **CRITICAL**: `.env` password `Adm!n#2025$SecureP@ss` truncated to `Adm!n` by dotenv `#` comment parsing
+  - **CRITICAL**: CJS server (IELTS) didn't load dotenv at all — admin login was impossible
+  - **Fix applied**: Single-quoted passwords in .env, added `require('dotenv').config()` to server-cjs.cjs
+  - Verified: full password works on both servers, truncated password rejected
+
+- S5: Completed-Status Guard Bypass [Cheater] → PASS
+  - Server-side dedup correctly blocks second submission for same student+skill+mock
+  - Client-side guards are defense-in-depth; server-side is authoritative
+
+- S6: Bulk Data Exfiltration [Insider] → NOTED
+  - Admin login required for all list endpoints (proper 401)
+  - Need admin token to test pagination/bulk response size
+
+### Fixes
+- `.env`: Single-quoted ADMIN_PASSWORD and INVIGILATOR_PASSWORD to prevent `#` comment truncation
+- `shared/server-bootstrap.js`: Added blocklist entries for autopilot-cursor/journal, error.log, .playwright-cli/
+- `server-cjs.cjs`: Added `require('dotenv').config()` + synced blocklist entries
+
+### Pattern Analysis
+- **Dotenv comment parsing is a silent password truncation vector.** The `#` character in unquoted .env values starts a comment — everything after is silently discarded. This reduced a 22-character password to 5 characters. Always quote .env values containing special characters.
+- **Blocklist is an ongoing maintenance burden.** Every time a new file is created (autopilot, eye, etc.), it must be added to the blocklist. A whitelist approach (only serve known directories: Cambridge/, IELTS/, assets/) would be more secure.
+- **Previous deferred finding "predictable admin token" was WRONG.** The code uses `crypto.randomBytes(32)` — 256 bits of entropy. Token is cryptographically secure. Removed from deferred findings.
+
+### Intelligence Update
+- Proven solid: Admin endpoint auth (all 401), admin token cryptographically secure, dedup blocks completed-test resubmission
+- Fixed: .env password truncation (CRITICAL), blocklist regression (HIGH), CJS dotenv loading (HIGH)
+- Corrected: Admin token was never predictable (deferred finding removed)
+- Weak pattern upgraded: blocklist-as-deny-list needs regular maintenance vs. allow-list approach
+
+### Stats (Round 9)
+Tested: 6 | Passed: 3 | Failed: 2 (1 critical) | Noted: 1 | Fixed: 3 | Deferred: 0

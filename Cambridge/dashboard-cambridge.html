@@ -194,8 +194,10 @@
         }
 
         function changeLevelSelection() {
-            // Confirm level change
-            if (confirm('Changing level will reset your current progress. Are you sure?')) {
+            // Check if there's any actual progress to warn about
+            const modules = ['listening', 'reading', 'writing', 'reading-writing', 'speaking'];
+            const hasProgress = modules.some(m => localStorage.getItem(`cambridge-${m}Status`));
+            if (!hasProgress || confirm('Changing level will reset your current progress. Are you sure?')) {
                 // Clear level-specific progress and answers (use cambridge- prefix)
                 const modules = ['listening', 'reading', 'writing', 'reading-writing', 'speaking'];
                 modules.forEach(module => {

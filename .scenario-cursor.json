@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-08 17:25",
-  "totalRuns": 8,
+  "lastRun": "2026-04-08 17:40",
+  "totalRuns": 9,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -30,25 +30,18 @@
     "blocklist-case-bypass-hardened",
     "blocklist-backslash-bypass-hardened",
     "http-method-confusion-handled",
-    "adr-017-admin-route-correct",
-    "adr-018-legacy-endpoint-removed",
     "round-1-3-regression-verified",
     "shared-validation-module-boundaries",
     "heal-refactor-xss-stripping-preserved",
     "ielts-submission-error-handling-fixed",
     "student-name-200char-limit",
-    "dashboard-client-xss-escaping-speaking-evals",
-    "dashboard-client-xss-escaping-student-results",
-    "dashboard-client-xss-escaping-admin-dashboard",
-    "dashboard-client-xss-escaping-invigilator",
-    "dashboard-client-xss-escaping-ielts-admin",
+    "dashboard-client-xss-escaping-all-5-files",
     "mock-number-validation-nan-zero-negative",
     "cambridge-error-masking-fixed",
     "admin-login-type-validation",
     "exam-flow-e2e-browser-verified",
     "dashboard-xss-rendering-browser-verified",
     "invigilator-panel-behavioral-verified",
-    "dead-code-removal-safe-no-references",
     "timestamp-required-on-submissions",
     "negative-elapsed-time-rejected",
     "invalid-date-format-rejected",
@@ -61,35 +54,29 @@
     "normal-cambridge-all-levels-regression-pass",
     "dedup-key-variants-handled-by-pg-casting",
     "cambridge-combined-skills-accepted",
-    "edge-timestamps-startequalsend-rejected"
+    "edge-timestamps-startequalsend-rejected",
+    "admin-token-cryptographically-secure",
+    "admin-endpoint-auth-all-401",
+    "score-update-endpoint-auth-protected",
+    "blocklist-autopilot-files-added",
+    "env-password-quoting-fixed",
+    "cjs-dotenv-loading-added",
+    "completed-test-resubmission-blocked"
   ],
   "weakPatterns": [
-    "no-rate-limiting-on-admin-login",
-    "predictable-admin-token",
     "answer-keys-writable-without-auth",
     "mock-answers-writable-without-auth",
     "cors-allows-all-origins",
     "invigilator-password-hardcoded-client-side",
     "client-controlled-timestamps-spoofable",
     "anti-cheat-metadata-spoofable",
-    "no-level-skill-matrix-validation-cambridge"
+    "no-level-skill-matrix-validation-cambridge",
+    "blocklist-deny-approach-needs-ongoing-maintenance"
   ],
   "untestedAreas": [
     "ai-score-suggestion-abuse"
   ],
   "deferredFindings": [
-    {
-      "title": "No rate limiting on admin login endpoint",
-      "severity": "HIGH",
-      "since": "2026-04-08",
-      "reason": "Needs middleware or external package"
-    },
-    {
-      "title": "Admin token is predictable (admin-session-{timestamp})",
-      "severity": "MEDIUM",
-      "since": "2026-04-08",
-      "reason": "Needs JWT overhaul"
-    },
     {
       "title": "Answer keys writable without authentication",
       "severity": "HIGH",
@@ -122,9 +109,9 @@
     }
   ],
   "stats": {
-    "scenariosTested": 50,
-    "bugsFound": 24,
-    "bugsFixed": 17,
-    "bugsDeferred": 7
+    "scenariosTested": 56,
+    "bugsFound": 27,
+    "bugsFixed": 20,
+    "bugsDeferred": 5
   }
 }

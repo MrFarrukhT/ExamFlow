@@ -45,8 +45,9 @@
 
                 <div class="entry-form">
                     <div class="form-group" id="idGroup">
-                        <input type="text" id="studentId" placeholder="Student ID" required aria-required="true" aria-describedby="studentIdError" maxlength="10" pattern="[0-9]{1,10}" inputmode="numeric" autocomplete="off">
+                        <input type="text" id="studentId" placeholder="Student ID" required aria-required="true" aria-describedby="studentIdHint studentIdError" maxlength="10" pattern="[0-9]{1,10}" inputmode="numeric" autocomplete="off">
                         <label for="studentId">Student ID</label>
+                        <small id="studentIdHint" class="form-hint" style="color:#999;font-size:0.75rem;display:block;margin-top:2px;">Check your admission letter or ask your invigilator</small>
                         <small id="studentIdError" class="form-error" role="alert">Student ID must be numbers only (max 10 digits)</small>
                     </div>
 
@@ -60,6 +61,7 @@
                 </div>
 
                 <p class="footer-text">Trouble logging in? Contact your invigilator.</p>
+                <p class="footer-text" style="margin-top:8px;"><a href="launcher.html" style="color:#999;text-decoration:underline;font-size:0.8rem;">&larr; Back to exam selection</a></p>
             </div>
         </div>
     </div>
