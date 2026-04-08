@@ -1,5 +1,33 @@
 # Architecture Decisions
 
+## Session: 2026-04-08 (Round 7)
+
+### ADR-029: Sync server-cjs.cjs with ESM Server Security
+**Status:** Executed
+**Impact:** High | **Effort:** 1 hour | **Risk:** Medium
+**Summary:** Rewrote the CJS packaged server (730→739 lines) to match the ESM development server. Added: rate limiting, admin auth (requireAdmin), input validation (validateStudentInfo, validateScore, stripHtmlTags), submission deduplication, duration validation, path security (blocks .git/.env/shared etc.), body size limit (50MB), DELETE /submissions/:id, /admin, /admin-login, /verify-invigilator routes. Removed stale Cambridge endpoints that used wrong DB schema. Preserved CJS-specific license management, pkg support, and error logging.
+**Result:** Executed in commits 6e0c8b2 + cf99b89.
+
+### ADR-030: Extract Cambridge Scoring Conversion Module
+**Status:** Executed
+**Impact:** Medium | **Effort:** 20 min | **Risk:** Low
+**Summary:** Extracted scoring conversion tables, grade boundaries, and helper functions (convertRawToScale, calculateOverallScale, getCefrLevel, isPassed) from inline JS in cambridge-student-results.html into `assets/js/cambridge/scoring-tables.js` (118 lines). Exposed as `window.CambridgeScoring` namespace. HTML file: 1,456→1,333 lines.
+**Result:** Executed in commit 5550e1e.
+
+### ADR-031: Extract Mobile Touch Features from core.js
+**Status:** Executed
+**Impact:** Low-Medium | **Effort:** 15 min | **Risk:** Low
+**Summary:** Extracted `initializeMobileFeatures()` (130 lines of touch event handlers) from core.js into standalone `assets/js/mobile-touch.js` (123 lines). Self-initializing module with zero dependencies on core.js closure state. 10 IELTS reading.html files updated with new script tag. core.js: 1,562→1,432 lines.
+**Result:** Executed in commit 8421d63.
+
+### ADR-032: Assess cambridge-bridge.js Decomposition
+**Status:** Deferred
+**Impact:** Medium | **Effort:** Hours | **Risk:** Medium
+**Summary:** CambridgeBridge (1,433 lines) is a single-class Inspera/CEQ adapter with 8 setup methods. All methods are tightly coupled to the same Inspera DOM structure. Splitting into smaller files would create more imports without reducing complexity. Decomposition would be warranted when Inspera content structure changes or when a second content adapter is needed.
+**Result:** Deferred — single-purpose adapter, decomposition premature.
+
+---
+
 ## Session: 2026-04-08 (Round 6)
 
 ### ADR-026: Remove Dead Cambridge JS Files
