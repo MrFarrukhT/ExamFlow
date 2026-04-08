@@ -1,5 +1,47 @@
 # Autopilot Journal
 
+## Session: 2026-04-09 02:30
+Persona: Cambridge B1 Preliminary student — round 2 (submission hardening + answer checking)
+System: Cambridge
+
+### Phase 1: Journey Map
+- Prior session already fixed localStorage keys, data-mock attrs, completed guards, and student results page
+- This session focused on: submission integrity, security hardening, UX polish
+
+### Phase 2: Creation
+- No new pages/features — prior session already built my-results.html and student-facing endpoints
+
+### Phase 3: Structure
+- Skipped — structure sound
+
+### Phase 4: Heal
+- Fixed: 3 findings
+  - **Rate limiting** — added `submissionLimiter` (10 req/min) to `/cambridge-submissions` and `/submit-speaking`. Prevents abuse from rapid-fire submissions. Committed as 86dfc3d
+  - **Admin auth on sensitive endpoints** — added `requireAdmin` middleware to 8 Cambridge endpoints (GET/POST submissions, answers, results, score, evaluate). Students can no longer access all submissions or admin-only data. Committed as 86dfc3d
+  - **Auth token in admin fetch** — added `_authFetch()` helper to `AdminDashboard` class, sends Bearer token with API requests to support new auth middleware. Committed as 8f3f127
+
+### Phase 5: Experience
+- Pages improved: 2
+  - **Cambridge dashboard** — completed module cards now show time taken (e.g., "Completed (32 min)") instead of just "Completed ✓". Committed as cde2260
+  - **Invigilator panel** — added room activity search/filter bar (search by name/ID, filter by skill, filter by scored/pending status). Committed as 86dfc3d
+
+### Phase 6: Scenario (Stress Test)
+- Tested: 7 scenarios
+  1. **Double-click submission** — FOUND & FIXED: deliver buttons had no double-click protection. Added `data-submitting` guard + disabled state to Part 6, Part 8, Listening Part 4 across all 3 mocks. Committed as 3fab795
+  2. **Empty answer submission** — Accepted: empty {} passes server validation. Design decision: students may time out with no answers, submission still valid
+  3. **Timer expiry during submission** — Safe: timer shows modal but does NOT auto-submit. Student retains control
+  4. **Tab close during submission** — Timer saves timer state via beforeunload, but answers are already persisted in localStorage via periodic autosave
+  5. **Server error fallback** — Correct: localStorage key `cambridge_submissions_database` is consistent
+  6. **My-results with no submissions** — Graceful: shows empty state, no crash
+  7. **Multiple module race** — Low risk: skill detection is timestamp-based, modules submit from separate pages
+
+### Session Stats
+Total commits: 4 (86dfc3d, 8f3f127, cde2260, 3fab795)
+Total files changed: ~18 (11 Part/Listening files, dashboard-cambridge.html, admin-common.js, cambridge-database-server.js, invigilator.html, student-dashboard.html)
+Persona journey coverage: Submission (all 4 modules) → Dashboard return → Answer checking → Security hardening
+
+---
+
 ## Session: 2026-04-09 01:00
 Persona: Cambridge B1 Preliminary student (intermediate exam + submitting and checking answers)
 System: Cambridge

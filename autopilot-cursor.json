@@ -1,15 +1,15 @@
 {
-  "lastRun": "2026-04-09 01:00",
-  "lastPersona": "cambridge-b1-preliminary-student",
+  "lastRun": "2026-04-09 02:30",
+  "lastPersona": "cambridge-b1-preliminary-student-round2",
   "completedPersonas": ["ielts-student", "cambridge-a2-student", "invigilator", "admin-scoring", "admin-management", "nervous-first-timer", "cambridge-a1-movers-student", "cambridge-b1-preliminary-student"],
-  "currentRotation": 7,
-  "totalSessions": 7,
+  "currentRotation": 8,
+  "totalSessions": 8,
   "stats": {
     "featuresCreated": 12,
     "structuralDecisions": 0,
-    "codeHealed": 12,
-    "experienceImprovements": 13,
-    "scenariosTested": 8,
-    "totalCommits": 19
+    "codeHealed": 15,
+    "experienceImprovements": 15,
+    "scenariosTested": 15,
+    "totalCommits": 23
   }
 }
