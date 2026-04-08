@@ -129,7 +129,12 @@
       "Read(//e/Test-System-v2/http:/localhost:3003/**)",
       "Bash(curl -s \"http://localhost:3003/cambridge-student-results?search=%00\")",
       "Bash(curl -s \"http://localhost:3003/cambridge-submissions\")",
-      "Bash(node -e \" const data = []; process.stdin.on\\('data', d => data.push\\(d\\)\\); process.stdin.on\\('end', \\(\\) => { const subs = JSON.parse\\(data.join\\(''\\)\\); const testIds = subs.filter\\(s => s.student_id.startsWith\\('RACE-TEST'\\) || s.student_id.startsWith\\('UNI-'\\) || s.student_id === ' ' \\).map\\(s => s.id\\); console.log\\('Test submission IDs to note:', testIds.join\\(', '\\)\\); console.log\\('Count:', testIds.length\\); }\\); \")"
+      "Bash(node -e \" const data = []; process.stdin.on\\('data', d => data.push\\(d\\)\\); process.stdin.on\\('end', \\(\\) => { const subs = JSON.parse\\(data.join\\(''\\)\\); const testIds = subs.filter\\(s => s.student_id.startsWith\\('RACE-TEST'\\) || s.student_id.startsWith\\('UNI-'\\) || s.student_id === ' ' \\).map\\(s => s.id\\); console.log\\('Test submission IDs to note:', testIds.join\\(', '\\)\\); console.log\\('Count:', testIds.length\\); }\\); \")",
+      "Bash(xargs -I {} sed -i 's|<script src=\"../../assets/js/universal-functions.js\"></script>|<script src=\"../../assets/js/modal-manager.js\"></script>\\\\n<script src=\"../../assets/js/options-menu.js\"></script>\\\\n<script src=\"../../assets/js/universal-functions.js\"></script>|g' {})",
+      "Bash(xargs -I {} sed -i 's|<script src=\"../../../assets/js/universal-functions.js\"></script>|<script src=\"../../../assets/js/modal-manager.js\"></script>\\\\n<script src=\"../../../assets/js/options-menu.js\"></script>\\\\n<script src=\"../../../assets/js/universal-functions.js\"></script>|g' {})",
+      "Bash(node --check assets/js/modal-manager.js)",
+      "Bash(node --check assets/js/options-menu.js)",
+      "Bash(node --check assets/js/universal-functions.js)"
     ],
     "additionalDirectories": [
       "e:\\Test-System-v2",
