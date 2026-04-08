@@ -941,3 +941,65 @@ Trigger: Commit 5597ecc added a new JSONB column accepting arbitrary client-supp
 
 ### Stats (Round 16)
 Tested: 6 | Passed: 1 | Failed: 4 | Mixed: 1 | Fixed: 4 | Deferred: 0
+
+---
+
+## Session: 2026-04-09 14:55
+Focus: Test the autopilot's admin scoring r3 commit (anti-cheat visibility on dashboards) — look for bypass via type confusion in violation logic
+Trigger: Commit 23fdf11 added renderAntiCheatBadge/Detail to admin-common.js and updated both admin dashboards to display violation flags
+
+### Scenarios
+
+- S1: Type confusion in violation fields [State Corruptor] → **FAIL** [MEDIUM]
+  - Submitted antiCheat with weird types: tabSwitches='Infinity', windowBlurs=-1, fullscreenExits=[1,2,3], copyAttempts={nested:5}, distractionFreeEnabled='maybe'
+  - Sanitizer's generic path accepted all of them (string=truncated, number=kept, array=recursed, object=recursed)
+  - Dashboard violation check `(ac.tabSwitches || 0) > 0`:
+    - `[1,2,3] > 0` → false (NaN comparison) — array bypasses badge
+    - `{nested:5} > 0` → false (NaN) — object bypasses badge
+    - `-1 > 0` → false — negative bypasses badge
+    - `'maybe' === false` → false (strict equality) — string bypasses fullscreen check
+  - **Cheater wins**: submit a violation as the wrong type and the badge silently fails to render
+  - **Fix applied**: schema-driven coercion in sanitizeAntiCheat — known fields must match strict type (counter=non-neg integer, boolean=real bool, date=parseable). Bypass payloads dropped, legitimate values preserved, unknown fields fall through to generic clean.
+
+- S2: Sanitization-resistant XSS payloads [Insider] → PASS (stored, but not exploitable in dashboard)
+  - `javascript:alert(1)`, `onclick=alert(1)`, `data:text/html,...`, `expression(...)` all stored after stripHtmlTags
+  - None are dangerous in current dashboard rendering — only used in `title="..."` attributes which escape entities
+  - Would be dangerous if any future admin page renders these as href/src/CSS
+
+- S3: distractionFreeEnabled type bypass [Cheater] → Fixed by S1's schema enforcement
+  - Same root cause: dashboard uses `=== false`, client could send anything else to bypass
+  - Schema now requires real boolean
+
+- S4: Dashboard violation logic verification [Code Review] → CONFIRMED
+  - Manually traced JS coercion behavior — `'Infinity' > 0` is true (Infinity is finite-ish for comparison), but `[1,2,3] > 0`, `{nested:5} > 0`, `-1 > 0` all false
+  - Confirmed via node REPL — dashboard logic does have the bypass
+
+- S5: Stress nested antiCheat [Power User] → PASS
+  - Sanitizer caps depth at 4, key count at 50, total at 4KB
+  - Heavy nesting truncated correctly
+
+- S6: Admin dashboard rendering review [Code Review] → PASS
+  - renderAntiCheatBadge: uses escapeHtml on title, hardcoded text content
+  - renderAntiCheatDetail: escapes label and value via esc(), hardcoded class names
+  - No unsafe innerHTML paths found in the new code
+  - Existing onclick handlers use `onclick="openAnswerComparison('${esc(s.id)}')"` — escapeHtml does escape `'` to `&#39;` which decodes to `'` in attribute context, then to JS string literal — would be exploitable IF s.id were user-controlled, but it's the auto-increment integer ID. Safe.
+
+### Fixes
+- `shared/validation.js`: Added ANTI_CHEAT_SCHEMA + coerceSchemaValue() for type enforcement on known fields. Refactored sanitizeAntiCheat to use schema-first then generic fallback.
+- `server-cjs.cjs`: Synced the schema and refactored sanitizer logic.
+
+### Pattern Analysis
+- **Loose JS comparison + strict type-confusion = bypass.** When client-supplied data flows into comparisons like `value > 0`, JS coerces non-numeric values to NaN and the comparison silently returns false. The fix is server-side type enforcement at the boundary, BEFORE the data reaches client-side checks.
+- **Schema enforcement is more robust than generic sanitization.** Generic sanitization (depth cap, length cap, HTML strip) handles unknown attackers. Schema enforcement on known fields handles attacks against known logic. Both layers needed.
+- **5 rounds of dashboard rendering review have all passed.** The escapeHtml usage is consistent in admin-common.js. The autopilot's UI work has been security-conscious. The remaining bugs have all been at the data layer (server-side), not the rendering layer.
+- **No drift this round!** The autopilot's commit only touched HTML/CSS/JS files served as static — no server-side changes that would need CJS sync. First clean drift status in 5 rounds.
+
+### Intelligence Update
+- Proven solid: Anti-cheat type enforcement (counter/boolean/date), schema-driven coercion, dashboard escapeHtml usage consistent, no drift this round
+- Attack surface: Known anti-cheat fields are now strictly typed; unknown fields still allowed for forward compat
+- 4 deferred findings remain (architectural — answer keys, CSS, timestamps, names+IDs)
+- 1 systemic deferred: ESM↔CJS drift (not triggered this round, still unsolved)
+- Coverage: 102 scenarios across 17 rounds, 40 bugs found, 35 fixed
+
+### Stats (Round 17)
+Tested: 6 | Passed: 4 | Failed: 1 | Confirmed: 1 | Fixed: 1 | Deferred: 0

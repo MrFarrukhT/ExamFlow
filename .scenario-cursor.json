@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-09 14:35",
-  "totalRuns": 16,
+  "lastRun": "2026-04-09 14:55",
+  "totalRuns": 17,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -82,16 +82,21 @@
     "anti-cheat-server-managed-keys-stripped-from-client",
     "anti-cheat-prototype-pollution-blocked-by-express",
     "anti-cheat-not-exposed-to-students-via-my-submissions",
-    "ielts-cjs-anti-cheat-synced"
+    "ielts-cjs-anti-cheat-synced",
+    "anti-cheat-schema-counter-fields-strict-integer",
+    "anti-cheat-schema-boolean-fields-strict",
+    "anti-cheat-schema-date-fields-validated",
+    "anti-cheat-unknown-fields-fall-through-to-generic",
+    "admin-dashboard-rendering-uses-escapeHtml-consistently"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
     "client-controlled-timestamps-spoofable",
-    "anti-cheat-metadata-spoofable-but-now-bounded",
+    "anti-cheat-known-fields-strict-typed-but-still-self-reported",
     "blocklist-deny-approach-needs-ongoing-maintenance",
     "submissions-list-unpaginated",
     "rate-limiter-hits-map-grows-unboundedly",
-    "esm-cjs-drift-recurring-systemic-issue-4-rounds",
+    "esm-cjs-drift-recurring-systemic-issue-4-rounds-no-occurrence-this-round",
     "student-names-not-secrets-physical-exam-context"
   ],
   "untestedAreas": [],
@@ -109,10 +114,10 @@
       "reason": "Names visible in physical exam settings; true auth needs per-student passwords/QR tokens"
     },
     {
-      "title": "ESM↔CJS drift recurring — autopilot edits ESM but skips server-cjs.cjs",
+      "title": "ESM↔CJS drift recurring (not triggered this round)",
       "severity": "HIGH",
       "since": "2026-04-09",
-      "reason": "4 rounds in a row found this pattern. Architect MUST automate sync or deprecate one server."
+      "reason": "4 rounds in a row found this pattern. R17 had no drift, but the workflow gap remains. Architect MUST automate sync or deprecate one server."
     },
     {
       "title": "CORS allows all origins",
@@ -127,16 +132,16 @@
       "reason": "Requires server-side session tracking (architectural)"
     },
     {
-      "title": "Anti-cheat metadata is client-side and partially spoofable (server-managed keys now protected)",
+      "title": "Anti-cheat counters are still client-self-reported (cheater can claim 0)",
       "severity": "LOW",
       "since": "2026-04-09",
-      "reason": "Client can still LIE about its own observations (tabSwitches=0). Server-managed keys are protected."
+      "reason": "Type confusion bypass closed; schema enforces non-negative integer. But a cheater can always claim tabSwitches:0. Server has no independent observation."
     }
   ],
   "stats": {
-    "scenariosTested": 96,
-    "bugsFound": 39,
-    "bugsFixed": 34,
+    "scenariosTested": 102,
+    "bugsFound": 40,
+    "bugsFixed": 35,
     "bugsDeferred": 6
   }
 }
