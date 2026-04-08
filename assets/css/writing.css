@@ -181,6 +181,29 @@ body {
     font-weight: 600;
     color: #333;
     font-family: 'Courier New', monospace;
+    transition: color 0.3s ease;
+}
+
+/* Timer warning states */
+.timer-container.warning .timer-display {
+    color: #f59e0b;
+    font-weight: 700;
+}
+
+.timer-container.critical .timer-display {
+    color: #ef4444;
+    font-weight: 700;
+}
+
+.timer-container.urgent .timer-display {
+    color: #ef4444;
+    font-weight: 700;
+    animation: timerPulse 1s ease-in-out infinite;
+}
+
+@keyframes timerPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
 }
 
 .timer-controls {
@@ -515,8 +538,8 @@ body {
     padding: 20px 20px 100px;
     overflow-y: auto;
     min-width: 200px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }
 
 .task-panel::-webkit-scrollbar {
@@ -531,12 +554,10 @@ body {
 .task-panel::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 4px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
 }
 
 .task-panel:hover::-webkit-scrollbar-thumb {
-    opacity: 1;
+    background: rgba(0, 0, 0, 0.35);
 }
 
 .writing-panel {
@@ -545,8 +566,8 @@ body {
     overflow-y: auto;
     min-width: 200px;
     border-left: 1px solid #e0e0e0;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }
 
 .writing-panel::-webkit-scrollbar {
@@ -561,12 +582,10 @@ body {
 .writing-panel::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 4px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
 }
 
 .writing-panel:hover::-webkit-scrollbar-thumb {
-    opacity: 1;
+    background: rgba(0, 0, 0, 0.35);
 }
 
 /* === RESIZER === */
@@ -717,20 +736,22 @@ body {
 .writing-area {
     width: 100%;
     min-height: 400px;
+    height: calc(100vh - 280px);
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 6px;
     padding: 15px;
     font-family: Arial, sans-serif;
     font-size: 16px;
     line-height: 1.6;
     resize: vertical;
     background-color: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .writing-area:focus {
     border-color: #4a90e2;
     outline: none;
-    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
 }
 
 /* === WORD COUNT === */
@@ -922,6 +943,12 @@ body {
 
 .task-set.active {
     display: block;
+    animation: fadeInTask 0.3s ease-out;
+}
+
+@keyframes fadeInTask {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 /* === MODAL STYLES === */

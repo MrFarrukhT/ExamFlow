@@ -248,14 +248,13 @@ class WritingHandler {
             timerEl.textContent = display;
         }
         
-        // Change color when time is running low
+        // Change color when time is running low — use CSS classes
         if (timerEl) {
-            if (this.timeRemaining <= 300) { // Last 5 minutes
-                timerEl.style.color = '#e74c3c';
-            } else if (this.timeRemaining <= 600) { // Last 10 minutes
-                timerEl.style.color = '#f39c12';
-            } else {
-                timerEl.style.color = '#333';
+            const container = timerEl.closest('.timer-container');
+            if (container) {
+                container.classList.toggle('warning', this.timeRemaining <= 600 && this.timeRemaining > 300);
+                container.classList.toggle('critical', this.timeRemaining <= 300 && this.timeRemaining > 60);
+                container.classList.toggle('urgent', this.timeRemaining <= 60 && this.timeRemaining > 0);
             }
         }
     }
@@ -275,7 +274,13 @@ class WritingHandler {
 
     timeUp() {
         this.pauseTimer();
-        alert('Time is up! Your writing test will be submitted automatically.');
+        // Show inline notification instead of alert
+        const timerEl = document.querySelector('.timer-display');
+        if (timerEl) {
+            timerEl.textContent = "Time's up!";
+            const container = timerEl.closest('.timer-container');
+            if (container) container.classList.add('urgent');
+        }
         this.submitWriting();
     }
 
