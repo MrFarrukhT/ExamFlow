@@ -501,11 +501,43 @@ Starting state: Functional test pages but several wrong labels, inconsistent sav
 | A1-Movers/Listening-Part-5.html | 4-Polished | Live save, filled-state feedback |
 | A1-Movers/Listening-Part-1,3,4.html | 3-Efficient | Non-text interactions, functional |
 
+### Round 3
+**Explored:** 1 page (Part 6.html), deep code review
+**Action:** REBUILD Part 6.html (remove inspera bloat)
+
+- [T4] Part 6.html — Rebuilt from 1168 → 434 lines (63% reduction). Removed TrackJS, inspera player config, dynamicRubrics JSON, service worker code, loader CSS, duplicated popup CSS, inspera script tags (bundle/jquery/annotator), preRenderTarget div, hypothesis annotator HTML. Preserved all test content, navigation, answer saving, submit handler.
+  Mode: rebuild
+  Quality layer: 3-Efficient → 4-Polished
+  Files: Cambridge/MOCKs-Cambridge/A1-Movers/Part 6.html
+
+- [T4] Part 6.html — Console log "A2 Key" → "A1 Movers"
+  Mode: polish
+  Files: Cambridge/MOCKs-Cambridge/A1-Movers/Part 6.html
+
+- [T0] universal-popup-styles.css — Added .movers-input to focus and filled-state CSS selectors
+  Mode: polish
+  Files: assets/css/universal-popup-styles.css
+
+### Quality Map (final)
+| Page | Layer | Notes |
+|------|-------|-------|
+| A1-Movers/Part 1-5.html | 4-Polished | Live save, filled-state feedback |
+| A1-Movers/Part 6.html | 4-Polished | Clean rebuild, no inspera bloat, filled-state |
+| A1-Movers/Listening-Part-2.html | 4-Polished | Live save, filled-state feedback |
+| A1-Movers/Listening-Part-5.html | 4-Polished | Live save, filled-state feedback |
+| A1-Movers/Listening-Part-1,3,4.html | 3-Efficient | Non-text interactions, functional |
+| A1-Movers/speaking.html | 3-Efficient | Correct title; content still uses A2 Key format |
+| A1-Movers/reading-writing.html | 3-Efficient | Correct default level fallback |
+
+### Deferred (remaining)
+- speaking.html — Content format is A2 Key (2 parts), needs rebuild to A1 Movers format (4 parts)
+- All Parts — Navigation script duplicated in every file (architecture debt)
+
 ### Session Stats
-Pages explored: 13
-Rounds: 2
-Polishes landed: 7
-Rebuilds landed: 0
+Pages explored: 14
+Rounds: 3
+Polishes landed: 9
+Rebuilds landed: 1
 Elevations landed: 1
 Reverted: 0
 Fixes landed: 3
