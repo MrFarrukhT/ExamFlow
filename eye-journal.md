@@ -1,5 +1,79 @@
 # Eye Journal
 
+## Session: 2026-04-09 — C1 Advanced rebuild
+Persona: Olympiada candidate (Zarmet University) sitting the C1 Advanced test
+System: Cambridge (Olympiada entry → C1 Advanced)
+Pages explored: dashboard-cambridge.html?exam=olympiada, reading.html (wrapper), Part 1-8.html, Listening Part 1-4.html, Writing Part 1-2.html
+Starting state: C1 had been built last session with custom orange/brown CSS shell — visually nothing like the official Cambridge B1/B2 Inspera UI. User explicitly asked to make C1 EXACTLY match B1/B2 style.
+
+### Round 1 — Total rebuild of all 14 C1 part pages in B2-First Inspera shell
+**Explored:** B2-First/Part 1.html (1007-line saved Inspera shell), B1-Preliminary mock variants, cambridge-bridge.js helper system
+**Action:** REBUILD all 14 C1 part files; surgical edits to support code
+
+- [T5] C1 Reading Parts 1-8 / Listening 1-4 / Writing 1-2 — Custom orange/brown shell with own CSS+JS replaced by 14 freshly generated Inspera pages that share B2-First's exact UI shell (Cambridge English logo top-left, Candidate ID header, fixed timer at top-center, 0/N progress badge top-right, Part 1-N footer navigation with subquestion buttons). Generator script: e:/tmp/c1-generator.js (one-time generator that reads B2 Part 1 as template, builds 8 reading + 4 listening + 2 writing parts using the same QTIAssessmentItem/choiceInteraction/textEntryInteraction class names).
+  Mode: rebuild
+  Quality layer: 2-Clear → 4-Polished (style now indistinguishable from B2)
+  Files: Cambridge/MOCKs-Cambridge/C1-Advanced/{Part 1-8,Listening Part 1-4,Writing Part 1-2}.html (14 files, all replaced)
+
+- [T4] cambridge-answer-sync.js — `detectRangesFromLevel()` had hardcoded ranges only for B1-Preliminary, B2-First, and A2-Key default. C1 fell through to A2 default, causing wrong "X of Y" counts in the footer (Part 6: "0 of 1", Part 7: "0 of 1"). Added C1-Advanced branch with correct reading (8/8/8/6/6/4/6/10) and listening (6/8/6/10) ranges.
+  Mode: polish (bug fix)
+  Files: assets/js/cambridge/cambridge-answer-sync.js:67-92
+
+- [T3] C1 reading.html / writing.html wrappers — Were calling `__C1_forceSaveAll` (a hook from my deleted custom c1-test.js). Switched to `__A2_forceSaveAll` which is what cambridge-bridge.js installs for the entire Cambridge system. Now C1 uses the same answer-sync pipeline as B1/B2.
+  Mode: polish
+  Files: Cambridge/MOCKs-Cambridge/C1-Advanced/reading.html, writing.html
+
+- [T2] Custom shell artefacts deleted: c1-test.css (340 lines), c1-test.js (300+ lines). Both obsolete now that the framework files (`cambridge-bridge.js`, `answer-manager.js`, `cambridge-answer-sync.js`) are doing the work instead.
+  Mode: polish (dead-code removal)
+  Files: deleted Cambridge/MOCKs-Cambridge/C1-Advanced/c1-test.css, c1-test.js
+
+- [T2] Generator div balance bug — first cut of `renderMcQuestion` had +1 unclosed div per call, causing question wrappers to nest inside each other. Fixed by adding 1 closing `</div>` and re-running generator. Verified balance via `document.querySelectorAll('.QuestionDisplay__questionDisplayWrapper___1n_b0')` — all wrappers now siblings of `#sectionContent`.
+  Mode: polish (bug fix)
+
+### Verification screenshots (round 1)
+| Page | Screenshot | Notes |
+|------|-----------|-------|
+| C1 Part 1 (MC cloze) | eye-c1-part1-counts-fixed.png | Cambridge logo + candidate ID + Part 1-8 nav + correct counts |
+| C1 Part 2 (open cloze) | eye-c1-part2.png | Inline text inputs in MoMA passage |
+| C1 Part 4 (key word) | eye-c1-part4.png | Original sentence + RESULT chip + completion input |
+| C1 Part 6 (cross-text) | eye-c1-part6.png | National parks rangers A-D + matching MC |
+| C1 Part 7 (gapped text) | eye-c1-part7.png | Audiobook passage with [Gap N] markers + paragraph bank |
+| C1 Part 8 (multi-match) | eye-c1-part8.png | Frank Gehry sections A-D + 47-56 questions |
+| C1 Listening Part 1 | eye-c1-listening-part1.png | Three extracts MC layout |
+| C1 Writing Part 1 | eye-c1-writing-part1.png | Essay rubric + textarea |
+| Olympiada dashboard | eye-c1-dashboard-modules.png | Zarmet header + 4 module cards (Reading/Writing/Listening/Speaking) |
+| Reading via flow | eye-c1-reading-via-dashboard.png | Full flow: dashboard → wrapper iframe → Cambridge UI with timer 1:29:54 + 0/56 progress badge |
+
+### End-to-end smoke test
+1. Set localStorage (studentId/studentName/examType=Olympiada/cambridgeLevel=C1-Advanced)
+2. Open dashboard-cambridge.html?exam=olympiada → Zarmet branding loads, "Welcome, Test Student" + 4 module cards
+3. Click "Start Reading" → reading.html loads → iframe loads Part 1.html → Cambridge UI with timer 1:29:54 + 0/56 badge
+4. Click footer Next button (inside iframe) → Part 2.html loads (verified via contentDocument.URL), iframe transitions cleanly
+5. Console: 0 errors, 0 warnings — only the expected "✅ Cambridge C1 Advanced - reading Part N Loaded" log lines
+
+### Quality Map (after round 1)
+| Page | Layer (before → after) | Notes |
+|------|------------------------|-------|
+| C1 Reading Part 1-8 | 2-Clear → 4-Polished | Now indistinguishable from B2 |
+| C1 Listening Part 1-4 | 2-Clear → 4-Polished | Same shell |
+| C1 Writing Part 1-2 | 2-Clear → 4-Polished | Same shell + textarea |
+| Olympiada dashboard | 4-Polished (unchanged) | Already in B2 shell, needed no work |
+
+### Deferred (would help but not in scope this round)
+- Listening audio popup ("Click Play to start listening test") — currently the listening.html wrapper has the popup but the C1 Listening Part files don't reference it; the wrapper plays audio in background which is correct, but the dual layout with popup needs verification when launching from dashboard.
+- Cross-test answer-sync verification: clicking radio buttons should write to `cambridge-readingAnswers` localStorage key — needs a manual click test to confirm cambridge-bridge.js's answer capture is wiring up to the new MC inputs. (Stubbed for next round.)
+
+### Session Stats (round 1)
+Pages explored: 14 part pages + 1 dashboard + 1 wrapper = 16 pages
+Rounds: 1 (deep rebuild)
+Polishes: 4 (cambridge-answer-sync C1 ranges, both wrapper hooks, dead-code removal, div balance fix)
+Rebuilds: 14 (every C1 part page)
+Elevations: 0 (this round was about parity, not enhancement)
+Reverted: 0
+Files touched: 17 (14 part files + 2 wrappers + cambridge-answer-sync.js + 2 deleted)
+
+---
+
 ## Session: 2026-04-08
 Persona: Student arriving to take an IELTS exam
 System: Both (IELTS + Cambridge launchers share same CSS)
