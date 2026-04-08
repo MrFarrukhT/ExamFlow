@@ -804,6 +804,42 @@ app.post('/cambridge-student-results', async (req, res) => {
     try {
         const data = req.body;
 
+        // Validate required fields
+        const trimmedId = typeof data.student_id === 'string' ? data.student_id.trim() : '';
+        const trimmedName = typeof data.student_name === 'string' ? data.student_name.trim() : '';
+        if (!trimmedId || !trimmedName) {
+            return res.status(400).json({ success: false, message: 'Student ID and name are required' });
+        }
+        if (!data.level || !VALID_LEVELS.includes(data.level)) {
+            return res.status(400).json({ success: false, message: `Invalid level. Must be one of: ${VALID_LEVELS.join(', ')}` });
+        }
+
+        // Sanitize text fields
+        data.student_id = trimmedId;
+        data.student_name = stripHtmlTags(trimmedName);
+        if (data.cefr_level) data.cefr_level = stripHtmlTags(String(data.cefr_level));
+
+        // Validate numeric score fields are within reasonable range (0-300 for Cambridge scale)
+        const numericFields = [
+            'reading_raw', 'reading_max', 'reading_scale',
+            'writing_raw', 'writing_max', 'writing_scale',
+            'listening_raw', 'listening_max', 'listening_scale',
+            'speaking_raw', 'speaking_max', 'speaking_scale',
+            'use_of_english_raw', 'use_of_english_max', 'use_of_english_scale',
+            'reading_writing_raw', 'reading_writing_max', 'reading_writing_scale',
+            'overall_scale', 'shields_listening', 'shields_reading_writing',
+            'shields_speaking', 'total_shields'
+        ];
+        for (const field of numericFields) {
+            if (data[field] != null) {
+                const val = Number(data[field]);
+                if (isNaN(val) || val < 0 || val > 300) {
+                    return res.status(400).json({ success: false, message: `${field} must be between 0 and 300` });
+                }
+                data[field] = val;
+            }
+        }
+
         console.log(`📊 Adding student result: ${data.student_name} (${data.student_id}) - ${data.level}`);
 
         const dbClient = await ensureConnection();
@@ -867,6 +903,37 @@ app.patch('/cambridge-student-results/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const data = req.body;
+
+        // Sanitize text fields if provided
+        if (data.student_name != null) data.student_name = stripHtmlTags(String(data.student_name).trim());
+        if (data.student_id != null) data.student_id = String(data.student_id).trim();
+        if (data.cefr_level != null) data.cefr_level = stripHtmlTags(String(data.cefr_level));
+
+        // Validate level if provided
+        if (data.level && !VALID_LEVELS.includes(data.level)) {
+            return res.status(400).json({ success: false, message: `Invalid level. Must be one of: ${VALID_LEVELS.join(', ')}` });
+        }
+
+        // Validate numeric fields if provided
+        const numericFields = [
+            'reading_raw', 'reading_max', 'reading_scale',
+            'writing_raw', 'writing_max', 'writing_scale',
+            'listening_raw', 'listening_max', 'listening_scale',
+            'speaking_raw', 'speaking_max', 'speaking_scale',
+            'use_of_english_raw', 'use_of_english_max', 'use_of_english_scale',
+            'reading_writing_raw', 'reading_writing_max', 'reading_writing_scale',
+            'overall_scale', 'shields_listening', 'shields_reading_writing',
+            'shields_speaking', 'total_shields'
+        ];
+        for (const field of numericFields) {
+            if (data[field] != null) {
+                const val = Number(data[field]);
+                if (isNaN(val) || val < 0 || val > 300) {
+                    return res.status(400).json({ success: false, message: `${field} must be between 0 and 300` });
+                }
+                data[field] = val;
+            }
+        }
 
         console.log(`📊 Updating student result ID ${id}`);
 
