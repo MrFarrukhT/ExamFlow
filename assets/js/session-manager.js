@@ -238,6 +238,11 @@ async function collectTestData(currentModule) {
         bandScore = calculateBandScore(score);
     }
 
+    // Collect anti-cheat metadata from distraction-free mode
+    const antiCheat = (typeof distractionFreeMode !== 'undefined' && distractionFreeMode.getAntiCheatData)
+        ? distractionFreeMode.getAntiCheatData()
+        : {};
+
     return {
         studentId,
         studentName,
@@ -247,7 +252,8 @@ async function collectTestData(currentModule) {
         score,
         bandScore,
         startTime,
-        endTime
+        endTime,
+        antiCheat
     };
 }
 

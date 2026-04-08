@@ -17,6 +17,7 @@ const { app, db, ensureConnection, __dirname: serverDir, start } = createServer(
         connectionString: process.env.CAMBRIDGE_DATABASE_URL || '',
         ssl: { require: true, rejectUnauthorized: false }
     },
+    staticOptions: { index: false },
     onReady: async ({ port }) => {
         // Initialize Cambridge-specific tables after connection
         const client = await ensureConnection();
@@ -438,6 +439,17 @@ app.post('/cambridge-submissions', submissionLimiter, async (req, res) => {
             const limit = levelLimits[submissionData.skill] || 90;
             if (elapsedMin > limit * 2) {
                 console.warn(`⚠️ DURATION ALERT: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.level} ${submissionData.skill} (limit: ${limit}min)`);
+            }
+        }
+
+        // Log anti-cheat flags if present
+        if (submissionData.antiCheat) {
+            const ac = submissionData.antiCheat;
+            if (ac.tabSwitchCount > 0) {
+                console.warn(`⚠️ ANTI-CHEAT: Student ${submissionData.studentId} switched tabs ${ac.tabSwitchCount} time(s) during ${submissionData.level} ${submissionData.skill}`);
+            }
+            if (ac.multiTabDetected) {
+                console.warn(`🚨 ANTI-CHEAT: Student ${submissionData.studentId} opened MULTIPLE TABS during ${submissionData.level} ${submissionData.skill}`);
             }
         }
 

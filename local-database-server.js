@@ -23,6 +23,7 @@ const { app, ensureConnection, __dirname: serverDir, start } = createServer({
         connectionString: process.env.DATABASE_URL || '',
         ssl: { require: true, rejectUnauthorized: false }
     },
+    staticOptions: { index: false },
     onReady: async ({ port }) => {
         // Auto-launch browser
         console.log(`📍 Server: http://localhost:${port}`);
@@ -149,6 +150,17 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
             if (elapsedMin > limit * 2) {
                 console.warn(`⚠️ DURATION ALERT: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.skill} (limit: ${limit}min)`);
                 submissionData.durationFlag = true;
+            }
+        }
+
+        // Log anti-cheat flags if present
+        if (submissionData.antiCheat) {
+            const ac = submissionData.antiCheat;
+            if (ac.tabSwitchCount > 0) {
+                console.warn(`⚠️ ANTI-CHEAT: Student ${submissionData.studentId} switched tabs ${ac.tabSwitchCount} time(s) during ${submissionData.skill}`);
+            }
+            if (ac.multiTabDetected) {
+                console.warn(`🚨 ANTI-CHEAT: Student ${submissionData.studentId} opened MULTIPLE TABS during ${submissionData.skill}`);
             }
         }
 

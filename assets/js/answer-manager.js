@@ -405,6 +405,11 @@ class AnswerManager {
             skill = this.determineSkillFromModules(testData.modules);
         }
 
+        // Collect anti-cheat metadata from distraction-free mode
+        const antiCheat = (typeof distractionFreeMode !== 'undefined' && distractionFreeMode.getAntiCheatData)
+            ? distractionFreeMode.getAntiCheatData()
+            : {};
+
         try {
             const response = await fetch('/cambridge-submissions', {
                 method: 'POST',
@@ -419,7 +424,8 @@ class AnswerManager {
                     score: null,
                     grade: null,
                     startTime: testData.studentInfo.testStartTime,
-                    endTime: new Date().toISOString()
+                    endTime: new Date().toISOString(),
+                    antiCheat
                 })
             });
             if (response.ok) success = true;
