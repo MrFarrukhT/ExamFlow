@@ -85,6 +85,56 @@ export function stripHtmlTags(str) {
 }
 
 /**
+ * Sanitize and bound a client-supplied anti-cheat metadata object.
+ *
+ * - Strips HTML tags from all string values (prevents stored XSS)
+ * - Caps total serialized size at MAX_BYTES (prevents DoS via massive payloads)
+ * - Drops nested objects deeper than MAX_DEPTH (prevents pathological structures)
+ * - Removes server-managed keys (caller will set those server-side after this returns)
+ *
+ * Returns null if input is not a plain object or if the sanitized result is empty.
+ */
+export function sanitizeAntiCheat(input, serverManagedKeys = []) {
+    if (input == null || typeof input !== 'object' || Array.isArray(input)) return null;
+    const MAX_DEPTH = 4;
+    const MAX_KEYS = 50;
+    const MAX_STRING = 500;
+    const MAX_BYTES = 4096; // 4KB serialized cap
+
+    function clean(value, depth) {
+        if (value == null) return null;
+        if (typeof value === 'string') return stripHtmlTags(value).slice(0, MAX_STRING);
+        if (typeof value === 'number' || typeof value === 'boolean') return value;
+        if (depth >= MAX_DEPTH) return null;
+        if (Array.isArray(value)) {
+            return value.slice(0, MAX_KEYS).map(v => clean(v, depth + 1)).filter(v => v !== null);
+        }
+        if (typeof value === 'object') {
+            const out = {};
+            let count = 0;
+            for (const key of Object.keys(value)) {
+                if (count >= MAX_KEYS) break;
+                if (serverManagedKeys.includes(key)) continue;
+                const cleaned = clean(value[key], depth + 1);
+                if (cleaned !== null) {
+                    out[key] = cleaned;
+                    count++;
+                }
+            }
+            return out;
+        }
+        return null;
+    }
+
+    const sanitized = clean(input, 0);
+    if (!sanitized || Object.keys(sanitized).length === 0) return null;
+    // Enforce total size cap by serializing
+    const json = JSON.stringify(sanitized);
+    if (json.length > MAX_BYTES) return null;
+    return sanitized;
+}
+
+/**
  * Send a standardized error response.
  */
 export function errorResponse(res, status, message, error) {
