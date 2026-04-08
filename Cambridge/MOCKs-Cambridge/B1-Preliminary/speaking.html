@@ -809,6 +809,7 @@
                 const submissionData = {
                     studentId: studentInfo.studentId,
                     studentName: studentInfo.studentName,
+                    examType: localStorage.getItem('examType') || 'Cambridge',
                     level: studentInfo.level,
                     mockTest: studentInfo.mockTest || '1',
                     skill: 'speaking',

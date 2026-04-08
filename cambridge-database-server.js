@@ -292,12 +292,16 @@ async function insertCambridgeSubmission(dbClient, data) {
     if (data.durationFlag) cleanAC.durationFlag = true;
     const antiCheatJson = Object.keys(cleanAC).length > 0 ? JSON.stringify(cleanAC) : null;
 
+    // Honor client-supplied examType (Olympiada vs Cambridge) instead of hardcoding
+    const examTypeRaw = (data.examType || 'Cambridge').toString().slice(0, 50);
+    const examType = ['Cambridge', 'Olympiada'].includes(examTypeRaw) ? examTypeRaw : 'Cambridge';
+
     const result = await dbClient.query(`
         INSERT INTO cambridge_submissions
         (student_id, student_name, exam_type, level, mock_test, skill, answers, score, grade, start_time, end_time, anti_cheat_data)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
         RETURNING id
-    `, [data.studentId, data.studentName, 'Cambridge', data.level,
+    `, [data.studentId, data.studentName, examType, data.level,
         data.mockTest || '1', data.skill, JSON.stringify(data.answers),
         data.score, data.grade, data.startTime, data.endTime, antiCheatJson]);
     console.log(`✅ Saved with ID: ${result.rows[0].id}${antiCheatJson ? ' (with anti-cheat flags)' : ''}`);
@@ -666,6 +670,9 @@ app.post('/submit-speaking', submissionLimiter, async (req, res) => {
             // Sanitize anti-cheat metadata (strip HTML, cap size/depth)
             const cleanSpeakAC = sanitizeAntiCheat(req.body.antiCheat) || {};
             const speakAntiCheatJson = Object.keys(cleanSpeakAC).length > 0 ? JSON.stringify(cleanSpeakAC) : null;
+            // Honor client-supplied examType (Olympiada vs Cambridge)
+            const speakExamRaw = (req.body.examType || 'Cambridge').toString().slice(0, 50);
+            const speakExamType = ['Cambridge', 'Olympiada'].includes(speakExamRaw) ? speakExamRaw : 'Cambridge';
             const result = await dbClient.query(`
                 INSERT INTO cambridge_submissions
                 (student_id, student_name, exam_type, level, mock_test, skill,
@@ -674,7 +681,7 @@ app.post('/submit-speaking', submissionLimiter, async (req, res) => {
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
                 RETURNING id
             `, [
-                trimmedId, trimmedName, 'Cambridge', level, safeMockTest, skill,
+                trimmedId, trimmedName, speakExamType, level, safeMockTest, skill,
                 JSON.stringify({}), audioData, safeAudioSize, safeDuration, safeMimeType,
                 startTime, endTime, false, speakAntiCheatJson
             ]);

@@ -437,6 +437,7 @@ class AnswerManager {
                 body: JSON.stringify({
                     studentId: testData.studentInfo.id,
                     studentName: testData.studentInfo.name,
+                    examType: localStorage.getItem('examType') || 'Cambridge',
                     level: testData.studentInfo.level,
                     mockTest: testData.studentInfo.mockTest || '1',
                     skill: skill,
