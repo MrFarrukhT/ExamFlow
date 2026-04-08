@@ -20,16 +20,16 @@ echo.
 REM Try different browsers in order of preference
 if exist "C:\Program Files\Google\Chrome\Application\chrome.exe" (
     echo  Launching with Google Chrome...
-    "C:\Program Files\Google\Chrome\Application\chrome.exe" --new-window --start-fullscreen --disable-web-security --disable-features=VizDisplayCompositor --app="file:///%~dp0Cambridge/launcher-cambridge.html"
+    "C:\Program Files\Google\Chrome\Application\chrome.exe" --new-window --start-fullscreen --disable-web-security --disable-features=VizDisplayCompositor --app="http://localhost:3003"
 ) else if exist "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" (
     echo  Launching with Google Chrome...
-    "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --new-window --start-fullscreen --disable-web-security --disable-features=VizDisplayCompositor --app="file:///%~dp0Cambridge/launcher-cambridge.html"
+    "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --new-window --start-fullscreen --disable-web-security --disable-features=VizDisplayCompositor --app="http://localhost:3003"
 ) else if exist "C:\Program Files\Microsoft\Edge\Application\msedge.exe" (
     echo  Launching with Microsoft Edge...
-    "C:\Program Files\Microsoft\Edge\Application\msedge.exe" --new-window --start-fullscreen --app="file:///%~dp0Cambridge/launcher-cambridge.html"
+    "C:\Program Files\Microsoft\Edge\Application\msedge.exe" --new-window --start-fullscreen --app="http://localhost:3003"
 ) else if exist "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" (
     echo  Launching with Microsoft Edge...
-    "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --new-window --start-fullscreen --app="file:///%~dp0Cambridge/launcher-cambridge.html"
+    "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --new-window --start-fullscreen --app="http://localhost:3003"
 ) else (
     echo  ERROR: No supported browser found!
     echo  Please install Google Chrome or Microsoft Edge.
