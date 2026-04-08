@@ -446,12 +446,16 @@
             const unscoredCount = filteredSubs.filter(s => !s.score).length;
             const speakingCount = filteredSubs.filter(s => s.skill === 'speaking').length;
 
+            const scoredCount = filteredSubs.length - unscoredCount;
+            const progressPct = filteredSubs.length > 0 ? Math.round((scoredCount / filteredSubs.length) * 100) : 0;
+
             document.getElementById('totalSubmissions').textContent = allSubmissions.length;
             document.getElementById('filteredSubmissions').textContent = filteredSubs.length;
             document.getElementById('averageScore').textContent = averageScore + '%';
             document.getElementById('totalStudents').textContent = uniqueStudents;
             document.getElementById('unscoredCount').textContent = unscoredCount;
             document.getElementById('speakingCount').textContent = speakingCount;
+            document.getElementById('scoringProgress').textContent = progressPct + '%';
         };
 
         // ── Override: score helpers (Cambridge: 70/50 thresholds, percentage) ──
