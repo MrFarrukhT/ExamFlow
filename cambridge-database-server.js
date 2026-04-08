@@ -511,6 +511,15 @@ app.post('/cambridge-submissions', submissionLimiter, async (req, res) => {
         if (!submissionData.skill || !VALID_SKILLS.includes(submissionData.skill)) {
             return res.status(400).json({ success: false, message: `Invalid skill. Must be one of: ${VALID_SKILLS.join(', ')}` });
         }
+        // Olympiada is locked to C1-Advanced — reject any other level/exam pairing.
+        // Mirrors the client-side guard in dashboard-cambridge.html selectLevel().
+        if (submissionData.examType === 'Olympiada' && submissionData.level !== 'C1-Advanced') {
+            console.warn(`🚨 OLYMPIADA LEVEL VIOLATION: student ${submissionData.studentId} tried to submit ${submissionData.level} as Olympiada`);
+            return res.status(400).json({
+                success: false,
+                message: 'Olympiada exam is locked to C1-Advanced. Other levels are not allowed.'
+            });
+        }
         if (!submissionData.answers) {
             return res.status(400).json({ success: false, message: 'Answers are required' });
         }
@@ -624,6 +633,14 @@ app.post('/submit-speaking', submissionLimiter, async (req, res) => {
         }
         if (!skill || !VALID_SKILLS.includes(skill)) {
             return res.status(400).json({ success: false, message: `Invalid skill. Must be one of: ${VALID_SKILLS.join(', ')}` });
+        }
+        // Olympiada is locked to C1-Advanced — same enforcement as the regular submission endpoint
+        if (req.body.examType === 'Olympiada' && level !== 'C1-Advanced') {
+            console.warn(`🚨 OLYMPIADA SPEAKING LEVEL VIOLATION: student ${trimmedId} tried to submit ${level} speaking as Olympiada`);
+            return res.status(400).json({
+                success: false,
+                message: 'Olympiada exam is locked to C1-Advanced. Other levels are not allowed.'
+            });
         }
 
         // Validate duration (must be non-negative if provided)

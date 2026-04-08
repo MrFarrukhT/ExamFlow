@@ -257,6 +257,20 @@
         }
 
         function selectLevel(level) {
+            // Olympiada is locked to C1-Advanced — reject any other level even if
+            // called from DevTools or via tampered click handlers.
+            const examType = localStorage.getItem('examType');
+            if (examType === 'Olympiada' && level !== 'C1-Advanced') {
+                console.warn('Olympiada is locked to C1-Advanced. Ignoring selectLevel(' + level + ').');
+                level = 'C1-Advanced';
+            }
+            // Validate against the known level whitelist
+            const VALID = ['A1-Movers', 'A2-Key', 'B1-Preliminary', 'B2-First', 'C1-Advanced'];
+            if (!VALID.includes(level)) {
+                console.warn('Unknown level rejected:', level);
+                return;
+            }
+
             localStorage.setItem('cambridgeLevel', level);
 
             // Update UI
@@ -269,7 +283,7 @@
 
             // Load appropriate modules for the level
             loadModulesForLevel(level);
-            
+
             // Wait for DOM to update before loading test state
             setTimeout(() => {
                 loadTestState();
