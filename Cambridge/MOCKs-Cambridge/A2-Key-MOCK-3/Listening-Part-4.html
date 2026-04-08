@@ -42,7 +42,7 @@
         }
         .question-number {
             font-weight: bold;
-            color: #2196F3;
+            color: #0d9488;
             margin-right: 10px;
         }
         .choices {
@@ -50,16 +50,22 @@
         }
         .choice-item {
             margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
         .choice-item:hover {
             background: #f5f5f5;
+            border-color: #0d9488;
         }
         .choice-item input[type="radio"] {
             margin-right: 10px;
+        }
+        .choice-item:has(input[type="radio"]:checked) {
+            background: #ccfbf1;
+            border-color: #0d9488;
         }
     </style>
     <!-- Highlight and Notes Persistence -->

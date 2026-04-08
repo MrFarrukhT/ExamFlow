@@ -111,6 +111,9 @@ const submissionLimiter = rateLimit({ windowMs: 60000, maxRequests: 10, message:
 // IELTS time limits per skill (minutes) — used for duration validation
 const IELTS_TIME_LIMITS = { reading: 60, writing: 60, listening: 40, speaking: 20 };
 
+// In-memory dedup lock — prevents concurrent submissions for same student+skill+mock
+const submissionLocks = new Set();
+
 // Save test submission
 app.post('/submissions', submissionLimiter, async (req, res) => {
     try {
@@ -155,20 +158,21 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
             submissionData.durationFlag = true;
         }
 
-        // Atomic dedup check + insert using advisory lock to prevent race conditions
-        const dbClient = await ensureConnection();
+        // In-memory lock + DB dedup check — prevents race conditions with singleton Client
         const mockNum = submissionData.mockNumber || '1';
-        await dbClient.query('BEGIN');
+        const dedupKey = `ielts:${studentCheck.studentId}:${submissionData.skill}:${mockNum}`;
+        if (submissionLocks.has(dedupKey)) {
+            return res.status(409).json({ success: false, message: 'Submission already in progress. Please wait.' });
+        }
+        submissionLocks.add(dedupKey);
         try {
-            await dbClient.query('SELECT pg_advisory_xact_lock(hashtext($1))',
-                [`ielts:${studentCheck.studentId}:${submissionData.skill}:${mockNum}`]);
+            const dbClient = await ensureConnection();
             const dupCheck = await dbClient.query(
                 `SELECT id FROM test_submissions
                  WHERE student_id = $1 AND skill = $2 AND mock_number = $3 LIMIT 1`,
                 [studentCheck.studentId, submissionData.skill, mockNum]
             );
             if (dupCheck.rows.length > 0) {
-                await dbClient.query('COMMIT');
                 console.warn(`⚠️ DUPLICATE SUBMISSION BLOCKED: Student ${studentCheck.studentId} already submitted ${submissionData.skill} mock ${mockNum}`);
                 return res.status(409).json({
                     success: false,
@@ -176,16 +180,14 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
                 });
             }
             const savedId = await insertIeltsSubmission(dbClient, submissionData);
-            await dbClient.query('COMMIT');
 
             res.json({
                 success: true,
                 message: 'Test submission saved successfully',
                 id: savedId
             });
-        } catch (txError) {
-            await dbClient.query('ROLLBACK').catch(() => {});
-            throw txError;
+        } finally {
+            submissionLocks.delete(dedupKey);
         }
 
     } catch (error) {

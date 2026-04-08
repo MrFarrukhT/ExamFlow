@@ -417,6 +417,9 @@ app.get('/test', async (req, res) => {
 const submissionLimiter = rateLimit({ windowMs: 60000, maxRequests: 10, message: 'Too many submissions. Try again later.' });
 const IELTS_TIME_LIMITS = { reading: 60, writing: 60, listening: 40, speaking: 20 };
 
+// In-memory dedup lock — prevents concurrent submissions for same student+skill+mock
+const submissionLocks = new Set();
+
 // Save test submission (rate-limited, validated, deduplicated)
 app.post('/submissions', submissionLimiter, async (req, res) => {
     try {
@@ -431,49 +434,72 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
             return res.status(400).json({ success: false, message: 'Skill is required' });
         }
 
-        // Submission deduplication
-        const dbClient = await ensureConnection();
-        const dupCheck = await dbClient.query(
-            `SELECT id FROM test_submissions
-             WHERE student_id = $1 AND skill = $2 AND mock_number = $3
-             LIMIT 1`,
-            [studentCheck.studentId, submissionData.skill, submissionData.mockNumber || '1']
-        );
-        if (dupCheck.rows.length > 0) {
-            console.warn(`⚠️ DUPLICATE SUBMISSION BLOCKED: Student ${studentCheck.studentId} already submitted ${submissionData.skill} mock ${submissionData.mockNumber || '1'}`);
-            return res.status(409).json({
+        // Duration validation — require timestamps and reject suspicious durations
+        if (!submissionData.startTime || !submissionData.endTime) {
+            return res.status(400).json({ success: false, message: 'startTime and endTime are required' });
+        }
+        const start = new Date(submissionData.startTime);
+        const end = new Date(submissionData.endTime);
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+            return res.status(400).json({ success: false, message: 'Invalid startTime or endTime format' });
+        }
+        const elapsedMin = (end - start) / 60000;
+        if (elapsedMin <= 0) {
+            return res.status(400).json({ success: false, message: 'endTime must be after startTime' });
+        }
+        const limit = IELTS_TIME_LIMITS[submissionData.skill] || 60;
+
+        if (elapsedMin > limit * 3) {
+            console.warn(`🚨 SUBMISSION REJECTED: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.skill} (limit: ${limit}min)`);
+            return res.status(400).json({
                 success: false,
-                message: 'You have already submitted this test. Only one submission per test is allowed.'
+                message: 'Submission rejected: test duration exceeded the maximum allowed time.'
             });
         }
 
-        // Duration validation
-        if (submissionData.startTime && submissionData.endTime) {
-            const start = new Date(submissionData.startTime);
-            const end = new Date(submissionData.endTime);
-            const elapsedMin = (end - start) / 60000;
-            const limit = IELTS_TIME_LIMITS[submissionData.skill] || 60;
-
-            if (elapsedMin > limit * 3) {
-                console.warn(`🚨 SUBMISSION REJECTED: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.skill} (limit: ${limit}min)`);
-                return res.status(400).json({
-                    success: false,
-                    message: 'Submission rejected: test duration exceeded the maximum allowed time.'
-                });
-            }
-
-            if (elapsedMin > limit * 2) {
-                console.warn(`⚠️ DURATION ALERT: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.skill}`);
-                submissionData.durationFlag = true;
-            }
+        if (elapsedMin > limit * 2) {
+            console.warn(`⚠️ DURATION ALERT: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.skill}`);
+            submissionData.durationFlag = true;
         }
 
-        const savedId = await saveWithRetry(submissionData);
-        res.json({
-            success: true,
-            message: 'Test submission saved successfully',
-            id: savedId
-        });
+        // In-memory lock + DB dedup check — prevents race conditions with singleton Client
+        const mockNum = submissionData.mockNumber || '1';
+        const dedupKey = `ielts:${studentCheck.studentId}:${submissionData.skill}:${mockNum}`;
+        if (submissionLocks.has(dedupKey)) {
+            return res.status(409).json({ success: false, message: 'Submission already in progress. Please wait.' });
+        }
+        submissionLocks.add(dedupKey);
+        try {
+            const dbClient = await ensureConnection();
+            const dupCheck = await dbClient.query(
+                `SELECT id FROM test_submissions
+                 WHERE student_id = $1 AND skill = $2 AND mock_number = $3 LIMIT 1`,
+                [studentCheck.studentId, submissionData.skill, mockNum]
+            );
+            if (dupCheck.rows.length > 0) {
+                console.warn(`⚠️ DUPLICATE SUBMISSION BLOCKED: Student ${studentCheck.studentId} already submitted ${submissionData.skill} mock ${mockNum}`);
+                return res.status(409).json({
+                    success: false,
+                    message: 'You have already submitted this test. Only one submission per test is allowed.'
+                });
+            }
+            const result = await dbClient.query(`
+                INSERT INTO test_submissions
+                (student_id, student_name, mock_number, skill, answers, score, band_score, start_time, end_time)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                RETURNING id
+            `, [submissionData.studentId, submissionData.studentName, submissionData.mockNumber,
+            submissionData.skill, JSON.stringify(submissionData.answers), submissionData.score,
+            submissionData.bandScore, submissionData.startTime, submissionData.endTime]);
+            console.log(`✅ Saved with ID: ${result.rows[0].id}`);
+            res.json({
+                success: true,
+                message: 'Test submission saved successfully',
+                id: result.rows[0].id
+            });
+        } finally {
+            submissionLocks.delete(dedupKey);
+        }
     } catch (error) {
         console.error('Submission save error:', error);
         res.status(500).json({

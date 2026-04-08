@@ -250,6 +250,9 @@ const VALID_SKILLS = ['reading', 'writing', 'listening', 'speaking', 'reading-wr
 // Rate limit on student-facing submission endpoints
 const submissionLimiter = rateLimit({ windowMs: 60000, maxRequests: 10, message: 'Too many submissions. Try again later.' });
 
+// In-memory dedup lock — prevents concurrent submissions for same student+level+skill+mock
+const submissionLocks = new Set();
+
 // Cambridge time limits per level (minutes) — used for duration validation
 const CAMBRIDGE_TIME_LIMITS = {
     'A1-Movers': { reading: 50, writing: 50, listening: 30, speaking: 15, 'reading-writing': 60 },
@@ -444,20 +447,21 @@ app.post('/cambridge-submissions', submissionLimiter, async (req, res) => {
             console.warn(`⚠️ DURATION ALERT: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.level} ${submissionData.skill} (limit: ${limit}min)`);
         }
 
-        // Atomic dedup check + insert using advisory lock to prevent race conditions
-        const dbClient = await ensureConnection();
+        // In-memory lock + DB dedup check — prevents race conditions with singleton Client
         const mockTest = submissionData.mockTest || '1';
-        await dbClient.query('BEGIN');
+        const dedupKey = `cam:${studentCheck.studentId}:${submissionData.level}:${submissionData.skill}:${mockTest}`;
+        if (submissionLocks.has(dedupKey)) {
+            return res.status(409).json({ success: false, message: 'Submission already in progress. Please wait.' });
+        }
+        submissionLocks.add(dedupKey);
         try {
-            await dbClient.query('SELECT pg_advisory_xact_lock(hashtext($1))',
-                [`cam:${studentCheck.studentId}:${submissionData.level}:${submissionData.skill}:${mockTest}`]);
+            const dbClient = await ensureConnection();
             const dupCheck = await dbClient.query(
                 `SELECT id FROM cambridge_submissions
                  WHERE student_id = $1 AND level = $2 AND skill = $3 AND mock_test = $4 LIMIT 1`,
                 [studentCheck.studentId, submissionData.level, submissionData.skill, mockTest]
             );
             if (dupCheck.rows.length > 0) {
-                await dbClient.query('COMMIT');
                 console.warn(`⚠️ DUPLICATE SUBMISSION BLOCKED: Student ${studentCheck.studentId} already submitted ${submissionData.level} ${submissionData.skill} mock ${mockTest}`);
                 return res.status(409).json({
                     success: false,
@@ -465,16 +469,14 @@ app.post('/cambridge-submissions', submissionLimiter, async (req, res) => {
                 });
             }
             const savedId = await insertCambridgeSubmission(dbClient, submissionData);
-            await dbClient.query('COMMIT');
 
             res.json({
                 success: true,
                 message: 'Cambridge test submission saved successfully',
                 id: savedId
             });
-        } catch (txError) {
-            await dbClient.query('ROLLBACK').catch(() => {});
-            throw txError;
+        } finally {
+            submissionLocks.delete(dedupKey);
         }
 
     } catch (error) {
@@ -530,20 +532,21 @@ app.post('/submit-speaking', submissionLimiter, async (req, res) => {
         // Validate audioSize (must be non-negative if provided)
         const safeAudioSize = (typeof audioSize === 'number' && audioSize >= 0 && audioSize <= 100) ? audioSize : null;
 
-        // Atomic dedup check + insert using advisory lock to prevent race conditions
-        const dbClient = await ensureConnection();
+        // In-memory lock + DB dedup check — prevents race conditions with singleton Client
         const safeMockTest = mockTest || '1';
-        await dbClient.query('BEGIN');
+        const dedupKey = `cam-spk:${trimmedId}:${level}:${skill}:${safeMockTest}`;
+        if (submissionLocks.has(dedupKey)) {
+            return res.status(409).json({ success: false, message: 'Submission already in progress. Please wait.' });
+        }
+        submissionLocks.add(dedupKey);
         try {
-            await dbClient.query('SELECT pg_advisory_xact_lock(hashtext($1))',
-                [`cam-spk:${trimmedId}:${level}:${skill}:${safeMockTest}`]);
+            const dbClient = await ensureConnection();
             const dupCheck = await dbClient.query(
                 `SELECT id FROM cambridge_submissions
                  WHERE student_id = $1 AND level = $2 AND skill = $3 AND mock_test = $4 LIMIT 1`,
                 [trimmedId, level, skill, safeMockTest]
             );
             if (dupCheck.rows.length > 0) {
-                await dbClient.query('COMMIT');
                 console.warn(`⚠️ DUPLICATE SPEAKING SUBMISSION BLOCKED: Student ${trimmedId} already submitted ${level} ${skill} mock ${safeMockTest}`);
                 return res.status(409).json({
                     success: false,
@@ -564,7 +567,6 @@ app.post('/submit-speaking', submissionLimiter, async (req, res) => {
                 JSON.stringify({}), audioData, safeAudioSize, safeDuration, safeMimeType,
                 startTime, endTime, false
             ]);
-            await dbClient.query('COMMIT');
 
             console.log(`✅ Speaking test saved with ID: ${result.rows[0].id}`);
             res.json({
@@ -572,9 +574,8 @@ app.post('/submit-speaking', submissionLimiter, async (req, res) => {
                 message: 'Speaking test submitted successfully',
                 id: result.rows[0].id
             });
-        } catch (txError) {
-            await dbClient.query('ROLLBACK').catch(() => {});
-            throw txError;
+        } finally {
+            submissionLocks.delete(dedupKey);
         }
 
     } catch (error) {
