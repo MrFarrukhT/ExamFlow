@@ -18,10 +18,17 @@ Starting state: 0 open findings in ledger
 - [HIGH] N+1 query pattern in mock answers insertion → fixed — `local-database-server.js`
 - [MEDIUM] Unreachable DOMContentLoaded handler → fixed — `assets/js/universal-functions.js`
 
+### Round 3
+- [HIGH] POST /cambridge-submissions catch block returns success:true on error → fixed — `cambridge-database-server.js`
+- [HIGH] Missing input validation on admin login credentials → fixed — `shared/database.js`
+- [HIGH] Missing toggleOptionsMenu() — HTML calls undefined function → fixed — `assets/js/universal-functions.js`
+- [MEDIUM] Dead code: toggleExplanation, toggleExplanationPart3, selectCell → fixed — `assets/js/core.js`
+- [MEDIUM] Unvalidated mock parameter passed to parseInt → fixed — `local-database-server.js`
+
 ### Deferred
 - Hardcoded invigilator password — needs architecture (server-side auth)
 - Same hardcoded password in Cambridge launcher — needs architecture
 
 ### Stats
-Rounds: 2 | Fixed: 10 | Reverted: 0 | Deferred: 2
+Rounds: 3 | Fixed: 15 | Reverted: 0 | Deferred: 2
 Ending state: 2 open findings in ledger

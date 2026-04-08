@@ -403,9 +403,15 @@ Starting state: Both launchers functional and polished from previous cycle, but 
 | ielts-admin-dashboard.html | 4-Polished | Clean title, matching gradient |
 | invigilator.html | 5-Delightful | Consistent brand colors across themes |
 
+### Round 8 (prompts #8-#9 — Cambridge Launcher & Login)
+**Explored:** 2 pages (Cambridge launcher + Cambridge login), 0 new findings
+**Action:** Verified — both already covered by unified architecture from rounds 1-2
+- Cambridge launcher → redirect to launcher.html?exam=cambridge (teal theme, live status) ✓
+- Cambridge login → redirect to index.html?exam=cambridge (teal colors, gradient overlay) ✓
+
 ### Session Stats
-Pages explored: 8
-Rounds: 7
+Pages explored: 10
+Rounds: 8
 Polishes landed: 17
 Rebuilds landed: 1
 Elevations landed: 4
