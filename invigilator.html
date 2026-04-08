@@ -233,7 +233,7 @@
             return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
 
-        const INVIGILATOR_PASSWORD = "InV!#2025$SecurePass";
+        // Invigilator password verified server-side via /verify-invigilator
         const examType = localStorage.getItem('examType') || 'IELTS';
         const isCambridge = examType === 'Cambridge';
 
@@ -397,16 +397,23 @@
             document.getElementById('resetAllData').addEventListener('click', function() { requirePassword(resetAllData); });
         }
 
-        // ── Password Modal ──────────────────────────────────────────
+        // ── Password Modal (server-side verification) ──────────────
         function requirePassword(callback) {
             var modal = document.getElementById('passwordModal');
             var input = document.getElementById('passwordInput');
             var ok = document.getElementById('confirmPassword');
             var no = document.getElementById('cancelPassword');
             modal.style.display = 'flex'; input.value = ''; input.focus();
-            ok.onclick = function() {
-                if (input.value === INVIGILATOR_PASSWORD) { modal.style.display = 'none'; callback(); }
-                else { alert('Incorrect password!'); input.value = ''; }
+            ok.onclick = async function() {
+                try {
+                    var response = await fetch('/verify-invigilator', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ password: input.value })
+                    });
+                    if (response.ok) { modal.style.display = 'none'; callback(); }
+                    else { alert('Incorrect password!'); input.value = ''; }
+                } catch (e) { alert('Server error. Please try again.'); }
             };
             no.onclick = function() { modal.style.display = 'none'; };
             input.onkeypress = function(e) { if (e.key === 'Enter') ok.click(); };

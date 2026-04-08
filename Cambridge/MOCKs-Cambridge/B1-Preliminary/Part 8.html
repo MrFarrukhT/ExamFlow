@@ -965,9 +965,13 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 if (deliverButton) {
                     deliverButton.addEventListener('click', async function(e) {
                         e.preventDefault();
+                        if (deliverButton.hasAttribute('data-submitting')) return;
                         console.log('✅ Submit button clicked!');
-                        
+
                         if (confirm('Are you sure you want to submit your writing test? This will mark the module as completed.')) {
+                            deliverButton.setAttribute('data-submitting', 'true');
+                            deliverButton.disabled = true;
+                            deliverButton.textContent = 'Submitting...';
                             try {
                                 console.log('📤 Submitting test to database...');
                                 

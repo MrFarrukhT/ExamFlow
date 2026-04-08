@@ -62,6 +62,7 @@ class AdminDashboard {
     /** Call once the DOM is ready. */
     init() {
         this.checkDatabaseConnection();
+        this.initKeyboardShortcuts();
         if (this.authToken) {
             this.showAdminPanel();
         }
@@ -599,6 +600,37 @@ class AdminDashboard {
                 this.loadSubmissions();
             }
         }, intervalMs);
+    }
+
+    // ------------------------------------------------------------------
+    // Keyboard shortcuts for modal scoring workflow
+    // ------------------------------------------------------------------
+
+    initKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            const modal = document.getElementById('answerModal');
+            if (!modal || modal.style.display !== 'block') return;
+
+            // Escape = close modal
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                this.closeModal();
+                return;
+            }
+
+            // Don't intercept when typing in input/textarea
+            const tag = (e.target.tagName || '').toLowerCase();
+            if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+
+            // Left/Right arrows = prev/next unscored
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                this.navigateScoring('prev');
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                this.navigateScoring('next');
+            }
+        });
     }
 
     // ------------------------------------------------------------------
