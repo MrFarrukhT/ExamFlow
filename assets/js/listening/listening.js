@@ -138,15 +138,15 @@
             
             if (mode === 'dark') {
                 document.body.classList.add('dark-mode');
-                document.getElementById('dark-mode-text').textContent = 'Dark mode';
+                const dmEl = document.getElementById('dark-mode-text'); if (dmEl) dmEl.textContent = 'Dark mode';
             } else if (mode === 'auto') {
                 // Check system preference
                 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                     document.body.classList.add('dark-mode');
                 }
-                document.getElementById('dark-mode-text').textContent = 'Auto (System)';
+                const amEl = document.getElementById('dark-mode-text'); if (amEl) amEl.textContent = 'Auto (System)';
             } else {
-                document.getElementById('dark-mode-text').textContent = 'Light mode';
+                const lmEl = document.getElementById('dark-mode-text'); if (lmEl) lmEl.textContent = 'Light mode';
             }
             
             closeModal('dark-mode-modal');
@@ -180,7 +180,7 @@
             };
             
             document.body.style.fontSize = sizes[size];
-            document.getElementById('text-size-text').textContent = `Text size: ${size.charAt(0).toUpperCase() + size.slice(1)}`;
+            const tsEl1 = document.getElementById('text-size-text'); if (tsEl1) tsEl1.textContent = `Text size: ${size.charAt(0).toUpperCase() + size.slice(1)}`;
             
             closeModal('text-size-modal');
             
@@ -1723,14 +1723,14 @@
             // Apply dark mode setting
             if (darkMode === 'dark') {
                 document.body.classList.add('dark-mode');
-                document.getElementById('dark-mode-text').textContent = 'Dark mode';
+                const dmEl = document.getElementById('dark-mode-text'); if (dmEl) dmEl.textContent = 'Dark mode';
             } else if (darkMode === 'auto') {
                 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                     document.body.classList.add('dark-mode');
                 }
-                document.getElementById('dark-mode-text').textContent = 'Auto (System)';
+                const amEl = document.getElementById('dark-mode-text'); if (amEl) amEl.textContent = 'Auto (System)';
             } else {
-                document.getElementById('dark-mode-text').textContent = 'Light mode';
+                const lmEl = document.getElementById('dark-mode-text'); if (lmEl) lmEl.textContent = 'Light mode';
             }
 
             // Apply text size setting
@@ -1740,7 +1740,7 @@
                 'large': '18px'
             };
             document.body.style.fontSize = sizes[currentTextSize];
-            document.getElementById('text-size-text').textContent = `Text size: ${currentTextSize.charAt(0).toUpperCase() + currentTextSize.slice(1)}`;
+            const tsEl2 = document.getElementById('text-size-text'); if (tsEl2) tsEl2.textContent = `Text size: ${currentTextSize.charAt(0).toUpperCase() + currentTextSize.slice(1)}`;
 
             // Listen for system theme changes
             if (window.matchMedia) {
