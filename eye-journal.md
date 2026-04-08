@@ -1543,3 +1543,47 @@ Elevations landed: 0
 Reverted: 0
 Fixes landed: 0
 Changes shipped: 1 file modified
+
+---
+
+## Session: 2026-04-09 (Cambridge Speaking Evaluations — prompt #23)
+Persona: Evaluator listening to and scoring speaking submissions
+System: Cambridge admin (localhost:3003/cambridge-speaking-evaluations.html)
+Pages explored: cambridge-speaking-evaluations.html (922 lines)
+Starting state: Different blue branding from other admin pages — used PURPLE gradient body (#667eea→#764ba2) and Material BLUE (#1976d2) for accents. Also had a broken favicon path (../assets/... from root). Card-based layout for submissions, audio playback, scoring criteria, evaluation notes.
+
+### Round 1
+**Explored:** 1 page, 4 findings
+**Action:** POLISH 4 (full teal identity sweep + favicon fix)
+
+- [T4] cambridge-speaking-evaluations.html — Added :root CSS variable override (--admin-primary teal). Body gradient purple→teal. Replaced 7 instances of #1976d2 (Material Blue) with #0d9488 across header h1, student-info h3, btn-primary bg, modal h2, audio-section h3, criteria-item border, stat-item p. Audio section bg #e3f2fd → #ccfbf1 (teal mint).
+  Mode: polish
+  Quality layer: 3-Efficient → 5-Delightful (consistent teal identity)
+  Files: cambridge-speaking-evaluations.html
+
+- [T1] cambridge-speaking-evaluations.html — Broken favicon path: `../assets/icons/innovativecentre.png` from a root-level file = 404. Fixed to `assets/icons/innovativecentre.png`.
+  Mode: fix (bug)
+  Quality layer: 1-Functional → 3-Efficient
+  Files: cambridge-speaking-evaluations.html
+
+- [T4] cambridge-speaking-evaluations.html — Page title cleaned: "Cambridge Speaking Test Evaluations" → "Cambridge Speaking Evaluations | Innovative Centre"
+  Mode: polish
+  Files: cambridge-speaking-evaluations.html
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| cambridge-speaking-evaluations.html | 5-Delightful | Teal identity, working favicon, card layout intact |
+
+### Deferred
+- Other admin pages (cambridge-admin-dashboard, cambridge-student-results) have NO favicon link at all — could add for consistency
+
+### Session Stats
+Pages explored: 1
+Rounds: 1
+Polishes landed: 3 (teal sweep, page title)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Fixes landed: 1 (favicon path)
+Changes shipped: 1 file modified
