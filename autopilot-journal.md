@@ -1,5 +1,56 @@
 # Autopilot Journal
 
+## Session: 2026-04-09 05:00
+Persona: Staff rotation round 2 (Invigilator + Admin Scoring + Admin Management — deeper pass)
+System: Both (IELTS + Cambridge)
+
+### Phase 1: Journey Map
+- Round 1 covered: Room Activity creation, cross-navigation, scoring progress stats
+- Round 2 gaps identified: 6 high-impact workflow improvements
+  - Admin scoring has no queue navigation (must manually find each unscored submission)
+  - Invigilator Room Activity has no search/filter (unusable with 20+ students)
+  - No way to delete test/junk submissions
+  - Type coercion bugs in ID comparisons across all admin dashboards
+  - Missing HTML escaping on submission IDs in IELTS onclick handlers
+  - Invigilator Room Activity broken by new requireAdmin middleware (no auth header sent)
+
+### Phase 2: Creation
+- Built: 3 new features
+  - **Scoring Queue Navigation** — "Start Scoring" button + prev/next unscored modal navigation + auto-advance after saving. Queue counter shows "3 of 17 unscored" in modal header. Both IELTS and Cambridge dashboards. Committed as 559147c
+  - **Room Activity Search/Filter** — search by name/ID, filter by skill (Reading/Writing/Listening/Speaking/R&W), filter by status (Scored/Pending). Stats update to filtered results. Committed as c75d506
+  - **Submission Delete** — DELETE endpoints on both servers (with requireAdmin), delete buttons in table rows, confirmation prompt, response.ok validation. Committed as 76c641d
+
+### Phase 3: Structure
+- Skipped — structure sound. AdminDashboard base class pattern continues to work well.
+
+### Phase 4: Heal
+- Fixed: 3 findings
+  - **Type coercion bugs** — `s.id == submissionId` (loose equality) replaced with `String(s.id) === String(submissionId)` across admin-common.js, IELTS dashboard, Cambridge dashboard. Committed as efd4741
+  - **Missing HTML escaping** — all IELTS `${submission.id}` in onclick handlers now use `${esc(submission.id)}` for consistency with Cambridge. Committed as efd4741
+  - **Missing response.ok check** — AI suggestion fetch now validates response before parsing JSON. Committed as efd4741
+
+### Phase 5: Experience
+- Improvements: 2
+  - **Keyboard shortcuts** — Arrow Left/Right to navigate prev/next unscored in modal, Escape to close modal. Tooltip hints on nav buttons. Committed as bae9751
+  - **Cambridge skill filter** — added "Reading & Writing" option to invigilator Room Activity skill dropdown. Committed as bae9751
+
+### Phase 6: Scenario (Stress Test)
+- Tested: 6 scenarios
+  1. **DELETE without auth** — correctly returns 401 "Authentication required" (IELTS)
+  2. **DELETE with invalid token** — correctly returns 401 "Invalid or expired token"
+  3. **DELETE non-existent submission** — correctly returns 404 (with valid auth)
+  4. **Cambridge DELETE route** — not available in running server (needs restart) — code verified correct
+  5. **Score update without auth** — correctly returns 401 on both servers
+  6. **Invigilator Room Activity without auth token** — FOUND & FIXED: fetch now sends admin token from localStorage, shows clear auth error with link to admin dashboard if no token. Committed as 03a63cd
+- Hardened: deleteSubmission response handling for non-JSON error responses. Committed as d3793cd
+
+### Session Stats
+Total commits: 7 (559147c, c75d506, 76c641d, efd4741, bae9751, 03a63cd, d3793cd)
+Total files changed: 6 (admin-common.js, admin-common.css, ielts-admin-dashboard.html, cambridge-admin-dashboard.html, invigilator.html, local-database-server.js, cambridge-database-server.js)
+Persona journey coverage: Admin scoring (full queue workflow), Invigilator (search + auth), Admin management (delete + security)
+
+---
+
 ## Session: 2026-04-09 04:30
 Persona: Cambridge A2 Key student — reading, writing, listening, speaking + submitting and checking answers
 System: Cambridge
