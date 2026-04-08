@@ -23,6 +23,9 @@
       /* Filled-state feedback for text inputs (Part 5) and textareas (Parts 6-7) */
       '.textEntryInteractionValue.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}' +
       'textarea.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}' +
+      /* Answered question button in footer — teal tint shows progress */
+      '.subQuestion.answered{background-color:#ccfbf1 !important;border-color:#5eead4 !important;color:#0f766e !important;}' +
+      '.subQuestion.answered.active{background-color:#99f6e4 !important;border-color:#2dd4bf !important;}' +
       /* Reduce excessive top spacing between header and content */
       '.rubric__rubricContainer___2l5dP{margin-top:0 !important;}' +
       '#sectionContent{padding-top:8px !important;}';

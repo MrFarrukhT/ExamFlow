@@ -489,7 +489,9 @@
     if (document.getElementById('ic-a2key-filled-style')) return;
     var css = '.textEntryInteractionValue.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}' +
       'textarea.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}' +
-      'select.inline-choice-select.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}';
+      'select.inline-choice-select.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}' +
+      '.subQuestion.answered{background-color:#ccfbf1 !important;border-color:#5eead4 !important;color:#0f766e !important;}' +
+      '.subQuestion.answered.active{background-color:#99f6e4 !important;border-color:#2dd4bf !important;}';
     var s = document.createElement('style'); s.id='ic-a2key-filled-style'; s.appendChild(document.createTextNode(css));
     (document.head || document.documentElement).appendChild(s);
   }
