@@ -882,3 +882,62 @@ Trigger: Commit 5734410 changed /my-submissions and /my-answer-keys to require s
 
 ### Stats (Round 15)
 Tested: 6 | Passed: 4 | Failed: 1 (critical drift) | Confirmed: 1 (limit) | Fixed: 1 | Deferred: 0
+
+---
+
+## Session: 2026-04-09 14:35
+Focus: Test the autopilot's anti-cheat r3 commit (anti_cheat_data JSONB column with no validation)
+Trigger: Commit 5597ecc added a new JSONB column accepting arbitrary client-supplied antiCheat metadata across both servers
+
+### Scenarios
+
+- S1: XSS payload in antiCheat field [State Corruptor] → **FAIL** [HIGH]
+  - `<script>alert(1)</script>`, `<img src=x>`, `<svg/onload>` accepted unsanitized
+  - **Fix applied**: stripHtmlTags via new sanitizeAntiCheat() helper
+
+- S2: Massive antiCheat object DoS [Power User] → **FAIL** [MEDIUM]
+  - 10MB anti-cheat payload accepted, stored as 10MB JSONB
+  - DB bloat vector — fill database with junk metadata
+  - **Fix applied**: 4KB total cap, 500-char per-string cap, 50 max keys, depth 4
+
+- S3: Prototype pollution via __proto__ [Chain Attacker] → PASS
+  - Express JSON parser strips __proto__ keys by default
+  - Submission accepted but pollution neutralized — health check confirms server still works
+
+- S4: anti_cheat_data exposure via /my-submissions [Insider] → MIXED
+  - Cambridge `/my-submissions` SELECT does NOT include anti_cheat_data — students can't see their own flags ✓
+  - **IELTS ESM source DID expose it** (inconsistency with Cambridge) — bug introduced by autopilot
+  - **Fix applied**: Removed anti_cheat_data from IELTS ESM /my-submissions SELECT
+
+- S5: Server durationFlag override by client [Cheater] → **FAIL** [MEDIUM]
+  - Client could include `antiCheat.durationFlag: false` for a normal-duration test
+  - Server's merge logic only overwrites if its own check is `true`, leaving client's false untouched
+  - More importantly: client could ADD false `cheatScore: 'CLEAN'` style fields
+  - **Fix applied**: sanitizeAntiCheat() removes `durationFlag` from client input via serverManagedKeys blacklist; server adds its own afterward. Client cannot forge server-managed fields.
+
+- S6: IELTS CJS server drift — anti-cheat missing entirely [Regression] → **FAIL** [HIGH]
+  - **4th drift gap in a row.** server-cjs.cjs had:
+    - No anti_cheat_data column migration → IELTS DB had no column at all
+    - INSERT didn't include the column → silent data loss
+    - No sanitizeAntiCheat helper
+  - Cambridge had it (ran migration on startup), IELTS CJS did not
+  - **Fix applied**: Synced full anti-cheat handling to server-cjs.cjs (migration + helper + INSERT)
+
+### Fixes
+- `shared/validation.js`: New `sanitizeAntiCheat(input, serverManagedKeys)` helper. Strips HTML, caps size/depth, removes server-managed keys
+- `local-database-server.js`: insertIeltsSubmission uses sanitizeAntiCheat with `['durationFlag']` blacklist; /my-submissions SELECT no longer exposes anti_cheat_data
+- `cambridge-database-server.js`: insertCambridgeSubmission + speaking endpoint both use sanitizeAntiCheat
+- `server-cjs.cjs`: Full sync — column migration on startup, sanitizeAntiCheat helper inlined, /submissions INSERT includes anti_cheat_data with sanitization
+
+### Pattern Analysis
+- **JSONB columns are convenient but easy to abuse.** Adding a JSONB field for "metadata" without validation is a foot-gun. Any client can dump arbitrary data — XSS payloads, gigabytes of junk, prototype pollution attempts. Always sanitize before storing.
+- **"Server-managed" claims need enforcement, not assumption.** The autopilot's code said "client-side data + server-side flags (durationFlag etc.)" but the merge order let the client's value pass through when the server's check was negative. The fix uses an explicit blacklist of server-managed keys that get stripped from client input first.
+- **4th drift gap = systemic process failure.** Every time the autopilot adds a feature, it edits ESM source. Every time the running CJS server gets stale. R13 → Cambridge↔IELTS drift. R14 → ESM endpoints missing from CJS. R15 → ESM defense missing from CJS. R16 → ESM column+sanitization missing from CJS. The drift is now logged as a critical weak pattern that the architect should solve at the workflow level.
+
+### Intelligence Update
+- Proven solid: anti-cheat sanitization (XSS, DoS, prototype pollution, server-key forging all blocked), IELTS CJS now syncs anti-cheat, student endpoints don't leak anti_cheat_data
+- 4th drift gap caught and fixed; still no automation
+- Coverage: 96 scenarios across 16 rounds, 39 bugs found, 34 fixed
+
+### Stats (Round 16)
+Tested: 6 | Passed: 1 | Failed: 4 | Mixed: 1 | Fixed: 4 | Deferred: 0

@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-09 14:10",
-  "totalRuns": 15,
+  "lastRun": "2026-04-09 14:35",
+  "totalRuns": 16,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -76,16 +76,22 @@
     "impersonation-case-sensitive-blocked",
     "impersonation-whitespace-variations-blocked",
     "impersonation-no-enumeration-via-response-shape",
-    "ielts-cjs-impersonation-defense-synced"
+    "ielts-cjs-impersonation-defense-synced",
+    "anti-cheat-html-stripped",
+    "anti-cheat-size-capped-4kb",
+    "anti-cheat-server-managed-keys-stripped-from-client",
+    "anti-cheat-prototype-pollution-blocked-by-express",
+    "anti-cheat-not-exposed-to-students-via-my-submissions",
+    "ielts-cjs-anti-cheat-synced"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
     "client-controlled-timestamps-spoofable",
-    "anti-cheat-metadata-spoofable",
+    "anti-cheat-metadata-spoofable-but-now-bounded",
     "blocklist-deny-approach-needs-ongoing-maintenance",
     "submissions-list-unpaginated",
     "rate-limiter-hits-map-grows-unboundedly",
-    "esm-cjs-drift-recurring-systemic-issue",
+    "esm-cjs-drift-recurring-systemic-issue-4-rounds",
     "student-names-not-secrets-physical-exam-context"
   ],
   "untestedAreas": [],
@@ -104,9 +110,9 @@
     },
     {
       "title": "ESM↔CJS drift recurring — autopilot edits ESM but skips server-cjs.cjs",
-      "severity": "MEDIUM",
+      "severity": "HIGH",
       "since": "2026-04-09",
-      "reason": "3 rounds in a row found this pattern. Architect should automate sync or deprecate one server."
+      "reason": "4 rounds in a row found this pattern. Architect MUST automate sync or deprecate one server."
     },
     {
       "title": "CORS allows all origins",
@@ -121,16 +127,16 @@
       "reason": "Requires server-side session tracking (architectural)"
     },
     {
-      "title": "Anti-cheat metadata is client-side and spoofable",
-      "severity": "MEDIUM",
-      "since": "2026-04-08",
-      "reason": "Server can sanitize but cannot verify"
+      "title": "Anti-cheat metadata is client-side and partially spoofable (server-managed keys now protected)",
+      "severity": "LOW",
+      "since": "2026-04-09",
+      "reason": "Client can still LIE about its own observations (tabSwitches=0). Server-managed keys are protected."
     }
   ],
   "stats": {
-    "scenariosTested": 90,
-    "bugsFound": 36,
-    "bugsFixed": 31,
+    "scenariosTested": 96,
+    "bugsFound": 39,
+    "bugsFixed": 34,
     "bugsDeferred": 6
   }
 }
