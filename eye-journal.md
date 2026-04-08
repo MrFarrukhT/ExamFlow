@@ -350,11 +350,34 @@ Starting state: Both launchers functional and polished from previous cycle, but 
 | MOCKs/*/reading.html | 5-Delightful | Comfortable line-height, badge headers, nav shadow |
 | MOCKs/*/writing.html | 5-Delightful | Consistent nav shadow, task accent, stable word count |
 
+### Round 5
+**Explored:** 1 page (MOCKs/MOCK 1/listening.html — IELTS Listening Test), 4 findings
+**Action:** FIX 1 bug + POLISH 1 CSS change
+
+- [T1] listening.js — Fixed TypeError: null reference on dark-mode-text and text-size-text elements
+  Mode: fix (bug)
+  Quality layer: 1-Functional → 3-Efficient
+  Files: assets/js/listening/listening.js
+
+- [T4] listening.css — Bottom nav: added box-shadow for consistency with reading/writing
+  Mode: polish
+  Files: assets/css/listening.css
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| launcher.html | 6-Innovative | Live status, Cambridge identity, unified architecture |
+| index.html | 6-Innovative | Professional copy, teal consistency, gradient overlay |
+| MOCKs/*/reading.html | 5-Delightful | Comfortable line-height, badge headers, nav shadow |
+| MOCKs/*/writing.html | 5-Delightful | Consistent nav shadow, task accent, stable word count |
+| MOCKs/*/listening.html | 5-Delightful | JS error fixed, consistent nav shadow |
+
 ### Session Stats
-Pages explored: 5
-Rounds: 4
-Polishes landed: 13
+Pages explored: 6
+Rounds: 5
+Polishes landed: 14
 Rebuilds landed: 1
 Elevations landed: 4
 Reverted: 0
+Fixes landed: 1
 Changes shipped: 15

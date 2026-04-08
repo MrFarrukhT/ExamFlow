@@ -1,0 +1,179 @@
+- generic [active] [ref=e1]:
+  - text: "-"
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - img "Innovative Centre Logo" [ref=e5]
+        - generic [ref=e6]: Innovative Centre
+      - generic [ref=e7]:
+        - generic [ref=e8]: Test taker ID
+        - strong [ref=e10]: "1234"
+    - generic [ref=e12]: 32:00
+    - generic [ref=e13]:
+      - generic "WiFi Status" [ref=e14]:
+        - generic [ref=e15]: 
+      - generic "Notifications" [ref=e16] [cursor=pointer]:
+        - generic [ref=e17]: 
+      - generic "Options" [ref=e18] [cursor=pointer]:
+        - generic [ref=e19]: 
+  - generic [ref=e22]:
+    - generic [ref=e23]:
+      - paragraph [ref=e24]:
+        - strong [ref=e25]: Part 1
+      - paragraph [ref=e26]: Listen and answer questions 1–10.
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - paragraph [ref=e30]:
+          - strong [ref=e31]: Questions 1-10
+        - paragraph [ref=e32]: Complete the notes below.
+        - paragraph [ref=e33]:
+          - text: Write
+          - strong [ref=e34]: ONE WORD AND/OR A NUMBER
+          - text: for each answer.
+      - generic [ref=e35]:
+        - paragraph [ref=e36]: Riverdale Pre-school
+        - table [ref=e37]:
+          - rowgroup [ref=e38]:
+            - row "Example" [ref=e39]:
+              - cell "Example" [ref=e40]
+              - cell [ref=e41]
+            - 'row "Children: 20 in a class" [ref=e42]':
+              - cell "Children:" [ref=e43]
+              - cell "20 in a class" [ref=e44]:
+                - strong [ref=e45]: "20"
+                - text: in a class
+            - 'row "Classes: First group - Mrs. Oliver" [ref=e46]':
+              - cell "Classes:" [ref=e47]
+              - cell "First group - Mrs. Oliver" [ref=e48]
+            - row "Second group - Mrs." [ref=e49]:
+              - cell [ref=e50]
+              - cell "Second group - Mrs." [ref=e51]:
+                - text: Second group - Mrs.
+                - textbox "1" [ref=e52]
+            - 'row "Hours & Days: Suzie will attend 3 days a week for a total of hours" [ref=e53]':
+              - cell "Hours & Days:" [ref=e54]
+              - cell "Suzie will attend 3 days a week for a total of hours" [ref=e55]:
+                - text: Suzie will attend 3 days a week for a total of
+                - textbox "2" [ref=e56]
+                - text: hours
+            - 'row "Activities: Outside time" [ref=e57]':
+              - cell "Activities:" [ref=e58]
+              - cell "Outside time" [ref=e59]
+            - row "- running, playing, or something quieter" [ref=e60]:
+              - cell [ref=e61]
+              - cell "- running, playing, or something quieter" [ref=e62]
+            - row "- just got a new piece of equipment" [ref=e63]:
+              - cell [ref=e64]
+              - cell "- just got a new piece of equipment" [ref=e65]
+            - row "- intend to make a" [ref=e66]:
+              - cell [ref=e67]
+              - cell "- intend to make a" [ref=e68]:
+                - text: "- intend to make a"
+                - textbox "3" [ref=e69]
+            - row "Indoors" [ref=e70]:
+              - cell [ref=e71]
+              - cell "Indoors" [ref=e72]
+            - row "- this year, activities are popular" [ref=e73]:
+              - cell [ref=e74]
+              - cell "- this year, activities are popular" [ref=e75]:
+                - text: "- this year,"
+                - textbox "4" [ref=e76]
+                - text: activities are popular
+            - row "- they hear a every day" [ref=e77]:
+              - cell [ref=e78]
+              - cell "- they hear a every day" [ref=e79]:
+                - text: "- they hear a"
+                - textbox "5" [ref=e80]
+                - text: every day
+            - 'row "Fees: Now costs $ per term" [ref=e81]':
+              - cell "Fees:" [ref=e82]
+              - cell "Now costs $ per term" [ref=e83]:
+                - text: Now costs $
+                - textbox "6" [ref=e84]
+                - text: per term
+            - row "Fees include:" [ref=e85]:
+              - cell "Fees include:" [ref=e86]
+              - cell [ref=e87]
+            - row "- a trip to a this year" [ref=e88]:
+              - cell [ref=e89]
+              - cell "- a trip to a this year" [ref=e90]:
+                - text: "- a trip to a"
+                - textbox "7" [ref=e91]
+                - text: this year
+            - row "- chance to take home a every week" [ref=e92]:
+              - cell [ref=e93]
+              - cell "- chance to take home a every week" [ref=e94]:
+                - text: "- chance to take home a"
+                - textbox "8" [ref=e95]
+                - text: every week
+            - row "Don't forget:" [ref=e96]:
+              - cell "Don't forget:" [ref=e97]
+              - cell [ref=e98]
+            - row "• Put a in Suzie's bag" [ref=e99]:
+              - cell [ref=e100]
+              - cell "• Put a in Suzie's bag" [ref=e101]:
+                - text: • Put a
+                - textbox "9" [ref=e102]
+                - text: in Suzie's bag
+            - row "• Arrange a visit; phone number:" [ref=e103]:
+              - cell "• Arrange a visit; phone number:" [ref=e104]
+              - cell [ref=e105]:
+                - textbox "10" [ref=e106]
+  - generic [ref=e108]:
+    - img [ref=e110]
+    - heading "Listening Test" [level=2] [ref=e112]
+    - paragraph [ref=e113]:
+      - text: You will be listening to an audio clip during this test. You will
+      - strong [ref=e114]: not
+      - text: be permitted to pause or rewind the audio while answering the questions.
+    - paragraph [ref=e115]: To continue, click Play.
+    - button "Play" [ref=e116] [cursor=pointer]: Play
+  - generic [ref=e118]:
+    - button "‹" [disabled] [ref=e119]
+    - button "›" [ref=e120] [cursor=pointer]
+  - navigation "Questions" [ref=e121]:
+    - tablist [ref=e122]:
+      - tab [ref=e123] [cursor=pointer]:
+        - generic [ref=e124]: Part 1
+      - generic [ref=e125]:
+        - button "Question 1" [ref=e126] [cursor=pointer]:
+          - generic [ref=e127]: Question 1
+          - generic [ref=e128]: "1"
+        - button "Question 2" [ref=e129] [cursor=pointer]:
+          - generic [ref=e130]: Question 2
+          - generic [ref=e131]: "2"
+        - button "Question 3" [ref=e132] [cursor=pointer]:
+          - generic [ref=e133]: Question 3
+          - generic [ref=e134]: "3"
+        - button "Question 4" [ref=e135] [cursor=pointer]:
+          - generic [ref=e136]: Question 4
+          - generic [ref=e137]: "4"
+        - button "Question 5" [ref=e138] [cursor=pointer]:
+          - generic [ref=e139]: Question 5
+          - generic [ref=e140]: "5"
+        - button "Question 6" [ref=e141] [cursor=pointer]:
+          - generic [ref=e142]: Question 6
+          - generic [ref=e143]: "6"
+        - button "Question 7" [ref=e144] [cursor=pointer]:
+          - generic [ref=e145]: Question 7
+          - generic [ref=e146]: "7"
+        - button "Question 8" [ref=e147] [cursor=pointer]:
+          - generic [ref=e148]: Question 8
+          - generic [ref=e149]: "8"
+        - button "Question 9" [ref=e150] [cursor=pointer]:
+          - generic [ref=e151]: Question 9
+          - generic [ref=e152]: "9"
+        - button "Question 10" [ref=e153] [cursor=pointer]:
+          - generic [ref=e154]: Question 10
+          - generic [ref=e155]: "10"
+    - tablist [ref=e156]:
+      - tab [ref=e157] [cursor=pointer]:
+        - generic [ref=e158]: Part 2 0 of 10
+    - tablist [ref=e159]:
+      - tab [ref=e160] [cursor=pointer]:
+        - generic [ref=e161]: Part 3 0 of 10
+    - tablist [ref=e162]:
+      - tab [ref=e163] [cursor=pointer]:
+        - generic [ref=e164]: Part 4 0 of 10
+    - button "Submit your test" [ref=e165] [cursor=pointer]:
+      - generic [ref=e166]: ✓
