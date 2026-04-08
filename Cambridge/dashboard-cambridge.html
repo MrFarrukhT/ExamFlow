@@ -11,7 +11,7 @@
     <!-- Load distraction-free mode first -->
     <script src="../assets/js/distraction-free.js"></script>
     <script src="../assets/js/cambridge/cambridge-answer-manager.js"></script>
-    <script src="../assets/js/cambridge/cambridge-timer.js"></script>
+    <script src="../assets/js/timer.js"></script>
 
     <div class="dashboard-wrapper">
         <!-- Header Section -->
@@ -117,9 +117,9 @@
 
         // Also clean up any timer UI elements that might be orphaned
         (function() {
-            const timerContainer = document.getElementById('cambridge-timer-container');
+            const timerContainer = document.getElementById('exam-timer-container');
             if (timerContainer) timerContainer.remove();
-            const timerStyles = document.getElementById('cambridge-timer-styles');
+            const timerStyles = document.getElementById('exam-timer-styles');
             if (timerStyles) timerStyles.remove();
             const timesUpModal = document.querySelector('.times-up-modal');
             if (timesUpModal) timesUpModal.remove();
