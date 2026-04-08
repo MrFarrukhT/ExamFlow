@@ -600,8 +600,6 @@ app.post('/update-score', requireAdmin, async (req, res) => {
 // MOCK ANSWERS API (admin only)
 // ============================================
 
-const VALID_IELTS_SKILLS = ['reading', 'listening', 'writing', 'speaking'];
-
 app.get('/mock-answers', requireAdmin, async (req, res) => {
     try {
         const { mock, skill } = req.query;
