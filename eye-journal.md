@@ -1250,3 +1250,43 @@ Elevations landed: 1 (selected-state on Parts 2 & 4)
 Reverted: 0
 Fixes landed: 0
 Changes shipped: 6 files modified
+
+---
+
+## Session: 2026-04-08 (B2 First Reading — prompt #16)
+Persona: B2 level student taking Reading test (Parts 1-6)
+System: Cambridge (localhost:3003)
+Pages explored: B2 First Reading Parts 1-8 across all 3 mocks (focus on 1-6)
+Starting state: B2 First already at 5-Delightful from prior session (teal identity, correct titles/counters). Material Blue cleaned. Part 4 had same opacity bug as A2 Key/B1.
+
+### Round 1
+**Explored:** 24 Part files across 3 B2 First mocks, 1 finding
+**Action:** FIX 1 (Part 4 opacity × 3 mocks)
+
+- [T1] Part 4.html (×3 mocks) — Missing `opacity: 1 !important` override. Students saw flash-of-blank on Part 4 load. Added the same fix used for A2 Key Part 4 and B1 Part 4.
+  Mode: fix (bug)
+  Quality layer: 1-Functional → 3-Efficient
+  Files: 3 Part 4.html files
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| B2-First/Part 1-3.html (Reading) | 5-Delightful | Teal identity, correct counters |
+| B2-First/Part 4.html (Reading) | 4-Polished | Opacity bug fixed |
+| B2-First/Part 5-6.html (Reading) | 5-Delightful | Teal identity |
+| B2-First/Part 7-8.html (Writing/UoE) | 5-Delightful | Teal identity |
+| MOCK-2 & MOCK-3 | Same layers | All fixes applied |
+
+### Deferred
+- Inspera bloat in Part files
+- Long passage scroll behavior — would need scroll position memory (complex)
+
+### Session Stats
+Pages explored: 24 (8 Parts × 3 mocks)
+Rounds: 1
+Polishes landed: 0
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Fixes landed: 1 (Part 4 opacity × 3 mocks)
+Changes shipped: 3 files modified
