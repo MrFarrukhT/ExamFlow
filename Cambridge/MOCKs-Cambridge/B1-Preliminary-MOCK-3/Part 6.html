@@ -839,7 +839,11 @@ function toggleOptionsMenu() {
         deliverButton.addEventListener('click', async function(e) {
             e.preventDefault();
             e.stopPropagation();
+            if (deliverButton.hasAttribute('data-submitting')) return;
             if (confirm('Are you sure you want to submit your reading test?')) {
+                deliverButton.setAttribute('data-submitting', 'true');
+                deliverButton.disabled = true;
+                deliverButton.textContent = 'Submitting...';
                 try {
                     if (window.__A2_forceSaveAll) window.__A2_forceSaveAll();
                     if (window.cambridgeAnswerManager && typeof window.cambridgeAnswerManager.submitTestToDatabase === 'function') {

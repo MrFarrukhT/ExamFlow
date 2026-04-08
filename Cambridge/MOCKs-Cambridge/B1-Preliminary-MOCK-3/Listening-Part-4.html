@@ -415,8 +415,12 @@
                 nextButton.disabled = true; // Disable next button as this is the last part
             }
 
-            document.getElementById('deliver-button').addEventListener('click', async function() {
+            const deliverBtn = document.getElementById('deliver-button');
+            deliverBtn.addEventListener('click', async function() {
+                if (deliverBtn.hasAttribute('data-submitting')) return;
                 if (confirm('Are you sure you want to submit your listening test?')) {
+                    deliverBtn.setAttribute('data-submitting', 'true');
+                    deliverBtn.disabled = true;
                     // Submit to database
                     try {
                         if (window.cambridgeAnswerManager && typeof window.cambridgeAnswerManager.submitTestToDatabase === 'function') {

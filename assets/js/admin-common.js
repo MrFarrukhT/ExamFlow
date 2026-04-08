@@ -689,11 +689,11 @@ class AdminDashboard {
 
         const current = idx !== -1 ? idx + 1 : '-';
         navEl.innerHTML = `
-            <button onclick="navigateScoring('prev')" class="scoring-nav-btn">&laquo; Prev</button>
+            <button onclick="navigateScoring('prev')" class="scoring-nav-btn" title="Or press Left Arrow">&laquo; Prev</button>
             <span style="color:rgba(255,255,255,0.9);font-size:13px;font-weight:500;">
                 ${current} of ${queue.length} unscored
             </span>
-            <button onclick="navigateScoring('next')" class="scoring-nav-btn">Next &raquo;</button>
+            <button onclick="navigateScoring('next')" class="scoring-nav-btn" title="Or press Right Arrow">Next &raquo;</button>
         `;
         navEl.style.display = 'flex';
     }

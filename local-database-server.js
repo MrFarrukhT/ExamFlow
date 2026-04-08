@@ -107,6 +107,9 @@ app.get('/test', async (req, res) => {
 // Rate limit on student-facing submission endpoints
 const submissionLimiter = rateLimit({ windowMs: 60000, maxRequests: 10, message: 'Too many submissions. Try again later.' });
 
+// IELTS time limits per skill (minutes) — used for duration validation
+const IELTS_TIME_LIMITS = { reading: 60, writing: 60, listening: 40, speaking: 20 };
+
 // Save test submission
 app.post('/submissions', submissionLimiter, async (req, res) => {
     try {
@@ -119,6 +122,18 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
         }
         if (!submissionData.skill) {
             return res.status(400).json({ success: false, message: 'Skill is required' });
+        }
+
+        // Server-side duration validation — flag suspiciously long test durations
+        if (submissionData.startTime && submissionData.endTime) {
+            const start = new Date(submissionData.startTime);
+            const end = new Date(submissionData.endTime);
+            const elapsedMin = (end - start) / 60000;
+            const limit = IELTS_TIME_LIMITS[submissionData.skill] || 60;
+            if (elapsedMin > limit * 2) {
+                console.warn(`⚠️ DURATION ALERT: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.skill} (limit: ${limit}min)`);
+                submissionData.durationFlag = true;
+            }
         }
 
         const savedId = await saveWithRetry(submissionData);
