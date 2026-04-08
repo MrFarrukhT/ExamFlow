@@ -498,6 +498,23 @@ app.post('/verify-invigilator', authLimiter, (req, res) => {
     }
 });
 
+// IELTS raw → band score mapping (server-side, used for anti-tamper recompute)
+const IELTS_BAND_MAPPING = {
+    40: '9.0', 39: '9.0', 38: '8.5', 37: '8.5', 36: '8.0', 35: '8.0', 34: '7.5',
+    33: '7.5', 32: '7.0', 31: '7.0', 30: '7.0', 29: '6.5', 28: '6.5', 27: '6.5',
+    26: '6.0', 25: '6.0', 24: '6.0', 23: '5.5', 22: '5.5', 21: '5.5', 20: '5.5',
+    19: '5.0', 18: '5.0', 17: '5.0', 16: '5.0', 15: '5.0', 14: '4.5', 13: '4.5',
+    12: '4.0', 11: '4.0', 10: '4.0', 9: '3.5', 8: '3.5', 7: '3.0', 6: '3.0',
+    5: '2.5', 4: '2.5'
+};
+function bandScoreFromRaw(score) {
+    if (typeof score !== 'number' || !Number.isFinite(score)) return null;
+    if (score <= 0) return '0.0';
+    if (score === 1) return '1.0';
+    if (score <= 3) return '2.0';
+    return IELTS_BAND_MAPPING[score] || '0.0';
+}
+
 // Test endpoint
 app.get('/test', async (req, res) => {
     try {
@@ -629,6 +646,62 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
                     message: 'You have already submitted this test. Only one submission per test is allowed.'
                 });
             }
+
+            // SECURITY: Recompute score server-side for auto-gradable skills (reading/listening).
+            // The client computes a score from window.correctAnswers (loaded from a static JS file)
+            // and sends it in the body. A cheater with DevTools could fake this score. Override
+            // it with a server-side recomputation against mock_answers to make tampering futile.
+            // Synced from local-database-server.js (autopilot cheater r6).
+            if (submissionData.skill === 'reading' || submissionData.skill === 'listening') {
+                try {
+                    const keyRows = await dbClient.query(
+                        'SELECT question_number, correct_answer FROM mock_answers WHERE mock_number = $1 AND skill = $2',
+                        [submissionData.mockNumber, submissionData.skill]
+                    );
+                    if (keyRows.rows.length > 0) {
+                        let correct = 0;
+                        // Defensively coerce answers to a plain object (reject arrays, strings, null)
+                        const studentAnswers = (submissionData.answers && typeof submissionData.answers === 'object' && !Array.isArray(submissionData.answers))
+                            ? submissionData.answers : {};
+                        const norm = s => String(s == null ? '' : s).trim().toLowerCase().replace(/\s+/g, ' ');
+                        keyRows.rows.forEach(r => {
+                            const qKey = String(r.question_number);
+                            const studentRaw = studentAnswers[qKey];
+                            if (studentRaw == null) return;
+                            const expected = String(r.correct_answer || '');
+                            const accepted = expected.includes('|') ? expected.split('|') :
+                                             expected.includes('/') ? expected.split('/') : [expected];
+                            if (accepted.some(a => norm(a) === norm(studentRaw))) correct++;
+                        });
+                        const clientScore = submissionData.score;
+                        if (typeof clientScore === 'number' && clientScore !== correct) {
+                            console.warn(`🚨 SCORE TAMPERING DETECTED: Student ${studentCheck.studentId} sent score=${clientScore}, server computed ${correct} for ${submissionData.skill} mock ${submissionData.mockNumber}`);
+                            submissionData.antiCheat = Object.assign({}, submissionData.antiCheat || {}, { scoreTamper: true, clientScore: clientScore, serverScore: correct });
+                        }
+                        submissionData.score = correct;
+                        submissionData.bandScore = bandScoreFromRaw(correct);
+                    } else {
+                        // No answer key in DB — clamp client score to valid range to prevent garbage
+                        const cs = Number(submissionData.score);
+                        submissionData.score = (Number.isFinite(cs) && cs >= 0 && cs <= 40) ? Math.round(cs) : null;
+                        // Also clamp bandScore: must be a string like "0.0"–"9.0"
+                        const bs = submissionData.bandScore;
+                        if (typeof bs !== 'string' || !/^[0-9](?:\.[05])?$/.test(bs)) {
+                            submissionData.bandScore = null;
+                        }
+                    }
+                } catch (err) {
+                    console.error('Server-side score recompute failed:', err);
+                    const cs = Number(submissionData.score);
+                    submissionData.score = (Number.isFinite(cs) && cs >= 0 && cs <= 40) ? Math.round(cs) : null;
+                }
+            } else {
+                // Writing/speaking: clamp client bandScore to 0-9 band range, set raw score to null
+                const bs = Number(submissionData.bandScore);
+                submissionData.bandScore = (Number.isFinite(bs) && bs >= 0 && bs <= 9) ? bs : null;
+                submissionData.score = null;
+            }
+
             // Sanitize anti-cheat metadata: strips HTML, caps size/depth, removes server-managed keys
             const SERVER_AC_KEYS = ['durationFlag'];
             const cleanAC = sanitizeAntiCheat(submissionData.antiCheat, SERVER_AC_KEYS) || {};
