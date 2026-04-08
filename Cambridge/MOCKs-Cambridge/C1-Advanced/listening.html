@@ -9,16 +9,12 @@
   <script src="../../../assets/js/cambridge/session-verify.js"></script>
 
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
       background: #ffffff;
       color: #000;
       font-family: system-ui, -apple-system, sans-serif;
       overflow: hidden;
-      max-width: 100vw !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
     }
     .part-frame {
       width: 100%;
@@ -26,14 +22,98 @@
       border: 0;
       background: #ffffff;
       display: block;
-      max-width: 100% !important;
-      overflow: hidden;
+    }
+
+    /* Audio Start Popup */
+    .audio-popup-overlay {
+      display: flex;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+    }
+    .audio-popup-overlay.hidden { display: none; }
+    .audio-popup-content {
+      background: #fff;
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 520px;
+      text-align: center;
+      box-shadow: 0 6px 28px rgba(0, 0, 0, 0.4);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    .headphones-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      fill: #ea580c;
+    }
+    .audio-popup-content h2 {
+      margin: 0 0 16px;
+      color: #7c2d12;
+      font-family: 'Georgia', serif;
+    }
+    .audio-popup-content p {
+      margin: 0 0 14px;
+      color: #555;
+      line-height: 1.6;
+    }
+    .start-listening-btn {
+      background: linear-gradient(135deg, #ea580c, #c2410c);
+      color: #fff;
+      border: 0;
+      padding: 14px 36px;
+      font-size: 17px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .start-listening-btn:hover {
+      background: linear-gradient(135deg, #c2410c, #9a3412);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(194, 65, 12, 0.35);
+    }
+    .play-icon {
+      width: 0;
+      height: 0;
+      border-left: 12px solid #fff;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
     }
   </style>
   <link rel="stylesheet" href="../../../assets/css/universal-popup-styles.css">
 </head>
 <body>
-  <iframe id="part-frame" class="part-frame" src="./Listening Part 1.html"></iframe>
+  <iframe id="part-frame" class="part-frame" src="./Listening Part 1.html" sandbox="allow-same-origin allow-scripts allow-forms allow-modals allow-top-navigation allow-popups"></iframe>
+
+  <!-- Audio Start Popup -->
+  <div id="audio-popup" class="audio-popup-overlay">
+    <div class="audio-popup-content">
+      <div class="headphones-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h2v-5H6v-5c0-3.87 3.13-7 7-7s7 3.13 7 7v5h-2v5h2c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"/>
+        </svg>
+      </div>
+      <h2>C1 Advanced Listening Test</h2>
+      <p>You will hear a single audio track which contains all four listening parts. You will <strong>not</strong> be permitted to pause or rewind the audio while answering the questions.</p>
+      <p>The audio will continue playing in the background as you navigate between parts.</p>
+      <p>To continue, click <strong>Play</strong>.</p>
+      <button id="start-listening-btn" class="start-listening-btn">
+        <div class="play-icon"></div>
+        Play
+      </button>
+    </div>
+  </div>
 
   <!-- Global Audio Player — plays in background across listening parts -->
   <audio id="global-audio-player" preload="auto" style="display: none;">
@@ -64,6 +144,7 @@
       CambridgeTimer.clearTimerState(module);
       localStorage.removeItem(`cambridge-${module}StartTime`);
       localStorage.removeItem(`cambridge-${module}EndTime`);
+      localStorage.removeItem('listeningTestStarted');
       localStorage.setItem(`cambridge-${module}StartTime`, new Date().toISOString());
     }
 
@@ -76,17 +157,99 @@
     // C1 Advanced Listening: 40 minutes
     const timer = new CambridgeTimer(40, 'Listening');
 
-    // Autosave answers periodically
-    setInterval(() => {
+    const globalAudioPlayer = document.getElementById('global-audio-player');
+    const audioPopup = document.getElementById('audio-popup');
+    const startBtn = document.getElementById('start-listening-btn');
+    const partFrame = document.getElementById('part-frame');
+
+    function stopListeningAudio(resetPosition) {
+      if (!globalAudioPlayer) return;
       try {
-        const frame = document.getElementById('part-frame');
-        const doc = frame.contentDocument;
-        if (doc && doc.defaultView && doc.defaultView.__C1_forceSaveAll) {
-          doc.defaultView.__C1_forceSaveAll();
-          if (typeof showCambridgeSaveIndicator === 'function' && doc.defaultView) showCambridgeSaveIndicator();
+        globalAudioPlayer.pause();
+        if (resetPosition) globalAudioPlayer.currentTime = 0;
+      } catch (e) { /* noop */ }
+    }
+
+    function handleListeningCompletion() {
+      stopListeningAudio(true);
+      localStorage.removeItem('listeningTestStarted');
+      localStorage.setItem(`cambridge-${module}Status`, 'completed');
+      if (!localStorage.getItem(`cambridge-${module}EndTime`)) {
+        localStorage.setItem(`cambridge-${module}EndTime`, new Date().toISOString());
+      }
+      CambridgeTimer.clearTimerState(module);
+      CambridgeTimer.destroyAllTimers();
+      setTimeout(() => {
+        window.location.href = '../../dashboard-cambridge.html';
+      }, 150);
+    }
+
+    function startListeningTest() {
+      if (!globalAudioPlayer) {
+        alert('Error: Audio player not found');
+        return;
+      }
+      if (audioPopup) audioPopup.classList.add('hidden');
+      localStorage.setItem('listeningTestStarted', 'true');
+      globalAudioPlayer.play().catch(err => {
+        alert('Could not start audio. Please check that the audio file exists in the audio/ folder.');
+        console.error(err);
+      });
+    }
+
+    if (startBtn) startBtn.addEventListener('click', startListeningTest);
+
+    window.addEventListener('load', function() {
+      const listeningStarted = localStorage.getItem('listeningTestStarted');
+      if (listeningStarted === 'true') {
+        if (audioPopup) audioPopup.classList.add('hidden');
+        if (globalAudioPlayer && globalAudioPlayer.paused) {
+          globalAudioPlayer.play().catch(() => {});
         }
-      } catch(e) { console.warn('Autosave failed:', e); }
-    }, 3000);
+      }
+    });
+
+    // Listen for navigation messages from child iframes
+    window.addEventListener('message', function(e) {
+      if (!e.data || !e.data.type) return;
+      if (e.origin && e.origin !== 'null' && e.origin !== window.location.origin && !window.location.protocol.startsWith('file')) return;
+
+      if (e.data.type === 'navigate') {
+        if (globalAudioPlayer && globalAudioPlayer.paused && localStorage.getItem('listeningTestStarted') === 'true') {
+          globalAudioPlayer.play().catch(() => {});
+        }
+        partFrame.src = e.data.url;
+      } else if (e.data.type === 'listening-complete') {
+        handleListeningCompletion();
+      }
+    });
+
+    if (partFrame) {
+      partFrame.addEventListener('load', function() {
+        if (globalAudioPlayer && globalAudioPlayer.paused && localStorage.getItem('listeningTestStarted') === 'true') {
+          setTimeout(() => globalAudioPlayer.play().catch(() => {}), 100);
+        }
+      });
+    }
+
+    // Block media keys / spacebar control of audio
+    document.addEventListener('keydown', function(e) {
+      if (e.code === 'MediaPlayPause' || e.code === 'MediaStop' ||
+          e.code === 'MediaTrackNext' || e.code === 'MediaTrackPrevious' ||
+          (e.ctrlKey && e.key === 'm') ||
+          (e.key === ' ' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA')) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+    });
+
+    if (globalAudioPlayer) {
+      globalAudioPlayer.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+      });
+    }
   </script>
 </body>
 </html>

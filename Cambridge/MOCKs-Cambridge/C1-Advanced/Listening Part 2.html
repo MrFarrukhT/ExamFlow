@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C1 Advanced - Listening Part 2</title>
+  <link rel="stylesheet" href="./c1-test.css">
+  <script src="../../../assets/js/cambridge/session-verify.js"></script>
+</head>
+<body>
+  <div class="c1-header">
+    <div class="part-label">Listening &middot; Part 2 &middot; Sentence completion</div>
+    <div class="part-info">Questions 7–14 &middot; First-year archaeological dig</div>
+  </div>
+
+  <div class="c1-shell">
+    <div class="c1-instructions">
+      You will hear an archaeology student called <strong>Hannah Miller</strong> giving a talk to a group of fellow students about an archaeological excavation, known as a dig. For questions <strong>7–14</strong>, complete the sentences with a <strong>word or short phrase</strong>.
+    </div>
+
+    <h2 class="c1-passage-title">First-year archaeological dig</h2>
+
+    <div class="c1-passage" id="passage"></div>
+  </div>
+
+  <script src="./c1-test.js"></script>
+  <script>
+    const passageEl = document.getElementById('passage');
+
+    function gap(num) {
+      return C1Test.renderTextInput(num, String(num), true);
+    }
+    function p(parts) {
+      const para = document.createElement('p');
+      parts.forEach(part => {
+        if (typeof part === 'string') para.appendChild(document.createTextNode(part));
+        else if (part.gap) para.appendChild(gap(part.gap));
+      });
+      passageEl.appendChild(para);
+    }
+
+    p(['7. Hannah warns that there is more ', { gap: 7 }, ' involved in a dig than most students expect.']);
+    p(['8. Hannah struggled with distinguishing between the ', { gap: 8 }, ' that the team found as they dug.']);
+    p(['9. Hannah says that past ', { gap: 9 }, ' sometimes made it difficult to determine which materials belonged to which building.']);
+    p(['10. Hannah thinks that ', { gap: 10 }, ' are the type of object that is hard to identify if you lack experience.']);
+    p(['11. Hannah explains why archaeologists need to be careful about using ', { gap: 11 }, ' while a dig is ongoing.']);
+    p(['12. Hannah feels that ', { gap: 12 }, ' is a good way to combat theft and vandalism around archaeological digs.']);
+    p(['13. Hannah was particularly grateful for the support that the ', { gap: 13 }, ' gave her during the dig.']);
+    p(['14. Doing her first dig helped Hannah realise that ', { gap: 14 }, ' was the aspect of archaeology she\u2019d like to study in the future.']);
+
+    C1Test.buildNav({
+      prevUrl: 'Listening Part 1.html',
+      nextUrl: 'Listening Part 3.html',
+      isLast: false,
+      progressText: 'Listening Part 2 of 4'
+    });
+  </script>
+</body>
+</html>

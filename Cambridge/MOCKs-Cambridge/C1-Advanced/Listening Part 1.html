@@ -10,71 +10,69 @@
 <body>
   <div class="c1-header">
     <div class="part-label">Listening &middot; Part 1 &middot; Multiple choice</div>
-    <div class="part-info">Questions 1–6 &middot; Listen to three short extracts</div>
+    <div class="part-info">Questions 1–6 &middot; Three short extracts</div>
   </div>
 
   <div class="c1-shell">
     <div class="c1-instructions">
-      You will hear three short extracts. For questions <strong>1–6</strong>, choose the answer
-      (<strong>A</strong>, <strong>B</strong> or <strong>C</strong>) which fits best according to what you hear.
-      There are two questions for each extract.
+      You will hear <strong>three different extracts</strong>. For questions <strong>1–6</strong>, choose the answer (<strong>A</strong>, <strong>B</strong> or <strong>C</strong>) which fits best according to what you hear. There are <strong>two questions</strong> for each extract.
     </div>
 
-    <div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:12px 16px;border-radius:6px;margin:16px 0;font-size:14px;color:#92400e;">
-      <strong>📢 Audio:</strong> The audio for this listening test plays in the background. Use the audio controls in the wrapper page if available.
+    <div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:12px 16px;border-radius:6px;margin:16px 0;font-size:14px;color:#92400e;font-family:'Segoe UI',system-ui,sans-serif;">
+      <strong>Audio:</strong> The audio is playing in the background. You cannot pause or rewind it.
     </div>
 
-    <h3 style="margin-top:24px;">Extract One</h3>
-    <p><em>You hear two friends discussing a book they have both read.</em></p>
+    <h3 style="margin-top:24px;color:#7c2d12;font-family:Georgia,serif;">Extract One</h3>
+    <p style="font-style:italic;color:#6b7280;">You hear part of a discussion between two marine biologists about coral reefs.</p>
 
     <div class="c1-questions" id="q1-container"></div>
-    <div class="c1-questions" id="q2-container"></div>
+    <div class="c1-questions" id="q2-container" style="margin-top:16px;"></div>
 
-    <h3 style="margin-top:24px;">Extract Two</h3>
-    <p><em>You hear two colleagues talking about a recent training course.</em></p>
+    <h3 style="margin-top:32px;color:#7c2d12;font-family:Georgia,serif;">Extract Two</h3>
+    <p style="font-style:italic;color:#6b7280;">You hear two friends talking about birdwatching.</p>
 
     <div class="c1-questions" id="q3-container"></div>
-    <div class="c1-questions" id="q4-container"></div>
+    <div class="c1-questions" id="q4-container" style="margin-top:16px;"></div>
 
-    <h3 style="margin-top:24px;">Extract Three</h3>
-    <p><em>You hear a radio interview with an expert in city planning.</em></p>
+    <h3 style="margin-top:32px;color:#7c2d12;font-family:Georgia,serif;">Extract Three</h3>
+    <p style="font-style:italic;color:#6b7280;">You hear a choreographer and a dancer talking about their work.</p>
 
     <div class="c1-questions" id="q5-container"></div>
-    <div class="c1-questions" id="q6-container"></div>
+    <div class="c1-questions" id="q6-container" style="margin-top:16px;"></div>
   </div>
 
   <script src="./c1-test.js"></script>
   <script>
     const questions = [
-      { num: 1, container: 'q1-container', stem: 'What does the woman find most surprising about the book?', options: [
-        { letter: 'A', text: 'the unusual setting' },
-        { letter: 'B', text: 'the unexpected ending' },
-        { letter: 'C', text: 'the complex characters' }
+      { num: 1, container: 'q1-container', stem: 'How does the woman feel about current research on coral reefs?', options: [
+        { letter: 'A', text: 'afraid that its value may be underestimated' },
+        { letter: 'B', text: 'worried that not enough time is being spent on it' },
+        { letter: 'C', text: 'concerned about shortcomings in what the data is measuring' }
       ]},
-      { num: 2, container: 'q2-container', stem: 'Both speakers agree that the author', options: [
-        { letter: 'A', text: 'has improved since their previous work.' },
-        { letter: 'B', text: 'should write more in the same genre.' },
-        { letter: 'C', text: 'creates believable dialogue.' }
+      { num: 2, container: 'q2-container', stem: 'When talking about conserving coral reefs, the man', options: [
+        { letter: 'A', text: 'outlines decisions that have affected it.' },
+        { letter: 'B', text: 'suggests practical approaches to take to it.' },
+        { letter: 'C', text: 'identifies specific projects that have been successful.' }
       ]},
-      { num: 3, container: 'q3-container', stem: 'How did the man feel about the training course?', options: [
-        { letter: 'A', text: 'inspired by the practical exercises' },
-        { letter: 'B', text: 'frustrated by the pace' },
-        { letter: 'C', text: 'uncertain about its relevance' }
+      { num: 3, container: 'q3-container', stem: 'Why has the woman\u2019s opinion of birdwatching changed?', options: [
+        { letter: 'A', text: 'She experienced the excitement of recognising an unusual species.' },
+        { letter: 'B', text: 'She was persuaded by the man\u2019s enthusiasm for the activity.' },
+        { letter: 'C', text: 'She had the opportunity to witness natural behaviour first hand.' }
       ]},
-      { num: 4, container: 'q4-container', stem: 'The woman suggests that future courses should', options: [
-        { letter: 'A', text: 'include more group work.' },
-        { letter: 'B', text: 'focus on real workplace scenarios.' },
-        { letter: 'C', text: 'be shorter in duration.' }
+      { num: 4, container: 'q4-container', stem: 'The man says that while birdwatching, he has developed', options: [
+        { letter: 'A', text: 'an interest in promoting the conservation of certain creatures.' },
+        { letter: 'B', text: 'an appreciation of the astonishing variety of species that exist.' },
+        { letter: 'C', text: 'an understanding of the connection between an environment and its wildlife.' }
       ]},
-      { num: 5, container: 'q5-container', stem: 'According to the expert, the main challenge facing modern cities is', options: [
-        { letter: 'A', text: 'inadequate public transport.' },
-        { letter: 'B', text: 'rising population density.' },
-        { letter: 'C', text: 'a lack of green spaces.' }
+      { num: 5, container: 'q5-container', stem: 'What does the man think about his work as a choreographer?', options: [
+        { letter: 'A', text: 'There is constant pressure on him to produce popular ballets.' },
+        { letter: 'B', text: 'It\u2019s important for him to seek out new sources of inspiration.' },
+        { letter: 'C', text: 'He has a responsibility to widen people\u2019s experiences.' }
       ]},
-      { num: 6, container: 'q6-container', stem: 'The expert\'s tone when discussing future projects could best be described as', options: [
-        { letter: 'A', text: 'cautiously optimistic.' },
-        { letter: 'B', text: 'openly critical.' },
-        { letter: 'C', text: 'mildly resigned.' }
+      { num: 6, container: 'q6-container', stem: 'What do they both think about dancers and choreographers creating new ballets together?', options: [
+        { letter: 'A', text: 'It\u2019s a physically demanding way of working.' },
+        { letter: 'B', text: 'It can be difficult to achieve genuine collaboration.' },
+        { letter: 'C', text: 'It may not always produce a satisfactory outcome.' }
       ]}
     ];
 
@@ -83,12 +81,11 @@
       C1Test.renderMultipleChoice(container, q.num, q.stem, q.options);
     });
 
-    // Single listening part for now (isLast: true → submit button)
     C1Test.buildNav({
       prevUrl: null,
-      nextUrl: null,
-      isLast: true,
-      progressText: 'Listening Part 1 of 1'
+      nextUrl: 'Listening Part 2.html',
+      isLast: false,
+      progressText: 'Listening Part 1 of 4'
     });
   </script>
 </body>

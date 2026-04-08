@@ -6,53 +6,160 @@
   <title>C1 Advanced - Writing</title>
   <link rel="stylesheet" href="./c1-test.css">
   <script src="../../../assets/js/cambridge/session-verify.js"></script>
+  <style>
+    .task-option {
+      background: #fffbeb;
+      border: 2px solid #fed7aa;
+      border-radius: 8px;
+      padding: 18px 22px;
+      margin-bottom: 14px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    .task-option:hover {
+      background: #fff7ed;
+      border-color: #ea580c;
+    }
+    .task-option.selected {
+      background: #fff;
+      border-color: #ea580c;
+      box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.12);
+    }
+    .task-option .opt-num {
+      display: inline-block;
+      background: #ea580c;
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+      text-align: center;
+      border-radius: 50%;
+      font-weight: 700;
+      margin-right: 12px;
+      font-size: 0.85rem;
+    }
+    .task-option .opt-title {
+      font-weight: 700;
+      color: #7c2d12;
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+    .task-option .opt-body {
+      color: #4b5563;
+      line-height: 1.6;
+      font-size: 0.95rem;
+      margin-top: 8px;
+      margin-left: 40px;
+    }
+  </style>
 </head>
 <body>
   <div class="c1-header">
     <div class="part-label">Writing Test &middot; 2 Tasks</div>
-    <div class="part-info">90 minutes &middot; Both tasks compulsory</div>
+    <div class="part-info">90 minutes &middot; Both parts compulsory</div>
   </div>
 
   <div class="c1-shell">
     <div class="c1-instructions">
-      <strong>Part 1 — Essay (compulsory)</strong>: Write your answer in <strong>220–260 words</strong>.<br>
-      <strong>Part 2 — Choose ONE task</strong>: Write your answer in <strong>220–260 words</strong>.
+      You must complete <strong>both parts</strong>. In <strong>Part 1</strong> the question is compulsory. In <strong>Part 2</strong> you must choose <strong>one</strong> of three tasks. Write your answers in <strong>220–260 words</strong> in an appropriate style.
     </div>
 
-    <h2 class="c1-passage-title">Part 1: Essay</h2>
+    <h2 class="c1-passage-title">Part 1 &middot; Essay (compulsory)</h2>
     <div class="c1-passage">
-      <p><strong>Task:</strong> Your class has watched a panel discussion about how schools can prepare students for the workplace. You have made the notes below.</p>
-      <p><em>Some opinions expressed in the discussion:</em></p>
+      <p>You must answer this question. Write your answer in <strong>220–260 words</strong> in an appropriate style.</p>
+      <p>Your class has listened to a podcast about factors that contribute to people\u2019s understanding of history. You have made the notes below:</p>
+      <p><strong>Factors that contribute to people\u2019s understanding of history:</strong></p>
       <ul>
-        <li>"Practical skills should be taught alongside academic subjects."</li>
-        <li>"Schools should teach communication and teamwork."</li>
-        <li>"Students need real-world work experience before they leave school."</li>
+        <li>school lessons</li>
+        <li>public monuments</li>
+        <li>museums</li>
       </ul>
-      <p>Write an <strong>essay</strong> discussing <strong>two</strong> of the points in your notes. You should explain which preparation you think is most important, giving reasons to support your opinion.</p>
+      <p><em>Some opinions expressed in the podcast:</em></p>
+      <ul>
+        <li>"Some teachers make learning history really interesting."</li>
+        <li>"Statues in public areas show what local people think is important."</li>
+        <li>"You can visit many museums online."</li>
+      </ul>
+      <p>Write an <strong>essay</strong> for your tutor discussing <strong>two</strong> of the factors in your notes. You should identify which factor you think contributes more to people\u2019s understanding of history, and provide reasons to justify your choice.</p>
+      <p>You may, if you wish, make use of the opinions expressed in the podcast, but you should use your own words as far as possible.</p>
     </div>
     <div id="task1-container"></div>
 
-    <h2 class="c1-passage-title" style="margin-top:32px;">Part 2: Task 2</h2>
-    <div class="c1-passage">
-      <p><strong>Task:</strong> A travel magazine has invited readers to send in <strong>reviews</strong> of a museum or art gallery they have visited recently. Your review should describe the museum or gallery, explain what you found most interesting about it, and say whether you would recommend it to other visitors.</p>
-      <p>Write your <strong>review</strong>.</p>
+    <h2 class="c1-passage-title" style="margin-top:40px;">Part 2 &middot; Choose ONE task</h2>
+    <div class="c1-passage" style="background:#fff7ed; border-color:#fed7aa;">
+      <p>Answer <strong>one</strong> of the questions 2–4 in this part. Write your answer in <strong>220–260 words</strong> in an appropriate style. Click a task below to select it, then write your response in the box that appears.</p>
     </div>
-    <div id="task2-container"></div>
+
+    <div id="task-options">
+      <div class="task-option" data-task="2">
+        <span class="opt-num">2</span><span class="opt-title">Email to a friend</span>
+        <div class="opt-body">
+          This is part of an email you receive from a friend:<br><br>
+          <em>From: Alex<br>Subject: Event<br><br>
+          Every year the International Club at my college organises an event based on the traditions of a specific country. Next year we\u2019d like to do something from your country. Can you recommend what we should do for the event, and why you think it would be enjoyable for our students? Could you suggest how we can make it feel really authentic?</em><br><br>
+          Write your <strong>email</strong>.
+        </div>
+      </div>
+
+      <div class="task-option" data-task="3">
+        <span class="opt-num">3</span><span class="opt-title">Hotel review</span>
+        <div class="opt-body">
+          You recently stayed in a hotel that was very different from what you expected.<br><br>
+          Write a <strong>review</strong> for a hotel review website in which you explain what you had expected from the hotel, and how your experience of it differed from your expectations.
+        </div>
+      </div>
+
+      <div class="task-option" data-task="4">
+        <span class="opt-num">4</span><span class="opt-title">Proposal to the College Principal</span>
+        <div class="opt-body">
+          You would like to create a study skills vlog which would be posted on the website of the international college where you study. You decide to send a proposal to the College Principal about your idea.<br><br>
+          In your <strong>proposal</strong>, you should explain why you want to create the vlog, summarise what would be in it, and say what help you might need.
+        </div>
+      </div>
+    </div>
+
+    <div id="task2-container" style="margin-top:24px;"></div>
   </div>
 
   <script src="./c1-test.js"></script>
   <script>
-    // Task 1: Essay (220-260 words)
+    // Task 1 — compulsory essay (saved as question key 1)
     document.getElementById('task1-container').appendChild(
-      C1Test.renderTextarea(1, 220, 260, 'Write your essay here…')
+      C1Test.renderTextarea(1, 220, 260, 'Write your essay here\u2026')
     );
 
-    // Task 2: Review (220-260 words)
-    document.getElementById('task2-container').appendChild(
-      C1Test.renderTextarea(2, 220, 260, 'Write your review here…')
-    );
+    // Task 2 — pick one of 3 options (we save selection as key '2_choice' and the response as key '2')
+    const task2Container = document.getElementById('task2-container');
+    const taskOptions = document.querySelectorAll('.task-option');
+    let currentTask = C1Test.getAnswer('2_choice');
 
-    // Single page = isLast (only writing part for now)
+    function showTask2Editor(taskNum) {
+      task2Container.innerHTML = '';
+      const heading = document.createElement('h3');
+      heading.textContent = 'Your response for Task ' + taskNum;
+      heading.style.cssText = 'font-family: Segoe UI, system-ui, sans-serif; color:#7c2d12; margin: 0 0 12px;';
+      task2Container.appendChild(heading);
+      task2Container.appendChild(C1Test.renderTextarea(2, 220, 260, 'Write your ' + (taskNum === '2' ? 'email' : taskNum === '3' ? 'review' : 'proposal') + ' here\u2026'));
+    }
+
+    function selectTask(taskNum) {
+      currentTask = String(taskNum);
+      C1Test.setAnswer('2_choice', currentTask);
+      taskOptions.forEach(opt => {
+        opt.classList.toggle('selected', opt.getAttribute('data-task') === currentTask);
+      });
+      showTask2Editor(currentTask);
+    }
+
+    taskOptions.forEach(opt => {
+      opt.addEventListener('click', function() {
+        selectTask(opt.getAttribute('data-task'));
+      });
+    });
+
+    if (currentTask) selectTask(currentTask);
+
     C1Test.buildNav({
       prevUrl: null,
       nextUrl: null,
