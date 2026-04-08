@@ -557,21 +557,33 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
 });
 
 // ============================================
-// STUDENT-FACING ENDPOINTS (no admin auth, rate limited, scoped by student_id)
-// IDOR by design — matches "no student auth, controlled by invigilator" pattern
+// STUDENT-FACING ENDPOINTS (no admin auth, rate limited, scoped by student_id+student_name)
+// Impersonation defense: requires both ID and name to match a real submission
 // ============================================
 
-// Get a student's own submissions (no admin auth, scoped to their student_id)
+// Get a student's own submissions (scoped by student_id+student_name)
 app.get('/my-submissions', submissionLimiter, async (req, res) => {
     try {
-        const { student_id, mock_number } = req.query;
-        if (!student_id) {
-            return res.status(400).json({ success: false, message: 'student_id is required' });
+        const { student_id, student_name, mock_number } = req.query;
+        if (!student_id || !student_name) {
+            return res.status(400).json({ success: false, message: 'student_id and student_name are required' });
         }
 
         const dbClient = await ensureConnection();
-        const conditions = ['student_id = $1'];
-        const params = [String(student_id)];
+
+        // Verify the student_id+student_name combo matches a real submission.
+        // Returns empty array (not 403) on no-match — same shape as "real student with no submissions"
+        // to prevent enumeration via response distinction.
+        const identityCheck = await dbClient.query(
+            `SELECT 1 FROM test_submissions WHERE student_id = $1 AND student_name = $2 LIMIT 1`,
+            [String(student_id), String(student_name)]
+        );
+        if (identityCheck.rows.length === 0) {
+            return res.json({ success: true, submissions: [] });
+        }
+
+        const conditions = ['student_id = $1', 'student_name = $2'];
+        const params = [String(student_id), String(student_name)];
 
         if (mock_number) {
             const mockNum = parseInt(mock_number, 10);
@@ -596,15 +608,15 @@ app.get('/my-submissions', submissionLimiter, async (req, res) => {
     }
 });
 
-// Get answer keys for a mock + skill (student-facing, requires prior submission for THIS mock)
+// Get answer keys for a mock + skill (requires student_id+student_name match for THIS mock)
 app.get('/my-answer-keys', submissionLimiter, async (req, res) => {
     try {
-        const { mock, skill, student_id } = req.query;
+        const { mock, skill, student_id, student_name } = req.query;
         if (!mock || !skill) {
             return res.status(400).json({ success: false, message: 'mock and skill are required' });
         }
-        if (!student_id) {
-            return res.status(400).json({ success: false, message: 'student_id is required' });
+        if (!student_id || !student_name) {
+            return res.status(400).json({ success: false, message: 'student_id and student_name are required' });
         }
         if (!VALID_IELTS_SKILLS.includes(skill)) {
             return res.status(400).json({ success: false, message: `Invalid skill. Must be one of: ${VALID_IELTS_SKILLS.join(', ')}` });
@@ -616,13 +628,13 @@ app.get('/my-answer-keys', submissionLimiter, async (req, res) => {
 
         const dbClient = await ensureConnection();
 
-        // Verify the student has submitted this skill+mock before revealing answer keys
-        // (mock-scoped — prevents viewing Mock 2 keys after only submitting Mock 1)
+        // Verify student_id+student_name has submitted this skill+mock before revealing answer keys
+        // (mock-scoped + name-verified — prevents impersonation and cross-mock cheating)
         const submissionCheck = await dbClient.query(
             `SELECT id FROM test_submissions
-             WHERE student_id = $1 AND skill = $2 AND mock_number = $3
+             WHERE student_id = $1 AND student_name = $2 AND skill = $3 AND mock_number = $4
              LIMIT 1`,
-            [String(student_id), skill, mockNum]
+            [String(student_id), String(student_name), skill, mockNum]
         );
 
         if (submissionCheck.rows.length === 0) {
