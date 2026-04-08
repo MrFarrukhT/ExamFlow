@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-09 14:55",
-  "totalRuns": 17,
+  "lastRun": "2026-04-09 15:15",
+  "totalRuns": 18,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -87,7 +87,10 @@
     "anti-cheat-schema-boolean-fields-strict",
     "anti-cheat-schema-date-fields-validated",
     "anti-cheat-unknown-fields-fall-through-to-generic",
-    "admin-dashboard-rendering-uses-escapeHtml-consistently"
+    "admin-dashboard-rendering-uses-escapeHtml-consistently",
+    "c1-advanced-level-db-constraint-fixed",
+    "c1-advanced-all-skills-submit-successfully",
+    "cross-level-cheating-blocked-by-mock-scoping"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
@@ -96,7 +99,8 @@
     "blocklist-deny-approach-needs-ongoing-maintenance",
     "submissions-list-unpaginated",
     "rate-limiter-hits-map-grows-unboundedly",
-    "esm-cjs-drift-recurring-systemic-issue-4-rounds-no-occurrence-this-round",
+    "esm-cjs-drift-recurring-systemic-issue",
+    "js-db-enum-drift-recurring-3-occurrences",
     "student-names-not-secrets-physical-exam-context"
   ],
   "untestedAreas": [],
@@ -114,10 +118,16 @@
       "reason": "Names visible in physical exam settings; true auth needs per-student passwords/QR tokens"
     },
     {
-      "title": "ESM↔CJS drift recurring (not triggered this round)",
+      "title": "JS↔DB enum drift recurring (3 occurrences: R8 speaking, R13 enum gap, R18 C1-Advanced)",
       "severity": "HIGH",
       "since": "2026-04-09",
-      "reason": "4 rounds in a row found this pattern. R17 had no drift, but the workflow gap remains. Architect MUST automate sync or deprecate one server."
+      "reason": "Every enum addition requires a paired DB migration. Architect should add a code review checklist or automated migration generator."
+    },
+    {
+      "title": "ESM↔CJS drift recurring (4 occurrences in R13-R16)",
+      "severity": "HIGH",
+      "since": "2026-04-09",
+      "reason": "No occurrence in R17-R18 because autopilot only touched UI. Pattern still unsolved."
     },
     {
       "title": "CORS allows all origins",
@@ -135,13 +145,13 @@
       "title": "Anti-cheat counters are still client-self-reported (cheater can claim 0)",
       "severity": "LOW",
       "since": "2026-04-09",
-      "reason": "Type confusion bypass closed; schema enforces non-negative integer. But a cheater can always claim tabSwitches:0. Server has no independent observation."
+      "reason": "Type confusion bypass closed; schema enforces non-negative integer. But a cheater can always claim tabSwitches:0."
     }
   ],
   "stats": {
-    "scenariosTested": 102,
-    "bugsFound": 40,
-    "bugsFixed": 35,
-    "bugsDeferred": 6
+    "scenariosTested": 108,
+    "bugsFound": 41,
+    "bugsFixed": 36,
+    "bugsDeferred": 7
   }
 }
