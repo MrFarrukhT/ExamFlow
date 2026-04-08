@@ -1,5 +1,73 @@
 # Autopilot Journal
 
+## Session: 2026-04-09 08:00
+Persona: Invigilator round 3 (anti-cheat visibility — full pipeline)
+System: Both (IELTS + Cambridge)
+
+### Phase 1: Journey Map
+- MAJOR FINDING: System was collecting anti-cheat data on the client and
+  sending it to the server, but it was being silently DROPPED at the INSERT
+  statement. Invigilators had ZERO visibility into student violations.
+- Pipeline gaps identified: 4 critical
+  1. Database had no anti_cheat_data column
+  2. INSERT statements didn't reference data.antiCheat
+  3. Client-side getAntiCheatData() only returned distractionFreeEnabled flag
+  4. Invigilator panel had no display logic for violations
+
+### Phase 2: Creation
+- New: anti_cheat_data JSONB column on test_submissions and cambridge_submissions
+- New: 5th "Flagged" stat card on invigilator panel (red gradient)
+- New: Anti-cheat badge row under flagged submissions
+- New: Expanded violation tracking on the client (6 new metrics)
+
+### Phase 3: Structure
+- Skipped — sound
+
+### Phase 4: Heal — full pipeline fix
+1. **Schema migration** — both servers add anti_cheat_data JSONB column on startup, idempotent
+2. **INSERT statements** — both insertIeltsSubmission and insertCambridgeSubmission now store antiCheat + durationFlag in the new column. Cambridge speaking-test INSERT also updated.
+3. **Client tracking** — distraction-free.js getAntiCheatData() now returns:
+   - tabSwitches (visibilitychange)
+   - windowBlurs (window blur)
+   - fullscreenExits (fullscreenchange)
+   - copyAttempts, pasteAttempts (clipboard events)
+   - rightClickAttempts (contextmenu)
+   - blockedShortcuts (keyboard intercepts)
+   - firstViolationAt, lastViolationAt (timestamps)
+   - distractionFreeEnabled (existing)
+   Counters persisted across page navigation via sessionStorage.
+4. **SELECT statements** — IELTS /my-submissions and Cambridge /cambridge-submissions now return anti_cheat_data
+5. **Invigilator panel display**:
+   - Flagged stat counter
+   - Flagged rows highlighted (red left-border + light red bg)
+   - Anti-cheat badges row showing specific violations (OVERTIME critical, others warn-tier)
+   - 5-column stats grid (was 4)
+
+Committed as 5597ecc.
+
+### Phase 5: Experience
+- Skipped — no server running
+
+### Phase 6: Scenario
+- Verified by code review:
+  - Schema migration is idempotent (DO $$ ... IF NOT EXISTS pattern)
+  - antiCheatJson is null when no data (avoids storing empty objects)
+  - Counter persistence across navigation works via sessionStorage
+  - Badge rendering escapes user input (numeric counts only)
+
+### Session Stats
+Total commits: 1 (5597ecc)
+Total files changed: 4 (local-database-server.js, cambridge-database-server.js, distraction-free.js, invigilator.html)
++208/-56 lines
+Persona journey coverage: Full anti-cheat pipeline from collection → storage → display
+
+### Major Win
+Closes the silent-data-loss issue: anti-cheat metadata was being collected
+and sent for several sessions but never stored or displayed. Now the full
+pipeline works end-to-end.
+
+---
+
 ## Session: 2026-04-08 15:00
 Persona: Cheater round 3 (validate sessions 18-20 attack surfaces)
 System: Both (IELTS + Cambridge)
