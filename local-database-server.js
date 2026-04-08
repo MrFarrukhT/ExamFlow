@@ -100,6 +100,17 @@ app.get('/test', async (req, res) => {
 app.post('/submissions', async (req, res) => {
     try {
         const submissionData = req.body;
+
+        // Validate required fields (Issue 4: malformed submissions silently queued)
+        const studentId = typeof submissionData.studentId === 'string' ? submissionData.studentId.trim() : '';
+        const studentName = typeof submissionData.studentName === 'string' ? submissionData.studentName.trim() : '';
+        if (!studentId || !studentName) {
+            return res.status(400).json({ success: false, message: 'Student ID and name are required' });
+        }
+        if (!submissionData.skill) {
+            return res.status(400).json({ success: false, message: 'Skill is required' });
+        }
+
         const savedId = await saveWithRetry(submissionData);
 
         res.json({

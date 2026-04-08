@@ -1,0 +1,60 @@
+{
+  "lastRun": "2026-04-08 03:33",
+  "totalRuns": 1,
+  "provenSolid": [
+    "sql-injection-parameterized-queries",
+    "idor-id-validation",
+    "unicode-handling-cyrillic-emoji-apostrophe",
+    "ielts-score-db-constraint",
+    "cambridge-score-validation",
+    "cambridge-xss-evaluator-sanitization",
+    "submission-body-validation",
+    "empty-whitespace-name-rejection",
+    "null-byte-search-sanitization"
+  ],
+  "weakPatterns": [
+    "no-rate-limiting-on-admin-login",
+    "no-duplicate-submission-prevention",
+    "predictable-admin-token"
+  ],
+  "untestedAreas": [
+    "exam-timer-manipulation",
+    "browser-back-button-after-submit",
+    "multi-tab-concurrent-exam",
+    "speaking-audio-upload-abuse",
+    "admin-dashboard-xss-rendering",
+    "mock-answers-manipulation",
+    "cambridge-answer-keys-injection",
+    "pagination-edges",
+    "concurrent-score-updates",
+    "session-timeout-mid-exam",
+    "ai-score-suggestion-abuse",
+    "file-path-traversal-static-serve"
+  ],
+  "deferredFindings": [
+    {
+      "title": "No rate limiting on admin login endpoint",
+      "severity": "HIGH",
+      "since": "2026-04-08",
+      "reason": "Needs middleware or external package — beyond scenario fix scope"
+    },
+    {
+      "title": "Admin token is predictable (admin-session-{timestamp})",
+      "severity": "MEDIUM",
+      "since": "2026-04-08",
+      "reason": "Needs JWT overhaul — architectural change"
+    },
+    {
+      "title": "Double submissions accepted (no dedup)",
+      "severity": "HIGH",
+      "since": "2026-04-08",
+      "reason": "Needs unique constraint or client-side idempotency key — needs design decision"
+    }
+  ],
+  "stats": {
+    "scenariosTested": 8,
+    "bugsFound": 7,
+    "bugsFixed": 4,
+    "bugsDeferred": 3
+  }
+}

@@ -241,6 +241,77 @@ async function insertCambridgeSubmission(dbClient, data) {
 const { saveWithRetry } = createRetryQueue(ensureConnection, insertCambridgeSubmission);
 
 // ============================================
+// SCORE/GRADE VALIDATION HELPERS
+// ============================================
+
+/**
+ * Validate a Cambridge score value.
+ * Must be an integer between 0 and 200 (Cambridge scale scores go up to 190+).
+ * Returns { valid, error } where error is a human-readable message on failure.
+ */
+function validateScore(score) {
+    if (score === null || score === undefined || score === '') {
+        return { valid: true }; // score is optional on some endpoints
+    }
+    const parsed = Number(score);
+    if (!Number.isInteger(parsed)) {
+        return { valid: false, error: 'Score must be an integer' };
+    }
+    if (parsed < 0 || parsed > 200) {
+        return { valid: false, error: 'Score must be between 0 and 200' };
+    }
+    return { valid: true, value: parsed };
+}
+
+/**
+ * Validate a Cambridge grade string.
+ * Must be at most 20 characters, containing only alphanumeric chars, spaces, and hyphens.
+ * Returns { valid, error }.
+ */
+function validateGrade(grade) {
+    if (grade === null || grade === undefined || grade === '') {
+        return { valid: true }; // grade is optional
+    }
+    if (typeof grade !== 'string') {
+        return { valid: false, error: 'Grade must be a string' };
+    }
+    if (grade.length > 20) {
+        return { valid: false, error: 'Grade must be at most 20 characters' };
+    }
+    if (!/^[a-zA-Z0-9 \-]+$/.test(grade)) {
+        return { valid: false, error: 'Grade must contain only letters, numbers, spaces, and hyphens' };
+    }
+    return { valid: true };
+}
+
+/**
+ * Validate score and grade together. Returns a 400-style error object or null if valid.
+ */
+function validateScoreAndGrade(score, grade) {
+    const scoreResult = validateScore(score);
+    if (!scoreResult.valid) {
+        return { success: false, message: scoreResult.error };
+    }
+    const gradeResult = validateGrade(grade);
+    if (!gradeResult.valid) {
+        return { success: false, message: gradeResult.error };
+    }
+    return null; // no error
+}
+
+// Valid Cambridge levels and skills for submission validation
+const VALID_LEVELS = ['A1-Movers', 'A2-Key', 'B1-Preliminary', 'B2-First'];
+const VALID_SKILLS = ['reading', 'writing', 'listening', 'speaking', 'reading-writing', 'reading-use-of-english'];
+
+/**
+ * Strip HTML tags from a string to prevent stored XSS.
+ */
+function stripHtmlTags(str) {
+    if (typeof str !== 'string') return str;
+    return str.replace(/<[^>]*>/g, '');
+}
+
+// ============================================
 // CAMBRIDGE-SPECIFIC ROUTES
 // ============================================
 
@@ -278,6 +349,29 @@ app.get('/test', async (req, res) => {
 app.post('/cambridge-submissions', async (req, res) => {
     try {
         const submissionData = req.body;
+
+        // Validate required fields (Issue 2: empty/whitespace names, Issue 4: malformed submissions)
+        const studentId = typeof submissionData.studentId === 'string' ? submissionData.studentId.trim() : '';
+        const studentName = typeof submissionData.studentName === 'string' ? submissionData.studentName.trim() : '';
+        if (!studentId || !studentName) {
+            return res.status(400).json({ success: false, message: 'Student ID and name are required' });
+        }
+        if (!submissionData.level || !VALID_LEVELS.includes(submissionData.level)) {
+            return res.status(400).json({ success: false, message: `Invalid level. Must be one of: ${VALID_LEVELS.join(', ')}` });
+        }
+        if (!submissionData.skill || !VALID_SKILLS.includes(submissionData.skill)) {
+            return res.status(400).json({ success: false, message: `Invalid skill. Must be one of: ${VALID_SKILLS.join(', ')}` });
+        }
+        if (!submissionData.answers) {
+            return res.status(400).json({ success: false, message: 'Answers are required' });
+        }
+
+        // Validate score and grade if provided
+        const validationError = validateScoreAndGrade(submissionData.score, submissionData.grade);
+        if (validationError) {
+            return res.status(400).json(validationError);
+        }
+
         const savedId = await saveWithRetry(submissionData);
 
         res.json({
@@ -312,6 +406,13 @@ app.post('/submit-speaking', async (req, res) => {
             startTime,
             endTime
         } = req.body;
+
+        // Validate required fields (Issue 2: empty/whitespace names)
+        const trimmedId = typeof studentId === 'string' ? studentId.trim() : '';
+        const trimmedName = typeof studentName === 'string' ? studentName.trim() : '';
+        if (!trimmedId || !trimmedName) {
+            return res.status(400).json({ success: false, message: 'Student ID and name are required' });
+        }
 
         console.log(`🎤 Saving speaking test: ${level} Mock ${mockTest} for ${studentName} (${audioSize}MB, ${duration}s)`);
 
@@ -414,6 +515,12 @@ app.patch('/cambridge-submissions/:id/score', async (req, res) => {
         const { id } = req.params;
         const { score, grade } = req.body;
 
+        // Validate score and grade
+        const validationError = validateScoreAndGrade(score, grade);
+        if (validationError) {
+            return res.status(400).json(validationError);
+        }
+
         console.log(`📊 Updating score for Cambridge submission ${id}: ${score}, Grade: ${grade || 'N/A'}`);
 
         const dbClient = await ensureConnection();
@@ -460,7 +567,17 @@ app.patch('/cambridge-submissions/:id/evaluate', async (req, res) => {
             evaluationNotes
         } = req.body;
 
-        console.log(`🎤 Evaluating speaking test ${id} by ${evaluatorName}: ${score}, Grade: ${grade || 'N/A'}`);
+        // Validate score and grade
+        const validationError = validateScoreAndGrade(score, grade);
+        if (validationError) {
+            return res.status(400).json(validationError);
+        }
+
+        // Strip HTML tags to prevent stored XSS (Issue 1)
+        const sanitizedEvaluatorName = stripHtmlTags(evaluatorName);
+        const sanitizedEvaluationNotes = stripHtmlTags(evaluationNotes);
+
+        console.log(`🎤 Evaluating speaking test ${id} by ${sanitizedEvaluatorName}: ${score}, Grade: ${grade || 'N/A'}`);
 
         const dbClient = await ensureConnection();
         const result = await dbClient.query(`
@@ -473,7 +590,7 @@ app.patch('/cambridge-submissions/:id/evaluate', async (req, res) => {
                 evaluation_notes = $4
             WHERE id = $5
             RETURNING *
-        `, [score, grade || null, evaluatorName, evaluationNotes, id]);
+        `, [score, grade || null, sanitizedEvaluatorName, sanitizedEvaluationNotes, id]);
 
         if (result.rows.length === 0) {
             return res.status(404).json({
@@ -510,6 +627,12 @@ app.post('/cambridge-update-score', async (req, res) => {
                 success: false,
                 message: 'Submission ID is required'
             });
+        }
+
+        // Validate score and grade
+        const validationError = validateScoreAndGrade(score, grade);
+        if (validationError) {
+            return res.status(400).json(validationError);
         }
 
         console.log(`📊 Updating score for Cambridge submission ${submissionId}: ${score}, Grade: ${grade}`);
@@ -646,7 +769,10 @@ app.post('/cambridge-answers', async (req, res) => {
 // Get all Cambridge student results with optional filters
 app.get('/cambridge-student-results', async (req, res) => {
     try {
-        const { level, mock_test, search } = req.query;
+        let { level, mock_test, search } = req.query;
+
+        // Strip null bytes to prevent UTF-8 encoding errors (Issue 3)
+        search = search?.replace(/\0/g, '');
 
         const dbClient = await ensureConnection();
         let query = 'SELECT * FROM cambridge_student_results';
