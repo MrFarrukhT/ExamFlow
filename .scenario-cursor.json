@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-09 15:35",
-  "totalRuns": 19,
+  "lastRun": "2026-04-09 15:55",
+  "totalRuns": 20,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -93,21 +93,26 @@
     "cross-level-cheating-blocked-by-mock-scoping",
     "examType-strict-typeof-string-check",
     "examType-whitelist-cambridge-olympiada",
-    "examType-not-exposed-via-my-submissions"
+    "examType-not-exposed-via-my-submissions",
+    "cross-exam-type-dedup-prevents-warmup-runs",
+    "c1-advanced-my-answer-keys-roundtrip-pass"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
     "client-controlled-timestamps-spoofable",
     "anti-cheat-known-fields-strict-typed-but-still-self-reported",
     "blocklist-deny-approach-needs-ongoing-maintenance",
-    "submissions-list-unpaginated",
+    "submissions-list-unpaginated-5604-rows-fetched-per-dashboard-load",
     "rate-limiter-hits-map-grows-unboundedly",
-    "esm-cjs-drift-recurring-systemic-issue",
-    "js-db-enum-drift-recurring-3-occurrences",
+    "esm-cjs-drift-recurring-systemic-issue-no-occurrence-r17-r20",
+    "js-db-enum-drift-recurring-3-occurrences-no-occurrence-r19-r20",
     "loose-type-coercion-trusting-toString-or-comparison-operators",
-    "student-names-not-secrets-physical-exam-context"
+    "student-names-not-secrets-physical-exam-context",
+    "olympiada-cambridge-mock-test-numbers-collision-workflow"
   ],
-  "untestedAreas": [],
+  "untestedAreas": [
+    "browser-based-c1-advanced-exam-flow"
+  ],
   "deferredFindings": [
     {
       "title": "Answer keys writable without authentication (admin POST/DELETE)",
@@ -122,16 +127,22 @@
       "reason": "Names visible in physical exam settings; true auth needs per-student passwords/QR tokens"
     },
     {
-      "title": "JS↔DB enum drift recurring (3 occurrences: R8 speaking, R13 enum gap, R18 C1-Advanced)",
+      "title": "JS↔DB enum drift recurring (3 occurrences: R8, R13, R18)",
       "severity": "HIGH",
       "since": "2026-04-09",
-      "reason": "Every enum addition requires a paired DB migration. Architect should add a code review checklist or automated migration generator."
+      "reason": "Every enum addition requires a paired DB migration. Architect should add a code review checklist."
     },
     {
-      "title": "ESM↔CJS drift recurring (4 occurrences in R13-R16)",
+      "title": "ESM↔CJS drift recurring (4 occurrences in R13-R16, none R17-R20)",
       "severity": "HIGH",
       "since": "2026-04-09",
-      "reason": "No occurrence in R17-R19 because autopilot only touched UI/Cambridge. Pattern still unsolved."
+      "reason": "Pattern unsolved, just hasn't been triggered recently. Will return."
+    },
+    {
+      "title": "Submissions list returns 5604+ rows unpaginated",
+      "severity": "LOW",
+      "since": "2026-04-08",
+      "reason": "Admin auth required, but response size and client-side filtering will not scale to 50K+"
     },
     {
       "title": "CORS allows all origins",
@@ -150,12 +161,18 @@
       "severity": "LOW",
       "since": "2026-04-09",
       "reason": "Type confusion bypass closed; schema enforces non-negative integer. But a cheater can always claim tabSwitches:0."
+    },
+    {
+      "title": "Olympiada and Cambridge mock_test numbers collide (dedup workflow concern)",
+      "severity": "LOW",
+      "since": "2026-04-09",
+      "reason": "Dedup key omits exam_type, so a student cannot take Mock 1 as both Cambridge and Olympiada. Configuration concern, not a bug."
     }
   ],
   "stats": {
-    "scenariosTested": 114,
+    "scenariosTested": 120,
     "bugsFound": 42,
     "bugsFixed": 37,
-    "bugsDeferred": 7
+    "bugsDeferred": 9
   }
 }

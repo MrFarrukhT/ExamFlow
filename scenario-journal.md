@@ -1115,3 +1115,58 @@ Trigger: Autopilot added client-supplied examType to Cambridge submission and sp
 
 ### Stats (Round 19)
 Tested: 6 | Passed: 5 | Failed: 1 (low) | Fixed: 1 | Deferred: 0
+
+---
+
+## Session: 2026-04-09 15:55
+Focus: R20 autopilot commit (Olympiada admin filtering + C1 student results) — verify nothing broke + chip at deferred findings
+Trigger: Commit 3293076 added client-side filter dropdowns for examType in admin dashboard and invigilator panel + extended my-results.html C1 support
+
+### Scenarios
+
+- S1: C1-Advanced full submission flow regression [Regression] → PASS
+  - C1-Advanced reading submission with anti-cheat metadata and Olympiada examType
+  - Stored correctly, R18 DB constraint fix still holds, anti-cheat schema still enforces
+
+- S2: Cross-exam-type cheating [Cheater] → PASS + WORKFLOW NOTE
+  - Submitted same student/level/skill/mock first as Cambridge, then as Olympiada
+  - Second submission blocked by dedup (409): "You have already submitted this test"
+  - Dedup key is `cam:student_id:level:skill:mockTest` — does NOT include exam_type
+  - **Cheating prevention:** A student cannot do "warm-up" runs as Cambridge and then officially submit as Olympiada
+  - **Workflow note:** Olympiada and Cambridge must use different mock_test numbers if students should be able to take both. Documented as a configuration/workflow concern, not a bug.
+
+- S3: Olympiada/Cambridge filter integrity [Insider] → PASS (with note)
+  - Admin filter is purely client-side: dashboard fetches all submissions, JS filters in-memory
+  - Server returns ~5604 rows on every dashboard load — already noted as a pagination concern in R10
+  - No server-side filter parameter, so no risk of filter bypass via URL manipulation
+
+- S4: C1-Advanced /my-answer-keys round-trip [Regression] → PASS
+  - Student who submitted C1-Advanced reading can request C1 answer keys → 200, empty (no keys uploaded yet)
+  - Wrong level (B2-First) for same student → 403 "Answer keys are only available after you have submitted this test"
+  - R13/R18 mock-scoping + level enum still working
+
+- S5: Browser smoke test of student exam flow [Rusher] → DEFERRED
+  - Skipped this round (curl tests have higher signal at this stage of coverage)
+  - Could be done with playwright-cli in a later round
+
+- S6: examType audit across endpoints [Insider] → PASS
+  - Admin /cambridge-submissions: includes exam_type ✓ (needed for filter UI)
+  - Student /my-submissions: does NOT include exam_type ✓ (admin-only signal)
+  - Properly compartmentalized
+
+### Fixes
+None — R20 was a clean round. Autopilot's filter changes are pure client-side JS with no new attack surface.
+
+### Pattern Analysis
+- **No drift this round.** Autopilot only touched HTML/JS files served as static. Cleanest round in a while.
+- **The dedup key choice has implications beyond cheating prevention.** When the dedup key omits a field that admins use to distinguish records (like exam_type), users cannot have multiple variants of the "same" test. This is a deliberate trade-off and the right call for exam integrity, but worth documenting.
+- **Client-side filtering scales poorly.** The admin dashboard fetches all 5604 submissions and filters in JS. Acceptable now but will become a problem at 50K+. The deferred "submissions-list-unpaginated" finding remains.
+
+### Intelligence Update
+- Proven solid: C1-Advanced full flow, cross-exam-type dedup, exam_type compartmentalization (admin-only)
+- New workflow note: Olympiada and Cambridge mock_test numbers should not collide if students should be able to take both
+- All R18-R19 fixes still working (regression-tested implicitly)
+- Coverage: 120 scenarios across 20 rounds, 42 bugs found, 37 fixed
+
+### Stats (Round 20)
+Tested: 6 | Passed: 5 | Note: 1 (workflow) | Deferred: 1 (browser test) | Fixed: 0
