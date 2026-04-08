@@ -12,6 +12,26 @@ function _safeParseJSON(str, fallback) {
     }
 }
 
+// ── Autosave indicator (shared by IELTS + Cambridge) ────────────
+// Shows a subtle "Answers saved" toast so students know their work is safe.
+let _lastCambridgeSaveIndicator = 0;
+function showCambridgeSaveIndicator() {
+    const now = Date.now();
+    if (now - _lastCambridgeSaveIndicator < 25000) return;
+    _lastCambridgeSaveIndicator = now;
+    const existing = document.getElementById('autosave-indicator');
+    if (existing) existing.remove();
+    const el = document.createElement('div');
+    el.id = 'autosave-indicator';
+    el.setAttribute('role', 'status');
+    el.setAttribute('aria-live', 'polite');
+    el.style.cssText = 'position:fixed;bottom:20px;left:20px;background:rgba(46,125,50,0.92);color:white;padding:8px 16px;border-radius:6px;font-size:13px;font-family:system-ui,-apple-system,sans-serif;z-index:2000;display:flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(0,0,0,0.15);transform:translateY(20px);opacity:0;transition:transform 0.3s ease,opacity 0.3s ease;pointer-events:none;';
+    el.innerHTML = '<span style="font-size:15px">&#10003;</span> Answers saved';
+    document.body.appendChild(el);
+    requestAnimationFrame(() => { el.style.transform = 'translateY(0)'; el.style.opacity = '1'; });
+    setTimeout(() => { el.style.transform = 'translateY(20px)'; el.style.opacity = '0'; setTimeout(() => { if (el.parentNode) el.remove(); }, 300); }, 2500);
+}
+
 class AnswerManager {
     constructor(examType = 'ielts') {
         this.examType = examType;
