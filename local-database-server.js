@@ -104,8 +104,11 @@ app.get('/test', async (req, res) => {
     }
 });
 
+// Rate limit on student-facing submission endpoints
+const submissionLimiter = rateLimit({ windowMs: 60000, maxRequests: 10, message: 'Too many submissions. Try again later.' });
+
 // Save test submission
-app.post('/submissions', async (req, res) => {
+app.post('/submissions', submissionLimiter, async (req, res) => {
     try {
         const submissionData = req.body;
 
@@ -136,8 +139,8 @@ app.post('/submissions', async (req, res) => {
     }
 });
 
-// Get all submissions
-app.get('/submissions', async (req, res) => {
+// Get all submissions (admin only — exposes all student data)
+app.get('/submissions', requireAdmin, async (req, res) => {
     try {
         const dbClient = await ensureConnection();
         const result = await dbClient.query(`
@@ -159,8 +162,8 @@ app.get('/submissions', async (req, res) => {
     }
 });
 
-// Update score for a submission
-app.post('/update-score', async (req, res) => {
+// Update score for a submission (admin only)
+app.post('/update-score', requireAdmin, async (req, res) => {
     try {
         const { submissionId, score, bandScore } = req.body;
 

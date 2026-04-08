@@ -862,7 +862,7 @@
                     method: 'PATCH', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ score: parseInt(finalScore), grade: grade || null })
                 });
-                if (response.ok) { alert('Score saved successfully!'); closeModal(); loadSubmissions(); }
+                if (response.ok) { advanceAfterScore(); }
                 else { alert('Failed to save score. Please try again.'); }
             } catch (error) { console.error('Error saving score:', error); alert('Error saving score. Please try again.'); }
         }
@@ -876,7 +876,7 @@
                     method: 'PATCH', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ score: parseInt(score), grade: grade || null })
                 });
-                if (response.ok) { alert('Score saved successfully!'); closeModal(); loadSubmissions(); }
+                if (response.ok) { advanceAfterScore(); }
                 else { alert('Failed to save score. Please try again.'); }
             } catch (error) { console.error('Error saving score:', error); alert('Error saving score. Please try again.'); }
         }
