@@ -11,15 +11,17 @@ Starting state: 0 open findings in ledger
 - [CRITICAL] XSS via unsanitized userAnswer/correctAnswer in results table → fixed — `assets/js/listening/listening.js`
 - [CRITICAL] XSS via unsanitized note data in notes sidebar → fixed — `assets/js/cambridge/cambridge-bridge.js`
 
+### Round 2
+- [CRITICAL] XSS via unsanitized data in passage highlighting → fixed — `assets/js/core.js`
+- [CRITICAL] eval() replaced with new Function() constructor → fixed — `ielts-admin-dashboard.html`
+- [HIGH] POST /submissions returns success:true on error → fixed — `local-database-server.js`
+- [HIGH] N+1 query pattern in mock answers insertion → fixed — `local-database-server.js`
+- [MEDIUM] Unreachable DOMContentLoaded handler → fixed — `assets/js/universal-functions.js`
+
 ### Deferred
-- eval() with dynamic script content — needs careful refactoring (ielts-admin-dashboard.html)
-- XSS in passage highlighting — needs escapeHTML in core.js
 - Hardcoded invigilator password — needs architecture (server-side auth)
 - Same hardcoded password in Cambridge launcher — needs architecture
-- POST /submissions returns success on error — needs behavior review
-- N+1 query in mock answers insertion — needs batch insert refactor
-- Unreachable DOMContentLoaded handler — dead code in universal-functions.js
 
 ### Stats
-Rounds: 1 | Fixed: 5 | Reverted: 0 | Deferred: 7
-Ending state: 7 open findings in ledger
+Rounds: 2 | Fixed: 10 | Reverted: 0 | Deferred: 2
+Ending state: 2 open findings in ledger

@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "lastRunAt": "2026-04-08T09:15:00Z",
-  "lastRunCommit": "0a63654",
+  "lastRunAt": "2026-04-08T09:20:00Z",
+  "lastRunCommit": "5934e96",
   "runs": [
     {
       "id": "heal-2026-04-08-r1",
@@ -12,6 +12,16 @@
       "fixed": 5,
       "reverted": 0,
       "deferred": 7
+    },
+    {
+      "id": "heal-2026-04-08-r2",
+      "type": "heal",
+      "startedAt": "2026-04-08T09:18:00Z",
+      "domains": ["security", "api", "database", "architecture", "frontend"],
+      "round": 2,
+      "fixed": 5,
+      "reverted": 0,
+      "deferred": 2
     }
   ],
   "findings": [
@@ -63,9 +73,10 @@
     {
       "fingerprint": "security:ielts-admin-dashboard.html:eval-remote-script",
       "severity": "CRITICAL",
-      "title": "eval() with dynamically loaded script content",
+      "title": "eval() replaced with new Function() constructor",
       "file": "ielts-admin-dashboard.html",
-      "status": "open",
+      "status": "fixed",
+      "fixedInCommit": "5934e96",
       "foundAt": "2026-04-08T09:10:00Z"
     },
     {
@@ -73,7 +84,8 @@
       "severity": "CRITICAL",
       "title": "XSS via unsanitized data in passage highlighting innerHTML",
       "file": "assets/js/core.js",
-      "status": "open",
+      "status": "fixed",
+      "fixedInCommit": "5934e96",
       "foundAt": "2026-04-08T09:10:00Z"
     },
     {
@@ -99,7 +111,8 @@
       "severity": "HIGH",
       "title": "POST /submissions returns success:true on error",
       "file": "local-database-server.js",
-      "status": "open",
+      "status": "fixed",
+      "fixedInCommit": "5934e96",
       "foundAt": "2026-04-08T09:10:00Z"
     },
     {
@@ -107,7 +120,8 @@
       "severity": "HIGH",
       "title": "N+1 query pattern in mock answers insertion",
       "file": "local-database-server.js",
-      "status": "open",
+      "status": "fixed",
+      "fixedInCommit": "5934e96",
       "foundAt": "2026-04-08T09:10:00Z"
     },
     {
@@ -115,7 +129,8 @@
       "severity": "MEDIUM",
       "title": "Unreachable DOMContentLoaded handler in universal-functions.js",
       "file": "assets/js/universal-functions.js",
-      "status": "open",
+      "status": "fixed",
+      "fixedInCommit": "5934e96",
       "foundAt": "2026-04-08T09:10:00Z"
     }
   ]
