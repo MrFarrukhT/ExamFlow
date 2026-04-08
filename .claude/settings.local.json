@@ -122,7 +122,14 @@
       "Bash(python3 -c \"print\\('A' * 10000\\)\")",
       "Bash(curl -s -X POST http://localhost:3003/cambridge-submissions -H 'Content-Type: application/json' -d '{\"studentId\":\"UNI-004\",\"studentName\":\"__TRACKED_VAR__\",\"level\":\"A2-Key\",\"skill\":\"reading\",\"answers\":{\"q1\":\"A\"},\"score\":8}')",
       "Bash(curl -s -X POST http://localhost:3003/cambridge-submissions -H \"Content-Type: application/json\" -d '{\"studentId\":\"UNI-005\",\"studentName\":\"\",\"level\":\"A2-Key\",\"skill\":\"reading\",\"answers\":{\"q1\":\"A\"}}')",
-      "Bash(curl -s -X POST http://localhost:3003/cambridge-submissions -H \"Content-Type: application/json\" -d '{\"studentId\":\"   \",\"studentName\":\"   \",\"level\":\"A2-Key\",\"skill\":\"reading\",\"answers\":{\"q1\":\"A\"}}')"
+      "Bash(curl -s -X POST http://localhost:3003/cambridge-submissions -H \"Content-Type: application/json\" -d '{\"studentId\":\"   \",\"studentName\":\"   \",\"level\":\"A2-Key\",\"skill\":\"reading\",\"answers\":{\"q1\":\"A\"}}')",
+      "Bash(curl -s \"http://localhost:3003/cambridge-student-results?search=%25\")",
+      "Bash(curl -s \"http://localhost:3003/cambridge-student-results?search=_\")",
+      "Bash(python3 -c \"print\\('A'*5000\\)\")",
+      "Read(//e/Test-System-v2/http:/localhost:3003/**)",
+      "Bash(curl -s \"http://localhost:3003/cambridge-student-results?search=%00\")",
+      "Bash(curl -s \"http://localhost:3003/cambridge-submissions\")",
+      "Bash(node -e \" const data = []; process.stdin.on\\('data', d => data.push\\(d\\)\\); process.stdin.on\\('end', \\(\\) => { const subs = JSON.parse\\(data.join\\(''\\)\\); const testIds = subs.filter\\(s => s.student_id.startsWith\\('RACE-TEST'\\) || s.student_id.startsWith\\('UNI-'\\) || s.student_id === ' ' \\).map\\(s => s.id\\); console.log\\('Test submission IDs to note:', testIds.join\\(', '\\)\\); console.log\\('Count:', testIds.length\\); }\\); \")"
     ],
     "additionalDirectories": [
       "e:\\Test-System-v2",
