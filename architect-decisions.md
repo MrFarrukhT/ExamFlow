@@ -1,5 +1,27 @@
 # Architecture Decisions
 
+## Session: 2026-04-08 (Round 6)
+
+### ADR-026: Remove Dead Cambridge JS Files
+**Status:** Executed
+**Impact:** Low | **Effort:** 5 min | **Risk:** None
+**Summary:** Deleted 4 orphaned files in `assets/js/cambridge/` (534 lines total): `a2-key-shared.js` (207), `a2-key-wrapper.js` (165), `a2-key-combined.js` (145), `a2-key-manifest.js` (17). No HTML file or JS module referenced them.
+**Result:** Executed in commit 7f1a3f6.
+
+### ADR-027: Rename Cross-Level Cambridge Modules
+**Status:** Executed
+**Impact:** Medium | **Effort:** 30 min | **Risk:** Low
+**Summary:** Renamed `a2-key-answer-sync.js` → `cambridge-answer-sync.js` and `a2-key-part-scroll.js` → `cambridge-part-scroll.js`. These modules are used by A2-Key, B1-Preliminary, AND B2-First — the "a2-key-" prefix was misleading. Updated 69 HTML files, guard variable, and code comments.
+**Result:** Executed in commit 18d6c07.
+
+### ADR-028: Flag server-cjs.cjs as Stale Deployment Artifact
+**Status:** Deferred
+**Impact:** High | **Effort:** Days | **Risk:** Medium
+**Summary:** `server-cjs.cjs` (730 lines) is the CJS packaged server for `pkg` binary distribution. It has NOT been updated through 25+ ADRs of changes — doesn't use shared modules (database.js, server-bootstrap.js, validation.js, auth.js), lacks rate limiting, submission deduplication, and recent endpoint changes. Contains license management not present in ESM servers. Needs either full sync or deprecation in favor of running ESM directly.
+**Result:** Deferred — requires assessment of pkg tooling compatibility with ESM shared modules.
+
+---
+
 ## Session: 2026-04-08 (Round 5)
 
 ### ADR-021: Extract Shared Admin JavaScript Library
