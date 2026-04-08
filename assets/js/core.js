@@ -1151,8 +1151,10 @@ async function loadAnswers() {
             function updateAnsweredNav() {
             const navButtons = document.querySelectorAll('.subQuestion');
             navButtons.forEach(btn => {
-                const qNum = parseInt(btn.textContent, 10);
-                if (isQuestionAnswered(qNum)) {
+                // Extract question number from onclick attribute (robust against sr-only spans)
+                const match = (btn.getAttribute('onclick') || '').match(/goToQuestion\((\d+)\)/);
+                const qNum = match ? parseInt(match[1], 10) : NaN;
+                if (!isNaN(qNum) && isQuestionAnswered(qNum)) {
                     btn.classList.add('answered');
                 } else {
                     btn.classList.remove('answered');

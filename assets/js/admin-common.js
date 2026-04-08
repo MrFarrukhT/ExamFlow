@@ -727,6 +727,13 @@ class AdminDashboard {
                 `${this.apiBase}${this.submissionsEndpoint}/${submissionId}`,
                 { method: 'DELETE' }
             );
+            if (!response.ok) {
+                const text = await response.text();
+                let msg;
+                try { msg = JSON.parse(text).message; } catch (_) { msg = 'Server returned ' + response.status; }
+                alert('Failed to delete: ' + msg);
+                return;
+            }
             const data = await response.json();
             if (data.success) {
                 this.loadSubmissions();
