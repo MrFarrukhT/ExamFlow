@@ -1461,3 +1461,48 @@ Elevations landed: 1 (inline ready-banner × 10 files)
 Reverted: 0
 Fixes landed: 0
 Changes shipped: 10 files modified
+
+---
+
+## Session: 2026-04-09 (Cambridge Admin Dashboard — prompt #21)
+Persona: Admin managing Cambridge exam submissions
+System: Cambridge admin (localhost:3003/cambridge-admin-dashboard.html)
+Pages explored: cambridge-admin-dashboard.html (902 lines), assets/css/admin-common.css
+Starting state: Dashboard had blue branding (#0066cc, #0052a3) instead of Cambridge teal. Title verbose ("Innovative Centre - Enhanced Cambridge Admin Dashboard"). Subtitle mentions "Enhanced" twice. Otherwise functionally complete (filters, stats, scoring, answer management, pagination, submissions table).
+
+### Round 1
+**Explored:** 1 page + shared admin CSS, 4 findings
+**Action:** POLISH 3 (CSS variable override + 2 copy fixes)
+
+- [T4] cambridge-admin-dashboard.html — Added `:root` CSS variable override in the page-level `<style>`: `--admin-primary: #0d9488; --admin-primary-dark: #0f766e;`. This propagates teal through 13 admin-common.css references (login button, form focus, tabs, buttons, badges, gradients) without affecting other admin pages that share the same stylesheet.
+  Mode: polish
+  Quality layer: 3-Efficient → 5-Delightful (consistent Cambridge teal identity throughout)
+  Files: cambridge-admin-dashboard.html
+
+- [T4] cambridge-admin-dashboard.html — Body + header gradients explicitly set to teal (#0d9488 → #0f766e). dateViewDefaultColor (calendar highlight) → teal.
+  Mode: polish
+  Files: cambridge-admin-dashboard.html
+
+- [T4] cambridge-admin-dashboard.html — Page title tightened: "Innovative Centre - Enhanced Cambridge Admin Dashboard" → "Cambridge Admin Dashboard | Innovative Centre". Header subtitle: "Enhanced Admin Dashboard with Answer Management" → "Submissions, scoring & answer key management".
+  Mode: polish
+  Files: cambridge-admin-dashboard.html
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| cambridge-admin-dashboard.html | 5-Delightful | Teal identity, clean header, all features intact |
+
+### Deferred
+- cambridge-student-results.html still has #0066cc blue (8 instances) — that's prompt #22
+- Inline differentiation gradients (purple speaking stat card, green scoring progress) — intentional, kept for scanability
+- Could add a unified empty state component for "no submissions match filters"
+
+### Session Stats
+Pages explored: 1 (cambridge-admin-dashboard.html) + admin-common.css review
+Rounds: 1
+Polishes landed: 3 (CSS variable override + body/header gradients + copy fixes)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Fixes landed: 0
+Changes shipped: 1 file modified
