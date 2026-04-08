@@ -708,19 +708,41 @@ Changes shipped: 44 files modified
 | All listening.html wrappers | 5-Delightful | Teal popup, favicon fixed |
 | MOCK 2 & 3 | 3-Efficient | Content distinct, all wrappers correct |
 
+### Round 5
+**Explored:** Footer nav interaction after answering all Part 1 questions
+**Action:** ELEVATE 1 (teal answered-state on footer question buttons)
+
+- [T0] a2-key-answer-sync.js + a2-key-shared.js — Injected .subQuestion.answered CSS into iframe Part pages. Footer question buttons now show teal mint (#ccfbf1) bg when answered, deeper teal (#99f6e4) when active+answered. Students see their progress at a glance across all 7 Parts.
+  Mode: elevate
+  Quality layer: 4-Polished → 5-Delightful
+  Files: assets/js/cambridge/a2-key-answer-sync.js, assets/js/cambridge/a2-key-shared.js
+
+### Final Quality Map (A2 Key)
+| Page | Layer | Notes |
+|------|-------|-------|
+| Cambridge/dashboard-cambridge.html | 5-Delightful | Teal identity, modal, animations |
+| A2-Key/Part 1-3 (Reading MCQ) | 5-Delightful | Teal answered-state on footer buttons |
+| A2-Key/Part 4 (Cloze Selects) | 5-Delightful | Green filled-state + teal footer |
+| A2-Key/Part 5 (Gap Fill) | 5-Delightful | Green filled-state + teal footer |
+| A2-Key/Part 6-7 (Writing) | 5-Delightful | Green filled-state + teal footer |
+| A2-Key/Listening Part 1-5 | 4-Polished | Filled-state on Part 2 inputs, teal footer |
+| All Cambridge speaking.html | 5-Delightful | Teal identity |
+| All listening.html wrappers | 5-Delightful | Teal popup, favicon fixed |
+| MOCK 2 & 3 | 4-Polished | Content distinct, teal footer, filled-state |
+
 ### Deferred
 - Part 6 missing images (Part 6_files/img) — 404 errors, need source assets
 - Mock test selection UI — by design, invigilator-controlled
 
 ### Session Stats (cumulative)
-Pages explored: 26
-Rounds: 4
+Pages explored: 27
+Rounds: 5
 Polishes landed: 6
 Rebuilds landed: 0
-Elevations landed: 4
+Elevations landed: 5
 Reverted: 0
 Fixes landed: 1 (32 files)
-Changes shipped: 58 files modified
+Changes shipped: 60 files modified
 
 ---
 
