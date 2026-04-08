@@ -383,10 +383,15 @@
                                 <td>${s.band_score || 'N/A'}</td>
                                 <td>${this.formatDate(s.created_at)}</td>
                                 <td>${this.calculateDuration(s.start_time, s.end_time)}</td>
-                                <td>
+                                <td style="white-space:nowrap;">
                                     <button class="btn btn-info" style="padding: 6px 12px; font-size: 12px;"
                                             onclick="openAnswerComparison('${s.id}')">
-                                        \uD83D\uDCCB Compare Answers
+                                        \uD83D\uDCCB Compare
+                                    </button>
+                                    <button class="btn" style="padding: 6px 8px; font-size: 12px; background:#dc3545;"
+                                            onclick="event.stopPropagation(); deleteSubmission('${s.id}')"
+                                            title="Delete submission">
+                                        \uD83D\uDDD1\uFE0F
                                     </button>
                                 </td>
                             </tr>

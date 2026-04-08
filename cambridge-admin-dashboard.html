@@ -406,10 +406,15 @@
                                 <td class="${this.getScoreClass(s.score)}">${esc(this.getScoreDisplay(s))}</td>
                                 <td>${esc(this.formatDate(s.created_at))}</td>
                                 <td>${esc(this.calculateDuration(s.start_time, s.end_time))}</td>
-                                <td>
+                                <td style="white-space:nowrap;">
                                     <button class="btn btn-info" style="padding: 6px 12px; font-size: 12px;"
                                             onclick="openAnswerComparison('${esc(s.id)}')">
                                         \uD83D\uDCCB View
+                                    </button>
+                                    <button class="btn" style="padding: 6px 8px; font-size: 12px; background:#dc3545;"
+                                            onclick="event.stopPropagation(); deleteSubmission('${esc(s.id)}')"
+                                            title="Delete submission">
+                                        \uD83D\uDDD1\uFE0F
                                     </button>
                                 </td>
                             </tr>
@@ -690,7 +695,7 @@
         }
         async function fetchCorrectAnswersForSkill(level, skill, mock) {
             try {
-                const response = await fetch(`${API_BASE}/cambridge-answers?level=${encodeURIComponent(level)}&skill=${skill}&mock=${mock}`);
+                const response = await dashboard._authFetch(`${API_BASE}/cambridge-answers?level=${encodeURIComponent(level)}&skill=${skill}&mock=${mock}`);
                 const data = await response.json();
                 if (data.success && data.answers && Object.keys(data.answers).length > 0) {
                     dashboard.correctAnswers[`${level}_${skill}_${mock}`] = data.answers;
@@ -858,7 +863,7 @@
             const grade = document.getElementById('gradeInput').value;
             if (!finalScore || finalScore < 0 || finalScore > 100) { alert('Please enter a valid score between 0 and 100'); return; }
             try {
-                const response = await fetch(`${API_BASE}/cambridge-submissions/${submissionId}/score`, {
+                const response = await dashboard._authFetch(`${API_BASE}/cambridge-submissions/${submissionId}/score`, {
                     method: 'PATCH', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ score: parseInt(finalScore), grade: grade || null })
                 });
@@ -872,7 +877,7 @@
             const grade = document.getElementById('writingGrade').value;
             if (!score || score < 0 || score > 100) { alert('Please enter a valid score between 0 and 100'); return; }
             try {
-                const response = await fetch(`${API_BASE}/cambridge-submissions/${submissionId}/score`, {
+                const response = await dashboard._authFetch(`${API_BASE}/cambridge-submissions/${submissionId}/score`, {
                     method: 'PATCH', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ score: parseInt(score), grade: grade || null })
                 });

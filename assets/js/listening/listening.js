@@ -1145,31 +1145,24 @@
                 localStorage.setItem('listeningStatus', 'completed');
                 localStorage.setItem('listeningEndTime', testData.endTime);
                 
+                // Determine correct dashboard path
+                const examType = localStorage.getItem('examType');
+                const dashboardPath = examType === 'Cambridge' ? '../../Cambridge/dashboard-cambridge.html' : '../../student-dashboard.html';
+
                 // Try to submit to backend (admin dashboard)
                 try {
                     await saveListeningToDatabase(testData);
-
-                    // Show success message
-                    alert('Listening section completed successfully!\nYou will be redirected to the dashboard.');
-                    
-                    // Redirect to dashboard
-                    setTimeout(() => {
-                        window.location.href = '../../student-dashboard.html';
-                    }, 500);
-                    
                 } catch (dbError) {
-                    // Still proceed to dashboard even if backend fails
-                    alert('Listening section completed successfully!\nAnswers saved locally. You will be redirected to the dashboard.');
-                    
-                    setTimeout(() => {
-                        window.location.href = '../../student-dashboard.html';
-                    }, 500);
+                    // Answers already saved locally above — proceed to dashboard
+                    console.error('Database save failed, continuing with local backup:', dbError);
                 }
+
+                // Redirect to dashboard
+                window.location.href = dashboardPath;
                 
             } catch (error) {
                 console.error('Listening submit error:', error);
-                alert('Error submitting listening test: ' + error.message);
-                // Re-enable button on error
+                // Re-enable button on error so student can retry
                 const submitButton = document.getElementById('deliver-button');
                 if (submitButton) {
                     submitButton.disabled = false;
