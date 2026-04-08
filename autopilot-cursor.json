@@ -1,15 +1,15 @@
 {
-  "lastRun": "2026-04-09 06:00",
-  "lastPersona": "ielts-student-round2",
-  "completedPersonas": ["ielts-student", "cambridge-a2-student", "invigilator", "admin-scoring", "admin-management", "nervous-first-timer", "cambridge-a1-movers-student", "cambridge-b1-preliminary-student", "cambridge-a2-key-student-round2", "staff-round-2", "cheater", "ielts-student-round2"],
-  "currentRotation": 12,
-  "totalSessions": 12,
+  "lastRun": "2026-04-09 07:30",
+  "lastPersona": "cheater-and-b2-first",
+  "completedPersonas": ["ielts-student", "cambridge-a2-student", "invigilator", "admin-scoring", "admin-management", "nervous-first-timer", "cambridge-a1-movers-student", "cambridge-b1-preliminary-student", "cambridge-a2-key-student-round2", "staff-round-2", "cheater", "ielts-student-round2", "cambridge-b2-first-student"],
+  "currentRotation": 13,
+  "totalSessions": 13,
   "stats": {
     "featuresCreated": 17,
     "structuralDecisions": 0,
-    "codeHealed": 41,
-    "experienceImprovements": 20,
-    "scenariosTested": 44,
-    "totalCommits": 40
+    "codeHealed": 48,
+    "experienceImprovements": 21,
+    "scenariosTested": 54,
+    "totalCommits": 48
   }
 }
