@@ -1,0 +1,88 @@
+{
+  "test": "B2 First Reading & Use of English — MOCK 2",
+  "totalQuestions": 32,
+  "parts": {
+    "part1": {
+      "questions": "1-5",
+      "type": "Multiple Choice — Use of English (vocabulary)",
+      "answers": {
+        "1": "?",
+        "2": "?",
+        "3": "?",
+        "4": "?",
+        "5": "?"
+      }
+    },
+    "part2": {
+      "questions": "6-10",
+      "type": "Multiple Choice — Use of English (grammar)",
+      "answers": {
+        "6": "?",
+        "7": "?",
+        "8": "?",
+        "9": "?",
+        "10": "?"
+      }
+    },
+    "part3": {
+      "questions": "11-15",
+      "type": "Multiple Choice — Use of English (word formation)",
+      "answers": {
+        "11": "?",
+        "12": "?",
+        "13": "?",
+        "14": "?",
+        "15": "?"
+      }
+    },
+    "part4": {
+      "questions": "16-20",
+      "type": "Gapped Text — removed sentences",
+      "answers": {
+        "16": "?",
+        "17": "?",
+        "18": "?",
+        "19": "?",
+        "20": "?"
+      }
+    },
+    "part5": {
+      "questions": "21-26",
+      "type": "Multiple Choice — Reading comprehension",
+      "answers": {
+        "21": "?",
+        "22": "?",
+        "23": "?",
+        "24": "?",
+        "25": "?",
+        "26": "?"
+      }
+    },
+    "part6": {
+      "questions": "27-32",
+      "type": "Multiple Matching — cross-text matching",
+      "answers": {
+        "27": "?",
+        "28": "?",
+        "29": "?",
+        "30": "?",
+        "31": "?",
+        "32": "?"
+      }
+    }
+  },
+  "markScheme": {
+    "totalMarks": 32,
+    "passMark": 16,
+    "gradeA": "28-32 marks",
+    "gradeB": "22-27 marks",
+    "gradeC": "16-21 marks"
+  },
+  "notes": [
+    "Replace '?' with correct answers before use",
+    "Parts 1-3: Use of English (vocabulary, grammar, word formation)",
+    "Parts 4-6: Reading comprehension (gapped text, MCQ, multiple matching)",
+    "Timer: 75 minutes for the complete Reading & Use of English paper",
+    "Answers are stored in the database via admin dashboard, not from this file"
+  ]
+}

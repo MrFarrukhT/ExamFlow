@@ -1,86 +1,70 @@
 {
-  "test": "A2 Key Listening",
-  "totalQuestions": 26,
+  "test": "B2 First Listening — MOCK 1",
+  "totalQuestions": 25,
   "parts": {
     "part1": {
-      "questions": "1-5",
+      "questions": "1-7",
       "type": "Multiple Choice",
       "answers": {
-        "1": "B",
-        "2": "A",
-        "3": "B",
-        "4": "C",
-        "5": "A"
+        "1": "?",
+        "2": "?",
+        "3": "?",
+        "4": "?",
+        "5": "?",
+        "6": "?",
+        "7": "?"
       }
     },
     "part2": {
-      "questions": "6-11",
-      "type": "Gap Fill / Note Completion",
+      "questions": "8-13",
+      "type": "Multiple Choice",
       "answers": {
-        "6": "John Smith",
-        "7": "15",
-        "8": "tennis",
-        "9": "Monday",
-        "10": "4:30",
-        "11": "25"
+        "8": "?",
+        "9": "?",
+        "10": "?",
+        "11": "?",
+        "12": "?",
+        "13": "?"
       }
     },
     "part3": {
-      "questions": "12-16",
-      "type": "Multiple Choice - Longer Conversation",
+      "questions": "14-19",
+      "type": "Gap Fill — one or two words, a number, a date, or a time",
       "answers": {
-        "12": "B",
-        "13": "A",
-        "14": "C",
-        "15": "B",
-        "16": "C"
+        "14": "?",
+        "15": "?",
+        "16": "?",
+        "17": "?",
+        "18": "?",
+        "19": "?"
       }
     },
     "part4": {
-      "questions": "17-21",
-      "type": "Multiple Choice - Monologue",
+      "questions": "20-25",
+      "type": "Multiple Choice",
       "answers": {
-        "17": "A",
-        "18": "B",
-        "19": "C",
-        "20": "A",
-        "21": "B"
-      }
-    },
-    "part5": {
-      "questions": "22-26",
-      "type": "Matching",
-      "answers": {
-        "22": "A",
-        "23": "C",
-        "24": "E",
-        "25": "F",
-        "26": "H"
-      },
-      "options": {
-        "A": "went shopping",
-        "B": "visited friends",
-        "C": "played football",
-        "D": "a book",
-        "E": "a necklace",
-        "F": "at the park",
-        "G": "at the cinema",
-        "H": "3:15 PM"
+        "20": "?",
+        "21": "?",
+        "22": "?",
+        "23": "?",
+        "24": "?",
+        "25": "?"
       }
     }
   },
   "markScheme": {
-    "totalMarks": 26,
+    "totalMarks": 25,
     "passMark": 13,
-    "gradeA": "23-26 marks",
-    "gradeB": "18-22 marks",
+    "gradeA": "22-25 marks",
+    "gradeB": "18-21 marks",
     "gradeC": "13-17 marks"
   },
   "notes": [
-    "Audio files should be placed in: assets/audio/",
-    "Audio file names: a2-key-listening-part1.mp3 through a2-key-listening-part5.mp3",
-    "Answers are automatically saved to localStorage as students progress",
-    "Timer is set to 30 minutes (1800 seconds) for the complete listening test"
+    "Replace '?' with correct answers before use",
+    "MCQ answers should be A, B, or C",
+    "Gap Fill answers (Part 3) are short text — accept reasonable spelling variants",
+    "Audio file: ./audio/Listening B1-001.mp3",
+    "Timer: 40 minutes for the complete listening test",
+    "Answers are stored in the database via admin dashboard, not from this file"
   ]
 }
-
