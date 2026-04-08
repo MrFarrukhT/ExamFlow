@@ -6,7 +6,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createDatabaseManager, adminLoginHandler } from './database.js';
-import { removeToken } from './auth.js';
+import { removeToken, rateLimit } from './auth.js';
 
 /**
  * Create a configured Express server with database, middleware, and lifecycle hooks.
@@ -93,8 +93,11 @@ export function createServer({ port, name, callerUrl, dbConfig, staticOptions, o
         app.use(express.static('./', sOpts));
     }
 
-    // Admin login endpoint
-    app.post('/admin-login', adminLoginHandler);
+    // Rate limit auth endpoints to prevent brute force (5 attempts per minute per IP)
+    const authLimiter = rateLimit({ windowMs: 60000, maxRequests: 5, message: 'Too many login attempts. Try again in a minute.' });
+
+    // Admin login endpoint (rate limited)
+    app.post('/admin-login', authLimiter, adminLoginHandler);
 
     // Admin logout endpoint — invalidates the token server-side
     app.post('/admin-logout', (req, res) => {
@@ -106,8 +109,8 @@ export function createServer({ port, name, callerUrl, dbConfig, staticOptions, o
         res.json({ success: true, message: 'Logged out' });
     });
 
-    // Invigilator password verification (server-side, password never sent to client)
-    app.post('/verify-invigilator', (req, res) => {
+    // Invigilator password verification (server-side, password never sent to client) (rate limited)
+    app.post('/verify-invigilator', authLimiter, (req, res) => {
         const { password } = req.body;
         if (!password || typeof password !== 'string') {
             return res.status(400).json({ success: false, message: 'Password is required' });

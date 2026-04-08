@@ -368,8 +368,11 @@ app.get('/admin', (req, res) => {
     res.sendFile(path.resolve('ielts-admin-dashboard.html'));
 });
 
-// Admin login
-app.post('/admin-login', (req, res) => {
+// Rate limit auth endpoints to prevent brute force (5 attempts per minute per IP)
+const authLimiter = rateLimit({ windowMs: 60000, maxRequests: 5, message: 'Too many login attempts. Try again in a minute.' });
+
+// Admin login (rate limited)
+app.post('/admin-login', authLimiter, (req, res) => {
     const { username, password } = req.body;
     if (!username || !password || typeof username !== 'string' || typeof password !== 'string') {
         return res.status(400).json({ success: false, message: 'Username and password are required' });
@@ -394,8 +397,8 @@ app.post('/admin-logout', (req, res) => {
     res.json({ success: true, message: 'Logged out' });
 });
 
-// Invigilator password verification
-app.post('/verify-invigilator', (req, res) => {
+// Invigilator password verification (rate limited)
+app.post('/verify-invigilator', authLimiter, (req, res) => {
     const { password } = req.body;
     if (!password || typeof password !== 'string') {
         return res.status(400).json({ success: false, message: 'Password is required' });
