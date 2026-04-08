@@ -1,0 +1,41 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - img "Innovative Centre" [ref=e5]
+      - generic [ref=e6]: Cambridge General English
+      - generic [ref=e7]:
+        - generic [ref=e8]: B2 First
+        - link "Invigilator" [ref=e9] [cursor=pointer]:
+          - /url: "#"
+  - main [ref=e10]:
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - heading "Welcome, Alex Student" [level=1] [ref=e13]
+        - paragraph [ref=e14]: "ID: 2001"
+      - text: ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - generic [ref=e54]: B2 First
+          - button "Change Level" [ref=e55] [cursor=pointer]
+        - heading "Select a Module to Begin" [level=2] [ref=e56]
+        - generic [ref=e57]:
+          - generic [ref=e58]:
+            - heading "Reading & Use of English" [level=3] [ref=e59]
+            - paragraph [ref=e60]: ~60 minutes
+            - generic [ref=e61]: Not Started
+            - button "Start Reading" [ref=e62] [cursor=pointer]
+          - generic [ref=e63]:
+            - heading "Writing" [level=3] [ref=e64]
+            - paragraph [ref=e65]: ~45 minutes
+            - generic [ref=e66]: Not Started
+            - button "Start Writing" [ref=e67] [cursor=pointer]
+          - generic [ref=e68]:
+            - heading "Listening" [level=3] [ref=e69]
+            - paragraph [ref=e70]: ~40 minutes
+            - generic [ref=e71]: Not Started
+            - button "Start Listening" [ref=e72] [cursor=pointer]
+          - generic [ref=e73]:
+            - heading "Speaking" [level=3] [ref=e74]
+            - paragraph [ref=e75]: ~14 minutes
+            - generic [ref=e76]: Not Started
+            - button "Start Speaking" [ref=e77] [cursor=pointer]

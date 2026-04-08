@@ -1,0 +1,92 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "header.logo"
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - status [ref=e11]: Connected
+            - generic [ref=e13]: 
+          - button "Messages" [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: Messages
+              - generic [ref=e17]: 
+          - button "Options" [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: Options
+              - generic [ref=e21]: 
+        - generic [ref=e24]:
+          - generic [ref=e25]: Candidate ID
+          - generic [ref=e26]: B1-2024-001
+  - generic [ref=e29]:
+    - generic [ref=e31]:
+      - 'heading "Part 3: Questions 14-19" [level=3] [ref=e32]'
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: For each question, write the correct answer in the gap. Write one or two words or a number or a date or a time.
+        - paragraph [ref=e35]: You will hear a guide telling a group of tourists about a costume museum, where you can see clothes that people wore in the past.
+    - generic [ref=e36]:
+      - heading "Costume Museum" [level=2] [ref=e37]
+      - generic [ref=e38]:
+        - heading "Opening hours" [level=3] [ref=e39]
+        - list [ref=e40]:
+          - listitem [ref=e41]: "• weekdays: 10 am to 5 pm"
+          - listitem [ref=e42]:
+            - text: "• Saturday and Sunday: 10 am to"
+            - textbox "(14)" [ref=e43]
+      - generic [ref=e44]:
+        - heading "What you can see" [level=3] [ref=e45]
+        - list [ref=e46]:
+          - listitem [ref=e47]: • 18th-century coats
+          - listitem [ref=e48]:
+            - text: • a collection of
+            - textbox "(15)" [ref=e49]
+            - text: from the 19th century
+          - listitem [ref=e50]:
+            - text: • the history of
+            - textbox "(16)" [ref=e51]
+            - text: (most popular display)
+          - listitem [ref=e52]:
+            - text: • clothes for
+            - textbox "(17)" [ref=e53]
+            - text: from all over the world (next week only)
+      - generic [ref=e54]:
+        - heading "This week's Saturday lecture" [level=3] [ref=e55]
+        - list [ref=e56]:
+          - listitem [ref=e57]:
+            - text: •
+            - textbox "(18)" [ref=e58]
+            - text: in the 1920s
+      - generic [ref=e59]:
+        - heading "Tickets" [level=3] [ref=e60]
+        - list [ref=e61]:
+          - listitem [ref=e62]: • adults £5
+          - listitem [ref=e63]: • students £3
+          - listitem [ref=e64]:
+            - text: • discounts available on
+            - textbox "(19)" [ref=e65]
+  - contentinfo [ref=e67]:
+    - navigation [ref=e68]:
+      - button [ref=e69]:
+        - generic [ref=e70]: 
+      - button [ref=e71]:
+        - generic [ref=e72]: 
+    - navigation [ref=e73]:
+      - tab "Part 1" [ref=e75]:
+        - generic [ref=e76]: Part 1
+      - tab "Part 2" [ref=e78]:
+        - generic [ref=e79]: Part 2
+      - generic [ref=e80]:
+        - tab "Part 3" [ref=e81]:
+          - generic [ref=e82]: Part 3
+        - generic [ref=e83]:
+          - button "14" [ref=e84]
+          - button "15" [ref=e85]
+          - button "16" [ref=e86]
+          - button "17" [ref=e87]
+          - button "18" [ref=e88]
+          - button "19" [ref=e89]
+      - tab "Part 4" [ref=e91]:
+        - generic [ref=e92]: Part 4
+      - button [ref=e93]:
+        - generic [ref=e94]: 

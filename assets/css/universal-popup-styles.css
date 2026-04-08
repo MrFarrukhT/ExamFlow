@@ -926,14 +926,18 @@ body.dark-mode .subQuestion.answered {
 
 /* Filled-state feedback — shows student which inputs have answers */
 .answer-input.filled,
-.gap-input.filled {
+.gap-input.filled,
+.q-input.filled,
+.color-input.filled {
     border-bottom-color: #16a34a !important;
     background-color: #f0fdf4 !important;
     color: #15803d !important;
 }
 
 body.dark-mode .answer-input.filled,
-body.dark-mode .gap-input.filled {
+body.dark-mode .gap-input.filled,
+body.dark-mode .q-input.filled,
+body.dark-mode .color-input.filled {
     border-bottom-color: #22c55e !important;
     background-color: #052e16 !important;
     color: #86efac !important;

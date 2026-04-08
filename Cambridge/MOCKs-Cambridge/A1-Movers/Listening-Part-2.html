@@ -195,7 +195,7 @@
                                             <div class="q-num">6</div>
                                             <div class="q-text">Age when first had a phone:</div>
                                             <div class="q-input-container">
-                                                <input type="text" class="q-input" id="q6" onchange="saveAnswer(6, this.value)">
+                                                <input type="text" class="q-input" id="q6" oninput="saveAnswer(6, this.value)">
                                             </div>
                                         </div>
 
@@ -203,7 +203,7 @@
                                             <div class="q-num">7</div>
                                             <div class="q-text">He texts his friends most at:</div>
                                             <div class="q-input-container">
-                                                <input type="text" class="q-input" id="q7" onchange="saveAnswer(7, this.value)">
+                                                <input type="text" class="q-input" id="q7" oninput="saveAnswer(7, this.value)">
                                             </div>
                                         </div>
 
@@ -211,7 +211,7 @@
                                             <div class="q-num">8</div>
                                             <div class="q-text">Person that he texts in his family:</div>
                                             <div class="q-input-container">
-                                                <input type="text" class="q-input" id="q8" onchange="saveAnswer(8, this.value)">
+                                                <input type="text" class="q-input" id="q8" oninput="saveAnswer(8, this.value)">
                                             </div>
                                         </div>
 
@@ -219,7 +219,7 @@
                                             <div class="q-num">9</div>
                                             <div class="q-text">Boy's name:</div>
                                             <div class="q-input-container">
-                                                <input type="text" class="q-input" id="q9" onchange="saveAnswer(9, this.value)">
+                                                <input type="text" class="q-input" id="q9" oninput="saveAnswer(9, this.value)">
                                             </div>
                                         </div>
 
@@ -227,7 +227,7 @@
                                             <div class="q-num">10</div>
                                             <div class="q-text">Name of school:</div>
                                             <div class="q-input-container">
-                                                <input type="text" class="q-input" id="q10" onchange="saveAnswer(10, this.value)">
+                                                <input type="text" class="q-input" id="q10" oninput="saveAnswer(10, this.value)">
                                             </div>
                                         </div>
                                     </div>
@@ -312,11 +312,17 @@
             let answers = JSON.parse(localStorage.getItem('cambridge-listeningAnswers') || '{}');
             answers[`L${questionNum}`] = answer;
             localStorage.setItem('cambridge-listeningAnswers', JSON.stringify(answers));
-            
+
             const btn = document.querySelector(`[data-ordernumber="${questionNum}"]`);
             if (btn) {
                 if(answer.trim()) btn.classList.add('answered');
                 else btn.classList.remove('answered');
+            }
+            // Visual filled-state on input
+            const input = document.getElementById(`q${questionNum}`);
+            if (input) {
+                if (answer.trim()) input.classList.add('filled');
+                else input.classList.remove('filled');
             }
         }
 
@@ -326,8 +332,8 @@
                 const answer = answers[`L${i}`];
                 if (answer) {
                     const input = document.getElementById(`q${i}`);
-                    if (input) input.value = answer;
-                    
+                    if (input) { input.value = answer; input.classList.add('filled'); }
+
                     const btn = document.querySelector(`[data-ordernumber="${i}"]`);
                     if (btn) btn.classList.add('answered');
                 }

@@ -1,0 +1,134 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "header.logo"
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - status [ref=e11]: Connected
+            - generic [ref=e13]: 
+          - button "Messages" [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: Messages
+              - generic [ref=e17]: 
+          - button "Options" [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: Options
+              - generic [ref=e21]: 
+        - generic [ref=e24]:
+          - generic [ref=e25]: Candidate ID
+          - generic [ref=e26]: B1-2024-001
+  - generic [ref=e29]:
+    - generic [ref=e31]:
+      - 'heading "Part 2: Questions 8-13" [level=3] [ref=e32]'
+      - paragraph [ref=e34]: For each question, choose the correct answer.
+    - generic [ref=e35]:
+      - generic [ref=e36]:
+        - text: "8"
+        - strong [ref=e37]: You will hear a boy telling a friend about an opera singer. When he heard her singing, he felt
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - radio "A) keen to learn about others like her." [ref=e40]
+          - text: A) keen to learn about others like her.
+        - generic [ref=e41]:
+          - radio "B) amazed at how very good she was." [ref=e42]
+          - text: B) amazed at how very good she was.
+        - generic [ref=e43]:
+          - radio "C) surprised that she wasn't better known." [ref=e44]
+          - text: C) surprised that she wasn't better known.
+    - generic [ref=e45]:
+      - generic [ref=e46]:
+        - text: "9"
+        - strong [ref=e47]: You will hear two friends talking about holidays. When the woman is on holiday, she likes to
+      - generic [ref=e48]:
+        - generic [ref=e49]:
+          - radio "A) have some new experiences." [ref=e50]
+          - text: A) have some new experiences.
+        - generic [ref=e51]:
+          - radio "B) visit different countries." [ref=e52]
+          - text: B) visit different countries.
+        - generic [ref=e53]:
+          - radio "C) do very little." [ref=e54]
+          - text: C) do very little.
+    - generic [ref=e55]:
+      - generic [ref=e56]:
+        - text: "10"
+        - strong [ref=e57]: You will hear two friends talking about a national science competition. What do they both like about the competition?
+      - generic [ref=e58]:
+        - generic [ref=e59]:
+          - radio "A) It gets people interested in science." [ref=e60]
+          - text: A) It gets people interested in science.
+        - generic [ref=e61]:
+          - radio "B) It can lead to great scientific discoveries." [ref=e62]
+          - text: B) It can lead to great scientific discoveries.
+        - generic [ref=e63]:
+          - radio "C) It gives non-scientists the chance to enter." [ref=e64]
+          - text: C) It gives non-scientists the chance to enter.
+    - generic [ref=e65]:
+      - generic [ref=e66]:
+        - text: "11"
+        - strong [ref=e67]: You will hear a girl talking to a friend about visiting her cousins. What pleased her about the visit?
+      - generic [ref=e68]:
+        - generic [ref=e69]:
+          - radio "A) They helped her to make a decision." [ref=e70]
+          - text: A) They helped her to make a decision.
+        - generic [ref=e71]:
+          - radio "B) The place where they live is beautiful." [ref=e72]
+          - text: B) The place where they live is beautiful.
+        - generic [ref=e73]:
+          - radio "C) She found she shared an interest with them." [ref=e74]
+          - text: C) She found she shared an interest with them.
+    - generic [ref=e75]:
+      - generic [ref=e76]:
+        - text: "12"
+        - strong [ref=e77]: You will hear two friends talking about learning Spanish. The man suggests that the woman should
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - radio "A) speak Spanish with a friend." [ref=e80]
+          - text: A) speak Spanish with a friend.
+        - generic [ref=e81]:
+          - radio "B) study Spanish grammar." [ref=e82]
+          - text: B) study Spanish grammar.
+        - generic [ref=e83]:
+          - radio "C) read more in Spanish." [ref=e84]
+          - text: C) read more in Spanish.
+    - generic [ref=e85]:
+      - generic [ref=e86]:
+        - text: "13"
+        - strong [ref=e87]: You will hear a husband and wife talking about a tree in their garden. What do they agree about?
+      - generic [ref=e88]:
+        - generic [ref=e89]:
+          - radio "A) how attractive it is" [ref=e90]
+          - text: A) how attractive it is
+        - generic [ref=e91]:
+          - radio "B) how fast it has grown" [ref=e92]
+          - text: B) how fast it has grown
+        - generic [ref=e93]:
+          - radio "C) how much fruit it provides" [ref=e94]
+          - text: C) how much fruit it provides
+  - contentinfo [ref=e96]:
+    - navigation [ref=e97]:
+      - button [ref=e98]:
+        - generic [ref=e99]: 
+      - button [ref=e100]:
+        - generic [ref=e101]: 
+    - navigation [ref=e102]:
+      - tab "Part 1" [ref=e104]:
+        - generic [ref=e105]: Part 1
+      - generic [ref=e106]:
+        - tab "Part 2" [ref=e107]:
+          - generic [ref=e108]: Part 2
+        - generic [ref=e109]:
+          - button "8" [ref=e110]
+          - button "9" [ref=e111]
+          - button "10" [ref=e112]
+          - button "11" [ref=e113]
+          - button "12" [ref=e114]
+          - button "13" [ref=e115]
+      - tab "Part 3" [ref=e117]:
+        - generic [ref=e118]: Part 3
+      - tab "Part 4" [ref=e120]:
+        - generic [ref=e121]: Part 4
+      - button [ref=e122]:
+        - generic [ref=e123]: 

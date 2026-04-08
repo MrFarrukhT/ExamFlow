@@ -1,0 +1,136 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "header.logo"
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - status [ref=e11]: Connected
+            - generic [ref=e13]: 
+          - button "Messages" [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: Messages
+              - generic [ref=e17]: 
+          - button "Options" [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: Options
+              - generic [ref=e21]: 
+        - generic [ref=e24]:
+          - generic [ref=e25]: Candidate ID
+          - generic [ref=e26]: B1-2024-001
+  - generic [ref=e29]:
+    - generic [ref=e31]:
+      - 'heading "Part 4: Questions 20-25" [level=3] [ref=e32]'
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: For each question, choose the correct answer.
+        - paragraph [ref=e35]: You will hear an interview with a woman called Hazel Ramsey, who's talking about her work as a sports journalist.
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - text: "20"
+        - strong [ref=e38]: When Hazel started writing about sport, she realised that
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - radio "A) she had a natural talent for it." [ref=e41]
+          - text: A) she had a natural talent for it.
+        - generic [ref=e42]:
+          - radio "B) she could make a career out of it." [ref=e43]
+          - text: B) she could make a career out of it.
+        - generic [ref=e44]:
+          - radio "C) she enjoyed it more than actually playing." [ref=e45]
+          - text: C) she enjoyed it more than actually playing.
+    - generic [ref=e46]:
+      - generic [ref=e47]:
+        - text: "21"
+        - strong [ref=e48]: What does Hazel say about the university course that she did?
+      - generic [ref=e49]:
+        - generic [ref=e50]:
+          - radio "A) It helped her understand sports better." [ref=e51]
+          - text: A) It helped her understand sports better.
+        - generic [ref=e52]:
+          - radio "B) It made her feel more self-confident." [ref=e53]
+          - text: B) It made her feel more self-confident.
+        - generic [ref=e54]:
+          - radio "C) It prepared her for a specific job." [ref=e55]
+          - text: C) It prepared her for a specific job.
+    - generic [ref=e56]:
+      - generic [ref=e57]:
+        - text: "22"
+        - strong [ref=e58]: What problems did Hazel have when she started interviewing sports people?
+      - generic [ref=e59]:
+        - generic [ref=e60]:
+          - radio "A) She didn't know how to get them to say interesting things." [ref=e61]
+          - text: A) She didn't know how to get them to say interesting things.
+        - generic [ref=e62]:
+          - radio "B) She didn't find out much about them in advance." [ref=e63]
+          - text: B) She didn't find out much about them in advance.
+        - generic [ref=e64]:
+          - radio "C) She didn't listen to them carefully enough." [ref=e65]
+          - text: C) She didn't listen to them carefully enough.
+    - generic [ref=e66]:
+      - generic [ref=e67]:
+        - text: "23"
+        - strong [ref=e68]: Hazel thinks her writing has improved because she includes
+      - generic [ref=e69]:
+        - generic [ref=e70]:
+          - radio "A) more of her own ideas." [ref=e71]
+          - text: A) more of her own ideas.
+        - generic [ref=e72]:
+          - radio "B) a wider range of vocabulary." [ref=e73]
+          - text: B) a wider range of vocabulary.
+        - generic [ref=e74]:
+          - radio "C) more details that are amusing." [ref=e75]
+          - text: C) more details that are amusing.
+    - generic [ref=e76]:
+      - generic [ref=e77]:
+        - text: "24"
+        - strong [ref=e78]: Hazel says the hardest part of her job is having to
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - radio "A) work long hours." [ref=e81]
+          - text: A) work long hours.
+        - generic [ref=e82]:
+          - radio "B) write very quickly." [ref=e83]
+          - text: B) write very quickly.
+        - generic [ref=e84]:
+          - radio "C) deal with technology." [ref=e85]
+          - text: C) deal with technology.
+    - generic [ref=e86]:
+      - generic [ref=e87]:
+        - text: "25"
+        - strong [ref=e88]: What is Hazel planning to do in the future?
+      - generic [ref=e89]:
+        - generic [ref=e90]:
+          - radio "A) write about things that don't involve sport" [ref=e91]
+          - text: A) write about things that don't involve sport
+        - generic [ref=e92]:
+          - radio "B) learn to speak more languages" [ref=e93]
+          - text: B) learn to speak more languages
+        - generic [ref=e94]:
+          - radio "C) develop photography skills" [ref=e95]
+          - text: C) develop photography skills
+  - contentinfo [ref=e97]:
+    - navigation [ref=e98]:
+      - button [ref=e99]:
+        - generic [ref=e100]: 
+      - button [disabled] [ref=e101]:
+        - generic [ref=e102]: 
+    - navigation [ref=e103]:
+      - tab "Part 1" [ref=e105]:
+        - generic [ref=e106]: Part 1
+      - tab "Part 2" [ref=e108]:
+        - generic [ref=e109]: Part 2
+      - tab "Part 3" [ref=e111]:
+        - generic [ref=e112]: Part 3
+      - generic [ref=e113]:
+        - tab "Part 4" [ref=e114]:
+          - generic [ref=e115]: Part 4
+        - generic [ref=e116]:
+          - button "20" [ref=e117]
+          - button "21" [ref=e118]
+          - button "22" [ref=e119]
+          - button "23" [ref=e120]
+          - button "24" [ref=e121]
+          - button "25" [ref=e122]
+      - button [ref=e123]:
+        - generic [ref=e124]: 
