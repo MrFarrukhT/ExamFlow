@@ -118,7 +118,7 @@
             let hasError = false;
 
             // Validate Student ID
-            if (!studentId || !/^[0-9]{1,4}$/.test(studentId)) {
+            if (!studentId || !/^[0-9]{1,10}$/.test(studentId)) {
                 showError('idGroup', 'studentIdError');
                 document.getElementById('studentId').focus();
                 hasError = true;

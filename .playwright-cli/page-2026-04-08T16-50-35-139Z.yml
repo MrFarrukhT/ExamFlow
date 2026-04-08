@@ -1,0 +1,39 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - img "Innovative Centre" [ref=e5]
+      - generic [ref=e6]: Cambridge General English
+      - generic [ref=e7]:
+        - generic [ref=e8]: A2 Key
+        - link "Invigilator" [ref=e9] [cursor=pointer]:
+          - /url: "#"
+  - main [ref=e10]:
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - heading "Welcome, Test Student" [level=1] [ref=e13]
+        - paragraph [ref=e14]: "ID: 12345"
+      - text: ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓
+      - generic [ref=e83]:
+        - generic [ref=e84]:
+          - generic [ref=e85]: A2 Key
+          - button "Change Level" [ref=e86] [cursor=pointer]
+        - heading "Select a Module to Begin" [level=2] [ref=e87]
+        - generic [ref=e88]:
+          - generic [ref=e89]:
+            - heading "Reading & Writing" [level=3] [ref=e90]
+            - paragraph [ref=e91]: ~60 minutes
+            - paragraph [ref=e92]: Multiple parts. Read texts, match words, and write short answers.
+            - generic [ref=e93]: Not Started
+            - button "Start Reading & Writing" [ref=e94] [cursor=pointer]
+          - generic [ref=e95]:
+            - heading "Listening" [level=3] [ref=e96]
+            - paragraph [ref=e97]: ~30 minutes
+            - paragraph [ref=e98]: Listen to audio recordings and answer questions. Audio cannot be paused.
+            - generic [ref=e99]: Not Started
+            - button "Start Listening" [ref=e100] [cursor=pointer]
+          - generic [ref=e101]:
+            - heading "Speaking" [level=3] [ref=e102]
+            - paragraph [ref=e103]: ~10 minutes
+            - paragraph [ref=e104]: Record yourself answering questions. You'll test your microphone first.
+            - generic [ref=e105]: Not Started
+            - button "Start Speaking" [ref=e106] [cursor=pointer]
