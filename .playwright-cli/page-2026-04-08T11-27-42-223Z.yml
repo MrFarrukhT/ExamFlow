@@ -1,0 +1,139 @@
+- generic [active] [ref=e1]:
+  - iframe [ref=e2]:
+    - generic [ref=f1e4]:
+      - banner [ref=f1e5]:
+        - generic [ref=f1e6]:
+          - generic [ref=f1e7]:
+            - img "header.logo"
+          - generic [ref=f1e8]:
+            - generic [ref=f1e9]:
+              - generic [ref=f1e10]:
+                - status [ref=f1e11]: Connected
+                - generic [ref=f1e13]: 
+              - button "Messages" [ref=f1e14]:
+                - generic [ref=f1e15]:
+                  - generic [ref=f1e16]: Messages
+                  - generic [ref=f1e17]: 
+              - button "Options" [ref=f1e18]:
+                - generic [ref=f1e19]:
+                  - generic [ref=f1e20]: Options
+                  - generic [ref=f1e21]: 
+            - generic [ref=f1e24]:
+              - generic [ref=f1e25]: Candidate ID
+              - generic [ref=f1e26]: STU002
+      - generic [ref=f1e29]:
+        - generic [ref=f1e31]:
+          - 'heading "Part 1: Questions 1-5" [level=3] [ref=f1e32]'
+          - paragraph [ref=f1e34]: For each question, choose the correct answer.
+        - generic [ref=f1e35]:
+          - generic [ref=f1e36]:
+            - text: "1"
+            - strong [ref=f1e37]: Where is Kari working now?
+          - generic [ref=f1e38]:
+            - generic [ref=f1e39]:
+              - generic [ref=f1e40]:
+                - img "Option A"
+              - generic [ref=f1e41]: A
+            - generic [ref=f1e42]:
+              - generic [ref=f1e43]:
+                - img "Option B"
+              - generic [ref=f1e44]: B
+            - generic [ref=f1e45]:
+              - generic [ref=f1e46]:
+                - img "Option C"
+              - generic [ref=f1e47]: C
+        - generic [ref=f1e48]:
+          - generic [ref=f1e49]:
+            - text: "2"
+            - strong [ref=f1e50]: When will they meet for lunch?
+          - generic [ref=f1e51]:
+            - generic [ref=f1e52]:
+              - generic [ref=f1e53]:
+                - img "Option A"
+              - generic [ref=f1e54]: A
+            - generic [ref=f1e55]:
+              - generic [ref=f1e56]:
+                - img "Option B"
+              - generic [ref=f1e57]: B
+            - generic [ref=f1e58]:
+              - generic [ref=f1e59]:
+                - img "Option C"
+              - generic [ref=f1e60]: C
+        - generic [ref=f1e61]:
+          - generic [ref=f1e62]:
+            - text: "3"
+            - strong [ref=f1e63]: Which new activity do the two students decide to do together?
+          - generic [ref=f1e64]:
+            - generic [ref=f1e65]:
+              - generic [ref=f1e66]:
+                - img "Option A"
+              - generic [ref=f1e67]: A
+            - generic [ref=f1e68]:
+              - generic [ref=f1e69]:
+                - img "Option B"
+              - generic [ref=f1e70]: B
+            - generic [ref=f1e71]:
+              - generic [ref=f1e72]:
+                - img "Option C"
+              - generic [ref=f1e73]: C
+        - generic [ref=f1e74]:
+          - generic [ref=f1e75]:
+            - text: "4"
+            - strong [ref=f1e76]: What was the weather like yesterday?
+          - generic [ref=f1e77]:
+            - generic [ref=f1e78]:
+              - generic [ref=f1e79]:
+                - img "Option A"
+              - generic [ref=f1e80]: A
+            - generic [ref=f1e81]:
+              - generic [ref=f1e82]:
+                - img "Option B"
+              - generic [ref=f1e83]: B
+            - generic [ref=f1e84]:
+              - generic [ref=f1e85]:
+                - img "Option C"
+              - generic [ref=f1e86]: C
+        - generic [ref=f1e87]:
+          - generic [ref=f1e88]:
+            - text: "5"
+            - strong [ref=f1e89]: Where did the woman first hear the rock band?
+          - generic [ref=f1e90]:
+            - generic [ref=f1e91]:
+              - generic [ref=f1e92]:
+                - img "Option A"
+              - generic [ref=f1e93]: A
+            - generic [ref=f1e94]:
+              - generic [ref=f1e95]:
+                - img "Option B"
+              - generic [ref=f1e96]: B
+            - generic [ref=f1e97]:
+              - generic [ref=f1e98]:
+                - img "Option C"
+              - generic [ref=f1e99]: C
+      - contentinfo [ref=f1e101]:
+        - navigation [ref=f1e102]:
+          - button [disabled] [ref=f1e103]:
+            - generic [ref=f1e104]: 
+          - button [ref=f1e105]:
+            - generic [ref=f1e106]: 
+        - navigation [ref=f1e107]:
+          - generic [ref=f1e108]:
+            - tab "Part 1" [ref=f1e109]:
+              - generic [ref=f1e110]: Part 1
+            - generic [ref=f1e111]:
+              - button "1" [ref=f1e112]
+              - button "2" [ref=f1e113]
+              - button "3" [ref=f1e114]
+              - button "4" [ref=f1e115]
+              - button "5" [ref=f1e116]
+          - tab "Part 2" [ref=f1e118]:
+            - generic [ref=f1e119]: Part 2
+          - tab "Part 3" [ref=f1e121]:
+            - generic [ref=f1e122]: Part 3
+          - tab "Part 4" [ref=f1e124]:
+            - generic [ref=f1e125]: Part 4
+          - tab "Part 5" [ref=f1e127]:
+            - generic [ref=f1e128]: Part 5
+          - button [ref=f1e129]:
+            - generic [ref=f1e130]: 
+  - generic [ref=e5]: 22:24
