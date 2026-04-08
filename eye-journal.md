@@ -301,11 +301,36 @@ Starting state: Both launchers functional and polished from previous cycle, but 
 | launcher.html | 6-Innovative | Live status, Cambridge identity, unified architecture |
 | index.html | 6-Innovative | Professional copy, teal consistency, gradient overlay |
 
+### Round 3
+**Explored:** 1 page (MOCKs/MOCK 1/reading.html — IELTS Reading Test), 5 findings
+**Action:** POLISH 2 fixes + ELEVATE 1 enhancement (CSS-only, benefits all 10 mocks)
+
+- [T3] reading.css — Passage line-height 1.4 → 1.65 for comfortable sustained academic reading
+  Mode: polish
+  Quality layer: 4-Polished → 5-Delightful
+  Files: assets/css/reading.css
+
+- [T4] reading.css — Bottom nav bar: added subtle top box-shadow for visual separation
+  Mode: polish
+  Files: assets/css/reading.css
+
+- [T4] reading.css — Part header: redesigned as blue badge pill with left accent border
+  Mode: elevate
+  Quality layer: 4-Polished → 5-Delightful
+  Files: assets/css/reading.css
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| launcher.html | 6-Innovative | Live status, Cambridge identity, unified architecture |
+| index.html | 6-Innovative | Professional copy, teal consistency, gradient overlay |
+| MOCKs/*/reading.html | 5-Delightful | Comfortable line-height, badge headers, nav shadow |
+
 ### Session Stats
-Pages explored: 3
-Rounds: 2
-Polishes landed: 8
+Pages explored: 4
+Rounds: 3
+Polishes landed: 10
 Rebuilds landed: 1
-Elevations landed: 3
+Elevations landed: 4
 Reverted: 0
-Changes shipped: 12
+Changes shipped: 15
