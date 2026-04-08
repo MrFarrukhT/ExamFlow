@@ -14,12 +14,93 @@
             var params = new URLSearchParams(window.location.search);
             var examParam = (params.get('exam') || '').toLowerCase();
             var stored = (localStorage.getItem('examType') || '').toLowerCase();
-            if (examParam === 'cambridge' || stored === 'cambridge') {
-                document.body.classList.add('cambridge');
+            if (examParam === 'olympiada' || stored === 'olympiada') {
+                document.documentElement.classList.add('olympiada');
+                document.title = 'Zarmet University - English Language Olympiada';
+            } else if (examParam === 'cambridge' || stored === 'cambridge') {
+                document.documentElement.classList.add('cambridge');
                 document.title = 'Innovative Centre - Cambridge General English Test System';
             }
         })();
     </script>
+    <style id="olympiada-entry-theme">
+        /* Olympiada (Zarmet University) overrides — no Innovative Centre branding */
+        html.olympiada body { background: #f9f5f0; }
+        html.olympiada .left-panel { background: linear-gradient(160deg, #7c2d12 0%, #431407 100%); }
+        html.olympiada .background-image { display: none; }
+        html.olympiada .left-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(234, 88, 12, 0.35), transparent 55%),
+                radial-gradient(circle at 75% 70%, rgba(251, 146, 60, 0.25), transparent 60%);
+        }
+        html.olympiada .left-panel::after {
+            content: 'Zarmet University \A English Language Olympiada \A C1 Advanced';
+            white-space: pre;
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fed7aa;
+            text-align: center;
+            font-family: 'Georgia', 'Segoe UI', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1.4;
+            text-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            letter-spacing: 1px;
+        }
+        html.olympiada .header-section { border-bottom-color: #fed7aa; }
+        html.olympiada .logo { display: none; }
+        html.olympiada .zarmet-mark {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: #7c2d12;
+            font-family: 'Georgia', 'Segoe UI', serif;
+        }
+        html:not(.olympiada) .zarmet-mark { display: none; }
+        html.olympiada .zarmet-mark .shield {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #ea580c, #7c2d12);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 18px;
+            letter-spacing: 1.5px;
+            box-shadow: 0 4px 12px rgba(124, 45, 18, 0.3);
+        }
+        html.olympiada .zarmet-mark .name { font-size: 1.05rem; font-weight: 700; line-height: 1.1; }
+        html.olympiada .zarmet-mark .name small { display: block; font-size: 0.7rem; color: #9a3412; font-weight: 500; margin-top: 2px; letter-spacing: 0.5px; }
+        html.olympiada .exam-badge {
+            background: linear-gradient(135deg, #ea580c, #c2410c);
+        }
+        html.olympiada .login-button {
+            background: #c2410c;
+        }
+        html.olympiada .login-button:hover {
+            background: #9a3412;
+            box-shadow: 0 2px 8px rgba(194, 65, 12, 0.35);
+        }
+        html.olympiada .form-group input:focus {
+            border-color: #c2410c;
+            box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.12);
+        }
+        html.olympiada .form-group input:focus + label,
+        html.olympiada .form-group input:not(:placeholder-shown) + label {
+            color: #c2410c;
+        }
+        html.olympiada .admin-link { color: #c2410c; }
+        html.olympiada .admin-link:hover { color: #9a3412; }
+    </style>
 
     <!-- Load distraction-free mode first -->
     <script src="assets/js/distraction-free.js"></script>
@@ -35,6 +116,10 @@
         <div class="right-panel">
             <div class="header-section">
                 <img src="assets/icons/Logo Big.png" alt="Innovative Centre" class="logo">
+                <div class="zarmet-mark" aria-label="Zarmet University">
+                    <div class="shield">ZU</div>
+                    <div class="name">Zarmet University<small>English Olympiada &middot; C1 Advanced</small></div>
+                </div>
                 <div class="exam-badge" id="examBadge">IELTS</div>
                 <a href="#" onclick="showInvigilatorLogin(); return false;" class="admin-link">Go to Invigilator Login →</a>
             </div>

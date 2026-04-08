@@ -52,6 +52,67 @@
             border-color: #0d9488;
             box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
         }
+
+        /* Olympiada (Zarmet University) theme — applied dynamically when exam=olympiada */
+        body.olympiada {
+            background: linear-gradient(135deg, #7c2d12 0%, #431407 100%);
+        }
+
+        body.olympiada .system-info {
+            background: rgba(234, 88, 12, 0.1);
+            border-color: rgba(234, 88, 12, 0.25);
+        }
+
+        body.olympiada .launch-button {
+            background: linear-gradient(135deg, #ea580c, #c2410c);
+            box-shadow: 0 4px 15px rgba(234, 88, 12, 0.35);
+        }
+
+        body.olympiada .launch-button:hover {
+            box-shadow: 0 6px 22px rgba(234, 88, 12, 0.5);
+            background: linear-gradient(135deg, #c2410c, #ea580c);
+        }
+
+        body.olympiada .feature-item svg {
+            color: #ea580c;
+        }
+
+        body.olympiada .modal-submit-btn {
+            background: linear-gradient(135deg, #ea580c, #c2410c);
+        }
+
+        body.olympiada .modal-submit-btn:hover {
+            background: linear-gradient(135deg, #c2410c, #ea580c);
+            box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3);
+        }
+
+        body.olympiada .modal-body input[type="password"]:focus {
+            border-color: #ea580c;
+            box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.12);
+        }
+
+        /* Hide default Innovative Centre identity in Olympiada mode */
+        body.olympiada #ic-identity { display: none !important; }
+        body.olympiada #zarmet-identity { display: block !important; }
+        #zarmet-identity { display: none; }
+
+        body.olympiada .zarmet-shield {
+            width: 84px;
+            height: 84px;
+            margin: 0 auto 0.75rem;
+            background: linear-gradient(135deg, #ea580c, #7c2d12);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 28px;
+            letter-spacing: 2px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        body.olympiada h1 { font-size: 1.6rem; }
     </style>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%234a90e2'/><text x='50' y='60' text-anchor='middle' fill='white' font-size='40' font-weight='bold'>IC</text></svg>">
 </head>
@@ -59,14 +120,21 @@
     <div class="launcher-container">
         <div class="launcher-header">
             <div class="logo-container">
-                <div class="app-icon">
-                    <svg viewBox="0 0 100 100" width="80" height="80" aria-label="Innovative Centre logo" role="img">
-                        <circle cx="50" cy="50" r="45" fill="#4a90e2"/>
-                        <text x="50" y="60" text-anchor="middle" fill="white" font-size="32" font-weight="bold">IC</text>
-                    </svg>
+                <div id="ic-identity">
+                    <div class="app-icon">
+                        <svg viewBox="0 0 100 100" width="80" height="80" aria-label="Innovative Centre logo" role="img">
+                            <circle cx="50" cy="50" r="45" fill="#4a90e2"/>
+                            <text x="50" y="60" text-anchor="middle" fill="white" font-size="32" font-weight="bold">IC</text>
+                        </svg>
+                    </div>
+                    <h1>Innovative Centre</h1>
+                    <p id="subtitle">Test System</p>
                 </div>
-                <h1>Innovative Centre</h1>
-                <p id="subtitle">Test System</p>
+                <div id="zarmet-identity">
+                    <div class="zarmet-shield" aria-label="Zarmet University">ZU</div>
+                    <h1>Zarmet University</h1>
+                    <p id="olympiada-subtitle">English Language Olympiada</p>
+                </div>
             </div>
         </div>
 
@@ -129,7 +197,7 @@
         </div>
 
         <div class="launcher-footer">
-            <p>&copy; 2026 Innovative Centre. All rights reserved.</p>
+            <p id="footer-copyright">&copy; 2026 Innovative Centre. All rights reserved.</p>
             <div>
                 <button class="footer-admin-btn" onclick="showInvigilatorLogin()">
                     <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
@@ -144,9 +212,20 @@
     <script>
         // Detect exam type from URL param or localStorage
         const urlParams = new URLSearchParams(window.location.search);
-        const isCambridge = urlParams.get('exam') === 'cambridge' || localStorage.getItem('examType') === 'Cambridge';
+        const examParam = (urlParams.get('exam') || '').toLowerCase();
+        const storedExam = localStorage.getItem('examType') || '';
+        const isOlympiada = examParam === 'olympiada' || storedExam === 'Olympiada';
+        const isCambridge = !isOlympiada && (examParam === 'cambridge' || storedExam === 'Cambridge');
 
-        if (isCambridge) {
+        if (isOlympiada) {
+            // Persist immediately so downstream pages know the mode
+            localStorage.setItem('examType', 'Olympiada');
+            document.body.classList.add('olympiada');
+            document.title = 'Zarmet University - English Language Olympiada';
+            document.getElementById('launch-text').textContent = 'Begin Olympiada';
+            document.getElementById('feature-1').textContent = 'C1 Advanced Level Assessment';
+            document.getElementById('footer-copyright').textContent = '\u00A9 2026 Zarmet University. All rights reserved.';
+        } else if (isCambridge) {
             document.body.classList.add('cambridge');
             document.title = 'Innovative Centre - Cambridge Test System';
             document.getElementById('subtitle').textContent = 'Cambridge General English Test System';
@@ -193,15 +272,19 @@
                                     docElement.mozRequestFullScreen ? docElement.mozRequestFullScreen() :
                                     docElement.msRequestFullscreen ? docElement.msRequestFullscreen() : Promise.resolve();
 
+            const targetUrl = isOlympiada ? 'index.html?exam=olympiada'
+                            : isCambridge ? 'index.html?exam=cambridge'
+                            : 'index.html';
+
             Promise.resolve(fullscreenPromise).then(() => {
                 setTimeout(() => {
                     sessionStorage.setItem('distractionFreeMode', 'true');
-                    window.location.href = isCambridge ? 'index.html?exam=cambridge' : 'index.html';
+                    window.location.href = targetUrl;
                 }, 100);
             }).catch(err => {
                 console.log('Fullscreen request failed:', err);
                 sessionStorage.setItem('distractionFreeMode', 'true');
-                window.location.href = isCambridge ? 'index.html?exam=cambridge' : 'index.html';
+                window.location.href = targetUrl;
             });
         }
 
