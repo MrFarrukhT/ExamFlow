@@ -482,3 +482,72 @@ Elevations landed: 1
 Reverted: 0
 Fixes landed: 3
 Changes shipped: 6
+
+---
+
+## Session: 2026-04-08 (A2 Key student deep dive)
+Persona: Student taking A2 Key (KET) test
+System: Cambridge (localhost:3003)
+Pages explored: dashboard-cambridge.html, reading-writing.html (Parts 1-7), listening.html
+Starting state: Dashboard used blue identity (not teal), "Admin" label, inline modal styles. Favicon broken across 32 wrapper files. Listening popup used Material Blue.
+
+### Round 1
+**Explored:** 10 pages (dashboard, 7 R&W parts, listening intro, listening part nav), 8 findings
+**Action:** POLISH 5 fixes + ELEVATE 1 enhancement + FIX 1 bug (across 44 files)
+
+- [T4] dashboard-cambridge.html — "Admin" → "Invigilator" header label
+  Mode: polish
+  Files: Cambridge/dashboard-cambridge.html
+
+- [T4] dashboard-cambridge.html — Inline modal styles → CSS classes (modal-overlay, modal-content, modal-close-btn, modal-title, modal-body, modal-input, modal-submit-btn, modal-error) with blur backdrop + slide-up animation
+  Mode: polish
+  Quality layer: 3-Efficient → 5-Delightful
+  Files: Cambridge/dashboard-cambridge.html
+
+- [T4] dashboard-cambridge.html + cambridge-dashboard.css — Blue (#0066cc) → teal (#0d9488) across all elements (header, badges, buttons, cards, focus states, hover states)
+  Mode: polish
+  Quality layer: 4-Polished → 5-Delightful (consistent Cambridge identity)
+  Files: Cambridge/dashboard-cambridge.html, assets/css/cambridge-dashboard.css
+
+- [T0] dashboard-cambridge.html — Escape key handler closes invigilator modal
+  Mode: polish
+  Files: Cambridge/dashboard-cambridge.html
+
+- [T0] cambridge-dashboard.css — Staggered fadeSlideUp entrance animations on welcome section, level cards, and module cards
+  Mode: elevate
+  Quality layer: 4-Polished → 5-Delightful
+  Files: assets/css/cambridge-dashboard.css
+
+- [T4] 32 wrapper files — Fixed favicon path `../../assets/icons/` → `../../../assets/icons/` (was 404 for all reading-writing.html, listening.html, reading.html, writing.html across all levels and mocks)
+  Mode: fix (bug)
+  Quality layer: 1-Functional → 3-Efficient
+  Files: 32 files across Cambridge/MOCKs-Cambridge/*/
+
+- [T4] 10 listening.html files — Headphones icon fill + Play button from Material Blue (#2196F3) → Cambridge teal (#0d9488)
+  Mode: polish
+  Quality layer: 4-Polished → 5-Delightful (identity consistency)
+  Files: 10 listening.html files across Cambridge/MOCKs-Cambridge/*/
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| Cambridge/dashboard-cambridge.html | 5-Delightful | Teal identity, clean modal, entrance animations |
+| Cambridge/MOCKs-Cambridge/*/reading-writing.html | 3-Efficient | Favicon fixed, Inspera content works |
+| Cambridge/MOCKs-Cambridge/*/listening.html | 5-Delightful | Teal popup, favicon fixed |
+| A2-Key/Part 1-5 (Reading) | 3-Efficient | Content from Inspera, functional |
+| A2-Key/Part 6-7 (Writing) | 3-Efficient | Writing tasks render correctly |
+
+### Deferred
+- Part 6 missing images (Part 6_files/img, img(1), img(2)) — 404 errors, likely missing saved assets
+- Font/moment-timezone JS errors in Inspera saved pages — cannot fix (external CDN references)
+- Part 7 picture story images render correctly but are small in viewport
+
+### Session Stats
+Pages explored: 10
+Rounds: 1
+Polishes landed: 5
+Rebuilds landed: 0
+Elevations landed: 1
+Reverted: 0
+Fixes landed: 1 (32 files)
+Changes shipped: 44 files modified
