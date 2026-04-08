@@ -1753,3 +1753,47 @@ Elevations landed: 0
 Reverted: 0
 Fixes landed: 0
 Changes shipped: 3 files modified
+
+---
+
+## Session: 2026-04-09 (Timer System All Tests — prompt #26)
+Persona: Student mid-test watching the timer
+System: Both (assets/js/timer.js — shared by IELTS + Cambridge)
+Pages explored: assets/js/timer.js (666 lines, ExamTimer class — overlay + embedded modes)
+Starting state: Solid timer logic with warning states (10/5/1 min thresholds with toast notifications), pulse animations (warning orange, critical red), times-up modal with audio alert. But: 3 blue color references not matching either brand identity, and times-up modal auto-dismissed after 10s — sometimes before students finished reading.
+
+### Round 1
+**Explored:** timer.js — overlay UI CSS, time warning toasts, times-up modal
+**Action:** POLISH 3 (color fixes) + ELEVATE 1 (no premature auto-dismiss)
+
+- [T4] timer.js — Times-up modal button: blue gradient #0066cc/#0052a3 → teal #0d9488/#0f766e. Button hover shadow rgba updated to teal. Time-warning toast 'info' level (10 min remaining): #1976d2 → #0d9488. Warning (orange) and urgent (red) levels kept as functional severity colors.
+  Mode: polish
+  Quality layer: 4-Polished → 5-Delightful (consistent teal identity in shared timer)
+  Files: assets/js/timer.js
+
+- [T0] timer.js — Removed 10-second auto-dismiss on Times Up modal. Modal is informational (test already auto-submitted by onTimeUp callback) and now requires explicit "I Understand" click. Better acknowledgment pattern for an end-of-test message.
+  Mode: elevate (UX correctness)
+  Quality layer: 4-Polished → 5-Delightful
+  Files: assets/js/timer.js
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| assets/js/timer.js (ExamTimer) | 5-Delightful | Teal identity, explicit modal acknowledgment, all warnings functional |
+
+### Verified working
+- Warning thresholds: 10 min (info toast), 5 min (warning toast + pulse), 1 min (urgent toast + critical pulse)
+- Auto-submit via onTimeUp callback at 0
+- Times-up modal with audio alert beep
+- State persistence via localStorage (survives refresh)
+- Both overlay mode (Cambridge) and embedded mode (IELTS) supported via single class
+
+### Session Stats
+Pages explored: 1 file (timer.js)
+Rounds: 1
+Polishes landed: 3 (color fixes consolidated)
+Rebuilds landed: 0
+Elevations landed: 1 (modal acknowledgment)
+Reverted: 0
+Fixes landed: 0
+Changes shipped: 1 file modified
