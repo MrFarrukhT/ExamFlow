@@ -23,7 +23,7 @@
             <div class="header-section">
                 <img src="../assets/icons/Logo Big.png" alt="Innovative Centre" class="logo">
                 <div class="exam-badge">Cambridge General English</div>
-                <a href="#" onclick="showInvigilatorLogin(); return false;" class="admin-link">Go to Admin Login →</a>
+                <a href="#" onclick="showInvigilatorLogin(); return false;" class="admin-link">Go to Invigilator Login →</a>
             </div>
 
             <div class="login-container" aria-label="Candidate login form">
@@ -31,16 +31,16 @@
                 <p class="exam-subtitle">Cambridge General English Assessment</p>
 
                 <div class="entry-form">
-                    <div class="form-group">
+                    <div class="form-group" id="idGroup">
                         <label for="studentId">Student ID</label>
                         <input type="text" id="studentId" placeholder="Enter your student ID" required aria-required="true" aria-describedby="studentIdError" maxlength="4" pattern="[0-9]{1,4}" inputmode="numeric" autocomplete="off">
-                        <small id="studentIdError" role="alert" style="color: #d32f2f; display: none; font-size: 0.875rem; margin-top: 4px;">Student ID must be numbers only (max 4 digits)</small>
+                        <small id="studentIdError" class="form-error" role="alert">Student ID must be numbers only (max 4 digits)</small>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" id="nameGroup">
                         <label for="studentName">Full Name</label>
                         <input type="text" id="studentName" placeholder="Full Name" required aria-required="true" aria-describedby="studentNameError" pattern="[A-Za-z]+\s+[A-Za-z]+.*" maxlength="50" autocomplete="off">
-                        <small id="studentNameError" role="alert" style="color: #d32f2f; display: none; font-size: 0.875rem; margin-top: 4px;">Please enter at least first name and surname (letters only, max 50 characters)</small>
+                        <small id="studentNameError" class="form-error" role="alert">Please enter at least first name and surname</small>
                     </div>
 
                     <button id="startTest" class="login-button">Login</button>
@@ -53,81 +53,58 @@
     </main>
 
     <script>
-        // Real-time validation for Student ID (numbers only, max 4 digits)
-        document.getElementById('studentId').addEventListener('input', function(e) {
-            let value = e.target.value;
-            // Remove any non-numeric characters
-            value = value.replace(/[^0-9]/g, '');
-            // Limit to 4 digits
-            if (value.length > 4) {
-                value = value.substring(0, 4);
-            }
-            e.target.value = value;
+        function showError(groupId, errorId) {
+            document.getElementById(groupId).classList.add('error');
+            document.getElementById(errorId).classList.add('visible');
+        }
 
-            // Show/hide error message
-            const errorMsg = document.getElementById('studentIdError');
-            if (value.length > 0 && !/^[0-9]{1,4}$/.test(value)) {
-                errorMsg.style.display = 'block';
-            } else {
-                errorMsg.style.display = 'none';
-            }
+        function clearError(groupId, errorId) {
+            document.getElementById(groupId).classList.remove('error');
+            document.getElementById(errorId).classList.remove('visible');
+        }
+
+        // Real-time validation for Student ID
+        document.getElementById('studentId').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            if (value.length > 4) value = value.substring(0, 4);
+            e.target.value = value;
+            clearError('idGroup', 'studentIdError');
         });
 
-        // Real-time validation for Student Name (letters, spaces, hyphens only)
+        // Real-time validation for Student Name
         document.getElementById('studentName').addEventListener('input', function(e) {
-            let value = e.target.value;
-            // Allow only letters, spaces, hyphens, and apostrophes
-            value = value.replace(/[^A-Za-z\s\-']/g, '');
-            // Limit to 50 characters
-            if (value.length > 50) {
-                value = value.substring(0, 50);
-            }
+            let value = e.target.value.replace(/[^A-Za-z\s\-']/g, '');
+            if (value.length > 50) value = value.substring(0, 50);
             e.target.value = value;
-
-            // Show/hide error message
-            const errorMsg = document.getElementById('studentNameError');
-            const words = value.trim().split(/\s+/);
-            if (value.length > 0 && words.length < 2) {
-                errorMsg.style.display = 'block';
-            } else {
-                errorMsg.style.display = 'none';
-            }
+            clearError('nameGroup', 'studentNameError');
         });
 
         document.getElementById('startTest').addEventListener('click', function() {
             const studentId = document.getElementById('studentId').value.trim();
             const studentName = document.getElementById('studentName').value.trim();
+            let hasError = false;
 
-            // Validate Student ID (must be 1-4 digits)
-            if (!studentId) {
-                alert('Please enter your Student ID');
-                return;
+            // Validate Student ID
+            if (!studentId || !/^[0-9]{1,4}$/.test(studentId)) {
+                showError('idGroup', 'studentIdError');
+                document.getElementById('studentId').focus();
+                hasError = true;
             }
 
-            if (!/^[0-9]{1,4}$/.test(studentId)) {
-                alert('Student ID must be numbers only (maximum 4 digits)');
-                document.getElementById('studentIdError').style.display = 'block';
-                return;
-            }
-
-            // Validate Student Name (must have at least first name and surname)
-            if (!studentName) {
-                alert('Please enter your Full Name');
-                return;
-            }
-
+            // Validate Student Name
             const nameParts = studentName.trim().split(/\s+/);
-            if (nameParts.length < 2) {
-                alert('Please enter at least your first name and surname');
-                document.getElementById('studentNameError').style.display = 'block';
-                return;
+            if (!studentName || nameParts.length < 2 || !/^[A-Za-z\s\-']+$/.test(studentName)) {
+                showError('nameGroup', 'studentNameError');
+                if (!hasError) document.getElementById('studentName').focus();
+                hasError = true;
             }
 
-            if (!/^[A-Za-z\s\-']+$/.test(studentName)) {
-                alert('Name must contain only letters, spaces, hyphens, and apostrophes');
-                document.getElementById('studentNameError').style.display = 'block';
-                return;
-            }
+            if (hasError) return;
+
+            // Show loading state
+            const btn = this;
+            btn.classList.add('loading');
+            btn.textContent = 'Logging in...';
 
             // Save student info to localStorage with Cambridge exam type
             localStorage.setItem('studentId', studentId);
@@ -188,28 +165,20 @@
     </script>
 
     <!-- Invigilator Access Modal -->
-    <div id="invigilator-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="invigilator-modal-title" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
-        <div class="modal-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 0; border-radius: 8px; max-width: 400px; width: 90%;">
-            <button class="modal-close-btn" onclick="closeInvigilatorModal()" aria-label="Close invigilator login dialog" style="position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
-            <h2 id="invigilator-modal-title" style="margin: 0; padding: 20px 20px 10px; font-size: 20px;">Invigilator Access</h2>
-            <div style="padding: 20px;">
-                <label for="invigilator-password" style="display: block; margin-bottom: 10px; font-weight: bold;">Enter Password:</label>
-                <input type="password" id="invigilator-password" placeholder="Password" aria-required="true" aria-describedby="password-error" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;" autocomplete="off">
-                <button onclick="verifyInvigilatorPassword()" style="width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Access Invigilator Page</button>
-                <p id="password-error" role="alert" style="color: red; margin-top: 10px; display: none;">Incorrect password. Please try again.</p>
+    <div id="invigilator-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="invigilator-modal-title">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeInvigilatorModal()" aria-label="Close invigilator login dialog">&times;</button>
+            <h2 id="invigilator-modal-title" class="modal-title">Invigilator Access</h2>
+            <div class="modal-body">
+                <label for="invigilator-password">Enter Password:</label>
+                <input type="password" id="invigilator-password" placeholder="Password" aria-required="true" aria-describedby="password-error" autocomplete="off">
+                <button class="modal-submit-btn" onclick="verifyInvigilatorPassword()">Access Invigilator Page</button>
+                <p id="password-error" class="modal-error" role="alert">Incorrect password. Please try again.</p>
             </div>
         </div>
     </div>
 
     <style>
-        .modal-overlay.hidden {
-            display: none !important;
-        }
-
-        .invigilator-access:hover {
-            opacity: 1 !important;
-        }
-
         .exam-badge {
             background: linear-gradient(135deg, #0066cc, #0052a3);
             color: white;
