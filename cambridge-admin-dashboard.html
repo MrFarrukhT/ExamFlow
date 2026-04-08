@@ -1174,6 +1174,7 @@
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('adminContent').style.display = 'block';
             document.getElementById('logoutBtn').style.display = 'block';
+            document.getElementById('adminTabs').style.display = 'flex';
 
             // Set default date range (last 30 days)
             const today = new Date();
@@ -2277,6 +2278,7 @@
             document.getElementById('loginForm').style.display = 'block';
             document.getElementById('adminContent').style.display = 'none';
             document.getElementById('logoutBtn').style.display = 'none';
+            document.getElementById('adminTabs').style.display = 'none';
             document.getElementById('username').value = 'admin';
             document.getElementById('password').value = '';
         }

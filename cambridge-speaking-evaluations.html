@@ -404,30 +404,42 @@
             margin-bottom: 10px;
         }
 
-        .back-button {
-            background: white;
-            color: #1976d2;
-            border: 2px solid #1976d2;
-            padding: 10px 20px;
-            border-radius: 6px;
+        .admin-tabs {
+            display: flex;
+            background: #0052a3;
+            padding: 0;
+            gap: 0;
+            border-radius: 12px 12px 0 0;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        .admin-tabs a {
+            padding: 14px 28px;
+            color: rgba(255,255,255,0.7);
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-            margin-bottom: 20px;
+            font-weight: 600;
+            font-size: 0.95em;
+            border-bottom: 3px solid transparent;
             transition: all 0.3s;
         }
-
-        .back-button:hover {
-            background: #1976d2;
+        .admin-tabs a:hover {
             color: white;
+            background: rgba(255,255,255,0.1);
+        }
+        .admin-tabs a.active {
+            color: white;
+            border-bottom-color: #ffc107;
+            background: rgba(255,255,255,0.1);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="cambridge-admin-dashboard.html" class="back-button">← Back to Admin Dashboard</a>
+        <nav class="admin-tabs">
+            <a href="cambridge-admin-dashboard.html">📋 Submissions</a>
+            <a href="cambridge-student-results.html">📊 Student Results</a>
+            <a href="cambridge-speaking-evaluations.html" class="active">🎤 Speaking Evaluations</a>
+        </nav>
 
         <div class="header">
             <h1>🎤 Cambridge Speaking Test Evaluations</h1>

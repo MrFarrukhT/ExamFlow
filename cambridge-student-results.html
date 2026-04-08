@@ -70,20 +70,29 @@
             color: #721c24;
         }
 
-        .back-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s;
+        .admin-tabs {
+            display: flex;
+            background: #0052a3;
+            padding: 0;
+            gap: 0;
+        }
+        .admin-tabs a {
+            padding: 14px 28px;
+            color: rgba(255,255,255,0.7);
             text-decoration: none;
             font-weight: 600;
+            font-size: 0.95em;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
         }
-
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+        .admin-tabs a:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+        .admin-tabs a.active {
+            color: white;
+            border-bottom-color: #ffc107;
+            background: rgba(255,255,255,0.1);
         }
 
         .admin-content {
@@ -589,9 +598,13 @@
             </div>
             <div class="header-right">
                 <span id="connectionStatus" class="connection-status disconnected">Database Offline</span>
-                <a href="cambridge-admin-dashboard.html" class="back-btn">Back to Dashboard</a>
             </div>
         </div>
+        <nav class="admin-tabs">
+            <a href="cambridge-admin-dashboard.html">📋 Submissions</a>
+            <a href="cambridge-student-results.html" class="active">📊 Student Results</a>
+            <a href="cambridge-speaking-evaluations.html">🎤 Speaking Evaluations</a>
+        </nav>
 
         <div class="admin-content">
             <!-- Controls Section -->
