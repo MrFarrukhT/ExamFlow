@@ -32,11 +32,62 @@
         .cambridge-mode .mock-selection button:hover {
             background: #0052a3; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,102,204,0.3);
         }
+        /* Room Activity */
+        .room-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+        .room-stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2); color: white;
+            padding: 16px; border-radius: 10px; text-align: center;
+        }
+        .cambridge-mode .room-stat-card { background: linear-gradient(135deg, #0d9488, #065f46); }
+        .room-stat-card.pending { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .room-stat-number { font-size: 2rem; font-weight: 800; line-height: 1.1; }
+        .room-stat-label { font-size: 0.8rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+        .room-activity-list { max-height: 450px; overflow-y: auto; }
+        .room-student-group {
+            background: #f8f9fa; border-radius: 8px; padding: 14px;
+            margin-bottom: 10px; border-left: 4px solid #667eea;
+        }
+        .cambridge-mode .room-student-group { border-left-color: #0d9488; }
+        .room-student-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 8px; font-weight: 600; color: #2c3e50;
+        }
+        .room-student-header .student-badge {
+            background: #667eea; color: white; padding: 3px 10px;
+            border-radius: 12px; font-size: 0.75rem;
+        }
+        .cambridge-mode .room-student-header .student-badge { background: #0d9488; }
+        .room-skill-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 6px 12px; background: white; border-radius: 6px;
+            margin-top: 6px; font-size: 0.9rem;
+        }
+        .room-skill-badge {
+            display: inline-block; padding: 2px 10px; border-radius: 10px;
+            font-size: 0.78rem; font-weight: 600;
+        }
+        .room-skill-badge.reading { background: #e3f2fd; color: #1565c0; }
+        .room-skill-badge.writing { background: #fce4ec; color: #c62828; }
+        .room-skill-badge.listening { background: #e8f5e9; color: #2e7d32; }
+        .room-skill-badge.speaking { background: #f3e5f5; color: #7b1fa2; }
+        .room-skill-badge.reading-writing { background: #fff3e0; color: #e65100; }
+        .room-score { font-weight: 600; }
+        .room-score.scored { color: #2e7d32; }
+        .room-score.pending { color: #f59e0b; font-style: italic; }
+        .room-refresh-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 12px; padding-top: 10px; border-top: 1px solid #e9ecef;
+            font-size: 0.82rem; color: #6c757d;
+        }
+        .room-loading { text-align: center; color: #6c757d; font-style: italic; padding: 20px; }
+        .room-empty { text-align: center; color: #6c757d; padding: 30px; }
+        .room-empty strong { display: block; font-size: 1.1rem; margin-bottom: 5px; color: #495057; }
+        .room-error { text-align: center; color: #dc3545; padding: 20px; background: #fff5f5; border-radius: 8px; }
+        @media (max-width: 768px) { .room-stats { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
     <script src="assets/js/distraction-free.js"></script>
-    <script src="assets/js/answer-manager.js"></script>
     <script src="assets/js/answer-manager.js"></script>
     <div class="container" id="appContainer">
         <div class="header" id="headerBlock">
@@ -107,6 +158,36 @@
             <h3>Current Session</h3>
             <div id="sessionInfo"><p>No active session</p></div>
         </div>
+        <!-- Room Activity — Server-side submissions feed -->
+        <div class="panel-section" id="roomActivitySection">
+            <h3>📡 Room Activity — Today's Submissions</h3>
+            <div class="room-stats" id="roomStats">
+                <div class="room-stat-card">
+                    <div class="room-stat-number" id="statStudents">—</div>
+                    <div class="room-stat-label">Students</div>
+                </div>
+                <div class="room-stat-card">
+                    <div class="room-stat-number" id="statSubmissions">—</div>
+                    <div class="room-stat-label">Submissions</div>
+                </div>
+                <div class="room-stat-card">
+                    <div class="room-stat-number" id="statScored">—</div>
+                    <div class="room-stat-label">Scored</div>
+                </div>
+                <div class="room-stat-card pending">
+                    <div class="room-stat-number" id="statPending">—</div>
+                    <div class="room-stat-label">Pending</div>
+                </div>
+            </div>
+            <div id="roomActivityList" class="room-activity-list">
+                <p class="room-loading">Connecting to server...</p>
+            </div>
+            <div class="room-refresh-bar">
+                <span id="roomLastUpdate" class="room-last-update">—</span>
+                <button class="small-btn" onclick="loadRoomActivity()">↻ Refresh</button>
+            </div>
+        </div>
+
         <!-- Password Modal -->
         <div id="passwordModal" class="modal" style="display: none;">
             <div class="modal-content">
@@ -409,6 +490,93 @@
             updateSessionInfo();
             if (isCambridge) updateCurrentLevel();
         }
+
+        // ── Room Activity (server-side) ────────────────────────
+        function loadRoomActivity() {
+            var endpoint = isCambridge ? '/cambridge-submissions' : '/submissions';
+            var listEl = document.getElementById('roomActivityList');
+            fetch(endpoint).then(function(r) {
+                if (!r.ok) throw new Error('Server returned ' + r.status);
+                return r.json();
+            }).then(function(data) {
+                var subs = isCambridge ? data : (data.submissions || []);
+                var today = new Date().toISOString().split('T')[0];
+                var todaySubs = subs.filter(function(s) {
+                    return s.created_at && s.created_at.split('T')[0] === today;
+                });
+                renderRoomStats(todaySubs);
+                renderRoomList(todaySubs);
+                document.getElementById('roomLastUpdate').textContent =
+                    'Updated ' + new Date().toLocaleTimeString();
+            }).catch(function(err) {
+                listEl.innerHTML = '<p class="room-error">Could not reach server — ' +
+                    escapeHtml(err.message) + '</p>';
+                ['statStudents','statSubmissions','statScored','statPending'].forEach(function(id) {
+                    document.getElementById(id).textContent = '\u2014';
+                });
+            });
+        }
+
+        function renderRoomStats(subs) {
+            var students = {};
+            var scored = 0;
+            subs.forEach(function(s) {
+                students[s.student_id || s.studentId || 'unknown'] = true;
+                if (isCambridge) { if (s.score !== null && s.score !== undefined) scored++; }
+                else { if (s.score !== null && s.score !== undefined && s.score !== 0) scored++; }
+            });
+            document.getElementById('statStudents').textContent = Object.keys(students).length;
+            document.getElementById('statSubmissions').textContent = subs.length;
+            document.getElementById('statScored').textContent = scored;
+            document.getElementById('statPending').textContent = Math.max(0, subs.length - scored);
+        }
+
+        function renderRoomList(subs) {
+            var listEl = document.getElementById('roomActivityList');
+            if (!subs.length) {
+                listEl.innerHTML = '<div class="room-empty"><strong>No submissions today</strong>' +
+                    'Students\u2019 work will appear here once they submit modules.</div>';
+                return;
+            }
+            var groups = {};
+            subs.forEach(function(s) {
+                var key = s.student_id || s.studentId || 'unknown';
+                if (!groups[key]) groups[key] = { name: s.student_name || s.studentName || key, items: [] };
+                groups[key].items.push(s);
+            });
+            var html = '';
+            Object.keys(groups).forEach(function(sid) {
+                var g = groups[sid];
+                html += '<div class="room-student-group">';
+                html += '<div class="room-student-header"><span>' + escapeHtml(g.name) +
+                    ' <span style="font-weight:400;color:#6c757d;font-size:0.85rem;">(' + escapeHtml(sid) + ')</span></span>' +
+                    '<span class="student-badge">' + g.items.length + ' submission' + (g.items.length > 1 ? 's' : '') + '</span></div>';
+                g.items.forEach(function(s) {
+                    var skill = s.skill || 'unknown';
+                    var badgeClass = skill.toLowerCase().replace(/\s+/g, '-').replace('&', '').replace('use-of-english','reading');
+                    var hasScore = s.score !== null && s.score !== undefined && (isCambridge || s.score !== 0);
+                    var scoreText = hasScore
+                        ? (isCambridge ? (s.score + (s.grade ? '/' + s.grade : '')) : (s.score + '/40' + (s.band_score ? ' (Band ' + s.band_score + ')' : '')))
+                        : 'Awaiting score';
+                    var time = s.created_at ? new Date(s.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '';
+                    var mock = isCambridge ? (s.mock_test || s.mockTest || '') : (s.mock_number || s.mockNumber || '');
+                    html += '<div class="room-skill-row">';
+                    html += '<span><span class="room-skill-badge ' + escapeHtml(badgeClass) + '">' + escapeHtml(skill) + '</span>';
+                    if (mock) html += ' <span style="color:#6c757d;font-size:0.8rem;">Mock ' + escapeHtml(String(mock)) + '</span>';
+                    if (isCambridge && s.level) html += ' <span style="color:#6c757d;font-size:0.8rem;">' + escapeHtml(s.level) + '</span>';
+                    html += '</span>';
+                    html += '<span><span class="room-score ' + (hasScore ? 'scored' : 'pending') + '">' + escapeHtml(scoreText) + '</span>';
+                    if (time) html += ' <span style="color:#adb5bd;font-size:0.78rem;margin-left:8px;">' + time + '</span>';
+                    html += '</span></div>';
+                });
+                html += '</div>';
+            });
+            listEl.innerHTML = html;
+        }
+
+        // Load room activity on page load and refresh every 30s
+        document.addEventListener('DOMContentLoaded', loadRoomActivity);
+        setInterval(loadRoomActivity, 30000);
 
         // ── Navigation ──────────────────────────────────────────────
         function goBackToTest() {
