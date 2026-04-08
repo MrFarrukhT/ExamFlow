@@ -65,7 +65,7 @@
   // Detect question ranges based on exam level from URL path
   function detectRangesFromLevel() {
     var path = window.location.pathname;
-    if (path.indexOf('B1-Preliminary') !== -1) {
+    if (path.indexOf('B1-Preliminary') !== -1 || path.indexOf('B2-First') !== -1) {
       return [
         { part: 1, min: 1,  max: 5 },
         { part: 2, min: 6,  max: 10 },
