@@ -326,10 +326,34 @@ Starting state: Both launchers functional and polished from previous cycle, but 
 | index.html | 6-Innovative | Professional copy, teal consistency, gradient overlay |
 | MOCKs/*/reading.html | 5-Delightful | Comfortable line-height, badge headers, nav shadow |
 
+### Round 4
+**Explored:** 1 page (MOCKs/MOCK 1/writing.html — IELTS Writing Test), 4 findings
+**Action:** POLISH 3 CSS-only changes (benefits all 10 mocks, consistency with reading)
+
+- [T4] writing.css — Bottom nav: replaced border-top with box-shadow (matches reading pattern)
+  Mode: polish
+  Files: assets/css/writing.css
+
+- [T4] writing.css — Task header: blue left accent border + lighter background (matches reading part-header)
+  Mode: polish
+  Files: assets/css/writing.css
+
+- [T4] writing.css — Word count: tabular-nums for stable digit widths during typing
+  Mode: polish
+  Files: assets/css/writing.css
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| launcher.html | 6-Innovative | Live status, Cambridge identity, unified architecture |
+| index.html | 6-Innovative | Professional copy, teal consistency, gradient overlay |
+| MOCKs/*/reading.html | 5-Delightful | Comfortable line-height, badge headers, nav shadow |
+| MOCKs/*/writing.html | 5-Delightful | Consistent nav shadow, task accent, stable word count |
+
 ### Session Stats
-Pages explored: 4
-Rounds: 3
-Polishes landed: 10
+Pages explored: 5
+Rounds: 4
+Polishes landed: 13
 Rebuilds landed: 1
 Elevations landed: 4
 Reverted: 0

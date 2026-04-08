@@ -1,0 +1,103 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - img "Innovative Centre Logo" [ref=e5]
+        - generic [ref=e6]: Innovative Centre
+      - generic [ref=e7]:
+        - generic [ref=e8]: Test taker ID
+        - strong [ref=e10]: "1234"
+    - generic [ref=e12]: 58:16
+    - generic [ref=e13]:
+      - generic [ref=e15]: 
+      - generic [ref=e17] [cursor=pointer]: 
+      - generic [ref=e19] [cursor=pointer]: 
+  - generic [ref=e21]:
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - heading "Writing Task 1" [level=2] [ref=e25]
+        - paragraph [ref=e26]:
+          - strong [ref=e27]: "Time:"
+          - text: 20 minutes
+        - paragraph [ref=e28]:
+          - strong [ref=e29]: "Minimum words:"
+          - text: "150"
+        - heading "Instructions" [level=4] [ref=e30]
+        - paragraph [ref=e31]: You should spend about 20 minutes on this task.
+        - paragraph [ref=e32]: Summarise the information by selecting and reporting the main features, and make comparisons where relevant.
+        - paragraph [ref=e33]: Write at least 150 words.
+      - generic [ref=e34]:
+        - paragraph [ref=e35]: The table below shows the average weight in grams of different types of food consumed per person per day in three different countries in 1961 and 2011.
+        - generic [ref=e36]:
+          - generic [ref=e37]: Food intake – average consumption in grams, per day, three countries, 1961, 2011
+          - table [ref=e38]:
+            - rowgroup [ref=e39]:
+              - row "Food Type Brazil 1961 Brazil 2011 India 1961 India 2011 Australia 1961 Australia 2011" [ref=e40]:
+                - columnheader "Food Type" [ref=e41]
+                - columnheader "Brazil 1961" [ref=e42]
+                - columnheader "Brazil 2011" [ref=e43]
+                - columnheader "India 1961" [ref=e44]
+                - columnheader "India 2011" [ref=e45]
+                - columnheader "Australia 1961" [ref=e46]
+                - columnheader "Australia 2011" [ref=e47]
+            - rowgroup [ref=e48]:
+              - row "Grain 262g 315g 378g 416g 283g 239g" [ref=e49]:
+                - cell "Grain" [ref=e50]
+                - cell "262g" [ref=e51]
+                - cell "315g" [ref=e52]
+                - cell "378g" [ref=e53]
+                - cell "416g" [ref=e54]
+                - cell "283g" [ref=e55]
+                - cell "239g" [ref=e56]
+              - row "Fruit & vegetables 515g 706g 199g 450g 480g 661g" [ref=e57]:
+                - cell "Fruit & vegetables" [ref=e58]
+                - cell "515g" [ref=e59]
+                - cell "706g" [ref=e60]
+                - cell "199g" [ref=e61]
+                - cell "450g" [ref=e62]
+                - cell "480g" [ref=e63]
+                - cell "661g" [ref=e64]
+              - row "Dairy & eggs 185g 446g 108g 235g 742g 670g" [ref=e65]:
+                - cell "Dairy & eggs" [ref=e66]
+                - cell "185g" [ref=e67]
+                - cell "446g" [ref=e68]
+                - cell "108g" [ref=e69]
+                - cell "235g" [ref=e70]
+                - cell "742g" [ref=e71]
+                - cell "670g" [ref=e72]
+              - row "Meat 92g 290g 17g 29g 343g 423g" [ref=e73]:
+                - cell "Meat" [ref=e74]
+                - cell "92g" [ref=e75]
+                - cell "290g" [ref=e76]
+                - cell "17g" [ref=e77]
+                - cell "29g" [ref=e78]
+                - cell "343g" [ref=e79]
+                - cell "423g" [ref=e80]
+              - row "Sugar & fat 147g 260g 108g 129g 173g 208g" [ref=e81]:
+                - cell "Sugar & fat" [ref=e82]
+                - cell "147g" [ref=e83]
+                - cell "260g" [ref=e84]
+                - cell "108g" [ref=e85]
+                - cell "129g" [ref=e86]
+                - cell "173g" [ref=e87]
+                - cell "208g" [ref=e88]
+        - paragraph [ref=e89]:
+          - strong [ref=e90]: Summarise the information by selecting and reporting the main features, and make comparisons where relevant.
+    - generic [ref=e93]:
+      - heading "Task 1 - Your Answer" [level=3] [ref=e94]
+      - textbox "Write your Task 1 response here... (minimum 150 words, maximum 500 words)" [ref=e95]
+      - generic [ref=e96]: "Word count: 0/500"
+  - generic [ref=e97]:
+    - button "T1" [ref=e98] [cursor=pointer]
+    - button "T2" [ref=e99] [cursor=pointer]
+  - navigation [ref=e100]:
+    - generic [ref=e101]:
+      - button "Task 1 (0 words)" [ref=e102] [cursor=pointer]:
+        - generic [ref=e103]: Task 1
+        - generic [ref=e104]: (0 words)
+      - button "Task 2 (0 words)" [ref=e105] [cursor=pointer]:
+        - generic [ref=e106]: Task 2
+        - generic [ref=e107]: (0 words)
+    - button "Submit Writing" [ref=e108] [cursor=pointer]:
+      - generic [ref=e109]: Submit Writing
+      - img [ref=e110]
