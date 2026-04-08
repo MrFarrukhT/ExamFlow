@@ -141,7 +141,7 @@
             const examType = localStorage.getItem('examType');
 
             if (!studentId || !studentName || examType !== 'Cambridge') {
-                window.location.href = 'index.html';
+                window.location.href = '../index.html?exam=cambridge';
                 return;
             }
 

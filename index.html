@@ -8,6 +8,19 @@
     <link rel="icon" href="assets/icons/innovativecentre.png">
 </head>
 <body>
+    <!-- Detect exam type early and apply body class before paint -->
+    <script>
+        (function() {
+            var params = new URLSearchParams(window.location.search);
+            var examParam = (params.get('exam') || '').toLowerCase();
+            var stored = (localStorage.getItem('examType') || '').toLowerCase();
+            if (examParam === 'cambridge' || stored === 'cambridge') {
+                document.body.classList.add('cambridge');
+                document.title = 'Innovative Centre - Cambridge General English Test System';
+            }
+        })();
+    </script>
+
     <!-- Load distraction-free mode first -->
     <script src="assets/js/distraction-free.js"></script>
     
@@ -22,7 +35,7 @@
         <div class="right-panel">
             <div class="header-section">
                 <img src="assets/icons/Logo Big.png" alt="Innovative Centre" class="logo">
-                <div class="exam-badge">IELTS</div>
+                <div class="exam-badge" id="examBadge">IELTS</div>
                 <a href="#" onclick="showInvigilatorLogin(); return false;" class="admin-link">Go to Invigilator Login →</a>
             </div>
 
@@ -53,6 +66,22 @@
     </main>
 
     <script>
+        // Determine exam type from URL param or localStorage
+        var _examType = (function() {
+            var params = new URLSearchParams(window.location.search);
+            var examParam = (params.get('exam') || '').toLowerCase();
+            if (examParam === 'cambridge') return 'Cambridge';
+            var stored = (localStorage.getItem('examType') || '');
+            if (stored === 'Cambridge') return 'Cambridge';
+            return 'IELTS';
+        })();
+
+        // Update badge and subtitle for Cambridge
+        if (_examType === 'Cambridge') {
+            document.getElementById('examBadge').textContent = 'Cambridge General English';
+            document.querySelector('.exam-subtitle').textContent = 'Cambridge General English Assessment';
+        }
+
         function showError(groupId, errorId) {
             const group = document.getElementById(groupId);
             const error = document.getElementById(errorId);
@@ -113,11 +142,15 @@
             // Save student info to localStorage
             localStorage.setItem('studentId', studentId);
             localStorage.setItem('studentName', studentName);
-            localStorage.setItem('examType', 'IELTS');
+            localStorage.setItem('examType', _examType);
             localStorage.setItem('testStartTime', new Date().toISOString());
 
-            // Redirect to dashboard
-            window.location.href = 'dashboard.html';
+            // Redirect to appropriate dashboard
+            if (_examType === 'Cambridge') {
+                window.location.href = 'Cambridge/dashboard-cambridge.html';
+            } else {
+                window.location.href = 'dashboard.html';
+            }
         });
         
         // Enter key support
@@ -152,6 +185,7 @@
             if (password === correctPassword) {
                 // Correct password - redirect to invigilator page
                 window.location.href = 'invigilator.html';
+                // Note: invigilator.html is unified and handles both exam types via localStorage
             } else {
                 // Wrong password
                 document.getElementById('password-error').style.display = 'block';

@@ -473,3 +473,65 @@ body {
         padding: 0.875rem 1rem;
     }
 }
+
+/* ==================== Cambridge Exam Overrides ==================== */
+body.cambridge .header-section {
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+body.cambridge .logo {
+    margin-bottom: 10px;
+}
+
+body.cambridge .admin-link {
+    position: absolute;
+    top: 2rem;
+    right: 3rem;
+}
+
+body.cambridge .welcome-title {
+    margin-bottom: 0.5rem;
+}
+
+body.cambridge .form-group input:focus {
+    border-color: #0066cc;
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+body.cambridge .login-button {
+    background: linear-gradient(135deg, #0066cc, #0052a3);
+}
+
+body.cambridge .login-button:hover {
+    background: linear-gradient(135deg, #0052a3, #003d7a);
+    box-shadow: 0 2px 8px rgba(0, 102, 204, 0.3);
+}
+
+body.cambridge .login-button:active {
+    background: #003d7a;
+}
+
+body.cambridge .exam-badge {
+    background: linear-gradient(135deg, #0066cc, #0052a3);
+    box-shadow: 0 2px 8px rgba(0, 102, 204, 0.3);
+}
+
+body.cambridge .exam-subtitle {
+    display: block;
+}
+
+/* Cambridge responsive overrides */
+@media (max-width: 768px) {
+    body.cambridge .admin-link {
+        position: static;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    body.cambridge .admin-link {
+        font-size: 0.85rem;
+    }
+}
