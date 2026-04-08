@@ -1,5 +1,77 @@
 # Autopilot Journal
 
+## Session: 2026-04-09 12:00
+Persona: Cheater round 6 — IELTS server-side score recomputation
+System: IELTS
+
+### Phase 1: Journey Map
+- Audit: IELTS POST /submissions input validation
+- Hypothesis: client-supplied scores might be trusted
+
+### Phase 2: Creation
+- No new features — security hardening only
+
+### Phase 3: Structure
+- Skipped — sound
+
+### Phase 4: Heal — CRITICAL: client-side scoring exploit
+**Vulnerability**: IELTS reading/listening scores were computed on the client
+from `window.correctAnswers` (loaded by answer-loader.js from a static JS file
+at runtime) and trusted by the server. Two attack vectors:
+
+1. **Read all answers via DevTools**: `window.correctAnswers` exposes the entire
+   answer key in the browser. Anyone with `F12` can see correct answers without
+   submitting first.
+2. **Forge any score**: Intercept the POST and set `score: 40` regardless of
+   actual answers. The server stores it as-is.
+
+The dashboard "Completed (40/40)" badge would then lie about server state.
+
+**Fix in POST /submissions**:
+
+- For reading/listening: query `mock_answers` from the database, recompute
+  the raw score server-side using normalized comparison + slash/pipe alt-answer
+  support (matches my-results.html scoring logic). Override whatever the client
+  sent.
+- If `clientScore !== serverScore`: log as tampering violation AND flag in
+  `antiCheat.scoreTamper` so the invigilator/admin panels surface it via the
+  session 22 anti-cheat pipeline.
+- For writing: client raw score is set to null (admin grades it). Band score
+  clamped to 0-9.
+- If no answer key in DB: clamp client score to 0-40 to prevent garbage.
+
+A cheater who fakes their score now gets:
+1. Their tampered score overwritten with the actual server-computed score
+2. A `scoreTamper: true` flag in `anti_cheat_data` (visible to invigilator + admin)
+3. Console.warn in server logs with student ID, claimed score, actual score
+
+Committed as e01f9ba.
+
+### Phase 5: Experience
+- Skipped — no server running
+
+### Phase 6: Scenario
+- Verified by code review:
+  - Recomputation handles missing answer keys gracefully (clamp + warn)
+  - Recomputation handles null/undefined student answers
+  - Slash/pipe alternatives match the my-results.html scoring logic
+  - antiCheat pipeline (session 22) carries the new scoreTamper flag through
+    to the invigilator panel and admin scoring view
+
+### Session Stats
+Total commits: 1 (e01f9ba)
+Total files changed: 1 (local-database-server.js, +55 lines)
+Persona journey coverage: IELTS reading/listening submission scoring path
+
+### Note: deeper architectural issue remains
+The root cause — answer keys being shipped to the client at all — was not
+addressed in this session. A long-term fix would be to remove answer-loader.js
+and have the client send only raw answers, with the server doing all scoring.
+For now, the server-side override + tamper detection prevents the most direct
+exploit while leaving the answer-leak issue documented.
+
+---
+
 ## Session: 2026-04-09 11:30
 Persona: IELTS student round 3 — regression audit after Cambridge/Olympiada burst
 System: IELTS
