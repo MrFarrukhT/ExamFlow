@@ -217,8 +217,8 @@ app.post('/update-score', requireAdmin, async (req, res) => {
 
 // Mock Answers API endpoints
 
-// GET /mock-answers?mock=1&skill=reading - Get answers for specific mock and skill
-app.get('/mock-answers', async (req, res) => {
+// GET /mock-answers?mock=1&skill=reading - Get answers for specific mock and skill (admin only)
+app.get('/mock-answers', requireAdmin, async (req, res) => {
     try {
         const { mock, skill } = req.query;
 
@@ -275,8 +275,8 @@ app.get('/mock-answers', async (req, res) => {
     }
 });
 
-// POST /mock-answers - Save answers for specific mock and skill
-app.post('/mock-answers', async (req, res) => {
+// POST /mock-answers - Save answers for specific mock and skill (admin only)
+app.post('/mock-answers', requireAdmin, async (req, res) => {
     try {
         const { mock, skill, answers } = req.body;
 
@@ -389,8 +389,8 @@ app.post('/mock-answers', async (req, res) => {
     }
 });
 
-// DELETE /mock-answers?mock=1&skill=reading - Delete answers for specific mock and skill
-app.delete('/mock-answers', async (req, res) => {
+// DELETE /mock-answers?mock=1&skill=reading - Delete answers for specific mock and skill (admin only)
+app.delete('/mock-answers', requireAdmin, async (req, res) => {
     try {
         const { mock, skill } = req.query;
 

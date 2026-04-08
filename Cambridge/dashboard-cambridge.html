@@ -393,6 +393,9 @@
                 });
 
                 document.querySelector('.section-title').textContent = 'All Modules Completed';
+            } else if (completedCount > 0) {
+                // Show "View My Submitted Answers" link when some modules are done
+                document.getElementById('viewAnswersLink').style.display = 'block';
             }
         }
 

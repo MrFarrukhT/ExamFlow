@@ -7,6 +7,7 @@ import path from 'path';
 import { createRetryQueue } from './shared/database.js';
 import { createServer } from './shared/server-bootstrap.js';
 import { validateScore, validateGrade, validateScoreAndGrade, validateStudentInfo, stripHtmlTags } from './shared/validation.js';
+import { requireAdmin, rateLimit } from './shared/auth.js';
 
 const { app, db, ensureConnection, __dirname: serverDir, start } = createServer({
     port: 3003,
