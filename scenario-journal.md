@@ -1352,3 +1352,62 @@ Trigger: Commit 236e286 added antiCheat collection to IELTS writing-handler.js +
 
 ### Stats (Round 23)
 Tested: 6 | Passed: 5 | Bug: 1 (data quality) | Fixed: 1 | Deferred: 0
+
+---
+
+## Session: 2026-04-09 17:10
+Focus: Audit autopilot's cheater r6 commit (IELTS server-side score recomputation) — most security-critical anti-cheat fix to date
+Trigger: Commit e01f9ba added a server-side score recompute path to local-database-server.js that overrides client-supplied scores for reading/listening
+
+### Scenarios
+
+- S1: bandScoreFromRaw missing function [Code Review] → **CRITICAL SILENT BUG**
+  - The autopilot's recompute calls `if (typeof bandScoreFromRaw === 'function')` defensively
+  - But bandScoreFromRaw is **never defined** anywhere in the codebase
+  - Result: bandScore is never recomputed even when raw score is — cheater can match the correct raw score and still tamper bandScore freely
+  - The defensive check silently swallows the missing function
+
+- S2/S3: server-cjs.cjs has zero score recompute [Drift] → **CRITICAL — 5th drift gap**
+  - The autopilot's "fix" only landed in ESM source. server-cjs.cjs (the actually-running IELTS server) still trusts client scores entirely.
+  - Verified: submitted reading with `score: 40, bandScore: '9.0'` and 1 wrong answer → stored as 40/'9.0'
+  - **Production was fully exploitable** despite the autopilot believing the issue was fixed
+  - This is the **most security-critical drift gap caught so far** — directly enables 100% score cheating
+
+- S4: No-answer-key fallback [Explorer] → PASS
+  - Mock numbers without DB-stored answer keys fall through to clamping path
+  - Client score clamped to 0-40 (Round 24's CJS sync also adds bandScore clamping which the ESM version was missing)
+  - Graceful degradation: protection only fires when admin has uploaded keys
+
+- S5: Anti-cheat scoreTamper flag [Insider] → PASS
+  - When tampering is detected: `anti_cheat_data: {scoreTamper: true, clientScore: 40, serverScore: 1}`
+  - Admin dashboard's renderAntiCheatBadge would not flag this currently (scoreTamper isn't in its checks) — minor follow-up for the autopilot
+
+- S6: Type confusion in answers [State Corruptor] → PASS (after fix)
+  - Cheater submits `answers: ['FALSE','TRUE','FALSE']` (array instead of object)
+  - The CJS sync added a strict object check: `(typeof === 'object' && !Array.isArray)` → coerces to `{}` → score = 0
+  - Array-as-answers can't be used to bypass the recompute
+
+### Fixes
+- `local-database-server.js`: Defined `IELTS_BAND_MAPPING` + `bandScoreFromRaw()` (the function the autopilot referenced but never created). Maps raw score 4-40 to band string per IELTS scale.
+- `server-cjs.cjs`: Synced the entire score recompute block from ESM. Added bandScoreFromRaw helper. Added strict object check on answers (defends type confusion). Made the no-answer-key fallback also clamp bandScore (was only clamping raw score in ESM).
+
+### Verification (all on the running CJS server)
+- Cheater sends `score=40, 1 wrong answer` → stored as `score=1, band='1.0'` with `scoreTamper:true`, `clientScore:40`, `serverScore:1`
+- Cheater sends correct `score=1, bandScore='9.0'` → stored as `score=1, band='1.0'` (bandScore correctly recomputed)
+- Cheater sends `answers: [arr,arr,arr]` → coerced to `{}`, score=0
+- Mock without answer keys → score clamped, no tampering detection (graceful degrade)
+
+### Pattern Analysis
+- **Drift returned with a vengeance.** R20-R23 had no drift; R24 has the most security-critical drift yet. The pattern is unsolved at the architect level — every autopilot commit that touches server logic must be re-tested.
+- **"Fixed" by autopilot ≠ fixed in production.** The autopilot's journal entry probably claims cheater r6 as complete. Without /scenario verifying end-to-end on the running server, the protection would have shipped without effect. **The autopilot's "complete" status is unreliable for security work** — must always be verified.
+- **Defensive `typeof === 'function'` checks can hide missing-function bugs.** The autopilot's caution swallowed the bandScoreFromRaw bug silently. A loud failure (`bandScoreFromRaw is not defined`) would have caught it during development. Pattern: don't use defensive feature-detection for code you control — it should always be present.
+- **Type-confusion defense matters even when the schema exists.** The ESM source had `(typeof === 'object' && submissionData.answers) || {}` which evaluates `true` for arrays (Array.isArray returns true but typeof is 'object'). A cheater submitting `answers: ['FALSE',...]` would have answers be the array, then `studentAnswers[qKey]` would index by string '1' which gives undefined. So scoring would silently produce 0. The CJS sync explicitly rejects arrays.
+
+### Intelligence Update
+- Proven solid: IELTS score recompute (CJS), bandScoreFromRaw helper defined, anti-cheat scoreTamper flag stored, type-confused answers safely defaulted
+- Critical regression caught: 5th drift gap, most security-critical to date
+- New pattern logged: defensive feature-detection can hide missing-function bugs
+- Coverage: 144 scenarios across 24 rounds, 46 bugs found, 41 fixed
+
+### Stats (Round 24)
+Tested: 6 | Passed: 4 | Failed: 2 (1 critical, 1 silent bug) | Fixed: 2 (combined into 1 patch) | Deferred: 0

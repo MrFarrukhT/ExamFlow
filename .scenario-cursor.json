@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-09 16:50",
-  "totalRuns": 23,
+  "lastRun": "2026-04-09 17:10",
+  "totalRuns": 24,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -103,7 +103,11 @@
     "olympiada-level-lock-no-array-or-case-bypass",
     "olympiada-level-lock-exam-type-immutable-after-insert",
     "ielts-writing-anti-cheat-parity-stored",
-    "ielts-rate-limiter-holds-under-30-concurrent-stress"
+    "ielts-rate-limiter-holds-under-30-concurrent-stress",
+    "ielts-cjs-server-side-score-recompute-synced",
+    "ielts-bandScoreFromRaw-helper-defined",
+    "ielts-score-tamper-flag-stored-in-anti-cheat",
+    "ielts-answers-array-coerced-to-empty-object"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
@@ -112,12 +116,14 @@
     "blocklist-deny-approach-needs-ongoing-maintenance",
     "submissions-list-unpaginated-5604-rows-fetched-per-dashboard-load",
     "rate-limiter-hits-map-grows-unboundedly",
-    "esm-cjs-drift-no-occurrence-r17-r23-but-pattern-unsolved",
+    "esm-cjs-drift-recurring-systemic-issue-5-occurrences-r24-most-critical",
     "js-db-enum-drift-recurring-3-occurrences",
     "loose-type-coercion-trusting-toString-or-comparison-operators",
     "student-names-not-secrets-physical-exam-context",
     "olympiada-cambridge-mock-test-numbers-collision-workflow",
-    "autopilot-bulk-copy-paste-can-spread-syntax-errors-across-files"
+    "autopilot-bulk-copy-paste-can-spread-syntax-errors-across-files",
+    "defensive-feature-detection-can-hide-missing-function-bugs",
+    "autopilot-complete-status-unreliable-for-security-work"
   ],
   "untestedAreas": [
     "browser-based-c1-advanced-exam-flow"
@@ -136,16 +142,16 @@
       "reason": "Names visible in physical exam settings; true auth needs per-student passwords/QR tokens"
     },
     {
-      "title": "JS↔DB enum drift recurring (3 occurrences: R8, R13, R18)",
+      "title": "JS↔DB enum drift recurring (3 occurrences)",
       "severity": "HIGH",
       "since": "2026-04-09",
       "reason": "Every enum addition requires a paired DB migration. Architect should add a code review checklist."
     },
     {
-      "title": "ESM↔CJS drift recurring (4 occurrences in R13-R16, none R17-R23)",
-      "severity": "HIGH",
+      "title": "ESM↔CJS drift recurring (5 occurrences, R24 most critical)",
+      "severity": "CRITICAL",
       "since": "2026-04-09",
-      "reason": "Pattern unsolved, just hasn't been triggered recently. 7-round clean streak."
+      "reason": "5 occurrences. R24 had production-fully-exploitable score tampering hidden by drift. Architect MUST automate sync or deprecate one server NOW."
     },
     {
       "title": "Submissions list returns 5604+ rows unpaginated",
@@ -175,19 +181,25 @@
       "title": "Olympiada and Cambridge mock_test numbers collide (dedup workflow concern)",
       "severity": "LOW",
       "since": "2026-04-09",
-      "reason": "Dedup key omits exam_type, so a student cannot take Mock 1 as both Cambridge and Olympiada. Configuration concern, not a bug."
+      "reason": "Dedup key omits exam_type, so a student cannot take Mock 1 as both Cambridge and Olympiada."
     },
     {
       "title": "Autopilot bulk-paste can spread syntax errors across many files (R21 pattern)",
       "severity": "MEDIUM",
       "since": "2026-04-09",
       "reason": "Workflow gap in autopilot agent. /scenario must always re-test areas the autopilot bulk-edits."
+    },
+    {
+      "title": "Admin dashboard renderAntiCheatBadge doesn't surface scoreTamper flag",
+      "severity": "LOW",
+      "since": "2026-04-09",
+      "reason": "R24's anti_cheat_data.scoreTamper is stored but not yet displayed in the badge — admin sees the row but not the warning. Minor follow-up for autopilot."
     }
   ],
   "stats": {
-    "scenariosTested": 137,
-    "bugsFound": 44,
-    "bugsFixed": 39,
-    "bugsDeferred": 10
+    "scenariosTested": 144,
+    "bugsFound": 46,
+    "bugsFixed": 41,
+    "bugsDeferred": 11
   }
 }
