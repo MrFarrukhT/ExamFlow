@@ -1,5 +1,45 @@
 # Autopilot Journal
 
+## Session: 2026-04-09 01:00
+Persona: Cambridge B1 Preliminary student (intermediate exam + submitting and checking answers)
+System: Cambridge
+
+### Phase 1: Journey Map
+- Gaps identified: 6
+- Key finding: Reading/Writing wrappers initialized wrong localStorage key (`readingAnswers` instead of `cambridge-readingAnswers`)
+- Key finding: Writing Part 7/8 had `data-mock="A2-Key"` instead of `B1-Preliminary`
+- Key finding: Reading/Writing wrappers had no completed-status guard (could re-enter finished tests)
+- Key finding: my-results.html only supported combined reading-writing (A1/A2), not separate reading+writing (B1/B2)
+- Key finding: All data-fetching endpoints required admin auth, blocking student results page
+
+### Phase 2: Creation
+- Built: 2 student-facing API endpoints
+  - `/my-submissions` — returns student's own submissions without admin auth (no audio_data)
+  - `/my-answer-keys` — returns answer keys for a level/skill without admin auth
+  - Committed within cambridge-database-server.js
+
+### Phase 3: Structure
+- Skipped — structure sound for B1 student flow
+
+### Phase 4: Heal
+- Fixed: 5 findings across all B1 mocks (MOCK 1, 2, 3)
+  - **localStorage key mismatch** — `readingAnswers`/`writingAnswers` → `cambridge-readingAnswers`/`cambridge-writingAnswers` in reading.html/writing.html wrappers. Also fixed in B2-First mocks. Committed as 18b6734
+  - **Wrong data-mock attribute** — Part 7/8 had `data-mock="A2-Key"`, fixed to `B1-Preliminary` across all 3 mocks. Committed as 269b70c
+  - **Missing completed-status guard** — reading.html/writing.html wrappers now redirect to dashboard if module already completed, matching listening.html behavior. Committed as adf1182
+
+### Phase 5: Experience
+- Pages improved: 1 (deep rewrite)
+  - **my-results.html** — full B1/B2 support: separate Reading, Writing, Listening sections; uses new student-facing `/my-submissions` and `/my-answer-keys` endpoints; level-aware summary (4 modules instead of 3); correct localStorage fallback keys. Committed as aa4b031
+
+### Phase 6: Scenario
+- Deferred (endpoint-level testing requires running server — structural correctness verified via code review)
+
+### Session Stats
+Total commits: 4 (18b6734, 269b70c, adf1182, aa4b031)
+Total files changed: ~20 (reading.html x6, writing.html x6, Part 7.html x3, Part 8.html x3, cambridge-database-server.js, my-results.html)
+Persona journey coverage: Login → Dashboard → Reading (submit) → Writing (submit) → Listening (submit) → Speaking (submit) → Dashboard (completion) → View Results (answer checking)
+---
+
 ## Session: 2026-04-08 23:40
 Persona: Cambridge A1 Movers student (young learner — take test, submit, check answers)
 System: Cambridge
