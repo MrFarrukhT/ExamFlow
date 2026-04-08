@@ -84,10 +84,57 @@ export function stripHtmlTags(str) {
     return str.replace(/<[^>]*>/g, '');
 }
 
+// Schema for known anti-cheat fields. Enforces type at the server boundary so
+// the dashboard violation logic (which uses loose type checks) can't be bypassed
+// by submitting non-numeric counters or non-boolean flags.
+//
+// counters: must coerce to non-negative integer (else dropped)
+// booleans: must be a boolean (else dropped)
+// dates:    must be a parseable ISO date string (else dropped)
+// Anything not in the schema falls through to generic sanitization.
+const ANTI_CHEAT_SCHEMA = {
+    tabSwitches: 'counter',
+    windowBlurs: 'counter',
+    fullscreenExits: 'counter',
+    copyAttempts: 'counter',
+    pasteAttempts: 'counter',
+    rightClickAttempts: 'counter',
+    blockedShortcuts: 'counter',
+    distractionFreeEnabled: 'boolean',
+    durationFlag: 'boolean',
+    firstViolationAt: 'date',
+    lastViolationAt: 'date'
+};
+
+function coerceSchemaValue(key, value) {
+    const type = ANTI_CHEAT_SCHEMA[key];
+    if (!type) return undefined; // unknown field — let generic path handle it
+    if (type === 'counter') {
+        // Must be a finite non-negative integer
+        if (typeof value !== 'number' || !Number.isFinite(value) || !Number.isInteger(value) || value < 0) {
+            return null; // drop
+        }
+        return value;
+    }
+    if (type === 'boolean') {
+        if (typeof value !== 'boolean') return null;
+        return value;
+    }
+    if (type === 'date') {
+        if (typeof value !== 'string') return null;
+        const d = new Date(value);
+        if (isNaN(d.getTime())) return null;
+        return value.slice(0, 50);
+    }
+    return null;
+}
+
 /**
  * Sanitize and bound a client-supplied anti-cheat metadata object.
  *
- * - Strips HTML tags from all string values (prevents stored XSS)
+ * - Schema-driven type enforcement on known anti-cheat fields (defeats type confusion
+ *   bypasses against dashboard violation logic)
+ * - Strips HTML tags from string values (prevents stored XSS)
  * - Caps total serialized size at MAX_BYTES (prevents DoS via massive payloads)
  * - Drops nested objects deeper than MAX_DEPTH (prevents pathological structures)
  * - Removes server-managed keys (caller will set those server-side after this returns)
@@ -126,12 +173,33 @@ export function sanitizeAntiCheat(input, serverManagedKeys = []) {
         return null;
     }
 
-    const sanitized = clean(input, 0);
-    if (!sanitized || Object.keys(sanitized).length === 0) return null;
+    // Top-level pass: schema-enforced for known keys, generic clean for unknown
+    const out = {};
+    let count = 0;
+    for (const key of Object.keys(input)) {
+        if (count >= MAX_KEYS) break;
+        if (serverManagedKeys.includes(key)) continue;
+        if (key in ANTI_CHEAT_SCHEMA) {
+            const coerced = coerceSchemaValue(key, input[key]);
+            if (coerced !== null && coerced !== undefined) {
+                out[key] = coerced;
+                count++;
+            }
+            // type mismatch on known field → silently drop
+            continue;
+        }
+        const cleaned = clean(input[key], 1);
+        if (cleaned !== null) {
+            out[key] = cleaned;
+            count++;
+        }
+    }
+
+    if (Object.keys(out).length === 0) return null;
     // Enforce total size cap by serializing
-    const json = JSON.stringify(sanitized);
+    const json = JSON.stringify(out);
     if (json.length > MAX_BYTES) return null;
-    return sanitized;
+    return out;
 }
 
 /**

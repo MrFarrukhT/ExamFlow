@@ -102,7 +102,37 @@ function stripHtmlTags(str) {
     return str.replace(/<[^>]*>/g, '');
 }
 
+// Schema-driven type enforcement for known anti-cheat fields. Defeats type
+// confusion bypasses against the dashboard violation checks.
+const ANTI_CHEAT_SCHEMA = {
+    tabSwitches: 'counter', windowBlurs: 'counter', fullscreenExits: 'counter',
+    copyAttempts: 'counter', pasteAttempts: 'counter', rightClickAttempts: 'counter',
+    blockedShortcuts: 'counter',
+    distractionFreeEnabled: 'boolean', durationFlag: 'boolean',
+    firstViolationAt: 'date', lastViolationAt: 'date'
+};
+function coerceSchemaValue(key, value) {
+    const type = ANTI_CHEAT_SCHEMA[key];
+    if (!type) return undefined;
+    if (type === 'counter') {
+        if (typeof value !== 'number' || !Number.isFinite(value) || !Number.isInteger(value) || value < 0) return null;
+        return value;
+    }
+    if (type === 'boolean') {
+        if (typeof value !== 'boolean') return null;
+        return value;
+    }
+    if (type === 'date') {
+        if (typeof value !== 'string') return null;
+        const d = new Date(value);
+        if (isNaN(d.getTime())) return null;
+        return value.slice(0, 50);
+    }
+    return null;
+}
+
 // Sanitize and bound a client-supplied anti-cheat metadata object.
+// - Schema-enforced types on known anti-cheat fields (defeats dashboard bypass)
 // - Strips HTML from string values, caps size/depth, removes server-managed keys.
 function sanitizeAntiCheat(input, serverManagedKeys) {
     serverManagedKeys = serverManagedKeys || [];
@@ -129,10 +159,29 @@ function sanitizeAntiCheat(input, serverManagedKeys) {
         }
         return null;
     }
-    const sanitized = clean(input, 0);
-    if (!sanitized || Object.keys(sanitized).length === 0) return null;
-    if (JSON.stringify(sanitized).length > MAX_BYTES) return null;
-    return sanitized;
+
+    const out = {};
+    let count = 0;
+    for (const key of Object.keys(input)) {
+        if (count >= MAX_KEYS) break;
+        if (serverManagedKeys.indexOf(key) !== -1) continue;
+        if (key in ANTI_CHEAT_SCHEMA) {
+            const coerced = coerceSchemaValue(key, input[key]);
+            if (coerced !== null && coerced !== undefined) {
+                out[key] = coerced;
+                count++;
+            }
+            continue;
+        }
+        const cleaned = clean(input[key], 1);
+        if (cleaned !== null) {
+            out[key] = cleaned;
+            count++;
+        }
+    }
+    if (Object.keys(out).length === 0) return null;
+    if (JSON.stringify(out).length > MAX_BYTES) return null;
+    return out;
 }
 
 // ============================================
