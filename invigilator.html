@@ -511,9 +511,13 @@
                 return r.json();
             }).then(function(data) {
                 var subs = isCambridge ? data : (data.submissions || []);
-                var today = new Date().toISOString().split('T')[0];
+                var now = new Date();
+                var todayLocal = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
                 var todaySubs = subs.filter(function(s) {
-                    return s.created_at && s.created_at.split('T')[0] === today;
+                    if (!s.created_at) return false;
+                    var d = new Date(s.created_at);
+                    var local = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+                    return local === todayLocal;
                 });
                 renderRoomStats(todaySubs);
                 renderRoomList(todaySubs);
@@ -533,8 +537,7 @@
             var scored = 0;
             subs.forEach(function(s) {
                 students[s.student_id || s.studentId || 'unknown'] = true;
-                if (isCambridge) { if (s.score !== null && s.score !== undefined) scored++; }
-                else { if (s.score !== null && s.score !== undefined && s.score !== 0) scored++; }
+                if (s.score !== null && s.score !== undefined) scored++;
             });
             document.getElementById('statStudents').textContent = Object.keys(students).length;
             document.getElementById('statSubmissions').textContent = subs.length;
@@ -565,7 +568,7 @@
                 g.items.forEach(function(s) {
                     var skill = s.skill || 'unknown';
                     var badgeClass = skill.toLowerCase().replace(/\s+/g, '-').replace('&', '').replace('use-of-english','reading');
-                    var hasScore = s.score !== null && s.score !== undefined && (isCambridge || s.score !== 0);
+                    var hasScore = s.score !== null && s.score !== undefined;
                     var scoreText = hasScore
                         ? (isCambridge ? (s.score + (s.grade ? '/' + s.grade : '')) : (s.score + '/40' + (s.band_score ? ' (Band ' + s.band_score + ')' : '')))
                         : 'Awaiting score';
