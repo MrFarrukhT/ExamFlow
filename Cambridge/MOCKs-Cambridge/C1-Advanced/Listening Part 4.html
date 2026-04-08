@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C1 Advanced - Listening Part 4</title>
+  <link rel="stylesheet" href="./c1-test.css">
+  <script src="../../../assets/js/cambridge/session-verify.js"></script>
+</head>
+<body>
+  <div class="c1-header">
+    <div class="part-label">Listening &middot; Part 4 &middot; Multiple matching</div>
+    <div class="part-info">Questions 21–30 &middot; Five extracts &middot; Two tasks</div>
+  </div>
+
+  <div class="c1-shell">
+    <div class="c1-instructions">
+      You will hear five short extracts in which people are talking about their work making and restoring violins. For <strong>Task 1</strong>, choose from the list (<strong>A–H</strong>) what each speaker says inspired them. For <strong>Task 2</strong>, choose from the list (<strong>A–H</strong>) what each speaker says about their work now. Complete <strong>both tasks</strong>.
+    </div>
+
+    <div class="c1-task-block">
+      <h3>Task 1 — What inspired them to learn to make and restore violins</h3>
+      <p style="margin-top:0;color:#7c2d12;font-size:0.9rem;font-family:'Segoe UI',system-ui,sans-serif;">Choose from the list below for questions 21–25.</p>
+
+      <div id="task1"></div>
+    </div>
+
+    <div class="c1-task-block">
+      <h3>Task 2 — What each speaker says about their work now</h3>
+      <p style="margin-top:0;color:#7c2d12;font-size:0.9rem;font-family:'Segoe UI',system-ui,sans-serif;">Choose from the list below for questions 26–30.</p>
+
+      <div id="task2"></div>
+    </div>
+  </div>
+
+  <script src="./c1-test.js"></script>
+  <script>
+    const task1Options = [
+      { value: 'A', text: 'A — having the chance to run a business' },
+      { value: 'B', text: 'B — following the recommendation of a friend' },
+      { value: 'C', text: 'C — playing someone else\u2019s violin' },
+      { value: 'D', text: 'D — handling the natural materials used' },
+      { value: 'E', text: 'E — observing an expert at work' },
+      { value: 'F', text: 'F — discovering the challenges of the job' },
+      { value: 'G', text: 'G — hearing someone talk about their passion' }
+    ];
+
+    const task2Options = [
+      { value: 'A', text: 'A — Having to deal with paperwork is distracting.' },
+      { value: 'B', text: 'B — It\u2019s disappointing when people underestimate what\u2019s involved.' },
+      { value: 'C', text: 'C — It\u2019s often thrilling to identify the original maker.' },
+      { value: 'D', text: 'D — The craft has taken a long time to master.' },
+      { value: 'E', text: 'E — Working on antiques is a privilege.' },
+      { value: 'F', text: 'F — Earning a living is far from straightforward.' },
+      { value: 'G', text: 'G — There\u2019s a huge demand for their work.' }
+    ];
+
+    function buildSpeakers(containerId, startQ, options) {
+      const container = document.getElementById(containerId);
+      for (let i = 0; i < 5; i++) {
+        const qNum = startQ + i;
+        const row = document.createElement('div');
+        row.className = 'c1-speaker-row';
+        const label = document.createElement('div');
+        label.className = 'speaker-label';
+        label.textContent = 'Speaker ' + (i + 1) + ' (Q' + qNum + ')';
+        row.appendChild(label);
+        row.appendChild(C1Test.renderSelect(qNum, options));
+        container.appendChild(row);
+      }
+    }
+
+    buildSpeakers('task1', 21, task1Options);
+    buildSpeakers('task2', 26, task2Options);
+
+    C1Test.buildNav({
+      prevUrl: 'Listening Part 3.html',
+      nextUrl: null,
+      isLast: true,
+      progressText: 'Listening Part 4 of 4 (final)'
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C1 Advanced - Listening Part 3</title>
+  <link rel="stylesheet" href="./c1-test.css">
+  <script src="../../../assets/js/cambridge/session-verify.js"></script>
+</head>
+<body>
+  <div class="c1-header">
+    <div class="part-label">Listening &middot; Part 3 &middot; Multiple choice</div>
+    <div class="part-info">Questions 15–20 &middot; Interview with two chefs</div>
+  </div>
+
+  <div class="c1-shell">
+    <div class="c1-instructions">
+      You will hear an interview with two chefs, <strong>Pearl Benuga</strong> and <strong>Jim Davis</strong>. For questions <strong>15–20</strong>, choose the answer (<strong>A</strong>, <strong>B</strong>, <strong>C</strong> or <strong>D</strong>) which fits best according to what you hear.
+    </div>
+
+    <div class="c1-questions" id="questions"></div>
+  </div>
+
+  <script src="./c1-test.js"></script>
+  <script>
+    const questions = [
+      { num: 15, stem: 'What does Pearl say about working in her father\u2019s restaurant?', options: [
+        { letter: 'A', text: 'She wasn\u2019t given special treatment.' },
+        { letter: 'B', text: 'She didn\u2019t appreciate her good fortune.' },
+        { letter: 'C', text: 'She didn\u2019t accomplish as much as expected.' },
+        { letter: 'D', text: 'She wasn\u2019t confident about her level of experience.' }
+      ]},
+      { num: 16, stem: 'What aspect of Jim\u2019s job gives him the most satisfaction?', options: [
+        { letter: 'A', text: 'the knowledge that his work is appreciated' },
+        { letter: 'B', text: 'the close relationships he has built up' },
+        { letter: 'C', text: 'the security of having a regular income' },
+        { letter: 'D', text: 'the praise he receives from colleagues' }
+      ]},
+      { num: 17, stem: 'What constant aspect of her work does Pearl dislike?', options: [
+        { letter: 'A', text: 'having to find new staff' },
+        { letter: 'B', text: 'having to check for imperfections' },
+        { letter: 'C', text: 'having to give instructions' },
+        { letter: 'D', text: 'having to stick to a schedule' }
+      ]},
+      { num: 18, stem: 'What do Pearl and Jim say inspires them?', options: [
+        { letter: 'A', text: 'exposure to the ideas of other chefs' },
+        { letter: 'B', text: 'discussions about food with other people' },
+        { letter: 'C', text: 'unconventional recipes they come across online' },
+        { letter: 'D', text: 'limited availability of ingredients they can use' }
+      ]},
+      { num: 19, stem: 'When Jim goes to other people\u2019s restaurants, he usually', options: [
+        { letter: 'A', text: 'assesses whether they\u2019re a threat to his business.' },
+        { letter: 'B', text: 'tries to ensure no-one recognises him.' },
+        { letter: 'C', text: 'feels annoyed at the unreasonable prices.' },
+        { letter: 'D', text: 'selects dishes that require skill to produce.' }
+      ]},
+      { num: 20, stem: 'What does Pearl say about her future plans?', options: [
+        { letter: 'A', text: 'They will be quite hard to finance.' },
+        { letter: 'B', text: 'They will involve big changes.' },
+        { letter: 'C', text: 'They reflect her earlier interests.' },
+        { letter: 'D', text: 'They are not very well developed.' }
+      ]}
+    ];
+
+    const container = document.getElementById('questions');
+    questions.forEach(q => C1Test.renderMultipleChoice(container, q.num, q.stem, q.options));
+
+    C1Test.buildNav({
+      prevUrl: 'Listening Part 2.html',
+      nextUrl: 'Listening Part 4.html',
+      isLast: false,
+      progressText: 'Listening Part 3 of 4'
+    });
+  </script>
+</body>
+</html>

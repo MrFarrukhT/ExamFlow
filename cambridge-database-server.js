@@ -31,7 +31,7 @@ const { app, db, ensureConnection, __dirname: serverDir, start } = createServer(
         console.log(`📝 Table: cambridge_submissions`);
         console.log(`🔗 Test connection: http://localhost:${port}/test`);
         console.log('═══════════════════════════════════════════════════');
-        console.log('\n📚 Supported Levels: A1-Movers, A2-Key, B1-Preliminary, B2-First');
+        console.log('\n📚 Supported Levels: A1-Movers, A2-Key, B1-Preliminary, B2-First, C1-Advanced');
         console.log('📝 Supported Skills: reading, writing, listening, reading-writing, reading-use-of-english');
         console.log('\nPress Ctrl+C to stop the server\n');
     }
@@ -67,7 +67,7 @@ async function initializeCambridgeTables(client) {
                 evaluator_name VARCHAR(200),
                 evaluation_date TIMESTAMP,
                 evaluation_notes TEXT,
-                CHECK (level IN ('A1-Movers', 'A2-Key', 'B1-Preliminary', 'B2-First')),
+                CHECK (level IN ('A1-Movers', 'A2-Key', 'B1-Preliminary', 'B2-First', 'C1-Advanced')),
                 CHECK (skill IN ('reading', 'writing', 'listening', 'speaking', 'reading-writing', 'reading-use-of-english'))
             )
         `);
@@ -192,6 +192,48 @@ async function initializeCambridgeTables(client) {
 
         console.log('✅ Skill constraint updated to include speaking');
 
+        // Update level constraint to include C1-Advanced (Olympiada launch)
+        await client.query(`
+            DO $$
+            BEGIN
+                IF EXISTS (
+                    SELECT 1 FROM pg_constraint
+                    WHERE conname = 'cambridge_submissions_level_check'
+                ) THEN
+                    ALTER TABLE cambridge_submissions DROP CONSTRAINT cambridge_submissions_level_check;
+                END IF;
+
+                ALTER TABLE cambridge_submissions
+                ADD CONSTRAINT cambridge_submissions_level_check
+                CHECK (level IN ('A1-Movers', 'A2-Key', 'B1-Preliminary', 'B2-First', 'C1-Advanced'));
+            END $$;
+        `);
+        console.log('✅ Level constraint updated to include C1-Advanced');
+
+        // Update answer-keys level constraint too
+        await client.query(`
+            DO $$
+            BEGIN
+                IF EXISTS (
+                    SELECT 1 FROM pg_constraint
+                    WHERE conname = 'cambridge_answer_keys_level_check'
+                ) THEN
+                    ALTER TABLE cambridge_answer_keys DROP CONSTRAINT cambridge_answer_keys_level_check;
+                END IF;
+
+                -- Only add if the table exists (skip on first run before table creation below)
+                IF EXISTS (
+                    SELECT 1 FROM information_schema.tables
+                    WHERE table_name = 'cambridge_answer_keys'
+                ) THEN
+                    ALTER TABLE cambridge_answer_keys
+                    ADD CONSTRAINT cambridge_answer_keys_level_check
+                    CHECK (level IN ('A1-Movers', 'A2-Key', 'B1-Preliminary', 'B2-First', 'C1-Advanced'));
+                END IF;
+            END $$;
+        `);
+        console.log('✅ Answer-keys level constraint updated to include C1-Advanced');
+
         // Create indexes for performance
         await client.query(`
             CREATE INDEX IF NOT EXISTS idx_cambridge_student_id ON cambridge_submissions(student_id)
@@ -218,7 +260,7 @@ async function initializeCambridgeTables(client) {
                 mock_test VARCHAR(10) DEFAULT '1',
                 answers JSONB NOT NULL,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                CHECK (level IN ('A1-Movers', 'A2-Key', 'B1-Preliminary', 'B2-First')),
+                CHECK (level IN ('A1-Movers', 'A2-Key', 'B1-Preliminary', 'B2-First', 'C1-Advanced')),
                 CHECK (skill IN ('reading', 'writing', 'listening', 'reading-writing', 'reading-use-of-english')),
                 UNIQUE(level, skill, mock_test)
             )
