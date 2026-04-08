@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-08 18:40",
-  "totalRuns": 13,
+  "lastRun": "2026-04-08 18:55",
+  "totalRuns": 14,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -66,7 +66,12 @@
     "cambridge-my-answer-keys-level-skill-enum-validation",
     "cambridge-my-answer-keys-mock-scoped",
     "cambridge-my-submissions-response-format-wrapped",
-    "student-facing-endpoints-sql-injection-safe"
+    "student-facing-endpoints-sql-injection-safe",
+    "ielts-cjs-my-submissions-synced",
+    "ielts-cjs-my-answer-keys-synced",
+    "ielts-cjs-my-answer-keys-mock-scoped",
+    "ielts-cjs-my-submissions-mock-number-validated",
+    "cambridge-review-modal-no-attack-surface"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
@@ -75,7 +80,7 @@
     "blocklist-deny-approach-needs-ongoing-maintenance",
     "submissions-list-unpaginated",
     "rate-limiter-hits-map-grows-unboundedly",
-    "ielts-cjs-not-synced-with-esm-source-new-endpoints-missing",
+    "esm-cjs-drift-creates-silent-feature-gaps",
     "student-id-idor-by-design"
   ],
   "untestedAreas": [],
@@ -109,18 +114,12 @@
       "severity": "MEDIUM",
       "since": "2026-04-08",
       "reason": "Server can sanitize but cannot verify"
-    },
-    {
-      "title": "IELTS CJS server missing /my-submissions and /my-answer-keys endpoints",
-      "severity": "MEDIUM",
-      "since": "2026-04-08",
-      "reason": "Sync gap — endpoints only exist in ESM source. Autopilot or architect needs to sync."
     }
   ],
   "stats": {
-    "scenariosTested": 78,
-    "bugsFound": 34,
-    "bugsFixed": 28,
-    "bugsDeferred": 6
+    "scenariosTested": 84,
+    "bugsFound": 35,
+    "bugsFixed": 30,
+    "bugsDeferred": 5
   }
 }
