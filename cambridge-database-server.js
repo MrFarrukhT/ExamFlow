@@ -292,8 +292,9 @@ async function insertCambridgeSubmission(dbClient, data) {
     if (data.durationFlag) cleanAC.durationFlag = true;
     const antiCheatJson = Object.keys(cleanAC).length > 0 ? JSON.stringify(cleanAC) : null;
 
-    // Honor client-supplied examType (Olympiada vs Cambridge) instead of hardcoding
-    const examTypeRaw = (data.examType || 'Cambridge').toString().slice(0, 50);
+    // Honor client-supplied examType (Olympiada vs Cambridge) instead of hardcoding.
+    // Strict string check first — prevents single-element-array bypass via toString().
+    const examTypeRaw = (typeof data.examType === 'string') ? data.examType.slice(0, 50) : 'Cambridge';
     const examType = ['Cambridge', 'Olympiada'].includes(examTypeRaw) ? examTypeRaw : 'Cambridge';
 
     const result = await dbClient.query(`
@@ -670,8 +671,9 @@ app.post('/submit-speaking', submissionLimiter, async (req, res) => {
             // Sanitize anti-cheat metadata (strip HTML, cap size/depth)
             const cleanSpeakAC = sanitizeAntiCheat(req.body.antiCheat) || {};
             const speakAntiCheatJson = Object.keys(cleanSpeakAC).length > 0 ? JSON.stringify(cleanSpeakAC) : null;
-            // Honor client-supplied examType (Olympiada vs Cambridge)
-            const speakExamRaw = (req.body.examType || 'Cambridge').toString().slice(0, 50);
+            // Honor client-supplied examType (Olympiada vs Cambridge).
+            // Strict string check first — prevents single-element-array bypass via toString().
+            const speakExamRaw = (typeof req.body.examType === 'string') ? req.body.examType.slice(0, 50) : 'Cambridge';
             const speakExamType = ['Cambridge', 'Olympiada'].includes(speakExamRaw) ? speakExamRaw : 'Cambridge';
             const result = await dbClient.query(`
                 INSERT INTO cambridge_submissions
