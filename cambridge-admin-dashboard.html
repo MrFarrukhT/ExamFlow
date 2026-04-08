@@ -286,168 +286,34 @@
         </div>
     </div>
 
+    <script src="assets/js/admin-common.js"></script>
     <script>
-        function escapeHtml(text) {
-            const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
-            return String(text).replace(/[&<>"']/g, m => map[m]);
-        }
+        // ── Cambridge Admin Dashboard — exam-specific code ──
+        const API_BASE = 'http://localhost:3003';
 
-        const API_BASE = 'http://localhost:3003'; // Cambridge server port
-        let authToken = localStorage.getItem('cambridgeAdminToken');
-        let currentSubmissions = [];
-        let filteredSubmissions = [];
-        let correctAnswers = {};
-        
-        // Pagination variables
-        let currentPage = 1;
-        let itemsPerPage = 15;
-        let totalPages = 0;
-        let isDateGroupView = false;
+        const dashboard = new AdminDashboard({
+            apiBase: API_BASE,
+            tokenKey: 'cambridgeAdminToken',
+            examType: 'cambridge',
+            healthEndpoint: '/test',
+            submissionsEndpoint: '/cambridge-submissions',
+            answersEndpoint: '/cambridge-answers',
+            csvFilenamePrefix: 'cambridge_submissions',
+            dateViewDefaultColor: '#0066cc',
+            serverHint: 'node cambridge-database-server.js',
+            extraFilterIds: ['filterLevel'],
+            extraLogoutHideIds: ['adminTabs'],
+            extraLoginShowIds: ['adminTabs']
+        });
 
-        // Check database connection on load
-        checkDatabaseConnection();
+        // ── Override: _parseSubmissionsResponse (Cambridge returns bare array) ──
+        dashboard._parseSubmissionsResponse = async function (response) {
+            if (!response.ok) throw new Error('Failed to fetch submissions');
+            return await response.json();
+        };
 
-        // Check if already logged in
-        if (authToken) {
-            showAdminPanel();
-        }
-
-        async function checkDatabaseConnection() {
-            try {
-                const response = await fetch(`${API_BASE}/test`);
-                
-                if (response.ok) {
-                    document.getElementById('connectionStatus').textContent = 'Database Online';
-                    document.getElementById('connectionStatus').className = 'connection-status connected';
-                } else {
-                    throw new Error('Database not responding');
-                }
-            } catch (error) {
-                document.getElementById('connectionStatus').textContent = 'Database Offline';
-                document.getElementById('connectionStatus').className = 'connection-status disconnected';
-            }
-        }
-
-        async function login(event) {
-            event.preventDefault();
-
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const loginBtn = document.getElementById('loginBtn');
-            const errorMessage = document.getElementById('errorMessage');
-            const successMessage = document.getElementById('successMessage');
-
-            loginBtn.disabled = true;
-            loginBtn.textContent = 'Logging in...';
-            errorMessage.style.display = 'none';
-            successMessage.style.display = 'none';
-
-            try {
-                const response = await fetch('/admin-login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    localStorage.setItem('cambridgeAdminToken', result.token);
-                    authToken = result.token;
-                    successMessage.textContent = 'Login successful!';
-                    successMessage.style.display = 'block';
-                    setTimeout(showAdminPanel, 1000);
-                } else {
-                    errorMessage.textContent = 'Invalid credentials.';
-                    errorMessage.style.display = 'block';
-                }
-            } catch (err) {
-                errorMessage.textContent = 'Server unavailable. Please ensure the server is running.';
-                errorMessage.style.display = 'block';
-            }
-
-            loginBtn.disabled = false;
-            loginBtn.textContent = 'Login';
-        }
-
-        function showAdminPanel() {
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('adminContent').style.display = 'block';
-            document.getElementById('logoutBtn').style.display = 'block';
-            document.getElementById('adminTabs').style.display = 'flex';
-
-            // Set default date range (last 30 days)
-            const today = new Date();
-            const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
-            document.getElementById('dateTo').value = today.toISOString().split('T')[0];
-            document.getElementById('dateFrom').value = thirtyDaysAgo.toISOString().split('T')[0];
-
-            // Initialize answer management interface
-            initializeAnswerManagement();
-
-            // Load all saved answers from database
-            loadCorrectAnswers();
-
-            loadSubmissions();
-        }
-
-        async function loadCorrectAnswers() {
-            try {
-                console.log('Loading Cambridge answers from database...');
-                
-                const levels = ['A1-Movers', 'A2-Key', 'B1-Preliminary', 'B2-First'];
-                const skills = ['reading', 'listening', 'reading-writing', 'reading-use-of-english'];
-                const mocks = ['1', '2', '3'];
-                
-                for (const level of levels) {
-                    for (const skill of skills) {
-                        for (const mock of mocks) {
-                            try {
-                                const response = await fetch(`${API_BASE}/cambridge-answers?level=${encodeURIComponent(level)}&skill=${skill}&mock=${mock}`);
-                                const data = await response.json();
-                                
-                                if (data.success && data.answers && Object.keys(data.answers).length > 0) {
-                                    const key = `${level}_${skill}_${mock}`;
-                                    correctAnswers[key] = data.answers;
-                                    console.log(`Loaded ${data.count} answers for ${level} ${skill} Mock ${mock}`);
-                                }
-                            } catch (error) {
-                                console.warn(`Could not load ${level} ${skill} Mock ${mock}:`, error.message);
-                            }
-                        }
-                    }
-                }
-
-                console.log('Loaded correct answers:', correctAnswers);
-            } catch (error) {
-                console.error('Error loading correct answers:', error);
-            }
-        }
-
-        async function loadSubmissions() {
-            const container = document.getElementById('submissionsContainer');
-            container.innerHTML = '<div class="loading">Loading Cambridge submissions...</div>';
-
-            try {
-                await checkDatabaseConnection();
-
-                const response = await fetch(`${API_BASE}/cambridge-submissions`);
-                
-                if (!response.ok) {
-                    throw new Error('Failed to fetch submissions');
-                }
-
-                currentSubmissions = await response.json();
-                applyFilters();
-            } catch (error) {
-                console.error('Load submissions error:', error);
-                container.innerHTML = `
-                    <div class="error-message" style="display: block;">
-                        Failed to load submissions. Please ensure the Cambridge database server is running.<br>
-                        <strong>Start it with:</strong> <code>node cambridge-database-server.js</code>
-                    </div>`;
-            }
-        }
-
-        function applyFilters() {
+        // ── Override: applyFilters (Cambridge has level filter, simpler scored logic) ──
+        dashboard.applyFilters = function () {
             const searchStudent = document.getElementById('searchStudent').value.toLowerCase();
             const filterLevel = document.getElementById('filterLevel').value;
             const filterSkill = document.getElementById('filterSkill').value;
@@ -456,1297 +322,553 @@
             const dateTo = document.getElementById('dateTo').value;
             const filterScored = document.getElementById('filterScored').value;
 
-            filteredSubmissions = currentSubmissions.filter(submission => {
-                // Search filter
+            this.filteredSubmissions = this.currentSubmissions.filter(submission => {
                 if (searchStudent &&
                     !submission.student_name.toLowerCase().includes(searchStudent) &&
-                    !submission.student_id.toLowerCase().includes(searchStudent)) {
-                    return false;
-                }
+                    !submission.student_id.toLowerCase().includes(searchStudent)) return false;
+                if (filterLevel && submission.level !== filterLevel) return false;
+                if (filterSkill && submission.skill !== filterSkill) return false;
+                if (filterMock && submission.mock_test !== filterMock) return false;
 
-                // Level filter
-                if (filterLevel && submission.level !== filterLevel) {
-                    return false;
-                }
-
-                // Skill filter
-                if (filterSkill && submission.skill !== filterSkill) {
-                    return false;
-                }
-
-                // Mock filter
-                if (filterMock && submission.mock_test !== filterMock) {
-                    return false;
-                }
-
-                // Date filters
                 const submissionDate = new Date(submission.created_at);
-                if (dateFrom && submissionDate < new Date(dateFrom)) {
-                    return false;
-                }
-                if (dateTo && submissionDate > new Date(dateTo + 'T23:59:59')) {
-                    return false;
-                }
+                if (dateFrom && submissionDate < new Date(dateFrom)) return false;
+                if (dateTo && submissionDate > new Date(dateTo + 'T23:59:59')) return false;
 
-                // Scored filter
-                if (filterScored === 'scored' && !submission.score) {
-                    return false;
-                }
-                if (filterScored === 'unscored' && submission.score) {
-                    return false;
-                }
-
+                if (filterScored === 'scored' && !submission.score) return false;
+                if (filterScored === 'unscored' && submission.score) return false;
                 return true;
             });
 
-            resetPagination();
-            displaySubmissions(filteredSubmissions);
-            updateStats(currentSubmissions, filteredSubmissions);
+            this.resetPagination();
+            this.displaySubmissions(this.filteredSubmissions);
+            this.updateStats(this.currentSubmissions, this.filteredSubmissions);
+        };
+
+        // ── Cambridge skill name helper ──
+        function formatSkillName(skill) {
+            const skillNames = {
+                'reading': 'Reading', 'writing': 'Writing', 'listening': 'Listening',
+                'speaking': 'Speaking', 'reading-writing': 'R&W', 'reading-use-of-english': 'R&UoE'
+            };
+            return skillNames[skill] || skill;
         }
 
-        function clearFilters() {
-            document.getElementById('searchStudent').value = '';
-            document.getElementById('filterLevel').value = '';
-            document.getElementById('filterSkill').value = '';
-            document.getElementById('filterMock').value = '';
-            document.getElementById('dateFrom').value = '';
-            document.getElementById('dateTo').value = '';
-            document.getElementById('filterScored').value = '';
-
-            applyFilters();
-        }
-
-        function filterTodaySubmissions() {
-            const today = new Date();
-            const todayISO = today.toISOString().split('T')[0];
-            
-            document.getElementById('dateFrom').value = todayISO;
-            document.getElementById('dateTo').value = todayISO;
-            
-            document.getElementById('searchStudent').value = '';
-            document.getElementById('filterLevel').value = '';
-            document.getElementById('filterSkill').value = '';
-            document.getElementById('filterMock').value = '';
-            document.getElementById('filterScored').value = '';
-            
-            applyFilters();
-        }
-
-        function displaySubmissions(submissions) {
+        // ── Override: displaySubmissions (Cambridge table with Level column) ──
+        dashboard.displaySubmissions = function (submissions) {
             const container = document.getElementById('submissionsContainer');
             const paginationControls = document.getElementById('paginationControls');
+            const esc = AdminDashboard.escapeHtml;
 
             if (submissions.length === 0) {
                 container.innerHTML = '<div class="no-submissions">No submissions match your filters.</div>';
                 paginationControls.style.display = 'none';
                 return;
             }
-
-            if (isDateGroupView) {
-                displaySubmissionsByDate(submissions);
+            if (this.isDateGroupView) {
+                this.displaySubmissionsByDate(submissions);
                 paginationControls.style.display = 'none';
                 return;
             }
 
-            // Calculate pagination
-            totalPages = Math.ceil(submissions.length / itemsPerPage);
-            
-            if (currentPage > totalPages) currentPage = 1;
-            if (currentPage < 1) currentPage = 1;
-            
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
+            this.totalPages = Math.ceil(submissions.length / this.itemsPerPage);
+            if (this.currentPage > this.totalPages) this.currentPage = 1;
+            if (this.currentPage < 1) this.currentPage = 1;
+
+            const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+            const endIndex = startIndex + this.itemsPerPage;
             const paginatedSubmissions = submissions.slice(startIndex, endIndex);
 
-            // Update pagination info
-            updatePaginationControls(submissions.length, startIndex, Math.min(endIndex, submissions.length));
+            this.updatePaginationControls(submissions.length, startIndex, Math.min(endIndex, submissions.length));
 
-            const table = `
+            container.innerHTML = `
                 <table class="submissions-table">
                     <thead>
                         <tr>
-                            <th>Student ID</th>
-                            <th>Name</th>
-                            <th>Level</th>
-                            <th>Mock</th>
-                            <th>Skill</th>
-                            <th>Score</th>
-                            <th>Date</th>
-                            <th>Duration</th>
-                            <th>Action</th>
+                            <th>Student ID</th><th>Name</th><th>Level</th><th>Mock</th><th>Skill</th>
+                            <th>Score</th><th>Date</th><th>Duration</th><th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        ${paginatedSubmissions.map(submission => `
+                        ${paginatedSubmissions.map(s => `
                             <tr>
-                                <td>${escapeHtml(submission.student_id)}</td>
-                                <td>${escapeHtml(submission.student_name)}</td>
-                                <td><span class="level-badge level-${escapeHtml(submission.level.split('-')[0].toLowerCase())}">${escapeHtml(submission.level)}</span></td>
-                                <td>Mock ${escapeHtml(submission.mock_test || '1')}</td>
-                                <td><span class="skill-badge skill-${escapeHtml(submission.skill)}">${escapeHtml(formatSkillName(submission.skill))}</span></td>
-                                <td class="${getScoreClass(submission.score)}">${escapeHtml(getScoreDisplay(submission))}</td>
-                                <td>${escapeHtml(formatDate(submission.created_at))}</td>
-                                <td>${escapeHtml(calculateDuration(submission.start_time, submission.end_time))}</td>
+                                <td>${esc(s.student_id)}</td>
+                                <td>${esc(s.student_name)}</td>
+                                <td><span class="level-badge level-${esc(s.level.split('-')[0].toLowerCase())}">${esc(s.level)}</span></td>
+                                <td>Mock ${esc(s.mock_test || '1')}</td>
+                                <td><span class="skill-badge skill-${esc(s.skill)}">${esc(formatSkillName(s.skill))}</span></td>
+                                <td class="${this.getScoreClass(s.score)}">${esc(this.getScoreDisplay(s))}</td>
+                                <td>${esc(this.formatDate(s.created_at))}</td>
+                                <td>${esc(this.calculateDuration(s.start_time, s.end_time))}</td>
                                 <td>
                                     <button class="btn btn-info" style="padding: 6px 12px; font-size: 12px;"
-                                            onclick="openAnswerComparison('${escapeHtml(submission.id)}')">
-                                        📋 View
+                                            onclick="openAnswerComparison('${esc(s.id)}')">
+                                        \uD83D\uDCCB View
                                     </button>
                                 </td>
                             </tr>
                         `).join('')}
                     </tbody>
-                </table>
-            `;
-
-            container.innerHTML = table;
+                </table>`;
             paginationControls.style.display = 'flex';
-        }
+        };
 
-        function displaySubmissionsByDate(submissions) {
-            const container = document.getElementById('submissionsContainer');
-            const submissionsByDate = getSubmissionsByDate(submissions);
-            
-            const sortedDates = Object.keys(submissionsByDate).sort((a, b) => new Date(b) - new Date(a));
-            
-            let html = '<div class="date-group-container">';
-            
-            if (sortedDates.length === 0) {
-                html += '<div class="no-submissions">No submissions found for the selected date range.</div>';
-            } else {
-                sortedDates.forEach((dateKey, index) => {
-                    const dateInfo = submissionsByDate[dateKey];
-                    const submissionCount = dateInfo.submissions.length;
-                    const isCollapsed = index > 0;
-                    
-                    html += `
-                        <div class="date-group ${isCollapsed ? 'collapsed' : ''}" id="dateGroup_${dateKey}">
-                            <div class="date-group-header" onclick="toggleDateGroup('${dateKey}')">
-                                <div class="date-group-header-left">
-                                    <span class="date-group-toggle">▼</span>
-                                    <span>📅 ${dateInfo.displayDate}</span>
-                                </div>
-                                <span class="date-group-count">${submissionCount} submission${submissionCount !== 1 ? 's' : ''}</span>
-                            </div>
-                            <div class="date-group-submissions">
-                    `;
-                    
-                    dateInfo.submissions.forEach(submission => {
-                        html += `
-                            <div class="date-group-submission" onclick="openAnswerComparison('${escapeHtml(submission.id)}')" style="cursor: pointer;">
-                                <div class="submission-info">
-                                    <div class="submission-name">${escapeHtml(submission.student_name)} (${escapeHtml(submission.student_id)})</div>
-                                    <div class="submission-details">
-                                        <span class="level-badge level-${escapeHtml(submission.level.split('-')[0].toLowerCase())}">${escapeHtml(submission.level)}</span>
-                                        <span class="skill-badge skill-${escapeHtml(submission.skill)}">${escapeHtml(formatSkillName(submission.skill))}</span>
-                                        <span>Mock ${escapeHtml(submission.mock_test || '1')}</span>
-                                        <span class="${getScoreClass(submission.score)}">${escapeHtml(getScoreDisplay(submission))}</span>
-                                        <span style="color: #6c757d; font-size: 13px;">${escapeHtml(formatDate(submission.created_at).split(' ')[1])}</span>
-                                    </div>
-                                </div>
-                                <button class="btn btn-info" style="padding: 4px 8px; font-size: 11px;"
-                                        onclick="event.stopPropagation(); openAnswerComparison('${escapeHtml(submission.id)}')">
-                                    View
-                                </button>
-                            </div>
-                        `;
-                    });
-                    
-                    html += `
-                            </div>
+        // ── Override: date-group row (Cambridge shows level + skill name) ──
+        dashboard.renderDateGroupSubmissionRow = function (submission) {
+            const esc = AdminDashboard.escapeHtml;
+            return `
+                <div class="date-group-submission" onclick="openAnswerComparison('${esc(submission.id)}')" style="cursor: pointer;">
+                    <div class="submission-info">
+                        <div class="submission-name">${esc(submission.student_name)} (${esc(submission.student_id)})</div>
+                        <div class="submission-details">
+                            <span class="level-badge level-${esc(submission.level.split('-')[0].toLowerCase())}">${esc(submission.level)}</span>
+                            <span class="skill-badge skill-${esc(submission.skill)}">${esc(formatSkillName(submission.skill))}</span>
+                            <span>Mock ${esc(submission.mock_test || '1')}</span>
+                            <span class="${this.getScoreClass(submission.score)}">${esc(this.getScoreDisplay(submission))}</span>
+                            <span style="color: #6c757d; font-size: 13px;">${esc(this.formatDate(submission.created_at).split(' ')[1])}</span>
                         </div>
-                    `;
-                });
-            }
-            
-            html += '</div>';
-            container.innerHTML = html;
-        }
+                    </div>
+                    <button class="btn btn-info" style="padding: 4px 8px; font-size: 11px;"
+                            onclick="event.stopPropagation(); openAnswerComparison('${esc(submission.id)}')">View</button>
+                </div>`;
+        };
 
-        function getSubmissionsByDate(submissions) {
-            const submissionsByDate = {};
-            
-            submissions.forEach(submission => {
-                const submissionDate = new Date(submission.created_at);
-                const dateKey = submissionDate.toISOString().split('T')[0];
-                const displayDate = submissionDate.toLocaleDateString('en-GB', {
-                    day: '2-digit',
-                    month: '2-digit', 
-                    year: 'numeric'
-                });
-                
-                if (!submissionsByDate[dateKey]) {
-                    submissionsByDate[dateKey] = {
-                        displayDate: displayDate,
-                        submissions: []
-                    };
-                }
-                
-                submissionsByDate[dateKey].submissions.push(submission);
-            });
-            
-            return submissionsByDate;
-        }
-
-        function toggleDateGroupView() {
-            isDateGroupView = !isDateGroupView;
-            const button = document.getElementById('dateGroupToggle');
-            
-            if (isDateGroupView) {
-                button.textContent = '📋 View as Table';
-                button.style.background = '#28a745';
-            } else {
-                button.textContent = '📅 View by Date';
-                button.style.background = '#0066cc';
-            }
-            
-            displaySubmissions(filteredSubmissions);
-        }
-
-        function toggleDateGroup(dateKey) {
-            const dateGroup = document.getElementById(`dateGroup_${dateKey}`);
-            if (dateGroup) {
-                dateGroup.classList.toggle('collapsed');
-            }
-        }
-
-        function updatePaginationControls(totalItems, startIndex, endIndex) {
-            document.getElementById('paginationInfo').textContent = 
-                `Showing ${startIndex + 1}-${endIndex} of ${totalItems} submissions`;
-            document.getElementById('currentPageSpan').textContent = currentPage;
-            document.getElementById('totalPagesSpan').textContent = totalPages;
-
-            const firstBtn = document.getElementById('firstPageBtn');
-            const prevBtn = document.getElementById('prevPageBtn');
-            const nextBtn = document.getElementById('nextPageBtn');
-            const lastBtn = document.getElementById('lastPageBtn');
-
-            firstBtn.disabled = currentPage === 1;
-            prevBtn.disabled = currentPage === 1;
-            nextBtn.disabled = currentPage === totalPages;
-            lastBtn.disabled = currentPage === totalPages;
-
-            const pageJumpInput = document.getElementById('pageJumpInput');
-            if (pageJumpInput) {
-                pageJumpInput.max = totalPages;
-                pageJumpInput.placeholder = currentPage.toString();
-            }
-        }
-
-        function jumpToPage() {
-            const pageInput = document.getElementById('pageJumpInput');
-            const pageNumber = parseInt(pageInput.value);
-            
-            if (pageNumber && pageNumber >= 1 && pageNumber <= totalPages) {
-                goToPage(pageNumber);
-                pageInput.value = '';
-            } else {
-                alert(`Please enter a valid page number between 1 and ${totalPages}`);
-                pageInput.focus();
-            }
-        }
-
-        function handlePageJumpEnter(event) {
-            if (event.key === 'Enter') {
-                jumpToPage();
-            }
-        }
-
-        function goToPage(pageNumber) {
-            if (pageNumber >= 1 && pageNumber <= totalPages) {
-                currentPage = pageNumber;
-                displaySubmissions(filteredSubmissions);
-            }
-        }
-
-        function resetPagination() {
-            currentPage = 1;
-        }
-
-        function updateStats(allSubmissions, filteredSubs) {
-            const totalSubmissions = allSubmissions.length;
-            const filteredCount = filteredSubs.length;
-            
+        // ── Override: updateStats (Cambridge has speaking count) ──
+        dashboard.updateStats = function (allSubmissions, filteredSubs) {
             const scoredTests = filteredSubs.filter(s => s.score !== null && s.score !== undefined);
             const scores = scoredTests.map(s => s.score);
             const averageScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
-            
             const uniqueStudents = new Set(filteredSubs.map(s => s.student_id)).size;
-            
             const unscoredCount = filteredSubs.filter(s => !s.score).length;
-            
-            // Count speaking submissions
             const speakingCount = filteredSubs.filter(s => s.skill === 'speaking').length;
 
-            document.getElementById('totalSubmissions').textContent = totalSubmissions;
-            document.getElementById('filteredSubmissions').textContent = filteredCount;
+            document.getElementById('totalSubmissions').textContent = allSubmissions.length;
+            document.getElementById('filteredSubmissions').textContent = filteredSubs.length;
             document.getElementById('averageScore').textContent = averageScore + '%';
             document.getElementById('totalStudents').textContent = uniqueStudents;
             document.getElementById('unscoredCount').textContent = unscoredCount;
             document.getElementById('speakingCount').textContent = speakingCount;
-        }
+        };
 
-        function getScoreClass(score) {
+        // ── Override: score helpers (Cambridge: 70/50 thresholds, percentage) ──
+        dashboard.getScoreClass = function (score) {
             if (!score) return 'score-poor';
             if (score >= 70) return 'score-good';
             if (score >= 50) return 'score-average';
             return 'score-poor';
-        }
+        };
+        dashboard.getScoreDisplay = function (submission) {
+            if (submission.skill === 'writing') return submission.score ? `${submission.score}%` : 'Not Graded';
+            return submission.score ? `${submission.score}%` : 'Unscored';
+        };
 
-        function getScoreDisplay(submission) {
-            if (submission.skill === 'writing') {
-                return submission.score ? `${submission.score}%` : 'Not Graded';
-            } else {
-                return submission.score ? `${submission.score}%` : 'Unscored';
+        // ── Override: CSV (Cambridge columns) ──
+        dashboard.generateCSV = function (submissions) {
+            const headers = ['Student ID', 'Student Name', 'Level', 'Mock Test', 'Skill', 'Score', 'Grade', 'Start Time', 'End Time', 'Created At'];
+            const rows = submissions.map(s => [
+                s.student_id, s.student_name, s.level, s.mock_test || '1', s.skill,
+                s.score || '', s.grade || '', s.start_time || '', s.end_time || '', s.created_at
+            ]);
+            return [headers, ...rows].map(row => row.map(field => `"${field}"`).join(',')).join('\n');
+        };
+
+        // ── Override: loadCorrectAnswers (Cambridge: database only) ──
+        dashboard.loadCorrectAnswers = async function () {
+            try {
+                const levels = ['A1-Movers', 'A2-Key', 'B1-Preliminary', 'B2-First'];
+                const skills = ['reading', 'listening', 'reading-writing', 'reading-use-of-english'];
+                const mocks = ['1', '2', '3'];
+                for (const level of levels) {
+                    for (const skill of skills) {
+                        for (const mock of mocks) {
+                            try {
+                                const response = await fetch(`${this.apiBase}/cambridge-answers?level=${encodeURIComponent(level)}&skill=${skill}&mock=${mock}`);
+                                const data = await response.json();
+                                if (data.success && data.answers && Object.keys(data.answers).length > 0) {
+                                    this.correctAnswers[`${level}_${skill}_${mock}`] = data.answers;
+                                }
+                            } catch (error) { console.warn(`Could not load ${level} ${skill} Mock ${mock}:`, error.message); }
+                        }
+                    }
+                }
+            } catch (error) { console.error('Error loading correct answers:', error); }
+        };
+
+        // ── Override: answer management (Cambridge endpoints with level) ──
+        dashboard.initializeAnswerManagement = function () {
+            this.initializeAnswerGrid();
+            document.getElementById('answerLevelSelect').addEventListener('change', () => { updateAnswerMockOptions(); this.loadAnswerSet(); });
+            document.getElementById('answerSkillSelect').addEventListener('change', () => this.loadAnswerSet());
+            document.getElementById('answerMockSelect').addEventListener('change', () => this.loadAnswerSet());
+            updateAnswerMockOptions();
+            this.loadAnswerSet();
+        };
+
+        function updateAnswerMockOptions() {
+            const levelSelect = document.getElementById('answerLevelSelect');
+            const mockSelect = document.getElementById('answerMockSelect');
+            if (!levelSelect || !mockSelect) return;
+            const selectedLevel = levelSelect.value;
+            const currentMock = mockSelect.value;
+            mockSelect.innerHTML = '';
+            const opt1 = document.createElement('option'); opt1.value = '1'; opt1.textContent = 'Mock 1'; mockSelect.appendChild(opt1);
+            if (selectedLevel !== 'A1-Movers') {
+                const opt2 = document.createElement('option'); opt2.value = '2'; opt2.textContent = 'Mock 2'; mockSelect.appendChild(opt2);
+                const opt3 = document.createElement('option'); opt3.value = '3'; opt3.textContent = 'Mock 3'; mockSelect.appendChild(opt3);
             }
+            if ((currentMock === '2' || currentMock === '3') && selectedLevel === 'A1-Movers') mockSelect.value = '1';
+            else mockSelect.value = currentMock || '1';
         }
 
-        function formatSkillName(skill) {
-            const skillNames = {
-                'reading': 'Reading',
-                'writing': 'Writing',
-                'listening': 'Listening',
-                'speaking': 'Speaking',
-                'reading-writing': 'R&W',
-                'reading-use-of-english': 'R&UoE'
-            };
-            return skillNames[skill] || skill;
-        }
+        dashboard.loadAnswerSet = async function () {
+            const level = document.getElementById('answerLevelSelect').value;
+            const skill = document.getElementById('answerSkillSelect').value;
+            const mock = document.getElementById('answerMockSelect').value;
+            for (let i = 1; i <= 40; i++) { const el = document.getElementById(`answer_${i}`); if (el) el.value = ''; }
+            try {
+                this.updateAnswerStatus('\u23F3 Loading answers from database...');
+                const response = await fetch(`${this.apiBase}/cambridge-answers?level=${encodeURIComponent(level)}&skill=${skill}&mock=${mock}`);
+                const data = await response.json();
+                if (data.success && data.answers && Object.keys(data.answers).length > 0) {
+                    const useLPrefix = skill === 'listening';
+                    for (let i = 1; i <= 40; i++) {
+                        const input = document.getElementById(`answer_${i}`);
+                        const answerKey = useLPrefix ? `L${i}` : `q${i}`;
+                        if (input && data.answers[answerKey]) {
+                            input.value = Array.isArray(data.answers[answerKey]) ? data.answers[answerKey].join(', ') : data.answers[answerKey];
+                        }
+                    }
+                    this.correctAnswers[`${level}_${skill}_${mock}`] = data.answers;
+                    this.updateAnswerStatus(`\u2705 Loaded ${data.count}/40 answers for ${level} ${skill} Mock ${mock}`);
+                } else {
+                    this.updateAnswerStatus(`\uD83D\uDCDD No saved answers found for ${level} ${skill} Mock ${mock}`);
+                }
+            } catch (error) {
+                console.error('Error loading answers:', error);
+                this.updateAnswerStatus(`\u274C Error loading answers: ${error.message}`);
+            }
+        };
 
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
-        }
+        dashboard.saveAnswerSet = async function () {
+            const level = document.getElementById('answerLevelSelect').value;
+            const skill = document.getElementById('answerSkillSelect').value;
+            const mock = document.getElementById('answerMockSelect').value;
+            const answers = {};
+            let filledCount = 0;
+            const useLPrefix = skill === 'listening';
+            for (let i = 1; i <= 40; i++) {
+                const input = document.getElementById(`answer_${i}`);
+                if (input && input.value.trim()) {
+                    const answerKey = useLPrefix ? `L${i}` : `q${i}`;
+                    let answerValue = input.value.trim();
+                    if (answerValue.includes(',')) answers[answerKey] = answerValue.split(',').map(a => a.trim());
+                    else answers[answerKey] = answerValue;
+                    filledCount++;
+                }
+            }
+            if (filledCount === 0) { this.updateAnswerStatus('\u274C No answers to save'); return; }
+            try {
+                this.updateAnswerStatus('\u23F3 Saving answers to database...');
+                const response = await fetch(`${this.apiBase}/cambridge-answers`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ level, skill, mock, answers })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    this.correctAnswers[`${level}_${skill}_${mock}`] = answers;
+                    this.updateAnswerStatus(`\u2705 ${data.message}`);
+                } else { this.updateAnswerStatus(`\u274C Failed to save: ${data.message}`); }
+            } catch (error) {
+                console.error('Error saving answers:', error);
+                this.updateAnswerStatus(`\u274C Error saving answers: ${error.message}`);
+            }
+        };
 
-        function calculateDuration(startTime, endTime) {
-            if (!startTime || !endTime) return 'N/A';
-            const start = new Date(startTime);
-            const end = new Date(endTime);
-            const durationMs = end - start;
-            const minutes = Math.round(durationMs / (1000 * 60));
-            return `${minutes}m`;
-        }
+        dashboard.clearAnswerSet = async function () {
+            if (!confirm('Are you sure you want to clear all answers? This action will delete them from the database and cannot be undone.')) return;
+            const level = document.getElementById('answerLevelSelect').value;
+            const skill = document.getElementById('answerSkillSelect').value;
+            const mock = document.getElementById('answerMockSelect').value;
+            try {
+                this.updateAnswerStatus('\u23F3 Clearing answers from database...');
+                const response = await fetch(`${this.apiBase}/cambridge-answers?level=${encodeURIComponent(level)}&skill=${skill}&mock=${mock}`, { method: 'DELETE' });
+                const data = await response.json();
+                if (data.success) {
+                    for (let i = 1; i <= 40; i++) { const el = document.getElementById(`answer_${i}`); if (el) el.value = ''; }
+                    delete this.correctAnswers[`${level}_${skill}_${mock}`];
+                    this.updateAnswerStatus(`\u2705 ${data.message}`);
+                } else { this.updateAnswerStatus(`\u274C Failed to clear: ${data.message}`); }
+            } catch (error) {
+                console.error('Error clearing answers:', error);
+                this.updateAnswerStatus(`\u274C Error clearing answers: ${error.message}`);
+                for (let i = 1; i <= 40; i++) { const el = document.getElementById(`answer_${i}`); if (el) el.value = ''; }
+                this.updateAnswerStatus('\uD83D\uDDD1\uFE0F Cleared local fields (database may still contain data)');
+            }
+        };
 
+        // ── Cambridge-only: openAnswerComparison (with mixed-skill support) ──
         async function openAnswerComparison(submissionId) {
-            const submission = currentSubmissions.find(s => s.id == submissionId);
-            if (!submission) {
-                alert('Submission not found');
-                return;
-            }
-
+            const submission = dashboard.currentSubmissions.find(s => s.id == submissionId);
+            if (!submission) { alert('Submission not found'); return; }
             const level = submission.level;
             const skill = submission.skill;
             const mockTest = submission.mock_test || '1';
 
-            // If it's a speaking test, redirect to the speaking evaluations page
-            if (skill === 'speaking') {
-                window.location.href = 'cambridge-speaking-evaluations.html';
-                return;
-            }
+            if (skill === 'speaking') { window.location.href = 'cambridge-speaking-evaluations.html'; return; }
 
             const studentAnswers = submission.answers || {};
-
-            // Detect if this submission contains mixed skills (e.g., both reading-writing and listening)
             const hasMixedSkills = detectMixedSkills(studentAnswers);
 
             if (hasMixedSkills) {
-                // Handle A1-Movers and A2-Key which have combined Reading&Writing + Listening
                 const readingWritingAnswers = filterAnswersByPrefix(studentAnswers, 'reading-writing_');
                 const listeningAnswers = filterAnswersByPrefix(studentAnswers, 'listening_');
-
-                // Load answer keys for both skills
                 const rwAnswerKey = `${level}_reading-writing_${mockTest}`;
                 const listeningAnswerKey = `${level}_listening_${mockTest}`;
-
-                // Auto-load correct answers if not already loaded
-                if (!correctAnswers[rwAnswerKey] || Object.keys(correctAnswers[rwAnswerKey]).length === 0) {
+                if (!dashboard.correctAnswers[rwAnswerKey] || Object.keys(dashboard.correctAnswers[rwAnswerKey]).length === 0)
                     await fetchCorrectAnswersForSkill(level, 'reading-writing', mockTest);
-                }
-                if (!correctAnswers[listeningAnswerKey] || Object.keys(correctAnswers[listeningAnswerKey]).length === 0) {
+                if (!dashboard.correctAnswers[listeningAnswerKey] || Object.keys(dashboard.correctAnswers[listeningAnswerKey]).length === 0)
                     await fetchCorrectAnswersForSkill(level, 'listening', mockTest);
-                }
-
-                const rwCorrectAnswers = correctAnswers[rwAnswerKey] || {};
-                const listeningCorrectAnswers = correctAnswers[listeningAnswerKey] || {};
-
+                const rwCorrectAnswers = dashboard.correctAnswers[rwAnswerKey] || {};
+                const listeningCorrectAnswers = dashboard.correctAnswers[listeningAnswerKey] || {};
                 document.getElementById('modalTitle').textContent =
                     `${submission.student_name} (${submission.student_id}) - ${level} R&W Mock ${mockTest}`;
-
-                const modalContent = generateMixedSkillsComparison(
-                    readingWritingAnswers,
-                    listeningAnswers,
-                    rwCorrectAnswers,
-                    listeningCorrectAnswers,
-                    submission
-                );
-
-                document.getElementById('modalContent').innerHTML = modalContent;
+                document.getElementById('modalContent').innerHTML = generateMixedSkillsComparison(
+                    readingWritingAnswers, listeningAnswers, rwCorrectAnswers, listeningCorrectAnswers, submission);
             } else {
-                // Standard single-skill submission
                 const answerKey = `${level}_${skill}_${mockTest}`;
-
-                // Auto-load correct answers if not already loaded
-                if (!correctAnswers[answerKey] || Object.keys(correctAnswers[answerKey]).length === 0) {
+                if (!dashboard.correctAnswers[answerKey] || Object.keys(dashboard.correctAnswers[answerKey]).length === 0)
                     await fetchCorrectAnswersForSkill(level, skill, mockTest);
-                }
-
-                const correctAnswersForTest = correctAnswers[answerKey] || {};
-                
+                const correctAnswersForTest = dashboard.correctAnswers[answerKey] || {};
                 document.getElementById('modalTitle').textContent =
                     `${submission.student_name} (${submission.student_id}) - ${level} ${formatSkillName(skill)} Mock ${mockTest}`;
-
-                let modalContent = '';
-
-                // Filter student answers to only show relevant answers for this skill type
                 const filteredStudentAnswers = filterAnswersBySkill(studentAnswers, skill);
-
-                if (skill === 'writing') {
-                    modalContent = generateWritingComparison(filteredStudentAnswers, correctAnswersForTest, submission);
-                } else {
-                    modalContent = generateAnswerComparison(filteredStudentAnswers, correctAnswersForTest, submission);
-                }
-
+                let modalContent = '';
+                if (skill === 'writing') modalContent = generateWritingComparison(filteredStudentAnswers, correctAnswersForTest, submission);
+                else modalContent = generateAnswerComparison(filteredStudentAnswers, correctAnswersForTest, submission);
                 document.getElementById('modalContent').innerHTML = modalContent;
             }
-            
             document.getElementById('answerModal').style.display = 'block';
         }
-        
-        // Helper function to detect if submission has mixed skills
+
+        // ── Cambridge helpers ──
         function detectMixedSkills(answers) {
             const keys = Object.keys(answers);
-            const hasReadingWriting = keys.some(k => k.startsWith('reading-writing_'));
-            const hasListening = keys.some(k => k.startsWith('listening_'));
-            return hasReadingWriting && hasListening;
+            return keys.some(k => k.startsWith('reading-writing_')) && keys.some(k => k.startsWith('listening_'));
         }
-        
-        // Helper function to filter answers by prefix
         function filterAnswersByPrefix(answers, prefix) {
             const filtered = {};
-            Object.keys(answers).forEach(key => {
-                if (key.startsWith(prefix)) {
-                    filtered[key] = answers[key];
-                }
-            });
+            Object.keys(answers).forEach(key => { if (key.startsWith(prefix)) filtered[key] = answers[key]; });
             return filtered;
         }
-
-        // Filter student answers by skill type for single-skill view
         function filterAnswersBySkill(answers, skill) {
             const filtered = {};
             Object.keys(answers).forEach(key => {
-                const keyLower = key.toLowerCase();
-
-                if (skill === 'listening') {
-                    // Only include L-prefixed or listening_ prefixed answers
-                    if (/^l\d+/i.test(key) || keyLower.startsWith('listening_')) {
-                        filtered[key] = answers[key];
-                    }
-                } else if (skill === 'writing') {
-                    // Only include writing_ prefixed answers
-                    if (keyLower.startsWith('writing_')) {
-                        filtered[key] = answers[key];
-                    }
-                } else if (skill === 'reading' || skill === 'reading-writing') {
-                    // Only include q-prefixed, reading_ prefixed, or plain number answers
-                    // Exclude listening and writing answers
-                    if (!keyLower.startsWith('listening_') &&
-                        !keyLower.startsWith('writing_') &&
-                        !/^l\d+/i.test(key)) {
-                        filtered[key] = answers[key];
-                    }
-                } else {
-                    // For any other skill, include all answers
-                    filtered[key] = answers[key];
-                }
+                const kl = key.toLowerCase();
+                if (skill === 'listening') { if (/^l\d+/i.test(key) || kl.startsWith('listening_')) filtered[key] = answers[key]; }
+                else if (skill === 'writing') { if (kl.startsWith('writing_')) filtered[key] = answers[key]; }
+                else if (skill === 'reading' || skill === 'reading-writing') {
+                    if (!kl.startsWith('listening_') && !kl.startsWith('writing_') && !/^l\d+/i.test(key)) filtered[key] = answers[key];
+                } else { filtered[key] = answers[key]; }
             });
             return filtered;
         }
-
-        // Helper function to fetch correct answers for a specific skill from the API
         async function fetchCorrectAnswersForSkill(level, skill, mock) {
             try {
-                console.log(`Auto-loading answers for ${level} ${skill} Mock ${mock}...`);
                 const response = await fetch(`${API_BASE}/cambridge-answers?level=${encodeURIComponent(level)}&skill=${skill}&mock=${mock}`);
                 const data = await response.json();
-
                 if (data.success && data.answers && Object.keys(data.answers).length > 0) {
-                    const key = `${level}_${skill}_${mock}`;
-                    correctAnswers[key] = data.answers;
-                    console.log(`Loaded ${Object.keys(data.answers).length} answers for ${key}`);
-                } else {
-                    console.log(`No answers found for ${level} ${skill} Mock ${mock}`);
+                    dashboard.correctAnswers[`${level}_${skill}_${mock}`] = data.answers;
                 }
-            } catch (error) {
-                console.error(`Error loading answers for ${level} ${skill} Mock ${mock}:`, error);
-            }
+            } catch (error) { console.error(`Error loading answers for ${level} ${skill} Mock ${mock}:`, error); }
         }
 
-        // Generate comparison for mixed skills (Reading&Writing + Listening)
+        // ── Cambridge: normalizeQuestionKey ──
+        function normalizeQuestionKey(key) {
+            const cleaned = key.replace(/^(listening_|reading-writing_|reading_|writing_)/i, '');
+            if (/^[LRW]\d+$/i.test(cleaned)) return cleaned.toUpperCase();
+            if (/^\d+$/.test(cleaned)) return `q${cleaned}`;
+            if (/^q\d+$/i.test(cleaned)) return cleaned.toLowerCase();
+            return key.toLowerCase();
+        }
+
+        // ── Cambridge: generateSingleSkillSection ──
+        function generateSingleSkillSection(studentAnswers, correctAns, sectionName, prefix) {
+            const esc = AdminDashboard.escapeHtml;
+            let correctCount = 0, totalQuestions = 0;
+            const comparisonRows = [];
+            const normalizedStudentAnswers = {}, normalizedCorrectAnswers = {}, originalKeys = {};
+            Object.keys(studentAnswers).forEach(key => { const n = normalizeQuestionKey(key); normalizedStudentAnswers[n] = studentAnswers[key]; if (!originalKeys[n]) originalKeys[n] = key; });
+            Object.keys(correctAns).forEach(key => { const n = normalizeQuestionKey(key); normalizedCorrectAnswers[n] = correctAns[key]; if (!originalKeys[n]) originalKeys[n] = key; });
+            const allKeys = [...new Set([...Object.keys(normalizedStudentAnswers), ...Object.keys(normalizedCorrectAnswers)])].sort((a, b) => (parseInt(a.replace(/\D/g, '')) || 0) - (parseInt(b.replace(/\D/g, '')) || 0));
+            for (const nk of allKeys) {
+                const studentAnswer = normalizedStudentAnswers[nk] || 'No Answer';
+                const correctAnswer = normalizedCorrectAnswers[nk] || 'N/A';
+                const displayKey = originalKeys[nk] || nk;
+                let isCorrect = false;
+                if (correctAnswer !== 'N/A' && studentAnswer !== 'No Answer') { totalQuestions++; isCorrect = AdminDashboard.isAnswerCorrect(studentAnswer, correctAnswer); if (isCorrect) correctCount++; }
+                const displayCorrect = Array.isArray(correctAnswer) ? correctAnswer.join(' / ') : correctAnswer;
+                const rowClass = correctAnswer === 'N/A' ? '' : (isCorrect ? 'correct-match' : 'incorrect-match');
+                comparisonRows.push(`<div class="answer-row ${rowClass}"><div class="question-id">${displayKey}:</div><div style="display: flex; gap: 20px; flex: 1;"><div style="flex: 1;"><strong>Student:</strong> ${esc(studentAnswer)}</div><div style="flex: 1;"><strong>Correct:</strong> ${esc(displayCorrect)}</div></div></div>`);
+            }
+            return { correctCount, totalQuestions, percentage: totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0, rows: comparisonRows.join('') };
+        }
+
+        // ── Cambridge: generateMixedSkillsComparison ──
         function generateMixedSkillsComparison(rwAnswers, listeningAnswers, rwCorrectAnswers, listeningCorrectAnswers, submission) {
-            // Generate comparison for Reading & Writing section
-            const rwComparison = generateSingleSkillSection(
-                rwAnswers, 
-                rwCorrectAnswers, 
-                'Reading & Writing',
-                'reading-writing'
-            );
-            
-            // Generate comparison for Listening section
-            const listeningComparison = generateSingleSkillSection(
-                listeningAnswers, 
-                listeningCorrectAnswers, 
-                'Listening',
-                'listening'
-            );
-            
-            // Calculate combined score
-            const totalCorrect = rwComparison.correctCount + listeningComparison.correctCount;
-            const totalQuestions = rwComparison.totalQuestions + listeningComparison.totalQuestions;
-            const overallPercentage = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
-            
+            const esc = AdminDashboard.escapeHtml;
+            const rwComp = generateSingleSkillSection(rwAnswers, rwCorrectAnswers, 'Reading & Writing', 'reading-writing');
+            const lisComp = generateSingleSkillSection(listeningAnswers, listeningCorrectAnswers, 'Listening', 'listening');
+            const totalCorrect = rwComp.correctCount + lisComp.correctCount;
+            const totalQ = rwComp.totalQuestions + lisComp.totalQuestions;
+            const overallPct = totalQ > 0 ? Math.round((totalCorrect / totalQ) * 100) : 0;
             return `
                 <div class="answer-comparison">
                     <div style="grid-column: 1 / -1;">
                         <div class="score-section">
                             <h3>Overall Scoring</h3>
-                            <p><strong>Total Score:</strong> ${totalCorrect}/${totalQuestions} correct answers (${overallPercentage}%)</p>
-                            <p style="margin-top: 10px;">
-                                <strong>Reading & Writing:</strong> ${rwComparison.correctCount}/${rwComparison.totalQuestions} (${rwComparison.percentage}%) &nbsp;|&nbsp;
-                                <strong>Listening:</strong> ${listeningComparison.correctCount}/${listeningComparison.totalQuestions} (${listeningComparison.percentage}%)
-                            </p>
+                            <p><strong>Total Score:</strong> ${totalCorrect}/${totalQ} correct answers (${overallPct}%)</p>
+                            <p style="margin-top: 10px;"><strong>Reading & Writing:</strong> ${rwComp.correctCount}/${rwComp.totalQuestions} (${rwComp.percentage}%) &nbsp;|&nbsp;
+                                <strong>Listening:</strong> ${lisComp.correctCount}/${lisComp.totalQuestions} (${lisComp.percentage}%)</p>
                             <div class="score-input">
                                 <label><strong>Final Score (%):</strong></label>
-                                <input type="number" id="finalScore" min="0" max="100" value="${escapeHtml(submission.score || overallPercentage)}" />
+                                <input type="number" id="finalScore" min="0" max="100" value="${esc(submission.score || overallPct)}" />
                                 <label><strong>Grade:</strong></label>
-                                <input type="text" id="gradeInput" value="${escapeHtml(submission.grade || '')}" placeholder="e.g. A, B, C" />
-                                <button class="btn btn-success" onclick="saveScore('${escapeHtml(submission.id)}')">Save Score</button>
+                                <input type="text" id="gradeInput" value="${esc(submission.grade || '')}" placeholder="e.g. A, B, C" />
+                                <button class="btn btn-success" onclick="saveScore('${esc(submission.id)}')">Save Score</button>
                             </div>
                         </div>
                     </div>
-                    
                     <div style="grid-column: 1 / -1; margin-top: 20px;">
                         <h3 style="background: linear-gradient(135deg, #ff9800, #f57c00); color: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                            📝 Reading & Writing Section (${rwComparison.correctCount}/${rwComparison.totalQuestions} correct)
-                        </h3>
-                        <div class="answers-content">
-                            ${rwComparison.rows}
-                        </div>
+                            \uD83D\uDCDD Reading & Writing Section (${rwComp.correctCount}/${rwComp.totalQuestions} correct)</h3>
+                        <div class="answers-content">${rwComp.rows}</div>
                     </div>
-                    
                     <div style="grid-column: 1 / -1; margin-top: 30px;">
                         <h3 style="background: linear-gradient(135deg, #4caf50, #388e3c); color: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                            🎧 Listening Section (${listeningComparison.correctCount}/${listeningComparison.totalQuestions} correct)
-                        </h3>
-                        <div class="answers-content">
-                            ${listeningComparison.rows}
-                        </div>
+                            \uD83C\uDFA7 Listening Section (${lisComp.correctCount}/${lisComp.totalQuestions} correct)</h3>
+                        <div class="answers-content">${lisComp.rows}</div>
                     </div>
-                </div>
-            `;
-        }
-        
-        // Helper function to generate a single skill section
-        function generateSingleSkillSection(studentAnswers, correctAnswers, sectionName, prefix) {
-            let correctCount = 0;
-            let totalQuestions = 0;
-            const comparisonRows = [];
-            
-            // Normalize question keys
-            function normalizeQuestionKey(key) {
-                // Remove skill prefixes (listening_, reading-writing_, etc.)
-                let normalized = key.replace(/^(listening_|reading-writing_|reading_|writing_)/i, '');
-                
-                // Keep L-prefix format (L6, L7, L8, etc.) as-is for listening
-                // This matches how listening tests save their answers
-                
-                return normalized;
-            }
-            
-            // Check if answer is correct
-            function isAnswerCorrect(studentAnswer, correctAnswer) {
-                if (!studentAnswer || !correctAnswer || studentAnswer === 'No Answer' || correctAnswer === 'N/A') {
-                    return false;
-                }
-                
-                const normalizeAnswer = (answer) => {
-                    return answer.toString().toLowerCase().trim()
-                        .replace(/\([^)]*\)/g, '')
-                        .trim();
-                };
-                
-                const normalizedStudent = normalizeAnswer(studentAnswer);
-                
-                if (Array.isArray(correctAnswer)) {
-                    return correctAnswer.some(ans => {
-                        const normalizedCorrect = normalizeAnswer(ans);
-                        return normalizedStudent === normalizedCorrect;
-                    });
-                } else {
-                    const normalizedCorrect = normalizeAnswer(correctAnswer);
-                    return normalizedStudent === normalizedCorrect;
-                }
-            }
-            
-            // Normalize student answers
-            const normalizedStudentAnswers = {};
-            const normalizedCorrectAnswers = {};
-            const originalKeys = {};
-            
-            Object.keys(studentAnswers).forEach(key => {
-                const normalized = normalizeQuestionKey(key);
-                normalizedStudentAnswers[normalized] = studentAnswers[key];
-                if (!originalKeys[normalized]) {
-                    originalKeys[normalized] = key;
-                }
-            });
-            
-            Object.keys(correctAnswers).forEach(key => {
-                const normalized = normalizeQuestionKey(key);
-                normalizedCorrectAnswers[normalized] = correctAnswers[key];
-                if (!originalKeys[normalized]) {
-                    originalKeys[normalized] = key;
-                }
-            });
-            
-            // Get all unique question keys and sort
-            const allNormalizedKeys = [...new Set([
-                ...Object.keys(normalizedStudentAnswers),
-                ...Object.keys(normalizedCorrectAnswers)
-            ])].sort((a, b) => {
-                const numA = parseInt(a.replace(/\D/g, '')) || 0;
-                const numB = parseInt(b.replace(/\D/g, '')) || 0;
-                return numA - numB;
-            });
-            
-            // Generate comparison rows
-            for (const normalizedKey of allNormalizedKeys) {
-                const studentAnswer = normalizedStudentAnswers[normalizedKey] || 'No Answer';
-                const correctAnswer = normalizedCorrectAnswers[normalizedKey] || 'N/A';
-                const displayKey = originalKeys[normalizedKey] || normalizedKey;
-                
-                let isCorrect = false;
-                if (correctAnswer !== 'N/A' && studentAnswer !== 'No Answer') {
-                    totalQuestions++;
-                    isCorrect = isAnswerCorrect(studentAnswer, correctAnswer);
-                    if (isCorrect) correctCount++;
-                }
-                
-                const displayCorrect = Array.isArray(correctAnswer) ? correctAnswer.join(' / ') : correctAnswer;
-                const rowClass = correctAnswer === 'N/A' ? '' : (isCorrect ? 'correct-match' : 'incorrect-match');
-                
-                comparisonRows.push(`
-                    <div class="answer-row ${rowClass}">
-                        <div class="question-id">${displayKey}:</div>
-                        <div style="display: flex; gap: 20px; flex: 1;">
-                            <div style="flex: 1;"><strong>Student:</strong> ${escapeHtml(studentAnswer)}</div>
-                            <div style="flex: 1;"><strong>Correct:</strong> ${escapeHtml(displayCorrect)}</div>
-                        </div>
-                    </div>
-                `);
-            }
-            
-            const percentage = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
-            
-            return {
-                correctCount,
-                totalQuestions,
-                percentage,
-                rows: comparisonRows.join('')
-            };
+                </div>`;
         }
 
-        function generateAnswerComparison(studentAnswers, correctAnswers, submission) {
-            let correctCount = 0;
-            let totalQuestions = 0;
-
-            // Normalize question keys to handle various formats
-            function normalizeQuestionKey(key) {
-                // Remove prefixes like 'listening_', 'reading-writing_', etc.
-                // Keep just the question number/identifier
-                const cleaned = key.replace(/^(listening_|reading-writing_|reading_|writing_)/i, '');
-                // If it starts with L, R, W followed by number, keep as is
-                // If it's just a number or q+number, standardize to q+number
-                if (/^[LRW]\d+$/i.test(cleaned)) {
-                    return cleaned.toUpperCase();
-                }
-                if (/^\d+$/.test(cleaned)) {
-                    return `q${cleaned}`;
-                }
-                if (/^q\d+$/i.test(cleaned)) {
-                    return cleaned.toLowerCase();
-                }
-                return key.toLowerCase();
-            }
-
-            // Create normalized maps
-            const normalizedStudentAnswers = {};
-            const normalizedCorrectAnswers = {};
-            const originalKeys = {}; // Map normalized key back to original for display
-
-            // Normalize student answers
-            Object.keys(studentAnswers).forEach(key => {
-                const normalized = normalizeQuestionKey(key);
-                normalizedStudentAnswers[normalized] = studentAnswers[key];
-                if (!originalKeys[normalized]) {
-                    originalKeys[normalized] = key;
-                }
-            });
-
-            // Normalize correct answers
-            Object.keys(correctAnswers).forEach(key => {
-                const normalized = normalizeQuestionKey(key);
-                normalizedCorrectAnswers[normalized] = correctAnswers[key];
-                if (!originalKeys[normalized]) {
-                    originalKeys[normalized] = key;
-                }
-            });
-
-            function isAnswerCorrect(studentAnswer, correctAnswer) {
-                if (!studentAnswer || !correctAnswer || studentAnswer === 'No Answer' || correctAnswer === 'N/A') {
-                    return false;
-                }
-
-                const normalizeAnswer = (answer) => {
-                    return answer.toString().toLowerCase().trim()
-                        .replace(/\([^)]*\)/g, '')
-                        .trim();
-                };
-
-                const normalizedStudent = normalizeAnswer(studentAnswer);
-
-                if (Array.isArray(correctAnswer)) {
-                    return correctAnswer.some(ans => {
-                        const normalizedCorrect = normalizeAnswer(ans);
-                        return normalizedStudent === normalizedCorrect;
-                    });
-                } else {
-                    const normalizedCorrect = normalizeAnswer(correctAnswer);
-                    return normalizedStudent === normalizedCorrect;
-                }
-            }
-
+        // ── Cambridge: generateAnswerComparison ──
+        function generateAnswerComparison(studentAnswers, correctAns, submission) {
+            const esc = AdminDashboard.escapeHtml;
+            let correctCount = 0, totalQuestions = 0;
+            const normalizedStudentAnswers = {}, normalizedCorrectAnswers = {}, originalKeys = {};
+            Object.keys(studentAnswers).forEach(key => { const n = normalizeQuestionKey(key); normalizedStudentAnswers[n] = studentAnswers[key]; if (!originalKeys[n]) originalKeys[n] = key; });
+            Object.keys(correctAns).forEach(key => { const n = normalizeQuestionKey(key); normalizedCorrectAnswers[n] = correctAns[key]; if (!originalKeys[n]) originalKeys[n] = key; });
             const comparisonRows = [];
-            
-            // Get all unique normalized question keys
-            const allNormalizedKeys = [...new Set([
-                ...Object.keys(normalizedStudentAnswers),
-                ...Object.keys(normalizedCorrectAnswers)
-            ])].sort((a, b) => {
-                // Extract numbers for sorting
-                const numA = parseInt(a.replace(/\D/g, '')) || 0;
-                const numB = parseInt(b.replace(/\D/g, '')) || 0;
-                return numA - numB;
-            });
-
-            for (const normalizedKey of allNormalizedKeys) {
-                const studentAnswer = normalizedStudentAnswers[normalizedKey] || 'No Answer';
-                const correctAnswer = normalizedCorrectAnswers[normalizedKey] || 'N/A';
-                const displayKey = originalKeys[normalizedKey] || normalizedKey;
-
+            const allKeys = [...new Set([...Object.keys(normalizedStudentAnswers), ...Object.keys(normalizedCorrectAnswers)])].sort((a, b) => (parseInt(a.replace(/\D/g, '')) || 0) - (parseInt(b.replace(/\D/g, '')) || 0));
+            for (const nk of allKeys) {
+                const studentAnswer = normalizedStudentAnswers[nk] || 'No Answer';
+                const correctAnswer = normalizedCorrectAnswers[nk] || 'N/A';
+                const displayKey = originalKeys[nk] || nk;
                 let isCorrect = false;
-                if (correctAnswer !== 'N/A' && studentAnswer !== 'No Answer') {
-                    totalQuestions++;
-                    isCorrect = isAnswerCorrect(studentAnswer, correctAnswer);
-                    if (isCorrect) correctCount++;
-                }
-
+                if (correctAnswer !== 'N/A' && studentAnswer !== 'No Answer') { totalQuestions++; isCorrect = AdminDashboard.isAnswerCorrect(studentAnswer, correctAnswer); if (isCorrect) correctCount++; }
                 const displayCorrect = Array.isArray(correctAnswer) ? correctAnswer.join(' / ') : correctAnswer;
                 const rowClass = correctAnswer === 'N/A' ? '' : (isCorrect ? 'correct-match' : 'incorrect-match');
-
-                comparisonRows.push(`
-                    <div class="answer-row ${rowClass}">
-                        <div class="question-id">${displayKey}:</div>
-                        <div style="display: flex; gap: 20px; flex: 1;">
-                            <div style="flex: 1;"><strong>Student:</strong> ${escapeHtml(studentAnswer)}</div>
-                            <div style="flex: 1;"><strong>Correct:</strong> ${escapeHtml(displayCorrect)}</div>
-                        </div>
-                    </div>
-                `);
+                comparisonRows.push(`<div class="answer-row ${rowClass}"><div class="question-id">${displayKey}:</div><div style="display: flex; gap: 20px; flex: 1;"><div style="flex: 1;"><strong>Student:</strong> ${esc(studentAnswer)}</div><div style="flex: 1;"><strong>Correct:</strong> ${esc(displayCorrect)}</div></div></div>`);
             }
-
-            // Calculate percentage score
-            const percentageScore = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
-
+            const pctScore = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
             return `
                 <div class="answer-comparison">
                     <div style="grid-column: 1 / -1;">
                         <div class="score-section">
                             <h3>Scoring</h3>
-                            <p><strong>Automatic Score:</strong> ${correctCount}/${totalQuestions} correct answers (${percentageScore}%)</p>
+                            <p><strong>Automatic Score:</strong> ${correctCount}/${totalQuestions} correct answers (${pctScore}%)</p>
                             <div class="score-input">
                                 <label><strong>Final Score (%):</strong></label>
-                                <input type="number" id="finalScore" min="0" max="100" value="${escapeHtml(submission.score || percentageScore)}" />
+                                <input type="number" id="finalScore" min="0" max="100" value="${esc(submission.score || pctScore)}" />
                                 <label><strong>Grade:</strong></label>
-                                <input type="text" id="gradeInput" value="${escapeHtml(submission.grade || '')}" placeholder="e.g. A, B, C" />
-                                <button class="btn btn-success" onclick="saveScore('${escapeHtml(submission.id)}')">Save Score</button>
+                                <input type="text" id="gradeInput" value="${esc(submission.grade || '')}" placeholder="e.g. A, B, C" />
+                                <button class="btn btn-success" onclick="saveScore('${esc(submission.id)}')">Save Score</button>
                             </div>
                         </div>
                     </div>
                     <div style="grid-column: 1 / -1;">
                         <div class="answers-header">Answer Comparison (Green = Correct, Red = Incorrect)</div>
-                        <div class="answers-content">
-                            ${comparisonRows.join('')}
-                        </div>
+                        <div class="answers-content">${comparisonRows.join('')}</div>
                     </div>
-                </div>
-            `;
+                </div>`;
         }
 
-        function generateWritingComparison(studentAnswers, correctAnswers, submission) {
-            // Collect all writing responses from various possible key formats
+        // ── Cambridge: generateWritingComparison ──
+        function generateWritingComparison(studentAnswers, _correctAns, submission) {
+            const esc = AdminDashboard.escapeHtml;
             const writingParts = [];
             let totalWordCount = 0;
-
-            // Sort keys to display in order
-            const sortedKeys = Object.keys(studentAnswers).sort((a, b) => {
-                const numA = parseInt(a.replace(/\D/g, '')) || 0;
-                const numB = parseInt(b.replace(/\D/g, '')) || 0;
-                return numA - numB;
-            });
-
+            const sortedKeys = Object.keys(studentAnswers).sort((a, b) => (parseInt(a.replace(/\D/g, '')) || 0) - (parseInt(b.replace(/\D/g, '')) || 0));
             sortedKeys.forEach(key => {
                 const value = studentAnswers[key];
                 if (value && typeof value === 'string' && value.trim()) {
-                    const wordCount = value.split(/\s+/).filter(word => word.length > 0).length;
-                    totalWordCount += wordCount;
-
-                    // Format the key for display
+                    const wc = value.split(/\s+/).filter(w => w.length > 0).length;
+                    totalWordCount += wc;
                     let displayKey = key;
-                    if (key.startsWith('writing_')) {
-                        displayKey = 'Task ' + key.replace('writing_', '');
-                    } else if (/^\d+$/.test(key)) {
-                        displayKey = 'Task ' + key;
-                    }
-
-                    writingParts.push({
-                        key: displayKey,
-                        text: value,
-                        wordCount: wordCount
-                    });
+                    if (key.startsWith('writing_')) displayKey = 'Task ' + key.replace('writing_', '');
+                    else if (/^\d+$/.test(key)) displayKey = 'Task ' + key;
+                    writingParts.push({ key: displayKey, text: value, wordCount: wc });
                 }
             });
-
-            // Generate HTML for each writing part
             let writingHTML = '';
-            if (writingParts.length === 0) {
-                writingHTML = '<div style="color: #666; font-style: italic;">No writing answers provided</div>';
-            } else {
-                writingParts.forEach(part => {
-                    writingHTML += `
-                        <div style="margin-bottom: 20px; padding: 15px; background: #f9f9f9; border-radius: 8px; border-left: 4px solid #7b1fa2;">
-                            <div style="font-weight: bold; color: #7b1fa2; margin-bottom: 10px;">${escapeHtml(part.key)} (${part.wordCount} words)</div>
-                            <div style="white-space: pre-wrap; line-height: 1.6; font-family: 'Times New Roman', serif; font-size: 14px;">${escapeHtml(part.text)}</div>
-                        </div>
-                    `;
-                });
-            }
-
+            if (writingParts.length === 0) writingHTML = '<div style="color: #666; font-style: italic;">No writing answers provided</div>';
+            else writingParts.forEach(part => {
+                writingHTML += `<div style="margin-bottom: 20px; padding: 15px; background: #f9f9f9; border-radius: 8px; border-left: 4px solid #7b1fa2;">
+                    <div style="font-weight: bold; color: #7b1fa2; margin-bottom: 10px;">${esc(part.key)} (${part.wordCount} words)</div>
+                    <div style="white-space: pre-wrap; line-height: 1.6; font-family: 'Times New Roman', serif; font-size: 14px;">${esc(part.text)}</div></div>`;
+            });
             return `
                 <div style="display: grid; gap: 20px;">
                     <div class="score-section">
                         <h3>Writing Assessment</h3>
                         <div class="score-input">
                             <label><strong>Score (%):</strong></label>
-                            <input type="number" id="writingScore" min="0" max="100" value="${escapeHtml(submission.score || '')}" placeholder="0-100" />
+                            <input type="number" id="writingScore" min="0" max="100" value="${esc(submission.score || '')}" placeholder="0-100" />
                             <label><strong>Grade:</strong></label>
-                            <input type="text" id="writingGrade" value="${escapeHtml(submission.grade || '')}" placeholder="e.g. A, B, C" />
-                            <button class="btn btn-success" onclick="saveWritingScore('${escapeHtml(submission.id)}')">Save Score</button>
+                            <input type="text" id="writingGrade" value="${esc(submission.grade || '')}" placeholder="e.g. A, B, C" />
+                            <button class="btn btn-success" onclick="saveWritingScore('${esc(submission.id)}')">Save Score</button>
                         </div>
                     </div>
-
                     <div class="student-answers">
-                        <div class="answers-header">
-                            Student Writing - Total: ${totalWordCount} words (${writingParts.length} task${writingParts.length !== 1 ? 's' : ''})
-                        </div>
-                        <div class="answers-content">
-                            ${writingHTML}
-                        </div>
+                        <div class="answers-header">Student Writing - Total: ${totalWordCount} words (${writingParts.length} task${writingParts.length !== 1 ? 's' : ''})</div>
+                        <div class="answers-content">${writingHTML}</div>
                     </div>
-                </div>
-            `;
+                </div>`;
         }
 
+        // ── Cambridge: saveScore / saveWritingScore (PATCH endpoint) ──
         async function saveScore(submissionId) {
             const finalScore = document.getElementById('finalScore').value;
             const grade = document.getElementById('gradeInput').value;
-
-            if (!finalScore || finalScore < 0 || finalScore > 100) {
-                alert('Please enter a valid score between 0 and 100');
-                return;
-            }
-
+            if (!finalScore || finalScore < 0 || finalScore > 100) { alert('Please enter a valid score between 0 and 100'); return; }
             try {
                 const response = await fetch(`${API_BASE}/cambridge-submissions/${submissionId}/score`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        score: parseInt(finalScore),
-                        grade: grade || null
-                    })
+                    method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ score: parseInt(finalScore), grade: grade || null })
                 });
-
-                if (response.ok) {
-                    alert('Score saved successfully!');
-                    closeModal();
-                    loadSubmissions();
-                } else {
-                    alert('Failed to save score. Please try again.');
-                }
-            } catch (error) {
-                console.error('Error saving score:', error);
-                alert('Error saving score. Please try again.');
-            }
+                if (response.ok) { alert('Score saved successfully!'); closeModal(); loadSubmissions(); }
+                else { alert('Failed to save score. Please try again.'); }
+            } catch (error) { console.error('Error saving score:', error); alert('Error saving score. Please try again.'); }
         }
 
         async function saveWritingScore(submissionId) {
             const score = document.getElementById('writingScore').value;
             const grade = document.getElementById('writingGrade').value;
-
-            if (!score || score < 0 || score > 100) {
-                alert('Please enter a valid score between 0 and 100');
-                return;
-            }
-
+            if (!score || score < 0 || score > 100) { alert('Please enter a valid score between 0 and 100'); return; }
             try {
                 const response = await fetch(`${API_BASE}/cambridge-submissions/${submissionId}/score`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        score: parseInt(score),
-                        grade: grade || null
-                    })
+                    method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ score: parseInt(score), grade: grade || null })
                 });
-
-                if (response.ok) {
-                    alert('Score saved successfully!');
-                    closeModal();
-                    loadSubmissions();
-                } else {
-                    alert('Failed to save score. Please try again.');
-                }
-            } catch (error) {
-                console.error('Error saving score:', error);
-                alert('Error saving score. Please try again.');
-            }
+                if (response.ok) { alert('Score saved successfully!'); closeModal(); loadSubmissions(); }
+                else { alert('Failed to save score. Please try again.'); }
+            } catch (error) { console.error('Error saving score:', error); alert('Error saving score. Please try again.'); }
         }
 
-        function closeModal() {
-            document.getElementById('answerModal').style.display = 'none';
-        }
-
-        function exportData() {
-            const csvContent = generateCSV(filteredSubmissions);
-            const blob = new Blob([csvContent], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `cambridge_submissions_${new Date().toISOString().split('T')[0]}.csv`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        }
-
-        function generateCSV(submissions) {
-            const headers = ['Student ID', 'Student Name', 'Level', 'Mock Test', 'Skill', 'Score', 'Grade', 'Start Time', 'End Time', 'Created At'];
-            const rows = submissions.map(s => [
-                s.student_id,
-                s.student_name,
-                s.level,
-                s.mock_test || '1',
-                s.skill,
-                s.score || '',
-                s.grade || '',
-                s.start_time || '',
-                s.end_time || '',
-                s.created_at
-            ]);
-
-            return [headers, ...rows].map(row =>
-                row.map(field => `"${field}"`).join(',')
-            ).join('\n');
-        }
-
-        function logout() {
-            localStorage.removeItem('cambridgeAdminToken');
-            authToken = null;
-            document.getElementById('loginForm').style.display = 'block';
-            document.getElementById('adminContent').style.display = 'none';
-            document.getElementById('logoutBtn').style.display = 'none';
-            document.getElementById('adminTabs').style.display = 'none';
-            document.getElementById('username').value = 'admin';
-            document.getElementById('password').value = '';
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('answerModal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        }
-
-        // Answer Management Functions
-        function initializeAnswerGrid() {
-            const grid = document.getElementById('answerGrid');
-            grid.innerHTML = '';
-            
-            for (let i = 1; i <= 40; i++) {
-                const inputGroup = document.createElement('div');
-                inputGroup.className = 'answer-input-group';
-                inputGroup.innerHTML = `
-                    <label>Q${i}:</label>
-                    <input type="text" id="answer_${i}" placeholder="Answer ${i}" />
-                `;
-                grid.appendChild(inputGroup);
-            }
-            
-            updateAnswerStatus('Ready to input answers');
-        }
-
-        async function loadAnswerSet() {
-            const level = document.getElementById('answerLevelSelect').value;
-            const skill = document.getElementById('answerSkillSelect').value;
-            const mock = document.getElementById('answerMockSelect').value;
-            
-            // Clear current inputs
-            for (let i = 1; i <= 40; i++) {
-                const input = document.getElementById(`answer_${i}`);
-                if (input) input.value = '';
-            }
-            
-            try {
-                updateAnswerStatus('⏳ Loading answers from database...');
-                
-                const response = await fetch(`${API_BASE}/cambridge-answers?level=${encodeURIComponent(level)}&skill=${skill}&mock=${mock}`);
-                const data = await response.json();
-                
-                if (data.success && data.answers && Object.keys(data.answers).length > 0) {
-                    // Fill the input fields
-                    // Use L-prefix for listening skills, q-prefix for others
-                    const useLPrefix = skill === 'listening';
-                    
-                    for (let i = 1; i <= 40; i++) {
-                        const input = document.getElementById(`answer_${i}`);
-                        const answerKey = useLPrefix ? `L${i}` : `q${i}`;
-                        
-                        if (input && data.answers[answerKey]) {
-                            const answerValue = Array.isArray(data.answers[answerKey]) ? 
-                                data.answers[answerKey].join(', ') : data.answers[answerKey];
-                            input.value = answerValue;
-                        }
-                    }
-                    
-                    // Update global correctAnswers object
-                    const key = `${level}_${skill}_${mock}`;
-                    correctAnswers[key] = data.answers;
-                    
-                    updateAnswerStatus(`✅ Loaded ${data.count}/40 answers for ${level} ${skill} Mock ${mock}`);
-                } else {
-                    updateAnswerStatus(`📝 No saved answers found for ${level} ${skill} Mock ${mock}`);
-                }
-            } catch (error) {
-                console.error('Error loading answers:', error);
-                updateAnswerStatus(`❌ Error loading answers: ${error.message}`);
-            }
-        }
-
-        async function saveAnswerSet() {
-            const level = document.getElementById('answerLevelSelect').value;
-            const skill = document.getElementById('answerSkillSelect').value;
-            const mock = document.getElementById('answerMockSelect').value;
-            
-            const answers = {};
-            let filledCount = 0;
-            
-            // Use L-prefix for listening skills, q-prefix for others
-            const useLPrefix = skill === 'listening';
-            
-            for (let i = 1; i <= 40; i++) {
-                const input = document.getElementById(`answer_${i}`);
-                if (input && input.value.trim()) {
-                    const answerKey = useLPrefix ? `L${i}` : `q${i}`;
-                    let answerValue = input.value.trim();
-                    
-                    // Handle multiple acceptable answers (comma-separated)
-                    if (answerValue.includes(',')) {
-                        answers[answerKey] = answerValue.split(',').map(a => a.trim());
-                    } else {
-                        answers[answerKey] = answerValue;
-                    }
-                    filledCount++;
-                }
-            }
-            
-            if (filledCount === 0) {
-                updateAnswerStatus('❌ No answers to save');
-                return;
-            }
-            
-            try {
-                updateAnswerStatus('⏳ Saving answers to database...');
-                
-                const response = await fetch(`${API_BASE}/cambridge-answers`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        level: level,
-                        skill: skill,
-                        mock: mock,
-                        answers: answers
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    // Update the global correctAnswers object
-                    const key = `${level}_${skill}_${mock}`;
-                    correctAnswers[key] = answers;
-                    
-                    updateAnswerStatus(`✅ ${data.message}`);
-                } else {
-                    updateAnswerStatus(`❌ Failed to save: ${data.message}`);
-                }
-                
-            } catch (error) {
-                console.error('Error saving answers:', error);
-                updateAnswerStatus(`❌ Error saving answers: ${error.message}`);
-            }
-        }
-
-        async function clearAnswerSet() {
-            if (confirm('Are you sure you want to clear all answers? This action will delete them from the database and cannot be undone.')) {
-                const level = document.getElementById('answerLevelSelect').value;
-                const skill = document.getElementById('answerSkillSelect').value;
-                const mock = document.getElementById('answerMockSelect').value;
-                
-                try {
-                    updateAnswerStatus('⏳ Clearing answers from database...');
-                    
-                    const response = await fetch(`${API_BASE}/cambridge-answers?level=${encodeURIComponent(level)}&skill=${skill}&mock=${mock}`, {
-                        method: 'DELETE'
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        // Clear input fields
-                        for (let i = 1; i <= 40; i++) {
-                            const input = document.getElementById(`answer_${i}`);
-                            if (input) input.value = '';
-                        }
-                        
-                        // Clear from global correctAnswers
-                        const key = `${level}_${skill}_${mock}`;
-                        delete correctAnswers[key];
-                        
-                        updateAnswerStatus(`✅ ${data.message}`);
-                    } else {
-                        updateAnswerStatus(`❌ Failed to clear: ${data.message}`);
-                    }
-                    
-                } catch (error) {
-                    console.error('Error clearing answers:', error);
-                    updateAnswerStatus(`❌ Error clearing answers: ${error.message}`);
-                    
-                    // Still clear the local fields
-                    for (let i = 1; i <= 40; i++) {
-                        const input = document.getElementById(`answer_${i}`);
-                        if (input) input.value = '';
-                    }
-                    updateAnswerStatus('🗑️ Cleared local fields (database may still contain data)');
-                }
-            }
-        }
-
-        function updateAnswerStatus(message) {
-            const status = document.getElementById('answerStatus');
-            if (status) {
-                status.textContent = message;
-                status.style.color = message.includes('✅') ? '#28a745' : 
-                                   message.includes('❌') ? '#dc3545' : '#007bff';
-            }
-        }
-
-        function initializeAnswerManagement() {
-            initializeAnswerGrid();
-            
-            document.getElementById('answerLevelSelect').addEventListener('change', function() {
-                updateAnswerMockOptions();
-                loadAnswerSet();
-            });
-            document.getElementById('answerSkillSelect').addEventListener('change', loadAnswerSet);
-            document.getElementById('answerMockSelect').addEventListener('change', loadAnswerSet);
-            
-            updateAnswerMockOptions(); // Initialize options
-            loadAnswerSet(); // Load default
-        }
-
-        function updateAnswerMockOptions() {
-            const levelSelect = document.getElementById('answerLevelSelect');
-            const mockSelect = document.getElementById('answerMockSelect');
-            if (!levelSelect || !mockSelect) return;
-
-            const selectedLevel = levelSelect.value;
-            const currentMock = mockSelect.value;
-            
-            mockSelect.innerHTML = '';
-            
-            // Mock 1 always available
-            const opt1 = document.createElement('option');
-            opt1.value = '1';
-            opt1.textContent = 'Mock 1';
-            mockSelect.appendChild(opt1);
-
-            if (selectedLevel !== 'A1-Movers') {
-                const opt2 = document.createElement('option');
-                opt2.value = '2';
-                opt2.textContent = 'Mock 2';
-                mockSelect.appendChild(opt2);
-
-                const opt3 = document.createElement('option');
-                opt3.value = '3';
-                opt3.textContent = 'Mock 3';
-                mockSelect.appendChild(opt3);
-            }
-
-            // Restore selection if valid
-            if (currentMock === '2' || currentMock === '3') {
-                if (selectedLevel === 'A1-Movers') {
-                    mockSelect.value = '1';
-                } else {
-                    mockSelect.value = currentMock;
-                }
-            } else {
-                mockSelect.value = currentMock || '1';
-            }
-        }
-
-        function toggleAnswerManagement() {
-            const header = document.querySelector('.answer-management-header');
-            const content = document.getElementById('answerManagementContent');
-            
-            if (content.classList.contains('open')) {
-                content.classList.remove('open');
-                header.classList.remove('open');
-            } else {
-                content.classList.add('open');
-                header.classList.add('open');
-            }
-        }
-
-        // Auto-refresh every 60 seconds
-        setInterval(() => {
-            if (authToken && document.getElementById('adminContent').style.display !== 'none') {
-                loadSubmissions();
-            }
-        }, 60000);
+        // ── Bootstrap ──
+        dashboard.setupModalCloseOnOutsideClick();
+        dashboard.init();
+        dashboard.loadCorrectAnswers();
+        dashboard.startAutoRefresh();
     </script>
 </body>
 </html>
