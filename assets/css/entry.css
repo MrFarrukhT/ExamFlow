@@ -532,6 +532,7 @@ body.cambridge .exam-badge {
 
 body.cambridge .exam-subtitle {
     display: block;
+    margin-top: 0;
 }
 
 /* Cambridge responsive overrides */

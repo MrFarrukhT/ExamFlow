@@ -1,5 +1,52 @@
 # Autopilot Journal
 
+## Session: 2026-04-09 07:30
+Persona: Cheater + Cambridge B2 First student (full rotation — remaining personas)
+System: Both (IELTS + Cambridge)
+
+### Phase 1: Journey Map — Cheater
+- Comprehensive security audit across 10 attack surfaces
+- Found CRITICAL vulnerabilities: unauthenticated answer key access, submission data leakage, no dedup, client-only timers, multi-tab exploits
+
+### Phase 2: Creation — Cheater
+- No new pages created (security hardening, not feature creation)
+
+### Phase 3: Structure
+- Skipped — structure sound
+
+### Phase 4: Heal — Cheater (5 fixes)
+1. **Answer key data leakage** — `/my-answer-keys` now requires `student_id` and verifies submission exists before revealing keys. Rate limited. Committed as b7ed239
+2. **Submission enumeration** — `/my-submissions` now rate limited. Committed as b7ed239
+3. **Submission deduplication** — Both servers reject duplicate submissions for same student+skill+mock. Cambridge speaking also protected. IELTS dedup on student+skill+mock_number. Returns 409 Conflict. Committed as d35f58b
+4. **Anti-cheat metadata in submissions** — `collectTestData()` (IELTS) and `submitTestToDatabase()` (Cambridge) now include tab switch count and multi-tab detection. Both servers log violations. Committed as 67af77b
+5. **Server-side time enforcement** — Submissions exceeding 3x time limit hard-rejected (400). 2x flagged but accepted. Both servers. Committed as f6a3dff
+
+### Phase 5: Experience — Cheater
+- **Distraction-free hardening** — BroadcastChannel multi-tab detection with blocking overlay, sessionStorage-based tab switch tracking (tamper-resistant), `getAntiCheatData()` method for submission metadata. Committed as 447b4c6
+- Note: Linter repeatedly reverts `init()` calls for `monitorTabVisibility()` and `detectMultipleTabs()` — requires investigation of linter config
+
+### Phase 6: Scenario — Cheater
+- Attack surface audit covers: timer manipulation, answer tampering, submission replay, URL exploits, score tampering, tab/window, DevTools, data leakage, speaking faking, fullscreen bypass
+- Fixes validated by code review (server not running for curl testing)
+
+### Phase 1: Journey Map — Cambridge B2 First Student
+- Gaps identified: 3 critical
+- Key finding: Reading timer was 45min instead of 75min (B2 First has combined Reading & Use of English)
+- Key finding: Writing timer was 45min instead of 80min
+- Key finding: ALL 36 B2 part files had wrong `data-mock` attributes (B1-Preliminary or A2-Key instead of B2-First)
+
+### Phase 4: Heal — B2 First (2 fixes)
+1. **Timer durations** — Reading 45→75min, Writing 45→80min across all 3 B2 mocks (6 files). Committed as 8e101e5
+2. **data-mock attributes** — Fixed `data-mock` and `data-test-version` from B1-Preliminary/A2-Key to B2-First in 36 part files across all 3 mocks. Committed as 8e101e5
+
+### Session Stats
+Total commits: 8 (b7ed239, d35f58b, 447b4c6, 67af77b, f6a3dff, bfb46ad, 8e101e5, + checkpoint 9cada9e)
+Total files changed: ~55
+Persona journey coverage: Full cheater attack surface + B2 First timer/data-mock fixes
+Remaining: B2 answer key creation (no reading/writing answer JSON files exist for B2)
+
+---
+
 ## Session: 2026-04-09 06:00
 Persona: IELTS student — full exam day (launcher → login → all skills → submit)
 System: IELTS

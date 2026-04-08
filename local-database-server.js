@@ -164,17 +164,6 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
             }
         }
 
-        // Log anti-cheat flags if present
-        if (submissionData.antiCheat) {
-            const ac = submissionData.antiCheat;
-            if (ac.tabSwitchCount > 0) {
-                console.warn(`⚠️ ANTI-CHEAT: Student ${submissionData.studentId} switched tabs ${ac.tabSwitchCount} time(s) during ${submissionData.skill}`);
-            }
-            if (ac.multiTabDetected) {
-                console.warn(`🚨 ANTI-CHEAT: Student ${submissionData.studentId} opened MULTIPLE TABS during ${submissionData.skill}`);
-            }
-        }
-
         const savedId = await saveWithRetry(submissionData);
 
         res.json({

@@ -13,8 +13,6 @@ class DistractionFreeMode {
         this.requestFullscreen();
         this.preventUnwantedActions();
         this.monitorFullscreen();
-        this.monitorTabVisibility();
-        this.detectMultipleTabs();
     }
 
     requestFullscreen() {

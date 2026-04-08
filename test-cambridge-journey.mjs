@@ -75,6 +75,14 @@ const BASE = 'http://localhost:3003';
         const levelCards = await page.$$('.level-card');
         console.log(`Level cards found: ${levelCards.length}`);
 
+        // Step 5b: Dismiss welcome guide if present
+        const welcomeBtn = await page.$('#wg-start-btn');
+        if (welcomeBtn) {
+            console.log('Welcome guide detected — dismissing');
+            await welcomeBtn.click();
+            await page.waitForTimeout(500);
+        }
+
         // Step 6: Select A2-Key level
         console.log('\n--- Step 6: Select A2-Key level ---');
         await page.click('[data-level="A2-Key"]');
