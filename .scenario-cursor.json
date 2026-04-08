@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-09 15:15",
-  "totalRuns": 18,
+  "lastRun": "2026-04-09 15:35",
+  "totalRuns": 19,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -90,7 +90,10 @@
     "admin-dashboard-rendering-uses-escapeHtml-consistently",
     "c1-advanced-level-db-constraint-fixed",
     "c1-advanced-all-skills-submit-successfully",
-    "cross-level-cheating-blocked-by-mock-scoping"
+    "cross-level-cheating-blocked-by-mock-scoping",
+    "examType-strict-typeof-string-check",
+    "examType-whitelist-cambridge-olympiada",
+    "examType-not-exposed-via-my-submissions"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
@@ -101,6 +104,7 @@
     "rate-limiter-hits-map-grows-unboundedly",
     "esm-cjs-drift-recurring-systemic-issue",
     "js-db-enum-drift-recurring-3-occurrences",
+    "loose-type-coercion-trusting-toString-or-comparison-operators",
     "student-names-not-secrets-physical-exam-context"
   ],
   "untestedAreas": [],
@@ -127,7 +131,7 @@
       "title": "ESM↔CJS drift recurring (4 occurrences in R13-R16)",
       "severity": "HIGH",
       "since": "2026-04-09",
-      "reason": "No occurrence in R17-R18 because autopilot only touched UI. Pattern still unsolved."
+      "reason": "No occurrence in R17-R19 because autopilot only touched UI/Cambridge. Pattern still unsolved."
     },
     {
       "title": "CORS allows all origins",
@@ -149,9 +153,9 @@
     }
   ],
   "stats": {
-    "scenariosTested": 108,
-    "bugsFound": 41,
-    "bugsFixed": 36,
+    "scenariosTested": 114,
+    "bugsFound": 42,
+    "bugsFixed": 37,
     "bugsDeferred": 7
   }
 }

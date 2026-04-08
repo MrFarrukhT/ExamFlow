@@ -1060,3 +1060,58 @@ Trigger: Major new attack surface — entire new exam level + 25+ HTML files + J
 
 ### Stats (Round 18)
 Tested: 6 | Passed: 4 | Failed: 1 (critical) | N/A: 1 | Fixed: 1 | Deferred: 0
+
+---
+
+## Session: 2026-04-09 15:35
+Focus: Olympiada examType pipeline (commit 7705de1) — verify the new field is validated and stored correctly
+Trigger: Autopilot added client-supplied examType to Cambridge submission and speaking endpoints
+
+### Scenarios
+
+- S1: examType whitelist bypass attempts [Insider] → MOSTLY PASS, **1 LOW BUG**
+  - `<script>alert(1)</script>` → 'Cambridge' (whitelist rejected) ✓
+  - `OLYMPIADA` (uppercase) → 'Cambridge' (case-sensitive) ✓
+  - `null` → 'Cambridge' (default via `||`) ✓
+  - `{evil:true}` → 'Cambridge' (toString → '[object Object]', whitelist rejected) ✓
+  - `['Olympiada']` → **'Olympiada' STORED** (single-element array.toString() bypasses) ✗
+  - no field → 'Cambridge' (default) ✓
+  - `'Olympiada'` (legit) → 'Olympiada' ✓
+
+- S2: examType type confusion [Explorer] → Confirmed bypass on array
+  - Root cause: `(data.examType || 'Cambridge').toString()` accepts any value with a toString()
+  - Single-element arrays of valid strings bypass the type check
+  - **Severity LOW**: result is still a valid whitelist value, no XSS/SQL/DoS impact, but indicates a code-quality gap
+
+- S3: Olympiada legit value stored [Regression] → PASS
+  - 'Olympiada' string stored correctly
+  - C1-Advanced + Olympiada combination works end-to-end
+
+- S4: Default behavior (no examType) [Regression] → PASS
+  - Missing field defaults to 'Cambridge'
+
+- S5: /my-submissions does NOT expose exam_type [Insider] → PASS
+  - SELECT in /my-submissions explicitly lists columns and exam_type is NOT in the list
+  - Students can't read their own exam_type (admin-only signal)
+
+- S6: Speaking endpoint examType validation [Insider] → Same bypass as S1
+  - Same `(req.body.examType || 'Cambridge').toString()` pattern
+  - Same fix applied to both endpoints
+
+### Fixes
+- `cambridge-database-server.js`: Replaced `(value || default).toString()` pattern with `(typeof value === 'string') ? value.slice(0, 50) : default` in both insertCambridgeSubmission and the speaking endpoint. Strict typeof check rejects arrays, objects, numbers, etc.
+
+### Pattern Analysis
+- **Same root cause as Round 17.** R17 found that loose JS comparisons (`> 0`) silently fail on type confusion. R19 finds that loose toString() coercion silently passes type confusion. Both stem from the same pattern: trusting JavaScript's type coercion to "do the right thing" with untyped client input. The fix in both cases is the same: explicit `typeof === 'string' | 'number' | 'boolean'` checks before any operations.
+- **No drift this round!** server-cjs.cjs has no exam_type field (it's the IELTS server), so no sync needed. The autopilot correctly scoped the change to Cambridge only.
+- **The validation was almost right.** The whitelist check, length cap, and default fallback were all in place. Only the type assumption was wrong. This is a cleaner pattern than R17 (which had no validation at all).
+
+### Intelligence Update
+- Proven solid: examType strict typeof check, whitelist enforced on string values only, defaults work, /my-submissions doesn't leak
+- Removed weak pattern: array.toString() bypass — fixed
+- 4 deferred findings remain (architectural)
+- 2 systemic deferred (ESM↔CJS drift, JS↔DB enum drift) — neither triggered this round
+- Coverage: 114 scenarios across 19 rounds, 42 bugs found, 37 fixed
+
+### Stats (Round 19)
+Tested: 6 | Passed: 5 | Failed: 1 (low) | Fixed: 1 | Deferred: 0
