@@ -460,7 +460,7 @@ class WritingHandler {
             localStorage.removeItem('ielts-writing-mock1-time');
 
             alert('Writing section completed successfully!');
-            window.location.href = '../../dashboard.html';
+            window.location.href = '../../student-dashboard.html';
 
         } catch (error) {
             console.error('❌ Error submitting writing test:', error);
@@ -474,7 +474,7 @@ class WritingHandler {
             localStorage.setItem('writingEndTime', new Date().toISOString());
 
             alert('Writing section completed successfully!\nNote: There was an issue saving to the database, but your answers are saved locally.');
-            window.location.href = '../../dashboard.html';
+            window.location.href = '../../student-dashboard.html';
         }
     }
 

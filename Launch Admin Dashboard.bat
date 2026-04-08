@@ -27,20 +27,20 @@ echo.
 REM Try different browsers in order of preference
 if exist "C:\Program Files\Google\Chrome\Application\chrome.exe" (
     echo  Opening enhanced admin dashboard with Google Chrome...
-    "C:\Program Files\Google\Chrome\Application\chrome.exe" --new-window "file:///%~dp0enhanced-admin-dashboard.html"
+    "C:\Program Files\Google\Chrome\Application\chrome.exe" --new-window "file:///%~dp0ielts-admin-dashboard.html"
 ) else if exist "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" (
     echo  Opening enhanced admin dashboard with Google Chrome...
-    "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --new-window "file:///%~dp0enhanced-admin-dashboard.html"
+    "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --new-window "file:///%~dp0ielts-admin-dashboard.html"
 ) else if exist "C:\Program Files\Microsoft\Edge\Application\msedge.exe" (
     echo  Opening enhanced admin dashboard with Microsoft Edge...
-    "C:\Program Files\Microsoft\Edge\Application\msedge.exe" --new-window "file:///%~dp0enhanced-admin-dashboard.html"
+    "C:\Program Files\Microsoft\Edge\Application\msedge.exe" --new-window "file:///%~dp0ielts-admin-dashboard.html"
 ) else if exist "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" (
     echo  Opening enhanced admin dashboard with Microsoft Edge...
-    "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --new-window "file:///%~dp0enhanced-admin-dashboard.html"
+    "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --new-window "file:///%~dp0ielts-admin-dashboard.html"
 ) else (
     echo  ERROR: No supported browser found!
     echo  Please install Google Chrome or Microsoft Edge.
-    echo  Or manually open: enhanced-admin-dashboard.html
+    echo  Or manually open: ielts-admin-dashboard.html
     echo.
     pause
 )

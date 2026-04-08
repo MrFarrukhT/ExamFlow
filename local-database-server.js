@@ -2,6 +2,7 @@
 // Run this with: node local-database-server.js
 
 import 'dotenv/config';
+import path from 'path';
 import open from 'open';
 import OpenAI from 'openai';
 import { createRetryQueue } from './shared/database.js';
@@ -12,7 +13,7 @@ const openai = process.env.OPENAI_API_KEY ? new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 }) : null;
 
-const { app, ensureConnection, start } = createServer({
+const { app, ensureConnection, __dirname: serverDir, start } = createServer({
     port: 3002,
     name: 'IELTS Local Database Server',
     callerUrl: import.meta.url,
@@ -74,6 +75,11 @@ const { saveWithRetry } = createRetryQueue(ensureConnection, insertIeltsSubmissi
 // Root redirect to launcher
 app.get('/', (req, res) => {
     res.redirect('/launcher.html');
+});
+
+// Admin dashboard
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(serverDir, 'ielts-admin-dashboard.html'));
 });
 
 // Test endpoint

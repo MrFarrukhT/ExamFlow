@@ -103,7 +103,7 @@
                 
                 // Redirect to dashboard
                 setTimeout(() => {
-                    window.location.href = '../../dashboard.html';
+                    window.location.href = '../../student-dashboard.html';
                 }, 500);
             }
         }
@@ -1169,7 +1169,7 @@
                     
                     // Redirect to dashboard
                     setTimeout(() => {
-                        window.location.href = '../../dashboard.html';
+                        window.location.href = '../../student-dashboard.html';
                     }, 500);
                     
                 } catch (dbError) {
@@ -1177,7 +1177,7 @@
                     alert('Listening section completed successfully!\nAnswers saved locally. You will be redirected to the dashboard.');
                     
                     setTimeout(() => {
-                        window.location.href = '../../dashboard.html';
+                        window.location.href = '../../student-dashboard.html';
                     }, 500);
                 }
                 

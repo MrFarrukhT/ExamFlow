@@ -166,7 +166,7 @@ class OptionsMenu {
                 if (isCambridge) {
                     window.location.href = '../../dashboard-cambridge.html';
                 } else {
-                    window.location.href = '../../dashboard.html';
+                    window.location.href = '../../student-dashboard.html';
                 }
             }, 1000);
         }

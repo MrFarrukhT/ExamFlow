@@ -106,7 +106,7 @@ async function handleTestCompletion() {
     }
 
     const examType = localStorage.getItem('examType');
-    const dashboardPath = examType === 'Cambridge' ? '../../dashboard-cambridge.html' : '../../dashboard.html';
+    const dashboardPath = examType === 'Cambridge' ? '../../dashboard-cambridge.html' : '../../student-dashboard.html';
 
     if (confirm('Are you sure you want to submit this section? You will not be able to return to it.')) {
         // Stop periodic saves and mark submission in progress to prevent race conditions
