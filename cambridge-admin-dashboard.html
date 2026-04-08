@@ -6,9 +6,15 @@
     <title>Innovative Centre - Enhanced Cambridge Admin Dashboard</title>
     <link rel="stylesheet" href="assets/css/admin-common.css">
     <style>
+        /* Cambridge Admin Dashboard — override admin-common.css blue → Cambridge teal */
+        :root {
+            --admin-primary: #0d9488;
+            --admin-primary-dark: #0f766e;
+        }
+
         /* Cambridge Admin Dashboard — page-specific styles */
         body {
-            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+            background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
         }
 
         .container {
@@ -16,7 +22,7 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #0066cc, #0052a3);
+            background: linear-gradient(135deg, #0d9488, #0f766e);
         }
 
         .admin-content {
@@ -306,7 +312,7 @@
             submissionsEndpoint: '/cambridge-submissions',
             answersEndpoint: '/cambridge-answers',
             csvFilenamePrefix: 'cambridge_submissions',
-            dateViewDefaultColor: '#0066cc',
+            dateViewDefaultColor: '#0d9488',
             serverHint: 'node cambridge-database-server.js',
             extraFilterIds: ['filterLevel'],
             extraLogoutHideIds: ['adminTabs'],

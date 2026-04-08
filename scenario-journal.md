@@ -1003,3 +1003,60 @@ Trigger: Commit 23fdf11 added renderAntiCheatBadge/Detail to admin-common.js and
 
 ### Stats (Round 17)
 Tested: 6 | Passed: 4 | Failed: 1 | Confirmed: 1 | Fixed: 1 | Deferred: 0
+
+---
+
+## Session: 2026-04-09 15:15
+Focus: C1-Advanced/Olympiada launch (commit 835ff0b) — verify the new level actually works end-to-end
+Trigger: Major new attack surface — entire new exam level + 25+ HTML files + JS/CSS + audio + new dashboard items
+
+### Scenarios
+
+- S1: C1-Advanced submissions across all skills [Regression] → **CRITICAL FAIL** [CRITICAL]
+  - reading, writing, listening, reading-use-of-english — ALL rejected by DB
+  - Error: `cambridge_submissions_level_check` constraint violation (PG code 23514)
+  - Server-side JS validation passed (autopilot updated VALID_LEVELS) but the DB CHECK constraint was never updated
+  - **The entire C1-Advanced launch was DOA at the database layer** — students would see 500 errors on every submission
+  - Same regression pattern as Round 8 (IELTS speaking constraint mismatch). 3rd time JS↔DB drift has shipped.
+  - **Fix applied**: Added DO $$ migration block in initializeCambridgeTables() that drops the old level constraint and re-adds with C1-Advanced. Same for cambridge_answer_keys. Updated inline CREATE TABLE constraints. Updated startup banner.
+
+- S2: C1-Advanced submissions after migration [Regression] → PASS
+  - All 4 skills (reading, writing, listening, reading-use-of-english) now save successfully
+  - /my-submissions returns C1-Advanced data correctly
+  - Sanitized anti-cheat data flows through unchanged
+
+- S3: Invalid level still rejected [Explorer] → PASS
+  - C2-Proficiency (not in VALID_LEVELS) → 400 with clear error message including all 5 valid levels
+
+- S4: Cross-level cheating prevention [Cheater] → PASS
+  - A B2-First student request for C1-Advanced answer keys → 403 "Answer keys are only available after you have submitted this test"
+  - Mock+level+name scoping (R13 fix) correctly extends to the new level
+
+- S5: C1-Advanced time limits work [Explorer] → PASS (implicit)
+  - 50min elapsed for a 90-min reading test accepted (well under hard reject of 270min)
+  - Time-limit table updated correctly by autopilot
+
+- S6: IELTS CJS sync check [Regression] → N/A
+  - C1-Advanced is Cambridge-only (Olympiada uses Cambridge infrastructure). IELTS CJS server has no C1 to sync. No drift this round.
+
+### Fixes
+- `cambridge-database-server.js`:
+  - Added migration block: drop old level constraint, re-add with C1-Advanced
+  - Same for cambridge_answer_keys (guarded by table-exists check)
+  - Updated inline CREATE TABLE constraints (lines 70 and 221)
+  - Updated startup banner to show 5 levels
+
+### Pattern Analysis
+- **JS validation ↔ DB constraint drift is now a recurring failure mode.** Round 8 (IELTS speaking), Round 13 (Cambridge level enum gap), Round 18 (C1-Advanced level). Every time the autopilot adds an enum value to JS, the DB constraint stays stale. Pattern: when adding a new level/skill/category/etc., the migration must run on next startup.
+- **DOA features are caught by /scenario.** Without this round, the C1-Advanced launch would have shipped to production with 100% submission failure rate. The autopilot tested its work via code review but didn't run end-to-end submission tests.
+- **Migration blocks should always be paired with enum additions.** The fix pattern: when you add a value to a JS enum that the DB enforces, write a `DO $$` block in the same commit that drops and re-adds the constraint. Code review should require this pairing.
+
+### Intelligence Update
+- Proven solid: C1-Advanced level fully functional, JS+DB level enums in sync, level constraint migration runs on every startup
+- Critical regression caught: entire new exam level was unusable
+- 4 deferred findings remain (architectural)
+- 1 systemic deferred upgraded: ESM↔CJS drift had no occurrence this round, BUT JS↔DB enum drift is now a separate, distinct recurring issue
+- Coverage: 108 scenarios across 18 rounds, 41 bugs found, 36 fixed
+
+### Stats (Round 18)
+Tested: 6 | Passed: 4 | Failed: 1 (critical) | N/A: 1 | Fixed: 1 | Deferred: 0

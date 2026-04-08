@@ -46,6 +46,8 @@
         html.olympiada .level-card[data-level="A2-Key"],
         html.olympiada .level-card[data-level="B1-Preliminary"],
         html.olympiada .level-card[data-level="B2-First"] { display: none !important; }
+        /* Hide C1-Advanced from regular Cambridge mode — Olympiada-only level */
+        html:not(.olympiada) .level-card[data-level="C1-Advanced"] { display: none !important; }
     </style>
     <script>
         // Detect olympiada mode early so theme is applied before paint
