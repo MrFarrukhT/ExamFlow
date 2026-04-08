@@ -190,9 +190,20 @@
       next = document.createElement('button');
       next.className = 'btn-submit';
       next.textContent = 'Submit ' + (MODULE.charAt(0).toUpperCase() + MODULE.slice(1)) + ' \u2713';
-      next.addEventListener('click', function () {
+      next.addEventListener('click', async function () {
+        if (next.disabled) return;
         if (confirm('Are you sure you want to submit your ' + MODULE + ' test? You won\'t be able to change your answers after submission.')) {
-          submitTest();
+          // Disable button to prevent double-submission while async submitTest runs
+          next.disabled = true;
+          var origText = next.textContent;
+          next.textContent = 'Submitting\u2026';
+          try {
+            await submitTest();
+          } catch (err) {
+            console.error('submitTest threw:', err);
+            next.disabled = false;
+            next.textContent = origText;
+          }
         }
       });
     } else {
@@ -223,10 +234,40 @@
     location.href = url;
   }
 
-  function submitTest() {
+  async function submitTest() {
     if (typeof window.__C1_forceSaveAll === 'function') window.__C1_forceSaveAll();
+
+    // CRITICAL: persist to database via the shared answer manager.
+    // Without this call, answers only exist in localStorage and the
+    // dashboard's "Completed" badge would lie about server state.
+    var dbSaved = false;
+    try {
+      // Look for the answer manager on either this window or the parent (iframe wrapper)
+      var mgr = (window.cambridgeAnswerManager) ||
+                (window.parent && window.parent.cambridgeAnswerManager);
+      if (mgr && typeof mgr.submitTestToDatabase === 'function') {
+        await mgr.submitTestToDatabase();
+        dbSaved = true;
+      } else {
+        console.warn('cambridgeAnswerManager not available — submission saved locally only');
+      }
+    } catch (err) {
+      console.error('Database submission failed:', err);
+      // Continue to mark completed locally — student work isn't lost,
+      // and the dashboard will still surface the local fallback.
+    }
+
     localStorage.setItem('cambridge-' + MODULE + 'Status', 'completed');
     localStorage.setItem('cambridge-' + MODULE + 'EndTime', new Date().toISOString());
+    if (!dbSaved) {
+      // Mark this submission as needing retry — admin tooling can use this
+      // to identify submissions that didn't reach the database.
+      try {
+        var pending = JSON.parse(localStorage.getItem('cambridge-pending-submissions') || '[]');
+        pending.push({ module: MODULE, ts: new Date().toISOString() });
+        localStorage.setItem('cambridge-pending-submissions', JSON.stringify(pending));
+      } catch (e) {}
+    }
 
     if (MODULE === 'listening') {
       try {

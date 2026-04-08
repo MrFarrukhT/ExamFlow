@@ -268,6 +268,15 @@
       */
     });
     
+    // Whitelist of allowed iframe navigation targets — prevents javascript:/data:
+    // URL injection via postMessage from a compromised child iframe.
+    function isAllowedPartUrl(url) {
+      if (typeof url !== 'string') return false;
+      if (url.indexOf(':') !== -1) return false;
+      if (url.indexOf('..') !== -1) return false;
+      return /^./(Listening )?Part d+.html$/.test(url);
+    }
+
     // Listen for navigation messages from child iframes
     window.addEventListener('message', function(e) {
       if (!e.data || !e.data.type) {
@@ -282,6 +291,7 @@
       }
 
       if (e.data.type === 'navigate') {
+        if (!isAllowedPartUrl(e.data.url)) { console.warn('Blocked navigation:', e.data.url); return; }
         console.log('📡 Navigation message received:', e.data.url);
         
         // Ensure audio continues playing during navigation

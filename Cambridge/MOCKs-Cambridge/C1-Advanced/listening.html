@@ -209,12 +209,29 @@
       }
     });
 
+    // Whitelist of allowed iframe navigation targets — prevents javascript:/data:
+    // URL injection via postMessage from a compromised child iframe.
+    // Only relative paths to "./Listening Part N.html" or "./Part N.html" are allowed.
+    function isAllowedPartUrl(url) {
+      if (typeof url !== 'string') return false;
+      // Reject any URL containing a colon (rules out javascript:, data:, http:, https:)
+      if (url.indexOf(':') !== -1) return false;
+      // Reject parent-directory traversal
+      if (url.indexOf('..') !== -1) return false;
+      // Must match the listening or reading part filename pattern
+      return /^\.\/(Listening )?Part \d+\.html$/.test(url);
+    }
+
     // Listen for navigation messages from child iframes
     window.addEventListener('message', function(e) {
       if (!e.data || !e.data.type) return;
       if (e.origin && e.origin !== 'null' && e.origin !== window.location.origin && !window.location.protocol.startsWith('file')) return;
 
       if (e.data.type === 'navigate') {
+        if (!isAllowedPartUrl(e.data.url)) {
+          console.warn('Blocked navigation to disallowed URL:', e.data.url);
+          return;
+        }
         if (globalAudioPlayer && globalAudioPlayer.paused && localStorage.getItem('listeningTestStarted') === 'true') {
           globalAudioPlayer.play().catch(() => {});
         }
