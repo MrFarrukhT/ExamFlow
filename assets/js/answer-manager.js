@@ -351,6 +351,7 @@ class AnswerManager {
             'cambridge-readingStatus', 'cambridge-readingStartTime', 'cambridge-readingEndTime', 'cambridge-readingAnswers',
             'cambridge-writingStatus', 'cambridge-writingStartTime', 'cambridge-writingEndTime', 'cambridge-writingAnswers',
             'cambridge-reading-writingStatus', 'cambridge-reading-writingStartTime', 'cambridge-reading-writingEndTime', 'cambridge-reading-writingAnswers',
+            'cambridge-speakingStatus', 'cambridge-speakingStartTime', 'cambridge-speakingEndTime',
             'distractionFreeMode'
         ] : [
             'studentId', 'studentName', 'selectedMock', 'testStartTime',
