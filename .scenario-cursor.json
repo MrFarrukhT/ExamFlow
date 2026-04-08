@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-08 18:25",
-  "totalRuns": 12,
+  "lastRun": "2026-04-08 18:40",
+  "totalRuns": 13,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -61,24 +61,36 @@
     "ai-score-endpoint-rate-limited-3-per-minute-esm",
     "ai-score-endpoint-prompt-injection-mitigated-esm",
     "ai-score-endpoint-task-length-bounded-esm",
-    "ai-score-endpoint-safe-json-parse-esm"
+    "ai-score-endpoint-safe-json-parse-esm",
+    "cambridge-my-submissions-level-enum-validation",
+    "cambridge-my-answer-keys-level-skill-enum-validation",
+    "cambridge-my-answer-keys-mock-scoped",
+    "cambridge-my-submissions-response-format-wrapped",
+    "student-facing-endpoints-sql-injection-safe"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
-    "cors-allows-all-origins-but-mitigated-by-bearer-auth",
     "client-controlled-timestamps-spoofable",
     "anti-cheat-metadata-spoofable",
     "blocklist-deny-approach-needs-ongoing-maintenance",
     "submissions-list-unpaginated",
-    "rate-limiter-hits-map-grows-unboundedly"
+    "rate-limiter-hits-map-grows-unboundedly",
+    "ielts-cjs-not-synced-with-esm-source-new-endpoints-missing",
+    "student-id-idor-by-design"
   ],
   "untestedAreas": [],
   "deferredFindings": [
     {
-      "title": "Answer keys writable without authentication",
+      "title": "Answer keys writable without authentication (admin POST/DELETE)",
       "severity": "HIGH",
       "since": "2026-04-08",
       "reason": "By design (no auth on answer keys), but grade manipulation risk"
+    },
+    {
+      "title": "Student-facing endpoints trust client-supplied student_id (IDOR)",
+      "severity": "HIGH",
+      "since": "2026-04-08",
+      "reason": "By design — matches existing 'no student auth, controlled by invigilator' pattern"
     },
     {
       "title": "CORS allows all origins",
@@ -97,12 +109,18 @@
       "severity": "MEDIUM",
       "since": "2026-04-08",
       "reason": "Server can sanitize but cannot verify"
+    },
+    {
+      "title": "IELTS CJS server missing /my-submissions and /my-answer-keys endpoints",
+      "severity": "MEDIUM",
+      "since": "2026-04-08",
+      "reason": "Sync gap — endpoints only exist in ESM source. Autopilot or architect needs to sync."
     }
   ],
   "stats": {
-    "scenariosTested": 73,
-    "bugsFound": 31,
-    "bugsFixed": 25,
-    "bugsDeferred": 4
+    "scenariosTested": 78,
+    "bugsFound": 34,
+    "bugsFixed": 28,
+    "bugsDeferred": 6
   }
 }

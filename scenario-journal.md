@@ -716,3 +716,55 @@ Trigger: No new code; round 11 cleared submission validation; time to chip at de
 
 ### Stats (Round 12)
 Tested: 5 | Passed: 1 | Failed: 1 (critical) | Noted: 3 | Fixed: 2 | Deferred: 0
+
+---
+
+## Session: 2026-04-08 18:40
+Focus: New student-facing endpoints (autopilot's IELTS results page commit added them)
+Trigger: Commit a28ce17 added /my-submissions and /my-answer-keys to local-database-server.js + my-results.html
+
+### Scenarios
+
+- S1: IDOR — fetch any student's submissions [Insider] → CONFIRMED [HIGH but by-design]
+  - Cambridge `/my-submissions?student_id=005` returned full data for student "005" without auth
+  - Front-end reads `studentId` from `localStorage` — fully client-controlled
+  - **By design**: matches existing "no student auth — controlled by invigilator" pattern
+  - Documented as known architectural choice, no fix candidate
+
+- S2: SQL injection in student_id, level, mock_test [Insider] → PASS
+  - `student_id=' OR 1=1--` returned empty array (parameterized query worked)
+  - All injection vectors safely handled by parameterized queries
+
+- S3: Cambridge `/my-submissions` invalid level enum [Explorer] → **FAIL** [MEDIUM]
+  - Invalid levels (`<script>`, `DROP TABLE`, `INVALID`) returned silent empty array `[]`
+  - No fail-fast validation — silently produces dead-end queries
+  - **Fix applied**: Validate level against VALID_LEVELS, return 400 with clear message
+
+- S4: Cambridge `/my-submissions` response format [Explorer] → **FAIL** [LOW]
+  - Cambridge returned raw array `[...]`, IELTS returned `{success, submissions}`
+  - Inconsistent API surface
+  - **Fix applied**: Wrap Cambridge response in `{success, submissions}`, update consumer (my-results.html) to handle new shape with array fallback for safety
+
+- S5: Cambridge answer keys mock-scoping [Cheater] → **FAIL** [HIGH]
+  - Cambridge `/my-answer-keys` checked only `student_id + level + skill`, NOT `mock_test`
+  - **Cheating vector**: A student who submitted A2-Key Listening Mock 1 could view answer keys for Mock 2/3 *before* taking those tests
+  - IELTS already scoped by mock_number — Cambridge had drifted from the pattern
+  - **Fix applied**: Include mock_test in submissionCheck when mock query param provided
+  - Verified: Mock 99 access correctly blocked, Mock 1 (actually submitted) works
+
+### Fixes
+- `cambridge-database-server.js`: VALID_LEVELS/VALID_SKILLS enum validation on both endpoints, mock_test scoping in answer keys check, response wrapped in `{success, submissions}` to match IELTS, used `String()` casts on params
+- `Cambridge/my-results.html`: Updated submissions fetch to handle wrapped response (with raw-array fallback for backwards safety)
+
+### Pattern Analysis
+- **Drift between sibling implementations creates real bugs.** IELTS and Cambridge both have student-facing endpoints, but they were implemented at different times with different review attention. IELTS scoped by mock_number; Cambridge skipped that. Code review should compare new code against the closest existing pattern, not just review it in isolation.
+- **"Validate then forget" with empty results.** Cambridge silently returned `[]` for invalid levels instead of 400. This makes debugging painful and obscures attacks — the attacker can't tell if the field is wrong or if the data just doesn't exist. Always fail-fast on enum validation.
+- **Response shape changes are silent contract breaks.** Wrapping the response improved consistency but would have broken the consumer if I hadn't checked. Always grep for consumers before changing API response shape.
+
+### Intelligence Update
+- New endpoints `/my-submissions` and `/my-answer-keys` are now hardened on Cambridge (mock-scoped, enum-validated, consistent format)
+- These endpoints exist only in ESM source — IELTS CJS server (server-cjs.cjs) does NOT have them, so testing IELTS via curl shows 404. The autopilot needs to sync them to CJS, OR the deployment should switch to ESM.
+- IDOR is documented as a by-design pattern (joins answer-keys-writable-without-auth as a known architectural choice)
+
+### Stats (Round 13)
+Tested: 5 | Passed: 1 | Failed: 3 | Noted: 1 | Fixed: 3 | Deferred: 0
