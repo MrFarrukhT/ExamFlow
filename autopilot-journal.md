@@ -1,5 +1,48 @@
 # Autopilot Journal
 
+## Session: 2026-04-09 04:30
+Persona: Cambridge A2 Key student — reading, writing, listening, speaking + submitting and checking answers
+System: Cambridge
+
+### Phase 1: Journey Map
+- Full journey mapped: Login → Dashboard → Level Select → Module Cards → R&W (7 parts) → Listening (5 parts + audio) → Speaking (mic check + record + submit) → Dashboard completion → View Results
+- Prior sessions had already fixed most critical bugs (examType case mismatch, cambridge- prefix, window.top redirect)
+- This session verified fixes and found new issues through end-to-end testing
+
+### Phase 2: Creation
+- No new pages needed — A2 Key student flow is complete end-to-end
+
+### Phase 3: Structure
+- Skipped — structure sound for A2 Key student flow
+
+### Phase 4: Heal
+- Fixed: 2 findings
+  - **Student ID max length too restrictive** — login form limited student IDs to 4 digits (maxlength, pattern, JS validation). Real IDs can be 5-10 digits. Increased to 10 across HTML attributes and JS. Committed as d5e36b5
+  - **Answer keys endpoint column mismatch** — `/my-answer-keys` endpoint queried `mock` column but table uses `mock_test`, and ordered by `created_at` but table uses `updated_at`. Both caused 500 errors when students tried to check answers. Fixed both. Committed as 3887949 + amended into 82b2a0e
+
+### Phase 5: Experience (Playwright walk-through)
+- Verified login → dashboard → A2 Key selection → welcome guide → module cards
+- Tested Reading & Writing: Part 1 questions render, radio selection works, answer counts update in footer (1 of 6), navigation to Part 7 works, writing textarea with word counter
+- Submission flow: confirm dialog → database submission → success alert → completion status
+- Dashboard shows "Completed ✓" after R&W submission
+- "View My Submitted Answers" link appears and my-results.html exists
+- Timer countdown (59:59) runs correctly with time warnings
+
+### Phase 6: Scenario (Stress Test)
+- Tested: 5 scenarios
+  1. **Empty answer submission** — Accepted (by design: timed-out students may have no answers)
+  2. **Missing required fields** — Correctly rejected
+  3. **Duplicate submission** — Accepted (latest wins, acceptable behavior)
+  4. **SQL injection in student name** — Safe: stored as literal string, parameterized queries protect
+  5. **Answer keys endpoint** — FOUND & FIXED: two column name bugs causing 500 errors
+
+### Session Stats
+Total commits: 2 (d5e36b5, 3887949)
+Total files changed: 2 (index.html, cambridge-database-server.js)
+Persona journey coverage: Login (ID validation) → Dashboard → R&W (all 7 parts + submit) → Answer checking (endpoint fixes)
+
+---
+
 ## Session: 2026-04-09 02:30
 Persona: Cambridge B1 Preliminary student — round 2 (submission hardening + answer checking)
 System: Cambridge
