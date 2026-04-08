@@ -10,6 +10,24 @@ import { createServer } from './shared/server-bootstrap.js';
 import { validateScore, validateStudentInfo, stripHtmlTags, sanitizeAntiCheat } from './shared/validation.js';
 import { requireAdmin, rateLimit } from './shared/auth.js';
 
+// IELTS raw → band score mapping (copied from assets/js/session-manager.js)
+// Used by the server-side score recompute path so a cheater can't tamper bandScore.
+const IELTS_BAND_MAPPING = {
+    40: '9.0', 39: '9.0', 38: '8.5', 37: '8.5', 36: '8.0', 35: '8.0', 34: '7.5',
+    33: '7.5', 32: '7.0', 31: '7.0', 30: '7.0', 29: '6.5', 28: '6.5', 27: '6.5',
+    26: '6.0', 25: '6.0', 24: '6.0', 23: '5.5', 22: '5.5', 21: '5.5', 20: '5.5',
+    19: '5.0', 18: '5.0', 17: '5.0', 16: '5.0', 15: '5.0', 14: '4.5', 13: '4.5',
+    12: '4.0', 11: '4.0', 10: '4.0', 9: '3.5', 8: '3.5', 7: '3.0', 6: '3.0',
+    5: '2.5', 4: '2.5'
+};
+function bandScoreFromRaw(score) {
+    if (typeof score !== 'number' || !Number.isFinite(score)) return null;
+    if (score <= 0) return '0.0';
+    if (score === 1) return '1.0';
+    if (score <= 3) return '2.0';
+    return IELTS_BAND_MAPPING[score] || '0.0';
+}
+
 // Initialize OpenAI client (will work if API key is configured)
 const openai = process.env.OPENAI_API_KEY ? new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
