@@ -1,5 +1,48 @@
 # Autopilot Journal
 
+## Session: 2026-04-08 13:00
+Persona: Nervous first-timer round 2 (UX audit + feature parity)
+System: Both (IELTS + Cambridge)
+
+### Phase 1: Journey Map
+- Comprehensive UX audit across entire platform from first-timer perspective
+- 10 anxiety-inducing issues identified
+- Feature parity gaps found: Cambridge lacks progress indicator + review modal; IELTS lacks results page
+- Key finding: Cambridge test pages had NO auto-save indicator (IELTS had it via session-manager.js)
+- Key finding: Login form had no Student ID explanation
+- Key finding: Cambridge level-change warning confusing for first-timers with no progress
+
+### Phase 2: Creation
+- Added `showCambridgeSaveIndicator()` function to answer-manager.js — "Answers saved" toast, throttled to 25s
+- Wired into all 19 Cambridge wrapper pages' autosave intervals
+
+### Phase 3: Structure
+- Skipped — structure sound
+
+### Phase 4: Heal (4 fixes)
+1. **Login Student ID hint** — Added "Check your admission letter or ask your invigilator" helper text below input. Committed as 9f7071e
+2. **Back to exam selection** — Added "Back to exam selection" link on login page footer. Committed as 9f7071e
+3. **Cambridge level-change warning** — Skip confusing "reset progress" confirm dialog when student has no actual progress. Committed as 9f7071e
+4. **Cambridge auto-save indicator** — All 19 wrapper pages now show green "Answers saved" toast during autosave, matching IELTS behavior. Committed as 9f7071e
+
+### Phase 5: Experience
+- Skipped — no server running
+
+### Phase 6: Scenario
+- Skipped (first-timer is not adversarial)
+
+### Feature Parity Findings (for future sessions)
+- IELTS has: progress indicator (exam-progress.js), review modal before submit
+- Cambridge has: student results page (my-results.html)
+- Both now have: welcome guide, auto-save indicator, time warnings, module hints, completed status
+
+### Session Stats
+Total commits: 1 (9f7071e)
+Total files changed: 21 (answer-manager.js, index.html, dashboard-cambridge.html, 19 wrapper pages)
+Persona journey coverage: Login → Dashboard → Test (autosave feedback) + cross-platform parity
+
+---
+
 ## Session: 2026-04-08 12:30
 Persona: Cambridge A1 Movers student round 2 + cross-level security sweep
 System: Cambridge (all levels)
