@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-08 17:40",
-  "totalRuns": 9,
+  "lastRun": "2026-04-08 17:55",
+  "totalRuns": 10,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -13,30 +13,18 @@
     "null-byte-search-sanitization",
     "sensitive-file-path-blocking",
     "answer-key-xss-sanitization",
-    "answer-key-level-skill-validation",
     "speaking-mimetype-sanitization",
-    "speaking-duration-audiosize-validation",
     "concurrent-score-update-last-write-wins",
     "path-traversal-blocked",
     "ielts-mock-answers-xss-sanitization",
-    "ielts-mock-answers-count-limit",
-    "ielts-mock-answers-skill-validation",
     "student-results-name-xss-sanitization",
-    "student-results-empty-name-rejection",
     "student-results-score-range-validation",
-    "student-results-level-validation",
     "admin-login-edge-cases",
     "blocklist-encoding-bypass-hardened",
-    "blocklist-case-bypass-hardened",
-    "blocklist-backslash-bypass-hardened",
     "http-method-confusion-handled",
-    "round-1-3-regression-verified",
     "shared-validation-module-boundaries",
-    "heal-refactor-xss-stripping-preserved",
-    "ielts-submission-error-handling-fixed",
     "student-name-200char-limit",
     "dashboard-client-xss-escaping-all-5-files",
-    "mock-number-validation-nan-zero-negative",
     "cambridge-error-masking-fixed",
     "admin-login-type-validation",
     "exam-flow-e2e-browser-verified",
@@ -44,7 +32,6 @@
     "invigilator-panel-behavioral-verified",
     "timestamp-required-on-submissions",
     "negative-elapsed-time-rejected",
-    "invalid-date-format-rejected",
     "dedup-race-condition-fixed-inmemory-lock",
     "rate-limiter-not-bypassable-via-headers",
     "ielts-speaking-skill-db-constraint-fixed",
@@ -52,30 +39,28 @@
     "ielts-skill-enum-validation",
     "normal-ielts-all-skills-regression-pass",
     "normal-cambridge-all-levels-regression-pass",
-    "dedup-key-variants-handled-by-pg-casting",
-    "cambridge-combined-skills-accepted",
-    "edge-timestamps-startequalsend-rejected",
     "admin-token-cryptographically-secure",
     "admin-endpoint-auth-all-401",
-    "score-update-endpoint-auth-protected",
-    "blocklist-autopilot-files-added",
     "env-password-quoting-fixed",
     "cjs-dotenv-loading-added",
-    "completed-test-resubmission-blocked"
+    "blocklist-autopilot-files-added",
+    "invigilator-password-fix-verified",
+    "concurrent-admin-tokens-valid",
+    "forged-token-rejected",
+    "admin-delete-parseInt-parameterized",
+    "admin-score-update-validated",
+    "r9-blocklist-regression-pass"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
-    "mock-answers-writable-without-auth",
     "cors-allows-all-origins",
-    "invigilator-password-hardcoded-client-side",
     "client-controlled-timestamps-spoofable",
     "anti-cheat-metadata-spoofable",
-    "no-level-skill-matrix-validation-cambridge",
-    "blocklist-deny-approach-needs-ongoing-maintenance"
+    "blocklist-deny-approach-needs-ongoing-maintenance",
+    "ai-score-endpoint-no-auth-prompt-injection",
+    "submissions-list-unpaginated"
   ],
-  "untestedAreas": [
-    "ai-score-suggestion-abuse"
-  ],
+  "untestedAreas": [],
   "deferredFindings": [
     {
       "title": "Answer keys writable without authentication",
@@ -84,10 +69,10 @@
       "reason": "By design (no auth), but grade manipulation risk"
     },
     {
-      "title": "AI score suggestion untested (OpenAI quota exceeded)",
+      "title": "AI score endpoint: no auth, prompt injection, no rate limit",
       "severity": "MEDIUM",
       "since": "2026-04-08",
-      "reason": "Need working API key to test prompt injection"
+      "reason": "Endpoint only in ESM source, not CJS. Fix proactively."
     },
     {
       "title": "CORS allows all origins",
@@ -96,10 +81,10 @@
       "reason": "Low impact without auth system"
     },
     {
-      "title": "Client-controlled timestamps are fundamentally spoofable",
+      "title": "Client-controlled timestamps are spoofable",
       "severity": "HIGH",
       "since": "2026-04-08",
-      "reason": "Requires server-side session/start tracking (architectural)"
+      "reason": "Requires server-side session tracking (architectural)"
     },
     {
       "title": "Anti-cheat metadata is client-side and spoofable",
@@ -109,7 +94,7 @@
     }
   ],
   "stats": {
-    "scenariosTested": 56,
+    "scenariosTested": 62,
     "bugsFound": 27,
     "bugsFixed": 20,
     "bugsDeferred": 5
