@@ -93,21 +93,50 @@ Starting state: Functional but utilitarian — invisible footer button, no anima
   Mode: elevate
   Files: index.html, assets/css/entry.css
 
+### Round 3
+**Explored:** 1 page (MOCKs/MOCK 1/reading.html — IELTS Reading Test), 7 findings
+**Action:** POLISH 4 fixes + ELEVATE 2 enhancements (CSS + minimal JS, benefits all 10 mocks)
+
+- [T4] reading.css — Reduced scrollbar width from 100px to 14px with rounded thumb
+  Mode: polish
+  Files: assets/css/reading.css
+
+- [T4] reading.css + core.js — Timer warning states (amber at 10min, red at 5min, pulse at 1min)
+  Mode: polish + elevate
+  Files: assets/css/reading.css, assets/js/core.js
+
+- [T4] reading.css — Improved .answered question button visibility (grey → blue tint)
+  Mode: polish
+  Files: assets/css/reading.css
+
+- [T3] reading.css — Added focus glow on answer inputs
+  Mode: polish
+  Files: assets/css/reading.css
+
+- [T0] reading.css — Fade-in transition when switching Parts 1/2/3
+  Mode: elevate
+  Files: assets/css/reading.css
+
+- Dark mode support added for all new styles
+
 ### Quality Map
 | Page | Layer | Notes |
 |------|-------|-------|
 | launcher.html | 5-Delightful | Animations, glow, loading state, clean modal |
 | Cambridge/launcher-cambridge.html | 5-Delightful | Same improvements applied |
 | index.html | 5-Delightful | Floating labels, inline validation, entrance animations |
+| MOCKs/*/reading.html | 4-Polished | Timer warnings, better nav, smooth transitions |
 
 ### Deferred
-- Cambridge/index.html — Same improvements needed (floating labels, inline validation, animations)
+- Cambridge/index.html — Same login improvements needed (floating labels, inline validation)
+- Reading test — FontAwesome CDN causes slow load; consider local copy
+- Reading test — Inline table styles in MOCK 1 Q14-26 need CSS class migration
 
 ### Session Stats
-Pages explored: 3
-Rounds: 2
-Polishes landed: 10
+Pages explored: 4
+Rounds: 3
+Polishes landed: 14
 Rebuilds landed: 0
-Elevations landed: 7
+Elevations landed: 9
 Reverted: 0
-Changes shipped: 17
+Changes shipped: 23

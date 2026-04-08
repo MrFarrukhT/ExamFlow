@@ -1716,11 +1716,6 @@
             transcriptionHighlighted = true;
         }
         
-        function closeContextMenu() {
-            document.getElementById('contextMenu').style.display = 'none';
-            contextElement = null;
-        }
-
         // Initialize saved settings
         document.addEventListener('DOMContentLoaded', function() {
             // Apply dark mode setting

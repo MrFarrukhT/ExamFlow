@@ -41,7 +41,20 @@
       "Bash(git push:*)",
       "Bash(git branch:*)",
       "Bash(git config:*)",
-      "Bash(git repack:*)"
+      "Bash(git repack:*)",
+      "Bash(node -c assets/js/session-manager.js)",
+      "Bash(node -c assets/js/database-direct.js)",
+      "Bash(node -c assets/js/universal-functions.js)",
+      "Bash(node -c assets/js/writing/writing-handler.js)",
+      "Bash(node -c assets/js/cambridge/cambridge-timer.js)",
+      "Bash(node -c assets/js/cambridge/cambridge-bridge.js)",
+      "Bash(node -c assets/js/listening/listening.js)",
+      "Bash(node -c assets/js/cambridge/cambridge-answer-manager.js)",
+      "Bash(node -c assets/js/cambridge/notes-manager.js)",
+      "Bash(node -c assets/js/cambridge/highlight-manager.js)",
+      "Bash(node -c local-database-server.js)",
+      "Bash(node -c cambridge-database-server.js)",
+      "Bash(node --check \"e:/Test-System-v2/assets/js/core.js\")"
     ],
     "additionalDirectories": [
       "e:\\Test-System-v2",
