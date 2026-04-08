@@ -10,6 +10,61 @@ function escapeHTML(str) {
 let _isSaving = false;
 let _isSubmitting = false;
 let _periodicSaveIntervalId = null;
+let _lastSaveIndicatorTime = 0;
+
+// ── Auto-save indicator ──────────────────────────────────────────
+// Shows a subtle "Answers saved" message so nervous students know their work is safe.
+function showSaveIndicator() {
+    const now = Date.now();
+    // Throttle: show at most once every 25 seconds to avoid spamming
+    if (now - _lastSaveIndicatorTime < 25000) return;
+    _lastSaveIndicatorTime = now;
+
+    // Remove any existing indicator
+    const existing = document.getElementById('autosave-indicator');
+    if (existing) existing.remove();
+
+    const indicator = document.createElement('div');
+    indicator.id = 'autosave-indicator';
+    indicator.setAttribute('role', 'status');
+    indicator.setAttribute('aria-live', 'polite');
+    indicator.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background: rgba(46, 125, 50, 0.92);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-family: system-ui, -apple-system, sans-serif;
+        z-index: 2000;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        transform: translateY(20px);
+        opacity: 0;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        pointer-events: none;
+    `;
+    indicator.innerHTML = '<span style="font-size:15px">&#10003;</span> Answers saved';
+
+    document.body.appendChild(indicator);
+
+    // Animate in
+    requestAnimationFrame(() => {
+        indicator.style.transform = 'translateY(0)';
+        indicator.style.opacity = '1';
+    });
+
+    // Animate out after 2.5s
+    setTimeout(() => {
+        indicator.style.transform = 'translateY(20px)';
+        indicator.style.opacity = '0';
+        setTimeout(() => { if (indicator.parentNode) indicator.remove(); }, 300);
+    }, 2500);
+}
 
 document.addEventListener('DOMContentLoaded', function () {
     initializeSession();
@@ -445,6 +500,11 @@ function saveAnswersToSession() {
     // Save to localStorage
     localStorage.setItem(`${currentModule}Answers`, JSON.stringify(answers));
     _isSaving = false;
+
+    // Show save indicator (only during periodic saves, not during submission)
+    if (!_isSubmitting && Object.keys(answers).length > 0) {
+        showSaveIndicator();
+    }
 }
 
 // Auto-save on page unload
