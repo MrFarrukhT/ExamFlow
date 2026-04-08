@@ -227,6 +227,61 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
                     message: 'You have already submitted this test. Only one submission per test is allowed.'
                 });
             }
+
+            // SECURITY: Recompute score server-side for auto-gradable skills (reading/listening)
+            // The client computes a score from window.correctAnswers (loaded from a static JS file)
+            // and sends it in the body. A cheater with DevTools could fake this score. Override
+            // it with a server-side recomputation against mock_answers to make tampering futile.
+            if (submissionData.skill === 'reading' || submissionData.skill === 'listening') {
+                try {
+                    const keyRows = await dbClient.query(
+                        'SELECT question_number, correct_answer FROM mock_answers WHERE mock_number = $1 AND skill = $2',
+                        [submissionData.mockNumber, submissionData.skill]
+                    );
+                    if (keyRows.rows.length > 0) {
+                        let correct = 0;
+                        const studentAnswers = (typeof submissionData.answers === 'object' && submissionData.answers) || {};
+                        const norm = s => String(s == null ? '' : s).trim().toLowerCase().replace(/\s+/g, ' ');
+                        keyRows.rows.forEach(r => {
+                            const qKey = String(r.question_number);
+                            const studentRaw = studentAnswers[qKey];
+                            if (studentRaw == null) return;
+                            const expected = String(r.correct_answer || '');
+                            // Support slash/pipe-separated alternatives
+                            const accepted = expected.includes('|') ? expected.split('|') :
+                                             expected.includes('/') ? expected.split('/') : [expected];
+                            if (accepted.some(a => norm(a) === norm(studentRaw))) correct++;
+                        });
+                        const clientScore = submissionData.score;
+                        if (typeof clientScore === 'number' && clientScore !== correct) {
+                            console.warn(`🚨 SCORE TAMPERING DETECTED: Student ${studentCheck.studentId} sent score=${clientScore}, server computed ${correct} for ${submissionData.skill} mock ${submissionData.mockNumber}`);
+                            // Flag this as an anti-cheat violation so admin sees it
+                            submissionData.antiCheat = Object.assign({}, submissionData.antiCheat || {}, { scoreTamper: true, clientScore: clientScore, serverScore: correct });
+                        }
+                        submissionData.score = correct;
+                        // Recompute band score from the corrected raw score
+                        if (typeof bandScoreFromRaw === 'function') {
+                            submissionData.bandScore = bandScoreFromRaw(correct);
+                        }
+                    } else {
+                        // No answer key in DB — clamp client score to valid range to prevent garbage
+                        const cs = Number(submissionData.score);
+                        submissionData.score = (Number.isFinite(cs) && cs >= 0 && cs <= 40) ? Math.round(cs) : null;
+                    }
+                } catch (err) {
+                    console.error('Server-side score recompute failed:', err);
+                    // Fall through with whatever the client sent — at least clamp it
+                    const cs = Number(submissionData.score);
+                    submissionData.score = (Number.isFinite(cs) && cs >= 0 && cs <= 40) ? Math.round(cs) : null;
+                }
+            } else {
+                // Writing: clamp client score to 0-9 band range, set raw score to null
+                const bs = Number(submissionData.bandScore);
+                submissionData.bandScore = (Number.isFinite(bs) && bs >= 0 && bs <= 9) ? bs : null;
+                // Don't trust client-supplied raw scores for writing — admin grades it
+                submissionData.score = null;
+            }
+
             const savedId = await insertIeltsSubmission(dbClient, submissionData);
 
             res.json({
