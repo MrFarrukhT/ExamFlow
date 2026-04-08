@@ -427,7 +427,9 @@
 
         // B1/B2 have separate reading + writing; A1/A2 have combined reading-writing
         function isSeparateRW() {
-            return level === 'B1-Preliminary' || level === 'B2-First';
+            // B1, B2, and C1 all have separate Reading and Writing modules.
+            // Only A1-Movers and A2-Key use the combined "reading-writing" module.
+            return level === 'B1-Preliminary' || level === 'B2-First' || level === 'C1-Advanced';
         }
 
         document.addEventListener('DOMContentLoaded', init);

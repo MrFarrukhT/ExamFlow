@@ -115,6 +115,15 @@
                             <option value="A2-Key">A2 Key</option>
                             <option value="B1-Preliminary">B1 Preliminary</option>
                             <option value="B2-First">B2 First</option>
+                            <option value="C1-Advanced">C1 Advanced</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="filterExamType">Exam Type:</label>
+                        <select id="filterExamType">
+                            <option value="">All</option>
+                            <option value="Cambridge">Cambridge</option>
+                            <option value="Olympiada">Olympiada (Zarmet)</option>
                         </select>
                     </div>
                     <div class="control-group">
@@ -314,7 +323,7 @@
             csvFilenamePrefix: 'cambridge_submissions',
             dateViewDefaultColor: '#0d9488',
             serverHint: 'node cambridge-database-server.js',
-            extraFilterIds: ['filterLevel'],
+            extraFilterIds: ['filterLevel', 'filterExamType'],
             extraLogoutHideIds: ['adminTabs'],
             extraLoginShowIds: ['adminTabs']
         });
@@ -325,10 +334,11 @@
             return await response.json();
         };
 
-        // ── Override: applyFilters (Cambridge has level filter, simpler scored logic) ──
+        // ── Override: applyFilters (Cambridge has level + examType filters) ──
         dashboard.applyFilters = function () {
             const searchStudent = document.getElementById('searchStudent').value.toLowerCase();
             const filterLevel = document.getElementById('filterLevel').value;
+            const filterExamType = document.getElementById('filterExamType').value;
             const filterSkill = document.getElementById('filterSkill').value;
             const filterMock = document.getElementById('filterMock').value;
             const dateFrom = document.getElementById('dateFrom').value;
@@ -340,6 +350,7 @@
                     !submission.student_name.toLowerCase().includes(searchStudent) &&
                     !submission.student_id.toLowerCase().includes(searchStudent)) return false;
                 if (filterLevel && submission.level !== filterLevel) return false;
+                if (filterExamType && submission.exam_type !== filterExamType) return false;
                 if (filterSkill && submission.skill !== filterSkill) return false;
                 if (filterMock && submission.mock_test !== filterMock) return false;
 

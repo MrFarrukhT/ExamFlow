@@ -206,6 +206,11 @@
                     <option value="scored">Scored</option>
                     <option value="pending">Pending</option>
                 </select>
+                <select id="roomFilterExamType" onchange="filterRoomActivity()" title="Filter by exam type (Cambridge vs Olympiada)">
+                    <option value="">All Exams</option>
+                    <option value="Cambridge">Cambridge</option>
+                    <option value="Olympiada">Olympiada</option>
+                </select>
             </div>
             <div id="roomActivityList" class="room-activity-list">
                 <p class="room-loading">Connecting to server...</p>
@@ -615,6 +620,8 @@
             var search = (document.getElementById('roomSearchInput').value || '').toLowerCase();
             var skillFilter = document.getElementById('roomFilterSkill').value;
             var statusFilter = document.getElementById('roomFilterStatus').value;
+            var examTypeEl = document.getElementById('roomFilterExamType');
+            var examTypeFilter = examTypeEl ? examTypeEl.value : '';
             var filtered = todaySubmissions.filter(function(s) {
                 if (search) {
                     var name = (s.student_name || s.studentName || '').toLowerCase();
@@ -624,6 +631,7 @@
                 if (skillFilter && (s.skill || '').toLowerCase() !== skillFilter) return false;
                 if (statusFilter === 'scored' && (s.score === null || s.score === undefined)) return false;
                 if (statusFilter === 'pending' && s.score !== null && s.score !== undefined) return false;
+                if (examTypeFilter && (s.exam_type || s.examType || 'Cambridge') !== examTypeFilter) return false;
                 return true;
             });
             renderRoomStats(filtered);
