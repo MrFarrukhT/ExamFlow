@@ -1,5 +1,56 @@
 # Autopilot Journal
 
+## Session: 2026-04-08 14:00
+Persona: IELTS student (feature parity with Cambridge — student results page)
+System: IELTS
+
+### Phase 1: Journey Map
+- Closes the LAST feature parity gap noted in nervous-first-timer round 2
+- IELTS students had no way to view their submitted answers and check correctness
+- Cambridge has my-results.html; IELTS had nothing equivalent
+
+### Phase 2: Creation
+- Built: `/my-submissions` endpoint in local-database-server.js
+  - No admin auth, scoped to student_id, rate limited via submissionLimiter
+  - Optional mock_number filter
+- Built: `/my-answer-keys` endpoint in local-database-server.js
+  - Requires student_id, mock, skill
+  - Verifies student has submitted that skill+mock before revealing keys
+  - Prevents enumeration attacks (can't peek at answers before submitting)
+- Built: `my-results.html` (~500 lines, parallel to Cambridge my-results.html)
+  - Summary cards: questions answered, correct/total, score %, modules submitted
+  - Reading + Listening answer grids with correct/incorrect indicators
+  - Writing essay viewer with word counts
+  - localStorage fallback if server unreachable
+  - Empty state for students with no submissions yet
+  - Mobile-responsive grid layouts
+- Wired: student-dashboard.html
+  - "View My Submitted Answers" link shown when at least one module completed
+  - "View My Answers & Results" button in the All Sections Complete banner
+
+### Phase 3: Structure
+- Skipped — sound
+
+### Phase 4: Heal
+- Skipped — covered creation
+
+### Phase 5: Experience
+- Skipped — no server running for live walk-through
+
+### Phase 6: Scenario
+- Security verified by code review:
+  - /my-submissions requires student_id (no enumeration)
+  - /my-answer-keys requires prior submission (no answer leak before submitting)
+  - Rate limited via submissionLimiter (10 req/min)
+
+### Session Stats
+Total commits: 1 (a28ce17)
+Total files changed: 3 (local-database-server.js, my-results.html [new], student-dashboard.html)
+Persona journey coverage: Submission → Dashboard return → View results → Compare answers
+Closes parity gap: IELTS now has student results page matching Cambridge
+
+---
+
 ## Session: 2026-04-08 13:30
 Persona: Cambridge student (feature parity with IELTS)
 System: Cambridge
