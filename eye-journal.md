@@ -1377,3 +1377,48 @@ Elevations landed: 0
 Reverted: 0
 Fixes landed: 0
 Changes shipped: 3 files modified
+
+---
+
+## Session: 2026-04-09 (B2 First Listening — prompt #19)
+Persona: B2 level student taking Listening test
+System: Cambridge (localhost:3003)
+Pages explored: B2 First Listening Parts 1-4 across all 3 mocks
+Starting state: Part 1 had old #e3f2fd (Material Blue light) selected-state. Parts 2 & 4 (MCQ) lacked visual feedback when student picks an answer. Part 3 is gap-fill (covered by setupFilledState).
+
+### Round 1
+**Explored:** 12 Listening Part files (4 Parts × 3 mocks), 2 findings
+**Action:** POLISH 1 (Part 1 teal selected-state) + ELEVATE 1 (Parts 2 & 4 selected-state CSS)
+
+- [T4] Part 1.html (×3 mocks) — Selected-state #e3f2fd → #ccfbf1 (teal mint)
+  Mode: polish
+  Quality layer: 4-Polished → 5-Delightful
+  Files: 3 Listening-Part-1.html files
+
+- [T0] Parts 2 & 4 (×3 mocks = 6 files) — Added `.choice-item:has(input:checked)` selected-state CSS with teal bg/border. Upgraded styling: padding, border 1→2px, radius 4→8px, 0.2s transition, hover border. Same upgrade applied to A2 Key/B1 Listening.
+  Mode: elevate
+  Quality layer: 4-Polished → 5-Delightful (visible answer feedback)
+  Files: 6 Listening-Part-2.html and Listening-Part-4.html files
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| B2-First/Listening-Part-1.html | 5-Delightful | Image MCQ with teal selected-state |
+| B2-First/Listening-Part-2.html | 5-Delightful | Text MCQ with teal selected-state |
+| B2-First/Listening-Part-3.html | 4-Polished | Gap-fill (covered by setupFilledState) |
+| B2-First/Listening-Part-4.html | 5-Delightful | Text MCQ with teal selected-state |
+| MOCK-2 & MOCK-3 | Same layers | All fixes applied |
+
+### Deferred
+- B2 First Listening uses B1 audio file as placeholder (deferred from earlier session)
+- Inspera bloat in Listening Part files
+
+### Session Stats
+Pages explored: 12 (4 Parts × 3 mocks)
+Rounds: 1
+Polishes landed: 1 (Part 1 selected-state × 3 mocks)
+Rebuilds landed: 0
+Elevations landed: 1 (selected-state on Parts 2 & 4 × 3 mocks)
+Reverted: 0
+Fixes landed: 0
+Changes shipped: 9 files modified
