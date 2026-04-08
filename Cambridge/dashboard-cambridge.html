@@ -93,6 +93,14 @@
                     </div>
                 </div>
 
+                <!-- Completion Banner (hidden by default) -->
+                <div id="completionBanner" class="completion-banner" style="display: none;">
+                    <div class="completion-icon">&#10003;</div>
+                    <h2 class="completion-title">All Sections Complete</h2>
+                    <p class="completion-message">You have finished all test modules. Please remain seated and wait for your invigilator's instructions.</p>
+                    <div class="completion-summary" id="completionSummary"></div>
+                </div>
+
                 <!-- Modules Section (shown after level selection) -->
                 <div class="modules-section" id="modulesSection" style="display: none;">
                     <div class="level-info-bar">
@@ -186,11 +194,13 @@
         function changeLevelSelection() {
             // Confirm level change
             if (confirm('Changing level will reset your current progress. Are you sure?')) {
-                // Clear level-specific progress (use cambridge- prefix)
+                // Clear level-specific progress and answers (use cambridge- prefix)
                 const modules = ['listening', 'reading', 'writing', 'reading-writing', 'speaking'];
                 modules.forEach(module => {
                     localStorage.removeItem(`cambridge-${module}Status`);
                     localStorage.removeItem(`cambridge-${module}StartTime`);
+                    localStorage.removeItem(`cambridge-${module}EndTime`);
+                    localStorage.removeItem(`cambridge-${module}Answers`);
                 });
 
                 // Show level selection
@@ -305,12 +315,13 @@
                 ? ['reading-writing', 'listening', 'speaking']
                 : ['reading', 'writing', 'listening', 'speaking'];
 
+            let completedCount = 0;
             modules.forEach(module => {
                 const status = localStorage.getItem(`cambridge-${module}Status`) || 'not-started';
-                
+
                 // Convert module name to camelCase for element IDs (reading-writing -> readingWriting)
                 const moduleId = module.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
-                
+
                 const card = document.getElementById(`${moduleId}Card`);
                 const statusEl = document.getElementById(`${moduleId}Status`);
                 const button = document.getElementById(`${moduleId}Button`);
@@ -321,10 +332,11 @@
                 }
 
                 if (status === 'completed') {
+                    completedCount++;
                     card.classList.add('completed');
                     statusEl.textContent = 'Completed';
                     statusEl.className = 'status-badge completed';
-                    button.textContent = 'Completed ✓';
+                    button.textContent = 'Completed \u2713';
                     button.disabled = true;
                 } else if (status === 'in-progress') {
                     card.classList.add('in-progress');
@@ -339,6 +351,35 @@
                     button.textContent = `Start ${moduleName}`;
                 }
             });
+
+            // Show completion banner when all modules are done
+            if (completedCount === modules.length) {
+                const banner = document.getElementById('completionBanner');
+                banner.style.display = 'block';
+
+                const summaryEl = document.getElementById('completionSummary');
+                summaryEl.textContent = '';
+                modules.forEach(m => {
+                    const start = localStorage.getItem(`cambridge-${m}StartTime`);
+                    const end = localStorage.getItem(`cambridge-${m}EndTime`);
+                    const label = m.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' & ');
+                    let duration = '';
+                    if (start && end) {
+                        const mins = Math.round((new Date(end) - new Date(start)) / 60000);
+                        duration = ` (${mins} min)`;
+                    }
+                    const item = document.createElement('div');
+                    item.className = 'summary-item';
+                    const check = document.createElement('span');
+                    check.className = 'summary-check';
+                    check.textContent = '\u2713';
+                    item.appendChild(check);
+                    item.appendChild(document.createTextNode(' ' + label + duration));
+                    summaryEl.appendChild(item);
+                });
+
+                document.querySelector('.section-title').textContent = 'All Modules Completed';
+            }
         }
 
         function startModule(module) {

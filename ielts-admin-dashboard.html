@@ -73,6 +73,7 @@
                 <p>IELTS Admin Dashboard</p>
             </div>
             <div class="header-right">
+                <a href="invigilator.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:0.85rem;margin-right:12px;padding:6px 14px;border:1px solid rgba(255,255,255,0.3);border-radius:6px;transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='transparent'">Invigilator Panel</a>
                 <span id="connectionStatus" class="connection-status disconnected">Database Offline</span>
                 <button class="logout-btn" onclick="logout()" style="display: none;" id="logoutBtn">Logout</button>
             </div>
@@ -177,6 +178,10 @@
                 <div class="stat-card">
                     <div class="stat-value" id="unscoredCount">0</div>
                     <div class="stat-label">Needs Scoring</div>
+                </div>
+                <div class="stat-card" style="background:linear-gradient(135deg,#27ae60,#1e8449);">
+                    <div class="stat-value" id="scoringProgress">0%</div>
+                    <div class="stat-label">Scoring Progress</div>
                 </div>
             </div>
 
@@ -416,11 +421,15 @@
             const uniqueStudents = new Set(filteredSubs.map(s => s.student_id)).size;
             const unscoredCount = filteredSubs.filter(s => s.skill === 'writing' ? !s.band_score : !s.score).length;
 
+            const scoredCount = filteredSubs.length - unscoredCount;
+            const progressPct = filteredSubs.length > 0 ? Math.round((scoredCount / filteredSubs.length) * 100) : 0;
+
             document.getElementById('totalSubmissions').textContent = allSubmissions.length;
             document.getElementById('filteredSubmissions').textContent = filteredSubs.length;
             document.getElementById('averageScore').textContent = averageScore;
             document.getElementById('totalStudents').textContent = uniqueStudents;
             document.getElementById('unscoredCount').textContent = unscoredCount;
+            document.getElementById('scoringProgress').textContent = progressPct + '%';
         };
 
         // ── Override: score helpers (IELTS: 30/20 thresholds, score out of 40) ──

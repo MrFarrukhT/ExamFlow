@@ -1,4 +1,7 @@
 {
+  "permissions": {
+    "defaultMode": "bypassPermissions"
+  },
   "allowedTools": {
     "Edit": true,
     "Write": true,
