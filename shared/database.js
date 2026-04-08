@@ -1,6 +1,7 @@
 // Shared database connection management for IELTS and Cambridge servers
 import { Client } from 'pg';
 import crypto from 'crypto';
+import { registerToken } from './auth.js';
 
 export function createDatabaseManager(config) {
     let client = null;
@@ -110,7 +111,9 @@ export function adminLoginHandler(req, res) {
 
     const adminPassword = process.env.ADMIN_PASSWORD || '';
     if (username === 'admin' && password === adminPassword) {
-        res.json({ success: true, token: 'admin-session-' + crypto.randomBytes(32).toString('hex') });
+        const token = 'admin-session-' + crypto.randomBytes(32).toString('hex');
+        registerToken(token);
+        res.json({ success: true, token });
     } else {
         res.status(401).json({ success: false, message: 'Invalid credentials' });
     }

@@ -987,14 +987,14 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                                 
                                 // Redirect to dashboard
                                 console.log('🔄 Redirecting to dashboard...');
-                                window.location.href = '../../dashboard-cambridge.html';
+                                if (window.top && window.top !== window) { window.top.location.href = '../../dashboard-cambridge.html'; } else { window.location.href = '../../dashboard-cambridge.html'; }
                             } catch (error) {
                                 console.error('❌ Error submitting test:', error);
                                 alert('Test marked as completed. Note: Database submission may have failed.');
                                 // Still mark as completed locally even if database fails
                                 localStorage.setItem('cambridge-writingStatus', 'completed');
                                 localStorage.setItem('cambridge-writingEndTime', new Date().toISOString());
-                                window.location.href = '../../dashboard-cambridge.html';
+                                if (window.top && window.top !== window) { window.top.location.href = '../../dashboard-cambridge.html'; } else { window.location.href = '../../dashboard-cambridge.html'; }
                             }
                         } else {
                             console.log('❌ Submission cancelled by user');

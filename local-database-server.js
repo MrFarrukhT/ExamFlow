@@ -8,6 +8,7 @@ import OpenAI from 'openai';
 import { createRetryQueue } from './shared/database.js';
 import { createServer } from './shared/server-bootstrap.js';
 import { validateScore, validateStudentInfo, stripHtmlTags } from './shared/validation.js';
+import { requireAdmin, rateLimit } from './shared/auth.js';
 
 // Initialize OpenAI client (will work if API key is configured)
 const openai = process.env.OPENAI_API_KEY ? new OpenAI({

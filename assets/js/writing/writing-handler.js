@@ -6,6 +6,7 @@ class WritingHandler {
         this.timerInterval = null;
         this.isTimerRunning = false;
         this.autosaveInterval = null;
+        this.mockNumber = localStorage.getItem('selectedMock') || document.body.dataset.mock || '1';
 
         // Store references for cleanup in destroy()
         this._boundHandlers = {
@@ -370,16 +371,16 @@ class WritingHandler {
         const task1Content = document.getElementById('task1-textarea')?.value || '';
         const task2Content = document.getElementById('task2-textarea')?.value || '';
         
-        localStorage.setItem('ielts-writing-mock1-task1', task1Content);
-        localStorage.setItem('ielts-writing-mock1-task2', task2Content);
-        localStorage.setItem('ielts-writing-mock1-time', this.timeRemaining.toString());
+        localStorage.setItem('ielts-writing-mock${this.mockNumber}-task1', task1Content);
+        localStorage.setItem('ielts-writing-mock${this.mockNumber}-task2', task2Content);
+        localStorage.setItem('ielts-writing-mock${this.mockNumber}-time', this.timeRemaining.toString());
         
     }
 
     loadSavedContent() {
-        const savedTask1 = localStorage.getItem('ielts-writing-mock1-task1');
-        const savedTask2 = localStorage.getItem('ielts-writing-mock1-task2');
-        const savedTime = localStorage.getItem('ielts-writing-mock1-time');
+        const savedTask1 = localStorage.getItem('ielts-writing-mock${this.mockNumber}-task1');
+        const savedTask2 = localStorage.getItem('ielts-writing-mock${this.mockNumber}-task2');
+        const savedTime = localStorage.getItem('ielts-writing-mock${this.mockNumber}-time');
         
         if (savedTask1) {
             const task1Textarea = document.getElementById('task1-textarea');
@@ -455,9 +456,9 @@ class WritingHandler {
             }
 
             // Clear saved content
-            localStorage.removeItem('ielts-writing-mock1-task1');
-            localStorage.removeItem('ielts-writing-mock1-task2');
-            localStorage.removeItem('ielts-writing-mock1-time');
+            localStorage.removeItem('ielts-writing-mock${this.mockNumber}-task1');
+            localStorage.removeItem('ielts-writing-mock${this.mockNumber}-task2');
+            localStorage.removeItem('ielts-writing-mock${this.mockNumber}-time');
 
             alert('Writing section completed successfully!');
             window.location.href = '../../student-dashboard.html';

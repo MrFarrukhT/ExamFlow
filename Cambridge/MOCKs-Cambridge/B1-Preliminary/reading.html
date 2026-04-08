@@ -46,6 +46,14 @@
     // Initialize storage
     const module = 'reading';
     const moduleStatus = localStorage.getItem(`cambridge-${module}Status`);
+
+    // Check if test is already completed - redirect to dashboard
+    if (moduleStatus === 'completed') {
+      alert('This test has already been completed. Returning to dashboard.');
+      window.location.href = '../../dashboard-cambridge.html';
+      throw new Error('Test already completed');
+    }
+
     const isNewTest = !localStorage.getItem(`cambridge-${module}StartTime`) || moduleStatus !== 'in-progress';
 
     if (isNewTest) {
