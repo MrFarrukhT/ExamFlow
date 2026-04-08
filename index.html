@@ -40,7 +40,7 @@
             </div>
 
             <div class="login-container" aria-label="Candidate login form">
-                <h1 class="welcome-title">Welcome to Candidate login!</h1>
+                <h1 class="welcome-title">Welcome, Candidate</h1>
                 <p class="exam-subtitle">IELTS Academic Assessment</p>
 
                 <div class="entry-form">
@@ -164,16 +164,12 @@
         function showInvigilatorLogin() {
             const modal = document.getElementById('invigilator-modal');
             modal.classList.remove('hidden');
-            modal.style.display = 'flex';
-            modal.style.alignItems = 'center';
-            modal.style.justifyContent = 'center';
             document.getElementById('invigilator-password').focus();
         }
 
         function closeInvigilatorModal() {
             const modal = document.getElementById('invigilator-modal');
             modal.classList.add('hidden');
-            modal.style.display = 'none';
             document.getElementById('invigilator-password').value = '';
             document.getElementById('password-error').style.display = 'none';
         }
@@ -193,6 +189,13 @@
                 document.getElementById('invigilator-password').focus();
             }
         }
+
+        // Close modal on Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeInvigilatorModal();
+            }
+        });
 
         // Allow Enter key to submit password in invigilator modal
         document.addEventListener('keydown', function(e) {

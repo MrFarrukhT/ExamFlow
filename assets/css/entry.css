@@ -56,6 +56,18 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    position: relative;
+}
+
+.background-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80px;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.6));
+    pointer-events: none;
 }
 
 /* Right Panel - Login Form */
@@ -496,26 +508,26 @@ body.cambridge .welcome-title {
 }
 
 body.cambridge .form-group input:focus {
-    border-color: #0066cc;
-    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+    border-color: #0d9488;
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
 }
 
 body.cambridge .login-button {
-    background: linear-gradient(135deg, #0066cc, #0052a3);
+    background: linear-gradient(135deg, #0d9488, #0f766e);
 }
 
 body.cambridge .login-button:hover {
-    background: linear-gradient(135deg, #0052a3, #003d7a);
-    box-shadow: 0 2px 8px rgba(0, 102, 204, 0.3);
+    background: linear-gradient(135deg, #0f766e, #0d9488);
+    box-shadow: 0 2px 8px rgba(13, 148, 136, 0.3);
 }
 
 body.cambridge .login-button:active {
-    background: #003d7a;
+    background: #065f46;
 }
 
 body.cambridge .exam-badge {
-    background: linear-gradient(135deg, #0066cc, #0052a3);
-    box-shadow: 0 2px 8px rgba(0, 102, 204, 0.3);
+    background: linear-gradient(135deg, #0d9488, #0f766e);
+    box-shadow: 0 2px 8px rgba(13, 148, 136, 0.3);
 }
 
 body.cambridge .exam-subtitle {
