@@ -1,0 +1,280 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - heading "🎓 Cambridge Admin Dashboard" [level=1] [ref=e5]
+      - paragraph [ref=e6]: Enhanced Admin Dashboard with Answer Management
+    - generic [ref=e7]:
+      - generic [ref=e8]: Database Online
+      - button "Logout" [ref=e9] [cursor=pointer]
+  - navigation [ref=e10]:
+    - link "📋 Submissions" [ref=e11] [cursor=pointer]:
+      - /url: cambridge-admin-dashboard.html
+    - link "📊 Student Results" [ref=e12] [cursor=pointer]:
+      - /url: cambridge-student-results.html
+    - link "🎤 Speaking Evaluations" [ref=e13] [cursor=pointer]:
+      - /url: cambridge-speaking-evaluations.html
+  - generic [ref=e14]:
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - generic [ref=e18]: "Search Student:"
+          - textbox "Search Student:" [active] [ref=e19]:
+            - /placeholder: Student name or ID
+            - text: Alex Student
+        - generic [ref=e20]:
+          - generic [ref=e21]: "Filter by Level:"
+          - combobox "Filter by Level:" [ref=e22]:
+            - option "All Levels" [selected]
+            - option "A1 Movers"
+            - option "A2 Key"
+            - option "B1 Preliminary"
+            - option "B2 First"
+        - generic [ref=e23]:
+          - generic [ref=e24]: "Filter by Skill:"
+          - combobox "Filter by Skill:" [ref=e25]:
+            - option "All Skills" [selected]
+            - option "Reading"
+            - option "Writing"
+            - option "Listening"
+            - option "Speaking"
+            - option "Reading & Writing"
+            - option "Reading & Use of English"
+        - generic [ref=e26]:
+          - generic [ref=e27]: "Filter by Mock:"
+          - combobox "Filter by Mock:" [ref=e28]:
+            - option "All Mocks" [selected]
+            - option "Mock 1"
+            - option "Mock 2"
+            - option "Mock 3"
+        - generic [ref=e29]:
+          - generic [ref=e30]: "Date From:"
+          - textbox "Date From:" [ref=e31]: 2026-03-09
+        - generic [ref=e32]:
+          - generic [ref=e33]: "Date To:"
+          - textbox "Date To:" [ref=e34]: 2026-04-08
+        - generic [ref=e35]:
+          - generic [ref=e36]: "Score Status:"
+          - combobox "Score Status:" [ref=e37]:
+            - option "All Submissions" [selected]
+            - option "Scored"
+            - option "Unscored"
+      - generic [ref=e38]:
+        - button "🔍 Apply Filters" [ref=e39] [cursor=pointer]
+        - button "🔄 Clear Filters" [ref=e40] [cursor=pointer]
+        - button "📊 Refresh Data" [ref=e41] [cursor=pointer]
+        - button "📤 Export CSV" [ref=e42] [cursor=pointer]
+        - button "📅 View by Date" [ref=e43] [cursor=pointer]
+        - button "📅 Today's Submissions" [ref=e44] [cursor=pointer]
+    - generic [ref=e45]:
+      - generic [ref=e46]:
+        - generic [ref=e47]: "5568"
+        - generic [ref=e48]: Total Submissions
+      - generic [ref=e49]:
+        - generic [ref=e50]: "1418"
+        - generic [ref=e51]: Filtered Results
+      - generic [ref=e52]:
+        - generic [ref=e53]: 18%
+        - generic [ref=e54]: Average Score
+      - generic [ref=e55]:
+        - generic [ref=e56]: "504"
+        - generic [ref=e57]: Unique Students
+      - generic [ref=e58]:
+        - generic [ref=e59]: "1409"
+        - generic [ref=e60]: Needs Scoring
+      - generic [ref=e61]:
+        - generic [ref=e62]: "36"
+        - generic [ref=e63]: Speaking Tests
+    - generic [ref=e65] [cursor=pointer]:
+      - generic [ref=e66]: 📝 Manage Cambridge Answer Keys
+      - generic [ref=e67]: ▼
+    - heading "Cambridge Test Submissions" [level=2] [ref=e68]
+    - generic [ref=e71]:
+      - generic [ref=e72]: Showing 1-15 of 1418 submissions
+      - generic [ref=e73]:
+        - button "First" [disabled] [ref=e74]
+        - button "Previous" [disabled] [ref=e75]
+        - generic [ref=e76]: Page 1 of 95
+        - generic [ref=e77]:
+          - generic [ref=e78]: "Go to:"
+          - spinbutton "Go to:" [ref=e79]
+          - button "Go" [ref=e80] [cursor=pointer]
+        - button "Next" [ref=e81] [cursor=pointer]
+        - button "Last" [ref=e82] [cursor=pointer]
+    - table [ref=e83]:
+      - rowgroup [ref=e84]:
+        - row "Student ID Name Level Mock Skill Score Date Duration Action" [ref=e85]:
+          - columnheader "Student ID" [ref=e86]
+          - columnheader "Name" [ref=e87]
+          - columnheader "Level" [ref=e88]
+          - columnheader "Mock" [ref=e89]
+          - columnheader "Skill" [ref=e90]
+          - columnheader "Score" [ref=e91]
+          - columnheader "Date" [ref=e92]
+          - columnheader "Duration" [ref=e93]
+          - columnheader "Action" [ref=e94]
+      - rowgroup [ref=e95]:
+        - row "XSS-TEST-002 <script>document.title=\"PWNED\"</script> B2-First Mock 1 Reading 50% 4/8/2026 10:36 AM N/A 📋 View" [ref=e96]:
+          - cell "XSS-TEST-002" [ref=e97]
+          - cell "<script>document.title=\"PWNED\"</script>" [ref=e98]
+          - cell "B2-First" [ref=e99]
+          - cell "Mock 1" [ref=e100]
+          - cell "Reading" [ref=e101]
+          - cell "50%" [ref=e102]
+          - cell "4/8/2026 10:36 AM" [ref=e103]
+          - cell "N/A" [ref=e104]
+          - cell "📋 View" [ref=e105]:
+            - button "📋 View" [ref=e106] [cursor=pointer]
+        - row "LEN-001 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA A2-Key Mock 1 Reading Unscored 4/8/2026 09:49 AM N/A 📋 View" [ref=e107]:
+          - cell "LEN-001" [ref=e108]
+          - cell "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" [ref=e109]
+          - cell "A2-Key" [ref=e110]
+          - cell "Mock 1" [ref=e111]
+          - cell "Reading" [ref=e112]
+          - cell "Unscored" [ref=e113]
+          - cell "4/8/2026 09:49 AM" [ref=e114]
+          - cell "N/A" [ref=e115]
+          - cell "📋 View" [ref=e116]:
+            - button "📋 View" [ref=e117] [cursor=pointer]
+        - row "REG Reg A2-Key Mock 1 Speaking Unscored 4/8/2026 09:02 AM N/A 📋 View" [ref=e118]:
+          - cell "REG" [ref=e119]
+          - cell "Reg" [ref=e120]
+          - cell "A2-Key" [ref=e121]
+          - cell "Mock 1" [ref=e122]
+          - cell "Speaking" [ref=e123]
+          - cell "Unscored" [ref=e124]
+          - cell "4/8/2026 09:02 AM" [ref=e125]
+          - cell "N/A" [ref=e126]
+          - cell "📋 View" [ref=e127]:
+            - button "📋 View" [ref=e128] [cursor=pointer]
+        - row "VERIFY-SIZE Verify Size A2-Key Mock 1 Speaking Unscored 4/8/2026 08:50 AM 5m 📋 View" [ref=e129]:
+          - cell "VERIFY-SIZE" [ref=e130]
+          - cell "Verify Size" [ref=e131]
+          - cell "A2-Key" [ref=e132]
+          - cell "Mock 1" [ref=e133]
+          - cell "Speaking" [ref=e134]
+          - cell "Unscored" [ref=e135]
+          - cell "4/8/2026 08:50 AM" [ref=e136]
+          - cell "5m" [ref=e137]
+          - cell "📋 View" [ref=e138]:
+            - button "📋 View" [ref=e139] [cursor=pointer]
+        - row "VERIFY-DUR Verify Dur A2-Key Mock 1 Speaking Unscored 4/8/2026 08:50 AM 5m 📋 View" [ref=e140]:
+          - cell "VERIFY-DUR" [ref=e141]
+          - cell "Verify Dur" [ref=e142]
+          - cell "A2-Key" [ref=e143]
+          - cell "Mock 1" [ref=e144]
+          - cell "Speaking" [ref=e145]
+          - cell "Unscored" [ref=e146]
+          - cell "4/8/2026 08:50 AM" [ref=e147]
+          - cell "5m" [ref=e148]
+          - cell "📋 View" [ref=e149]:
+            - button "📋 View" [ref=e150] [cursor=pointer]
+        - row "VERIFY-SPEAK Verify Speaker A2-Key Mock 1 Speaking Unscored 4/8/2026 08:50 AM 5m 📋 View" [ref=e151]:
+          - cell "VERIFY-SPEAK" [ref=e152]
+          - cell "Verify Speaker" [ref=e153]
+          - cell "A2-Key" [ref=e154]
+          - cell "Mock 1" [ref=e155]
+          - cell "Speaking" [ref=e156]
+          - cell "Unscored" [ref=e157]
+          - cell "4/8/2026 08:50 AM" [ref=e158]
+          - cell "5m" [ref=e159]
+          - cell "📋 View" [ref=e160]:
+            - button "📋 View" [ref=e161] [cursor=pointer]
+        - row "AUDIO-TEST-5 Neg Duration A2-Key Mock 1 Speaking Unscored 4/8/2026 08:47 AM 5m 📋 View" [ref=e162]:
+          - cell "AUDIO-TEST-5" [ref=e163]
+          - cell "Neg Duration" [ref=e164]
+          - cell "A2-Key" [ref=e165]
+          - cell "Mock 1" [ref=e166]
+          - cell "Speaking" [ref=e167]
+          - cell "Unscored" [ref=e168]
+          - cell "4/8/2026 08:47 AM" [ref=e169]
+          - cell "5m" [ref=e170]
+          - cell "📋 View" [ref=e171]:
+            - button "📋 View" [ref=e172] [cursor=pointer]
+        - row "AUDIO-TEST-4 XSS Mime A2-Key Mock 1 Speaking Unscored 4/8/2026 08:47 AM 5m 📋 View" [ref=e173]:
+          - cell "AUDIO-TEST-4" [ref=e174]
+          - cell "XSS Mime" [ref=e175]
+          - cell "A2-Key" [ref=e176]
+          - cell "Mock 1" [ref=e177]
+          - cell "Speaking" [ref=e178]
+          - cell "Unscored" [ref=e179]
+          - cell "4/8/2026 08:47 AM" [ref=e180]
+          - cell "5m" [ref=e181]
+          - cell "📋 View" [ref=e182]:
+            - button "📋 View" [ref=e183] [cursor=pointer]
+        - row "AUDIO-TEST-3 Size Liar A2-Key Mock 1 Speaking Unscored 4/8/2026 08:47 AM 5m 📋 View" [ref=e184]:
+          - cell "AUDIO-TEST-3" [ref=e185]
+          - cell "Size Liar" [ref=e186]
+          - cell "A2-Key" [ref=e187]
+          - cell "Mock 1" [ref=e188]
+          - cell "Speaking" [ref=e189]
+          - cell "Unscored" [ref=e190]
+          - cell "4/8/2026 08:47 AM" [ref=e191]
+          - cell "5m" [ref=e192]
+          - cell "📋 View" [ref=e193]:
+            - button "📋 View" [ref=e194] [cursor=pointer]
+        - row "AUDIO-TEST-2 No Audio A2-Key Mock 1 Speaking Unscored 4/8/2026 08:47 AM 5m 📋 View" [ref=e195]:
+          - cell "AUDIO-TEST-2" [ref=e196]
+          - cell "No Audio" [ref=e197]
+          - cell "A2-Key" [ref=e198]
+          - cell "Mock 1" [ref=e199]
+          - cell "Speaking" [ref=e200]
+          - cell "Unscored" [ref=e201]
+          - cell "4/8/2026 08:47 AM" [ref=e202]
+          - cell "5m" [ref=e203]
+          - cell "📋 View" [ref=e204]:
+            - button "📋 View" [ref=e205] [cursor=pointer]
+        - row "AUDIO-TEST Audio Test A2-Key Mock 1 Speaking Unscored 4/8/2026 08:47 AM 5m 📋 View" [ref=e206]:
+          - cell "AUDIO-TEST" [ref=e207]
+          - cell "Audio Test" [ref=e208]
+          - cell "A2-Key" [ref=e209]
+          - cell "Mock 1" [ref=e210]
+          - cell "Speaking" [ref=e211]
+          - cell "Unscored" [ref=e212]
+          - cell "4/8/2026 08:47 AM" [ref=e213]
+          - cell "5m" [ref=e214]
+          - cell "📋 View" [ref=e215]:
+            - button "📋 View" [ref=e216] [cursor=pointer]
+        - row "VERIFY-001 Verify Test A2-Key Mock 1 Reading 50% 4/8/2026 08:45 AM N/A 📋 View" [ref=e217]:
+          - cell "VERIFY-001" [ref=e218]
+          - cell "Verify Test" [ref=e219]
+          - cell "A2-Key" [ref=e220]
+          - cell "Mock 1" [ref=e221]
+          - cell "Reading" [ref=e222]
+          - cell "50%" [ref=e223]
+          - cell "4/8/2026 08:45 AM" [ref=e224]
+          - cell "N/A" [ref=e225]
+          - cell "📋 View" [ref=e226]:
+            - button "📋 View" [ref=e227] [cursor=pointer]
+        - row "A2-Key Mock 1 Reading Unscored 4/8/2026 08:35 AM N/A 📋 View" [ref=e228]:
+          - cell [ref=e229]
+          - cell [ref=e230]
+          - cell "A2-Key" [ref=e231]
+          - cell "Mock 1" [ref=e232]
+          - cell "Reading" [ref=e233]
+          - cell "Unscored" [ref=e234]
+          - cell "4/8/2026 08:35 AM" [ref=e235]
+          - cell "N/A" [ref=e236]
+          - cell "📋 View" [ref=e237]:
+            - button "📋 View" [ref=e238] [cursor=pointer]
+        - row "UNI-005 A2-Key Mock 1 Reading Unscored 4/8/2026 08:35 AM N/A 📋 View" [ref=e239]:
+          - cell "UNI-005" [ref=e240]
+          - cell [ref=e241]
+          - cell "A2-Key" [ref=e242]
+          - cell "Mock 1" [ref=e243]
+          - cell "Reading" [ref=e244]
+          - cell "Unscored" [ref=e245]
+          - cell "4/8/2026 08:35 AM" [ref=e246]
+          - cell "N/A" [ref=e247]
+          - cell "📋 View" [ref=e248]:
+            - button "📋 View" [ref=e249] [cursor=pointer]
+        - row "UNI-004 A2-Key Mock 1 Reading 8% 4/8/2026 08:35 AM N/A 📋 View" [ref=e250]:
+          - cell "UNI-004" [ref=e251]
+          - cell [ref=e252]
+          - cell "A2-Key" [ref=e253]
+          - cell "Mock 1" [ref=e254]
+          - cell "Reading" [ref=e255]
+          - cell "8%" [ref=e256]
+          - cell "4/8/2026 08:35 AM" [ref=e257]
+          - cell "N/A" [ref=e258]
+          - cell "📋 View" [ref=e259]:
+            - button "📋 View" [ref=e260] [cursor=pointer]
