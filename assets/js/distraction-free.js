@@ -26,9 +26,7 @@ class DistractionFreeMode {
                        elem.msRequestFullscreen;
         
         if (request) {
-            request.call(elem).catch(err => {
-                console.log('Fullscreen not available:', err);
-            });
+            request.call(elem).catch(err => {});
         }
     }
 
@@ -120,6 +118,6 @@ function enterFullscreenMode() {
                    elem.msRequestFullscreen;
     
     if (request) {
-        request.call(elem).catch(err => console.log('Fullscreen not available'));
+        request.call(elem).catch(err => {});
     }
 }

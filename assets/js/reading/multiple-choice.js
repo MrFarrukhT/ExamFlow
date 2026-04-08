@@ -7,7 +7,6 @@ class MultipleChoiceHandler {
 
     init() {
         this.bindEvents();
-        console.log('✅ Multiple Choice handler initialized');
     }
 
     bindEvents() {
@@ -64,7 +63,6 @@ class MultipleChoiceHandler {
 
     updateAnswerStatus(questionNumber, value) {
         // This can be extended for visual feedback
-        console.log(`Question ${questionNumber} answered:`, value);
     }
 
     // Get answer for checking

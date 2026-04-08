@@ -13,12 +13,8 @@
       if (doc && doc.defaultView && doc.defaultView.__A2_forceSaveAll) {
         // Call the force save function in the iframe
         doc.defaultView.__A2_forceSaveAll();
-        console.log('✓ Force-saved all answers before switching to Part', n);
-      } else {
-        console.warn('⚠ Force save function not available, answers may not be saved');
       }
     } catch(e) {
-      console.warn('Unable to force save before part switch:', e);
     }
     
     try { sessionStorage.setItem('a2key-rw-active', String(n)); } catch (e) {}
@@ -45,10 +41,8 @@
       try {
         if (doc.defaultView && doc.defaultView.__A2_applySavedAnswers) {
           doc.defaultView.__A2_applySavedAnswers();
-          console.log('🔄 Triggered answer restoration after part load');
         }
       } catch(e) {
-        console.warn('Could not trigger answer restoration:', e);
       }
     }, 200);
 
@@ -143,7 +137,6 @@
     try {
       if (doc && doc.defaultView && doc.defaultView.__A2_forceSaveAll) {
         doc.defaultView.__A2_forceSaveAll();
-        console.log('✓ Saved answers before navigating to question', qAbs);
       }
     } catch(e) {}
     

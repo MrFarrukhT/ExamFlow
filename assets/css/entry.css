@@ -1,3 +1,29 @@
+/* ==================== CSS CUSTOM PROPERTIES ==================== */
+:root {
+    /* Z-index hierarchy */
+    --z-base: 1;
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-overlay: 1000;
+    --z-modal: 2000;
+    --z-toast: 3000;
+    --z-timer: 4000;
+    --z-critical: 5000;
+
+    /* Color palette */
+    --color-primary: #1976d2;
+    --color-primary-dark: #1565c0;
+    --color-primary-darker: #0d47a1;
+    --color-success: #4caf50;
+    --color-warning: #ff9800;
+    --color-error: #f44336;
+    --color-text: #333;
+    --color-text-light: #666;
+    --color-bg: #f5f5f5;
+    --color-bg-white: #fff;
+    --color-border: #e0e0e0;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -35,7 +61,7 @@ body {
 /* Right Panel - Login Form */
 .right-panel {
     flex: 1;
-    background: #ffffff;
+    background: var(--color-bg-white);
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -46,7 +72,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 2rem 3rem;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--color-border);
 }
 
 .logo {
@@ -56,7 +82,7 @@ body {
 }
 
 .admin-link {
-    color: #1976d2;
+    color: var(--color-primary);
     text-decoration: none;
     font-size: 0.95rem;
     font-weight: 500;
@@ -64,7 +90,7 @@ body {
 }
 
 .admin-link:hover {
-    color: #1565c0;
+    color: var(--color-primary-dark);
     text-decoration: underline;
 }
 
@@ -82,7 +108,7 @@ body {
 .welcome-title {
     font-size: 2.2rem;
     font-weight: 400;
-    color: #333333;
+    color: var(--color-text);
     margin-bottom: 3rem;
     line-height: 1.2;
 }
@@ -113,7 +139,7 @@ body {
     top: -0.5rem;
     left: 1rem;
     font-size: 0.75rem;
-    color: #1976d2;
+    color: var(--color-primary);
 }
 
 .form-group input {
@@ -123,13 +149,13 @@ body {
     border-radius: 6px;
     font-size: 1rem;
     transition: all 0.3s ease;
-    background: #ffffff;
-    color: #333333;
+    background: var(--color-bg-white);
+    color: var(--color-text);
 }
 
 .form-group input:focus {
     outline: none;
-    border-color: #1976d2;
+    border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
 }
 
@@ -138,7 +164,7 @@ body {
 }
 
 .form-error {
-    color: #d32f2f;
+    color: var(--color-error);
     display: none;
     font-size: 0.8rem;
     margin-top: 6px;
@@ -162,17 +188,17 @@ body {
 }
 
 .form-group.error input {
-    border-color: #d32f2f;
+    border-color: var(--color-error);
     animation: shake 0.4s ease;
 }
 
 .form-group.error label {
-    color: #d32f2f;
+    color: var(--color-error);
 }
 
 .login-button {
     width: auto;
-    background: #1976d2;
+    background: var(--color-primary);
     color: white;
     border: none;
     padding: 0.875rem 2.5rem;
@@ -186,12 +212,12 @@ body {
 }
 
 .login-button:hover {
-    background: #1565c0;
+    background: var(--color-primary-dark);
     box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
 }
 
 .login-button:active {
-    background: #0d47a1;
+    background: var(--color-primary-darker);
 }
 
 .login-button.loading {
@@ -201,7 +227,7 @@ body {
 
 /* Exam badge */
 .exam-badge {
-    background: linear-gradient(135deg, #1976d2, #1565c0);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
     color: white;
     padding: 4px 12px;
     border-radius: 20px;
@@ -246,7 +272,7 @@ body {
 }
 
 .footer-text {
-    color: #666666;
+    color: var(--color-text-light);
     font-size: 0.95rem;
     font-style: italic;
     margin-top: 2rem;
@@ -261,7 +287,7 @@ body {
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
-    z-index: 1000;
+    z-index: var(--z-overlay);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -269,7 +295,7 @@ body {
 }
 
 .modal-overlay.hidden {
-    display: none !important;
+    display: none;
 }
 
 .modal-content {
@@ -345,14 +371,14 @@ body {
 
 .modal-body input[type="password"]:focus {
     outline: none;
-    border-color: #1976d2;
+    border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
 }
 
 .modal-submit-btn {
     width: 100%;
     padding: 12px;
-    background: #1976d2;
+    background: var(--color-primary);
     color: white;
     border: none;
     border-radius: 6px;
@@ -363,12 +389,12 @@ body {
 }
 
 .modal-submit-btn:hover {
-    background: #1565c0;
+    background: var(--color-primary-dark);
     box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
 }
 
 .modal-error {
-    color: #d32f2f;
+    color: var(--color-error);
     margin-top: 12px;
     font-size: 0.85rem;
     display: none;

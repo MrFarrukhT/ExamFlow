@@ -56,7 +56,6 @@
             
             // Only initialize if we have all required elements
             if (!this.passagePanel || !this.questionsPanel || !this.resizer) {
-                console.log('📐 Layout Toggle: Not applicable for this page');
                 return;
             }
             
@@ -65,8 +64,6 @@
                 e.preventDefault();
                 this.toggleLayout();
             });
-            
-            console.log('✅ Layout Toggle initialized - Double-click the resizer to toggle layouts');
         }
         
         toggleLayout() {
@@ -79,8 +76,6 @@
             
             // Show toast notification
             this.showToast(mode.name);
-            
-            console.log(`📐 Layout: ${mode.name}`);
         }
         
         applyLayout(passagePercent, questionsPercent) {

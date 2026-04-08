@@ -50,14 +50,64 @@ Starting state: Functional but utilitarian — invisible footer button, no anima
 | launcher.html | 5-Delightful | Animations, glow, loading state, clean modal |
 | Cambridge/launcher-cambridge.html | 5-Delightful | Same improvements applied |
 
+### Round 2
+**Explored:** 1 page (index.html — IELTS Student Login), 9 findings
+**Action:** POLISH 5 fixes + ELEVATE 4 enhancements
+
+- [T3] index.html — Renamed "Go to Admin Login" → "Go to Invigilator Login" for consistency
+  Mode: polish
+  Files: index.html
+
+- [T3] index.html — Replaced alert() validation with inline errors + shake animation
+  Mode: polish
+  Quality layer: 2-Clear → 4-Polished
+  Files: index.html, assets/css/entry.css
+
+- [T4] index.html — Moved inline modal styles to CSS classes (matching launcher pattern)
+  Mode: polish
+  Files: index.html, assets/css/entry.css
+
+- [T4] index.html — Added floating labels (label floats above input on focus/fill)
+  Mode: polish
+  Quality layer: 3-Efficient → 4-Polished
+  Files: index.html, assets/css/entry.css
+
+- [T4] index.html — Inline error styles moved to .form-error CSS class
+  Mode: polish
+  Files: index.html, assets/css/entry.css
+
+- [T3] index.html — Added IELTS exam badge in header (matching Cambridge's badge pattern)
+  Mode: elevate
+  Files: index.html, assets/css/entry.css
+
+- [T0] index.html — Added "IELTS Academic Assessment" subtitle below heading
+  Mode: elevate
+  Files: index.html, assets/css/entry.css
+
+- [T0] index.html — Staggered form entrance animations (title, fields, button)
+  Mode: elevate
+  Quality layer: 3-Efficient → 5-Delightful
+  Files: assets/css/entry.css
+
+- [T0] index.html — Login button loading state ("Logging in...")
+  Mode: elevate
+  Files: index.html, assets/css/entry.css
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| launcher.html | 5-Delightful | Animations, glow, loading state, clean modal |
+| Cambridge/launcher-cambridge.html | 5-Delightful | Same improvements applied |
+| index.html | 5-Delightful | Floating labels, inline validation, entrance animations |
+
 ### Deferred
-- None for this round
+- Cambridge/index.html — Same improvements needed (floating labels, inline validation, animations)
 
 ### Session Stats
-Pages explored: 2
-Rounds: 1
-Polishes landed: 5
+Pages explored: 3
+Rounds: 2
+Polishes landed: 10
 Rebuilds landed: 0
-Elevations landed: 3
+Elevations landed: 7
 Reverted: 0
-Changes shipped: 8
+Changes shipped: 17

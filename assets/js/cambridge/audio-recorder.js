@@ -167,8 +167,6 @@ class CambridgeAudioRecorder {
         this.recordingStartTime = new Date();
         this.isRecording = true;
         this.isPaused = false;
-        
-        console.log('🎤 Recording started');
     }
 
     /**
@@ -178,7 +176,6 @@ class CambridgeAudioRecorder {
         if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
             this.mediaRecorder.pause();
             this.isPaused = true;
-            console.log('⏸️ Recording paused');
         }
     }
 
@@ -189,7 +186,6 @@ class CambridgeAudioRecorder {
         if (this.mediaRecorder && this.mediaRecorder.state === 'paused') {
             this.mediaRecorder.resume();
             this.isPaused = false;
-            console.log('▶️ Recording resumed');
         }
     }
 
@@ -210,8 +206,7 @@ class CambridgeAudioRecorder {
                 this.recordingEndTime = new Date();
                 this.isRecording = false;
                 this.isPaused = false;
-                
-                console.log('⏹️ Recording stopped');
+
                 resolve(this.audioBlob);
             };
 
@@ -325,8 +320,6 @@ class CambridgeAudioRecorder {
         this.audioBlob = null;
         this.isRecording = false;
         this.isPaused = false;
-        
-        console.log('🧹 Audio recorder cleaned up');
     }
 
     /**

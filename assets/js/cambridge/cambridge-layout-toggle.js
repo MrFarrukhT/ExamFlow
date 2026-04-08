@@ -47,7 +47,6 @@
             // Check if this is Part 1 - if so, disable layout toggle
             const isPart1 = this.detectPart1();
             if (isPart1) {
-                console.log('📐 Cambridge Layout Toggle: Disabled for Part 1');
                 return;
             }
             
@@ -64,12 +63,9 @@
             // Determine layout type
             if (hasPartWidthLayout && hasQuestions) {
                 this.layoutType = 'part-width';
-                console.log('📐 Detected Part 2 style layout (side-by-side)');
             } else if (hasStimulusLayout && hasResizableDivider && hasQuestions) {
                 this.layoutType = 'stimulus';
-                console.log('📐 Detected Part 3+ style layout (resizable split-view)');
             } else {
-                console.log('📐 Cambridge Layout Toggle: Not applicable for this page');
                 return;
             }
             
@@ -81,8 +77,6 @@
             
             // Initialize drag functionality
             this.initializeDragFunctionality();
-            
-            console.log('✅ Cambridge Layout Toggle initialized (draggable divider mode)');
         }
         
         detectPart1() {
@@ -171,8 +165,6 @@
             
             // Update button icon
             this.updateButtonIcon(mode.mode);
-            
-            console.log(`📐 Cambridge Layout: ${mode.name}`);
         }
         
         updateButtonIcon(mode) {
@@ -324,7 +316,6 @@
             const sectionContent = document.querySelector('.DisplayTypeContainer__sectionContent___2HSJ0');
             
             if (!divider || !stimulusWrapper || !sectionContent) {
-                console.log('📐 Drag functionality: Required elements not found');
                 return;
             }
             
@@ -406,14 +397,12 @@
                 // Save the preference
                 const currentWidth = stimulusWrapper.style.width;
                 localStorage.setItem('cambridge-divider-width', currentWidth);
-                console.log('📐 Divider position saved:', currentWidth);
             };
             
             // Restore saved position
             const savedWidth = localStorage.getItem('cambridge-divider-width');
             if (savedWidth) {
                 stimulusWrapper.style.width = savedWidth;
-                console.log('📐 Restored divider position:', savedWidth);
             }
             
             // Add event listeners
@@ -429,8 +418,6 @@
             if (resizeBtn) {
                 resizeBtn.addEventListener('mousedown', onMouseDown);
             }
-            
-            console.log('✅ Drag functionality initialized (optimized with RAF)');
         }
         
         showToast(message) {

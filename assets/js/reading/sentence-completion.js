@@ -8,7 +8,6 @@ class SentenceCompletionHandler {
     init() {
         this.bindEvents();
         this.setupWordLimits();
-        console.log('✅ Sentence Completion handler initialized');
     }
 
     bindEvents() {
@@ -124,7 +123,6 @@ class SentenceCompletionHandler {
     }
 
     updateAnswerStatus(questionNumber, value) {
-        console.log(`Sentence Completion Question ${questionNumber} answered:`, value);
     }
 
     // Get answer for checking

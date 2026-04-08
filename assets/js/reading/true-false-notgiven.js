@@ -7,7 +7,6 @@ class TrueFalseNotGivenHandler {
 
     init() {
         this.bindEvents();
-        console.log('✅ True/False/Not Given handler initialized');
     }
 
     bindEvents() {
@@ -54,7 +53,6 @@ class TrueFalseNotGivenHandler {
     }
 
     updateAnswerStatus(questionNumber, value) {
-        console.log(`TFNG Question ${questionNumber} answered:`, value);
     }
 
     // Get answer for checking

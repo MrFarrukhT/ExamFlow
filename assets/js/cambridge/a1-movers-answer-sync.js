@@ -49,8 +49,6 @@
       // Update individual question buttons (highlight answered)
       updateQuestionButtons(part, count);
     }
-    
-    console.log(`✅ Footer updated: ${totalAnswered}/${totalQuestions} answered`);
   }
 
   // Update the "X of Y" counter for a specific part button
@@ -176,8 +174,7 @@
     
     // Save consolidated answers to the expected localStorage key
     localStorage.setItem('cambridge-reading-writingAnswers', JSON.stringify(consolidated));
-    console.log(`✅ Consolidated ${Object.keys(consolidated).length} A1-Movers R&W answers`);
-    
+
     return consolidated;
   }
   

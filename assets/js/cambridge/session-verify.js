@@ -36,7 +36,6 @@ window.populateCandidateIdDisplay = function() {
         if (displayDiv) {
           displayDiv.textContent = studentId;
           displayDiv.style.fontWeight = 'bold';
-          console.log('✅ Candidate ID header populated:', studentId);
         }
       }
       
@@ -54,12 +53,9 @@ window.populateCandidateIdDisplay = function() {
         if (input) {
           input.value = studentId;
           input.readOnly = true;
-          console.log('✅ Candidate ID input populated:', studentId);
           break;
         }
       }
-    } else {
-      console.warn('⚠️ No studentId found in localStorage');
     }
   } catch(e) {
     console.error('Error populating Candidate ID:', e);

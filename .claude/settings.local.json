@@ -36,12 +36,18 @@
       "Bash(GIT_DIR=.git-corrupt git format-patch 273f615..dad5a73 -o /tmp/unpushed-patches/)",
       "Bash(GIT_DIR=.git-corrupt git format-patch -1 dad5a73 --stdout)",
       "Bash(git am:*)",
-      "Bash(git apply:*)"
+      "Bash(git apply:*)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(git push:*)",
+      "Bash(git branch:*)",
+      "Bash(git config:*)",
+      "Bash(git repack:*)"
     ],
     "additionalDirectories": [
       "e:\\Test-System-v2",
       "C:\\Users\\User\\.cursor\\worktrees\\Test-System-v2-\\2lZvJ",
-      "\\tmp"
+      "\\tmp",
+      "E:\\Test-System-v2\\.claude"
     ]
   }
 }

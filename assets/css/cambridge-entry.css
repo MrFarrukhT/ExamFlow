@@ -35,7 +35,7 @@ body {
 /* Right Panel - Login Form */
 .right-panel {
     flex: 1;
-    background: #ffffff;
+    background: var(--color-bg-white);
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -98,6 +98,14 @@ body {
 
 .form-group {
     margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333333;
 }
 
 .form-group input {

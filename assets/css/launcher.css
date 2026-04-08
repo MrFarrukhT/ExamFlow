@@ -105,8 +105,8 @@ body {
     font-weight: 600;
 }
 
-.status-ready {
-    color: #27ae60 !important;
+.info-value.status-ready {
+    color: #27ae60;
     position: relative;
 }
 
@@ -340,7 +340,7 @@ body {
     height: 100%;
     background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(4px);
-    z-index: 1000;
+    z-index: var(--z-overlay);
     display: flex;
     align-items: center;
     justify-content: center;

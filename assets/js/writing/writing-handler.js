@@ -91,14 +91,12 @@ class WritingHandler {
 
             const pasteHandler = (e) => {
                 e.preventDefault();
-                console.log('Paste disabled in writing test');
             };
             textarea.addEventListener('paste', pasteHandler);
             this._boundHandlers.textareaListeners.push({ element: textarea, event: 'paste', handler: pasteHandler });
 
             const cutHandler = (e) => {
                 e.preventDefault();
-                console.log('Cut disabled in writing test');
             };
             textarea.addEventListener('cut', cutHandler);
             this._boundHandlers.textareaListeners.push({ element: textarea, event: 'cut', handler: cutHandler });
@@ -123,7 +121,6 @@ class WritingHandler {
         document.querySelectorAll('.task-nav-btn').forEach(btn => btn.style.opacity = '0.7');
         document.getElementById(`task${taskNumber}Btn`).style.opacity = '1';
         
-        console.log(`Switched to Task ${taskNumber}`);
     }
 
     updateWordCount(taskId) {
@@ -239,7 +236,6 @@ class WritingHandler {
         this.pauseTimer();
         this.timeRemaining = 3600; // Reset to 60 minutes
         this.updateTimerDisplay();
-        console.log('Timer reset to 60 minutes');
     }
 
     updateTimerDisplay() {
@@ -373,7 +369,6 @@ class WritingHandler {
         localStorage.setItem('ielts-writing-mock1-task2', task2Content);
         localStorage.setItem('ielts-writing-mock1-time', this.timeRemaining.toString());
         
-        console.log('Auto-saved writing content');
     }
 
     loadSavedContent() {
@@ -436,7 +431,6 @@ class WritingHandler {
 
             // Save to database using session manager
             if (typeof saveTestToDatabase === 'function') {
-                console.log('🔄 Saving writing test to database...');
                 await saveTestToDatabase(writingData);
             }
 
