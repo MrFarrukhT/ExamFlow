@@ -34,18 +34,38 @@ export function createServer({ port, name, callerUrl, dbConfig, onReady }) {
     app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
     // Block access to sensitive files before static middleware
+    // Normalize path to defeat encoding, case, and separator bypasses
     const blockedPaths = [
         /^\/\.git(\/|$)/,
         /^\/\.claude(\/|$)/,
         /^\/\.env/,
         /^\/\.scenario-cursor\.json$/,
+        /^\/\.eye-cursor\.json$/,
         /^\/node_modules(\/|$)/,
         /^\/shared(\/|$)/,
         /^\/package(-lock)?\.json$/,
         /^\/(local-database-server|cambridge-database-server|server-bundled|keygen)\.js$/,
+        /^\/scenario-journal\.md$/,
+        /^\/architect-decisions\.md$/,
+        /^\/\.gitignore$/,
+        /^\/tsconfig/,
+        /^\/\.eslint/,
     ];
     app.use((req, res, next) => {
-        if (blockedPaths.some(re => re.test(req.path))) {
+        let normalized;
+        try {
+            normalized = decodeURIComponent(req.path);
+        } catch {
+            normalized = req.path;
+        }
+        // Lowercase for case-insensitive filesystems (Windows)
+        normalized = normalized.toLowerCase();
+        // Replace backslashes with forward slashes (Windows path separator)
+        normalized = normalized.replace(/\\/g, '/');
+        // Collapse multiple slashes
+        normalized = normalized.replace(/\/+/g, '/');
+
+        if (blockedPaths.some(re => re.test(normalized))) {
             return res.status(404).send('Not found');
         }
         next();

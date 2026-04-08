@@ -7,6 +7,7 @@ import open from 'open';
 import OpenAI from 'openai';
 import { createRetryQueue } from './shared/database.js';
 import { createServer } from './shared/server-bootstrap.js';
+import { validateScore } from './shared/validation.js';
 
 // Initialize OpenAI client (will work if API key is configured)
 const openai = process.env.OPENAI_API_KEY ? new OpenAI({
@@ -169,6 +170,12 @@ app.post('/update-score', async (req, res) => {
                 success: false,
                 message: 'Submission ID is required'
             });
+        }
+
+        // Validate score if provided
+        const scoreResult = validateScore(score);
+        if (!scoreResult.valid) {
+            return res.status(400).json({ success: false, message: scoreResult.error });
         }
 
         console.log(`📊 Updating score for submission ${submissionId}: ${score}/40, Band: ${bandScore}`);

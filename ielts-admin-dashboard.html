@@ -278,6 +278,11 @@
     </div>
 
     <script>
+        function escapeHtml(text) {
+            const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
+            return String(text).replace(/[&<>"']/g, m => map[m]);
+        }
+
         const API_BASE = 'http://localhost:3002';
         let authToken = localStorage.getItem('adminToken');
         let currentSubmissions = [];
@@ -662,8 +667,8 @@
                     <tbody>
                         ${paginatedSubmissions.map(submission => `
                             <tr>
-                                <td>${submission.student_id}</td>
-                                <td>${submission.student_name}</td>
+                                <td>${escapeHtml(submission.student_id)}</td>
+                                <td>${escapeHtml(submission.student_name)}</td>
                                 <td>Mock ${submission.mock_number}</td>
                                 <td><span class="skill-badge skill-${submission.skill}">${submission.skill}</span></td>
                                 <td class="${getScoreClass(submission.score)}">${getScoreDisplay(submission)}</td>
@@ -719,7 +724,7 @@
                         html += `
                             <div class="date-group-submission" onclick="openAnswerComparison('${submission.id}')" style="cursor: pointer;">
                                 <div class="submission-info">
-                                    <div class="submission-name">${submission.student_name} (${submission.student_id})</div>
+                                    <div class="submission-name">${escapeHtml(submission.student_name)} (${escapeHtml(submission.student_id)})</div>
                                     <div class="submission-details">
                                         <span class="skill-badge skill-${submission.skill}">${submission.skill}</span>
                                         <span>Mock ${submission.mock_number}</span>
@@ -996,8 +1001,8 @@
                     <div class="answer-row ${rowClass}">
                         <div class="question-id">Q${questionNum}:</div>
                         <div style="display: flex; gap: 20px; flex: 1;">
-                            <div style="flex: 1;"><strong>Student:</strong> ${studentAnswer}</div>
-                            <div style="flex: 1;"><strong>Correct:</strong> ${displayCorrect}</div>
+                            <div style="flex: 1;"><strong>Student:</strong> ${escapeHtml(studentAnswer)}</div>
+                            <div style="flex: 1;"><strong>Correct:</strong> ${escapeHtml(displayCorrect)}</div>
                         </div>
                     </div>
                 `);
@@ -1082,7 +1087,7 @@
                                 </span>
                             </div>
                             <div class="answers-content">
-                                <div style="white-space: pre-wrap; line-height: 1.6; font-family: 'Times New Roman', serif; font-size: 14px;">${task1Text}</div>
+                                <div style="white-space: pre-wrap; line-height: 1.6; font-family: 'Times New Roman', serif; font-size: 14px;">${escapeHtml(task1Text)}</div>
                             </div>
                         </div>
                         <div class="student-answers">
@@ -1093,7 +1098,7 @@
                                 </span>
                             </div>
                             <div class="answers-content">
-                                <div style="white-space: pre-wrap; line-height: 1.6; font-family: 'Times New Roman', serif; font-size: 14px;">${task2Text}</div>
+                                <div style="white-space: pre-wrap; line-height: 1.6; font-family: 'Times New Roman', serif; font-size: 14px;">${escapeHtml(task2Text)}</div>
                             </div>
                         </div>
                     </div>

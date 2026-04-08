@@ -287,6 +287,11 @@
     </div>
 
     <script>
+        function escapeHtml(text) {
+            const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
+            return String(text).replace(/[&<>"']/g, m => map[m]);
+        }
+
         const API_BASE = 'http://localhost:3003'; // Cambridge server port
         let authToken = localStorage.getItem('cambridgeAdminToken');
         let currentSubmissions = [];
@@ -574,17 +579,17 @@
                     <tbody>
                         ${paginatedSubmissions.map(submission => `
                             <tr>
-                                <td>${submission.student_id}</td>
-                                <td>${submission.student_name}</td>
-                                <td><span class="level-badge level-${submission.level.split('-')[0].toLowerCase()}">${submission.level}</span></td>
-                                <td>Mock ${submission.mock_test || '1'}</td>
-                                <td><span class="skill-badge skill-${submission.skill}">${formatSkillName(submission.skill)}</span></td>
-                                <td class="${getScoreClass(submission.score)}">${getScoreDisplay(submission)}</td>
-                                <td>${formatDate(submission.created_at)}</td>
-                                <td>${calculateDuration(submission.start_time, submission.end_time)}</td>
+                                <td>${escapeHtml(submission.student_id)}</td>
+                                <td>${escapeHtml(submission.student_name)}</td>
+                                <td><span class="level-badge level-${escapeHtml(submission.level.split('-')[0].toLowerCase())}">${escapeHtml(submission.level)}</span></td>
+                                <td>Mock ${escapeHtml(submission.mock_test || '1')}</td>
+                                <td><span class="skill-badge skill-${escapeHtml(submission.skill)}">${escapeHtml(formatSkillName(submission.skill))}</span></td>
+                                <td class="${getScoreClass(submission.score)}">${escapeHtml(getScoreDisplay(submission))}</td>
+                                <td>${escapeHtml(formatDate(submission.created_at))}</td>
+                                <td>${escapeHtml(calculateDuration(submission.start_time, submission.end_time))}</td>
                                 <td>
                                     <button class="btn btn-info" style="padding: 6px 12px; font-size: 12px;"
-                                            onclick="openAnswerComparison('${submission.id}')">
+                                            onclick="openAnswerComparison('${escapeHtml(submission.id)}')">
                                         📋 View
                                     </button>
                                 </td>
@@ -628,19 +633,19 @@
                     
                     dateInfo.submissions.forEach(submission => {
                         html += `
-                            <div class="date-group-submission" onclick="openAnswerComparison('${submission.id}')" style="cursor: pointer;">
+                            <div class="date-group-submission" onclick="openAnswerComparison('${escapeHtml(submission.id)}')" style="cursor: pointer;">
                                 <div class="submission-info">
-                                    <div class="submission-name">${submission.student_name} (${submission.student_id})</div>
+                                    <div class="submission-name">${escapeHtml(submission.student_name)} (${escapeHtml(submission.student_id)})</div>
                                     <div class="submission-details">
-                                        <span class="level-badge level-${submission.level.split('-')[0].toLowerCase()}">${submission.level}</span>
-                                        <span class="skill-badge skill-${submission.skill}">${formatSkillName(submission.skill)}</span>
-                                        <span>Mock ${submission.mock_test || '1'}</span>
-                                        <span class="${getScoreClass(submission.score)}">${getScoreDisplay(submission)}</span>
-                                        <span style="color: #6c757d; font-size: 13px;">${formatDate(submission.created_at).split(' ')[1]}</span>
+                                        <span class="level-badge level-${escapeHtml(submission.level.split('-')[0].toLowerCase())}">${escapeHtml(submission.level)}</span>
+                                        <span class="skill-badge skill-${escapeHtml(submission.skill)}">${escapeHtml(formatSkillName(submission.skill))}</span>
+                                        <span>Mock ${escapeHtml(submission.mock_test || '1')}</span>
+                                        <span class="${getScoreClass(submission.score)}">${escapeHtml(getScoreDisplay(submission))}</span>
+                                        <span style="color: #6c757d; font-size: 13px;">${escapeHtml(formatDate(submission.created_at).split(' ')[1])}</span>
                                     </div>
                                 </div>
-                                <button class="btn btn-info" style="padding: 4px 8px; font-size: 11px;" 
-                                        onclick="event.stopPropagation(); openAnswerComparison('${submission.id}')">
+                                <button class="btn btn-info" style="padding: 4px 8px; font-size: 11px;"
+                                        onclick="event.stopPropagation(); openAnswerComparison('${escapeHtml(submission.id)}')">
                                     View
                                 </button>
                             </div>
@@ -1012,10 +1017,10 @@
                             </p>
                             <div class="score-input">
                                 <label><strong>Final Score (%):</strong></label>
-                                <input type="number" id="finalScore" min="0" max="100" value="${submission.score || overallPercentage}" />
+                                <input type="number" id="finalScore" min="0" max="100" value="${escapeHtml(submission.score || overallPercentage)}" />
                                 <label><strong>Grade:</strong></label>
-                                <input type="text" id="gradeInput" value="${submission.grade || ''}" placeholder="e.g. A, B, C" />
-                                <button class="btn btn-success" onclick="saveScore('${submission.id}')">Save Score</button>
+                                <input type="text" id="gradeInput" value="${escapeHtml(submission.grade || '')}" placeholder="e.g. A, B, C" />
+                                <button class="btn btn-success" onclick="saveScore('${escapeHtml(submission.id)}')">Save Score</button>
                             </div>
                         </div>
                     </div>
@@ -1271,10 +1276,10 @@
                             <p><strong>Automatic Score:</strong> ${correctCount}/${totalQuestions} correct answers (${percentageScore}%)</p>
                             <div class="score-input">
                                 <label><strong>Final Score (%):</strong></label>
-                                <input type="number" id="finalScore" min="0" max="100" value="${submission.score || percentageScore}" />
+                                <input type="number" id="finalScore" min="0" max="100" value="${escapeHtml(submission.score || percentageScore)}" />
                                 <label><strong>Grade:</strong></label>
-                                <input type="text" id="gradeInput" value="${submission.grade || ''}" placeholder="e.g. A, B, C" />
-                                <button class="btn btn-success" onclick="saveScore('${submission.id}')">Save Score</button>
+                                <input type="text" id="gradeInput" value="${escapeHtml(submission.grade || '')}" placeholder="e.g. A, B, C" />
+                                <button class="btn btn-success" onclick="saveScore('${escapeHtml(submission.id)}')">Save Score</button>
                             </div>
                         </div>
                     </div>
@@ -1343,10 +1348,10 @@
                         <h3>Writing Assessment</h3>
                         <div class="score-input">
                             <label><strong>Score (%):</strong></label>
-                            <input type="number" id="writingScore" min="0" max="100" value="${submission.score || ''}" placeholder="0-100" />
+                            <input type="number" id="writingScore" min="0" max="100" value="${escapeHtml(submission.score || '')}" placeholder="0-100" />
                             <label><strong>Grade:</strong></label>
-                            <input type="text" id="writingGrade" value="${submission.grade || ''}" placeholder="e.g. A, B, C" />
-                            <button class="btn btn-success" onclick="saveWritingScore('${submission.id}')">Save Score</button>
+                            <input type="text" id="writingGrade" value="${escapeHtml(submission.grade || '')}" placeholder="e.g. A, B, C" />
+                            <button class="btn btn-success" onclick="saveWritingScore('${escapeHtml(submission.id)}')">Save Score</button>
                         </div>
                     </div>
 

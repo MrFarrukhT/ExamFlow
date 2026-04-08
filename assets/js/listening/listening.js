@@ -987,13 +987,15 @@
             
             scoreSummary.textContent = `You scored ${score} out of 40 (Band ${band}).`;
             
+            const escapeHTML = (str) => String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
             let tableHTML = '<table><tr><th>Question</th><th>Your Answer</th><th>Correct Answer</th><th>Result</th></tr>';
             resultsData.sort((a,b) => parseInt(a.question, 10) - parseInt(b.question, 10)).forEach(res => {
                 tableHTML += `
                     <tr>
-                        <td>${res.question}</td>
-                        <td>${res.userAnswer}</td>
-                        <td>${res.correctAnswer}</td>
+                        <td>${escapeHTML(res.question)}</td>
+                        <td>${escapeHTML(res.userAnswer)}</td>
+                        <td>${escapeHTML(res.correctAnswer)}</td>
                         <td class="${res.isCorrect ? 'result-correct' : 'result-incorrect'}">
                             ${res.isCorrect ? '✔ Correct' : '✖ Incorrect'}
                         </td>

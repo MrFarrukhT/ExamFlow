@@ -916,15 +916,16 @@ class CambridgeBridge {
         if (emptyMessage) emptyMessage.style.display = 'none';
         
         // Build notes HTML
+        const escapeHTML = (str) => String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         notesList.innerHTML = notesWithContent.map(noteData => `
-            <div class="note-item" data-note-id="${noteData.id}">
-                <div class="note-text">"${this.truncateText(noteData.text, 50)}"</div>
-                <div class="note-content">${noteData.note}</div>
+            <div class="note-item" data-note-id="${escapeHTML(noteData.id)}">
+                <div class="note-text">"${escapeHTML(this.truncateText(noteData.text, 50))}"</div>
+                <div class="note-content">${escapeHTML(noteData.note)}</div>
                 <div class="note-actions">
-                    <button class="note-action-btn" onclick="cambridgeBridge.jumpToNote('${noteData.id}')">
+                    <button class="note-action-btn" onclick="cambridgeBridge.jumpToNote('${escapeHTML(noteData.id)}')">
                         <i class="fa fa-eye"></i> Find
                     </button>
-                    <button class="note-action-btn delete" onclick="cambridgeBridge.deleteNote('${noteData.id}')">
+                    <button class="note-action-btn delete" onclick="cambridgeBridge.deleteNote('${escapeHTML(noteData.id)}')">
                         <i class="fa fa-trash"></i> Delete
                     </button>
                 </div>

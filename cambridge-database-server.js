@@ -6,6 +6,7 @@ import 'dotenv/config';
 import path from 'path';
 import { createRetryQueue } from './shared/database.js';
 import { createServer } from './shared/server-bootstrap.js';
+import { validateScore, validateGrade, validateScoreAndGrade, stripHtmlTags } from './shared/validation.js';
 
 const { app, db, ensureConnection, __dirname: serverDir, start } = createServer({
     port: 3003,
@@ -240,76 +241,9 @@ async function insertCambridgeSubmission(dbClient, data) {
 
 const { saveWithRetry } = createRetryQueue(ensureConnection, insertCambridgeSubmission);
 
-// ============================================
-// SCORE/GRADE VALIDATION HELPERS
-// ============================================
-
-/**
- * Validate a Cambridge score value.
- * Must be an integer between 0 and 200 (Cambridge scale scores go up to 190+).
- * Returns { valid, error } where error is a human-readable message on failure.
- */
-function validateScore(score) {
-    if (score === null || score === undefined || score === '') {
-        return { valid: true }; // score is optional on some endpoints
-    }
-    const parsed = Number(score);
-    if (!Number.isInteger(parsed)) {
-        return { valid: false, error: 'Score must be an integer' };
-    }
-    if (parsed < 0 || parsed > 200) {
-        return { valid: false, error: 'Score must be between 0 and 200' };
-    }
-    return { valid: true, value: parsed };
-}
-
-/**
- * Validate a Cambridge grade string.
- * Must be at most 20 characters, containing only alphanumeric chars, spaces, and hyphens.
- * Returns { valid, error }.
- */
-function validateGrade(grade) {
-    if (grade === null || grade === undefined || grade === '') {
-        return { valid: true }; // grade is optional
-    }
-    if (typeof grade !== 'string') {
-        return { valid: false, error: 'Grade must be a string' };
-    }
-    if (grade.length > 20) {
-        return { valid: false, error: 'Grade must be at most 20 characters' };
-    }
-    if (!/^[a-zA-Z0-9 \-]+$/.test(grade)) {
-        return { valid: false, error: 'Grade must contain only letters, numbers, spaces, and hyphens' };
-    }
-    return { valid: true };
-}
-
-/**
- * Validate score and grade together. Returns a 400-style error object or null if valid.
- */
-function validateScoreAndGrade(score, grade) {
-    const scoreResult = validateScore(score);
-    if (!scoreResult.valid) {
-        return { success: false, message: scoreResult.error };
-    }
-    const gradeResult = validateGrade(grade);
-    if (!gradeResult.valid) {
-        return { success: false, message: gradeResult.error };
-    }
-    return null; // no error
-}
-
 // Valid Cambridge levels and skills for submission validation
 const VALID_LEVELS = ['A1-Movers', 'A2-Key', 'B1-Preliminary', 'B2-First'];
 const VALID_SKILLS = ['reading', 'writing', 'listening', 'speaking', 'reading-writing', 'reading-use-of-english'];
-
-/**
- * Strip HTML tags from a string to prevent stored XSS.
- */
-function stripHtmlTags(str) {
-    if (typeof str !== 'string') return str;
-    return str.replace(/<[^>]*>/g, '');
-}
 
 // ============================================
 // CAMBRIDGE-SPECIFIC ROUTES
@@ -777,8 +711,8 @@ app.get('/cambridge-student-results', async (req, res) => {
             params.push(mock_test);
         }
         if (search) {
-            conditions.push(`(student_name ILIKE $${params.length + 1} OR student_id ILIKE $${params.length + 1})`);
-            params.push(`%${search}%`);
+            conditions.push(`(student_name ILIKE $${params.length + 1} OR student_id ILIKE $${params.length + 2})`);
+            params.push(`%${search}%`, `%${search}%`);
         }
 
         if (conditions.length > 0) {

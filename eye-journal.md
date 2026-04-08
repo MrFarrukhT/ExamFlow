@@ -220,11 +220,60 @@ Starting state: Functional but utilitarian — invisible footer button, no anima
 - All tests — FontAwesome CDN causes slow load; consider local copy
 - Listening — Inline styles on answer inputs need CSS class migration
 
+---
+
+## Session: 2026-04-08 (fresh cycle)
+Persona: Student arriving to take an exam
+System: Both (IELTS + Cambridge launchers)
+Pages explored: launcher.html, Cambridge/launcher-cambridge.html
+Starting state: Both launchers functional and polished from previous cycle, but identical visually with hardcoded status
+
+### Round 1
+**Explored:** 2 pages (IELTS launcher + Cambridge launcher), 7 findings
+**Action:** POLISH 4 fixes + ELEVATE 2 enhancements + REBUILD 1 architecture change
+
+- [T4] launcher.html — Fixed copyright "© 2025" → "© 2026"
+  Mode: polish
+  Files: launcher.html
+
+- [T4] launcher.html — Cleaned up modal JS: removed inline style overrides (display, alignItems, justifyContent), now uses CSS class toggling only
+  Mode: polish
+  Files: launcher.html
+
+- [T4] launcher.html — Added Escape key handler to close invigilator modal
+  Mode: polish
+  Files: launcher.html
+
+- [T4] launcher.html — Harmonized Cambridge version 1.0.0 → 2.0.0
+  Mode: polish
+  Files: launcher.html
+
+- [T3→T0] launcher.html — Added live status check: pings /test endpoint on load, shows "Connecting..." (amber) → "Ready" (green) or "Offline" (red) instead of hardcoded "Ready"
+  Mode: elevate
+  Quality layer: 4-Polished → 5-Delightful (trustworthy indicator)
+  Files: launcher.html, assets/css/launcher.css
+
+- [T0] launcher.html — Cambridge visual differentiation: teal/emerald gradient + accent colors when accessed with ?exam=cambridge, clearly distinct from IELTS purple/blue
+  Mode: elevate
+  Quality layer: 5-Delightful → 6-Innovative (instant system recognition)
+  Files: launcher.html
+
+- [T5] Cambridge/launcher-cambridge.html — Unified launcher architecture: Cambridge launcher now redirects to launcher.html?exam=cambridge, eliminating code duplication
+  Mode: rebuild
+  Quality layer: 5-Delightful → 6-Innovative (single source of truth)
+  Files: Cambridge/launcher-cambridge.html
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| launcher.html | 6-Innovative | Live status, Cambridge identity, unified architecture |
+| Cambridge/launcher-cambridge.html | 6-Innovative | Redirect to unified launcher |
+
 ### Session Stats
-Pages explored: 7
-Rounds: 6
-Polishes landed: 25
-Rebuilds landed: 0
-Elevations landed: 12
+Pages explored: 2
+Rounds: 1
+Polishes landed: 4
+Rebuilds landed: 1
+Elevations landed: 2
 Reverted: 0
-Changes shipped: 37
+Changes shipped: 7
