@@ -541,7 +541,10 @@
         function loadRoomActivity() {
             var endpoint = isCambridge ? '/cambridge-submissions' : '/submissions';
             var listEl = document.getElementById('roomActivityList');
-            fetch(endpoint).then(function(r) {
+            var tokenKey = isCambridge ? 'cambridgeAdminToken' : 'adminToken';
+            var token = localStorage.getItem(tokenKey);
+            var fetchOpts = token ? { headers: { 'Authorization': 'Bearer ' + token } } : {};
+            fetch(endpoint, fetchOpts).then(function(r) {
                 if (!r.ok) throw new Error('Server returned ' + r.status);
                 return r.json();
             }).then(function(data) {
@@ -558,8 +561,15 @@
                 document.getElementById('roomLastUpdate').textContent =
                     'Updated ' + new Date().toLocaleTimeString();
             }).catch(function(err) {
-                listEl.innerHTML = '<p class="room-error">Could not reach server — ' +
-                    escapeHtml(err.message) + '</p>';
+                var msg = err.message || 'Unknown error';
+                if (msg.indexOf('401') !== -1 || msg.indexOf('Authentication') !== -1) {
+                    listEl.innerHTML = '<p class="room-error">Authentication required — please log in to the <a href="' +
+                        (isCambridge ? 'cambridge-admin-dashboard.html' : 'ielts-admin-dashboard.html') +
+                        '" style="color:#dc3545;font-weight:600;">Admin Dashboard</a> first, then return here.</p>';
+                } else {
+                    listEl.innerHTML = '<p class="room-error">Could not reach server — ' +
+                        escapeHtml(msg) + '</p>';
+                }
                 ['statStudents','statSubmissions','statScored','statPending'].forEach(function(id) {
                     document.getElementById(id).textContent = '\u2014';
                 });
