@@ -220,16 +220,50 @@ Starting state: Functional but utilitarian — invisible footer button, no anima
 | MOCKs/*/listening.html | 4-Polished | Timer + nav + part fade |
 | dashboard.html | 4-Polished | CSS vars fixed, card animations |
 
+### Round 7
+**Explored:** 1 page (invigilator.html — IELTS Invigilator Panel), 5 findings
+**Action:** FIX 1 + POLISH 2 + ELEVATE 1
+
+- [T4] invigilator.css — Added missing :root with --z-overlay variable
+  Mode: fix
+  Files: assets/css/invigilator.css
+
+- [T4] invigilator.html — Header buttons moved from inline styles to CSS classes
+  Mode: polish
+  Files: invigilator.html, assets/css/invigilator.css
+
+- [T3] invigilator.html — Replaced JS inline style.background with CSS theme classes
+  Mode: polish
+  Files: invigilator.html, assets/css/invigilator.css
+
+- [T0] invigilator.css — Staggered entrance animation on panel sections
+  Mode: elevate
+  Files: assets/css/invigilator.css
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| launcher.html | 5-Delightful | Complete |
+| Cambridge/launcher-cambridge.html | 5-Delightful | Complete |
+| index.html | 5-Delightful | Complete |
+| MOCKs/*/reading.html | 4-Polished | Timer + nav + transitions |
+| MOCKs/*/writing.html | 4-Polished | Timer + scrollbars + task fade |
+| MOCKs/*/listening.html | 4-Polished | Timer + nav + part fade |
+| dashboard.html | 4-Polished | CSS vars fixed, card animations |
+| invigilator.html | 4-Polished | Theme classes, nav buttons, panel animations |
+
 ### Deferred
 - Cambridge/index.html — Same login improvements needed
 - All tests — FontAwesome CDN causes slow load; consider local copy
 - Listening — Inline styles on answer inputs need CSS class migration
+- Invigilator — Level display inline styles need CSS class migration
 
 ### Session Stats
-Pages explored: 7
-Rounds: 6
-Polishes landed: 25
+Pages explored: 8
+Rounds: 7
+Polishes landed: 28
 Rebuilds landed: 0
-Elevations landed: 12
+Elevations landed: 13
 Reverted: 0
+Changes shipped: 41
 Changes shipped: 37
