@@ -682,38 +682,58 @@
       <div class="container generic">
          
       <div class="container generic">
-         <h2>Part 2 — Choose ONE task</h2>
-         <p class="double-line-spacing ">Answer <strong>one</strong> of the questions 2–4. Write your answer in <strong>220–260 words</strong> in an appropriate style.</p>
+         <h2>Questions 2–4</h2>
+         <p class="double-line-spacing ">Answer <strong>one</strong> of these questions. Write <strong>220–260 words</strong> in an appropriate style.</p>
 
-         <h3 style="margin-top:24px;">Question 2 — Email to a friend</h3>
-         <p class="double-line-spacing ">This is part of an email you receive from a friend:</p>
-         <p class="double-line-spacing " style="margin-left:24px;font-style:italic;">From: Alex<br>Subject: Event<br><br>Every year the International Club at my college organises an event based on the traditions of a specific country. Next year we&rsquo;d like to do something from your country. Can you recommend what we should do for the event, and why you think it would be enjoyable for our students? Could you suggest how we can make it feel really authentic?</p>
-         <p class="double-line-spacing ">Write your <strong>email</strong>.</p>
+         <div class="c1-writing-callout">
+           <strong>Question 2 — Email to a friend</strong>
+           <p style="margin:6px 0 0 0;">This is part of an email you receive from a friend:</p>
+           <p style="margin:6px 0 0 0;font-style:italic;">From: Alex<br>Subject: Event<br><br>Every year the International Club at my college organises an event based on the traditions of a specific country. Next year we’d like to do something from your country. Can you recommend what we should do for the event, and why you think it would be enjoyable for our students? Could you suggest how we can make it feel really authentic?</p>
+           <p style="margin:6px 0 0 0;">Write your <strong>email</strong>.</p>
+         </div>
 
-         <h3 style="margin-top:24px;">Question 3 — Hotel review</h3>
-         <p class="double-line-spacing ">You recently stayed in a hotel that was very different from what you expected. Write a <strong>review</strong> for a hotel review website in which you explain what you had expected from the hotel, and how your experience of it differed from your expectations.</p>
+         <div class="c1-writing-callout">
+           <strong>Question 3 — Hotel review</strong>
+           <p style="margin:6px 0 0 0;">You recently stayed in a hotel that was very different from what you expected. Write a <strong>review</strong> for a hotel review website in which you explain what you had expected from the hotel, and how your experience of it differed from your expectations.</p>
+         </div>
 
-         <h3 style="margin-top:24px;">Question 4 — Proposal to the College Principal</h3>
-         <p class="double-line-spacing ">You would like to create a study skills vlog which would be posted on the website of the international college where you study. You decide to send a <strong>proposal</strong> to the College Principal about your idea. Explain why you want to create the vlog, summarise what would be in it, and say what help you might need.</p>
-
-         <div class="interaction-container" style="margin-top:24px;">
-            <p style="font-weight:700;color:#1e3a5f;">Write your response (Question 2, 3 or 4) below. State which question you are answering at the top.</p>
-            <textarea id="c1ia1088" class="textEntryInteractionValue" name="c1ia1088" data-q="w2" rows="14" style="width:100%;padding:14px;border:2px solid #ccc;border-radius:6px;font-family:Georgia,serif;font-size:1rem;line-height:1.6;" placeholder="Write your response here…"></textarea>
-            <p style="text-align:right;color:#666;font-size:0.9em;margin-top:4px;" id="w2-count">Word count: 0 / target 220–260</p>
+         <div class="c1-writing-callout">
+           <strong>Question 4 — Proposal to the College Principal</strong>
+           <p style="margin:6px 0 0 0;">You would like to create a study skills vlog which would be posted on the website of the international college where you study. You decide to send a <strong>proposal</strong> to the College Principal about your idea. Explain why you want to create the vlog, summarise what would be in it, and say what help you might need.</p>
+         </div>
+      </div>   </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div></div></div></div></div><div class="QuestionDisplay__questionDisplayWrapper___1n_b0 question-wrapper wide-and-left-align"><div class="QuestionDisplay__question___89pdZ question desktop hidden-title" id="question-c1-pane-w2" role="main" dir="ltr"><div class="QuestionDisplay__questionBody___ZOMJ7"><div class="QuestionDisplay__mainQuestionWrapper___3P0CZ QuestionDisplay__questionContentOverflow___3e0FA" tabindex="-1" role="group"><div class="QTIAssessmentItem__QTIAssessmentItemWrapper___3W6-C"><div id="QTI_renderer_pane_w2" class="QTIAssessmentItem__QTIAssessmentItem___cfGlV preRender" lang="en-US"><div id="interactionWrapper_pane_w2">
+      <div class="container generic">
+         <div class="c1-writing-qselect">
+           <span>Answering this question?</span>
+           <select id="w2-qpick" aria-label="Which question are you answering?">
+             <option value="">Undecided</option>
+             <option value="2">Question 2</option>
+             <option value="3">Question 3</option>
+             <option value="4">Question 4</option>
+           </select>
+         </div>
+         <div class="c1-writing-pane">
+           <span id="scorableItem-c1_88" class="interaction-container">
+             <textarea id="c1ia1088" class="textEntryInteractionValue" name="c1ia1088" data-q="w2" placeholder="Write your response here…" aria-label="Response for Part 2"></textarea>
+           </span>
+           <div class="c1-writing-wordcount" id="w2-count">Words: 0 · 0 of 1 questions selected</div>
          </div>
          <script>
            (function(){
              var ta = document.getElementById('c1ia1088');
              var c  = document.getElementById('w2-count');
+             var sel = document.getElementById('w2-qpick');
              function upd(){
                var t = ta.value.trim();
                var w = t === '' ? 0 : t.split(/\s+/).length;
-               c.textContent = 'Word count: ' + w + ' / target 220–260';
-               c.style.color = (w >= 220 && w <= 260) ? '#16a34a' : (w === 0 ? '#666' : '#dc2626');
+               var picked = sel.value ? '1' : '0';
+               c.textContent = 'Words: ' + w + ' · ' + picked + ' of 1 questions selected';
+               c.style.color = (w >= 220 && w <= 260) ? '#16a34a' : (w === 0 ? '#666' : '#b85c00');
                try {
                  var k = 'cambridge-writingAnswers';
                  var a = JSON.parse(localStorage.getItem(k) || '{}');
                  a['2'] = ta.value;
+                 a['2_qpick'] = sel.value;
                  localStorage.setItem(k, JSON.stringify(a));
                } catch(e){}
              }
@@ -721,14 +741,15 @@
                var k = 'cambridge-writingAnswers';
                var a = JSON.parse(localStorage.getItem(k) || '{}');
                if (a['2']) ta.value = a['2'];
+               if (a['2_qpick']) sel.value = a['2_qpick'];
              } catch(e){}
              ta.addEventListener('input', upd);
+             sel.addEventListener('change', upd);
              upd();
            })();
          </script>
       </div>
-      </div>
-   </div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div></div></div></div></div></div></div><div class="App__footerWrapper___2el50"><footer class="footer__footer___1NlzQ"><div class="footer__navButtons___Gtvxu   " role="navigation" aria-label="Previous / next question" id="footer-nav-wrapper" tabindex="-1"><button class="footer__previousBtn___3pfYh footer__arrowIconBtn___3AiJS" id="footer-nav-button-previous" aria-label="Previous"><i class="fa fa-arrow-left" aria-hidden="true"></i></button><button class="footer__promotedNextBtn___Qf9LU footer__arrowIconBtn___3AiJS" id="footer-nav-button-next" aria-label="Next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div><nav class="nav-row perScorableItem" aria-label="Questions"><div class="footer__questionWrapper___1tZ46 single" role="tablist"><button role="tab" class="footer__questionNo___3WNct
+   </div></div></div></div></div><div class="QuestionDisplay__footer___1uARt "></div></div></div></div></div><div class="App__footerWrapper___2el50"><footer class="footer__footer___1NlzQ"><div class="footer__navButtons___Gtvxu   " role="navigation" aria-label="Previous / next question" id="footer-nav-wrapper" tabindex="-1"><button class="footer__previousBtn___3pfYh footer__arrowIconBtn___3AiJS" id="footer-nav-button-previous" aria-label="Previous"><i class="fa fa-arrow-left" aria-hidden="true"></i></button><button class="footer__promotedNextBtn___Qf9LU footer__arrowIconBtn___3AiJS" id="footer-nav-button-next" aria-label="Next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div><nav class="nav-row perScorableItem" aria-label="Questions"><div class="footer__questionWrapper___1tZ46 single" role="tablist"><button role="tab" class="footer__questionNo___3WNct
                                 " data-sectionid="c1-write-1" tabindex="0"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">1</span><span class="attemptedCount" aria-hidden="true">0 of 1</span><span class="sr-only">Part 
             1. 0 of 1 questions attempted.</span></span></button></div><div class="footer__questionWrapper___1tZ46 selected single" role="tablist"><button role="tab" class="footer__questionNo___3WNct
                                 " data-sectionid="c1-write-2" tabindex="-1"><span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">2</span><span class="attemptedCount" aria-hidden="true">0 of 1</span><span class="sr-only">Part 

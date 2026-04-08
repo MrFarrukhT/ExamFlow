@@ -140,7 +140,12 @@ function sanitizeAntiCheat(input, serverManagedKeys) {
     const MAX_DEPTH = 4, MAX_KEYS = 50, MAX_STRING = 500, MAX_BYTES = 4096;
     function clean(value, depth) {
         if (value == null) return null;
-        if (typeof value === 'string') return stripHtmlTags(value).slice(0, MAX_STRING);
+        if (typeof value === 'string') {
+            // Drop strings that become empty/whitespace after HTML stripping —
+            // they're useless metadata and may indicate sanitized XSS attempts.
+            const stripped = stripHtmlTags(value).trim().slice(0, MAX_STRING);
+            return stripped === '' ? null : stripped;
+        }
         if (typeof value === 'number' || typeof value === 'boolean') return value;
         if (depth >= MAX_DEPTH) return null;
         if (Array.isArray(value)) {
