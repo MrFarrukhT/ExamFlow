@@ -161,7 +161,9 @@ async function handleTestCompletion() {
     }
 
     const examType = localStorage.getItem('examType');
-    const dashboardPath = examType === 'Cambridge' ? '../../dashboard-cambridge.html' : '../../student-dashboard.html';
+    // Cambridge AND Olympiada both use the Cambridge dashboard infrastructure
+    const isCambridgeFamily = examType === 'Cambridge' || examType === 'Olympiada';
+    const dashboardPath = isCambridgeFamily ? '../../dashboard-cambridge.html' : '../../student-dashboard.html';
 
     // Use review modal if available (reading/listening), otherwise fall back to confirm
     if ((currentModule === 'reading' || currentModule === 'listening') && window.examProgress) {
@@ -193,7 +195,8 @@ async function _executeSubmission(currentModule, examType, dashboardPath) {
         localStorage.setItem(`${currentModule}EndTime`, new Date().toISOString());
 
         // Use appropriate answer manager based on exam type
-        if (examType === 'Cambridge' && window.cambridgeAnswerManager) {
+        // Olympiada also uses cambridgeAnswerManager (same infrastructure as Cambridge)
+        if ((examType === 'Cambridge' || examType === 'Olympiada') && window.cambridgeAnswerManager) {
             await window.cambridgeAnswerManager.submitTestToDatabase();
         } else {
             // Get test data for submission (IELTS)

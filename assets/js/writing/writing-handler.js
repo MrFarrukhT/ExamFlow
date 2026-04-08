@@ -513,6 +513,13 @@ class WritingHandler {
         const score = this.calculateScore(task1Text, task1Words, task2Text, task2Words);
         const bandScore = this.calculateWritingBandScore(score, task1Words, task2Words);
 
+        // Collect anti-cheat metadata so writing submissions are flagged like
+        // reading/listening (which go through session-manager.js). Without this,
+        // writing submissions had no anti-cheat data in the database.
+        const antiCheat = (typeof distractionFreeMode !== 'undefined' && distractionFreeMode.getAntiCheatData)
+            ? distractionFreeMode.getAntiCheatData()
+            : {};
+
         return {
             studentId,
             studentName,
@@ -522,7 +529,8 @@ class WritingHandler {
             score,
             bandScore,
             startTime,
-            endTime
+            endTime,
+            antiCheat
         };
     }
 
