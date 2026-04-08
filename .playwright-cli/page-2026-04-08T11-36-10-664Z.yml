@@ -1,0 +1,245 @@
+- generic [active] [ref=e1]:
+  - iframe [ref=e2]:
+    - generic [ref=f3e4]:
+      - banner [ref=f3e5]:
+        - generic [ref=f3e6]:
+          - generic [ref=f3e7]:
+            - img "header.logo"
+          - generic [ref=f3e8]:
+            - generic [ref=f3e9]:
+              - generic [ref=f3e10]:
+                - status [ref=f3e11]: Connected
+                - generic [ref=f3e13]: 
+              - button "Messages" [ref=f3e14]:
+                - generic [ref=f3e15]:
+                  - generic [ref=f3e16]: Messages
+                  - generic [ref=f3e17]: 
+              - button "Options" [ref=f3e18]:
+                - generic [ref=f3e19]:
+                  - generic [ref=f3e20]: Options
+                  - generic [ref=f3e21]: 
+              - button "Show notes" [ref=f3e22]:
+                - generic [ref=f3e23]:
+                  - generic [ref=f3e24]: Show notes
+                  - generic [ref=f3e25]: 
+            - generic [ref=f3e28]:
+              - generic [ref=f3e29]: Candidate ID
+              - generic [ref=f3e30]: STU003
+      - generic [ref=f3e32]:
+        - generic [ref=f3e34]:
+          - generic [ref=f3e36]:
+            - heading "Questions 1–6" [level=3] [ref=f3e37]
+            - generic [ref=f3e38]: For each question, choose the correct answer.
+          - generic [ref=f3e39]:
+            - main [ref=f3e40]:
+              - generic [ref=f3e41]:
+                - group [ref=f3e42]:
+                  - generic [ref=f3e46]:
+                    - generic [ref=f3e49]:
+                      - img "Background image"
+                    - radiogroup "1 What does the sign/text say?" [ref=f3e51]:
+                      - paragraph [ref=f3e53]:
+                        - generic [ref=f3e54]: "1"
+                        - generic [ref=f3e55]: What does the sign/text say?
+                      - list [ref=f3e56]:
+                        - listitem [ref=f3e57]:
+                          - radio "how many new members the swim team needs." [ref=f3e58]
+                          - generic [ref=f3e60]: how many new members the swim team needs.
+                        - listitem [ref=f3e61]:
+                          - radio "who the coach of the college swim team is." [ref=f3e62]
+                          - generic [ref=f3e64]: who the coach of the college swim team is.
+                        - listitem [ref=f3e65]:
+                          - radio "how far they have to be able to swim." [ref=f3e66]
+                          - generic [ref=f3e68]: how far they have to be able to swim.
+                      - button "Flag question 1":
+                        - generic [ref=f3e69]: Flag question 1
+                - generic [ref=f3e71]: 
+            - main [ref=f3e73]:
+              - generic [ref=f3e74]:
+                - group [ref=f3e75]:
+                  - generic [ref=f3e79]:
+                    - generic [ref=f3e82]:
+                      - img "Advertisement image"
+                    - radiogroup "2 What does the sign/text say?" [ref=f3e84]:
+                      - paragraph [ref=f3e86]:
+                        - generic [ref=f3e87]: "2"
+                        - generic [ref=f3e88]: What does the sign/text say?
+                      - list [ref=f3e89]:
+                        - listitem [ref=f3e90]:
+                          - radio "Pete would like to know if Oli took any other photos of the party." [ref=f3e91]
+                          - generic [ref=f3e93]: Pete would like to know if Oli took any other photos of the party.
+                        - listitem [ref=f3e94]:
+                          - radio "Pete wants Oli to help him choose photos to put on the internet." [ref=f3e95]
+                          - generic [ref=f3e97]: Pete wants Oli to help him choose photos to put on the internet.
+                        - listitem [ref=f3e98]:
+                          - radio "Pete thinks the photos Oli took of the party are better than his." [ref=f3e99]
+                          - generic [ref=f3e101]: Pete thinks the photos Oli took of the party are better than his.
+                      - button "Flag question 2":
+                        - generic [ref=f3e102]: Flag question 2
+                - generic [ref=f3e104]: 
+            - main [ref=f3e106]:
+              - generic [ref=f3e107]:
+                - group [ref=f3e108]:
+                  - generic [ref=f3e112]:
+                    - generic [ref=f3e115]:
+                      - img "Advertisement image"
+                    - radiogroup "3 What does the sign/text say?" [ref=f3e117]:
+                      - paragraph [ref=f3e119]:
+                        - generic [ref=f3e120]: "3"
+                        - generic [ref=f3e121]: What does the sign/text say?
+                      - list [ref=f3e122]:
+                        - listitem [ref=f3e123]:
+                          - radio "to give her some advice." [ref=f3e124]
+                          - generic [ref=f3e126]: to give her some advice.
+                        - listitem [ref=f3e127]:
+                          - radio "to share some information." [ref=f3e128]
+                          - generic [ref=f3e130]: to share some information.
+                        - listitem [ref=f3e131]:
+                          - radio "to find out about a problem." [ref=f3e132]
+                          - generic [ref=f3e134]: to find out about a problem.
+                      - button "Flag question 3":
+                        - generic [ref=f3e135]: Flag question 3
+                - generic [ref=f3e137]: 
+            - main [ref=f3e139]:
+              - generic [ref=f3e140]:
+                - group [ref=f3e141]:
+                  - generic [ref=f3e145]:
+                    - generic [ref=f3e148]:
+                      - img "Advertisement image"
+                    - radiogroup "4 What does the sign/text say?" [ref=f3e150]:
+                      - paragraph [ref=f3e152]:
+                        - generic [ref=f3e153]: "4"
+                        - generic [ref=f3e154]: What does the sign/text say?
+                      - list [ref=f3e155]:
+                        - listitem [ref=f3e156]:
+                          - radio "Some trains won't be able to stop at Kingsford after the work in September." [ref=f3e157]
+                          - generic [ref=f3e159]: Some trains won't be able to stop at Kingsford after the work in September.
+                        - listitem [ref=f3e160]:
+                          - radio "Passengers will have to use different platforms at Kingsford in September." [ref=f3e161]
+                          - generic [ref=f3e163]: Passengers will have to use different platforms at Kingsford in September.
+                        - listitem [ref=f3e164]:
+                          - radio "It won't be possible to catch trains from Kingsford in September." [ref=f3e165]
+                          - generic [ref=f3e167]: It won't be possible to catch trains from Kingsford in September.
+                      - button "Flag question 4":
+                        - generic [ref=f3e168]: Flag question 4
+                - generic [ref=f3e170]: 
+            - main [ref=f3e172]:
+              - generic [ref=f3e173]:
+                - group [ref=f3e174]:
+                  - generic [ref=f3e178]:
+                    - generic [ref=f3e181]:
+                      - img "Advertisement image"
+                    - radiogroup "5 What does the sign/text say?" [ref=f3e183]:
+                      - paragraph [ref=f3e185]:
+                        - generic [ref=f3e186]: "5"
+                        - generic [ref=f3e187]: What does the sign/text say?
+                      - list [ref=f3e188]:
+                        - listitem [ref=f3e189]:
+                          - radio "Ben is planning to eat at Emma's house this evening." [ref=f3e190]
+                          - generic [ref=f3e192]: Ben is planning to eat at Emma's house this evening.
+                        - listitem [ref=f3e193]:
+                          - radio "Ben has gone to Emma's house to help her with her project." [ref=f3e194]
+                          - generic [ref=f3e196]: Ben has gone to Emma's house to help her with her project.
+                        - listitem [ref=f3e197]:
+                          - radio "Ben will practise for the concert when he gets back from Emma's house." [ref=f3e198]
+                          - generic [ref=f3e200]: Ben will practise for the concert when he gets back from Emma's house.
+                      - button "Flag question 5":
+                        - generic [ref=f3e201]: Flag question 5
+                - generic [ref=f3e203]: 
+            - main [ref=f3e205]:
+              - generic [ref=f3e206]:
+                - group [ref=f3e207]:
+                  - generic [ref=f3e211]:
+                    - generic [ref=f3e214]:
+                      - img "Advertisement image"
+                    - radiogroup "6 What does the sign/text say?" [ref=f3e216]:
+                      - paragraph [ref=f3e218]:
+                        - generic [ref=f3e219]: "6"
+                        - generic [ref=f3e220]: What does the sign/text say?
+                      - list [ref=f3e221]:
+                        - listitem [ref=f3e222]:
+                          - radio "Gail's mum wants her to get lunch from the shop today." [ref=f3e223]
+                          - generic [ref=f3e225]: Gail's mum wants her to get lunch from the shop today.
+                        - listitem [ref=f3e226]:
+                          - radio "Gail can have lunch when she wants to today." [ref=f3e227]
+                          - generic [ref=f3e229]: Gail can have lunch when she wants to today.
+                        - listitem [ref=f3e230]:
+                          - radio "Gail can't have any milk with her lunch today." [ref=f3e231]
+                          - generic [ref=f3e233]: Gail can't have any milk with her lunch today.
+                      - button "Flag question 6":
+                        - generic [ref=f3e234]: Flag question 6
+                - generic [ref=f3e236]: 
+        - contentinfo [ref=f3e238]:
+          - navigation "Previous / next question" [ref=f3e239]:
+            - button "Previous" [disabled] [ref=f3e240]:
+              - generic [ref=f3e241]: 
+            - button "Next" [ref=f3e242]:
+              - generic [ref=f3e243]: 
+          - navigation "Questions" [ref=f3e244]:
+            - tablist [ref=f3e245]:
+              - tab [ref=f3e246]:
+                - generic [ref=f3e247]: Part 1
+              - generic [ref=f3e248]:
+                - button "Question 1 Not attempted Active" [ref=f3e249]:
+                  - generic [ref=f3e250]: Question 1
+                  - text: "1"
+                  - generic [ref=f3e251]: Not attempted Active
+                - button "Question 2 Not attempted" [ref=f3e252]:
+                  - generic [ref=f3e253]: Question 2
+                  - text: "2"
+                  - generic [ref=f3e254]: Not attempted
+                - button "Question 3 Not attempted" [ref=f3e255]:
+                  - generic [ref=f3e256]: Question 3
+                  - text: "3"
+                  - generic [ref=f3e257]: Not attempted
+                - button "Question 4 Not attempted" [ref=f3e258]:
+                  - generic [ref=f3e259]: Question 4
+                  - text: "4"
+                  - generic [ref=f3e260]: Not attempted
+                - button "Question 5 Not attempted" [ref=f3e261]:
+                  - generic [ref=f3e262]: Question 5
+                  - text: "5"
+                  - generic [ref=f3e263]: Not attempted
+                - button "Question 6 Not attempted" [ref=f3e264]:
+                  - generic [ref=f3e265]: Question 6
+                  - text: "6"
+                  - generic [ref=f3e266]: Not attempted
+            - tablist [ref=f3e267]:
+              - tab "Part 2. 0 of 7 questions attempted." [ref=f3e268]:
+                - generic [ref=f3e269]:
+                  - text: Part 2
+                  - generic [ref=f3e270]: 0 of 7
+                  - generic [ref=f3e271]: Part 2. 0 of 7 questions attempted.
+            - tablist [ref=f3e272]:
+              - tab "Part 3. 0 of 5 questions attempted." [ref=f3e273]:
+                - generic [ref=f3e274]:
+                  - text: Part 3
+                  - generic [ref=f3e275]: 0 of 5
+                  - generic [ref=f3e276]: Part 3. 0 of 5 questions attempted.
+            - tablist [ref=f3e277]:
+              - tab "Part 4. 0 of 6 questions attempted." [ref=f3e278]:
+                - generic [ref=f3e279]:
+                  - text: Part 4
+                  - generic [ref=f3e280]: 0 of 6
+                  - generic [ref=f3e281]: Part 4. 0 of 6 questions attempted.
+            - tablist [ref=f3e282]:
+              - tab "Part 5. 0 of 6 questions attempted." [ref=f3e283]:
+                - generic [ref=f3e284]:
+                  - text: Part 5
+                  - generic [ref=f3e285]: 0 of 6
+                  - generic [ref=f3e286]: Part 5. 0 of 6 questions attempted.
+            - tablist [ref=f3e287]:
+              - tab "Part 6. 0 of 1 questions attempted." [ref=f3e288]:
+                - generic [ref=f3e289]:
+                  - text: Part 6
+                  - generic [ref=f3e290]: 0 of 1
+                  - generic [ref=f3e291]: Part 6. 0 of 1 questions attempted.
+            - tablist [ref=f3e292]:
+              - tab "Part 7. 0 of 1 questions attempted." [ref=f3e293]:
+                - generic [ref=f3e294]:
+                  - text: Part 7
+                  - generic [ref=f3e295]: 0 of 1
+                  - generic [ref=f3e296]: Part 7. 0 of 1 questions attempted.
+            - button "Review your answers" [ref=f3e297]:
+              - generic [ref=f3e298]: 
+  - generic [ref=e5]: 58:59
