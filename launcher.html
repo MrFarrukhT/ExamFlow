@@ -5,6 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Innovative Centre Test System</title>
     <link rel="stylesheet" href="assets/css/launcher.css">
+    <style id="cambridge-theme">
+        /* Cambridge-specific color scheme — applied dynamically when exam=cambridge */
+        body.cambridge {
+            background: linear-gradient(135deg, #0d9488 0%, #065f46 100%);
+        }
+
+        body.cambridge .system-info {
+            background: rgba(13, 148, 136, 0.1);
+            border-color: rgba(13, 148, 136, 0.2);
+        }
+
+        body.cambridge .launch-button {
+            background: linear-gradient(135deg, #0d9488, #0f766e);
+            box-shadow: 0 4px 15px rgba(13, 148, 136, 0.3);
+        }
+
+        @keyframes glowPulse {
+            0%, 100% {
+                box-shadow: 0 4px 15px rgba(13, 148, 136, 0.3);
+            }
+            50% {
+                box-shadow: 0 4px 25px rgba(13, 148, 136, 0.5), 0 0 40px rgba(13, 148, 136, 0.15);
+            }
+        }
+
+        body.cambridge .launch-button:hover {
+            box-shadow: 0 6px 20px rgba(13, 148, 136, 0.4);
+            background: linear-gradient(135deg, #0f766e, #0d9488);
+        }
+
+        body.cambridge .feature-item svg {
+            color: #0d9488;
+        }
+
+        body.cambridge .modal-submit-btn {
+            background: linear-gradient(135deg, #0d9488, #0f766e);
+        }
+
+        body.cambridge .modal-submit-btn:hover {
+            background: linear-gradient(135deg, #0f766e, #0d9488);
+            box-shadow: 0 2px 8px rgba(13, 148, 136, 0.3);
+        }
+
+        body.cambridge .modal-body input[type="password"]:focus {
+            border-color: #0d9488;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+        }
+    </style>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%234a90e2'/><text x='50' y='60' text-anchor='middle' fill='white' font-size='40' font-weight='bold'>IC</text></svg>">
 </head>
 <body>
@@ -18,10 +66,10 @@
                     </svg>
                 </div>
                 <h1>Innovative Centre</h1>
-                <p>Test System</p>
+                <p id="subtitle">Test System</p>
             </div>
         </div>
-        
+
         <div class="launcher-content">
             <div class="system-info">
                 <div class="info-item">
@@ -37,24 +85,24 @@
                     <span class="info-value status-ready">Ready</span>
                 </div>
             </div>
-            
+
             <button class="launch-button" id="launch-btn" onclick="launchApp()">
                 <div class="launch-icon">
                     <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
                         <polygon points="5,3 19,12 5,21 12,12"/>
                     </svg>
                 </div>
-                <span class="launch-text">Launch Test System</span>
+                <span class="launch-text" id="launch-text">Launch Test System</span>
             </button>
             <div class="launch-hint">Press <kbd>Enter</kbd> to launch</div>
-            
+
             <div class="features-list">
                 <div class="feature-item">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                         <polyline points="22,4 12,14.01 9,11.01"/>
                     </svg>
-                    <span>Distraction-Free Environment</span>
+                    <span id="feature-1">Distraction-Free Environment</span>
                 </div>
                 <div class="feature-item">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
@@ -79,9 +127,9 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="launcher-footer">
-            <p>&copy; 2025 Innovative Centre. All rights reserved.</p>
+            <p>&copy; 2026 Innovative Centre. All rights reserved.</p>
             <div>
                 <button class="footer-admin-btn" onclick="showInvigilatorLogin()">
                     <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
@@ -94,6 +142,42 @@
     </div>
 
     <script>
+        // Detect exam type from URL param or localStorage
+        const urlParams = new URLSearchParams(window.location.search);
+        const isCambridge = urlParams.get('exam') === 'cambridge' || localStorage.getItem('examType') === 'Cambridge';
+
+        if (isCambridge) {
+            document.body.classList.add('cambridge');
+            document.title = 'Innovative Centre - Cambridge Test System';
+            document.getElementById('subtitle').textContent = 'Cambridge General English Test System';
+            document.getElementById('launch-text').textContent = 'Launch Cambridge Test System';
+            document.getElementById('feature-1').textContent = '4 Levels: A1, A2, B1, B2';
+        }
+
+        // Live status check
+        (async function checkStatus() {
+            const statusEl = document.querySelector('.info-value.status-ready');
+            if (!statusEl) return;
+
+            statusEl.textContent = 'Connecting...';
+            statusEl.className = 'info-value status-connecting';
+
+            try {
+                const res = await fetch('/test', { signal: AbortSignal.timeout(5000) });
+                const data = await res.json();
+                if (data.success) {
+                    statusEl.textContent = 'Ready';
+                    statusEl.className = 'info-value status-ready';
+                } else {
+                    statusEl.textContent = 'Offline';
+                    statusEl.className = 'info-value status-offline';
+                }
+            } catch {
+                statusEl.textContent = 'Offline';
+                statusEl.className = 'info-value status-offline';
+            }
+        })();
+
         function launchApp() {
             const btn = document.getElementById('launch-btn');
             if (btn.classList.contains('launching')) return;
@@ -103,43 +187,34 @@
         }
 
         function enterFullscreenMode() {
-            // Request fullscreen first
             const docElement = document.documentElement;
             const fullscreenPromise = docElement.requestFullscreen ? docElement.requestFullscreen() :
                                     docElement.webkitRequestFullscreen ? docElement.webkitRequestFullscreen() :
                                     docElement.mozRequestFullScreen ? docElement.mozRequestFullScreen() :
                                     docElement.msRequestFullscreen ? docElement.msRequestFullscreen() : Promise.resolve();
 
-            // Wait for fullscreen to be established, then navigate
             Promise.resolve(fullscreenPromise).then(() => {
-                // Small delay to ensure fullscreen is established
                 setTimeout(() => {
-                    // Enable distraction-free mode
                     sessionStorage.setItem('distractionFreeMode', 'true');
-                    
-                    // Navigate to the main app
-                    window.location.href = 'index.html';
+                    window.location.href = isCambridge ? 'index.html?exam=cambridge' : 'index.html';
                 }, 100);
             }).catch(err => {
                 console.log('Fullscreen request failed:', err);
-                // Still navigate even if fullscreen fails
                 sessionStorage.setItem('distractionFreeMode', 'true');
-                window.location.href = 'index.html';
+                window.location.href = isCambridge ? 'index.html?exam=cambridge' : 'index.html';
             });
         }
 
         // Prevent refresh and context menu
         document.addEventListener('keydown', function(e) {
-            // Prevent F5, Ctrl+R, F12
-            if (e.key === 'F5' || 
-                (e.ctrlKey && e.key === 'r') || 
+            if (e.key === 'F5' ||
+                (e.ctrlKey && e.key === 'r') ||
                 e.key === 'F12' ||
                 (e.ctrlKey && e.shiftKey && e.key === 'I')) {
                 e.preventDefault();
             }
         });
 
-        // Prevent right-click
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
         });
@@ -167,7 +242,7 @@
             const modal = document.getElementById('invigilator-modal');
             if (modal) {
                 modal.classList.add('hidden');
-                modal.style.display = 'none';
+                modal.style.display = '';
                 document.getElementById('invigilator-password').value = '';
                 document.getElementById('password-error').style.display = 'none';
             }
@@ -175,23 +250,28 @@
 
         function verifyInvigilatorPassword() {
             const password = document.getElementById('invigilator-password').value;
-            const correctPassword = 'InV!#2025$SecurePass'; // Strong password - change this for production
-            
+            const correctPassword = 'InV!#2025$SecurePass';
+
             if (password === correctPassword) {
-                // Correct password - redirect to invigilator page
                 window.location.href = 'invigilator.html';
             } else {
-                // Wrong password
                 document.getElementById('password-error').style.display = 'block';
                 document.getElementById('invigilator-password').value = '';
                 document.getElementById('invigilator-password').focus();
             }
         }
 
+        // Close modal on Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeInvigilatorModal();
+            }
+        });
+
         // Allow Enter key to submit password in invigilator modal
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && document.getElementById('invigilator-modal') && !document.getElementById('invigilator-modal').classList.contains('hidden')) {
-                e.stopPropagation(); // Prevent launching app
+                e.stopPropagation();
                 verifyInvigilatorPassword();
             }
         });

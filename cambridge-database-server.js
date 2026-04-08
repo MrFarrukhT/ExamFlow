@@ -317,7 +317,7 @@ function stripHtmlTags(str) {
 
 // Root redirect to Cambridge launcher
 app.get('/', (req, res) => {
-    res.redirect('/Cambridge/launcher-cambridge.html');
+    res.redirect('/launcher.html?exam=cambridge');
 });
 
 // Serve Cambridge Admin Dashboard

@@ -408,11 +408,11 @@
         // ── Navigation ──────────────────────────────────────────────
         function goBackToTest() {
             var sid = localStorage.getItem('studentId');
-            if (isCambridge) window.location.href = sid ? 'Cambridge/dashboard-cambridge.html' : 'Cambridge/launcher-cambridge.html';
+            if (isCambridge) window.location.href = sid ? 'Cambridge/dashboard-cambridge.html' : 'launcher.html?exam=cambridge';
             else window.location.href = sid ? 'student-dashboard.html' : 'index.html';
         }
         function goToIndex() {
-            window.location.href = isCambridge ? 'Cambridge/launcher-cambridge.html' : 'index.html';
+            window.location.href = isCambridge ? 'launcher.html?exam=cambridge' : 'index.html';
         }
     </script>
 </body>
