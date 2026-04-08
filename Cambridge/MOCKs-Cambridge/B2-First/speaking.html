@@ -641,8 +641,9 @@
                 this.disabled = false;
                 
             } catch (error) {
-                document.getElementById('micCheckStatus').innerHTML = 
-                    `<div class="warning-box"><strong>❌ Error:</strong> ${error.message}</div>`;
+                const errEl = document.getElementById('micCheckStatus');
+                errEl.innerHTML = '<div class="warning-box"><strong>❌ Error:</strong> <span id="micErrMsg"></span></div>';
+                document.getElementById('micErrMsg').textContent = error.message;
                 this.textContent = '🔄 Try Again';
                 this.disabled = false;
             }
@@ -774,10 +775,13 @@
 
         // Submit Recording
         document.getElementById('submitBtn').addEventListener('click', async function() {
+            if (this.disabled) return;
             if (!confirm('Are you sure you want to submit your recording? You cannot change it after submission.')) {
                 return;
             }
-            
+            this.disabled = true;
+            this.textContent = 'Submitting...';
+
             try {
                 // Show submission status
                 document.getElementById('testContent').style.display = 'none';
@@ -851,10 +855,11 @@
                 
             } catch (error) {
                 console.error('Submission error:', error);
+                const safeMsg = error.message.replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]));
                 document.getElementById('submissionStatus').innerHTML = `
                     <div class="warning-box">
                         <h2>⚠️ Submission Error</h2>
-                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p><strong>Error:</strong> ${safeMsg}</p>
                         <p><strong>Don't worry!</strong> Your recording is safe.</p>
                         <p><strong>Next steps:</strong></p>
                         <ol style="text-align: left; margin: 15px auto; max-width: 500px;">
