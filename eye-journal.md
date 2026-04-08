@@ -1422,3 +1422,42 @@ Elevations landed: 1 (selected-state on Parts 2 & 4 × 3 mocks)
 Reverted: 0
 Fixes landed: 0
 Changes shipped: 9 files modified
+
+---
+
+## Session: 2026-04-09 (Cambridge Speaking Tests All Levels — prompt #20)
+Persona: Student recording speaking responses
+System: Cambridge (localhost:3003)
+Pages explored: All 10 speaking.html files (A1 Movers, A2 Key ×3, B1 Preliminary ×3, B2 First ×3)
+Starting state: Speaking tests already at 5-Delightful from prior content rebuilds. Microphone check, recording controls, audio playback all functional. One nagging UX issue: a jarring browser alert() interrupting the calm flow after the mic check.
+
+### Round 1
+**Explored:** 10 speaking files + audio-recorder.js, 1 finding
+**Action:** ELEVATE 1 (replace alert with inline ready-banner)
+
+- [T4] All 10 speaking.html files — Replaced jarring browser `alert()` ("You can now read through the speaking test questions...") with an inline styled ready-banner inside testContent. The banner uses a teal gradient, slideDown animation, and stays visible as a calm reference instead of blocking the user with a system dialog.
+  Mode: elevate
+  Quality layer: 4-Polished → 5-Delightful (calm test entry instead of jarring alert)
+  Files: 10 speaking.html files
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| A1-Movers/speaking.html | 5-Delightful | Inline ready-banner, no alert |
+| A2-Key/speaking.html (×3) | 5-Delightful | Inline ready-banner |
+| B1-Preliminary/speaking.html (×3) | 5-Delightful | Full PET format + inline banner |
+| B2-First/speaking.html (×3) | 5-Delightful | Full FCE format + inline banner |
+
+### Deferred
+- 6 other alerts() in speaking flow (download confirmations, error states) — less jarring as they confirm explicit user actions or errors
+- B2 First Listening uses B1 audio placeholder (already deferred)
+
+### Session Stats
+Pages explored: 10 (all speaking files) + audio-recorder.js
+Rounds: 1
+Polishes landed: 0
+Rebuilds landed: 0
+Elevations landed: 1 (inline ready-banner × 10 files)
+Reverted: 0
+Fixes landed: 0
+Changes shipped: 10 files modified
