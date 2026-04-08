@@ -1,8 +1,9 @@
-// Cambridge A2 Key unified answer syncing for Reading & Writing parts
-// Saves radio/text answers keyed by absolute question number in localStorage 'reading-writingAnswers'
+// Cambridge unified answer syncing for Reading & Writing parts
+// Used by A2-Key, B1-Preliminary, and B2-First levels
+// Saves radio/text answers keyed by absolute question number in localStorage
 // Enhanced with seamless real-time autosave (no visual indicators)
 (function(){
-  if (window.__A2AnswerSyncLoaded) return; window.__A2AnswerSyncLoaded = true;
+  if (window.__CambridgeAnswerSyncLoaded) return; window.__CambridgeAnswerSyncLoaded = true;
 
   // Dynamically determine storage key based on data-skill attribute
   // Use cambridge- prefix to avoid collision with IELTS storage keys

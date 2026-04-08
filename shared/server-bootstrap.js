@@ -15,10 +15,11 @@ import { createDatabaseManager, adminLoginHandler } from './database.js';
  * @param {string} opts.name           — display name for logs (e.g. "IELTS Server")
  * @param {string} opts.callerUrl      — import.meta.url from the calling module
  * @param {object} opts.dbConfig       — passed to createDatabaseManager
+ * @param {object} [opts.staticOptions] — options passed to express.static (e.g. { index: false })
  * @param {function} [opts.onReady]    — optional async callback after app.listen()
  * @returns {{ app: express.Application, db: object, ensureConnection: function, __dirname: string }}
  */
-export function createServer({ port, name, callerUrl, dbConfig, onReady }) {
+export function createServer({ port, name, callerUrl, dbConfig, staticOptions, onReady }) {
     const __filename = fileURLToPath(callerUrl);
     const callerDirname = path.dirname(__filename);
 
@@ -80,11 +81,12 @@ export function createServer({ port, name, callerUrl, dbConfig, onReady }) {
     });
 
     // Serve static files — handle both local dev and packaged (pkg) environment
+    const sOpts = staticOptions || {};
     if (process.pkg) {
-        app.use(express.static(path.join(callerDirname, 'public')));
-        app.use(express.static(callerDirname));
+        app.use(express.static(path.join(callerDirname, 'public'), sOpts));
+        app.use(express.static(callerDirname, sOpts));
     } else {
-        app.use(express.static('./'));
+        app.use(express.static('./', sOpts));
     }
 
     // Admin login endpoint

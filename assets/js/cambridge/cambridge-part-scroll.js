@@ -1,4 +1,5 @@
-// Cambridge A2 Key per-part question navigation
+// Cambridge per-part question navigation
+// Used by A2-Key, B1-Preliminary, and B2-First levels
 // - Adds click handlers to footer question numbers to scroll the right pane
 // - Works in standalone Part X.html pages
 // - Intentionally disables itself when loaded inside the combined
