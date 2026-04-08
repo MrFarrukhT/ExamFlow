@@ -1290,3 +1290,48 @@ Elevations landed: 0
 Reverted: 0
 Fixes landed: 1 (Part 4 opacity × 3 mocks)
 Changes shipped: 3 files modified
+
+---
+
+## Session: 2026-04-08 (B2 First Writing — prompt #17)
+Persona: B2 level student writing essay and optional tasks
+System: Cambridge (localhost:3003)
+Pages explored: B2 First Part 7 (compulsory essay) and Part 8 (article/story choice) across 3 mocks
+Starting state: Part 7 contained B1-level email task ("Trip to the beach" from Sam) instead of B2 essay format. Wrong content for the level — students would expect to write 140-190 word essays but were given email writing.
+
+### Round 1
+**Explored:** 6 Part files (Part 7 + Part 8 × 3 mocks), 2 findings
+**Action:** REBUILD 1 (Part 7 essay content × 3 mocks) + POLISH 1 (textarea resize)
+
+- [T2] Part 7.html (×3 mocks) — Content was wrong format for B2 First. Replaced B1 email task with proper B2 First essay format: question + numbered notes + opinions + 140-190 word instruction. Each mock got a unique topic.
+  Mode: rebuild
+  Quality layer: 2-Clear (functional but wrong content) → 5-Delightful (proper level + clean visual structure)
+  Files: 3 Part 7.html files
+  Topics: MOCK 1 = environment, MOCK 2 = technology, MOCK 3 = travel
+
+- [T3] Part 7 & 8 textareas (×3 mocks) — `resize: none` → `resize: vertical`. Students can grow writing area for longer responses.
+  Mode: polish
+  Quality layer: 3-Efficient → 4-Polished
+  Files: 6 Part 7/8 files
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| B2-First/Part 7.html (Essay) | 5-Delightful | Proper B2 essay format, unique topic, teal styling |
+| B2-First/Part 8.html (Choice) | 4-Polished | Article + Story choice (B2-acceptable), resizable |
+| MOCK-2 (Part 7) | 5-Delightful | Technology essay topic |
+| MOCK-3 (Part 7) | 5-Delightful | Travel essay topic |
+
+### Deferred
+- Part 8 currently offers 2 choices (article + story); B2 First standard typically has 3 (article, email/letter, review, report). Could add a third.
+- Inspera bloat in Part files
+
+### Session Stats
+Pages explored: 6 (Part 7 + Part 8 × 3 mocks)
+Rounds: 1
+Polishes landed: 1 (resize × 6 files)
+Rebuilds landed: 1 (Part 7 essay × 3 mocks)
+Elevations landed: 0
+Reverted: 0
+Fixes landed: 0
+Changes shipped: 6 files modified
