@@ -3,23 +3,40 @@
 // Run this with: node cambridge-database-server.js
 
 import 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
 import path from 'path';
-import { fileURLToPath } from 'url';
-import { createDatabaseManager, createRetryQueue, adminLoginHandler } from './shared/database.js';
+import { createRetryQueue } from './shared/database.js';
+import { createServer } from './shared/server-bootstrap.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const { app, db, ensureConnection, __dirname: serverDir, start } = createServer({
+    port: 3003,
+    name: 'Cambridge Database Server',
+    callerUrl: import.meta.url,
+    dbConfig: {
+        connectionString: process.env.CAMBRIDGE_DATABASE_URL || '',
+        ssl: { require: true, rejectUnauthorized: false }
+    },
+    onReady: async ({ port }) => {
+        // Initialize Cambridge-specific tables after connection
+        const client = await ensureConnection();
+        await initializeCambridgeTables(client);
 
-const app = express();
-const PORT = 3003; // Different port from IELTS server (3002)
-
-// Database connection using shared module
-const db = createDatabaseManager({
-    connectionString: process.env.CAMBRIDGE_DATABASE_URL || '',
-    ssl: { require: true, rejectUnauthorized: false }
+        console.log('═══════════════════════════════════════════════════');
+        console.log('🎓 CAMBRIDGE LEVEL TESTS DATABASE SERVER');
+        console.log('═══════════════════════════════════════════════════');
+        console.log(`✅ Server running on: http://localhost:${port}`);
+        console.log(`📊 Database: Cambridge (Neon PostgreSQL)`);
+        console.log(`📝 Table: cambridge_submissions`);
+        console.log(`🔗 Test connection: http://localhost:${port}/test`);
+        console.log('═══════════════════════════════════════════════════');
+        console.log('\n📚 Supported Levels: A1-Movers, A2-Key, B1-Preliminary, B2-First');
+        console.log('📝 Supported Skills: reading, writing, listening, reading-writing, reading-use-of-english');
+        console.log('\nPress Ctrl+C to stop the server\n');
+    }
 });
+
+// ============================================
+// CAMBRIDGE TABLE INITIALIZATION
+// ============================================
 
 async function initializeCambridgeTables(client) {
     try {
@@ -54,10 +71,10 @@ async function initializeCambridgeTables(client) {
 
         // Add mock_test column if it doesn't exist (for existing databases)
         await client.query(`
-            DO $$ 
-            BEGIN 
+            DO $$
+            BEGIN
                 IF NOT EXISTS (
-                    SELECT 1 FROM information_schema.columns 
+                    SELECT 1 FROM information_schema.columns
                     WHERE table_name = 'cambridge_submissions' AND column_name = 'mock_test'
                 ) THEN
                     ALTER TABLE cambridge_submissions ADD COLUMN mock_test VARCHAR(10) DEFAULT '1';
@@ -67,67 +84,67 @@ async function initializeCambridgeTables(client) {
 
         // Add audio-related columns if they don't exist (for existing databases)
         await client.query(`
-            DO $$ 
-            BEGIN 
+            DO $$
+            BEGIN
                 -- Add audio_data column
                 IF NOT EXISTS (
-                    SELECT 1 FROM information_schema.columns 
+                    SELECT 1 FROM information_schema.columns
                     WHERE table_name = 'cambridge_submissions' AND column_name = 'audio_data'
                 ) THEN
                     ALTER TABLE cambridge_submissions ADD COLUMN audio_data TEXT;
                 END IF;
-                
+
                 -- Add audio_size column
                 IF NOT EXISTS (
-                    SELECT 1 FROM information_schema.columns 
+                    SELECT 1 FROM information_schema.columns
                     WHERE table_name = 'cambridge_submissions' AND column_name = 'audio_size'
                 ) THEN
                     ALTER TABLE cambridge_submissions ADD COLUMN audio_size DECIMAL(10,2);
                 END IF;
-                
+
                 -- Add audio_duration column
                 IF NOT EXISTS (
-                    SELECT 1 FROM information_schema.columns 
+                    SELECT 1 FROM information_schema.columns
                     WHERE table_name = 'cambridge_submissions' AND column_name = 'audio_duration'
                 ) THEN
                     ALTER TABLE cambridge_submissions ADD COLUMN audio_duration INTEGER;
                 END IF;
-                
+
                 -- Add audio_mime_type column
                 IF NOT EXISTS (
-                    SELECT 1 FROM information_schema.columns 
+                    SELECT 1 FROM information_schema.columns
                     WHERE table_name = 'cambridge_submissions' AND column_name = 'audio_mime_type'
                 ) THEN
                     ALTER TABLE cambridge_submissions ADD COLUMN audio_mime_type VARCHAR(100);
                 END IF;
-                
+
                 -- Add evaluated column
                 IF NOT EXISTS (
-                    SELECT 1 FROM information_schema.columns 
+                    SELECT 1 FROM information_schema.columns
                     WHERE table_name = 'cambridge_submissions' AND column_name = 'evaluated'
                 ) THEN
                     ALTER TABLE cambridge_submissions ADD COLUMN evaluated BOOLEAN DEFAULT FALSE;
                 END IF;
-                
+
                 -- Add evaluator_name column
                 IF NOT EXISTS (
-                    SELECT 1 FROM information_schema.columns 
+                    SELECT 1 FROM information_schema.columns
                     WHERE table_name = 'cambridge_submissions' AND column_name = 'evaluator_name'
                 ) THEN
                     ALTER TABLE cambridge_submissions ADD COLUMN evaluator_name VARCHAR(200);
                 END IF;
-                
+
                 -- Add evaluation_date column
                 IF NOT EXISTS (
-                    SELECT 1 FROM information_schema.columns 
+                    SELECT 1 FROM information_schema.columns
                     WHERE table_name = 'cambridge_submissions' AND column_name = 'evaluation_date'
                 ) THEN
                     ALTER TABLE cambridge_submissions ADD COLUMN evaluation_date TIMESTAMP;
                 END IF;
-                
+
                 -- Add evaluation_notes column
                 IF NOT EXISTS (
-                    SELECT 1 FROM information_schema.columns 
+                    SELECT 1 FROM information_schema.columns
                     WHERE table_name = 'cambridge_submissions' AND column_name = 'evaluation_notes'
                 ) THEN
                     ALTER TABLE cambridge_submissions ADD COLUMN evaluation_notes TEXT;
@@ -139,19 +156,19 @@ async function initializeCambridgeTables(client) {
 
         // Update the skill check constraint to include 'speaking'
         await client.query(`
-            DO $$ 
-            BEGIN 
+            DO $$
+            BEGIN
                 -- Drop the old constraint if it exists
                 IF EXISTS (
-                    SELECT 1 FROM pg_constraint 
+                    SELECT 1 FROM pg_constraint
                     WHERE conname = 'cambridge_submissions_skill_check'
                 ) THEN
                     ALTER TABLE cambridge_submissions DROP CONSTRAINT cambridge_submissions_skill_check;
                 END IF;
-                
+
                 -- Add the new constraint with 'speaking' included
-                ALTER TABLE cambridge_submissions 
-                ADD CONSTRAINT cambridge_submissions_skill_check 
+                ALTER TABLE cambridge_submissions
+                ADD CONSTRAINT cambridge_submissions_skill_check
                 CHECK (skill IN ('reading', 'writing', 'listening', 'speaking', 'reading-writing', 'reading-use-of-english'));
             END $$;
         `);
@@ -207,8 +224,6 @@ async function initializeCambridgeTables(client) {
     }
 }
 
-const { ensureConnection } = db;
-
 // Cambridge submission insert function
 async function insertCambridgeSubmission(dbClient, data) {
     const result = await dbClient.query(`
@@ -225,14 +240,9 @@ async function insertCambridgeSubmission(dbClient, data) {
 
 const { saveWithRetry } = createRetryQueue(ensureConnection, insertCambridgeSubmission);
 
-// Middleware
-app.use(cors());
-app.use(express.json({ limit: '50mb' })); // Increased limit for audio files
-app.use(express.urlencoded({ limit: '50mb', extended: true })); // Also increase URL-encoded limit
-app.use(express.static('./')); // Serve static files from current directory
-
-// Admin login endpoint
-app.post('/admin-login', adminLoginHandler);
+// ============================================
+// CAMBRIDGE-SPECIFIC ROUTES
+// ============================================
 
 // Root redirect to Cambridge launcher
 app.get('/', (req, res) => {
@@ -241,7 +251,7 @@ app.get('/', (req, res) => {
 
 // Serve Cambridge Admin Dashboard
 app.get('/admin', (req, res) => {
-    res.sendFile(path.join(__dirname, 'cambridge-admin-dashboard.html'));
+    res.sendFile(path.join(serverDir, 'cambridge-admin-dashboard.html'));
 });
 
 // Test endpoint
@@ -289,15 +299,15 @@ app.post('/cambridge-submissions', async (req, res) => {
 // Save Cambridge Speaking test submission with audio
 app.post('/submit-speaking', async (req, res) => {
     try {
-        const { 
-            studentId, 
-            studentName, 
-            level, 
-            mockTest, 
+        const {
+            studentId,
+            studentName,
+            level,
+            mockTest,
             skill,
-            audioData, 
-            audioSize, 
-            duration, 
+            audioData,
+            audioSize,
+            duration,
             mimeType,
             startTime,
             endTime
@@ -308,17 +318,17 @@ app.post('/submit-speaking', async (req, res) => {
         const dbClient = await ensureConnection();
         const result = await dbClient.query(`
             INSERT INTO cambridge_submissions
-            (student_id, student_name, exam_type, level, mock_test, skill, 
+            (student_id, student_name, exam_type, level, mock_test, skill,
              answers, audio_data, audio_size, audio_duration, audio_mime_type,
              start_time, end_time, evaluated)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
             RETURNING id
         `, [
-            studentId, 
-            studentName, 
+            studentId,
+            studentName,
             'Cambridge',
-            level, 
-            mockTest || '1', 
+            level,
+            mockTest || '1',
             skill,
             JSON.stringify({}), // Empty answers object for speaking tests
             audioData,
@@ -352,7 +362,7 @@ app.post('/submit-speaking', async (req, res) => {
 app.get('/cambridge-submissions', async (req, res) => {
     try {
         const { level, skill } = req.query;
-        
+
         const dbClient = await ensureConnection();
         let query = 'SELECT * FROM cambridge_submissions';
         const params = [];
@@ -443,11 +453,11 @@ app.patch('/cambridge-submissions/:id/score', async (req, res) => {
 app.patch('/cambridge-submissions/:id/evaluate', async (req, res) => {
     try {
         const { id } = req.params;
-        const { 
-            score, 
-            grade, 
-            evaluatorName, 
-            evaluationNotes 
+        const {
+            score,
+            grade,
+            evaluatorName,
+            evaluationNotes
         } = req.body;
 
         console.log(`🎤 Evaluating speaking test ${id} by ${evaluatorName}: ${score}, Grade: ${grade || 'N/A'}`);
@@ -455,8 +465,8 @@ app.patch('/cambridge-submissions/:id/evaluate', async (req, res) => {
         const dbClient = await ensureConnection();
         const result = await dbClient.query(`
             UPDATE cambridge_submissions
-            SET score = $1, 
-                grade = $2, 
+            SET score = $1,
+                grade = $2,
                 evaluated = TRUE,
                 evaluator_name = $3,
                 evaluation_date = CURRENT_TIMESTAMP,
@@ -550,13 +560,13 @@ app.get('/cambridge-answers', async (req, res) => {
         }
 
         const dbClient = await ensureConnection();
-        
+
         const mockCondition = mock ? 'AND mock_test = $3' : '';
         const params = mock ? [level, skill, mock] : [level, skill];
-        
+
         const result = await dbClient.query(`
-            SELECT answers, mock_test 
-            FROM cambridge_answer_keys 
+            SELECT answers, mock_test
+            FROM cambridge_answer_keys
             WHERE level = $1 AND skill = $2 ${mockCondition}
         `, params);
 
@@ -601,12 +611,12 @@ app.post('/cambridge-answers', async (req, res) => {
         console.log(`💾 Saving Cambridge answer key: ${level} ${skill} Mock ${mockTest} (${Object.keys(answers).length} answers)`);
 
         const dbClient = await ensureConnection();
-        
+
         // Upsert (insert or update)
         const result = await dbClient.query(`
             INSERT INTO cambridge_answer_keys (level, skill, mock_test, answers, updated_at)
             VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP)
-            ON CONFLICT (level, skill, mock_test) 
+            ON CONFLICT (level, skill, mock_test)
             DO UPDATE SET answers = $4, updated_at = CURRENT_TIMESTAMP
             RETURNING *
         `, [level, skill, mockTest, JSON.stringify(answers)]);
@@ -872,7 +882,7 @@ app.delete('/cambridge-answers', async (req, res) => {
         console.log(`🗑️ Deleting Cambridge answer key: ${level} ${skill} Mock ${mockTest}`);
 
         const dbClient = await ensureConnection();
-        
+
         const result = await dbClient.query(`
             DELETE FROM cambridge_answer_keys
             WHERE level = $1 AND skill = $2 AND mock_test = $3
@@ -902,43 +912,5 @@ app.delete('/cambridge-answers', async (req, res) => {
     }
 });
 
-// Initialize database on startup
-async function initialize() {
-    try {
-        await db.createConnection();
-        // Initialize Cambridge-specific tables after connection
-        const client = await ensureConnection();
-        await initializeCambridgeTables(client);
-        console.log('🚀 Cambridge Database Server starting...');
-    } catch (error) {
-        console.error('❌ Failed to initialize:', error);
-        process.exit(1);
-    }
-}
-
-// Start server
-initialize().then(() => {
-    app.listen(PORT, () => {
-        console.log('═══════════════════════════════════════════════════');
-        console.log('🎓 CAMBRIDGE LEVEL TESTS DATABASE SERVER');
-        console.log('═══════════════════════════════════════════════════');
-        console.log(`✅ Server running on: http://localhost:${PORT}`);
-        console.log(`📊 Database: Cambridge (Neon PostgreSQL)`);
-        console.log(`📝 Table: cambridge_submissions`);
-        console.log(`🔗 Test connection: http://localhost:${PORT}/test`);
-        console.log('═══════════════════════════════════════════════════');
-        console.log('\n📚 Supported Levels: A1-Movers, A2-Key, B1-Preliminary, B2-First');
-        console.log('📝 Supported Skills: reading, writing, listening, reading-writing, reading-use-of-english');
-        console.log('\nPress Ctrl+C to stop the server\n');
-    });
-}).catch(error => {
-    console.error('❌ Server failed to start:', error);
-    process.exit(1);
-});
-
-// Graceful shutdown
-process.on('SIGINT', async () => {
-    console.log('\n\n🛑 Shutting down Cambridge Database Server...');
-    await db.shutdown();
-    process.exit(0);
-});
+// Start the server
+start();

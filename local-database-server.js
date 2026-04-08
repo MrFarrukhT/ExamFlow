@@ -2,32 +2,55 @@
 // Run this with: node local-database-server.js
 
 import 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
-import path from 'path';
 import open from 'open';
-import { fileURLToPath } from 'url';
 import OpenAI from 'openai';
-import { createDatabaseManager, createRetryQueue, adminLoginHandler } from './shared/database.js';
+import { createRetryQueue } from './shared/database.js';
+import { createServer } from './shared/server-bootstrap.js';
 
 // Initialize OpenAI client (will work if API key is configured)
 const openai = process.env.OPENAI_API_KEY ? new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 }) : null;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const { app, ensureConnection, start } = createServer({
+    port: 3002,
+    name: 'IELTS Local Database Server',
+    callerUrl: import.meta.url,
+    dbConfig: {
+        connectionString: process.env.DATABASE_URL || '',
+        ssl: { require: true, rejectUnauthorized: false }
+    },
+    onReady: async ({ port }) => {
+        // Auto-launch browser
+        console.log(`📍 Server: http://localhost:${port}`);
+        console.log(`🔗 Test connection: http://localhost:${port}/test`);
+        console.log(`📊 View submissions: http://localhost:${port}/submissions`);
+        console.log(`\n💡 Your tests will now save to the database automatically!`);
+        console.log(`🔄 Database connection will auto-recover if lost!\n`);
 
-const app = express();
-const PORT = 3002; // Using 3002 to avoid conflicts
-
-// Database connection using shared module
-const db = createDatabaseManager({
-    connectionString: process.env.DATABASE_URL || '',
-    ssl: { require: true, rejectUnauthorized: false }
+        console.log('🚀 Launching IELTS Test System...');
+        try {
+            await open(`http://localhost:${port}/launcher.html`, {
+                app: {
+                    name: open.apps.chrome,
+                    arguments: ['--new-window', '--start-fullscreen', '--disable-web-security', '--disable-features=VizDisplayCompositor']
+                }
+            });
+        } catch (e) {
+            // Fallback to Edge if Chrome fails
+            try {
+                await open(`http://localhost:${port}/launcher.html`, {
+                    app: {
+                        name: open.apps.edge,
+                        arguments: ['--new-window', '--start-fullscreen']
+                    }
+                });
+            } catch (e2) {
+                console.log('⚠️ Could not auto-launch browser. Please open http://localhost:3002/launcher.html manually.');
+            }
+        }
+    }
 });
-
-const { ensureConnection } = db;
 
 // IELTS submission insert function
 async function insertIeltsSubmission(dbClient, data) {
@@ -44,20 +67,9 @@ async function insertIeltsSubmission(dbClient, data) {
 
 const { saveWithRetry } = createRetryQueue(ensureConnection, insertIeltsSubmission);
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// Serve static files - handle both local dev and packaged environment
-if (process.pkg) {
-    app.use(express.static(path.join(__dirname, 'public')));
-    app.use(express.static(__dirname));
-} else {
-    app.use(express.static('./'));
-}
-
-// Admin login endpoint
-app.post('/admin-login', adminLoginHandler);
+// ============================================
+// IELTS-SPECIFIC ROUTES
+// ============================================
 
 // Root redirect to launcher
 app.get('/', (req, res) => {
@@ -274,8 +286,8 @@ app.post('/mock-answers', async (req, res) => {
                 }
 
                 await dbClient.query(
-                    `INSERT INTO mock_answers 
-                     (mock_number, skill, question_number, correct_answer, alternative_answers, updated_at) 
+                    `INSERT INTO mock_answers
+                     (mock_number, skill, question_number, correct_answer, alternative_answers, updated_at)
                      VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP)`,
                     [parseInt(mock), skill, questionNumber, correctAnswer, alternativeAnswers]
                 );
@@ -437,77 +449,5 @@ Respond with ONLY a JSON object:
     }
 });
 
-// Initialize and start server
-async function startServer() {
-    try {
-        console.log('🚀 Starting local database server...');
-
-        // Initialize database connection
-        await db.createConnection();
-
-        // Start server
-        app.listen(PORT, async () => {
-            console.log(`
-🎉 Local Database Server running!
-
-📍 Server: http://localhost:${PORT}
-🔗 Test connection: http://localhost:${PORT}/test
-📊 View submissions: http://localhost:${PORT}/submissions
-
-💡 Your tests will now save to the database automatically!
-🔄 Database connection will auto-recover if lost!
-
-To test manually:
-curl http://localhost:${PORT}/test
-            `);
-
-            // Auto-launch browser
-            console.log('🚀 Launching IELTS Test System...');
-            try {
-                await open(`http://localhost:${PORT}/launcher.html`, {
-                    app: {
-                        name: open.apps.chrome,
-                        arguments: ['--new-window', '--start-fullscreen', '--disable-web-security', '--disable-features=VizDisplayCompositor']
-                    }
-                });
-            } catch (e) {
-                // Fallback to Edge if Chrome fails
-                try {
-                    await open(`http://localhost:${PORT}/launcher.html`, {
-                        app: {
-                            name: open.apps.edge,
-                            arguments: ['--new-window', '--start-fullscreen']
-                        }
-                    });
-                } catch (e2) {
-                    console.log('⚠️ Could not auto-launch browser. Please open http://localhost:3002/launcher.html manually.');
-                }
-            }
-        });
-
-    } catch (error) {
-        console.error('❌ Failed to start server:', error);
-        console.log('⚠️ Server will start anyway, database will connect on first request');
-
-        // Start server even if database connection fails
-        app.listen(PORT, () => {
-            console.log(`
-🎉 Local Database Server running! (Database will connect on first request)
-
-📍 Server: http://localhost:${PORT}
-🔗 Test connection: http://localhost:${PORT}/test
-📊 View submissions: http://localhost:${PORT}/submissions
-            `);
-        });
-    }
-}
-
-// Handle shutdown
-process.on('SIGINT', async () => {
-    console.log('\n🛑 Shutting down server...');
-    await db.shutdown();
-    process.exit(0);
-});
-
 // Start the server
-startServer();
+start();
