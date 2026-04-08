@@ -53,8 +53,8 @@
                             <h3 class="module-title">Listening</h3>
                             <p class="module-duration">~30 minutes</p>
                             <p class="module-hint">4 parts, 40 questions. Listen to audio recordings and answer questions.</p>
-                            <span class="status-badge" id="listeningStatus">In Progress</span>
-                            <button class="module-button" id="listeningButton">Continue Listening</button>
+                            <span class="status-badge not-started" id="listeningStatus">Not Started</span>
+                            <button class="module-button" id="listeningButton">Start Listening</button>
                         </div>
 
                         <!-- Reading Module -->
@@ -62,8 +62,8 @@
                             <h3 class="module-title">Reading</h3>
                             <p class="module-duration">60 minutes</p>
                             <p class="module-hint">3 passages, 40 questions. Read texts and answer comprehension questions.</p>
-                            <span class="status-badge" id="readingStatus">In Progress</span>
-                            <button class="module-button" id="readingButton">Continue Reading</button>
+                            <span class="status-badge not-started" id="readingStatus">Not Started</span>
+                            <button class="module-button" id="readingButton">Start Reading</button>
                         </div>
 
                         <!-- Writing Module -->
@@ -71,8 +71,8 @@
                             <h3 class="module-title">Writing</h3>
                             <p class="module-duration">60 minutes</p>
                             <p class="module-hint">2 tasks. Task 1: describe a chart/table (150+ words). Task 2: write an essay (250+ words).</p>
-                            <span class="status-badge" id="writingStatus">In Progress</span>
-                            <button class="module-button" id="writingButton">Continue Writing</button>
+                            <span class="status-badge not-started" id="writingStatus">Not Started</span>
+                            <button class="module-button" id="writingButton">Start Writing</button>
                         </div>
                     </div>
                 </div>
@@ -242,15 +242,15 @@
     </script>
 
     <!-- Invigilator Access Modal -->
-    <div id="invigilator-modal" class="modal-overlay hidden">
+    <div id="invigilator-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="invigilator-modal-title">
         <div class="modal-content">
-            <button class="modal-close-btn" onclick="closeInvigilatorModal()">&times;</button>
-            <h2 class="modal-title">Invigilator Access</h2>
+            <button class="modal-close-btn" onclick="closeInvigilatorModal()" aria-label="Close invigilator login dialog">&times;</button>
+            <h2 class="modal-title" id="invigilator-modal-title">Invigilator Access</h2>
             <div class="modal-body">
                 <label for="invigilator-password">Enter Password:</label>
-                <input type="password" id="invigilator-password" placeholder="Password">
+                <input type="password" id="invigilator-password" placeholder="Password" aria-required="true" aria-describedby="password-error">
                 <button class="modal-submit-btn" onclick="verifyInvigilatorPassword()">Access Invigilator Page</button>
-                <p id="password-error" class="modal-error">Incorrect password. Please try again.</p>
+                <p id="password-error" class="modal-error" role="alert">Incorrect password. Please try again.</p>
             </div>
         </div>
     </div>

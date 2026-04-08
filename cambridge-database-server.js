@@ -246,6 +246,9 @@ const { saveWithRetry } = createRetryQueue(ensureConnection, insertCambridgeSubm
 const VALID_LEVELS = ['A1-Movers', 'A2-Key', 'B1-Preliminary', 'B2-First'];
 const VALID_SKILLS = ['reading', 'writing', 'listening', 'speaking', 'reading-writing', 'reading-use-of-english'];
 
+// Rate limit on student-facing submission endpoints
+const submissionLimiter = rateLimit({ windowMs: 60000, maxRequests: 10, message: 'Too many submissions. Try again later.' });
+
 // ============================================
 // CAMBRIDGE-SPECIFIC ROUTES
 // ============================================
@@ -280,8 +283,8 @@ app.get('/test', async (req, res) => {
     }
 });
 
-// Save Cambridge test submission
-app.post('/cambridge-submissions', async (req, res) => {
+// Save Cambridge test submission (rate limited)
+app.post('/cambridge-submissions', submissionLimiter, async (req, res) => {
     try {
         const submissionData = req.body;
 
@@ -324,8 +327,8 @@ app.post('/cambridge-submissions', async (req, res) => {
     }
 });
 
-// Save Cambridge Speaking test submission with audio
-app.post('/submit-speaking', async (req, res) => {
+// Save Cambridge Speaking test submission with audio (rate limited)
+app.post('/submit-speaking', submissionLimiter, async (req, res) => {
     try {
         const {
             studentId,
@@ -412,8 +415,8 @@ app.post('/submit-speaking', async (req, res) => {
     }
 });
 
-// Get all Cambridge submissions
-app.get('/cambridge-submissions', async (req, res) => {
+// Get all Cambridge submissions (admin only — exposes all student data)
+app.get('/cambridge-submissions', requireAdmin, async (req, res) => {
     try {
         const { level, skill, student_id, mock_test } = req.query;
 
@@ -463,8 +466,8 @@ app.get('/cambridge-submissions', async (req, res) => {
     }
 });
 
-// Update score for a Cambridge submission (PATCH method for REST compliance)
-app.patch('/cambridge-submissions/:id/score', async (req, res) => {
+// Update score for a Cambridge submission (admin only)
+app.patch('/cambridge-submissions/:id/score', requireAdmin, async (req, res) => {
     try {
         const { id } = req.params;
         const { score, grade } = req.body;
@@ -510,8 +513,8 @@ app.patch('/cambridge-submissions/:id/score', async (req, res) => {
     }
 });
 
-// Update speaking test evaluation
-app.patch('/cambridge-submissions/:id/evaluate', async (req, res) => {
+// Update speaking test evaluation (admin only)
+app.patch('/cambridge-submissions/:id/evaluate', requireAdmin, async (req, res) => {
     try {
         const { id } = req.params;
         const {
@@ -573,8 +576,8 @@ app.patch('/cambridge-submissions/:id/evaluate', async (req, res) => {
 
 
 
-// Get Cambridge answer keys
-app.get('/cambridge-answers', async (req, res) => {
+// Get Cambridge answer keys (admin only)
+app.get('/cambridge-answers', requireAdmin, async (req, res) => {
     try {
         const { level, skill, mock } = req.query;
 
@@ -621,8 +624,8 @@ app.get('/cambridge-answers', async (req, res) => {
     }
 });
 
-// Save Cambridge answer keys
-app.post('/cambridge-answers', async (req, res) => {
+// Save Cambridge answer keys (admin only)
+app.post('/cambridge-answers', requireAdmin, async (req, res) => {
     try {
         const { level, skill, mock, answers } = req.body;
 
@@ -694,8 +697,8 @@ app.post('/cambridge-answers', async (req, res) => {
 // CAMBRIDGE STUDENT RESULTS ENDPOINTS
 // =====================================================
 
-// Get all Cambridge student results with optional filters
-app.get('/cambridge-student-results', async (req, res) => {
+// Get all Cambridge student results with optional filters (admin only)
+app.get('/cambridge-student-results', requireAdmin, async (req, res) => {
     try {
         let { level, mock_test, search } = req.query;
 
@@ -738,8 +741,8 @@ app.get('/cambridge-student-results', async (req, res) => {
     }
 });
 
-// Add new Cambridge student result
-app.post('/cambridge-student-results', async (req, res) => {
+// Add new Cambridge student result (admin only)
+app.post('/cambridge-student-results', requireAdmin, async (req, res) => {
     try {
         const data = req.body;
 
@@ -840,8 +843,8 @@ app.post('/cambridge-student-results', async (req, res) => {
     }
 });
 
-// Update Cambridge student result
-app.patch('/cambridge-student-results/:id', async (req, res) => {
+// Update Cambridge student result (admin only)
+app.patch('/cambridge-student-results/:id', requireAdmin, async (req, res) => {
     try {
         const { id } = req.params;
         const data = req.body;

@@ -42,6 +42,16 @@
         .room-stat-card.pending { background: linear-gradient(135deg, #f59e0b, #d97706); }
         .room-stat-number { font-size: 2rem; font-weight: 800; line-height: 1.1; }
         .room-stat-label { font-size: 0.8rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+        .room-filter-bar {
+            display: flex; gap: 10px; margin-bottom: 14px;
+        }
+        .room-filter-bar input, .room-filter-bar select {
+            padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;
+            font-size: 0.85rem; background: white;
+        }
+        .room-filter-bar input { flex: 1; min-width: 0; }
+        .room-filter-bar select { min-width: 110px; }
+        @media (max-width: 600px) { .room-filter-bar { flex-wrap: wrap; } .room-filter-bar input { width: 100%; } }
         .room-activity-list { max-height: 450px; overflow-y: auto; }
         .room-student-group {
             background: #f8f9fa; border-radius: 8px; padding: 14px;
@@ -145,6 +155,21 @@
                     <div class="room-stat-number" id="statPending">—</div>
                     <div class="room-stat-label">Pending</div>
                 </div>
+            </div>
+            <div class="room-filter-bar">
+                <input type="text" id="roomSearchInput" placeholder="Search student name or ID..." oninput="filterRoomActivity()">
+                <select id="roomFilterSkill" onchange="filterRoomActivity()">
+                    <option value="">All Skills</option>
+                    <option value="reading">Reading</option>
+                    <option value="writing">Writing</option>
+                    <option value="listening">Listening</option>
+                    <option value="speaking">Speaking</option>
+                </select>
+                <select id="roomFilterStatus" onchange="filterRoomActivity()">
+                    <option value="">All Status</option>
+                    <option value="scored">Scored</option>
+                    <option value="pending">Pending</option>
+                </select>
             </div>
             <div id="roomActivityList" class="room-activity-list">
                 <p class="room-loading">Connecting to server...</p>
@@ -503,6 +528,8 @@
         }
 
         // ── Room Activity (server-side) ────────────────────────
+        var todaySubmissions = []; // stored for filtering
+
         function loadRoomActivity() {
             var endpoint = isCambridge ? '/cambridge-submissions' : '/submissions';
             var listEl = document.getElementById('roomActivityList');
@@ -513,14 +540,13 @@
                 var subs = isCambridge ? data : (data.submissions || []);
                 var now = new Date();
                 var todayLocal = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
-                var todaySubs = subs.filter(function(s) {
+                todaySubmissions = subs.filter(function(s) {
                     if (!s.created_at) return false;
                     var d = new Date(s.created_at);
                     var local = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
                     return local === todayLocal;
                 });
-                renderRoomStats(todaySubs);
-                renderRoomList(todaySubs);
+                filterRoomActivity();
                 document.getElementById('roomLastUpdate').textContent =
                     'Updated ' + new Date().toLocaleTimeString();
             }).catch(function(err) {
@@ -530,6 +556,25 @@
                     document.getElementById(id).textContent = '\u2014';
                 });
             });
+        }
+
+        function filterRoomActivity() {
+            var search = (document.getElementById('roomSearchInput').value || '').toLowerCase();
+            var skillFilter = document.getElementById('roomFilterSkill').value;
+            var statusFilter = document.getElementById('roomFilterStatus').value;
+            var filtered = todaySubmissions.filter(function(s) {
+                if (search) {
+                    var name = (s.student_name || s.studentName || '').toLowerCase();
+                    var id = (s.student_id || s.studentId || '').toLowerCase();
+                    if (name.indexOf(search) === -1 && id.indexOf(search) === -1) return false;
+                }
+                if (skillFilter && (s.skill || '').toLowerCase() !== skillFilter) return false;
+                if (statusFilter === 'scored' && (s.score === null || s.score === undefined)) return false;
+                if (statusFilter === 'pending' && s.score !== null && s.score !== undefined) return false;
+                return true;
+            });
+            renderRoomStats(filtered);
+            renderRoomList(filtered);
         }
 
         function renderRoomStats(subs) {

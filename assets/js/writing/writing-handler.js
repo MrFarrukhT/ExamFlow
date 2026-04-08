@@ -460,8 +460,10 @@ class WritingHandler {
             localStorage.removeItem(`ielts-writing-mock${this.mockNumber}-task2`);
             localStorage.removeItem(`ielts-writing-mock${this.mockNumber}-time`);
 
-            alert('Writing section completed successfully!');
-            window.location.href = '../../student-dashboard.html';
+            // Redirect to dashboard — no alert needed, completion is visible on dashboard
+            const examType = localStorage.getItem('examType');
+            const dashboardPath = examType === 'Cambridge' ? '../../Cambridge/dashboard-cambridge.html' : '../../student-dashboard.html';
+            window.location.href = dashboardPath;
 
         } catch (error) {
             console.error('❌ Error submitting writing test:', error);
@@ -474,8 +476,9 @@ class WritingHandler {
             localStorage.setItem('writingStatus', 'completed');
             localStorage.setItem('writingEndTime', new Date().toISOString());
 
-            alert('Writing section completed successfully!\nNote: There was an issue saving to the database, but your answers are saved locally.');
-            window.location.href = '../../student-dashboard.html';
+            const examType = localStorage.getItem('examType');
+            const dashboardPath = examType === 'Cambridge' ? '../../Cambridge/dashboard-cambridge.html' : '../../student-dashboard.html';
+            window.location.href = dashboardPath;
         }
     }
 
