@@ -1,5 +1,46 @@
 # Autopilot Journal
 
+## Session: 2026-04-08 22:00
+Persona: Cambridge Test Taker (all levels — A1, A2, B1, B2)
+System: Cambridge (http://localhost:3003)
+
+### Phase 1: Journey Map
+- Walked complete student flow: launcher → login → dashboard → level selection → test modules → results
+- Tested all 4 levels (A1-Movers, A2-Key, B1-Preliminary, B2-First)
+- Verified all 10 mock test folders have complete file coverage
+
+### What's Broken (Fixes Applied)
+1. **CRITICAL: Root redirect broken** — `express.static('./')` served `index.html` at `/` before `app.get('/')` redirect fired. Students visiting `http://localhost:3003/` saw IELTS login instead of Cambridge launcher. **Fix:** Added `staticOptions: { index: false }` to both Cambridge and IELTS server configs via `server-bootstrap.js`.
+2. **HIGH: Student ID validation mismatch** — `index.html` click handler regex allowed only 1-4 digits (`{1,4}`) but input field allowed 1-10. Students with 5+ digit IDs couldn't log in. **Fix:** Changed regex to `{1,10}`.
+3. **HIGH: Session-verify redirect to non-existent file** — When session expired inside test pages, redirect went to `../../index.html` (= `Cambridge/index.html`, doesn't exist). **Fix:** Changed to absolute `/index.html?exam=cambridge`.
+4. **HIGH: Results page answer key mismatch** — A1/A2 `my-results.html` used raw `rwSub.answers` without stripping `reading-writing_` prefix, causing all answers to show as wrong. Also affected listening answers. **Fix:** Added `extractAnswers()` call for both `reading-writing` and `listening` in A1/A2 block.
+
+### Phase 2: Creation
+- No new pages needed — all test flows are complete
+
+### Phase 3: Structure
+- Skipped — structure sound for Cambridge student journey
+
+### Phase 4: Heal
+- Fixed 4 issues (see above)
+- Server bootstrap enhanced with `staticOptions` parameter
+
+### Phase 5: Experience
+- Playwright-verified full student journey across all 4 levels
+- Screenshots: launcher page, A2-Key test, B1 reading, results page — all render correctly
+- Welcome guide properly shown on first visit, dismissed correctly
+
+### Phase 6: Scenario
+- Verified 403s on answer keys for unsubmitted modules are handled gracefully (`.catch()`)
+- Confirmed all module buttons work for each level variant
+
+### Session Stats
+Total fixes: 4 (1 critical, 3 high)
+Files changed: 5 (server-bootstrap.js, cambridge-database-server.js, local-database-server.js, index.html, session-verify.js, my-results.html)
+Persona journey coverage: 100% (all 4 Cambridge levels, all skills, results page)
+
+---
+
 ## Session: 2026-04-09 07:30
 Persona: Cheater + Cambridge B2 First student (full rotation — remaining personas)
 System: Both (IELTS + Cambridge)
