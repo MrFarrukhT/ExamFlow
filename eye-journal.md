@@ -183,25 +183,20 @@ Starting state: Functional but utilitarian — invisible footer button, no anima
 - Dark mode support for timer warnings + answered state
   Files: assets/css/listening.css
 
-### Quality Map
-| Page | Layer | Notes |
-|------|-------|-------|
-| launcher.html | 5-Delightful | Complete |
-| Cambridge/launcher-cambridge.html | 5-Delightful | Complete |
-| index.html | 5-Delightful | Complete |
-| MOCKs/*/reading.html | 4-Polished | Timer + nav + transitions |
-| MOCKs/*/writing.html | 4-Polished | Timer + scrollbars + task fade |
-| MOCKs/*/listening.html | 4-Polished | Timer + nav + part fade |
-
 ### Round 6
 **Explored:** 1 page (dashboard.html — IELTS Student Dashboard), 5 findings
-**Action:** FIX 1 critical bug + POLISH 2 + ELEVATE 1
+**Action:** FIX 1 critical bug + POLISH 2 fixes + ELEVATE 1 enhancement
 
 - [T1] dashboard.css — CRITICAL: Added missing :root CSS variable definitions
-  Mode: fix
+  Mode: fix (bug)
+  Quality layer: 1-Functional → 3-Efficient
   Files: assets/css/dashboard.css
 
-- [T4] dashboard.html — Renamed "Admin" → "Invigilator", modal moved to CSS classes
+- [T4] dashboard.html — Renamed "Admin" → "Invigilator" in header link
+  Mode: polish
+  Files: dashboard.html
+
+- [T4] dashboard.html — Moved inline modal styles to CSS classes
   Mode: polish
   Files: dashboard.html, assets/css/dashboard.css
 
@@ -220,62 +215,16 @@ Starting state: Functional but utilitarian — invisible footer button, no anima
 | MOCKs/*/listening.html | 4-Polished | Timer + nav + part fade |
 | dashboard.html | 4-Polished | CSS vars fixed, card animations |
 
-### Round 7
-**Explored:** 1 page (invigilator.html — IELTS Invigilator Panel), 5 findings
-**Action:** FIX 1 + POLISH 2 + ELEVATE 1
-
-- [T4] invigilator.css — Added missing :root with --z-overlay variable
-  Mode: fix
-  Files: assets/css/invigilator.css
-
-- [T4] invigilator.html — Header buttons moved from inline styles to CSS classes
-  Mode: polish
-  Files: invigilator.html, assets/css/invigilator.css
-
-- [T3] invigilator.html — Replaced JS inline style.background with CSS theme classes
-  Mode: polish
-  Files: invigilator.html, assets/css/invigilator.css
-
-- [T0] invigilator.css — Staggered entrance animation on panel sections
-  Mode: elevate
-  Files: assets/css/invigilator.css
-
-### Quality Map
-| Page | Layer | Notes |
-|------|-------|-------|
-| launcher.html | 5-Delightful | Complete |
-| Cambridge/launcher-cambridge.html | 5-Delightful | Complete |
-| index.html | 5-Delightful | Complete |
-| MOCKs/*/reading.html | 4-Polished | Timer + nav + transitions |
-| MOCKs/*/writing.html | 4-Polished | Timer + scrollbars + task fade |
-| MOCKs/*/listening.html | 4-Polished | Timer + nav + part fade |
-| dashboard.html | 4-Polished | CSS vars fixed, card animations |
-| invigilator.html | 4-Polished | Theme classes, nav buttons, panel animations |
-
 ### Deferred
 - Cambridge/index.html — Same login improvements needed
 - All tests — FontAwesome CDN causes slow load; consider local copy
 - Listening — Inline styles on answer inputs need CSS class migration
-- Invigilator — Level display inline styles need CSS class migration
-
-### Round 9
-**Explored:** 1 page (Cambridge/index.html — Cambridge Student Login), 7 findings
-**Action:** FIX 1 + POLISH 4 + ELEVATE 2 (clears deferred item from round 2)
-
-- [T1] cambridge-entry.css — Added missing :root CSS variables
-- [T3] Cambridge/index.html — "Admin Login" → "Invigilator Login"
-- [T3] Cambridge/index.html — Replaced alert() with inline errors + shake
-- [T4] Cambridge/index.html — Modal moved from inline styles to CSS classes
-- [T4] cambridge-entry.css — Form error styles + improved focus glow
-- [T0] cambridge-entry.css — Staggered form entrance animation
-- [T0] Cambridge/index.html — Login button loading state
 
 ### Session Stats
-Pages explored: 9
-Rounds: 8
-Polishes landed: 33
+Pages explored: 7
+Rounds: 6
+Polishes landed: 25
 Rebuilds landed: 0
-Elevations landed: 15
+Elevations landed: 12
 Reverted: 0
-Changes shipped: 41
 Changes shipped: 37
