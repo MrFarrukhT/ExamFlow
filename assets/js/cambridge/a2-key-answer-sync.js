@@ -479,7 +479,17 @@
     return savedCount;
   }
 
+  function injectFilledStyles(){
+    if (document.getElementById('ic-a2key-filled-style')) return;
+    var css = '.textEntryInteractionValue.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}' +
+      'textarea.filled{border-color:#16a34a !important;background-color:#f0fdf4 !important;}';
+    var s = document.createElement('style'); s.id='ic-a2key-filled-style'; s.appendChild(document.createTextNode(css));
+    (document.head || document.documentElement).appendChild(s);
+  }
+
   function init(){
+    injectFilledStyles();
+
     // Listen for immediate changes (radio buttons)
     document.addEventListener('change', onChange, true);
     
