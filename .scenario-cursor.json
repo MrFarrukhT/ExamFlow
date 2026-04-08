@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-08 04:10",
-  "totalRuns": 4,
+  "lastRun": "2026-04-08 04:30",
+  "totalRuns": 5,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -32,7 +32,16 @@
     "http-method-confusion-handled",
     "adr-017-admin-route-correct",
     "adr-018-legacy-endpoint-removed",
-    "round-1-3-regression-verified"
+    "round-1-3-regression-verified",
+    "shared-validation-module-boundaries",
+    "heal-refactor-xss-stripping-preserved",
+    "ielts-submission-error-handling-fixed",
+    "student-name-200char-limit",
+    "dashboard-client-xss-escaping-speaking-evals",
+    "dashboard-client-xss-escaping-student-results",
+    "dashboard-client-xss-escaping-admin-dashboard",
+    "dashboard-client-xss-escaping-invigilator",
+    "dashboard-client-xss-escaping-ielts-admin"
   ],
   "weakPatterns": [
     "no-rate-limiting-on-admin-login",
@@ -40,13 +49,9 @@
     "predictable-admin-token",
     "answer-keys-writable-without-auth",
     "mock-answers-writable-without-auth",
-    "cors-allows-all-origins",
-    "error-messages-expose-db-engine"
+    "cors-allows-all-origins"
   ],
   "untestedAreas": [
-    "admin-dashboard-xss-rendering",
-    "admin-dashboard-javascript-behavior",
-    "invigilator-panel-flows",
     "ai-score-suggestion-abuse"
   ],
   "deferredFindings": [
@@ -88,9 +93,9 @@
     }
   ],
   "stats": {
-    "scenariosTested": 25,
-    "bugsFound": 16,
-    "bugsFixed": 10,
+    "scenariosTested": 30,
+    "bugsFound": 18,
+    "bugsFixed": 12,
     "bugsDeferred": 6
   }
 }

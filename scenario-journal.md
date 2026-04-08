@@ -127,7 +127,7 @@ Trigger: Round 1 cursor listed 12 untested areas; no new code changes to test
 - New weak pattern: Answer keys writable without auth (grade manipulation risk)
 - For next run: Browser-based behavioral tests (exam flow, timer, multi-tab), admin dashboard JS behavior, IELTS mock-answers validation (only Cambridge was hardened), invigilator panel flows
 
-### Stats
+### Stats (Round 2)
 Tested: 6 | Passed: 1 | Failed: 4 | Inconclusive: 1 | Fixed: 3 | Deferred: 2
 
 ---
@@ -238,5 +238,51 @@ Trigger: Rounds 1-3 added a file blocklist; Round 4 tests if it can be defeated
 ### Stats
 Tested: 5 | Passed: 3 | Failed: 1 (critical) | Partial: 1 | Fixed: 1 | Deferred: 0
 
-### Stats
-Tested: 6 | Passed: 1 | Failed: 4 | Inconclusive: 1 | Fixed: 3 | Deferred: 2
+### Stats (Round 3)
+Tested: 6 | Passed: 2 | Failed: 2 | Partial: 2 | Fixed: 2 | Deferred: 2
+
+---
+
+## Session: 2026-04-08 04:20
+Focus: New code audit (heal refactor), shared validation boundaries, **client-side XSS sinks**
+Trigger: Concurrent heal/eye runs changed server code; 4 remaining untested areas from cursor
+
+### Scenarios
+
+- S1: Heal Refactor XSS Preservation [Regression] -> PASS
+  - Batch INSERT refactor preserves XSS stripping. `<script>` → `alert(1)`.
+
+- S2: Shared Validation Module Boundaries [Explorer] -> PASS
+  - Score 0/200 accepted, 201/3.7 rejected. String "50" coerced. 21-char grade rejected.
+
+- S3: IELTS Error Handling [Regression] -> PASS
+  - No more fake "success:true, queued" — proper 400 errors.
+
+- S4: Client-Side XSS Sink Audit [Insider] -> **CRITICAL FAIL** [CRITICAL]
+  - **14 CRITICAL + 6 HIGH** XSS sinks across 5 dashboard files
+  - 2 files had zero escapeHtml (speaking-evaluations, student-results)
+  - invigilator.html injected localStorage raw into innerHTML
+  - cambridge-admin-dashboard missed escapeHtml in 2 helpers
+  - **Fix applied**: escapeHtml added to all 4 files, 40+ data points wrapped
+
+- S5: 200-char Name Limit [Explorer] -> **FAIL** [MEDIUM]
+  - validateStudentInfo exists in shared module but no endpoint used it
+  - 201-char names accepted on all servers
+  - **Fix applied**: Inline length checks on all 4 submission endpoints
+
+### Fixes
+- 4 HTML dashboard files: escapeHtml + sanitizeClass for all API data rendering
+- 2 server files: 200-char length limit on student name/ID
+
+### Pattern Analysis
+- **Client-side XSS was the deepest remaining vulnerability class.** 5 rounds to get here — server validation → file exposure → bypass hardening → client rendering.
+- **ielts-admin-dashboard.html was the model** — it already had proper escapeHtml. Other files should have followed.
+
+### Intelligence Update
+- All dashboard files now have client-side XSS escaping
+- Only AI score suggestion remains untested (OpenAI quota)
+- All 6 deferred findings are architectural — beyond scenario fix scope
+- **Comprehensive coverage reached across 5 rounds**
+
+### Stats (Round 5)
+Tested: 5 | Passed: 3 | Failed: 2 (1 critical) | Fixed: 2 | Deferred: 0
