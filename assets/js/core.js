@@ -10,7 +10,6 @@
         // --- STATE VARIABLES ---
         let currentPassage = 1;
         let currentQuestion = 1;
-        let selectedRange = null;
         
         // Set timer duration based on test skill type
         const skill = document.body.getAttribute('data-skill');
@@ -238,10 +237,7 @@ async function loadAnswers() {
                 resizer.addEventListener('touchstart', initResizeTouch, false);
             }
             
-            // Initialize context menu only if it exists
-            if (contextMenu) {
-                initializeContextMenu();
-            }
+            // Context menu is initialized by ContextMenuManager (loaded from context-menu.js)
         }
 
         // --- PREVENT BROWSER AUTOCOMPLETE ---
@@ -1368,243 +1364,11 @@ async function loadAnswers() {
         }
         
         // --- CONTEXT MENU (Highlighting) ---
-        
-        function initializeContextMenu() {
-            const panels = [passagePanel, questionsPanel].filter(panel => panel !== null && panel !== undefined);
-            let targetElementForClear = null;
-
-            // Only initialize if we have valid panels
-            if (panels.length === 0) {
-                return;
-            }
-
-            // This listener simply tracks the last valid text selection in either panel.
-            document.addEventListener('selectionchange', () => {
-                const selection = window.getSelection();
-                if (selection && !selection.isCollapsed && selection.toString().trim().length > 0) {
-                    const range = selection.getRangeAt(0);
-                    if (panels.some(panel => panel.contains(range.commonAncestorContainer))) {
-                        selectedRange = range;
-                        targetElementForClear = null; // New selection overrides clearing a specific element
-                    }
-                }
-            });
-
-            const showContextMenu = (e) => {
-                const target = e.target;
-                const isClickOnHighlight = target.closest('.highlight, .comment-highlight');
-                const isSelectionActive = selectedRange && selectedRange.toString().trim().length > 0;
-                
-                let showMenu = false;
-
-                if (isClickOnHighlight) {
-                    document.getElementById('menu-highlight').style.display = 'none';
-                    document.getElementById('menu-note').style.display = 'none';
-                    document.getElementById('menu-clear').style.display = 'block';
-                    document.getElementById('menu-clear-all').style.display = 'block';
-                    contextMenu.targetElementForClear = isClickOnHighlight;
-                    showMenu = true;
-                } else if (isSelectionActive && panels.some(panel => panel.contains(selectedRange.commonAncestorContainer))) {
-                    document.getElementById('menu-highlight').style.display = 'flex';
-                    document.getElementById('menu-note').style.display = 'flex';
-                    document.getElementById('menu-clear').style.display = 'none';
-                    document.getElementById('menu-clear-all').style.display = 'block'; // Always show clear all
-                    showMenu = true;
-                } else {
-                    // No highlight menu needed - check if we should block right-click entirely
-                    if (window.distractionFreeMode && window.distractionFreeMode.isEnabled) {
-                        const currentSkill = window.distractionFreeMode.getCurrentSkill();
-                        if (currentSkill !== 'reading' && currentSkill !== 'listening') {
-                            // Block context menu for non-reading/listening sections
-                            e.preventDefault();
-                            window.distractionFreeMode.showActionBlockedMessage('Right-click menu is disabled during the test');
-                            return false;
-                        }
-                    }
-                    // In reading/listening sections, allow default context menu if no highlights
-                    return true;
-                }
-
-                if (showMenu) {
-                    e.preventDefault();
-                    contextMenu.style.display = 'block';
-                    const menuHeight = contextMenu.offsetHeight;
-                    const menuWidth = contextMenu.offsetWidth;
-                    let left = e.pageX;
-                    let top = e.pageY;
-                    if (left + menuWidth > window.innerWidth) left = window.innerWidth - menuWidth - 5;
-                    if (top + menuHeight > window.innerHeight) top = e.pageY - menuHeight - 5;
-                    else top = e.pageY - menuHeight - 5;
-                    
-                    contextMenu.style.left = `${left}px`;
-                    contextMenu.style.top = `${top}px`;
-                }
-            };
-
-            panels.forEach(panel => {
-                panel.addEventListener('contextmenu', showContextMenu);
-            });
-
-            document.addEventListener('click', (e) => {
-                if (contextMenu.style.display === 'block' && !contextMenu.contains(e.target)) {
-                    closeContextMenu();
-                }
-            });
-        }
-
-        function closeContextMenu() {
-            contextMenu.style.display = 'none';
-            selectedRange = null; // Clear range after menu closes
-        }
-
-        function unwrapElement(element) {
-            const parent = element.parentNode;
-            if (!parent) return;
-            while (element.firstChild) {
-                parent.insertBefore(element.firstChild, element);
-            }
-            parent.removeChild(element);
-            parent.normalize();
-        }
-
-        window.highlightText = () => {
-            if (selectedRange && !selectedRange.collapsed) {
-                try {
-                    // Check if selection spans multiple paragraphs
-                    const startContainer = selectedRange.startContainer;
-                    const endContainer = selectedRange.endContainer;
-                    
-                    // Find parent paragraph elements
-                    const startParagraph = startContainer.nodeType === Node.TEXT_NODE 
-                        ? startContainer.parentElement.closest('p') 
-                        : startContainer.closest('p');
-                    const endParagraph = endContainer.nodeType === Node.TEXT_NODE 
-                        ? endContainer.parentElement.closest('p') 
-                        : endContainer.closest('p');
-                    
-                    // If selection spans multiple paragraphs, restrict to first paragraph only
-                    if (startParagraph && endParagraph && startParagraph !== endParagraph) {
-                        
-                        // Create a new range that ends at the end of the first paragraph
-                        const restrictedRange = document.createRange();
-                        restrictedRange.setStart(selectedRange.startContainer, selectedRange.startOffset);
-                        
-                        // Set end to the last text node in the start paragraph
-                        const lastTextNode = getLastTextNode(startParagraph);
-                        if (lastTextNode) {
-                            restrictedRange.setEnd(lastTextNode, lastTextNode.length);
-                        } else {
-                            restrictedRange.setEndAfter(startParagraph.lastChild || startParagraph);
-                        }
-                        
-                        // Use the restricted range
-                        selectedRange = restrictedRange;
-                    }
-                    
-                    const span = document.createElement('span');
-                    span.className = 'highlight';
-
-                    // Use surroundContents instead of extractContents + insertNode
-                    // This preserves the text structure better across elements
-                    if (selectedRange.commonAncestorContainer.nodeType === Node.TEXT_NODE ||
-                        selectedRange.toString().indexOf('\n') === -1) {
-                        selectedRange.surroundContents(span);
-                    } else {
-                        // Fallback for complex selections spanning multiple elements
-                        const contents = selectedRange.extractContents();
-                        span.appendChild(contents);
-                        selectedRange.insertNode(span);
-                    }
-                } catch (e) {
-                    // Fallback for selections that can't be surrounded
-                    const span = document.createElement('span');
-                    span.className = 'highlight';
-                    const contents = selectedRange.extractContents();
-                    span.appendChild(contents);
-                    selectedRange.insertNode(span);
-                }
-            }
-            closeContextMenu();
-            window.getSelection().removeAllRanges();
-        };
-        
-        // Helper function to get the last text node in an element
-        function getLastTextNode(element) {
-            let lastText = null;
-            const walker = document.createTreeWalker(
-                element,
-                NodeFilter.SHOW_TEXT,
-                {
-                    acceptNode: function(node) {
-                        // Skip empty or whitespace-only text nodes
-                        if (node.textContent.trim().length > 0) {
-                            return NodeFilter.FILTER_ACCEPT;
-                        }
-                        return NodeFilter.FILTER_SKIP;
-                    }
-                }
-            );
-            
-            while (walker.nextNode()) {
-                lastText = walker.currentNode;
-            }
-            
-            return lastText;
-        }
-
-        window.addNote = () => {
-            const note = prompt('Enter your note:');
-            if (note && selectedRange && !selectedRange.collapsed) {
-                try {
-                    const span = document.createElement('span');
-                    span.className = 'comment-highlight';
-                    const tooltip = document.createElement('span');
-                    tooltip.className = 'comment-tooltip';
-                    tooltip.textContent = note;
-
-                    // Use surroundContents for better structure preservation
-                    if (selectedRange.commonAncestorContainer.nodeType === Node.TEXT_NODE ||
-                        selectedRange.toString().indexOf('\n') === -1) {
-                        selectedRange.surroundContents(span);
-                        span.appendChild(tooltip);
-                    } else {
-                        // Fallback for complex selections
-                        const contents = selectedRange.extractContents();
-                        span.appendChild(contents);
-                        span.appendChild(tooltip);
-                        selectedRange.insertNode(span);
-                    }
-                } catch (e) {
-                    // Fallback for selections that can't be surrounded
-                    const span = document.createElement('span');
-                    span.className = 'comment-highlight';
-                    const tooltip = document.createElement('span');
-                    tooltip.className = 'comment-tooltip';
-                    tooltip.textContent = note;
-                    const contents = selectedRange.extractContents();
-                    span.appendChild(contents);
-                    span.appendChild(tooltip);
-                    selectedRange.insertNode(span);
-                }
-            }
-            closeContextMenu();
-            window.getSelection().removeAllRanges();
-        };
-
-        window.clearHighlight = () => {
-             const elementToClear = contextMenu.targetElementForClear;
-             if (elementToClear) {
-                 unwrapElement(elementToClear);
-             }
-             closeContextMenu();
-             window.getSelection().removeAllRanges();
-        };
-        
-        window.clearAllHighlights = () => {
-            document.querySelectorAll('.highlight, .comment-highlight').forEach(unwrapElement);
-            closeContextMenu();
-            window.getSelection().removeAllRanges();
-        };
+        // Extracted to context-menu.js — ContextMenuManager class
+        const contextMenuManager = new ContextMenuManager({
+            menuElement: contextMenu,
+            panels: [passagePanel, questionsPanel]
+        });
 
         function updateAttemptedCount(part, startQ, endQ) {
             let answeredCount = 0;
@@ -1628,10 +1392,8 @@ async function loadAnswers() {
         window.goToQuestion = goToQuestion;
         window.switchToPart = switchToPart;
         window.closeResultsModal = closeResultsModal;
-        window.highlightText = highlightText;
-        window.addNote = addNote;
-        window.clearHighlight = clearHighlight;
-        window.clearAllHighlights = clearAllHighlights;
+        // highlightText, addNote, clearHighlight, clearAllHighlights
+        // are now exposed by ContextMenuManager in context-menu.js
         
         // Explanation toggle function for Part 2
         window.toggleExplanation = function() {

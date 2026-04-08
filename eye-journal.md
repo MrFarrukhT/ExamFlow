@@ -164,16 +164,45 @@ Starting state: Functional but utilitarian — invisible footer button, no anima
 | MOCKs/*/reading.html | 4-Polished | Timer warnings, better nav, smooth transitions |
 | MOCKs/*/writing.html | 4-Polished | Timer CSS classes, visible scrollbars, task fade |
 
+### Round 5
+**Explored:** 1 page (MOCKs/MOCK 1/listening.html — IELTS Listening Test), 5 findings
+**Action:** POLISH 4 CSS-only changes (benefits all 10 mocks, consistency with reading/writing)
+
+- [T4] listening.css — Timer warning CSS states (warning/critical/urgent + pulse animation)
+  Mode: polish
+  Files: assets/css/listening.css
+
+- [T4] listening.css — Improved .answered button visibility (grey → blue)
+  Mode: polish
+  Files: assets/css/listening.css
+
+- [T0] listening.css — Fade-in animation on part switch
+  Mode: polish
+  Files: assets/css/listening.css
+
+- Dark mode support for timer warnings + answered state
+  Files: assets/css/listening.css
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| launcher.html | 5-Delightful | Complete |
+| Cambridge/launcher-cambridge.html | 5-Delightful | Complete |
+| index.html | 5-Delightful | Complete |
+| MOCKs/*/reading.html | 4-Polished | Timer + nav + transitions |
+| MOCKs/*/writing.html | 4-Polished | Timer + scrollbars + task fade |
+| MOCKs/*/listening.html | 4-Polished | Timer + nav + part fade |
+
 ### Deferred
-- Cambridge/index.html — Same login improvements needed (floating labels, inline validation)
-- Reading/Writing — FontAwesome CDN causes slow load; consider local copy
-- Writing test — No auto-save indicator visible to student
+- Cambridge/index.html — Same login improvements needed
+- All tests — FontAwesome CDN causes slow load; consider local copy
+- Listening — Inline styles on answer inputs need CSS class migration
 
 ### Session Stats
-Pages explored: 5
-Rounds: 4
-Polishes landed: 18
+Pages explored: 6
+Rounds: 5
+Polishes landed: 22
 Rebuilds landed: 0
 Elevations landed: 11
 Reverted: 0
-Changes shipped: 29
+Changes shipped: 33

@@ -68,7 +68,11 @@
       "Bash(gh repo:*)",
       "Bash(git remote:*)",
       "Bash(node --check assets/js/core.js)",
-      "Bash(node --check assets/js/timer.js)"
+      "Bash(node --check assets/js/timer.js)",
+      "Bash(gh api:*)",
+      "Bash(git update-ref:*)",
+      "Bash(node --check \"E:/Test-System-v2/assets/js/core.js\")",
+      "Bash(node --check assets/js/context-menu.js)"
     ],
     "additionalDirectories": [
       "e:\\Test-System-v2",
