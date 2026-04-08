@@ -1,5 +1,69 @@
 # Autopilot Journal
 
+## Session: 2026-04-09 10:00
+Persona: Olympiada post-submission (student results + admin filtering)
+System: Cambridge
+
+### Phase 1: Journey Map
+- Sessions 24+25 unblocked the Olympiada launch and fixed exam_type persistence
+- Three remaining gaps for Olympiada to be production-ready:
+  1. C1-Advanced student results page didn't recognize the level (would show
+     "No answers found")
+  2. Admin dashboard had no way to filter by exam type
+  3. Invigilator panel had no way to filter by exam type
+  4. Admin dashboard level filter dropdown missing C1-Advanced option
+
+### Phase 2: Creation
+- No new pages — feature additions to existing UIs
+
+### Phase 3: Structure
+- Skipped — sound
+
+### Phase 4: Heal
+1. **my-results.html `isSeparateRW()`** — only B1/B2 were in the list. C1-Advanced
+   also has separate Reading + Writing modules. Without this, C1 students would
+   see an empty results page because the code tried to load
+   `cambridge-reading-writingAnswers` (combined module key) instead of separate
+   `cambridge-readingAnswers` + `cambridge-writingAnswers`.
+2. **Cambridge admin dashboard**:
+   - Added C1 Advanced option to existing level filter
+   - Added new Exam Type filter dropdown (Cambridge / Olympiada)
+   - Wired into applyFilters() and extraFilterIds for proper clear-on-reset
+3. **Invigilator panel**:
+   - Added Exam Type filter dropdown to room activity filter bar
+   - Wired into filterRoomActivity() with backward-compat fallback
+     (missing exam_type treated as 'Cambridge')
+
+Committed as 3293076 (3 files, +24/-3 lines).
+
+### Phase 5: Experience
+- Skipped — no server running
+
+### Phase 6: Scenario
+- Verified by code review:
+  - Filter cleanly handles missing exam_type (legacy submissions before session 25)
+  - Level filter still validates against server VALID_LEVELS
+  - Apply Filters button triggers re-render in admin dashboard
+
+### Session Stats
+Total commits: 1 (3293076)
+Total files changed: 3
+Persona journey coverage: Closes the post-submission loop for Olympiada — students
+can view their C1 results, admins/invigilators can isolate Olympiada submissions
+from Cambridge submissions
+
+### Olympiada launch checklist
+- ✅ Login + dashboard branding (s24)
+- ✅ Server validation accepts C1-Advanced (s24)
+- ✅ Wrappers + Part stubs for all 4 modules (s24)
+- ✅ examType pipeline integrity (s25)
+- ✅ Student results page supports C1 (this session)
+- ✅ Admin/invigilator filter by exam type (this session)
+- ⚠️ Real C1 answer keys not yet in DB (content task)
+- ⚠️ Mock 2/3 not yet built
+
+---
+
 ## Session: 2026-04-09 09:30
 Persona: Olympiada submission pipeline (data integrity follow-up to session 24)
 System: Cambridge
