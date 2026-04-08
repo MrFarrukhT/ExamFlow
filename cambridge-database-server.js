@@ -430,13 +430,24 @@ app.post('/cambridge-submissions', submissionLimiter, async (req, res) => {
             });
         }
 
-        // Server-side duration validation — flag suspiciously long test durations
+        // Server-side duration validation — flag and reject suspiciously long test durations
         if (submissionData.startTime && submissionData.endTime) {
             const start = new Date(submissionData.startTime);
             const end = new Date(submissionData.endTime);
             const elapsedMin = (end - start) / 60000;
             const levelLimits = CAMBRIDGE_TIME_LIMITS[submissionData.level] || {};
             const limit = levelLimits[submissionData.skill] || 90;
+
+            // Hard reject: 3x the time limit
+            if (elapsedMin > limit * 3) {
+                console.warn(`🚨 SUBMISSION REJECTED: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.level} ${submissionData.skill} (limit: ${limit}min, max: ${limit * 3}min)`);
+                return res.status(400).json({
+                    success: false,
+                    message: 'Submission rejected: test duration exceeded the maximum allowed time.'
+                });
+            }
+
+            // Soft flag: 2x the time limit — accept but mark for review
             if (elapsedMin > limit * 2) {
                 console.warn(`⚠️ DURATION ALERT: Student ${submissionData.studentId} took ${Math.round(elapsedMin)}min for ${submissionData.level} ${submissionData.skill} (limit: ${limit}min)`);
             }
