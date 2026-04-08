@@ -943,3 +943,9 @@ body.dark-mode .subQuestion.answered {
 .selectable-image img {
     pointer-events: auto !important;
 }
+
+/* ==================== CAMBRIDGE NAV BAR SHADOW ==================== */
+/* Consistent top shadow for bottom navigation across all Cambridge tests */
+.footer__footer___1NlzQ {
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+}
