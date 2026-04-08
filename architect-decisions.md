@@ -20,11 +20,11 @@
 **Summary:** Merged IELTS and Cambridge login into single root index.html that detects exam type via ?exam=cambridge URL param or localStorage. Cambridge/index.html is now a redirect stub. Added body.cambridge CSS class scoping to entry.css.
 **Result:** Executed in commit 3e2f6ef.
 
-### ADR-014: core.js Phase 2 — Extract Options Menu & Modal Manager
-**Status:** Deferred (revised)
-**Impact:** High | **Effort:** Days (revised from 2 hours) | **Risk:** High
-**Summary:** On deep inspection, options menu and modals are in universal-functions.js (443 lines), NOT core.js. core.js (1,614 lines) is tightly coupled test evaluation logic in a single DOMContentLoaded closure. Decomposition requires refactoring from closure-based to class-based state management — a larger, riskier effort than initially assessed.
-**Result:** Deferred — needs dedicated session with per-file verification.
+### ADR-014: Extract Options Menu & Modal Manager (revised target)
+**Status:** Executed
+**Impact:** High | **Effort:** 1 hour | **Risk:** Medium
+**Summary:** Extracted ModalManager (80 lines) and OptionsMenu (224 lines) from universal-functions.js (not core.js as originally proposed — options/modals were in the wrong file). universal-functions.js: 443→144 lines (67% reduction). IELTSUniversalFunctions delegates to both via composition. 160 HTML files updated with new script tags. All inline onclick handlers preserved.
+**Result:** Executed in commit 272ab3d.
 
 ### ADR-015: Extract Shared Admin Styles to External Stylesheet
 **Status:** Executed
