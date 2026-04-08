@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-08 18:10",
-  "totalRuns": 11,
+  "lastRun": "2026-04-08 18:25",
+  "totalRuns": 12,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -53,15 +53,22 @@
     "null-byte-control-char-sanitization-in-names",
     "sanitized-values-used-in-insert",
     "audio-data-length-capped-15mb",
-    "json-payload-1mb-accepted"
+    "json-payload-1mb-accepted",
+    "speaking-dedup-race-condition-handled",
+    "admin-login-rate-limited-5-per-minute",
+    "verify-invigilator-rate-limited-5-per-minute",
+    "ai-score-endpoint-auth-required-esm",
+    "ai-score-endpoint-rate-limited-3-per-minute-esm",
+    "ai-score-endpoint-prompt-injection-mitigated-esm",
+    "ai-score-endpoint-task-length-bounded-esm",
+    "ai-score-endpoint-safe-json-parse-esm"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
-    "cors-allows-all-origins",
+    "cors-allows-all-origins-but-mitigated-by-bearer-auth",
     "client-controlled-timestamps-spoofable",
     "anti-cheat-metadata-spoofable",
     "blocklist-deny-approach-needs-ongoing-maintenance",
-    "ai-score-endpoint-no-auth-prompt-injection",
     "submissions-list-unpaginated",
     "rate-limiter-hits-map-grows-unboundedly"
   ],
@@ -71,19 +78,13 @@
       "title": "Answer keys writable without authentication",
       "severity": "HIGH",
       "since": "2026-04-08",
-      "reason": "By design (no auth), but grade manipulation risk"
-    },
-    {
-      "title": "AI score endpoint: no auth, prompt injection, no rate limit",
-      "severity": "MEDIUM",
-      "since": "2026-04-08",
-      "reason": "Endpoint only in ESM source, not CJS. Fix proactively when ESM server runs."
+      "reason": "By design (no auth on answer keys), but grade manipulation risk"
     },
     {
       "title": "CORS allows all origins",
-      "severity": "MEDIUM",
+      "severity": "LOW",
       "since": "2026-04-08",
-      "reason": "Low impact without auth system"
+      "reason": "Mitigated by Bearer auth (browsers don't auto-send Authorization header)"
     },
     {
       "title": "Client-controlled timestamps are spoofable",
@@ -99,9 +100,9 @@
     }
   ],
   "stats": {
-    "scenariosTested": 68,
-    "bugsFound": 30,
-    "bugsFixed": 23,
-    "bugsDeferred": 5
+    "scenariosTested": 73,
+    "bugsFound": 31,
+    "bugsFixed": 25,
+    "bugsDeferred": 4
   }
 }

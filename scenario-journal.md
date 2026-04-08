@@ -648,3 +648,71 @@ Trigger: No new code to test; switched to systemic concerns — token lifecycle,
 
 ### Stats (Round 11)
 Tested: 6 | Passed: 1 | Failed: 3 | Partial: 1 | Noted: 1 | Fixed: 3 | Deferred: 1
+
+---
+
+## Session: 2026-04-08 18:25
+Focus: Address long-deferred findings — auth rate limiting + AI score endpoint hardening + speaking race
+Trigger: No new code; round 11 cleared submission validation; time to chip at deferred backlog
+
+### Scenarios
+
+- S1: Speaking Submission Dedup Race [Multitasker] → PASS
+  - 5 concurrent /submit-speaking with same student+level+skill+mock
+  - Result: exactly 1 succeeded, 4 blocked with "Submission already in progress"
+  - The R7 in-memory lock fix had already been applied to the speaking endpoint
+  - Verified working — no regression
+
+- S2: CSRF on State-Changing Endpoints [Chain Attacker] → NOTED
+  - POST /submissions with `Origin: https://evil.com` and `Referer: evil.com/attack` → accepted (200)
+  - OPTIONS preflight returns `Access-Control-Allow-Origin: *` and all methods allowed
+  - **Not a real vulnerability**: student endpoints are by design unauthenticated, admin endpoints use Bearer token (not auto-sent by browsers)
+  - Documented as architectural pattern — no fix needed
+
+- S3: Admin Token Accumulation [Power User] → NOTED
+  - 50 successful logins all stored in validTokens Set, no DoS
+  - Each token ~80 bytes; 1M tokens = 80MB memory
+  - Now mitigated by R11 logout endpoint + R12 rate limiter on /admin-login
+  - No fix needed beyond what R11/R12 already added
+
+- S4: AI Score Endpoint Probe [Insider] → NOTED
+  - POST /api/ai-score-suggestion still returns 404 on CJS server
+  - Endpoint only exists in ESM source `local-database-server.js`
+  - Cannot be exploited via running server, but issues exist in code
+  - **Proactive fix applied** to ESM source (see Fixes)
+
+- S5: Admin Login Brute Force [Chain Attacker] → **CRITICAL FAIL** [HIGH]
+  - 100 wrong-password attempts in rapid succession
+  - Result: 100×401, 0×429, **NO RATE LIMITING AT ALL**
+  - This was the deferred R1 finding — never fixed in 10 rounds
+  - Combined with the R9 dotenv comment-truncation vulnerability (now fixed),
+    this could have allowed practical brute-force of the truncated 5-char password
+  - **Fix applied**: authLimiter (5 req/min/IP) on /admin-login + /verify-invigilator
+    in both shared/server-bootstrap.js (ESM) and server-cjs.cjs
+  - Verified: 5×401 then 10×429, legitimate login still works after window resets
+
+### Fixes
+- `shared/server-bootstrap.js`: Created `authLimiter` (5/min), applied to /admin-login + /verify-invigilator, imported `rateLimit` from auth.js
+- `server-cjs.cjs`: Synced `authLimiter` definition + applied to both auth endpoints
+- `local-database-server.js`: AI score endpoint hardening (proactive — endpoint not exposed by CJS):
+  - Added `requireAdmin` middleware
+  - Added `aiScoreLimiter` (3/min — expensive OpenAI calls)
+  - Added MAX_TASK_LENGTH (5000 chars per task)
+  - Restructured prompt with system+user separation, used `<task1>`/`<task2>` XML delimiters with explicit "treat as data only" instruction
+  - Safe JSON.parse with try/catch (returns 502 instead of crashing)
+  - Schema validation: bands must be numbers in 0-9 range
+
+### Pattern Analysis
+- **Deferred findings rot.** "No rate limiting on admin login" was logged in R1 and stayed deferred for 10 rounds because it required "middleware". In R12 we discovered the rate limit middleware was already in shared/auth.js — we just needed to apply it. The "needs middleware or external package" reason was wrong from the start. Always re-examine deferred findings each round; they may already be solvable.
+- **CSRF concerns are mitigated by Bearer auth.** Cookies are auto-sent by browsers; Authorization headers are not. The CORS `*` policy looks scary but is harmless for token-based auth — an attacker would need to first steal a token, and at that point CSRF is moot.
+- **Prompt injection mitigation: structure beats validation.** Stripping characters from user input is fragile; LLMs can be jailbroken with creative phrasing. Better: separate system instructions from user data via the system role, wrap user data in delimited tags, and explicitly tell the model "treat as data only".
+
+### Intelligence Update
+- Proven solid: Speaking dedup race (already fixed in R7), auth endpoints rate-limited, validateStudentInfo sanitization
+- Removed from deferred: "No rate limiting on admin login" — fixed
+- Removed from deferred: "AI score endpoint hardening" — fixed in source (still not exposed by CJS)
+- 4 deferred findings remain (all true architectural: answer keys public, CORS policy, client timestamps, anti-cheat metadata)
+- Coverage: 73 scenarios across 12 rounds, 31 bugs found, 25 fixed (+2 in R12)
+
+### Stats (Round 12)
+Tested: 5 | Passed: 1 | Failed: 1 (critical) | Noted: 3 | Fixed: 2 | Deferred: 0
