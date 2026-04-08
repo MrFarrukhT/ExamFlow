@@ -492,7 +492,7 @@
                     for (const skill of skills) {
                         for (const mock of mocks) {
                             try {
-                                const response = await fetch(`${this.apiBase}/cambridge-answers?level=${encodeURIComponent(level)}&skill=${skill}&mock=${mock}`);
+                                const response = await this._authFetch(`${this.apiBase}/cambridge-answers?level=${encodeURIComponent(level)}&skill=${skill}&mock=${mock}`);
                                 const data = await response.json();
                                 if (data.success && data.answers && Object.keys(data.answers).length > 0) {
                                     this.correctAnswers[`${level}_${skill}_${mock}`] = data.answers;

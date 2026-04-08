@@ -847,13 +847,13 @@ function toggleOptionsMenu() {
                     localStorage.setItem('cambridge-reading-writingStatus', 'completed');
                     localStorage.setItem('cambridge-reading-writingEndTime', new Date().toISOString());
                     alert('Test submitted successfully!');
-                    window.location.href = '../../dashboard-cambridge.html';
+                    if (window.top && window.top !== window) { window.top.location.href = '../../dashboard-cambridge.html'; } else { window.location.href = '../../dashboard-cambridge.html'; }
                 } catch(error) {
                     console.error('Error:', error);
                     alert('Test marked as completed. Note: Database submission may have failed.');
                     localStorage.setItem('cambridge-reading-writingStatus', 'completed');
                     localStorage.setItem('cambridge-reading-writingEndTime', new Date().toISOString());
-                    window.location.href = '../../dashboard-cambridge.html';
+                    if (window.top && window.top !== window) { window.top.location.href = '../../dashboard-cambridge.html'; } else { window.location.href = '../../dashboard-cambridge.html'; }
                 }
             }
         });

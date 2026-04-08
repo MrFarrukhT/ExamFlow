@@ -785,7 +785,7 @@
             const bandScore = document.getElementById('bandScore').value;
             if (!finalScore || finalScore < 0 || finalScore > 40) { alert('Please enter a valid score between 0 and 40'); return; }
             try {
-                const response = await fetch(`${API_BASE}/update-score`, {
+                const response = await dashboard._authFetch(`${API_BASE}/update-score`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ submissionId, score: parseInt(finalScore), bandScore })
                 });
@@ -800,7 +800,7 @@
                 alert('Please enter a valid band score between 0 and 9 (e.g., 6.5)'); return;
             }
             try {
-                const response = await fetch(`${API_BASE}/update-score`, {
+                const response = await dashboard._authFetch(`${API_BASE}/update-score`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ submissionId, score: null, bandScore })
                 });
@@ -826,7 +826,7 @@
             buttonText.textContent = 'Getting suggestion...';
             resultDiv.style.display = 'none';
             try {
-                const response = await fetch(`${API_BASE}/api/ai-score-suggestion`, {
+                const response = await dashboard._authFetch(`${API_BASE}/api/ai-score-suggestion`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ task1: task1Text, task2: task2Text })
                 });

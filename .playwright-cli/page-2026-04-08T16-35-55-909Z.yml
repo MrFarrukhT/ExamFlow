@@ -1,0 +1,42 @@
+- iframe [active] [ref=e2]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - img "Innovative Centre" [ref=f1e5]
+        - generic [ref=f1e6]: Cambridge General English
+        - generic [ref=f1e7]:
+          - generic [ref=f1e8]: A2 Key
+          - link "Invigilator" [ref=f1e9] [cursor=pointer]:
+            - /url: "#"
+    - main [ref=f1e10]:
+      - generic [ref=f1e11]:
+        - generic [ref=f1e12]:
+          - heading "Welcome, Test Student A" [level=1] [ref=f1e13]
+          - paragraph [ref=f1e14]: "ID: 1234"
+        - text: ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓
+        - link "📄 View My Submitted Answers" [ref=f1e16] [cursor=pointer]:
+          - /url: my-results.html
+        - generic [ref=f1e17]:
+          - generic [ref=f1e18]:
+            - generic [ref=f1e19]: A2 Key
+            - button "Change Level" [ref=f1e20] [cursor=pointer]
+          - heading "Select a Module to Begin" [level=2] [ref=f1e21]
+          - generic [ref=f1e22]:
+            - generic [ref=f1e23]:
+              - heading "Reading & Writing" [level=3] [ref=f1e24]
+              - paragraph [ref=f1e25]: ~60 minutes
+              - paragraph [ref=f1e26]: Multiple parts. Read texts, match words, and write short answers.
+              - generic [ref=f1e27]: Completed
+              - button "Completed ✓" [disabled] [ref=f1e28]
+            - generic [ref=f1e29]:
+              - heading "Listening" [level=3] [ref=f1e30]
+              - paragraph [ref=f1e31]: ~30 minutes
+              - paragraph [ref=f1e32]: Listen to audio recordings and answer questions. Audio cannot be paused.
+              - generic [ref=f1e33]: Not Started
+              - button "Start Listening" [ref=f1e34] [cursor=pointer]
+            - generic [ref=f1e35]:
+              - heading "Speaking" [level=3] [ref=f1e36]
+              - paragraph [ref=f1e37]: ~10 minutes
+              - paragraph [ref=f1e38]: Record yourself answering questions. You'll test your microphone first.
+              - generic [ref=f1e39]: Not Started
+              - button "Start Speaking" [ref=f1e40] [cursor=pointer]
