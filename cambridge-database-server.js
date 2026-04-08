@@ -157,6 +157,20 @@ async function initializeCambridgeTables(client) {
 
         console.log('✅ Audio columns migration completed');
 
+        // Add anti_cheat_data JSONB column for invigilator visibility into violations
+        await client.query(`
+            DO $$
+            BEGIN
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns
+                    WHERE table_name = 'cambridge_submissions' AND column_name = 'anti_cheat_data'
+                ) THEN
+                    ALTER TABLE cambridge_submissions ADD COLUMN anti_cheat_data JSONB;
+                END IF;
+            END $$;
+        `);
+        console.log('✅ anti_cheat_data column ready');
+
         // Update the skill check constraint to include 'speaking'
         await client.query(`
             DO $$
@@ -229,15 +243,20 @@ async function initializeCambridgeTables(client) {
 
 // Cambridge submission insert function
 async function insertCambridgeSubmission(dbClient, data) {
+    // Build anti-cheat metadata: client-side data + server-side flags
+    const antiCheatMeta = Object.assign({}, data.antiCheat || {});
+    if (data.durationFlag) antiCheatMeta.durationFlag = true;
+    const antiCheatJson = Object.keys(antiCheatMeta).length > 0 ? JSON.stringify(antiCheatMeta) : null;
+
     const result = await dbClient.query(`
         INSERT INTO cambridge_submissions
-        (student_id, student_name, exam_type, level, mock_test, skill, answers, score, grade, start_time, end_time)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        (student_id, student_name, exam_type, level, mock_test, skill, answers, score, grade, start_time, end_time, anti_cheat_data)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
         RETURNING id
     `, [data.studentId, data.studentName, 'Cambridge', data.level,
         data.mockTest || '1', data.skill, JSON.stringify(data.answers),
-        data.score, data.grade, data.startTime, data.endTime]);
-    console.log(`✅ Saved with ID: ${result.rows[0].id}`);
+        data.score, data.grade, data.startTime, data.endTime, antiCheatJson]);
+    console.log(`✅ Saved with ID: ${result.rows[0].id}${antiCheatJson ? ' (with anti-cheat flags)' : ''}`);
     return result.rows[0].id;
 }
 
@@ -598,17 +617,20 @@ app.post('/submit-speaking', submissionLimiter, async (req, res) => {
             }
 
             console.log(`🎤 Saving speaking test: ${level} Mock ${safeMockTest} for ${trimmedName} (${safeAudioSize}MB, ${safeDuration}s)`);
+            // Build anti-cheat metadata for speaking submission
+            const speakAntiCheat = Object.assign({}, req.body.antiCheat || {});
+            const speakAntiCheatJson = Object.keys(speakAntiCheat).length > 0 ? JSON.stringify(speakAntiCheat) : null;
             const result = await dbClient.query(`
                 INSERT INTO cambridge_submissions
                 (student_id, student_name, exam_type, level, mock_test, skill,
                  answers, audio_data, audio_size, audio_duration, audio_mime_type,
-                 start_time, end_time, evaluated)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+                 start_time, end_time, evaluated, anti_cheat_data)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
                 RETURNING id
             `, [
                 trimmedId, trimmedName, 'Cambridge', level, safeMockTest, skill,
                 JSON.stringify({}), audioData, safeAudioSize, safeDuration, safeMimeType,
-                startTime, endTime, false
+                startTime, endTime, false, speakAntiCheatJson
             ]);
 
             console.log(`✅ Speaking test saved with ID: ${result.rows[0].id}`);
@@ -639,7 +661,7 @@ app.get('/cambridge-submissions', requireAdmin, async (req, res) => {
         const dbClient = await ensureConnection();
         // When student_id is provided, exclude audio_data to keep response small
         const selectCols = student_id
-            ? 'id, student_id, student_name, exam_type, level, mock_test, skill, answers, score, grade, start_time, end_time, created_at, evaluated, evaluator_name, evaluation_date, evaluation_notes'
+            ? 'id, student_id, student_name, exam_type, level, mock_test, skill, answers, score, grade, start_time, end_time, created_at, evaluated, evaluator_name, evaluation_date, evaluation_notes, anti_cheat_data'
             : '*';
         let query = `SELECT ${selectCols} FROM cambridge_submissions`;
         const params = [];

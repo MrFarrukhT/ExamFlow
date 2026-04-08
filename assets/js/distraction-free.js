@@ -4,9 +4,54 @@
 class DistractionFreeMode {
     constructor() {
         this.isEnabled = sessionStorage.getItem('distractionFreeMode') === 'true';
+        // Anti-cheat counters — persisted across page navigations via sessionStorage
+        this.counters = this._loadCounters();
         if (this.isEnabled) {
             this.init();
         }
+        // Always track focus/visibility events even if fullscreen disabled
+        this._setupViolationTracking();
+    }
+
+    _loadCounters() {
+        try {
+            const raw = sessionStorage.getItem('antiCheatCounters');
+            if (raw) return JSON.parse(raw);
+        } catch (e) {}
+        return {
+            tabSwitches: 0,
+            windowBlurs: 0,
+            fullscreenExits: 0,
+            copyAttempts: 0,
+            pasteAttempts: 0,
+            rightClickAttempts: 0,
+            blockedShortcuts: 0,
+            firstViolationAt: null,
+            lastViolationAt: null
+        };
+    }
+
+    _saveCounters() {
+        try {
+            sessionStorage.setItem('antiCheatCounters', JSON.stringify(this.counters));
+        } catch (e) {}
+    }
+
+    _recordViolation(type) {
+        if (typeof this.counters[type] === 'number') this.counters[type]++;
+        const now = new Date().toISOString();
+        if (!this.counters.firstViolationAt) this.counters.firstViolationAt = now;
+        this.counters.lastViolationAt = now;
+        this._saveCounters();
+    }
+
+    _setupViolationTracking() {
+        // Tab switch / page visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) this._recordViolation('tabSwitches');
+        });
+        // Window blur (clicked outside the browser)
+        window.addEventListener('blur', () => this._recordViolation('windowBlurs'));
     }
 
     init() {
@@ -32,8 +77,9 @@ class DistractionFreeMode {
 
     monitorFullscreen() {
         const checkFullscreen = () => {
-            if (!document.fullscreenElement && !document.webkitFullscreenElement && 
+            if (!document.fullscreenElement && !document.webkitFullscreenElement &&
                 !document.mozFullScreenElement && !document.msFullscreenElement) {
+                this._recordViolation('fullscreenExits');
                 this.showFullscreenWarning();
             }
         };
@@ -68,60 +114,45 @@ class DistractionFreeMode {
 
     preventUnwantedActions() {
         // Prevent context menu (right-click)
-        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('contextmenu', e => {
+            e.preventDefault();
+            this._recordViolation('rightClickAttempts');
+        });
 
         // Prevent common keyboard shortcuts
+        const blockShortcut = (e) => {
+            e.preventDefault();
+            this._recordViolation('blockedShortcuts');
+            return false;
+        };
         document.addEventListener('keydown', e => {
             // F5, Ctrl+R (refresh)
-            if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
-                e.preventDefault();
-                return false;
-            }
-
+            if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) return blockShortcut(e);
             // F12, Ctrl+Shift+I (dev tools)
-            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
-                e.preventDefault();
-                return false;
-            }
-
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) return blockShortcut(e);
             // Ctrl+Shift+J (console)
-            if (e.ctrlKey && e.shiftKey && e.key === 'J') {
-                e.preventDefault();
-                return false;
-            }
-
+            if (e.ctrlKey && e.shiftKey && e.key === 'J') return blockShortcut(e);
             // Ctrl+Shift+C (element picker)
-            if (e.ctrlKey && e.shiftKey && e.key === 'C') {
-                e.preventDefault();
-                return false;
-            }
-
+            if (e.ctrlKey && e.shiftKey && e.key === 'C') return blockShortcut(e);
             // Ctrl+U (view source)
-            if (e.ctrlKey && e.key === 'u') {
-                e.preventDefault();
-                return false;
-            }
-
-            // Ctrl+P (print — could be used to export test content)
-            if (e.ctrlKey && e.key === 'p') {
-                e.preventDefault();
-                return false;
-            }
-
+            if (e.ctrlKey && e.key === 'u') return blockShortcut(e);
+            // Ctrl+P (print)
+            if (e.ctrlKey && e.key === 'p') return blockShortcut(e);
             // Ctrl+S (save page)
-            if (e.ctrlKey && e.key === 's') {
-                e.preventDefault();
-                return false;
-            }
+            if (e.ctrlKey && e.key === 's') return blockShortcut(e);
         });
 
         // Prevent copy/paste in test input fields (writing tasks exempt)
         document.addEventListener('copy', e => {
-            if (!e.target.closest('textarea')) e.preventDefault();
+            if (!e.target.closest('textarea')) {
+                e.preventDefault();
+                this._recordViolation('copyAttempts');
+            }
         });
         document.addEventListener('paste', e => {
             if (e.target.closest('textarea')) return; // allow paste in writing tasks
             e.preventDefault();
+            this._recordViolation('pasteAttempts');
         });
 
         // Prevent accidental back navigation
@@ -132,9 +163,11 @@ class DistractionFreeMode {
     }
 
     getAntiCheatData() {
-        return {
+        // Returns the full anti-cheat profile for submission to the server.
+        // Includes both the fullscreen state and the persisted violation counters.
+        return Object.assign({
             distractionFreeEnabled: this.isEnabled
-        };
+        }, this.counters);
     }
 }
 

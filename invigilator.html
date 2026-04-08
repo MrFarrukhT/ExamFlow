@@ -33,13 +33,14 @@
             background: #0052a3; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,102,204,0.3);
         }
         /* Room Activity */
-        .room-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+        .room-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
         .room-stat-card {
             background: linear-gradient(135deg, #667eea, #764ba2); color: white;
             padding: 16px; border-radius: 10px; text-align: center;
         }
         .cambridge-mode .room-stat-card { background: linear-gradient(135deg, #0d9488, #065f46); }
         .room-stat-card.pending { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .room-stat-card.flagged { background: linear-gradient(135deg, #dc2626, #991b1b); }
         .room-stat-number { font-size: 2rem; font-weight: 800; line-height: 1.1; }
         .room-stat-label { font-size: 0.8rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
         .room-filter-bar {
@@ -72,6 +73,35 @@
             padding: 6px 12px; background: white; border-radius: 6px;
             margin-top: 6px; font-size: 0.9rem;
         }
+        .room-skill-row-flagged {
+            background: #fff5f5;
+            border-left: 3px solid #dc2626;
+        }
+        .ac-flags {
+            display: flex; flex-wrap: wrap; gap: 4px;
+            padding: 4px 12px 6px;
+            background: #fff5f5;
+            border-radius: 0 0 6px 6px;
+            margin-top: -6px;
+            margin-bottom: 6px;
+            border-left: 3px solid #dc2626;
+        }
+        .ac-flag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+        .ac-flag-critical {
+            background: #dc2626; color: white;
+        }
+        .ac-flag-warn {
+            background: #fef3c7; color: #92400e;
+            border: 1px solid #fbbf24;
+        }
         .room-skill-badge {
             display: inline-block; padding: 2px 10px; border-radius: 10px;
             font-size: 0.78rem; font-weight: 600;
@@ -94,6 +124,7 @@
         .room-empty strong { display: block; font-size: 1.1rem; margin-bottom: 5px; color: #495057; }
         .room-error { text-align: center; color: #dc3545; padding: 20px; background: #fff5f5; border-radius: 8px; }
         @media (max-width: 768px) { .room-stats { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 769px) and (max-width: 1100px) { .room-stats { grid-template-columns: repeat(3, 1fr); } }
     </style>
 </head>
 <body>
@@ -154,6 +185,10 @@
                 <div class="room-stat-card pending">
                     <div class="room-stat-number" id="statPending">—</div>
                     <div class="room-stat-label">Pending</div>
+                </div>
+                <div class="room-stat-card flagged">
+                    <div class="room-stat-number" id="statFlagged">—</div>
+                    <div class="room-stat-label">Flagged</div>
                 </div>
             </div>
             <div class="room-filter-bar">
@@ -570,7 +605,7 @@
                     listEl.innerHTML = '<p class="room-error">Could not reach server — ' +
                         escapeHtml(msg) + '</p>';
                 }
-                ['statStudents','statSubmissions','statScored','statPending'].forEach(function(id) {
+                ['statStudents','statSubmissions','statScored','statPending','statFlagged'].forEach(function(id) {
                     document.getElementById(id).textContent = '\u2014';
                 });
             });
@@ -598,14 +633,55 @@
         function renderRoomStats(subs) {
             var students = {};
             var scored = 0;
+            var flagged = 0;
             subs.forEach(function(s) {
                 students[s.student_id || s.studentId || 'unknown'] = true;
                 if (s.score !== null && s.score !== undefined) scored++;
+                if (hasAntiCheatViolations(s)) flagged++;
             });
             document.getElementById('statStudents').textContent = Object.keys(students).length;
             document.getElementById('statSubmissions').textContent = subs.length;
             document.getElementById('statScored').textContent = scored;
             document.getElementById('statPending').textContent = Math.max(0, subs.length - scored);
+            var flagEl = document.getElementById('statFlagged');
+            if (flagEl) flagEl.textContent = flagged;
+        }
+
+        // Anti-cheat helpers — read submission flags from anti_cheat_data column
+        function getAntiCheat(s) {
+            var ac = s.anti_cheat_data || s.antiCheatData || s.antiCheat || null;
+            if (!ac) return null;
+            if (typeof ac === 'string') {
+                try { return JSON.parse(ac); } catch (e) { return null; }
+            }
+            return ac;
+        }
+
+        function hasAntiCheatViolations(s) {
+            var ac = getAntiCheat(s);
+            if (!ac) return false;
+            if (ac.durationFlag) return true;
+            if ((ac.tabSwitches || 0) > 0) return true;
+            if ((ac.windowBlurs || 0) > 0) return true;
+            if ((ac.fullscreenExits || 0) > 0) return true;
+            if ((ac.copyAttempts || 0) > 0) return true;
+            if ((ac.pasteAttempts || 0) > 0) return true;
+            if (ac.distractionFreeEnabled === false) return true;
+            return false;
+        }
+
+        function buildAntiCheatBadges(s) {
+            var ac = getAntiCheat(s);
+            if (!ac) return '';
+            var badges = [];
+            if (ac.durationFlag) badges.push('<span class="ac-flag ac-flag-critical" title="Test took longer than 2x the time limit">\u23F1 OVERTIME</span>');
+            if ((ac.tabSwitches || 0) > 0) badges.push('<span class="ac-flag ac-flag-warn" title="Tab switches detected">\u26A0 ' + ac.tabSwitches + ' tab\u00A0switch' + (ac.tabSwitches > 1 ? 'es' : '') + '</span>');
+            if ((ac.fullscreenExits || 0) > 0) badges.push('<span class="ac-flag ac-flag-warn" title="Exited fullscreen">\u26A0 ' + ac.fullscreenExits + ' fs\u00A0exit' + (ac.fullscreenExits > 1 ? 's' : '') + '</span>');
+            if ((ac.windowBlurs || 0) > 0) badges.push('<span class="ac-flag ac-flag-warn" title="Window lost focus">\u26A0 ' + ac.windowBlurs + ' blur</span>');
+            if ((ac.copyAttempts || 0) > 0) badges.push('<span class="ac-flag ac-flag-warn" title="Copy attempts blocked">\u26A0 ' + ac.copyAttempts + ' copy</span>');
+            if ((ac.pasteAttempts || 0) > 0) badges.push('<span class="ac-flag ac-flag-warn" title="Paste attempts blocked">\u26A0 ' + ac.pasteAttempts + ' paste</span>');
+            if (ac.distractionFreeEnabled === false) badges.push('<span class="ac-flag ac-flag-warn" title="Distraction-free mode disabled">\u26A0 NO\u00A0FS</span>');
+            return badges.length > 0 ? '<div class="ac-flags">' + badges.join(' ') + '</div>' : '';
         }
 
         function renderRoomList(subs) {
@@ -637,7 +713,8 @@
                         : 'Awaiting score';
                     var time = s.created_at ? new Date(s.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '';
                     var mock = isCambridge ? (s.mock_test || s.mockTest || '') : (s.mock_number || s.mockNumber || '');
-                    html += '<div class="room-skill-row">';
+                    var flagged = hasAntiCheatViolations(s);
+                    html += '<div class="room-skill-row' + (flagged ? ' room-skill-row-flagged' : '') + '">';
                     html += '<span><span class="room-skill-badge ' + escapeHtml(badgeClass) + '">' + escapeHtml(skill) + '</span>';
                     if (mock) html += ' <span style="color:#6c757d;font-size:0.8rem;">Mock ' + escapeHtml(String(mock)) + '</span>';
                     if (isCambridge && s.level) html += ' <span style="color:#6c757d;font-size:0.8rem;">' + escapeHtml(s.level) + '</span>';
@@ -645,6 +722,8 @@
                     html += '<span><span class="room-score ' + (hasScore ? 'scored' : 'pending') + '">' + escapeHtml(scoreText) + '</span>';
                     if (time) html += ' <span style="color:#adb5bd;font-size:0.78rem;margin-left:8px;">' + time + '</span>';
                     html += '</span></div>';
+                    // Anti-cheat badges row (only if violations exist)
+                    if (flagged) html += buildAntiCheatBadges(s);
                 });
                 html += '</div>';
             });

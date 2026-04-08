@@ -58,14 +58,19 @@ const { app, ensureConnection, __dirname: serverDir, start } = createServer({
 
 // IELTS submission insert function
 async function insertIeltsSubmission(dbClient, data) {
+    // Build anti-cheat metadata: client-side data + server-side flags (durationFlag etc.)
+    const antiCheatMeta = Object.assign({}, data.antiCheat || {});
+    if (data.durationFlag) antiCheatMeta.durationFlag = true;
+    const antiCheatJson = Object.keys(antiCheatMeta).length > 0 ? JSON.stringify(antiCheatMeta) : null;
+
     const result = await dbClient.query(`
         INSERT INTO test_submissions
-        (student_id, student_name, mock_number, skill, answers, score, band_score, start_time, end_time)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        (student_id, student_name, mock_number, skill, answers, score, band_score, start_time, end_time, anti_cheat_data)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         RETURNING id
     `, [data.studentId, data.studentName, data.mockNumber, data.skill,
-    JSON.stringify(data.answers), data.score, data.bandScore, data.startTime, data.endTime]);
-    console.log(`✅ Saved with ID: ${result.rows[0].id}`);
+    JSON.stringify(data.answers), data.score, data.bandScore, data.startTime, data.endTime, antiCheatJson]);
+    console.log(`✅ Saved with ID: ${result.rows[0].id}${antiCheatJson ? ' (with anti-cheat flags)' : ''}`);
     return result.rows[0].id;
 }
 
@@ -127,6 +132,19 @@ const VALID_SKILLS = Object.keys(IELTS_TIME_LIMITS);
             END $$;
         `);
         console.log('✅ Skill constraint updated to include speaking');
+
+        // Add anti_cheat_data JSONB column for invigilator visibility into violations
+        await db.query(`
+            DO $$ BEGIN
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns
+                    WHERE table_name = 'test_submissions' AND column_name = 'anti_cheat_data'
+                ) THEN
+                    ALTER TABLE test_submissions ADD COLUMN anti_cheat_data JSONB;
+                END IF;
+            END $$;
+        `);
+        console.log('✅ anti_cheat_data column ready');
     } catch (e) { /* constraint may not exist yet */ }
 })();
 
@@ -268,7 +286,7 @@ app.get('/my-submissions', submissionLimiter, async (req, res) => {
         }
 
         const query = `SELECT id, student_id, student_name, skill, mock_number, answers, score, band_score,
-                              start_time, end_time, created_at
+                              start_time, end_time, created_at, anti_cheat_data
                        FROM test_submissions
                        WHERE ${conditions.join(' AND ')}
                        ORDER BY created_at DESC`;
