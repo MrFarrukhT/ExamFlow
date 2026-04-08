@@ -114,6 +114,9 @@ app.post('/submissions', async (req, res) => {
         if (!studentId || !studentName) {
             return res.status(400).json({ success: false, message: 'Student ID and name are required' });
         }
+        if (studentId.length > 200 || studentName.length > 200) {
+            return res.status(400).json({ success: false, message: 'Student ID and name must be at most 200 characters' });
+        }
         if (!submissionData.skill) {
             return res.status(400).json({ success: false, message: 'Skill is required' });
         }

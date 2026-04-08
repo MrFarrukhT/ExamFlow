@@ -290,6 +290,9 @@ app.post('/cambridge-submissions', async (req, res) => {
         if (!studentId || !studentName) {
             return res.status(400).json({ success: false, message: 'Student ID and name are required' });
         }
+        if (studentId.length > 200 || studentName.length > 200) {
+            return res.status(400).json({ success: false, message: 'Student ID and name must be at most 200 characters' });
+        }
         if (!submissionData.level || !VALID_LEVELS.includes(submissionData.level)) {
             return res.status(400).json({ success: false, message: `Invalid level. Must be one of: ${VALID_LEVELS.join(', ')}` });
         }
@@ -346,6 +349,9 @@ app.post('/submit-speaking', async (req, res) => {
         const trimmedName = typeof studentName === 'string' ? studentName.trim() : '';
         if (!trimmedId || !trimmedName) {
             return res.status(400).json({ success: false, message: 'Student ID and name are required' });
+        }
+        if (trimmedId.length > 200 || trimmedName.length > 200) {
+            return res.status(400).json({ success: false, message: 'Student ID and name must be at most 200 characters' });
         }
 
         // Validate level and skill
@@ -743,6 +749,9 @@ app.post('/cambridge-student-results', async (req, res) => {
         const trimmedName = typeof data.student_name === 'string' ? data.student_name.trim() : '';
         if (!trimmedId || !trimmedName) {
             return res.status(400).json({ success: false, message: 'Student ID and name are required' });
+        }
+        if (trimmedId.length > 200 || trimmedName.length > 200) {
+            return res.status(400).json({ success: false, message: 'Student ID and name must be at most 200 characters' });
         }
         if (!data.level || !VALID_LEVELS.includes(data.level)) {
             return res.status(400).json({ success: false, message: `Invalid level. Must be one of: ${VALID_LEVELS.join(', ')}` });
