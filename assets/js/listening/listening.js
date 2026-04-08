@@ -1291,15 +1291,22 @@
                 wasPlaying = true;
             }
 
-            // Add confirmation dialog before submission
-            if (confirm('Are you sure you want to submit your listening test? This action cannot be undone.')) {
-                // Override to submit to backend instead of showing answers
+            function resumeAudio() {
+                if (wasPlaying && audioPlayer) {
+                    audioPlayer.play().catch(function () {});
+                }
+            }
+
+            // Use review modal if available, otherwise fall back to confirm
+            if (window.examProgress) {
+                window.examProgress.showReviewModal(
+                    function () { window.submitListeningTest(); },
+                    resumeAudio
+                );
+            } else if (confirm('Are you sure you want to submit your listening test? This action cannot be undone.')) {
                 window.submitListeningTest();
             } else {
-                // Resume if they cancelled and it was previously playing
-                if (wasPlaying && audioPlayer) {
-                    audioPlayer.play().catch(e => {});
-                }
+                resumeAudio();
             }
         });
         

@@ -163,64 +163,58 @@ async function handleTestCompletion() {
     const examType = localStorage.getItem('examType');
     const dashboardPath = examType === 'Cambridge' ? '../../dashboard-cambridge.html' : '../../student-dashboard.html';
 
-    // Count unanswered questions for a more informative confirmation
-    let confirmMsg = 'Are you sure you want to submit this section? You will not be able to return to it.';
-    if (currentModule === 'reading' || currentModule === 'listening') {
-        const totalQuestions = 40;
-        const answersStr = localStorage.getItem(`${currentModule}Answers`);
-        let answers = {};
-        try { answers = answersStr ? JSON.parse(answersStr) : {}; } catch (e) { /* ignore parse error */ }
-        const answered = Object.values(answers).filter(v => v !== null && v !== undefined && String(v).trim() !== '').length;
-        const unanswered = totalQuestions - answered;
-        if (unanswered > 0) {
-            confirmMsg = `You have ${unanswered} unanswered question${unanswered > 1 ? 's' : ''} out of ${totalQuestions}.\n\nAre you sure you want to submit? You will not be able to return to this section.`;
-        }
+    // Use review modal if available (reading/listening), otherwise fall back to confirm
+    if ((currentModule === 'reading' || currentModule === 'listening') && window.examProgress) {
+        window.examProgress.showReviewModal(function () {
+            _executeSubmission(currentModule, examType, dashboardPath);
+        });
+        return;
     }
 
-    if (confirm(confirmMsg)) {
-        // Stop periodic saves and mark submission in progress to prevent race conditions
-        _isSubmitting = true;
-        if (_periodicSaveIntervalId) {
-            clearInterval(_periodicSaveIntervalId);
-            _periodicSaveIntervalId = null;
-        }
+    if (confirm('Are you sure you want to submit this section? You will not be able to return to it.')) {
+        _executeSubmission(currentModule, examType, dashboardPath);
+    }
+}
 
-        try {
-            // Save final answers (waits if a periodic save is still running)
-            saveAnswersToSession();
+async function _executeSubmission(currentModule, examType, dashboardPath) {
+    // Stop periodic saves and mark submission in progress to prevent race conditions
+    _isSubmitting = true;
+    if (_periodicSaveIntervalId) {
+        clearInterval(_periodicSaveIntervalId);
+        _periodicSaveIntervalId = null;
+    }
 
-            // Mark as completed first (in case database fails)
-            localStorage.setItem(`${currentModule}Status`, 'completed');
-            localStorage.setItem(`${currentModule}EndTime`, new Date().toISOString());
+    try {
+        // Save final answers (waits if a periodic save is still running)
+        saveAnswersToSession();
 
-            // Use appropriate answer manager based on exam type
-            if (examType === 'Cambridge' && window.cambridgeAnswerManager) {
-                await window.cambridgeAnswerManager.submitTestToDatabase();
-            } else {
-                // Get test data for submission (IELTS)
-                const testData = await collectTestData(currentModule);
+        // Mark as completed first (in case database fails)
+        localStorage.setItem(`${currentModule}Status`, 'completed');
+        localStorage.setItem(`${currentModule}EndTime`, new Date().toISOString());
 
-                // Save to database
-                await saveTestToDatabase(testData);
+        // Use appropriate answer manager based on exam type
+        if (examType === 'Cambridge' && window.cambridgeAnswerManager) {
+            await window.cambridgeAnswerManager.submitTestToDatabase();
+        } else {
+            // Get test data for submission (IELTS)
+            const testData = await collectTestData(currentModule);
 
-                // Save to history if answer manager is available
-                if (window.answerManager) {
-                    window.answerManager.saveCurrentTestToHistory();
-                }
+            // Save to database
+            await saveTestToDatabase(testData);
+
+            // Save to history if answer manager is available
+            if (window.answerManager) {
+                window.answerManager.saveCurrentTestToHistory();
             }
-
-            // Show completion message
-            alert(`${currentModule.charAt(0).toUpperCase() + currentModule.slice(1)} section completed successfully!`);
-
-            // Return to appropriate dashboard
-            window.location.href = dashboardPath;
-
-        } catch (error) {
-            console.error('Error submitting test:', error);
-            // Still allow completion even if database save fails (already marked as completed above)
-            alert(`${currentModule.charAt(0).toUpperCase() + currentModule.slice(1)} section completed successfully!\nNote: There was an issue saving to the database, but your answers are saved locally.`);
-            window.location.href = dashboardPath;
         }
+
+        // Return to appropriate dashboard (no alert — the review modal already confirmed)
+        window.location.href = dashboardPath;
+
+    } catch (error) {
+        console.error('Error submitting test:', error);
+        // Still allow completion even if database save fails (already marked as completed above)
+        window.location.href = dashboardPath;
     }
 }
 

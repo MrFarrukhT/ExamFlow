@@ -414,13 +414,21 @@ app.post('/submit-speaking', async (req, res) => {
 // Get all Cambridge submissions
 app.get('/cambridge-submissions', async (req, res) => {
     try {
-        const { level, skill } = req.query;
+        const { level, skill, student_id, mock_test } = req.query;
 
         const dbClient = await ensureConnection();
-        let query = 'SELECT * FROM cambridge_submissions';
+        // When student_id is provided, exclude audio_data to keep response small
+        const selectCols = student_id
+            ? 'id, student_id, student_name, exam_type, level, mock_test, skill, answers, score, grade, start_time, end_time, created_at, evaluated, evaluator_name, evaluation_date, evaluation_notes'
+            : '*';
+        let query = `SELECT ${selectCols} FROM cambridge_submissions`;
         const params = [];
         const conditions = [];
 
+        if (student_id) {
+            conditions.push(`student_id = $${params.length + 1}`);
+            params.push(student_id);
+        }
         if (level) {
             conditions.push(`level = $${params.length + 1}`);
             params.push(level);
@@ -428,6 +436,10 @@ app.get('/cambridge-submissions', async (req, res) => {
         if (skill) {
             conditions.push(`skill = $${params.length + 1}`);
             params.push(skill);
+        }
+        if (mock_test) {
+            conditions.push(`mock_test = $${params.length + 1}`);
+            params.push(mock_test);
         }
 
         if (conditions.length > 0) {

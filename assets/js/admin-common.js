@@ -48,6 +48,9 @@ class AdminDashboard {
         this.totalPages = 0;
         this.isDateGroupView = false;
 
+        // Scoring queue state
+        this.scoringQueueIndex = -1;
+
         // Expose on window so inline onclick handlers work
         this._exposeGlobals();
     }
@@ -587,6 +590,89 @@ class AdminDashboard {
     }
 
     // ------------------------------------------------------------------
+    // Scoring queue — navigate unscored submissions without leaving modal
+    // ------------------------------------------------------------------
+
+    /** Override per exam to define what "unscored" means. */
+    _isUnscored(submission) {
+        return !submission.score;
+    }
+
+    /** Get the list of unscored submissions from the current filtered set. */
+    getScoringQueue() {
+        return this.filteredSubmissions.filter(s => this._isUnscored(s));
+    }
+
+    /** Open the first unscored submission in the modal. */
+    startScoringQueue() {
+        const queue = this.getScoringQueue();
+        if (queue.length === 0) { alert('All submissions in the current filter are scored!'); return; }
+        this.scoringQueueIndex = 0;
+        window.openAnswerComparison(queue[0].id);
+    }
+
+    /** Navigate to prev/next unscored submission. */
+    navigateScoring(direction) {
+        const queue = this.getScoringQueue();
+        if (queue.length === 0) { alert('All scored!'); this.closeModal(); return; }
+        if (direction === 'next') {
+            this.scoringQueueIndex++;
+            if (this.scoringQueueIndex >= queue.length) this.scoringQueueIndex = 0;
+        } else {
+            this.scoringQueueIndex--;
+            if (this.scoringQueueIndex < 0) this.scoringQueueIndex = queue.length - 1;
+        }
+        window.openAnswerComparison(queue[this.scoringQueueIndex].id);
+    }
+
+    /**
+     * Call from openAnswerComparison to update the scoring nav bar.
+     * Shows "3 of 17 unscored" + prev/next buttons inside the modal.
+     */
+    updateScoringNav(submissionId) {
+        const navEl = document.getElementById('scoringNav');
+        if (!navEl) return;
+
+        const queue = this.getScoringQueue();
+        const idx = queue.findIndex(s => s.id == submissionId);
+        if (idx !== -1) this.scoringQueueIndex = idx;
+
+        if (queue.length === 0) {
+            navEl.innerHTML = '<span style="color:#a5d6a7;font-weight:600;">All scored!</span>';
+            navEl.style.display = 'flex';
+            return;
+        }
+
+        const current = idx !== -1 ? idx + 1 : '-';
+        navEl.innerHTML = `
+            <button onclick="navigateScoring('prev')" class="scoring-nav-btn">&laquo; Prev</button>
+            <span style="color:rgba(255,255,255,0.9);font-size:13px;font-weight:500;">
+                ${current} of ${queue.length} unscored
+            </span>
+            <button onclick="navigateScoring('next')" class="scoring-nav-btn">Next &raquo;</button>
+        `;
+        navEl.style.display = 'flex';
+    }
+
+    /**
+     * Call after saving a score to auto-advance to next unscored.
+     * Reloads submissions, then opens the next unscored if any remain.
+     */
+    async advanceAfterScore() {
+        await this.loadSubmissions();
+        const queue = this.getScoringQueue();
+        if (queue.length === 0) {
+            this.closeModal();
+            alert('All submissions scored!');
+            return;
+        }
+        // Stay at current index (the item we just scored is gone from queue,
+        // so the next item slid into our index position)
+        if (this.scoringQueueIndex >= queue.length) this.scoringQueueIndex = 0;
+        window.openAnswerComparison(queue[this.scoringQueueIndex].id);
+    }
+
+    // ------------------------------------------------------------------
     // Expose methods as window globals for inline onclick handlers
     // ------------------------------------------------------------------
 
@@ -623,6 +709,11 @@ class AdminDashboard {
         window.loadAnswerSet = () => self.loadAnswerSet();
         window.saveAnswerSet = () => self.saveAnswerSet();
         window.clearAnswerSet = () => self.clearAnswerSet();
+
+        // Scoring queue navigation
+        window.startScoringQueue = () => self.startScoringQueue();
+        window.navigateScoring = (d) => self.navigateScoring(d);
+        window.advanceAfterScore = () => self.advanceAfterScore();
 
         // Expose state as getters so pagination onclick references like
         // goToPage(currentPage - 1) still work with bare variable names.
