@@ -287,13 +287,13 @@ Before spawning any agent, read:
 - The target HTML file's current code
 - Similar pages that are well-built
 
-### For Polish changes — parallel agents (in worktrees)
+### For Polish changes — sequential on main branch
 
-Each agent receives the change, the target file, the CSS files to reference, and similar pages for pattern matching.
+Make each change directly, one at a time. Read the file, edit it, verify, move to the next.
 
-### For Rebuild changes — single focused agent
+### For Rebuild changes — sequential on main branch
 
-Agent receives: current HTML file, design spec, available CSS/JS modules, reference pages.
+Read: current HTML file, design spec, available CSS/JS modules, reference pages. Then make the changes directly.
 
 **Rules for this project:**
 1. Edit HTML files directly (no JSX, no components)

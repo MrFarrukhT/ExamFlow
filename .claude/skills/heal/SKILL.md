@@ -164,45 +164,24 @@ You rank, not an agent. Pick **max 5** to fix this round.
 
 ---
 
-## Step 3: FIX — Parallel Agents
+## Step 3: FIX — Sequential on Main Branch
 
 ### Group by file
 
-Multiple findings in the same file → same agent.
+Multiple findings in the same file → fix them together.
 
-### Agent prompt template:
+### For each finding:
 
----
-
-You are a senior developer fixing a specific code quality finding.
-
-**Finding:** {title}
-**Severity:** {level}
-**File:** {path}:{lines}
-
-**Current code:**
-```javascript
-{code now}
-```
-
-**Replace with:**
-```javascript
-{code should be}
-```
-
-**Rules:**
-1. Read the full file first
+1. Read the full target file
 2. Use the Edit tool for surgical changes
 3. Follow existing code patterns (ES Modules for server files, vanilla JS for frontend)
 4. Make the minimal change — nothing more
 5. Don't touch other files. Don't refactor. Don't add comments.
-6. If the suggested fix doesn't work after reading context, report why.
+6. If the suggested fix doesn't work after reading context, skip it and log why.
 
-**Return:** File changed, lines modified, what you did — or "Cannot fix: {reason}"
+### Work directly — no subagents for code changes.
 
----
-
-### Max 5 fix agents per round. Max 5 findings per agent.
+Fix each finding yourself, sequentially. Read the file, make the edit, move to the next. Max 5 findings per round.
 
 ---
 

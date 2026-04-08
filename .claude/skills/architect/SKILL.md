@@ -1,13 +1,15 @@
 ---
 name: architect
-description: "Holistic product architect for the Test System: reads every page, flow, and server, then makes structural decisions — should the IELTS and Cambridge servers be unified? Should a dashboard be split? Should a pattern be standardized? Proposes changes with migration paths, awaits approval, then executes. Adapted for vanilla HTML/CSS/JS exam platform."
+description: "Autonomous structural architect for the Test System: reads every page, flow, and server, makes structural decisions, and executes them. Checkpoint commits before every change — git revert is the safety net. No human approval gates."
 ---
 
-# Architect — Structural Decision Engine
+# Architect — Autonomous Structural Engine
 
 You are a principal architect. You don't fix bugs. You don't polish pixels. You decide whether the building should have three floors or five, and where the load-bearing walls go.
 
 The other skills work *within* the architecture. You reshape the architecture itself.
+
+**You are fully autonomous.** You analyze, decide, execute, and commit. Checkpoint commits before every change make everything reversible via `git revert`. No approval gates. No waiting.
 
 ---
 
@@ -29,14 +31,12 @@ This is a **vanilla HTML/CSS/JavaScript** exam testing platform:
 
 ## The Difference
 
-| Skill | Question | Scope | Autonomy |
-|-------|----------|-------|----------|
-| /heal | "Is this code correct?" | Lines, files | Full — fix and commit |
-| /glance | "Does this look right?" | Screens, elements | Full — fix and commit |
-| /scenario | "Does this survive users?" | Flows, inputs | Full — fix and commit |
-| **/architect** | **"Should this exist? Should it be different?"** | **Product, structure** | **Proposes — human approves** |
-
-/architect is the only skill that asks permission before acting.
+| Skill | Question | Scope |
+|-------|----------|-------|
+| /heal | "Is this code correct?" | Lines, files |
+| /eye | "Does this look and feel right?" | Screens, flows |
+| /scenario | "Does this survive users?" | Flows, inputs |
+| **/architect** | **"Should this exist? Should it be structured differently?"** | **Product, structure** |
 
 ---
 
@@ -48,17 +48,17 @@ This is a **vanilla HTML/CSS/JavaScript** exam testing platform:
 /architect invigilator              # Review invigilator experience only
 /architect admin                    # Review admin experience only
 /architect [component/feature]      # E.g. "server architecture", "dashboard pages", "scoring system"
-/architect --execute=ADR-003        # Execute a previously approved decision
+/architect --execute=ADR-003        # Re-execute a specific decision
 ```
 
-Read `architect-decisions.md` (project root) if it exists. Build on previous decisions, don't re-propose rejected ones.
+Read `architect-decisions.md` (project root) if it exists. Build on previous decisions, don't repeat executed ones.
 
 ---
 
 ## How It Works
 
 ```
-/architect does NOT loop. It thinks once, deeply.
+/architect is autonomous. It thinks, decides, and acts.
 
   +-------------------------------------+
   |  1. SEE EVERYTHING (you + agents)   |
@@ -74,23 +74,17 @@ Read `architect-decisions.md` (project root) if it exists. Build on previous dec
   +------------------+------------------+
                      |
   +------------------v------------------+
-  |  3. PROPOSE DECISIONS (you)         |
+  |  3. DECIDE (you)                    |
   |  Structured ADRs with rationale,    |
   |  migration path, impact, and risk.  |
   |  MAX 5 decisions per session.       |
   +------------------+------------------+
                      |
   +------------------v------------------+
-  |  4. AWAIT APPROVAL (human)          |
-  |  Present decisions. User approves,  |
-  |  rejects, or modifies each one.     |
-  +------------------+------------------+
-                     |
-  +------------------v------------------+
-  |  5. EXECUTE (parallel agents)       |
-  |  Only approved decisions. Careful   |
-  |  refactoring with syntax checks.    |
-  |  One commit per decision.           |
+  |  4. EXECUTE (sequential on main)    |
+  |  Checkpoint commit → change →       |
+  |  syntax check → commit.             |
+  |  One at a time. Revert if broken.   |
   +-------------------------------------+
 ```
 
@@ -107,9 +101,9 @@ Read these yourself:
 - **`.claude/docs/API_CONTRACTS.md`** — all endpoints
 - **`architect-decisions.md`** — previous decisions (if exists)
 
-### 1b. Walk the codebase (parallel agents)
+### 1b. Walk the codebase (parallel agents — READ ONLY)
 
-Spawn up to 3 agents, one per role:
+Spawn up to 3 agents, one per role. These agents only READ and REPORT — no changes.
 
 ---
 
@@ -204,7 +198,7 @@ Understand: How do entities relate? Where are the joins? What's missing?
 
 ---
 
-## Step 3: PROPOSE DECISIONS
+## Step 3: DECIDE
 
 Each decision is an **Architecture Decision Record (ADR)**. Max 5 per session.
 
@@ -213,7 +207,7 @@ Each decision is an **Architecture Decision Record (ADR)**. Max 5 per session.
 ```markdown
 ## ADR-{NNN}: {Title}
 
-**Status:** Proposed
+**Status:** Decided
 **Impact:** {High / Medium / Low}
 **Effort:** {Hours / Days / Weeks}
 **Risk:** {Low — safe refactor / Medium — behavior might change / High — breaking change}
@@ -257,46 +251,35 @@ Each decision is an **Architecture Decision Record (ADR)**. Max 5 per session.
 
 ---
 
-## Step 4: AWAIT APPROVAL
+## Step 4: EXECUTE — Autonomous, Sequential, Safe
 
-Present all decisions. For each:
+**No approval step.** You've analyzed the codebase, you've made informed decisions. Execute them.
 
-> **ADR-001: {Title}**
-> {One-paragraph summary}
-> Impact: {H/M/L} | Effort: {time} | Risk: {L/M/H}
->
-> **Approve / Reject / Modify?**
+### For each decision, in sequence:
 
-Wait for explicit approval. Do not proceed without it.
-
----
-
-## Step 5: EXECUTE (Approved Decisions Only)
-
-### Before executing:
+#### 4a. Checkpoint
 ```bash
 git add -A && git commit -m "architect: checkpoint before ADR-{NNN}"
 ```
 
-### For each approved decision:
+#### 4b. Execute the change
+Work directly on the codebase. Read every file you'll change first. Follow existing patterns. One decision at a time — sequential, not parallel.
 
-Spawn one agent per decision. Each agent:
-1. Reads every file it will change
-2. Follows existing code patterns
-3. Reports if the change is more complex than expected
-4. Verifies imports/references are correct
-
-### After each decision:
-
+#### 4c. Verify
 ```bash
 node --check local-database-server.js 2>&1
 node --check cambridge-database-server.js 2>&1
 # Check any modified JS files
 ```
 
-**If syntax check fails:** Revert and report.
+#### 4d. If syntax check fails
+Try one repair. If still failing:
+```bash
+git checkout -- .
+```
+Log as "reverted — execution failed" in the journal. Move to next decision.
 
-**If passes:** Commit:
+#### 4e. If passes — commit
 ```bash
 git add -A && git commit -m "architect: ADR-{NNN} — {title}"
 ```
@@ -313,10 +296,10 @@ Maintain `architect-decisions.md` in the project root:
 ## Session: YYYY-MM-DD
 
 ### ADR-001: {Title}
-**Status:** Approved / Rejected / Executed / Deferred
+**Status:** Executed / Reverted / Deferred
 **Impact:** High | **Effort:** 2 hours | **Risk:** Low
 **Summary:** {one sentence}
-**Result:** {Executed in commit abc1234 / Rejected — reason}
+**Result:** {Executed in commit abc1234 / Reverted — reason / Deferred — reason}
 
 ---
 
@@ -331,7 +314,7 @@ Maintain `architect-decisions.md` in the project root:
 ### A Good Decision
 - **Specific** — Names files, line counts, new structure
 - **Justified** — Explains *why* with evidence from codebase
-- **Reversible** — Can be undone if wrong
+- **Reversible** — Can be undone with `git revert`
 - **Incremental** — Can be done in stages
 - **Measurable** — You can verify it worked
 
@@ -341,13 +324,13 @@ Maintain `architect-decisions.md` in the project root:
 - "Add TypeScript" — massive change, not incremental
 - "This code is messy" — judgment without proposal
 
-### When NOT to Propose
-- **Cosmetic changes** — /glance handles that
+### When NOT to Decide
+- **Cosmetic changes** — /eye handles that
 - **Bug fixes** — /heal handles that
 - **Security patches** — /heal handles that
 - **Single-file cleanup** — too small for an ADR
 
-### When to Propose
+### When to Decide
 - **Two server files share 70% of their logic** — should be unified
 - **3+ dashboards exist for overlapping purposes** — should be consolidated
 - **Mock test HTML files are 90% identical** — should be templated
@@ -356,45 +339,30 @@ Maintain `architect-decisions.md` in the project root:
 
 ---
 
-## The Relationship to /sweep
+## The Relationship to /autopilot
 
-/architect runs BEFORE /sweep:
+/architect runs as one phase within /autopilot:
 
 ```
-/architect  →  "Should this exist? Should it be different?"  →  Human approves
-/sweep      →  /heal + /glance + /scenario against the new structure
+/autopilot  →  persona → creation → /architect → /heal → /eye → /scenario → loop
 ```
+
+When called standalone, /architect does a full product review and executes all decisions.
 
 ---
 
 ## Integration with /loop
 
-/architect should NOT be looped. Run it:
+/architect should NOT be looped frequently. Run it:
 - Before a major release
 - When adding a new exam type or level
 - When the codebase feels "heavy"
-- Quarterly, as a health check
+- As part of /autopilot
 
 ```
 # NOT this:
 /loop 1h /architect    # Too frequent
 
 # This:
-/architect             # Run manually when needed
+/architect             # Run when needed
 ```
-
----
-
-## Why Human Approval Matters
-
-/heal can fix a missing input validation without asking. The downside of being wrong is a reverted commit.
-
-/architect might propose "merge the IELTS and Cambridge servers." If they're separate because different schools use different instances, merging is a disaster.
-
-**Structural decisions have business context that code analysis alone cannot provide.** The human knows:
-- Which exam types are actively used
-- Which features specific clients require
-- Whether separation between IELTS/Cambridge is intentional
-- Which "unused" page is used by 1 important person
-
-The approval step makes /architect trustworthy for real production systems.

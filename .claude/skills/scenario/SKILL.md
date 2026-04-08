@@ -265,10 +265,10 @@ What happened: {1-3 sentences}
 Fix needed: {Yes — description / No}
 ```
 
-### Run in parallel where possible:
-- Different roles → parallel browser agents
-- curl tests → all parallel
-- Same browser session → sequential
+### Execute sequentially on main branch:
+- Run curl tests yourself, one by one
+- Use playwright-cli for browser tests yourself
+- No worktrees, no parallel change agents — direct sequential execution
 
 ---
 
@@ -278,7 +278,7 @@ For each FAIL or PARTIAL:
 
 1. **Analyze the root cause** — don't just patch symptoms
 2. **Check if the pattern exists elsewhere** — one IDOR means check ALL similar endpoints
-3. **Spawn fix agents** — one per file, parallel where independent
+3. **Fix directly** — edit each file yourself, sequentially
 4. **Verify build:**
    ```bash
    cd lms && npx tsc --noEmit 2>&1 | head -50

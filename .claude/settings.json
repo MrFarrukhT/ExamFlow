@@ -1,9 +1,16 @@
 {
   "allowedTools": {
     "Edit": true,
-    "Create": true,
+    "Write": true,
+    "Read": true,
+    "Glob": true,
+    "Grep": true,
+    "Agent": true,
+    "TodoWrite": true,
     "Bash": {
       "npm *": true,
+      "npx *": true,
+      "node *": true,
       "git *": true,
       "cd *": true,
       "ls *": true,
@@ -12,7 +19,29 @@
       "tail *": true,
       "find *": true,
       "grep *": true,
-      "pm2 *": true
+      "rg *": true,
+      "pm2 *": true,
+      "curl *": true,
+      "wc *": true,
+      "sort *": true,
+      "xargs *": true,
+      "awk *": true,
+      "sed *": true,
+      "mkdir *": true,
+      "rm *": true,
+      "mv *": true,
+      "cp *": true,
+      "echo *": true,
+      "touch *": true,
+      "pwd": true,
+      "which *": true,
+      "gh *": true,
+      "python3 *": true,
+      "xxd *": true,
+      "wait": true,
+      "kill *": true,
+      "tasklist *": true,
+      "netstat *": true
     }
   }
 }
