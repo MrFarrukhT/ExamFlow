@@ -654,15 +654,47 @@ Changes shipped: 44 files modified
 - Part 6 missing images (Part 6_files/img) — 404 errors
 - Top padding reduction CSS in shared.js may not take effect due to cache
 
+### Round 3
+**Explored:** 6 pages (listening popup, Parts 1-3, speaking test code review, MOCK 2/3 consistency check), 3 findings
+**Action:** POLISH 1 (speaking teal) + ELEVATE 1 (listening filled-state)
+
+- [T4] 7 speaking.html files — Blue (#1976d2) + purple gradient → teal (#0d9488) across A1 Movers, A2 Key (×3), B1 Preliminary (×3)
+  Mode: polish
+  Quality layer: 4-Polished → 5-Delightful (all Cambridge now teal)
+  Files: 7 speaking.html files
+
+- [T0] cambridge-bridge.js — Added setupFilledState(): green border + light green bg on text inputs/textareas across ALL Cambridge Part pages (benefits Listening Part 2 gap-fill, B1/B2 reading/writing, etc.)
+  Mode: elevate
+  Quality layer: 3-Efficient → 4-Polished
+  Files: assets/js/cambridge/cambridge-bridge.js
+
+### Updated Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| Cambridge/dashboard-cambridge.html | 5-Delightful | Teal identity, clean modal, entrance animations |
+| A2-Key/Part 1-4 (Reading MCQ/Cloze) | 3-Efficient | Radio + dropdown questions work, auto-save |
+| A2-Key/Part 5 (Gap Fill) | 4-Polished | Green filled-state on text inputs |
+| A2-Key/Part 6-7 (Writing) | 4-Polished | Green filled-state on textareas |
+| A2-Key/Listening Part 1 | 3-Efficient | Picture MCQ, functional |
+| A2-Key/Listening Part 2 | 4-Polished | Gap-fill with green filled-state |
+| A2-Key/Listening Parts 3-5 | 3-Efficient | MCQ/matching, functional |
+| All Cambridge speaking.html | 5-Delightful | Teal identity consistent |
+| Cambridge/MOCKs-Cambridge/*/listening.html | 5-Delightful | Teal popup, favicon fixed |
+
+### Deferred
+- Part 4 select dropdowns have no filled-state (need select-specific CSS)
+- Part 6 missing images (Part 6_files/img) — 404 errors
+- Mock test selection UI — no way for student to choose Mock 1/2/3 (invigilator-controlled)
+
 ### Session Stats (cumulative)
-Pages explored: 14
-Rounds: 2
-Polishes landed: 5
+Pages explored: 20
+Rounds: 3
+Polishes landed: 6
 Rebuilds landed: 0
-Elevations landed: 2
+Elevations landed: 3
 Reverted: 0
 Fixes landed: 1 (32 files)
-Changes shipped: 46 files modified
+Changes shipped: 56 files modified
 
 ---
 
