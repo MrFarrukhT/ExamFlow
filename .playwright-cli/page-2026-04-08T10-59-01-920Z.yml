@@ -1,0 +1,245 @@
+- generic [active] [ref=e1]:
+  - iframe [ref=e2]:
+    - generic [ref=f2e4]:
+      - banner [ref=f2e5]:
+        - generic [ref=f2e6]:
+          - generic [ref=f2e7]:
+            - img "header.logo"
+          - generic [ref=f2e8]:
+            - generic [ref=f2e9]:
+              - generic [ref=f2e10]:
+                - status [ref=f2e11]: Connected
+                - generic [ref=f2e13]: 
+              - button "Messages" [ref=f2e14]:
+                - generic [ref=f2e15]:
+                  - generic [ref=f2e16]: Messages
+                  - generic [ref=f2e17]: 
+              - button "Options" [ref=f2e18]:
+                - generic [ref=f2e19]:
+                  - generic [ref=f2e20]: Options
+                  - generic [ref=f2e21]: 
+              - button "Show notes" [ref=f2e22]:
+                - generic [ref=f2e23]:
+                  - generic [ref=f2e24]: Show notes
+                  - generic [ref=f2e25]: 
+            - generic [ref=f2e28]:
+              - generic [ref=f2e29]: Candidate ID
+              - generic [ref=f2e30]: STU001
+      - generic [ref=f2e32]:
+        - generic [ref=f2e34]:
+          - generic [ref=f2e36]:
+            - heading "Questions 1–6" [level=3] [ref=f2e37]
+            - generic [ref=f2e38]: For each question, choose the correct answer.
+          - generic [ref=f2e39]:
+            - main [ref=f2e40]:
+              - generic [ref=f2e41]:
+                - group [ref=f2e42]:
+                  - generic [ref=f2e46]:
+                    - generic [ref=f2e49]:
+                      - img "Background image"
+                    - radiogroup "1 What does the sign/text say?" [ref=f2e51]:
+                      - paragraph [ref=f2e53]:
+                        - generic [ref=f2e54]: "1"
+                        - generic [ref=f2e55]: What does the sign/text say?
+                      - list [ref=f2e56]:
+                        - listitem [ref=f2e57]:
+                          - radio "The bicycle that’s for sale was built for a child." [ref=f2e58]
+                          - generic [ref=f2e60]: The bicycle that’s for sale was built for a child.
+                        - listitem [ref=f2e61]:
+                          - radio "Some parts of the bicycle must be changed." [ref=f2e62]
+                          - generic [ref=f2e64]: Some parts of the bicycle must be changed.
+                        - listitem [ref=f2e65]:
+                          - radio "Debbie is selling the bike because she’s too big for it now." [ref=f2e66]
+                          - generic [ref=f2e68]: Debbie is selling the bike because she’s too big for it now.
+                      - button "Flag question 1":
+                        - generic [ref=f2e69]: Flag question 1
+                - generic [ref=f2e71]: 
+            - main [ref=f2e73]:
+              - generic [ref=f2e74]:
+                - group [ref=f2e75]:
+                  - generic [ref=f2e79]:
+                    - generic [ref=f2e82]:
+                      - img "Advertisement image"
+                    - radiogroup "2 What does the sign/text say?" [ref=f2e84]:
+                      - paragraph [ref=f2e86]:
+                        - generic [ref=f2e87]: "2"
+                        - generic [ref=f2e88]: What does the sign/text say?
+                      - list [ref=f2e89]:
+                        - listitem [ref=f2e90]:
+                          - radio "The concert starts at 8 p.m." [ref=f2e91]
+                          - generic [ref=f2e93]: The concert starts at 8 p.m.
+                        - listitem [ref=f2e94]:
+                          - radio "Tickets must be purchased online." [ref=f2e95]
+                          - generic [ref=f2e97]: Tickets must be purchased online.
+                        - listitem [ref=f2e98]:
+                          - radio "There are no tickets available at the door." [ref=f2e99]
+                          - generic [ref=f2e101]: There are no tickets available at the door.
+                      - button "Flag question 2":
+                        - generic [ref=f2e102]: Flag question 2
+                - generic [ref=f2e104]: 
+            - main [ref=f2e106]:
+              - generic [ref=f2e107]:
+                - group [ref=f2e108]:
+                  - generic [ref=f2e112]:
+                    - generic [ref=f2e115]:
+                      - img "Advertisement image"
+                    - radiogroup "3 What does the sign/text say?" [ref=f2e117]:
+                      - paragraph [ref=f2e119]:
+                        - generic [ref=f2e120]: "3"
+                        - generic [ref=f2e121]: What does the sign/text say?
+                      - list [ref=f2e122]:
+                        - listitem [ref=f2e123]:
+                          - radio "Groups of 12 or more people can get cheaper tickets." [ref=f2e124]
+                          - generic [ref=f2e126]: Groups of 12 or more people can get cheaper tickets.
+                        - listitem [ref=f2e127]:
+                          - radio "The adventure park is only open at weekends." [ref=f2e128]
+                          - generic [ref=f2e130]: The adventure park is only open at weekends.
+                        - listitem [ref=f2e131]:
+                          - radio "Children must be over 12 years old to enter." [ref=f2e132]
+                          - generic [ref=f2e134]: Children must be over 12 years old to enter.
+                      - button "Flag question 3":
+                        - generic [ref=f2e135]: Flag question 3
+                - generic [ref=f2e137]: 
+            - main [ref=f2e139]:
+              - generic [ref=f2e140]:
+                - group [ref=f2e141]:
+                  - generic [ref=f2e145]:
+                    - generic [ref=f2e148]:
+                      - img "Advertisement image"
+                    - radiogroup "4 What does the sign/text say?" [ref=f2e150]:
+                      - paragraph [ref=f2e152]:
+                        - generic [ref=f2e153]: "4"
+                        - generic [ref=f2e154]: What does the sign/text say?
+                      - list [ref=f2e155]:
+                        - listitem [ref=f2e156]:
+                          - radio "Emma wants to go to Kim's party with Lynne." [ref=f2e157]
+                          - generic [ref=f2e159]: Emma wants to go to Kim's party with Lynne.
+                        - listitem [ref=f2e160]:
+                          - radio "The party will start after 9 o'clock." [ref=f2e161]
+                          - generic [ref=f2e163]: The party will start after 9 o'clock.
+                        - listitem [ref=f2e164]:
+                          - radio "Lynne finishes work at 8 p.m." [ref=f2e165]
+                          - generic [ref=f2e167]: Lynne finishes work at 8 p.m.
+                      - button "Flag question 4":
+                        - generic [ref=f2e168]: Flag question 4
+                - generic [ref=f2e170]: 
+            - main [ref=f2e172]:
+              - generic [ref=f2e173]:
+                - group [ref=f2e174]:
+                  - generic [ref=f2e178]:
+                    - generic [ref=f2e181]:
+                      - img "Advertisement image"
+                    - radiogroup "5 What does the sign/text say?" [ref=f2e183]:
+                      - paragraph [ref=f2e185]:
+                        - generic [ref=f2e186]: "5"
+                        - generic [ref=f2e187]: What does the sign/text say?
+                      - list [ref=f2e188]:
+                        - listitem [ref=f2e189]:
+                          - radio "You can get a free ice cream at lunchtime." [ref=f2e190]
+                          - generic [ref=f2e192]: You can get a free ice cream at lunchtime.
+                        - listitem [ref=f2e193]:
+                          - radio "The ice cream shop is only open until 2 p.m." [ref=f2e194]
+                          - generic [ref=f2e196]: The ice cream shop is only open until 2 p.m.
+                        - listitem [ref=f2e197]:
+                          - radio "All ice creams cost the same price." [ref=f2e198]
+                          - generic [ref=f2e200]: All ice creams cost the same price.
+                      - button "Flag question 5":
+                        - generic [ref=f2e201]: Flag question 5
+                - generic [ref=f2e203]: 
+            - main [ref=f2e205]:
+              - generic [ref=f2e206]:
+                - group [ref=f2e207]:
+                  - generic [ref=f2e211]:
+                    - generic [ref=f2e214]:
+                      - img "Advertisement image"
+                    - radiogroup "6 What does the sign/text say?" [ref=f2e216]:
+                      - paragraph [ref=f2e218]:
+                        - generic [ref=f2e219]: "6"
+                        - generic [ref=f2e220]: What does the sign/text say?
+                      - list [ref=f2e221]:
+                        - listitem [ref=f2e222]:
+                          - radio "Sophie wants Anna to contact her about their project." [ref=f2e223]
+                          - generic [ref=f2e225]: Sophie wants Anna to contact her about their project.
+                        - listitem [ref=f2e226]:
+                          - radio "Anna was ill and couldn't go to class." [ref=f2e227]
+                          - generic [ref=f2e229]: Anna was ill and couldn't go to class.
+                        - listitem [ref=f2e230]:
+                          - radio "The teacher has finished the history project." [ref=f2e231]
+                          - generic [ref=f2e233]: The teacher has finished the history project.
+                      - button "Flag question 6":
+                        - generic [ref=f2e234]: Flag question 6
+                - generic [ref=f2e236]: 
+        - contentinfo [ref=f2e238]:
+          - navigation "Previous / next question" [ref=f2e239]:
+            - button "Previous" [disabled] [ref=f2e240]:
+              - generic [ref=f2e241]: 
+            - button "Next" [ref=f2e242]:
+              - generic [ref=f2e243]: 
+          - navigation "Questions" [ref=f2e244]:
+            - tablist [ref=f2e245]:
+              - tab [ref=f2e246]:
+                - generic [ref=f2e247]: Part 1
+              - generic [ref=f2e248]:
+                - button "Question 1 Not attempted Active" [ref=f2e249]:
+                  - generic [ref=f2e250]: Question 1
+                  - text: "1"
+                  - generic [ref=f2e251]: Not attempted Active
+                - button "Question 2 Not attempted" [ref=f2e252]:
+                  - generic [ref=f2e253]: Question 2
+                  - text: "2"
+                  - generic [ref=f2e254]: Not attempted
+                - button "Question 3 Not attempted" [ref=f2e255]:
+                  - generic [ref=f2e256]: Question 3
+                  - text: "3"
+                  - generic [ref=f2e257]: Not attempted
+                - button "Question 4 Not attempted" [ref=f2e258]:
+                  - generic [ref=f2e259]: Question 4
+                  - text: "4"
+                  - generic [ref=f2e260]: Not attempted
+                - button "Question 5 Not attempted" [ref=f2e261]:
+                  - generic [ref=f2e262]: Question 5
+                  - text: "5"
+                  - generic [ref=f2e263]: Not attempted
+                - button "Question 6 Not attempted" [ref=f2e264]:
+                  - generic [ref=f2e265]: Question 6
+                  - text: "6"
+                  - generic [ref=f2e266]: Not attempted
+            - tablist [ref=f2e267]:
+              - tab "Part 2. 0 of 7 questions attempted." [ref=f2e268]:
+                - generic [ref=f2e269]:
+                  - text: Part 2
+                  - generic [ref=f2e270]: 0 of 7
+                  - generic [ref=f2e271]: Part 2. 0 of 7 questions attempted.
+            - tablist [ref=f2e272]:
+              - tab "Part 3. 0 of 5 questions attempted." [ref=f2e273]:
+                - generic [ref=f2e274]:
+                  - text: Part 3
+                  - generic [ref=f2e275]: 0 of 5
+                  - generic [ref=f2e276]: Part 3. 0 of 5 questions attempted.
+            - tablist [ref=f2e277]:
+              - tab "Part 4. 0 of 6 questions attempted." [ref=f2e278]:
+                - generic [ref=f2e279]:
+                  - text: Part 4
+                  - generic [ref=f2e280]: 0 of 6
+                  - generic [ref=f2e281]: Part 4. 0 of 6 questions attempted.
+            - tablist [ref=f2e282]:
+              - tab "Part 5. 0 of 6 questions attempted." [ref=f2e283]:
+                - generic [ref=f2e284]:
+                  - text: Part 5
+                  - generic [ref=f2e285]: 0 of 6
+                  - generic [ref=f2e286]: Part 5. 0 of 6 questions attempted.
+            - tablist [ref=f2e287]:
+              - tab "Part 6. 0 of 1 questions attempted." [ref=f2e288]:
+                - generic [ref=f2e289]:
+                  - text: Part 6
+                  - generic [ref=f2e290]: 0 of 1
+                  - generic [ref=f2e291]: Part 6. 0 of 1 questions attempted.
+            - tablist [ref=f2e292]:
+              - tab "Part 7. 0 of 1 questions attempted." [ref=f2e293]:
+                - generic [ref=f2e294]:
+                  - text: Part 7
+                  - generic [ref=f2e295]: 0 of 1
+                  - generic [ref=f2e296]: Part 7. 0 of 1 questions attempted.
+            - button "Review your answers" [ref=f2e297]:
+              - generic [ref=f2e298]: 
+  - generic [ref=e5]: 49:14
