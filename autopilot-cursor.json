@@ -1,15 +1,15 @@
 {
-  "lastRun": "2026-04-08 22:30",
-  "lastPersona": "nervous-first-timer",
-  "completedPersonas": ["ielts-student", "cambridge-a2-student", "invigilator", "admin-scoring", "admin-management", "nervous-first-timer"],
-  "currentRotation": 5,
-  "totalSessions": 5,
+  "lastRun": "2026-04-08 23:40",
+  "lastPersona": "cambridge-a1-movers-student",
+  "completedPersonas": ["ielts-student", "cambridge-a2-student", "invigilator", "admin-scoring", "admin-management", "nervous-first-timer", "cambridge-a1-movers-student"],
+  "currentRotation": 6,
+  "totalSessions": 6,
   "stats": {
-    "featuresCreated": 8,
+    "featuresCreated": 10,
     "structuralDecisions": 0,
-    "codeHealed": 5,
-    "experienceImprovements": 9,
-    "scenariosTested": 2,
-    "totalCommits": 11
+    "codeHealed": 7,
+    "experienceImprovements": 12,
+    "scenariosTested": 8,
+    "totalCommits": 15
   }
 }

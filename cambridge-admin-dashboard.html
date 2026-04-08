@@ -628,7 +628,7 @@
 
         // ── Cambridge-only: openAnswerComparison (with mixed-skill support) ──
         async function openAnswerComparison(submissionId) {
-            const submission = dashboard.currentSubmissions.find(s => s.id == submissionId);
+            const submission = dashboard.currentSubmissions.find(s => String(s.id) === String(submissionId));
             if (!submission) { alert('Submission not found'); return; }
             const level = submission.level;
             const skill = submission.skill;

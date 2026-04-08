@@ -174,19 +174,24 @@
             document.getElementById('password-error').style.display = 'none';
         }
 
-        function verifyInvigilatorPassword() {
+        async function verifyInvigilatorPassword() {
             const password = document.getElementById('invigilator-password').value;
-            const correctPassword = 'InV!#2025$SecurePass'; // Strong password - change this for production
-            
-            if (password === correctPassword) {
-                // Correct password - redirect to invigilator page
-                window.location.href = 'invigilator.html';
-                // Note: invigilator.html is unified and handles both exam types via localStorage
-            } else {
-                // Wrong password
+            try {
+                const response = await fetch('/verify-invigilator', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+                if (response.ok) {
+                    window.location.href = 'invigilator.html';
+                } else {
+                    document.getElementById('password-error').style.display = 'block';
+                    document.getElementById('invigilator-password').value = '';
+                    document.getElementById('invigilator-password').focus();
+                }
+            } catch (error) {
                 document.getElementById('password-error').style.display = 'block';
                 document.getElementById('invigilator-password').value = '';
-                document.getElementById('invigilator-password').focus();
             }
         }
 

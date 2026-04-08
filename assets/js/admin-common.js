@@ -646,7 +646,7 @@ class AdminDashboard {
         if (!navEl) return;
 
         const queue = this.getScoringQueue();
-        const idx = queue.findIndex(s => s.id == submissionId);
+        const idx = queue.findIndex(s => String(s.id) === String(submissionId));
         if (idx !== -1) this.scoringQueueIndex = idx;
 
         if (queue.length === 0) {

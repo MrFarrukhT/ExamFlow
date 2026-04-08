@@ -1,0 +1,34 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - img "Innovative Centre" [ref=e5]
+      - generic [ref=e6]:
+        - generic [ref=e7]: "Mock Test: 1"
+        - link "Invigilator" [ref=e8] [cursor=pointer]:
+          - /url: "#"
+  - main [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - heading "Welcome, John Smith" [level=1] [ref=e12]
+        - paragraph [ref=e13]: "ID: 1234"
+      - generic [ref=e14]:
+        - heading "Select a Module to Begin" [level=2] [ref=e15]
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - heading "Listening" [level=3] [ref=e18]
+            - paragraph [ref=e19]: ~30 minutes
+            - paragraph [ref=e20]: 4 parts, 40 questions. Listen to audio recordings and answer questions.
+            - generic [ref=e21]: Not Started
+            - button "Start Listening" [ref=e22] [cursor=pointer]
+          - generic [ref=e23]:
+            - heading "Reading" [level=3] [ref=e24]
+            - paragraph [ref=e25]: 60 minutes
+            - paragraph [ref=e26]: 3 passages, 40 questions. Read texts and answer comprehension questions.
+            - generic [ref=e27]: Not Started
+            - button "Start Reading" [ref=e28] [cursor=pointer]
+          - generic [ref=e29]:
+            - heading "Writing" [level=3] [ref=e30]
+            - paragraph [ref=e31]: 60 minutes
+            - paragraph [ref=e32]: "2 tasks. Task 1: describe a chart/table (150+ words). Task 2: write an essay (250+ words)."
+            - generic [ref=e33]: Not Started
+            - button "Start Writing" [ref=e34] [cursor=pointer]

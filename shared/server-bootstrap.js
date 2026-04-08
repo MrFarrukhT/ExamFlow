@@ -82,6 +82,20 @@ export function createServer({ port, name, callerUrl, dbConfig, onReady }) {
     // Admin login endpoint
     app.post('/admin-login', adminLoginHandler);
 
+    // Invigilator password verification (server-side, password never sent to client)
+    app.post('/verify-invigilator', (req, res) => {
+        const { password } = req.body;
+        if (!password || typeof password !== 'string') {
+            return res.status(400).json({ success: false, message: 'Password is required' });
+        }
+        const correctPassword = process.env.INVIGILATOR_PASSWORD || '';
+        if (password === correctPassword) {
+            res.json({ success: true });
+        } else {
+            res.status(401).json({ success: false, message: 'Incorrect password' });
+        }
+    });
+
     // --- Lifecycle helpers ---
 
     async function start() {

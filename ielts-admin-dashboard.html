@@ -385,11 +385,11 @@
                                 <td>${this.calculateDuration(s.start_time, s.end_time)}</td>
                                 <td style="white-space:nowrap;">
                                     <button class="btn btn-info" style="padding: 6px 12px; font-size: 12px;"
-                                            onclick="openAnswerComparison('${s.id}')">
+                                            onclick="openAnswerComparison('${esc(s.id)}')">
                                         \uD83D\uDCCB Compare
                                     </button>
                                     <button class="btn" style="padding: 6px 8px; font-size: 12px; background:#dc3545;"
-                                            onclick="event.stopPropagation(); deleteSubmission('${s.id}')"
+                                            onclick="event.stopPropagation(); deleteSubmission('${esc(s.id)}')"
                                             title="Delete submission">
                                         \uD83D\uDDD1\uFE0F
                                     </button>
@@ -405,7 +405,7 @@
         dashboard.renderDateGroupSubmissionRow = function (submission) {
             const esc = AdminDashboard.escapeHtml;
             return `
-                <div class="date-group-submission" onclick="openAnswerComparison('${submission.id}')" style="cursor: pointer;">
+                <div class="date-group-submission" onclick="openAnswerComparison('${esc(submission.id)}')" style="cursor: pointer;">
                     <div class="submission-info">
                         <div class="submission-name">${esc(submission.student_name)} (${esc(submission.student_id)})</div>
                         <div class="submission-details">
@@ -416,7 +416,7 @@
                         </div>
                     </div>
                     <button class="btn btn-info" style="padding: 4px 8px; font-size: 11px;"
-                            onclick="event.stopPropagation(); openAnswerComparison('${submission.id}')">View</button>
+                            onclick="event.stopPropagation(); openAnswerComparison('${esc(submission.id)}')">View</button>
                 </div>`;
         };
 
@@ -689,7 +689,7 @@
                                 <input type="number" id="finalScore" min="0" max="40" value="${submission.score || correctCount}" />
                                 <label><strong>Band Score:</strong></label>
                                 <input type="text" id="bandScore" value="${submission.band_score || ''}" placeholder="e.g. 6.5" />
-                                <button class="btn btn-success" onclick="saveScore('${submission.id}')">Save Score</button>
+                                <button class="btn btn-success" onclick="saveScore('${esc(submission.id)}')">Save Score</button>
                             </div>
                         </div>
                     </div>
@@ -719,10 +719,10 @@
                         <div class="score-input" style="flex-wrap: wrap; gap: 10px;">
                             <label><strong>Overall Band Score (0-9):</strong></label>
                             <input type="text" id="writingBandScore" value="${submission.band_score || ''}" placeholder="e.g. 6.5" />
-                            <button class="btn" style="background: #17a2b8;" onclick="getAISuggestion('${submission.id}')">
+                            <button class="btn" style="background: #17a2b8;" onclick="getAISuggestion('${esc(submission.id)}')">
                                 <span id="aiButtonText">Get AI Suggestion</span>
                             </button>
-                            <button class="btn btn-success" onclick="saveWritingScore('${submission.id}')">Save Band Score</button>
+                            <button class="btn btn-success" onclick="saveWritingScore('${esc(submission.id)}')">Save Band Score</button>
                         </div>
                         <div id="aiSuggestionResult" style="margin-top: 15px; display: none;">
                             <div style="background: #e7f3ff; padding: 12px 18px; border-radius: 6px; border: 1px solid #b3d9ff;">
@@ -816,7 +816,7 @@
 
         // ── IELTS-only: AI Score Suggestion ──
         async function getAISuggestion(submissionId) {
-            const submission = dashboard.currentSubmissions.find(s => s.id == submissionId);
+            const submission = dashboard.currentSubmissions.find(s => String(s.id) === String(submissionId));
             if (!submission) { alert('Submission not found'); return; }
             const task1Text = submission.answers?.task_1?.text ||
                 (typeof submission.answers?.task_1 === 'string' ? submission.answers.task_1 : '') ||
@@ -835,6 +835,7 @@
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ task1: task1Text, task2: task2Text })
                 });
+                if (!response.ok) throw new Error('Server returned ' + response.status);
                 const data = await response.json();
                 if (data.success) {
                     document.getElementById('aiTask1Score').textContent = data.task1Band;
