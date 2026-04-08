@@ -1,5 +1,39 @@
 # Architecture Decisions
 
+## Session: 2026-04-08 (Round 3)
+
+### ADR-011: Complete Cambridge Admin Tab Navigation
+**Status:** Executed
+**Impact:** Medium | **Effort:** 15 min | **Risk:** Low
+**Summary:** Added unified tab nav bar to cambridge-student-results.html and cambridge-speaking-evaluations.html. Fixed bug where tabs in cambridge-admin-dashboard.html were never shown (display:none not removed after login). All 3 Cambridge admin pages now have consistent navigation.
+**Result:** Executed in commit cf9e4e9.
+
+### ADR-012: Extract Shared Server Bootstrap Module
+**Status:** Executed
+**Impact:** Medium | **Effort:** 30 min | **Risk:** Low
+**Summary:** Both servers now use createServer() from shared/server-bootstrap.js (91 lines). Eliminates duplicated Express setup, middleware, static serving, admin login, and shutdown handlers. IELTS: 512→360 lines. Cambridge: 944→735 lines.
+**Result:** Executed in commit f86cd03.
+
+### ADR-013: Unify Student Login Pages
+**Status:** Executed
+**Impact:** Medium | **Effort:** 45 min | **Risk:** Medium
+**Summary:** Merged IELTS and Cambridge login into single root index.html that detects exam type via ?exam=cambridge URL param or localStorage. Cambridge/index.html is now a redirect stub. Added body.cambridge CSS class scoping to entry.css.
+**Result:** Executed in commit 3e2f6ef.
+
+### ADR-014: core.js Phase 2 — Extract Options Menu & Modal Manager
+**Status:** In Progress
+**Impact:** High | **Effort:** 2 hours | **Risk:** Medium
+**Summary:** Extract OptionsMenu and ModalManager classes from core.js (1,614 lines) into standalone modules. Target: core.js → ~1,250 lines.
+**Result:** Pending agent completion.
+
+### ADR-015: Extract Shared Admin Styles to External Stylesheet
+**Status:** Executed
+**Impact:** Medium | **Effort:** 1 hour | **Risk:** Low
+**Summary:** All 4 admin dashboards now use shared assets/css/admin-common.css (865 lines) instead of inline CSS. cambridge-admin-dashboard: 2,553→1,747 lines. enhanced-admin-dashboard: 2,343→1,582 lines. ~1,600 lines of duplicated CSS removed.
+**Result:** Executed in commit bddbb72.
+
+---
+
 ## Session: 2026-04-08 (Round 2)
 
 ### ADR-006: Retire Legacy Admin Panel (Port 3000)
