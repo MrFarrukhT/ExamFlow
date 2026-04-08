@@ -956,8 +956,8 @@ app.patch('/cambridge-student-results/:id', requireAdmin, async (req, res) => {
     }
 });
 
-// Delete Cambridge student result
-app.delete('/cambridge-student-results/:id', async (req, res) => {
+// Delete Cambridge student result (admin only)
+app.delete('/cambridge-student-results/:id', requireAdmin, async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -993,8 +993,8 @@ app.delete('/cambridge-student-results/:id', async (req, res) => {
     }
 });
 
-// Delete Cambridge answer keys
-app.delete('/cambridge-answers', async (req, res) => {
+// Delete Cambridge answer keys (admin only)
+app.delete('/cambridge-answers', requireAdmin, async (req, res) => {
     try {
         const { level, skill, mock } = req.query;
 
