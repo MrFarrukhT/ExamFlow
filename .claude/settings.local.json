@@ -81,7 +81,13 @@
       "Bash(ls -lh /e/Test-System-v2/*.html)",
       "Read(//e/Test-System-v2/**)",
       "Bash(xargs wc:*)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3002/dashboard.html)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3002/dashboard.html)",
+      "Bash(git filter-branch:*)",
+      "Bash(node --check shared/server-bootstrap.js)",
+      "Bash(xargs -0 -I {} basename {})",
+      "Bash(xargs -I {} basename {})",
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --force --index-filter 'git rm -r --cached --ignore-unmatch .git-corrupt' --prune-empty -- 273f615..HEAD)",
+      "Bash(git reflog:*)"
     ],
     "additionalDirectories": [
       "e:\\Test-System-v2",
