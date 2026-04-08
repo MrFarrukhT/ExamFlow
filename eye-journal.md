@@ -580,6 +580,41 @@ Reverted: 0
 Fixes landed: 1 (32 files)
 Changes shipped: 44 files modified
 
+### Round 2
+**Explored:** 4 pages (Part 1 answer interaction, Part 4 dropdown cloze, Part 5 gap-fill, Part 6 writing), 2 findings
+**Action:** ELEVATE 1 enhancement (filled-state visual feedback)
+
+- [T0] a2-key-answer-sync.js — Added .filled class toggle on text inputs (.textEntryInteractionValue) and textareas when student types an answer. Green border + light green bg (#f0fdf4) shows which gaps are completed at a glance.
+  Mode: elevate
+  Quality layer: 3-Efficient → 4-Polished (matches A1 Movers pattern)
+  Files: assets/js/cambridge/a2-key-answer-sync.js, assets/js/cambridge/a2-key-shared.js
+
+- CSS injected directly by answer-sync init() to bypass iframe cache issues
+
+### Updated Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| Cambridge/dashboard-cambridge.html | 5-Delightful | Teal identity, clean modal, entrance animations |
+| A2-Key/Part 1-4 (Reading MCQ/Cloze) | 3-Efficient | Radio + dropdown questions work, auto-save |
+| A2-Key/Part 5 (Gap Fill) | 4-Polished | Green filled-state on text inputs |
+| A2-Key/Part 6-7 (Writing) | 4-Polished | Green filled-state on textareas |
+| Cambridge/MOCKs-Cambridge/*/listening.html | 5-Delightful | Teal popup, favicon fixed |
+
+### Deferred
+- Part 4 select dropdowns have no filled-state (need select-specific CSS)
+- Part 6 missing images (Part 6_files/img) — 404 errors
+- Top padding reduction CSS in shared.js may not take effect due to cache
+
+### Session Stats (cumulative)
+Pages explored: 14
+Rounds: 2
+Polishes landed: 5
+Rebuilds landed: 0
+Elevations landed: 2
+Reverted: 0
+Fixes landed: 1 (32 files)
+Changes shipped: 46 files modified
+
 ---
 
 ## Session: 2026-04-08 (B2 First student deep dive)
