@@ -1,5 +1,56 @@
 # Autopilot Journal
 
+## Session: 2026-04-09 08:30
+Persona: Admin scoring round 3 — anti-cheat visibility on dashboards
+System: Both (IELTS + Cambridge)
+
+### Phase 1: Journey Map
+- Anti-cheat pipeline gap follow-up: invigilator panel was wired in session 22, but ADMIN scoring dashboards still had ZERO visibility
+- Admins were scoring submissions blind to flagged behavior
+- Server endpoints already returned anti_cheat_data; only the UI was missing
+
+### Phase 2: Creation
+- New helpers in admin-common.js:
+  - `parseAntiCheat()` — handles JSON string or object
+  - `hasAntiCheatViolations()` — boolean check
+  - `renderAntiCheatBadge()` — compact "⚠ Flagged" chip with tooltip
+  - `renderAntiCheatDetail()` — full breakdown card for scoring modals
+
+### Phase 3: Structure
+- Skipped — sound
+
+### Phase 4: Heal — wire helpers into both dashboards
+- IELTS admin: new "Flags" column in submission table; flagged rows highlighted; detail block in reading/listening modal AND writing assessment modal
+- Cambridge admin: new "Flags" column; flagged rows highlighted; detail block in all 3 comparison modals (mixed-skills, single-skill, writing)
+- Date-group view rows also gain the badge via shared admin-common.js renderer
+- CSS in admin-common.css for badges, flagged rows, detail blocks (critical vs warn styling)
+
+Committed as 23fdf11.
+
+### Phase 5: Experience
+- Skipped — no server running
+
+### Phase 6: Scenario
+- Verified by code review:
+  - escapeHtml used on all user-derived values (tooltip text, label, value)
+  - parseAntiCheat tolerates string/object/null (no JSON throw)
+  - Helpers reused via static methods (no per-dashboard duplication)
+
+### Session Stats
+Total commits: 1 (23fdf11)
+Total files changed: 4 (admin-common.js, admin-common.css, ielts-admin-dashboard.html, cambridge-admin-dashboard.html)
++175/-9 lines
+Persona journey coverage: Full anti-cheat pipeline now end-to-end visible:
+collection → sanitization → storage → invigilator panel → admin scoring view
+
+### Pipeline complete
+session 22 (invigilator) + session 23 (admin) closes the anti-cheat
+visibility loop. Both staff personas now see violations exactly where
+they need them: the invigilator at room-monitoring time, the admin at
+scoring time.
+
+---
+
 ## Session: 2026-04-09 08:00
 Persona: Invigilator round 3 (anti-cheat visibility — full pipeline)
 System: Both (IELTS + Cambridge)
