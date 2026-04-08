@@ -1117,3 +1117,53 @@ Elevations landed: 2 (selected-state on Parts 3-4, filled-state on Part 5)
 Reverted: 0
 Fixes landed: 0
 Changes shipped: 24 files modified (15 teal + 6 choice CSS + 3 dropdown filled)
+
+---
+
+## Session: 2026-04-08 (B1 Preliminary Reading — prompt #13)
+Persona: B1 level student taking Reading test (Parts 2-6)
+System: Cambridge (localhost:3003)
+Pages explored: Part 1-8.html + Listening-Part-1-4.html (all 3 mocks)
+Starting state: Titles/counters fixed (4-Polished), but Material Blue identity across all Part files. Part 4 flash-of-blank bug.
+
+### Round 1
+**Explored:** 36 files across 3 B1 Preliminary mocks, 3 findings
+**Action:** POLISH 1 (teal identity sweep across 36 files) + FIX 1 (Part 4 opacity × 3 mocks)
+
+- [T4] All 24 Reading/Writing Part files (8 Parts × 3 mocks) — Material Blue (#2196F3, #1976D2, #e3f2fd) → Cambridge teal (#0d9488, #ccfbf1). Question numbers, hover states, selected backgrounds, link colors.
+  Mode: polish
+  Quality layer: 4-Polished → 5-Delightful (consistent teal identity)
+  Files: 24 Part files across B1-Preliminary, B1-Preliminary-MOCK-2, B1-Preliminary-MOCK-3
+
+- [T4] All 12 Listening Part files (4 Parts × 3 mocks) — Same blue-to-teal replacement.
+  Mode: polish
+  Quality layer: 3-Efficient → 4-Polished
+  Files: 12 Listening-Part files
+
+- [T1] Part 4.html (×3 mocks) — Missing `opacity: 1 !important` override. Students see flash-of-blank on Part 4 load.
+  Mode: fix (bug)
+  Quality layer: 1-Functional → 3-Efficient
+  Files: 3 Part 4.html files
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| B1-Preliminary/Part 1-6.html (Reading) | 5-Delightful | Teal identity, correct titles/counters |
+| B1-Preliminary/Part 7-8.html (Writing) | 5-Delightful | Teal identity |
+| B1-Preliminary/Listening-Part-1-4.html | 4-Polished | Teal identity |
+| B1-Preliminary/speaking.html | 5-Delightful | Full PET format |
+| MOCK-2 & MOCK-3 | Same layers | All fixes applied |
+
+### Deferred
+- Inspera bloat (~300 lines/file) — architecture debt, not UX-facing
+- Navigation script duplicated in every Part file
+
+### Session Stats
+Pages explored: 36 files across 3 mocks
+Rounds: 1
+Polishes landed: 2 (24 Part files + 12 Listening files teal)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Fixes landed: 1 (Part 4 opacity × 3 mocks)
+Changes shipped: 36 files modified
