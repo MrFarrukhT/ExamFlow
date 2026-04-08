@@ -9,7 +9,7 @@ Web-based language exam testing platform for administering Cambridge English and
 ### IELTS System (Port 3002)
 - **Server:** `local-database-server.js`
 - **Entry:** `launcher.html` → `index.html` (student login) → test pages
-- **Dashboard:** `dashboard.html` (admin), `invigilator.html`
+- **Dashboard:** `student-dashboard.html` (student), `ielts-admin-dashboard.html` (admin), `invigilator.html`
 - **Tests:** 10 mock sets in `MOCKs/MOCK 1-10/` (reading.html, writing.html, listening.html)
 - **Templates:** `templates/reading-template.html`, `templates/writing-template.html`
 - **Database:** Neon PostgreSQL — `test_submissions`, `mock_answers` tables
@@ -61,7 +61,8 @@ assets/
 |------|-------|---------|
 | **Student** | launcher → index → test pages | Takes exams |
 | **Invigilator** | invigilator.html / cambridge-invigilator.html | Supervises live tests |
-| **Admin** | dashboard.html / cambridge-admin-dashboard.html | Views submissions, manages scores |
+| **Student** | student-dashboard.html / Cambridge/dashboard-cambridge.html | Module selection hub |
+| **Admin** | ielts-admin-dashboard.html / cambridge-admin-dashboard.html | Views submissions, manages scores |
 
 ## Data Flow
 

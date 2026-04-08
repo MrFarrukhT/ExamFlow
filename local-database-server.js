@@ -270,6 +270,28 @@ app.post('/mock-answers', async (req, res) => {
             });
         }
 
+        // Validate answers is an object with reasonable size
+        if (typeof answers !== 'object' || Array.isArray(answers) || Object.keys(answers).length > 200) {
+            return res.status(400).json({
+                success: false,
+                message: 'Answers must be an object with at most 200 entries'
+            });
+        }
+
+        // Validate skill
+        const VALID_IELTS_SKILLS = ['reading', 'listening', 'writing', 'speaking'];
+        if (!VALID_IELTS_SKILLS.includes(skill)) {
+            return res.status(400).json({
+                success: false,
+                message: `Invalid skill. Must be one of: ${VALID_IELTS_SKILLS.join(', ')}`
+            });
+        }
+
+        // Strip HTML tags from answer values
+        function stripHtml(str) {
+            return typeof str === 'string' ? str.replace(/<[^>]*>/g, '') : str;
+        }
+
         const dbClient = await ensureConnection();
 
         // Begin transaction
@@ -294,12 +316,12 @@ app.post('/mock-answers', async (req, res) => {
                 let alternativeAnswers = null;
 
                 if (Array.isArray(answerValue)) {
-                    correctAnswer = answerValue[0];
+                    correctAnswer = stripHtml(answerValue[0]);
                     if (answerValue.length > 1) {
-                        alternativeAnswers = JSON.stringify(answerValue.slice(1));
+                        alternativeAnswers = JSON.stringify(answerValue.slice(1).map(stripHtml));
                     }
                 } else {
-                    correctAnswer = answerValue;
+                    correctAnswer = stripHtml(answerValue);
                 }
 
                 await dbClient.query(
