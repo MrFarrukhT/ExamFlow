@@ -752,12 +752,45 @@ Starting state: Footer nav counters showed wrong question totals (inherited from
 - Writing test (Parts 7-8) — no timer overlay visible (reading.html wrapper provides timer, but writing module wrapper may need same)
 - Console errors from Inspera bundled JS (react-modal, moment-timezone, fontawesome fonts) — cannot fix (external CDN references)
 
+### Round 2
+**Explored:** 0 new pages (acted on deferred items from Round 1), 3 findings
+**Action:** FIX 3 bugs (titles, console logs, speaking heading + fallback across 27 files)
+
+- [T2] Part 1-8.html (3 mocks × 8 files = 24 files) — Fixed page titles from "A2 Key RW Digital Sample Test" to "B1 Preliminary Reading - Part N" / "B1 Preliminary Writing - Part N"
+  Mode: fix (bug)
+  Quality layer: 2-Clear → 4-Polished (browser tabs now show correct level)
+  Files: All Part 1-8.html across B1-Preliminary, B1-Preliminary-MOCK-2, B1-Preliminary-MOCK-3
+
+- [T2] Part 1-8.html (3 mocks × 8 files) — Fixed console.log messages from "Cambridge A2 Key" to "Cambridge B1 Preliminary"
+  Mode: fix (bug)
+  Files: Same Part files
+
+- [T2] speaking.html (3 mocks) — Fixed h1 heading "Cambridge A2 Key" → "Cambridge B1 Preliminary", fixed default level fallback 'A2-Key' → 'B1-Preliminary' (affects timer duration)
+  Mode: fix (bug)
+  Quality layer: 2-Clear → 3-Efficient
+  Files: B1-Preliminary/speaking.html, B1-Preliminary-MOCK-2/speaking.html, B1-Preliminary-MOCK-3/speaking.html
+
+### Updated Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| B1-Preliminary/Part 1-6.html (Reading) | 4-Polished | Correct titles, counters, console logs |
+| B1-Preliminary/Part 7-8.html (Writing) | 4-Polished | Correct titles and console logs |
+| B1-Preliminary/Listening-Part-1-4.html | 3-Efficient | Already had correct titles |
+| B1-Preliminary/speaking.html | 3-Efficient | Correct heading, title, level fallback |
+| B1-Preliminary-MOCK-2/* | 4-Polished | Same fixes applied |
+| B1-Preliminary-MOCK-3/* | 4-Polished | Same fixes applied |
+
+### Deferred
+- Console errors from Inspera bundled JS (react-modal, moment-timezone, fontawesome fonts) — cannot fix
+- Speaking test content format inherited from A2 Key (2 parts) — needs rebuild for B1 format
+- Writing wrapper (writing.html) has no visible timer — reading.html has one, writing needs same
+
 ### Session Stats
 Pages explored: 12
-Rounds: 1
+Rounds: 2
 Polishes landed: 0
 Rebuilds landed: 0
 Elevations landed: 0
 Reverted: 0
-Fixes landed: 2 (16 files total: 1 JS + 15 HTML)
-Changes shipped: 16 files modified
+Fixes landed: 5 (43 files total: 1 JS + 15 HTML counters + 27 title/log/heading fixes)
+Changes shipped: 43 files modified
