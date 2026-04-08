@@ -1296,6 +1296,12 @@ async function loadAnswers() {
                 const seconds = timeInSeconds % 60;
                 if (timerDisplay) {
                     timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    const container = timerDisplay.closest('.timer-container');
+                    if (container) {
+                        container.classList.toggle('warning', timeInSeconds <= 600 && timeInSeconds > 300);
+                        container.classList.toggle('critical', timeInSeconds <= 300 && timeInSeconds > 60);
+                        container.classList.toggle('urgent', timeInSeconds <= 60 && timeInSeconds > 0);
+                    }
                 }
                 if (timeInSeconds <= 0) {
                     clearInterval(timerInterval);

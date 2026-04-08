@@ -259,24 +259,22 @@
         }
         
         .main-container .passage-panel::-webkit-scrollbar {
-            width: 100px !important;
-            background: rgba(0, 0, 0, 0.1) !important;
+            width: 14px !important;
+            background: #f5f5f5 !important;
         }
-        
+
         .main-container .passage-panel::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.1) !important;
+            background: #f5f5f5 !important;
             border-radius: 0px !important;
         }
-        
+
         .main-container .passage-panel::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.6) !important;
-            border-radius: 0px !important;
-            border: 20px solid rgba(0, 0, 0, 0.1) !important;
+            background: rgba(0, 0, 0, 0.35) !important;
+            border-radius: 7px !important;
+            border: 3px solid #f5f5f5 !important;
             min-height: 50px !important;
-            opacity: 1 !important;
-            background-clip: content-box !important;
         }
-        
+
         .passage-panel::-webkit-scrollbar-thumb:hover {
             background: rgba(0, 0, 0, 0.5) !important;
         }
@@ -313,24 +311,22 @@
         }
         
         .main-container .questions-panel::-webkit-scrollbar {
-            width: 100px !important;
-            background: rgba(0, 0, 0, 0.1) !important;
+            width: 14px !important;
+            background: #f5f5f5 !important;
         }
-        
+
         .main-container .questions-panel::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.1) !important;
+            background: #f5f5f5 !important;
             border-radius: 0px !important;
         }
-        
+
         .main-container .questions-panel::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.6) !important;
-            border-radius: 0px !important;
-            border: 20px solid rgba(0, 0, 0, 0.1) !important;
+            background: rgba(0, 0, 0, 0.35) !important;
+            border-radius: 7px !important;
+            border: 3px solid #f5f5f5 !important;
             min-height: 50px !important;
-            opacity: 1 !important;
-            background-clip: content-box !important;
         }
-        
+
         .questions-panel::-webkit-scrollbar-thumb:hover {
             background: rgba(0, 0, 0, 0.5) !important;
         }
@@ -789,8 +785,9 @@
         }
 
         .subQuestion.answered {
-            background-color: #e9ecef;
-            border-color: #ddd;
+            background-color: #dbeafe;
+            border-color: #93c5fd;
+            color: #1e40af;
         }
         .subQuestion.correct {
             background-color: #28a745;
@@ -878,6 +875,18 @@
 
         .hidden {
             display: none !important;
+        }
+
+        /* Smooth content appearance when switching parts */
+        .question-set:not(.hidden),
+        .reading-passage:not(.hidden),
+        .part-header:not(.hidden) {
+            animation: fadeInContent 0.3s ease-out;
+        }
+
+        @keyframes fadeInContent {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         /* Context Menu */
@@ -984,6 +993,7 @@
             border-color: #3581d8;
             border-width: 2px;
             outline: none;
+            box-shadow: 0 0 0 3px rgba(53, 129, 216, 0.15);
         }
         .answer-input::placeholder {
             color: #666;
@@ -1172,6 +1182,28 @@
         }
         .timer-container .timer-tooltip {
             display: none;
+        }
+
+        /* Timer warning states */
+        .timer-container.warning .timer-display {
+            color: #f59e0b;
+            font-weight: 700;
+        }
+
+        .timer-container.critical .timer-display {
+            color: #ef4444;
+            font-weight: 700;
+        }
+
+        .timer-container.urgent .timer-display {
+            color: #ef4444;
+            font-weight: 700;
+            animation: timerPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
         }
 
         .timer-controls {
@@ -2282,8 +2314,9 @@
         }
 
         body.dark-mode .subQuestion.answered {
-            background-color: #2a2a2a;
-            border-color: #555555;
+            background-color: #1e3a5f;
+            border-color: #3b82f6;
+            color: #93c5fd;
         }
 
         body.dark-mode .subQuestion.active {
@@ -2417,6 +2450,13 @@
         /* Dark mode for timer */
         body.dark-mode .timer-display {
             color: #ffffff;
+        }
+        body.dark-mode .timer-container.warning .timer-display {
+            color: #fbbf24;
+        }
+        body.dark-mode .timer-container.critical .timer-display,
+        body.dark-mode .timer-container.urgent .timer-display {
+            color: #f87171;
         }
 
         /* Dark mode for context menu (highlight/clear/note) */
