@@ -560,6 +560,7 @@
         </div>
     </div>
 
+    <script src="assets/js/cambridge/scoring-tables.js"></script>
     <script>
         function escapeHtml(str) {
             if (str == null) return '';
@@ -591,132 +592,8 @@
         let itemsPerPage = 15;
         let totalPages = 1;
 
-        // Cambridge scoring conversion table generator
-        // Based on official cambridge-score.com data
-        // passRaw = the raw score needed to achieve the pass scale score
-        function generateConversionTable(maxRaw, minScale, maxScale, passScale, passRaw) {
-            const table = {};
-
-            for (let i = 0; i <= maxRaw; i++) {
-                if (i <= passRaw) {
-                    // Below/at pass: map 0 to passRaw → minScale to passScale
-                    const ratio = i / passRaw;
-                    table[i] = Math.round(minScale + ratio * (passScale - minScale));
-                } else {
-                    // Above pass: map passRaw to maxRaw → passScale to maxScale
-                    const ratio = (i - passRaw) / (maxRaw - passRaw);
-                    table[i] = Math.round(passScale + ratio * (maxScale - passScale));
-                }
-            }
-            return table;
-        }
-
-        // Cambridge Score Conversion Tables
-        // Based on official data from cambridge-score.com
-        // Format: generateConversionTable(maxRaw, minScale, maxScale, passScale, passRaw)
-        const CONVERSION_TABLES = {
-            'A2-Key': {
-                // A2-Key: scale 100-150, pass at 120
-                // Pass raw scores from cambridge-score.com: Reading 20/30, Writing 18/30, Listening 17/25, Speaking 27/45
-                reading: { max: 30, scale: generateConversionTable(30, 100, 150, 120, 20) },
-                writing: { max: 30, scale: generateConversionTable(30, 100, 150, 120, 18) },
-                listening: { max: 25, scale: generateConversionTable(25, 100, 150, 120, 17) },
-                speaking: { max: 45, scale: generateConversionTable(45, 100, 150, 120, 27) }
-            },
-            'B1-Preliminary': {
-                // B1-Preliminary: scale 120-170, pass at 140
-                // Pass raw scores from cambridge-score.com: Reading 23/32, Writing 24/40, Listening 18/25, Speaking 18/30
-                reading: { max: 32, scale: generateConversionTable(32, 120, 170, 140, 23) },
-                writing: { max: 40, scale: generateConversionTable(40, 120, 170, 140, 24) },
-                listening: { max: 25, scale: generateConversionTable(25, 120, 170, 140, 18) },
-                speaking: { max: 30, scale: generateConversionTable(30, 120, 170, 140, 18) }
-            },
-            'B2-First': {
-                // B2-First: scale 140-190, pass at 160
-                // Pass raw scores from cambridge-score.com: Reading 24/42, Writing 24/40, Listening 18/30, Speaking 36/60, UoE 18/28
-                reading: { max: 42, scale: generateConversionTable(42, 140, 190, 160, 24) },
-                writing: { max: 40, scale: generateConversionTable(40, 140, 190, 160, 24) },
-                listening: { max: 30, scale: generateConversionTable(30, 140, 190, 160, 18) },
-                speaking: { max: 60, scale: generateConversionTable(60, 140, 190, 160, 36) },
-                useOfEnglish: { max: 28, scale: generateConversionTable(28, 140, 190, 160, 18) }
-            },
-            'A1-Movers': {
-                // A1-Movers: scale 100-120, uses shields (1-5), all students achieve at least A1
-                // Approximate pass thresholds (~60-70% for good shield count)
-                readingWriting: { max: 35, scale: generateConversionTable(35, 100, 120, 106, 21) },
-                listening: { max: 25, scale: generateConversionTable(25, 100, 120, 106, 15) },
-                speaking: { max: 15, scale: generateConversionTable(15, 100, 120, 106, 9) }
-            }
-        };
-
-        // Grade boundaries
-        const GRADE_BOUNDARIES = {
-            'A2-Key': {
-                'B1': 140,  // Pass with Distinction
-                'A2-Merit': 133,  // Pass with Merit
-                'A2': 120,  // Pass
-                'A1': 100,  // Below Level
-                minPass: 120
-            },
-            'B1-Preliminary': {
-                'B2': 160,  // Pass with Distinction
-                'B1-Merit': 153,  // Pass with Merit
-                'B1': 140,  // Pass
-                'A2': 120,  // Below Level
-                minPass: 140
-            },
-            'B2-First': {
-                'C1': 180,  // Grade A
-                'B2-Merit': 173,  // Grade B
-                'B2': 160,  // Grade C (Pass)
-                'B1': 140,  // Below Level
-                minPass: 160
-            },
-            'A1-Movers': {
-                'A2': 100,  // All students achieve A1
-                minPass: 100
-            }
-        };
-
-        function convertRawToScale(raw, skill, level) {
-            if (raw === null || raw === undefined || raw === '') return null;
-
-            const table = CONVERSION_TABLES[level];
-            if (!table || !table[skill]) return null;
-
-            const skillData = table[skill];
-            const rawScore = Math.min(Math.max(0, parseInt(raw)), skillData.max);
-
-            return skillData.scale[rawScore] || null;
-        }
-
-        function calculateOverallScale(scales) {
-            const validScales = scales.filter(s => s !== null && s !== undefined);
-            if (validScales.length === 0) return null;
-            return Math.round(validScales.reduce((a, b) => a + b, 0) / validScales.length);
-        }
-
-        function getCefrLevel(overallScale, level) {
-            const boundaries = GRADE_BOUNDARIES[level];
-            if (!boundaries || !overallScale) return '-';
-
-            const sortedGrades = Object.entries(boundaries)
-                .filter(([key]) => key !== 'minPass')
-                .sort((a, b) => b[1] - a[1]);
-
-            for (const [grade, threshold] of sortedGrades) {
-                if (overallScale >= threshold) {
-                    return grade;
-                }
-            }
-            return 'Below Level';
-        }
-
-        function isPassed(overallScale, level) {
-            const boundaries = GRADE_BOUNDARIES[level];
-            if (!boundaries || !overallScale) return false;
-            return overallScale >= boundaries.minPass;
-        }
+        // Scoring functions — loaded from assets/js/cambridge/scoring-tables.js
+        const { CONVERSION_TABLES, GRADE_BOUNDARIES, convertRawToScale, calculateOverallScale, getCefrLevel, isPassed } = window.CambridgeScoring;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
