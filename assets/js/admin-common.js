@@ -89,6 +89,81 @@ class AdminDashboard {
         return String(text).replace(/[&<>"']/g, m => map[m]);
     }
 
+    // ------------------------------------------------------------------
+    // Anti-cheat helpers — read flags from anti_cheat_data column
+    // ------------------------------------------------------------------
+
+    static parseAntiCheat(submission) {
+        if (!submission) return null;
+        const ac = submission.anti_cheat_data || submission.antiCheatData || null;
+        if (!ac) return null;
+        if (typeof ac === 'string') {
+            try { return JSON.parse(ac); } catch (e) { return null; }
+        }
+        return (typeof ac === 'object') ? ac : null;
+    }
+
+    static hasAntiCheatViolations(submission) {
+        const ac = AdminDashboard.parseAntiCheat(submission);
+        if (!ac) return false;
+        if (ac.durationFlag) return true;
+        if ((ac.tabSwitches || 0) > 0) return true;
+        if ((ac.windowBlurs || 0) > 0) return true;
+        if ((ac.fullscreenExits || 0) > 0) return true;
+        if ((ac.copyAttempts || 0) > 0) return true;
+        if ((ac.pasteAttempts || 0) > 0) return true;
+        if (ac.distractionFreeEnabled === false) return true;
+        return false;
+    }
+
+    /** Compact inline flag for table rows. Returns empty string if no violations. */
+    static renderAntiCheatBadge(submission) {
+        if (!AdminDashboard.hasAntiCheatViolations(submission)) return '';
+        const ac = AdminDashboard.parseAntiCheat(submission);
+        const reasons = [];
+        if (ac.durationFlag) reasons.push('Overtime');
+        if ((ac.tabSwitches || 0) > 0) reasons.push(ac.tabSwitches + ' tab\u00A0switch' + (ac.tabSwitches > 1 ? 'es' : ''));
+        if ((ac.fullscreenExits || 0) > 0) reasons.push(ac.fullscreenExits + ' fs\u00A0exit' + (ac.fullscreenExits > 1 ? 's' : ''));
+        if ((ac.windowBlurs || 0) > 0) reasons.push(ac.windowBlurs + ' blur');
+        if ((ac.copyAttempts || 0) > 0) reasons.push(ac.copyAttempts + ' copy');
+        if ((ac.pasteAttempts || 0) > 0) reasons.push(ac.pasteAttempts + ' paste');
+        if (ac.distractionFreeEnabled === false) reasons.push('No FS');
+        const title = AdminDashboard.escapeHtml(reasons.join(', '));
+        return '<span class="ac-flag-badge" title="' + title + '">\u26A0 Flagged</span>';
+    }
+
+    /** Detailed block for the scoring modal — full violation breakdown. */
+    static renderAntiCheatDetail(submission) {
+        const ac = AdminDashboard.parseAntiCheat(submission);
+        if (!ac) return '';
+        const rows = [];
+        if (ac.durationFlag) rows.push(['Time limit', 'Exceeded 2x the allowed duration', true]);
+        if ((ac.tabSwitches || 0) > 0) rows.push(['Tab switches', ac.tabSwitches, false]);
+        if ((ac.fullscreenExits || 0) > 0) rows.push(['Fullscreen exits', ac.fullscreenExits, false]);
+        if ((ac.windowBlurs || 0) > 0) rows.push(['Window blurs', ac.windowBlurs, false]);
+        if ((ac.copyAttempts || 0) > 0) rows.push(['Copy attempts (blocked)', ac.copyAttempts, false]);
+        if ((ac.pasteAttempts || 0) > 0) rows.push(['Paste attempts (blocked)', ac.pasteAttempts, false]);
+        if ((ac.rightClickAttempts || 0) > 0) rows.push(['Right-click attempts', ac.rightClickAttempts, false]);
+        if ((ac.blockedShortcuts || 0) > 0) rows.push(['Blocked shortcuts', ac.blockedShortcuts, false]);
+        if (ac.distractionFreeEnabled === false) rows.push(['Distraction-free mode', 'Disabled', true]);
+        if (ac.firstViolationAt) rows.push(['First violation', new Date(ac.firstViolationAt).toLocaleString(), false]);
+        if (ac.lastViolationAt) rows.push(['Last violation', new Date(ac.lastViolationAt).toLocaleString(), false]);
+
+        if (rows.length === 0) return '';
+
+        const esc = AdminDashboard.escapeHtml;
+        const rowHtml = rows.map(r => {
+            const cls = r[2] ? 'ac-detail-row ac-critical' : 'ac-detail-row';
+            return '<div class="' + cls + '"><span class="ac-label">' + esc(r[0]) + '</span><span class="ac-value">' + esc(r[1]) + '</span></div>';
+        }).join('');
+
+        return '<div class="anti-cheat-detail-block">' +
+               '<div class="anti-cheat-detail-title">\u26A0 Anti-Cheat Flags</div>' +
+               '<div class="anti-cheat-detail-note">Consider these signals when scoring this submission.</div>' +
+               rowHtml +
+               '</div>';
+    }
+
     formatDate(dateString) {
         const date = new Date(dateString);
         return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -373,14 +448,17 @@ class AdminDashboard {
     /** Override for exam-specific date-group row. */
     renderDateGroupSubmissionRow(submission) {
         const esc = AdminDashboard.escapeHtml;
+        const flagged = AdminDashboard.hasAntiCheatViolations(submission);
+        const acBadge = AdminDashboard.renderAntiCheatBadge(submission);
         return `
-            <div class="date-group-submission" onclick="openAnswerComparison('${esc(submission.id)}')" style="cursor: pointer;">
+            <div class="date-group-submission${flagged ? ' submission-flagged' : ''}" onclick="openAnswerComparison('${esc(submission.id)}')" style="cursor: pointer;">
                 <div class="submission-info">
                     <div class="submission-name">${esc(submission.student_name)} (${esc(submission.student_id)})</div>
                     <div class="submission-details">
                         <span class="skill-badge skill-${esc(submission.skill)}">${esc(submission.skill)}</span>
                         <span class="${this.getScoreClass(submission.score)}">${esc(this.getScoreDisplay(submission))}</span>
                         <span style="color: #6c757d; font-size: 13px;">${esc(this.formatDate(submission.created_at).split(' ')[1])}</span>
+                        ${acBadge}
                     </div>
                 </div>
                 <button class="btn btn-info" style="padding: 4px 8px; font-size: 11px;"

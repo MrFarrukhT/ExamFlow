@@ -912,3 +912,80 @@ body {
         min-width: 60px !important;
     }
 }
+
+/* ──────────────────────────────────────────────────────────
+   Anti-cheat flag display (admin dashboards + invigilator)
+   ────────────────────────────────────────────────────────── */
+.ac-flag-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fbbf24;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: help;
+    white-space: nowrap;
+}
+
+.row-flagged {
+    background: #fff5f5 !important;
+    border-left: 3px solid #dc2626 !important;
+}
+
+.submission-flagged {
+    background: #fff5f5 !important;
+    border-left: 3px solid #dc2626 !important;
+}
+
+.anti-cheat-detail-block {
+    background: #fff5f5;
+    border: 1px solid #fecaca;
+    border-left: 4px solid #dc2626;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+}
+
+.anti-cheat-detail-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #b91c1c;
+    margin-bottom: 4px;
+}
+
+.anti-cheat-detail-note {
+    font-size: 0.85rem;
+    color: #7f1d1d;
+    margin-bottom: 12px;
+    font-style: italic;
+}
+
+.ac-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    margin: 4px 0;
+    background: white;
+    border-radius: 4px;
+    font-size: 0.88rem;
+}
+
+.ac-detail-row.ac-critical {
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+}
+
+.ac-detail-row .ac-label {
+    color: #555;
+    font-weight: 500;
+}
+
+.ac-detail-row .ac-value {
+    color: #b91c1c;
+    font-weight: 700;
+}

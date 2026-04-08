@@ -369,12 +369,14 @@
                     <thead>
                         <tr>
                             <th>Student ID</th><th>Name</th><th>Mock</th><th>Skill</th>
-                            <th>Score</th><th>Band</th><th>Date</th><th>Duration</th><th>Action</th>
+                            <th>Score</th><th>Band</th><th>Date</th><th>Duration</th><th>Flags</th><th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        ${paginatedSubmissions.map(s => `
-                            <tr>
+                        ${paginatedSubmissions.map(s => {
+                            const flagged = AdminDashboard.hasAntiCheatViolations(s);
+                            return `
+                            <tr${flagged ? ' class="row-flagged"' : ''}>
                                 <td>${esc(s.student_id)}</td>
                                 <td>${esc(s.student_name)}</td>
                                 <td>Mock ${s.mock_number}</td>
@@ -383,6 +385,7 @@
                                 <td>${s.band_score || 'N/A'}</td>
                                 <td>${this.formatDate(s.created_at)}</td>
                                 <td>${this.calculateDuration(s.start_time, s.end_time)}</td>
+                                <td>${AdminDashboard.renderAntiCheatBadge(s) || '<span style="color:#bbb;">\u2014</span>'}</td>
                                 <td style="white-space:nowrap;">
                                     <button class="btn btn-info" style="padding: 6px 12px; font-size: 12px;"
                                             onclick="openAnswerComparison('${esc(s.id)}')">
@@ -395,7 +398,7 @@
                                     </button>
                                 </td>
                             </tr>
-                        `).join('')}
+                        `;}).join('')}
                     </tbody>
                 </table>`;
             paginationControls.style.display = 'block';
@@ -681,6 +684,7 @@
             return `
                 <div class="answer-comparison">
                     <div style="grid-column: 1 / -1;">
+                        ${AdminDashboard.renderAntiCheatDetail(submission)}
                         <div class="score-section">
                             <h3>Scoring</h3>
                             <p><strong>Automatic Score:</strong> ${correctCount}/${totalQuestions} correct answers</p>
@@ -714,6 +718,7 @@
 
             return `
                 <div style="display: grid; gap: 20px;">
+                    ${AdminDashboard.renderAntiCheatDetail(submission)}
                     <div class="score-section">
                         <h3>Writing Assessment</h3>
                         <div class="score-input" style="flex-wrap: wrap; gap: 10px;">
