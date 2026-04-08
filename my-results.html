@@ -291,7 +291,7 @@
 
         async function loadResults() {
             try {
-                const subsResp = await fetchJSON(API_BASE + '/my-submissions?student_id=' + encodeURIComponent(studentId) + '&mock_number=' + encodeURIComponent(mockNumber)).catch(() => ({ success: false, submissions: [] }));
+                const subsResp = await fetchJSON(API_BASE + '/my-submissions?student_id=' + encodeURIComponent(studentId) + '&student_name=' + encodeURIComponent(studentName) + '&mock_number=' + encodeURIComponent(mockNumber)).catch(() => ({ success: false, submissions: [] }));
                 const submissions = (subsResp && subsResp.submissions) || [];
 
                 // Latest submission per skill
@@ -303,9 +303,10 @@
                 });
 
                 // Fetch answer keys per skill (in parallel, swallow errors)
+                const nameParam = '&student_name=' + encodeURIComponent(studentName);
                 const [readKeysResp, listenKeysResp] = await Promise.all([
-                    fetchJSON(API_BASE + '/my-answer-keys?mock=' + encodeURIComponent(mockNumber) + '&skill=reading&student_id=' + encodeURIComponent(studentId)).catch(() => ({ success: false })),
-                    fetchJSON(API_BASE + '/my-answer-keys?mock=' + encodeURIComponent(mockNumber) + '&skill=listening&student_id=' + encodeURIComponent(studentId)).catch(() => ({ success: false }))
+                    fetchJSON(API_BASE + '/my-answer-keys?mock=' + encodeURIComponent(mockNumber) + '&skill=reading&student_id=' + encodeURIComponent(studentId) + nameParam).catch(() => ({ success: false })),
+                    fetchJSON(API_BASE + '/my-answer-keys?mock=' + encodeURIComponent(mockNumber) + '&skill=listening&student_id=' + encodeURIComponent(studentId) + nameParam).catch(() => ({ success: false }))
                 ]);
 
                 const readKeys = (readKeysResp && readKeysResp.success) ? readKeysResp.answers : {};

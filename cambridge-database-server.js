@@ -299,12 +299,15 @@ app.get('/test', async (req, res) => {
 // STUDENT-FACING ENDPOINTS (no admin auth)
 // ============================================
 
-// Get a student's own submissions (no audio data, scoped by student_id)
+// Get a student's own submissions (no audio data, scoped by student_id+student_name).
+// Security: requires BOTH student_id AND student_name to match a real submission.
+// This raises the bar for impersonation — a student would need to know both fields
+// to read another student's data.
 app.get('/my-submissions', submissionLimiter, async (req, res) => {
     try {
-        const { student_id, level, mock_test } = req.query;
-        if (!student_id) {
-            return res.status(400).json({ success: false, message: 'student_id is required' });
+        const { student_id, student_name, level, mock_test } = req.query;
+        if (!student_id || !student_name) {
+            return res.status(400).json({ success: false, message: 'student_id and student_name are required' });
         }
         // Fail-fast on invalid level enum to prevent silent empty results
         if (level && !VALID_LEVELS.includes(level)) {
@@ -312,8 +315,19 @@ app.get('/my-submissions', submissionLimiter, async (req, res) => {
         }
 
         const dbClient = await ensureConnection();
-        const conditions = ['student_id = $1'];
-        const params = [String(student_id)];
+
+        // Verify the student_id+student_name combo matches a real submission.
+        // Returns empty submissions array if no match — same as no submissions yet.
+        const identityCheck = await dbClient.query(
+            `SELECT 1 FROM cambridge_submissions WHERE student_id = $1 AND student_name = $2 LIMIT 1`,
+            [String(student_id), String(student_name)]
+        );
+        if (identityCheck.rows.length === 0) {
+            return res.json({ success: true, submissions: [] });
+        }
+
+        const conditions = ['student_id = $1', 'student_name = $2'];
+        const params = [String(student_id), String(student_name)];
 
         if (level) {
             conditions.push(`level = $${params.length + 1}`);
@@ -341,15 +355,15 @@ app.get('/my-submissions', submissionLimiter, async (req, res) => {
 });
 
 // Get answer keys for a level/skill (student-facing, for answer checking)
-// Security: requires student_id, validates level/skill, scoped to specific mock
+// Security: requires student_id+student_name combo, validates level/skill, scoped to specific mock
 app.get('/my-answer-keys', submissionLimiter, async (req, res) => {
     try {
-        const { level, skill, mock, student_id } = req.query;
+        const { level, skill, mock, student_id, student_name } = req.query;
         if (!level || !skill) {
             return res.status(400).json({ success: false, message: 'level and skill are required' });
         }
-        if (!student_id) {
-            return res.status(400).json({ success: false, message: 'student_id is required' });
+        if (!student_id || !student_name) {
+            return res.status(400).json({ success: false, message: 'student_id and student_name are required' });
         }
         // Fail-fast on invalid enums to prevent silent dead-end queries
         if (!VALID_LEVELS.includes(level)) {
@@ -361,14 +375,14 @@ app.get('/my-answer-keys', submissionLimiter, async (req, res) => {
 
         const dbClient = await ensureConnection();
 
-        // Verify the student submitted THIS specific mock — not just any mock for this skill+level.
-        // Without mock-scoping, a student who submitted Mock 1 reading could view Mock 2/3 answer
-        // keys before taking those tests (cheating vector across mocks).
-        const submissionCheckParams = [String(student_id), level, skill];
+        // Verify the student_id+student_name combo submitted THIS specific mock.
+        // Mock scoping prevents cross-mock cheating; name+id verification raises the bar
+        // against impersonation attacks.
+        const submissionCheckParams = [String(student_id), String(student_name), level, skill];
         let submissionCheckQuery = `SELECT id FROM cambridge_submissions
-                                    WHERE student_id = $1 AND level = $2 AND skill = $3`;
+                                    WHERE student_id = $1 AND student_name = $2 AND level = $3 AND skill = $4`;
         if (mock) {
-            submissionCheckQuery += ` AND mock_test = $4`;
+            submissionCheckQuery += ` AND mock_test = $5`;
             submissionCheckParams.push(String(mock));
         }
         submissionCheckQuery += ` LIMIT 1`;
