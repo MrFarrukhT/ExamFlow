@@ -900,6 +900,41 @@ img.contrast-compatible,
     draggable: false !important;
 }
 
+/* ==================== CAMBRIDGE-WIDE QUALITY IMPROVEMENTS ==================== */
+
+/* Better answered question button visibility (matches IELTS pattern) */
+.subQuestion.answered {
+    background-color: #dbeafe !important;
+    border-color: #93c5fd !important;
+    color: #1e40af !important;
+}
+
+body.dark-mode .subQuestion.answered {
+    background-color: #1e3a5f !important;
+    border-color: #3b82f6 !important;
+    color: #93c5fd !important;
+}
+
+/* Better answer input focus for all Cambridge tests */
+.answer-input:focus {
+    border-bottom-color: #0066cc !important;
+    border-bottom-width: 2px !important;
+    box-shadow: 0 2px 0 0 rgba(0, 102, 204, 0.3) !important;
+    outline: none !important;
+}
+
+/* Smooth content transitions when switching parts */
+.DisplayTypeContainer__sectionContent___2HSJ0,
+.question-part:not(.hidden),
+.question-set:not(.hidden) {
+    animation: camFadeIn 0.3s ease-out;
+}
+
+@keyframes camFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
 /* Re-enable pointer events for clickable option images in listening tests */
 .option-image img,
 .clickable-image img,
