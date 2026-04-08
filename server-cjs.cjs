@@ -2,6 +2,7 @@
 // Synced with local-database-server.js (ESM) as of ADR-029
 // Run this with: node server-cjs.cjs
 
+require('dotenv').config();
 const { Client } = require('pg');
 const express = require('express');
 const cors = require('cors');
@@ -215,6 +216,9 @@ const blockedPaths = [
     /^\/\.gitignore$/,
     /^\/tsconfig/,
     /^\/\.eslint/,
+    /^\/autopilot-(cursor|journal)\.(json|md)$/,
+    /^\/error\.log$/,
+    /^\/\.playwright-cli(\/|$)/,
 ];
 
 app.use((req, res, next) => {

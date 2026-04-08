@@ -53,12 +53,15 @@ export function createServer({ port, name, callerUrl, dbConfig, staticOptions, o
         /^\/node_modules(\/|$)/,
         /^\/shared(\/|$)/,
         /^\/package(-lock)?\.json$/,
-        /^\/(local-database-server|cambridge-database-server|server-bundled|keygen)\.js$/,
+        /^\/(local-database-server|cambridge-database-server|server-bundled|server-cjs|keygen)\.js$/,
         /^\/scenario-journal\.md$/,
         /^\/architect-decisions\.md$/,
         /^\/\.gitignore$/,
         /^\/tsconfig/,
         /^\/\.eslint/,
+        /^\/autopilot-(cursor|journal)\.(json|md)$/,
+        /^\/error\.log$/,
+        /^\/\.playwright-cli(\/|$)/,
     ];
     app.use((req, res, next) => {
         let normalized;
