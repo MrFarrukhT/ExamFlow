@@ -597,6 +597,11 @@
     </div>
 
     <script>
+        function escapeHtml(str) {
+            if (str == null) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
         let allSubmissions = [];
         let currentSubmission = null;
 
@@ -665,8 +670,8 @@
                 <div class="submission-card ${submission.evaluated ? 'evaluated' : 'pending'}">
                     <div class="card-header">
                         <div class="student-info">
-                            <h3>${submission.student_name}</h3>
-                            <p>ID: ${submission.student_id} | ${submission.level} | Mock ${submission.mock_test}</p>
+                            <h3>${escapeHtml(submission.student_name)}</h3>
+                            <p>ID: ${escapeHtml(submission.student_id)} | ${escapeHtml(submission.level)} | Mock ${escapeHtml(submission.mock_test)}</p>
                         </div>
                         <span class="status-badge ${submission.evaluated ? 'evaluated' : 'pending'}">
                             ${submission.evaluated ? '✓ Evaluated' : '⏳ Pending'}
@@ -674,12 +679,12 @@
                     </div>
 
                     <div class="recording-info">
-                        <p><strong>Duration:</strong> ${formatDuration(submission.audio_duration)}</p>
-                        <p><strong>Size:</strong> ${submission.audio_size} MB</p>
-                        <p><strong>Submitted:</strong> ${formatDate(submission.created_at)}</p>
+                        <p><strong>Duration:</strong> ${escapeHtml(formatDuration(submission.audio_duration))}</p>
+                        <p><strong>Size:</strong> ${escapeHtml(submission.audio_size)} MB</p>
+                        <p><strong>Submitted:</strong> ${escapeHtml(formatDate(submission.created_at))}</p>
                         ${submission.evaluated ? `
-                            <p><strong>Score:</strong> ${submission.score}/100 (${submission.grade})</p>
-                            <p><strong>Evaluated by:</strong> ${submission.evaluator_name}</p>
+                            <p><strong>Score:</strong> ${escapeHtml(submission.score)}/100 (${escapeHtml(submission.grade)})</p>
+                            <p><strong>Evaluated by:</strong> ${escapeHtml(submission.evaluator_name)}</p>
                         ` : ''}
                     </div>
 
@@ -726,9 +731,9 @@
 
             // Update recording info
             document.getElementById('modalRecordingInfo').innerHTML = `
-                <p><strong>Duration:</strong> ${formatDuration(currentSubmission.audio_duration)}</p>
-                <p><strong>File Size:</strong> ${currentSubmission.audio_size} MB</p>
-                <p><strong>Submitted:</strong> ${formatDate(currentSubmission.created_at)}</p>
+                <p><strong>Duration:</strong> ${escapeHtml(formatDuration(currentSubmission.audio_duration))}</p>
+                <p><strong>File Size:</strong> ${escapeHtml(currentSubmission.audio_size)} MB</p>
+                <p><strong>Submitted:</strong> ${escapeHtml(formatDate(currentSubmission.created_at))}</p>
             `;
 
             // If already evaluated, populate form with existing data

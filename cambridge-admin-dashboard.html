@@ -1139,8 +1139,8 @@
                     <div class="answer-row ${rowClass}">
                         <div class="question-id">${displayKey}:</div>
                         <div style="display: flex; gap: 20px; flex: 1;">
-                            <div style="flex: 1;"><strong>Student:</strong> ${studentAnswer}</div>
-                            <div style="flex: 1;"><strong>Correct:</strong> ${displayCorrect}</div>
+                            <div style="flex: 1;"><strong>Student:</strong> ${escapeHtml(studentAnswer)}</div>
+                            <div style="flex: 1;"><strong>Correct:</strong> ${escapeHtml(displayCorrect)}</div>
                         </div>
                     </div>
                 `);
@@ -1258,8 +1258,8 @@
                     <div class="answer-row ${rowClass}">
                         <div class="question-id">${displayKey}:</div>
                         <div style="display: flex; gap: 20px; flex: 1;">
-                            <div style="flex: 1;"><strong>Student:</strong> ${studentAnswer}</div>
-                            <div style="flex: 1;"><strong>Correct:</strong> ${displayCorrect}</div>
+                            <div style="flex: 1;"><strong>Student:</strong> ${escapeHtml(studentAnswer)}</div>
+                            <div style="flex: 1;"><strong>Correct:</strong> ${escapeHtml(displayCorrect)}</div>
                         </div>
                     </div>
                 `);
@@ -1335,8 +1335,8 @@
                 writingParts.forEach(part => {
                     writingHTML += `
                         <div style="margin-bottom: 20px; padding: 15px; background: #f9f9f9; border-radius: 8px; border-left: 4px solid #7b1fa2;">
-                            <div style="font-weight: bold; color: #7b1fa2; margin-bottom: 10px;">${part.key} (${part.wordCount} words)</div>
-                            <div style="white-space: pre-wrap; line-height: 1.6; font-family: 'Times New Roman', serif; font-size: 14px;">${part.text}</div>
+                            <div style="font-weight: bold; color: #7b1fa2; margin-bottom: 10px;">${escapeHtml(part.key)} (${part.wordCount} words)</div>
+                            <div style="white-space: pre-wrap; line-height: 1.6; font-family: 'Times New Roman', serif; font-size: 14px;">${escapeHtml(part.text)}</div>
                         </div>
                     `;
                 });

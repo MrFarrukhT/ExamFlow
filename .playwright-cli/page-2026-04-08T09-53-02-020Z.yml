@@ -1,0 +1,15 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - heading "Innovative Centre" [level=1] [ref=e5]
+      - paragraph [ref=e6]: Enhanced Admin Dashboard
+    - generic [ref=e8]: Database Offline
+  - generic "Admin login form" [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - generic [ref=e12]: "Username:"
+        - textbox "Username:" [ref=e13]: admin
+      - generic [ref=e14]:
+        - generic [ref=e15]: "Password:"
+        - textbox "Password:" [ref=e16]
+      - button "Login" [ref=e17] [cursor=pointer]

@@ -121,6 +121,11 @@
     </div>
 
     <script>
+        function escapeHtml(str) {
+            if (str == null) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
         const INVIGILATOR_PASSWORD = "InV!#2025$SecurePass";
         const examType = localStorage.getItem('examType') || 'IELTS';
         const isCambridge = examType === 'Cambridge';
@@ -228,24 +233,24 @@
                 var mock = localStorage.getItem('selectedCambridgeMock') || '1';
                 var start = localStorage.getItem('testStartTime');
                 var mods = getModules(level);
-                div.innerHTML = '<p><strong>Student ID:</strong> ' + sid + '</p>' +
-                    '<p><strong>Name:</strong> ' + name + '</p>' +
-                    '<p><strong>Level:</strong> ' + level + '</p>' +
-                    '<p><strong>Mock Test:</strong> ' + mock + '</p>' +
-                    '<p><strong>Test Started:</strong> ' + (start ? new Date(start).toLocaleString() : 'N/A') + '</p>' +
+                div.innerHTML = '<p><strong>Student ID:</strong> ' + escapeHtml(sid) + '</p>' +
+                    '<p><strong>Name:</strong> ' + escapeHtml(name) + '</p>' +
+                    '<p><strong>Level:</strong> ' + escapeHtml(level) + '</p>' +
+                    '<p><strong>Mock Test:</strong> ' + escapeHtml(mock) + '</p>' +
+                    '<p><strong>Test Started:</strong> ' + (start ? escapeHtml(new Date(start).toLocaleString()) : 'N/A') + '</p>' +
                     '<h4 style="margin-top:15px;">Module Status:</h4>' +
                     mods.map(function(m) {
                         var st = localStorage.getItem('cambridge-' + m + 'Status') || 'not-started';
                         var ic = st === 'completed' ? '\u2705' : st === 'in-progress' ? '\u23F3' : '\u2B55';
-                        return '<p>' + ic + ' <strong>' + fmtMod(m) + ':</strong> ' + st + '</p>';
+                        return '<p>' + ic + ' <strong>' + fmtMod(m) + ':</strong> ' + escapeHtml(st) + '</p>';
                     }).join('');
             } else {
                 var mock = localStorage.getItem('selectedMock') || '1';
                 var mods = ['listening','reading','writing'];
                 var done = mods.filter(function(m) { return localStorage.getItem(m + 'Status') === 'completed'; }).length;
-                div.innerHTML = '<p><strong>Student:</strong> ' + name + '</p>' +
-                    '<p><strong>ID:</strong> ' + sid + '</p>' +
-                    '<p><strong>Test:</strong> IELTS Mock Test ' + mock + '</p>' +
+                div.innerHTML = '<p><strong>Student:</strong> ' + escapeHtml(name) + '</p>' +
+                    '<p><strong>ID:</strong> ' + escapeHtml(sid) + '</p>' +
+                    '<p><strong>Test:</strong> IELTS Mock Test ' + escapeHtml(mock) + '</p>' +
                     '<p><strong>Progress:</strong> ' + done + '/' + mods.length + ' modules completed</p>';
             }
         }
@@ -305,11 +310,11 @@
                 list.innerHTML = hist.map(function(t, i) {
                     var info = t.studentInfo || {};
                     return '<div class="history-item"><div class="history-info">' +
-                        '<h5>Test ' + (i+1) + ' - ' + (info.level||'') + '</h5>' +
-                        '<p><strong>Student:</strong> ' + (info.name||'Unknown') + ' (ID: ' + (info.id||'') + ')</p>' +
-                        '<p><strong>Completed:</strong> ' + (t.savedAt ? new Date(t.savedAt).toLocaleString() : 'N/A') + '</p>' +
+                        '<h5>Test ' + (i+1) + ' - ' + escapeHtml(info.level||'') + '</h5>' +
+                        '<p><strong>Student:</strong> ' + escapeHtml(info.name||'Unknown') + ' (ID: ' + escapeHtml(info.id||'') + ')</p>' +
+                        '<p><strong>Completed:</strong> ' + (t.savedAt ? escapeHtml(new Date(t.savedAt).toLocaleString()) : 'N/A') + '</p>' +
                         '</div><div class="history-actions">' +
-                        '<button onclick="downloadHistoricalTest(\'' + t.id + '\',\'Cambridge\')" class="small-btn">Download</button>' +
+                        '<button onclick="downloadHistoricalTest(\'' + escapeHtml(t.id) + '\',\'Cambridge\')" class="small-btn">Download</button>' +
                         '</div></div>';
                 }).join('');
             } else {
@@ -320,15 +325,15 @@
                 all.sort(function(a,b) { return new Date(b.completionDate+' '+b.completionTime) - new Date(a.completionDate+' '+a.completionTime); });
                 list.innerHTML = all.map(function(t) {
                     var tp = t.examType || 'IELTS';
-                    var lbl = tp === 'Cambridge' ? t.level : 'Mock Test ' + t.mockTest;
+                    var lbl = tp === 'Cambridge' ? escapeHtml(t.level) : 'Mock Test ' + escapeHtml(t.mockTest);
                     var tot = tp === 'Cambridge' ? (t.level==='A1-Movers'||t.level==='A2-Key' ? 2 : 3) : 3;
                     var clr = tp === 'Cambridge' ? '#0066cc' : '#28a745';
                     return '<div class="history-item"><div class="history-info">' +
-                        '<strong>' + t.studentName + '</strong> (ID: ' + t.studentId + ')' +
-                        '<br><span style="background:'+clr+';color:white;padding:2px 8px;border-radius:4px;font-size:0.8rem;margin-right:5px;">'+tp+'</span> '+lbl+' | '+t.completionDate+' '+t.completionTime +
+                        '<strong>' + escapeHtml(t.studentName) + '</strong> (ID: ' + escapeHtml(t.studentId) + ')' +
+                        '<br><span style="background:'+clr+';color:white;padding:2px 8px;border-radius:4px;font-size:0.8rem;margin-right:5px;">'+escapeHtml(tp)+'</span> '+lbl+' | '+escapeHtml(t.completionDate)+' '+escapeHtml(t.completionTime) +
                         '<br>Modules Completed: ' + t.modulesCompleted + '/' + tot +
                         '</div><div class="history-actions">' +
-                        '<button onclick="downloadHistoricalTest(\''+t.id+'\',\''+tp+'\')" class="small-btn">Download TXT</button>' +
+                        '<button onclick="downloadHistoricalTest(\''+escapeHtml(t.id)+'\',\''+escapeHtml(tp)+'\')" class="small-btn">Download TXT</button>' +
                         '</div></div>';
                 }).join('');
             }

@@ -560,6 +560,16 @@
     </div>
 
     <script>
+        function escapeHtml(str) {
+            if (str == null) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        function sanitizeClass(str) {
+            if (str == null) return '';
+            return String(str).replace(/[^a-zA-Z0-9_-]/g, '');
+        }
+
         const API_BASE = 'http://localhost:3003';
         let allResults = [];
         let filteredResults = [];
@@ -853,8 +863,8 @@
             `;
 
             pageResults.forEach((r, index) => {
-                const levelClass = `level-${r.level.split('-')[0].toLowerCase()}`;
-                const cefrClass = `cefr-${(r.cefr_level || '').split('-')[0].toLowerCase()}`;
+                const levelClass = `level-${sanitizeClass(r.level.split('-')[0].toLowerCase())}`;
+                const cefrClass = `cefr-${sanitizeClass((r.cefr_level || '').split('-')[0].toLowerCase())}`;
 
                 // Determine which scores to show based on level
                 let lScore = r.listening_scale || '-';
@@ -868,25 +878,25 @@
                 const statusClass = isScored ? (r.passed ? 'status-passed' : 'status-failed') : '';
 
                 // Create a unique key for this row
-                const rowKey = `${r.student_id}_${r.level}_${r.mock_test}`;
+                const rowKey = `${sanitizeClass(r.student_id)}_${sanitizeClass(r.level)}_${sanitizeClass(r.mock_test)}`;
 
                 html += `
                     <tr>
-                        <td>${r.student_id}</td>
-                        <td>${r.student_name}</td>
-                        <td><span class="level-badge ${levelClass}">${r.level}</span></td>
-                        <td>Mock ${r.mock_test || '1'}</td>
-                        <td class="score-cell">${lScore}</td>
-                        <td class="score-cell">${rScore}</td>
-                        <td class="score-cell">${wScore}</td>
-                        <td class="score-cell">${sScore}</td>
-                        <td class="scale-score">${r.overall_scale || '-'}</td>
-                        <td><span class="cefr-badge ${cefrClass}">${r.cefr_level || '-'}</span></td>
-                        <td class="${statusClass}" style="${!isScored ? 'color: #6c757d; font-style: italic;' : ''}">${statusText}</td>
+                        <td>${escapeHtml(r.student_id)}</td>
+                        <td>${escapeHtml(r.student_name)}</td>
+                        <td><span class="level-badge ${levelClass}">${escapeHtml(r.level)}</span></td>
+                        <td>Mock ${escapeHtml(r.mock_test || '1')}</td>
+                        <td class="score-cell">${escapeHtml(lScore)}</td>
+                        <td class="score-cell">${escapeHtml(rScore)}</td>
+                        <td class="score-cell">${escapeHtml(wScore)}</td>
+                        <td class="score-cell">${escapeHtml(sScore)}</td>
+                        <td class="scale-score">${escapeHtml(r.overall_scale || '-')}</td>
+                        <td><span class="cefr-badge ${cefrClass}">${escapeHtml(r.cefr_level || '-')}</span></td>
+                        <td class="${statusClass}" style="${!isScored ? 'color: #6c757d; font-style: italic;' : ''}">${escapeHtml(statusText)}</td>
                         <td>
                             <div class="action-buttons">
-                                <button class="action-btn edit-btn" onclick="editResultByKey('${rowKey}')">${isScored ? 'Edit' : 'Score'}</button>
-                                ${r.hasExistingResult && r.id ? `<button class="action-btn delete-btn" onclick="deleteResult(${r.id})">Delete</button>` : ''}
+                                <button class="action-btn edit-btn" onclick="editResultByKey('${escapeHtml(rowKey)}')">${isScored ? 'Edit' : 'Score'}</button>
+                                ${r.hasExistingResult && r.id ? `<button class="action-btn delete-btn" onclick="deleteResult(${Number(r.id) || 0})">Delete</button>` : ''}
                             </div>
                         </td>
                     </tr>
