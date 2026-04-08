@@ -110,6 +110,25 @@ const submissionLimiter = rateLimit({ windowMs: 60000, maxRequests: 10, message:
 
 // IELTS time limits per skill (minutes) — used for duration validation
 const IELTS_TIME_LIMITS = { reading: 60, writing: 60, listening: 40, speaking: 20 };
+const VALID_SKILLS = Object.keys(IELTS_TIME_LIMITS);
+
+// Ensure DB skill constraint includes all valid skills
+(async () => {
+    try {
+        const db = await ensureConnection();
+        await db.query(`
+            DO $$ BEGIN
+                IF EXISTS (SELECT 1 FROM information_schema.constraint_column_usage
+                           WHERE table_name = 'test_submissions' AND constraint_name = 'test_submissions_skill_check') THEN
+                    ALTER TABLE test_submissions DROP CONSTRAINT test_submissions_skill_check;
+                END IF;
+                ALTER TABLE test_submissions ADD CONSTRAINT test_submissions_skill_check
+                    CHECK (skill IN ('reading', 'writing', 'listening', 'speaking'));
+            END $$;
+        `);
+        console.log('✅ Skill constraint updated to include speaking');
+    } catch (e) { /* constraint may not exist yet */ }
+})();
 
 // In-memory dedup lock — prevents concurrent submissions for same student+skill+mock
 const submissionLocks = new Set();
@@ -124,9 +143,16 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
         if (!studentCheck.valid) {
             return res.status(400).json({ success: false, message: studentCheck.error });
         }
-        if (!submissionData.skill) {
-            return res.status(400).json({ success: false, message: 'Skill is required' });
+        if (!submissionData.skill || !VALID_SKILLS.includes(submissionData.skill)) {
+            return res.status(400).json({ success: false, message: `Invalid skill. Must be one of: ${VALID_SKILLS.join(', ')}` });
         }
+
+        // Validate mockNumber — must be a positive integer (DB column is integer type)
+        const mockNum = parseInt(submissionData.mockNumber, 10);
+        if (isNaN(mockNum) || mockNum < 1) {
+            return res.status(400).json({ success: false, message: 'mockNumber must be a positive integer' });
+        }
+        submissionData.mockNumber = mockNum;
 
         // Server-side duration validation — require timestamps and reject suspicious durations
         if (!submissionData.startTime || !submissionData.endTime) {
