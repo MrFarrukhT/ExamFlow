@@ -269,11 +269,43 @@ Starting state: Both launchers functional and polished from previous cycle, but 
 | launcher.html | 6-Innovative | Live status, Cambridge identity, unified architecture |
 | Cambridge/launcher-cambridge.html | 6-Innovative | Redirect to unified launcher |
 
+### Round 2
+**Explored:** 1 page (index.html — IELTS Student Login), 6 findings
+**Action:** POLISH 4 fixes + ELEVATE 1 enhancement
+
+- [T4] index.html — Title "Welcome to Candidate login!" → "Welcome, Candidate" (professional tone)
+  Mode: polish
+  Files: index.html
+
+- [T4] index.html — Modal JS: removed inline style overrides, CSS class toggling only
+  Mode: polish
+  Files: index.html
+
+- [T0] index.html — Added Escape key handler to close invigilator modal
+  Mode: polish
+  Files: index.html
+
+- [T4] entry.css — Cambridge colors aligned from blue (#0066cc) to teal (#0d9488) matching launcher identity
+  Mode: polish
+  Quality layer: 5-Delightful → 5-Delightful (consistency)
+  Files: assets/css/entry.css
+
+- [T0] entry.css — Left panel gradient overlay: smooth photo-to-white transition
+  Mode: elevate
+  Quality layer: 5-Delightful → 6-Innovative
+  Files: assets/css/entry.css
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| launcher.html | 6-Innovative | Live status, Cambridge identity, unified architecture |
+| index.html | 6-Innovative | Professional copy, teal consistency, gradient overlay |
+
 ### Session Stats
-Pages explored: 2
-Rounds: 1
-Polishes landed: 4
+Pages explored: 3
+Rounds: 2
+Polishes landed: 8
 Rebuilds landed: 1
-Elevations landed: 2
+Elevations landed: 3
 Reverted: 0
-Changes shipped: 7
+Changes shipped: 12
