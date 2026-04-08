@@ -68,6 +68,18 @@ class AdminDashboard {
     }
 
     // ------------------------------------------------------------------
+    // Authenticated fetch helper — sends admin token with every request
+    // ------------------------------------------------------------------
+
+    _authFetch(url, options = {}) {
+        if (!options.headers) options.headers = {};
+        if (this.authToken) {
+            options.headers['Authorization'] = `Bearer ${this.authToken}`;
+        }
+        return fetch(url, options);
+    }
+
+    // ------------------------------------------------------------------
     // Utility helpers (pure)
     // ------------------------------------------------------------------
 
@@ -225,7 +237,7 @@ class AdminDashboard {
 
         try {
             await this.checkDatabaseConnection();
-            const response = await fetch(`${this.apiBase}${this.submissionsEndpoint}`);
+            const response = await this._authFetch(`${this.apiBase}${this.submissionsEndpoint}`);
             const data = await this._parseSubmissionsResponse(response);
             this.currentSubmissions = data;
             this.applyFilters();
