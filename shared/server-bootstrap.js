@@ -33,6 +33,24 @@ export function createServer({ port, name, callerUrl, dbConfig, onReady }) {
     app.use(express.json({ limit: '50mb' }));
     app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
+    // Block access to sensitive files before static middleware
+    const blockedPaths = [
+        /^\/\.git(\/|$)/,
+        /^\/\.claude(\/|$)/,
+        /^\/\.env/,
+        /^\/\.scenario-cursor\.json$/,
+        /^\/node_modules(\/|$)/,
+        /^\/shared(\/|$)/,
+        /^\/package(-lock)?\.json$/,
+        /^\/(local-database-server|cambridge-database-server|server-bundled|keygen)\.js$/,
+    ];
+    app.use((req, res, next) => {
+        if (blockedPaths.some(re => re.test(req.path))) {
+            return res.status(404).send('Not found');
+        }
+        next();
+    });
+
     // Serve static files — handle both local dev and packaged (pkg) environment
     if (process.pkg) {
         app.use(express.static(path.join(callerDirname, 'public')));

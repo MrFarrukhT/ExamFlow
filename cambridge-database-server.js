@@ -414,7 +414,22 @@ app.post('/submit-speaking', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Student ID and name are required' });
         }
 
-        console.log(`🎤 Saving speaking test: ${level} Mock ${mockTest} for ${studentName} (${audioSize}MB, ${duration}s)`);
+        // Validate level and skill
+        if (!VALID_LEVELS.includes(level)) {
+            return res.status(400).json({ success: false, message: `Invalid level. Must be one of: ${VALID_LEVELS.join(', ')}` });
+        }
+
+        // Validate duration (must be non-negative if provided)
+        const safeDuration = (typeof duration === 'number' && duration >= 0) ? duration : null;
+
+        // Sanitize mimeType — only allow valid audio MIME types
+        const VALID_MIME_PATTERN = /^audio\/[\w.+-]+$/;
+        const safeMimeType = (typeof mimeType === 'string' && VALID_MIME_PATTERN.test(mimeType)) ? mimeType : 'audio/webm';
+
+        // Validate audioSize (must be non-negative if provided)
+        const safeAudioSize = (typeof audioSize === 'number' && audioSize >= 0 && audioSize <= 100) ? audioSize : null;
+
+        console.log(`🎤 Saving speaking test: ${level} Mock ${mockTest} for ${trimmedName} (${safeAudioSize}MB, ${safeDuration}s)`);
 
         const dbClient = await ensureConnection();
         const result = await dbClient.query(`
@@ -425,17 +440,17 @@ app.post('/submit-speaking', async (req, res) => {
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
             RETURNING id
         `, [
-            studentId,
-            studentName,
+            trimmedId,
+            trimmedName,
             'Cambridge',
             level,
             mockTest || '1',
             skill,
             JSON.stringify({}), // Empty answers object for speaking tests
             audioData,
-            audioSize,
-            duration,
-            mimeType,
+            safeAudioSize,
+            safeDuration,
+            safeMimeType,
             startTime,
             endTime,
             false // Not evaluated yet
@@ -730,8 +745,33 @@ app.post('/cambridge-answers', async (req, res) => {
             });
         }
 
+        // Validate level and skill
+        if (!VALID_LEVELS.includes(level)) {
+            return res.status(400).json({ success: false, message: `Invalid level. Must be one of: ${VALID_LEVELS.join(', ')}` });
+        }
+        if (!VALID_SKILLS.includes(skill)) {
+            return res.status(400).json({ success: false, message: `Invalid skill. Must be one of: ${VALID_SKILLS.join(', ')}` });
+        }
+
+        // Limit answer count to prevent storage abuse
+        if (typeof answers !== 'object' || Object.keys(answers).length > 200) {
+            return res.status(400).json({ success: false, message: 'Answers must be an object with at most 200 entries' });
+        }
+
+        // Sanitize answer values — strip HTML tags
+        const sanitizedAnswers = {};
+        for (const [key, val] of Object.entries(answers)) {
+            if (typeof val === 'string') {
+                sanitizedAnswers[key] = stripHtmlTags(val);
+            } else if (Array.isArray(val)) {
+                sanitizedAnswers[key] = val.map(v => typeof v === 'string' ? stripHtmlTags(v) : v);
+            } else {
+                sanitizedAnswers[key] = val;
+            }
+        }
+
         const mockTest = mock || '1';
-        console.log(`💾 Saving Cambridge answer key: ${level} ${skill} Mock ${mockTest} (${Object.keys(answers).length} answers)`);
+        console.log(`💾 Saving Cambridge answer key: ${level} ${skill} Mock ${mockTest} (${Object.keys(sanitizedAnswers).length} answers)`);
 
         const dbClient = await ensureConnection();
 
@@ -742,7 +782,7 @@ app.post('/cambridge-answers', async (req, res) => {
             ON CONFLICT (level, skill, mock_test)
             DO UPDATE SET answers = $4, updated_at = CURRENT_TIMESTAMP
             RETURNING *
-        `, [level, skill, mockTest, JSON.stringify(answers)]);
+        `, [level, skill, mockTest, JSON.stringify(sanitizedAnswers)]);
 
         console.log(`✅ Cambridge answer key saved: ${level} ${skill} Mock ${mockTest}`);
 
