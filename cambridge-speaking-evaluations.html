@@ -5,27 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cambridge Speaking Test Evaluations</title>
     <link rel="icon" href="../assets/icons/innovativecentre.png">
+    <link rel="stylesheet" href="assets/css/admin-common.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* Cambridge Speaking Evaluations — page-specific styles */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
         }
 
         .container {
             max-width: 1400px;
-            margin: 0 auto;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
         }
 
         .header {
             background: white;
+            color: inherit;
             padding: 25px 30px;
             border-radius: 12px;
             margin-bottom: 25px;
@@ -64,6 +60,7 @@
             cursor: pointer;
         }
 
+        /* Card-based layout (unique to this page) */
         .submissions-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -154,17 +151,12 @@
 
         .btn {
             padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
             font-size: 14px;
             font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
             flex: 1;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
@@ -183,16 +175,9 @@
             color: white;
         }
 
-        /* Modal Styles */
+        /* Modal overrides for this page */
         .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
             background: rgba(0,0,0,0.7);
-            z-index: 1000;
             overflow-y: auto;
         }
 
@@ -209,15 +194,19 @@
             max-width: 900px;
             width: 100%;
             max-height: 90vh;
+            height: auto;
             overflow-y: auto;
             padding: 30px;
             position: relative;
         }
 
         .modal-header {
+            background: none;
+            color: inherit;
             margin-bottom: 25px;
-            padding-bottom: 15px;
+            padding: 0 0 15px 0;
             border-bottom: 2px solid #e0e0e0;
+            display: block;
         }
 
         .modal-header h2 {
@@ -246,6 +235,7 @@
             color: #333;
         }
 
+        /* Audio and evaluation (unique to this page) */
         .audio-section {
             background: #e3f2fd;
             padding: 20px;
@@ -280,15 +270,8 @@
             margin-bottom: 20px;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
         .form-group label {
-            display: block;
             font-weight: 500;
-            color: #333;
-            margin-bottom: 8px;
         }
 
         .form-group input,
@@ -358,6 +341,7 @@
             display: block;
         }
 
+        /* Stats bar (unique layout to this page) */
         .stats-bar {
             background: white;
             padding: 20px;
@@ -367,9 +351,7 @@
         }
 
         .stats-grid {
-            display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
         }
 
         .stat-item {
@@ -404,32 +386,11 @@
             margin-bottom: 10px;
         }
 
+        /* Admin tabs override for standalone layout */
         .admin-tabs {
-            display: flex;
-            background: #0052a3;
-            padding: 0;
-            gap: 0;
             border-radius: 12px 12px 0 0;
             margin-bottom: 25px;
             overflow: hidden;
-        }
-        .admin-tabs a {
-            padding: 14px 28px;
-            color: rgba(255,255,255,0.7);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95em;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-        }
-        .admin-tabs a:hover {
-            color: white;
-            background: rgba(255,255,255,0.1);
-        }
-        .admin-tabs a.active {
-            color: white;
-            border-bottom-color: #ffc107;
-            background: rgba(255,255,255,0.1);
         }
     </style>
 </head>

@@ -4,95 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Innovative Centre - Cambridge Student Results</title>
+    <link rel="stylesheet" href="assets/css/admin-common.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* Cambridge Student Results — page-specific styles */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
-            min-height: 100vh;
-            padding: 20px;
         }
 
         .container {
             max-width: 1800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
         }
 
         .header {
             background: linear-gradient(135deg, #0066cc, #0052a3);
-            color: white;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .header-left h1 {
-            font-size: 2.2em;
-            margin-bottom: 5px;
-        }
-
-        .header-left p {
-            opacity: 0.9;
-            font-size: 1.1em;
-        }
-
-        .header-right {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .connection-status {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: 600;
-        }
-
-        .connected {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .disconnected {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .admin-tabs {
-            display: flex;
-            background: #0052a3;
-            padding: 0;
-            gap: 0;
-        }
-        .admin-tabs a {
-            padding: 14px 28px;
-            color: rgba(255,255,255,0.7);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95em;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-        }
-        .admin-tabs a:hover {
-            color: white;
-            background: rgba(255,255,255,0.1);
-        }
-        .admin-tabs a.active {
-            color: white;
-            border-bottom-color: #ffc107;
-            background: rgba(255,255,255,0.1);
         }
 
         .admin-content {
@@ -100,99 +24,37 @@
         }
 
         .controls-section {
-            background: #f8f9fa;
-            padding: 20px;
             border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .controls-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .control-group label {
-            font-weight: 600;
-            font-size: 0.9em;
-            color: #495057;
         }
 
         .control-group input, .control-group select {
             padding: 10px 12px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        .controls-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
         }
 
         .btn {
-            background: #0066cc;
-            color: white;
             padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
             font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
         }
 
         .btn:hover {
-            background: #0052a3;
             transform: translateY(-1px);
         }
 
-        .btn-success { background: #28a745; }
-        .btn-success:hover { background: #218838; }
-
-        .btn-warning { background: #ffc107; color: #212529; }
-        .btn-warning:hover { background: #e0a800; }
-
-        .btn-danger { background: #dc3545; }
-        .btn-danger:hover { background: #c82333; }
-
-        .btn-info { background: #17a2b8; }
-        .btn-info:hover { background: #138496; }
-
         .stats-grid {
-            display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
             margin-bottom: 25px;
         }
 
-        .stat-card {
-            background: linear-gradient(135deg, #0066cc, #0052a3);
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
         .stat-value {
             font-size: 2.2em;
-            font-weight: bold;
-            margin-bottom: 5px;
         }
 
         .stat-label {
             font-size: 1em;
-            opacity: 0.9;
         }
 
+        /* Results table (unique to this page) */
         .results-table {
             width: 100%;
             border-collapse: collapse;
@@ -232,15 +94,8 @@
         .level-badge {
             padding: 4px 10px;
             border-radius: 15px;
-            font-size: 0.8em;
-            font-weight: 600;
             white-space: nowrap;
         }
-
-        .level-a1 { background: #e3f2fd; color: #1976d2; }
-        .level-a2 { background: #e8f5e9; color: #388e3c; }
-        .level-b1 { background: #fff3e0; color: #f57c00; }
-        .level-b2 { background: #f3e5f5; color: #7b1fa2; }
 
         .score-cell {
             font-weight: 600;
@@ -310,55 +165,37 @@
             background: #c82333;
         }
 
-        /* Modal Styles */
+        /* Modal overrides for this page */
         .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
             overflow-y: auto;
         }
 
         .modal-content {
-            background-color: #fefefe;
             margin: 3% auto;
-            padding: 0;
             border-radius: 12px;
-            width: 95%;
             max-width: 900px;
+            height: auto;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
 
         .modal-header {
-            background: linear-gradient(135deg, #0066cc, #0052a3);
-            color: white;
             padding: 20px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             border-radius: 12px 12px 0 0;
         }
 
         .modal-header h2 {
-            margin: 0;
             font-size: 1.4em;
         }
 
         .close {
             color: white;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
             opacity: 0.8;
             transition: opacity 0.2s;
         }
 
         .close:hover {
             opacity: 1;
+            color: white;
         }
 
         .modal-body {
@@ -520,24 +357,8 @@
             border-radius: 0 0 12px 12px;
         }
 
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-            font-style: italic;
-        }
-
-        /* Pagination */
+        /* Pagination overrides */
         .pagination-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             padding: 15px 0;
             margin-top: 20px;
         }
@@ -547,7 +368,6 @@
         }
 
         .pagination-buttons {
-            display: flex;
             gap: 8px;
         }
 
@@ -556,23 +376,7 @@
             font-size: 13px;
         }
 
-        .pagination-buttons button:disabled {
-            background: #e9ecef;
-            color: #6c757d;
-            cursor: not-allowed;
-        }
-
         @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
-
-            .controls-grid {
-                grid-template-columns: 1fr;
-            }
-
             .skill-row {
                 grid-template-columns: 1fr;
                 gap: 10px;

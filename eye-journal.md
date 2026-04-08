@@ -193,16 +193,43 @@ Starting state: Functional but utilitarian — invisible footer button, no anima
 | MOCKs/*/writing.html | 4-Polished | Timer + scrollbars + task fade |
 | MOCKs/*/listening.html | 4-Polished | Timer + nav + part fade |
 
+### Round 6
+**Explored:** 1 page (dashboard.html — IELTS Student Dashboard), 5 findings
+**Action:** FIX 1 critical bug + POLISH 2 + ELEVATE 1
+
+- [T1] dashboard.css — CRITICAL: Added missing :root CSS variable definitions
+  Mode: fix
+  Files: assets/css/dashboard.css
+
+- [T4] dashboard.html — Renamed "Admin" → "Invigilator", modal moved to CSS classes
+  Mode: polish
+  Files: dashboard.html, assets/css/dashboard.css
+
+- [T0] dashboard.css — Staggered entrance animation on module cards
+  Mode: elevate
+  Files: assets/css/dashboard.css
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| launcher.html | 5-Delightful | Complete |
+| Cambridge/launcher-cambridge.html | 5-Delightful | Complete |
+| index.html | 5-Delightful | Complete |
+| MOCKs/*/reading.html | 4-Polished | Timer + nav + transitions |
+| MOCKs/*/writing.html | 4-Polished | Timer + scrollbars + task fade |
+| MOCKs/*/listening.html | 4-Polished | Timer + nav + part fade |
+| dashboard.html | 4-Polished | CSS vars fixed, card animations |
+
 ### Deferred
 - Cambridge/index.html — Same login improvements needed
 - All tests — FontAwesome CDN causes slow load; consider local copy
 - Listening — Inline styles on answer inputs need CSS class migration
 
 ### Session Stats
-Pages explored: 6
-Rounds: 5
-Polishes landed: 22
+Pages explored: 7
+Rounds: 6
+Polishes landed: 25
 Rebuilds landed: 0
-Elevations landed: 11
+Elevations landed: 12
 Reverted: 0
-Changes shipped: 33
+Changes shipped: 37
