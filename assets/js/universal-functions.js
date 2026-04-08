@@ -123,10 +123,6 @@ class IELTSUniversalFunctions {
 }
 
 // Initialize universal functions when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    window.ieltsUniversal = new IELTSUniversalFunctions();
-});
-
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
         if (!window.ieltsUniversal) {

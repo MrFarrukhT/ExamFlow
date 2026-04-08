@@ -489,7 +489,7 @@
                         if (!correctAnswers[mockKey] || !correctAnswers[mockKey][skill]) {
                             // Execute the script in a safe context
                             const tempWindow = {};
-                            eval(`(function(window) { ${scriptText} })(tempWindow)`);
+                            new Function('window', scriptText)(tempWindow);
 
                             if (tempWindow.testAnswers) {
                                 if (!correctAnswers[mockKey]) {

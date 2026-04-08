@@ -127,12 +127,11 @@ app.post('/submissions', async (req, res) => {
         });
 
     } catch (error) {
-        // Even if immediate save failed, we queued it for background retry
-        console.log('⏰ Submission queued for background retry');
-        res.json({
-            success: true,
-            message: 'Test submission queued - will retry until successful',
-            queued: true
+        console.error('Submission save error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to save submission',
+            error: error.message
         });
     }
 });
@@ -311,8 +310,12 @@ app.post('/mock-answers', async (req, res) => {
                 [parseInt(mock), skill]
             );
 
-            // Insert new answers
+            // Insert new answers (batch INSERT)
+            const valueClauses = [];
+            const params = [];
+            let paramIndex = 1;
             let insertedCount = 0;
+
             for (const [questionKey, answerValue] of Object.entries(answers)) {
                 // Extract question number from key (remove 'q' prefix if present)
                 const questionNumber = parseInt(questionKey.replace(/^q/, ''));
@@ -331,14 +334,19 @@ app.post('/mock-answers', async (req, res) => {
                     correctAnswer = stripHtml(answerValue);
                 }
 
+                valueClauses.push(`($${paramIndex}, $${paramIndex + 1}, $${paramIndex + 2}, $${paramIndex + 3}, $${paramIndex + 4}, CURRENT_TIMESTAMP)`);
+                params.push(parseInt(mock), skill, questionNumber, correctAnswer, alternativeAnswers);
+                paramIndex += 5;
+                insertedCount++;
+            }
+
+            if (insertedCount > 0) {
                 await dbClient.query(
                     `INSERT INTO mock_answers
                      (mock_number, skill, question_number, correct_answer, alternative_answers, updated_at)
-                     VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP)`,
-                    [parseInt(mock), skill, questionNumber, correctAnswer, alternativeAnswers]
+                     VALUES ${valueClauses.join(', ')}`,
+                    params
                 );
-
-                insertedCount++;
             }
 
             // Commit transaction

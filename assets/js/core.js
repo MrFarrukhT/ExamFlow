@@ -768,6 +768,7 @@ async function loadAnswers() {
                 });
 
                 // Add highlights for each answer
+                const escapeHTML = (str) => String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
                 highlights.forEach(item => {
                     const paragraphs = passageElement.querySelectorAll('p');
                     paragraphs.forEach(paragraph => {
@@ -778,13 +779,13 @@ async function loadAnswers() {
                             const re = new RegExp(escapeRegExp(item.text));
                             const replaced = html.replace(
                                 re,
-                                `<span class="answer-highlight" data-question="${item.question}" style="
+                                `<span class="answer-highlight" data-question="${escapeHTML(item.question)}" style="
                                     background-color: #ffeb3b;
                                     padding: 2px 4px;
                                     border-radius: 3px;
                                     font-weight: bold;
                                     position: relative;
-                                ">${item.text}<span style="
+                                ">${escapeHTML(item.text)}<span style="
                                     position: absolute;
                                     top: -8px;
                                     right: -8px;
@@ -798,7 +799,7 @@ async function loadAnswers() {
                                     justify-content: center;
                                     font-size: 12px;
                                     font-weight: bold;
-                                ">${item.question}</span></span>`
+                                ">${escapeHTML(item.question)}</span></span>`
                             );
                             paragraph.innerHTML = replaced;
                         }
