@@ -768,3 +768,60 @@ Trigger: Commit a28ce17 added /my-submissions and /my-answer-keys to local-datab
 
 ### Stats (Round 13)
 Tested: 5 | Passed: 1 | Failed: 3 | Noted: 1 | Fixed: 3 | Deferred: 0
+
+---
+
+## Session: 2026-04-08 18:55
+Focus: Address R13 deferred sync gap — IELTS CJS server missing /my-submissions and /my-answer-keys
+Trigger: New autopilot commit (Cambridge review modal — UI only, no attack surface) + R13 left a known sync gap
+
+### Scenarios
+
+- S1: IELTS endpoints currently broken [Regression] → CONFIRMED
+  - Both /my-submissions and /my-answer-keys returned 404 on the running CJS server
+  - Means the autopilot's IELTS results page (my-results.html) was non-functional in production
+
+- S2/S3: **Sync new endpoints to server-cjs.cjs** [Fix] → DONE
+  - Copied logic from local-database-server.js (ESM) to server-cjs.cjs
+  - Applied the same hardening Round 13 added to Cambridge:
+    - student_id required, mock_number parseInt+range validated
+    - Answer keys mock-scoped (Mock 1 → Mock 2 cheating blocked)
+    - VALID_IELTS_SKILLS enum validation
+    - Wrapped {success, submissions} response format
+    - submissionLimiter rate limit applied
+
+- S4: IELTS new endpoints work [Regression] → PASS
+  - Empty student_id → 400 with clear message
+  - Real student → wrapped response with submissions array
+  - mock_number=999 (no submissions) → empty array (correct)
+
+- S5: IDOR/injection on synced endpoints [Insider] → PASS
+  - SQL injection in student_id (`' OR 1=1--`) → empty array (parameterized)
+  - mock_number 'foo' → 400
+  - mock_number '-1' → 400
+  - Invalid skill → 400 with valid options listed
+  - Never-submitted student requesting answer keys → 403
+
+- S6: Cambridge review modal regression [Code Review] → PASS (no attack surface)
+  - New code in cambridge-exam-progress.js adds a UI modal before submission
+  - Reviewed innerHTML usage: gridHTML and noteHTML built from local computation (no user input)
+  - skillLabel comes from window.__cambridgeModule or detectModuleFromUrl() — both return whitelisted strings
+  - Pure UI feature with no security impact
+
+### Fixes
+- `server-cjs.cjs`: Added /my-submissions and /my-answer-keys endpoints with same hardening as ESM source. IELTS student results page now functional.
+
+### Pattern Analysis
+- **Sync gaps are slow-burn bugs.** When the architect/autopilot adds new code to the ESM source but doesn't sync to the CJS bundle, the running server silently lacks features. Users see 404s, page features quietly break. The R13 deferred finding was real and would have rotted indefinitely if not addressed proactively.
+- **Drift compounds.** R13 fixed the same drift in Cambridge vs IELTS. R14 fixed the drift between ESM source and CJS bundle. Each round closes a gap; future rounds will find new ones until either: (a) one server is canonical, (b) automated sync runs after every architect change.
+- **Hardening propagates.** The R13 fix to Cambridge (mock-scoped answer keys, enum validation, wrapped response) is now applied to IELTS too. The pattern is consistent across both servers.
+
+### Intelligence Update
+- IELTS student results page now functional (was broken since the autopilot added it)
+- Both /my-submissions and /my-answer-keys hardened identically across IELTS+Cambridge
+- Removed from deferred: "IELTS CJS missing /my-submissions and /my-answer-keys" — fixed
+- 5 deferred findings remain (all true architectural)
+- Coverage: 84 scenarios across 14 rounds, 35 bugs found, 30 fixed (+2 in R14)
+
+### Stats (Round 14)
+Tested: 6 | Passed: 4 | Failed: 0 | Confirmed: 1 | Fixed: 1 (sync) | Deferred: 0
