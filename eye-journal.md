@@ -1,5 +1,61 @@
 # Eye Journal
 
+## Session: 2026-04-09 — Result-viewing flow round 3: speaking auth, sticky scoring (loop /eye full re-run)
+Persona: Admin scoring 40-question reading tests + invigilator going to speaking-evaluations from a bookmark
+System: Both
+Pages explored: cambridge-speaking-evaluations.html (deep — error path + sticky stat cards), IELTS Compare modal scrolling, Cambridge View modal scrolling, .answer-comparison wrapper restructuring.
+
+The third cron-fired run of the same prompt. Round 1 fixed 3 silent-fail bugs. Round 2 walked the write paths and shipped a stat-card loading polish. This round picked up the round-2 deferred items and found a real auth-crash bug along the way.
+
+### What I shipped this round
+
+**Bug 5 (T1): cambridge-speaking-evaluations.html crashed with "submissions.map is not a function" when the user wasn't authenticated.**
+The page has no own login form — it depends on `cambridgeAdminToken` being set in localStorage by `cambridge-admin-dashboard.html` first. If you open the speaking-evaluations URL directly (bookmark, refresh after server restart, etc.), the fetch to `/cambridge-submissions?skill=speaking` returns `{success:false, message:"Authentication required"}` (an OBJECT, not an array). The page then called `submissions.map()` on the object, threw a TypeError, and the catch mislabeled it as a "Connection Error" — wrong AND not actionable.
+Fix: in `loadSubmissions()`, check `response.status === 401` BEFORE parsing the body and render a "🔒 Authentication required" empty state with a link straight to `cambridge-admin-dashboard.html`. Also added a defensive `Array.isArray(data)` guard.
+Verified: opening the page with no token shows the auth prompt + working login link; logging in via the admin dashboard and returning shows all 63 submissions.
+
+**Bug 6 (T2 polish): Speaking-evaluations stat cards initialised to "0" before the fetch resolved** — same flicker issue as the IELTS / Cambridge admin dashboards from round 2. Fixed identically: 3 stat cards (Total / Pending / Evaluated) now read `—`.
+
+**Bug 7 (T3 → T4 polished): Score input scrolled out of view as admin reviewed the answer rows.**
+Opening Compare on a 40-question reading test, layout was: anti-cheat banner → score-section → "Answer Comparison" header → 40 colored rows. To enter a final score the admin had to scroll through all 40 rows, then **scroll back up** to find the score input.
+Fix in two parts:
+1. CSS: `.score-section { position: sticky; top: 0; z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.08) }` so the score input pins to the top of the modal-body scroll viewport.
+2. HTML restructure (3 generators in IELTS + Cambridge): score-section was nested two levels deep inside `.answer-comparison > div[grid-column]`, which made its sticky containing block the tiny first grid cell. Lifted score-section + anti-cheat banner + answer rows to be DIRECT children of `#modalContent`, removing the now-redundant `.answer-comparison` wrapper.
+Verified end-to-end with real browser scroll measurements: score-section stays pinned at relative-top 20px (= modal-body's 20px padding-top) across all scroll positions on both dashboards.
+
+### Wrong deferred item from round 2 (corrected)
+Logged "Save Score doesn't update the row inline" as deferred, but checking the code revealed `advanceAfterScore()` already calls `loadSubmissions()` after a save. Verified: scoring EYE-VERIFY-1 in round 2 correctly updated its row to "READING | 7/40 | 4.5". Dropped.
+
+### Files touched this round
+1. `cambridge-speaking-evaluations.html` — em-dash placeholders + auth-aware loadSubmissions error branch with `Array.isArray` defence
+2. `assets/css/admin-common.css` — `.score-section` sticky CSS (with explanatory comment)
+3. `ielts-admin-dashboard.html` — generateAnswerComparison restructure
+4. `cambridge-admin-dashboard.html` — same restructure on `generateA1A2AnswerComparison` (multi-section) and `generateAnswerComparison` (single-skill)
+
+### Quality Map (after round 3)
+| Page | Layer (before round 3 → after) | Notes |
+|------|--------------------------------|-------|
+| cambridge-speaking-evaluations.html — no auth | 1-Functional → 4-Polished | Was crashing silently; now actionable empty state |
+| cambridge-speaking-evaluations.html — initial paint | 3-Efficient → 4-Polished | Stat cards signal loading |
+| IELTS Compare modal — 40-question reading | 3-Efficient → 5-Delightful | Score input always in view |
+| Cambridge View modal — multi-section + single-section | 3-Efficient → 5-Delightful | Same |
+
+### Deferred (next round)
+- IELTS writing comparison modal: should already inherit the sticky CSS via `.score-section` class but uses its own inline layout — needs visual verification on a real writing submission.
+- Cambridge writing comparison modal: same.
+- View by Date toggle on IELTS dashboard collapses groups but keyboard focus jumps to top — minor a11y polish.
+- Speaking-evaluations 60-second auto-refresh doesn't update stat cards — could trigger updateStatistics() on each refresh too.
+
+### Session Stats (round 3)
+Pages explored: 3 deep flows
+Bugs found: 3 (1 T1 crash, 1 T2 flicker, 1 T3 → T4 polish)
+Polishes landed: 1
+Elevations landed: 1
+Reverted: 0
+Files touched: 4
+
+---
+
 ## Session: 2026-04-09 (round 31) — Loading & Error States
 Persona: Student on a slow / unreliable connection
 System: Both — focused on launcher.html, index.html, Cambridge/dashboard-cambridge.html, plus the assets/css/launcher.css and entry.css that style their visible states
