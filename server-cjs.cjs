@@ -811,9 +811,15 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
 app.get('/my-submissions', submissionLimiter, async (req, res) => {
     try {
         const { student_id, student_name, mock_number } = req.query;
-        if (!student_id || !student_name) {
-            return res.status(400).json({ success: false, message: 'student_id and student_name are required' });
+        // R32: sanitize via validateStudentInfo (strips null bytes/control chars + length cap).
+        // POST guarantees clean storage; GET must sanitize to avoid PG UTF-8 errors
+        // that leaked as 500s on null-byte input.
+        const idCheck = validateStudentInfo(student_id, student_name);
+        if (!idCheck.valid) {
+            return res.status(400).json({ success: false, message: idCheck.error });
         }
+        const safeStudentId = idCheck.studentId;
+        const safeStudentName = idCheck.studentName;
 
         const dbClient = await ensureConnection();
 
@@ -822,14 +828,14 @@ app.get('/my-submissions', submissionLimiter, async (req, res) => {
         // to prevent enumeration via response distinction.
         const identityCheck = await dbClient.query(
             `SELECT 1 FROM test_submissions WHERE student_id = $1 AND student_name = $2 LIMIT 1`,
-            [String(student_id), String(student_name)]
+            [safeStudentId, safeStudentName]
         );
         if (identityCheck.rows.length === 0) {
             return res.json({ success: true, submissions: [] });
         }
 
         const conditions = ['student_id = $1', 'student_name = $2'];
-        const params = [String(student_id), String(student_name)];
+        const params = [safeStudentId, safeStudentName];
 
         if (mock_number) {
             const mockNum = parseInt(mock_number, 10);
@@ -861,8 +867,10 @@ app.get('/my-answer-keys', submissionLimiter, async (req, res) => {
         if (!mock || !skill) {
             return res.status(400).json({ success: false, message: 'mock and skill are required' });
         }
-        if (!student_id || !student_name) {
-            return res.status(400).json({ success: false, message: 'student_id and student_name are required' });
+        // R32: sanitize via validateStudentInfo (strips null bytes/control chars + length cap).
+        const idCheck = validateStudentInfo(student_id, student_name);
+        if (!idCheck.valid) {
+            return res.status(400).json({ success: false, message: idCheck.error });
         }
         if (!VALID_IELTS_SKILLS.includes(skill)) {
             return res.status(400).json({ success: false, message: `Invalid skill. Must be one of: ${VALID_IELTS_SKILLS.join(', ')}` });
@@ -880,7 +888,7 @@ app.get('/my-answer-keys', submissionLimiter, async (req, res) => {
             `SELECT id FROM test_submissions
              WHERE student_id = $1 AND student_name = $2 AND skill = $3 AND mock_number = $4
              LIMIT 1`,
-            [String(student_id), String(student_name), skill, mockNum]
+            [idCheck.studentId, idCheck.studentName, skill, mockNum]
         );
 
         if (submissionCheck.rows.length === 0) {

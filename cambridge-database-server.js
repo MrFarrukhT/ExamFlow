@@ -376,8 +376,11 @@ app.get('/test', async (req, res) => {
 app.get('/my-submissions', submissionLimiter, async (req, res) => {
     try {
         const { student_id, student_name, level, mock_test } = req.query;
-        if (!student_id || !student_name) {
-            return res.status(400).json({ success: false, message: 'student_id and student_name are required' });
+        // R32: sanitize via validateStudentInfo (strips null bytes/control chars + length cap).
+        // POST guarantees clean storage; GET must sanitize to avoid PG UTF-8 errors.
+        const idCheck = validateStudentInfo(student_id, student_name);
+        if (!idCheck.valid) {
+            return res.status(400).json({ success: false, message: idCheck.error });
         }
         // Fail-fast on invalid level enum to prevent silent empty results
         if (level && !VALID_LEVELS.includes(level)) {
@@ -390,14 +393,14 @@ app.get('/my-submissions', submissionLimiter, async (req, res) => {
         // Returns empty submissions array if no match — same as no submissions yet.
         const identityCheck = await dbClient.query(
             `SELECT 1 FROM cambridge_submissions WHERE student_id = $1 AND student_name = $2 LIMIT 1`,
-            [String(student_id), String(student_name)]
+            [idCheck.studentId, idCheck.studentName]
         );
         if (identityCheck.rows.length === 0) {
             return res.json({ success: true, submissions: [] });
         }
 
         const conditions = ['student_id = $1', 'student_name = $2'];
-        const params = [String(student_id), String(student_name)];
+        const params = [idCheck.studentId, idCheck.studentName];
 
         if (level) {
             conditions.push(`level = $${params.length + 1}`);
@@ -432,8 +435,10 @@ app.get('/my-answer-keys', submissionLimiter, async (req, res) => {
         if (!level || !skill) {
             return res.status(400).json({ success: false, message: 'level and skill are required' });
         }
-        if (!student_id || !student_name) {
-            return res.status(400).json({ success: false, message: 'student_id and student_name are required' });
+        // R32: sanitize via validateStudentInfo (strips null bytes/control chars + length cap).
+        const idCheck = validateStudentInfo(student_id, student_name);
+        if (!idCheck.valid) {
+            return res.status(400).json({ success: false, message: idCheck.error });
         }
         // Fail-fast on invalid enums to prevent silent dead-end queries
         if (!VALID_LEVELS.includes(level)) {
@@ -448,7 +453,7 @@ app.get('/my-answer-keys', submissionLimiter, async (req, res) => {
         // Verify the student_id+student_name combo submitted THIS specific mock.
         // Mock scoping prevents cross-mock cheating; name+id verification raises the bar
         // against impersonation attacks.
-        const submissionCheckParams = [String(student_id), String(student_name), level, skill];
+        const submissionCheckParams = [idCheck.studentId, idCheck.studentName, level, skill];
         let submissionCheckQuery = `SELECT id FROM cambridge_submissions
                                     WHERE student_id = $1 AND student_name = $2 AND level = $3 AND skill = $4`;
         if (mock) {

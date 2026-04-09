@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-09 19:30",
-  "totalRuns": 31,
+  "lastRun": "2026-04-09 19:50",
+  "totalRuns": 32,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -129,7 +129,10 @@
     "cambridge-student-results-search-like-wildcards-escaped-r30",
     "no-further-like-pattern-injection-surface-r31",
     "dedup-lock-rate-limiter-correct-under-20-request-burst-r31",
-    "absolute-timestamp-window-5min-future-24h-backdate-all-4-submission-paths-r31"
+    "absolute-timestamp-window-5min-future-24h-backdate-all-4-submission-paths-r31",
+    "anti-cheat-prototype-pollution-blocked-r32",
+    "get-my-submissions-my-answer-keys-null-byte-sanitized-all-6-endpoints-r32",
+    "audio-data-validation-defense-in-depth-no-fix-needed-r32"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
@@ -241,9 +244,9 @@
     }
   ],
   "stats": {
-    "scenariosTested": 173,
-    "bugsFound": 64,
-    "bugsFixed": 59,
+    "scenariosTested": 178,
+    "bugsFound": 65,
+    "bugsFixed": 60,
     "bugsDeferred": 11
   }
 }
