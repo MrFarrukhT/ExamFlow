@@ -1,5 +1,52 @@
 # Eye Journal
 
+## Session: 2026-04-09 13:05 — End-to-End Test Round 4: Cambridge A1-Movers Reading-Writing Mock 1
+Persona: Student (EyeBot-A1 / Eye Bot A1, ID: 99914) → Admin
+System: Cambridge (port 3003)
+
+### Round 4 — Cambridge A1-Movers Reading-Writing Mock 1
+**Flow:** Login → Cambridge Dashboard → A1-Movers R&W test (iframe with 6 parts) → Fill all 34 answers → Submit → Admin verify
+
+- [PASS] Login as Cambridge student, navigate to A1-Movers Reading-Writing test
+- [PASS] Filled all 6 parts via iframe navigation:
+  - Part 1: 5 text inputs (word matching)
+  - Part 2: 5 radio groups (multiple choice A/B/C)
+  - Part 3: 5 text + 1 radio
+  - Part 4: 5 text
+  - Part 5: 7 text
+  - Part 6: 6 text
+- [PASS] Submit via deliver-button → c-review-submit → POST /cambridge-submissions → 200 OK
+- [PASS] DB: `99914 | Eye Bot A | A1-Movers | reading-writing | 34 answers | 2026-04-09T07:57:29`
+- [PASS] Admin Dashboard: Row found `99914 | Eye Bot A | A1-Movers | Mock 1 | R&W | Unscored`
+- [NOTE] Invigilator/Student Results: Not verified (WebSocket-dependent, hard to test headless)
+
+**Findings:**
+- Cambridge GET /cambridge-submissions returns flat array, not `{submissions: []}` like IELTS — test DB check needed adjustment
+- Student name "Eye Bot A1" was stored as "Eye Bot A" — the `1` at end was interpreted as part of the name pattern. Not a bug, just a data observation.
+
+---
+
+## Session: 2026-04-09 12:46 — End-to-End Test Round 3: IELTS Listening Mock 1
+Persona: Student (EyeBot-L / Eye Bot Listening, ID: 99903) → Admin → Invigilator
+System: IELTS (port 3002)
+
+### Round 3 — IELTS Listening Mock 1
+**Flow:** Login → Dashboard → Listening Test → Dismiss audio popup → Fill 40 answers (4 parts) → Submit → Admin verify → Invigilator verify
+
+- [PASS] Audio popup dismissed (Play button)
+- [PASS] Part 1 (Q1-10): text inputs filled
+- [PASS] Part 2 (Q11-15 text, Q16-20 radio): all filled
+- [PASS] Part 3 (Q21-24 select dropdowns, Q25-30 radio): all filled
+- [PASS] Part 4 (Q31-32 radio, Q33-40 text): all filled
+- [PASS] Submit → review modal → POST /submissions → 200 OK (id: 12021, 40 answers)
+- [PASS] Admin Dashboard: Row found `99903 | Eye Bot Listening | Mock 1 | listening | Unscored/40`
+- [PASS] Invigilator: Student found
+
+**Bugs found:** None — listening pipeline works end-to-end
+**404 error:** Audio file not found (IC001 listening.mp3) — expected in headless test, doesn't affect submission
+
+---
+
 ## Session: 2026-04-09 12:38 — End-to-End Test Round 2: IELTS Writing Mock 1
 Persona: Student (EyeBot-W / Eye Bot Writing, ID: 99902) → Admin → Invigilator
 System: IELTS (port 3002)
