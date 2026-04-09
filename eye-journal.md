@@ -3184,3 +3184,20 @@ Fixes landed: 0
 Reverted: 0
 Files touched: 1 (assets/js/cambridge/scoring-tables.js)
 Verification scripts: 1 (e:/tmp/verify-c1-scoring.js — 19 assertions, all pass)
+
+---
+
+## Session: 2026-04-09 (round 7 — IELTS half-band validation + misleading-comment cleanup)
+Persona: Admin grading IELTS Writing; AI scoring endpoint
+System: IELTS port 3002
+Starting state: The AI scoring endpoint accepted any 0-9 number (hallucination gap), the admin client validator didn't check 0.5 increments, and cambridge-answer-sync.js had a misleading "A2 Key / A1 Movers" comment.
+
+### Round 7 — three polishes shipped
+- [T2] `local-database-server.js:912–921` — `isValidBand` rebuilt to require `Math.round(b*2) === b*2` so non-half-band AI hallucinations (e.g. 7.3) are rejected.
+- [T2] `ielts-admin-dashboard.html:819–828` — `saveWritingScore` client validator now matches server's `/update-score` check exactly: `(bandNum * 2) % 1 !== 0`.
+- [T0] `assets/js/cambridge/cambridge-answer-sync.js:102–104` — comment corrected from "A2 Key / A1 Movers" to "A2 Key only" with note about A1 Movers' own sync.
+
+### Session Stats
+Polishes landed: 3
+Files touched: 3 (local-database-server.js, ielts-admin-dashboard.html, cambridge-answer-sync.js)
+Deferred: B2 First mock content shape (6 parts × 32q vs official 7 × 52q) — needs new exam content, not a UI fix.
