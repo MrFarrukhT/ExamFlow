@@ -73,11 +73,62 @@ class AdminDashboard {
     // ------------------------------------------------------------------
 
     _authFetch(url, options = {}) {
+        // Stale-token short-circuit: once we've seen a 401 with this token in the current page
+        // load, don't keep firing more requests with the same dead token. loadCorrectAnswers()
+        // fans out ~48 parallel /cambridge-answers calls; without this guard, all 48 fail and
+        // each spams the console even though the first 401 already triggered _handleStaleToken().
+        if (this._tokenInvalidated) {
+            return Promise.resolve(new Response(
+                JSON.stringify({ success: false, message: 'Session expired' }),
+                { status: 401, headers: { 'Content-Type': 'application/json' } }
+            ));
+        }
         if (!options.headers) options.headers = {};
         if (this.authToken) {
             options.headers['Authorization'] = `Bearer ${this.authToken}`;
         }
-        return fetch(url, options);
+        return fetch(url, options).then(res => {
+            // Stale-token recovery: when the server restarts (or the in-memory token store is
+            // cleared) the dashboard's locally cached token becomes invalid. Without this hook,
+            // the dashboard sat in a "logged in but empty" state — totalSubmissions=0, no error,
+            // no way to know auth was the problem. Detect 401 on any authenticated call and
+            // forcibly bounce the user back to the login form so they can reconnect.
+            if (res.status === 401 && this.authToken) {
+                this._handleStaleToken();
+            }
+            return res;
+        });
+    }
+
+    /**
+     * Wipe the cached admin token and surface the login form. Called from _authFetch when an
+     * authenticated request comes back 401, which means the server no longer recognises the token
+     * (typically because it was restarted). Idempotent — safe to call multiple times.
+     */
+    _handleStaleToken() {
+        if (!this.authToken) return; // already cleared
+        this._tokenInvalidated = true;  // suppress further in-flight requests in _authFetch
+        localStorage.removeItem(this.tokenKey);
+        this.authToken = null;
+        // Mirror logout()'s UI reset so the user lands on the login form instead of the empty
+        // dashboard. We don't call logout() directly because it also clears the password field
+        // and resets the username — _handleStaleToken should be a quieter recovery path.
+        const loginForm = document.getElementById('loginForm');
+        const adminContent = document.getElementById('adminContent');
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (loginForm) loginForm.style.display = 'block';
+        if (adminContent) adminContent.style.display = 'none';
+        if (logoutBtn) logoutBtn.style.display = 'none';
+        this.extraLogoutHideIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        });
+        // Surface a one-time message so the user understands why they were bounced back.
+        const errorMessage = document.getElementById('errorMessage');
+        if (errorMessage) {
+            errorMessage.textContent = 'Your session expired. Please log in again.';
+            errorMessage.style.display = 'block';
+        }
     }
 
     // ------------------------------------------------------------------
@@ -251,6 +302,7 @@ class AdminDashboard {
             if (result.success) {
                 localStorage.setItem(this.tokenKey, result.token);
                 this.authToken = result.token;
+                this._tokenInvalidated = false;  // fresh token, allow _authFetch again
                 successMessage.textContent = 'Login successful!';
                 successMessage.style.display = 'block';
                 setTimeout(() => this.showAdminPanel(), 1000);

@@ -131,7 +131,36 @@
     return w ? wrapperOrderNumber(w) : null;
   }
 
+  /* Part 1 popover gap badge — shows the question number when
+     the gap is empty, switches to the chosen letter (A–D) on
+     selection. The select element underneath is still the
+     functional control; the badge is purely visual.
+     Independent from single-question pagination — runs on every
+     page that uses .c1-popover-gap. */
+  function bindPopoverBadges() {
+    var gaps = document.querySelectorAll('.c1-popover-gap');
+    if (!gaps.length) return;
+    Array.prototype.forEach.call(gaps, function (gap) {
+      var sel = gap.querySelector('select');
+      var badge = gap.querySelector('.c1-popover-num');
+      if (!sel || !badge) return;
+      var originalNumber = badge.textContent.trim();
+      function sync() {
+        if (sel.value && sel.value !== '') {
+          badge.textContent = sel.value;
+          gap.classList.add('has-value');
+        } else {
+          badge.textContent = originalNumber;
+          gap.classList.remove('has-value');
+        }
+      }
+      sync();
+      sel.addEventListener('change', sync);
+    });
+  }
+
   function init() {
+    bindPopoverBadges();
     if (!isSingleQuestionPage()) return;
     var wrappers = getWrappers();
     if (!wrappers.length) return;

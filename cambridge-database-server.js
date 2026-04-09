@@ -687,6 +687,42 @@ app.post('/submit-speaking', submissionLimiter, async (req, res) => {
             return res.status(413).json({ success: false, message: `audioData exceeds maximum size of ${MAX_AUDIO_BYTES} bytes` });
         }
 
+        // Server-side duration validation — sibling endpoint /cambridge-submissions has this;
+        // /submit-speaking was missing it entirely (R26 parallel-code gap). Mirror the same
+        // require-timestamps + reverse-time + min-time + over-time guards here.
+        if (!startTime || !endTime) {
+            return res.status(400).json({ success: false, message: 'startTime and endTime are required' });
+        }
+        const speakStart = new Date(startTime);
+        const speakEnd = new Date(endTime);
+        if (isNaN(speakStart.getTime()) || isNaN(speakEnd.getTime())) {
+            return res.status(400).json({ success: false, message: 'Invalid startTime or endTime format' });
+        }
+        const speakElapsedMin = (speakEnd - speakStart) / 60000;
+        if (speakElapsedMin <= 0) {
+            return res.status(400).json({ success: false, message: 'endTime must be after startTime' });
+        }
+        // Minimum-time guard: 30s minimum (same threshold as the regular submission endpoint).
+        // A speaking test has a 15-min slot; sub-30s is impossible by any human and indicates a forged POST.
+        const SPEAK_MIN_ELAPSED_SEC = 30;
+        if (speakElapsedMin * 60 < SPEAK_MIN_ELAPSED_SEC) {
+            console.warn(`🚨 SPEAKING SUBMISSION REJECTED: Student ${trimmedId} took only ${(speakElapsedMin*60).toFixed(1)}s for ${level} ${skill} (min: ${SPEAK_MIN_ELAPSED_SEC}s)`);
+            return res.status(400).json({
+                success: false,
+                message: 'Submission rejected: test duration is below the minimum allowed.'
+            });
+        }
+        // Hard reject overtime — speaking slots are at most 15min; allow up to 3x as cushion.
+        const speakLevelLimits = CAMBRIDGE_TIME_LIMITS[level] || {};
+        const speakLimit = speakLevelLimits[skill] || 30;
+        if (speakElapsedMin > speakLimit * 3) {
+            console.warn(`🚨 SPEAKING SUBMISSION REJECTED: Student ${trimmedId} took ${Math.round(speakElapsedMin)}min for ${level} ${skill} (limit: ${speakLimit}min)`);
+            return res.status(400).json({
+                success: false,
+                message: 'Submission rejected: test duration exceeded the maximum allowed time.'
+            });
+        }
+
         // In-memory lock + DB dedup check — prevents race conditions with singleton Client
         const safeMockTest = mockTest || '1';
         const dedupKey = `cam-spk:${trimmedId}:${level}:${skill}:${safeMockTest}`;

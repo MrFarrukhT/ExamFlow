@@ -510,8 +510,9 @@ body[data-c1-layout="single-question"]
     color: transparent;
 }
 
-/* The number badge sits centred over the select. JS adds
-   .has-value to the wrapper once a real option is chosen. */
+/* The badge sits centred over the select. JS swaps its text
+   between the question number (empty state) and the chosen
+   letter (filled state); we keep it visible in both. */
 .c1-popover-num {
     position: absolute;
     top: 50%;
@@ -519,10 +520,12 @@ body[data-c1-layout="single-question"]
     transform: translate(-50%, -50%);
     color: #1e3a5f;
     font-weight: 700;
-    font-size: 0.78em;
+    font-size: 0.85em;
     pointer-events: none;
     user-select: none;
+    line-height: 1;
 }
 .c1-popover-gap.has-value .c1-popover-num {
-    display: none;
+    color: #007a87;
+    font-size: 0.95em;
 }
