@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-09 18:10",
-  "totalRuns": 27,
+  "lastRun": "2026-04-09 18:30",
+  "totalRuns": 28,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -118,7 +118,10 @@
     "validatescore-upper-bound-100-not-200",
     "patch-cambridge-student-results-length-caps",
     "patch-cambridge-evaluate-evaluator-notes-length-caps",
-    "striphtmltags-safe-against-entity-and-nested-tags-with-escapehtml-downstream"
+    "striphtmltags-safe-against-entity-and-nested-tags-with-escapehtml-downstream",
+    "ielts-cambridge-student-facing-error-message-not-leaked-r28",
+    "delete-cambridge-answers-mock-level-skill-validation-parity-r28",
+    "heal-r7-mock-validation-1-100-on-post-cambridge-answers"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
@@ -144,7 +147,12 @@
     "patch-endpoints-lag-behind-post-endpoint-validations-r27-three-instances",
     "pg-error-messages-leak-column-types-via-generic-try-catch-r27",
     "validation-ranges-untied-to-real-world-constraints-eventually-wrong-by-order-of-magnitude-r27",
-    "drift-count-now-8-occurrences-r20-r27"
+    "drift-count-now-8-occurrences-r20-r27",
+    "concentric-drift-each-fix-round-leaves-a-sibling-ring-unfixed-r28",
+    "info-disclosure-fixes-prioritize-admin-paths-but-should-prioritize-unauthenticated-paths-r28",
+    "drift-count-now-10-occurrences-r20-r28-r28-added-4-new",
+    "ielts-mock-answers-no-upper-bound-deferred-low-r28",
+    "12-admin-error-message-handlers-still-leak-after-r28-bulk-strip-needed"
   ],
   "untestedAreas": [
     "browser-based-c1-advanced-exam-flow"
@@ -169,10 +177,10 @@
       "reason": "Every enum addition requires a paired DB migration. Architect should add a code review checklist."
     },
     {
-      "title": "ESM↔CJS drift + sibling-endpoint partial drift (8 occurrences as of R27)",
+      "title": "ESM↔CJS + sibling-endpoint + concentric drift (10 occurrences as of R28)",
       "severity": "CRITICAL",
       "since": "2026-04-09",
-      "reason": "8 occurrences across R20-R27. R24 had production-fully-exploitable score tampering hidden by drift; R26 found CJS missing bandScore validation; R27 found 2 PATCH endpoints lagging behind POST sibling validations and a 0-200 score range that nobody validated against real-world maxes. Architect MUST automate sync or deprecate one server NOW; the cron will keep mining this seam every round."
+      "reason": "10 occurrences across R20-R28. Each round finds a new ring: same-endpoint drift (R20-R24), POST/POST sibling drift (R25-R26), POST/PATCH drift (R27), unauthenticated/admin drift on error.message + POST/DELETE drift on /cambridge-answers (R28). Architect MUST deduplicate sibling routes through a shared handler — the cron will keep mining new rings every round otherwise."
     },
     {
       "title": "Submissions list returns 5604+ rows unpaginated",
@@ -219,9 +227,9 @@
     }
   ],
   "stats": {
-    "scenariosTested": 158,
-    "bugsFound": 56,
-    "bugsFixed": 51,
-    "bugsDeferred": 10
+    "scenariosTested": 163,
+    "bugsFound": 60,
+    "bugsFixed": 55,
+    "bugsDeferred": 11
   }
 }

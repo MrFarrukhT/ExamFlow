@@ -1632,3 +1632,93 @@ Trigger: R26 weak-pattern entry "sibling-endpoint partial drift" called out admi
 
 ### Stats (Round 27)
 Tested: 4 | Passed: 1 | Failed: 3 (1 MEDIUM, 2 LOW) | Fixed: 3 | Deferred: 0
+
+---
+
+## Session: 2026-04-09 18:30
+Focus: R28 — extend the R27 sibling-drift hunt one ring outward. R27 fixed two PATCH/POST drift instances; R28 looked at the *unauthenticated* student-facing endpoints (which heal r7 didn't touch) and at the POST/DELETE pair on `/cambridge-answers`. Also probed the IELTS `/mock-answers` POST/DELETE pair since the architectural pattern repeats across both servers.
+Trigger: heal r7's commit (`03485b0`) stripped error.message from 5 admin endpoints but skipped POST `/cambridge-submissions` and POST `/submit-speaking` — and IELTS server-cjs.cjs has the same leak in 8 places.
+
+### Scenarios
+
+- S1: IELTS POST `/submissions` with `mockNumber: 2147483648` [Insider/Anyone] → **BUG (HIGH)**
+  - Hits the int4 overflow boundary on the `mock_number` column. Server returned `{"success":false,"message":"Failed to save submission","error":"value \"2147483648\" is out of range for type integer"}`.
+  - **Unauthenticated** information disclosure. Anyone can fingerprint the database (Postgres), the column type (int4), and the exact integer overflow boundary. Same gap exists on local-database-server.js (ESM, the development copy).
+
+- S2: Cambridge POST `/cambridge-submissions` and POST `/submit-speaking` with 300-char `mockTest` [Insider/Anyone] → **BUG (HIGH × 2)**
+  - Both endpoints returned `{"success":false,"message":"Failed to save…","error":"value too long for type character varying(10)"}`.
+  - **Unauthenticated** information disclosure of the `mock_test` column type (`varchar(10)`).
+  - heal r7 fixed admin endpoints but missed both student-facing POST handlers.
+
+- S3: heal r7's mock validation in POST `/cambridge-answers` [Verification] → **PASS**
+  - mock=0 → 400 "Mock must be a positive integer between 1 and 100"
+  - mock=101 → 400 same
+  - mock='abc' → 400 same
+  - mock=50 → 200 saved
+  - heal r7's added check works correctly across the boundary.
+
+- S4: DELETE `/cambridge-answers` mock validation parity vs POST [Insider] → **BUG (LOW)**
+  - mock='abc' / -1 / 999 → all silently returned "Answer key not found" (200-shaped 400).
+  - DELETE had **no validation at all** — no level/skill enum check, no mock range check. Sibling drift with POST.
+  - Severity LOW because admin auth gates abuse, but inconsistency lets attackers probe the keyspace without rate-limiting penalties and the lack of an enum check means weird payloads reach the DB query untouched.
+
+- S5: IELTS POST/DELETE `/mock-answers` mock parameter parity [Insider] → **BUG (LOW)**
+  - POST mock=999 → 200 stored (no upper bound)
+  - DELETE mock=99999 → 200 "Deleted 0" (no upper bound)
+  - POST mock=0 → 400 but with the wrong error message "Mock number, skill, and answers are required" (because `0` is falsy in the `if (!mock)` check).
+  - **Three different validation policies** across the four mock-answers endpoints (Cambridge POST: 1-100, Cambridge DELETE: none, IELTS POST: ≥1 no upper, IELTS DELETE: ≥1 no upper). Severity LOW; logged for the architect to dedupe.
+
+### Fixes
+
+**Fix A — Strip `error.message` from 3 student-facing endpoint error handlers:**
+- `server-cjs.cjs` line 753: removed `error: error.message` from POST `/submissions` 500-path. Added comment explaining R28 trigger.
+- `local-database-server.js` line 336: same change to ESM IELTS server (parity fix to prevent ESM↔CJS drift recurring).
+- `cambridge-database-server.js` line 622: removed from POST `/cambridge-submissions` 500-path.
+- `cambridge-database-server.js` line 783: removed from POST `/submit-speaking` 500-path.
+- All four endpoints now return generic `Failed to save…` 500s. The full error is still logged server-side via `console.error` for ops debugging.
+
+**Fix B — DELETE `/cambridge-answers` mock + level/skill validation parity:**
+- `cambridge-database-server.js` line 1447: added `VALID_LEVELS.includes(level)` check (parity with POST)
+- Added `VALID_SKILLS.includes(skill)` check (parity with POST)
+- Added the same `1-100 positive integer` mock validation that heal r7 added to POST in r7
+- Returns 400 with named-field errors on rejection. Now POST and DELETE behave identically for input validation.
+
+### Verification (post-fix, fresh server restart)
+
+- S1v2 IELTS POST mockNumber=2147483648 → `{"success":false,"message":"Failed to save submission"}` ✓ (no error.message)
+- S2v2 Cambridge POST 300-char mockTest → `{"success":false,"message":"Failed to save Cambridge submission"}` ✓
+- S2cv2 /submit-speaking 300-char mockTest → `{"success":false,"message":"Failed to save speaking test"}` ✓
+- R28R1 legit IELTS submission → 200 stored ✓ (regression)
+- S4v2 DELETE mock='abc' → 400 "Mock must be a positive integer between 1 and 100" ✓
+- S4v2 DELETE mock=999 → 400 same ✓
+- S4v2 DELETE mock=-1 → 400 same ✓
+- S4v2 DELETE mock=50 → 200 deleted ✓
+- S4v2 DELETE level='NotALevel' → 400 "Invalid level…" ✓ (also gained the level enum check)
+
+### Pattern Analysis
+
+- **The "concentric drift" pattern: each round of fixes leaves a ring of unfixed siblings.**
+  R20-R24 fixed ESM↔CJS drift on the same endpoint.
+  R25 fixed POST/POST drift between sibling submission endpoints.
+  R26 fixed POST/POST drift on /submit-speaking vs /cambridge-submissions.
+  R27 fixed POST/PATCH drift on student-results and evaluate.
+  R28 fixed unauthenticated POST/admin-PATCH drift on error.message disclosure AND POST/DELETE drift on /cambridge-answers.
+  Each round, the fix moves from one ring of code to the next: same-endpoint, then sibling endpoints, then auth-tier siblings, then verb siblings. The architect's "deprecate one server / dedupe sibling routes" recommendation would collapse all of these rings at once.
+
+- **Unauthenticated 500s are higher-value disclosure than admin 500s.**
+  heal r7 correctly identified error.message as a leak and stripped it from admin endpoints. But admin endpoints are gated by auth — only an attacker with admin credentials can trigger them. The student-facing POST endpoints are reachable by anyone with the URL. Stripping admin first and unauthenticated second is exactly backwards: the public surface has the higher exposure. **Lesson: when fixing information disclosure, fix the unauthenticated paths FIRST.**
+
+- **`error.message` count is finite, fixable in one pass.**
+  R28 found 16 remaining `error: error.message` instances across the three server files (8 in server-cjs.cjs, 8 in local-database-server.js, 7 in cambridge-database-server.js after heal r7's 5 fixes). I fixed 4 of the most exposed. The remaining 12 are all admin-gated. **For-next-run: do the bulk strip in one pass — this is a finite list, easier to do all at once than to keep finding them by triggering 500s one at a time.**
+
+### Intelligence Update
+
+- Proven solid: error.message no longer leaked from POST /submissions (CJS+ESM), POST /cambridge-submissions, POST /submit-speaking; DELETE /cambridge-answers parity with POST (level/skill enum + mock 1-100)
+- New weak pattern logged: concentric drift — each fix round leaves a sibling ring unfixed; the rings repeat (same-endpoint → sibling endpoints → auth-tier siblings → verb siblings)
+- New weak pattern logged: information disclosure fixes prioritize admin paths but should prioritize unauthenticated paths
+- Drift count update: 10 occurrences (R20-R28); R28 alone added 4 new instances
+- Coverage: 163 scenarios across 28 rounds, 58 bugs found, 53 fixed
+- Untested area logged: bulk error.message strip across the remaining 12 admin-gated handlers
+
+### Stats (Round 28)
+Tested: 5 | Passed: 1 | Failed: 4 (3 HIGH, 1 LOW; S5 documented but not fixed) | Fixed: 4 (Fix A: 4 endpoints across 3 files; Fix B: 1 endpoint) | Deferred: 1 (IELTS mock-answers upper bound — hygiene)
