@@ -415,7 +415,7 @@
 
             <div class="header-controls">
                 <div class="filter-group">
-                    <label>Level:</label>
+                    <label for="levelFilter">Level:</label>
                     <select id="levelFilter">
                         <option value="">All Levels</option>
                         <option value="A1-Movers">A1 Movers</option>
@@ -426,7 +426,7 @@
                 </div>
 
                 <div class="filter-group">
-                    <label>Status:</label>
+                    <label for="statusFilter">Status:</label>
                     <select id="statusFilter">
                         <option value="">All</option>
                         <option value="pending">Pending Evaluation</option>
@@ -435,7 +435,7 @@
                 </div>
 
                 <div class="filter-group">
-                    <label>Mock Test:</label>
+                    <label for="mockFilter">Mock Test:</label>
                     <select id="mockFilter">
                         <option value="">All Tests</option>
                         <option value="1">Mock 1</option>
@@ -520,7 +520,7 @@
 
                 <div class="criteria-grid">
                     <div class="criteria-item">
-                        <label>Grammar & Accuracy</label>
+                        <label for="grammarScore">Grammar & Accuracy</label>
                         <select id="grammarScore">
                             <option value="">Select...</option>
                             <option value="1">1 - Poor</option>
@@ -532,7 +532,7 @@
                     </div>
 
                     <div class="criteria-item">
-                        <label>Vocabulary</label>
+                        <label for="vocabularyScore">Vocabulary</label>
                         <select id="vocabularyScore">
                             <option value="">Select...</option>
                             <option value="1">1 - Poor</option>
@@ -544,7 +544,7 @@
                     </div>
 
                     <div class="criteria-item">
-                        <label>Pronunciation</label>
+                        <label for="pronunciationScore">Pronunciation</label>
                         <select id="pronunciationScore">
                             <option value="">Select...</option>
                             <option value="1">1 - Poor</option>
@@ -556,7 +556,7 @@
                     </div>
 
                     <div class="criteria-item">
-                        <label>Fluency & Coherence</label>
+                        <label for="fluencyScore">Fluency & Coherence</label>
                         <select id="fluencyScore">
                             <option value="">Select...</option>
                             <option value="1">1 - Poor</option>
@@ -569,17 +569,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Evaluator Name</label>
+                    <label for="evaluatorName">Evaluator Name</label>
                     <input type="text" id="evaluatorName" placeholder="Enter your name" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Overall Score (out of 100)</label>
+                    <label for="overallScore">Overall Score (out of 100)</label>
                     <input type="number" id="overallScore" min="0" max="100" placeholder="0-100" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Grade</label>
+                    <label for="overallGrade">Grade</label>
                     <select id="overallGrade">
                         <option value="">Select grade...</option>
                         <option value="A+">A+ (90-100)</option>
@@ -593,7 +593,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Feedback & Notes</label>
+                    <label for="evaluationNotes">Feedback & Notes</label>
                     <textarea id="evaluationNotes" placeholder="Provide detailed feedback for the student..."></textarea>
                 </div>
 
@@ -634,7 +634,7 @@
         window.addEventListener('DOMContentLoaded', loadSubmissions);
 
         // Auto-refresh every 60 seconds
-        setInterval(loadSubmissions, 60000);
+        window.__speakingEvalRefreshInterval = setInterval(loadSubmissions, 60000);
 
         async function loadSubmissions() {
             try {

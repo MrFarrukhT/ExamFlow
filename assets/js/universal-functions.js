@@ -86,22 +86,6 @@ class IELTSUniversalFunctions {
         this.showPopup(content);
     }
 
-    updateNotificationBadge() {
-        const badge = document.querySelector('.notification-badge');
-        if (badge) {
-            const count = this.notifications.length;
-            badge.textContent = count > 9 ? '9+' : count.toString();
-            badge.style.display = count > 0 ? 'flex' : 'none';
-        }
-    }
-
-    addNotification(title, message) {
-        const notification = { id: Date.now(), title, message, time: 'Just now' };
-        this.notifications.unshift(notification);
-        this.updateNotificationBadge();
-        this.showToast(`New notification: ${escapeHTML(title)}`, 'info');
-    }
-
     // --- Delegation to ModalManager ---
 
     showPopup(content, additionalClass) { this.modalManager.showPopup(content, additionalClass); }
