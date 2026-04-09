@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "lastRunAt": "2026-04-09T11:10:00Z",
-  "lastRunCommit": "4424c5d",
+  "lastRunAt": "2026-04-09T11:18:00Z",
+  "lastRunCommit": "9b8a950",
   "runs": [
     {
       "id": "heal-2026-04-08-r1",
@@ -94,6 +94,17 @@
       "fixed": 5,
       "reverted": 0,
       "deferred": 0
+    },
+    {
+      "id": "heal-2026-04-09-r10",
+      "type": "heal",
+      "startedAt": "2026-04-09T11:14:00Z",
+      "domains": ["frontend", "architecture"],
+      "round": 10,
+      "fixed": 4,
+      "reverted": 0,
+      "deferred": 0,
+      "note": "Confirmed admin/ directory does not exist; pivoted to a11y + dead-code cleanup. Heal r10 commit 9b8a950 piggybacked 9 unrelated C1-Advanced HTML edits from parallel agent stage."
     }
   ],
   "findings": [
@@ -573,6 +584,42 @@
       "status": "fixed",
       "fixedInCommit": "4424c5d",
       "foundAt": "2026-04-09T11:05:00Z"
+    },
+    {
+      "fingerprint": "frontend:cambridge-speaking-evaluations:missing-label-for",
+      "severity": "HIGH",
+      "title": "10 form labels missing for=\"...\" associations (filters + scoring criteria + evaluator/grade fields)",
+      "file": "cambridge-speaking-evaluations.html",
+      "status": "fixed",
+      "fixedInCommit": "9b8a950",
+      "foundAt": "2026-04-09T11:14:00Z"
+    },
+    {
+      "fingerprint": "frontend:cambridge-speaking-evaluations:setinterval-no-reference",
+      "severity": "MEDIUM",
+      "title": "loadSubmissions auto-refresh setInterval ID not stored — cannot clearInterval",
+      "file": "cambridge-speaking-evaluations.html",
+      "status": "fixed",
+      "fixedInCommit": "9b8a950",
+      "foundAt": "2026-04-09T11:14:00Z"
+    },
+    {
+      "fingerprint": "frontend:ielts-admin-dashboard:missing-label-for",
+      "severity": "MEDIUM",
+      "title": "3 score labels missing for=\"...\" associations (finalScore, bandScore, writingBandScore)",
+      "file": "ielts-admin-dashboard.html",
+      "status": "fixed",
+      "fixedInCommit": "9b8a950",
+      "foundAt": "2026-04-09T11:14:00Z"
+    },
+    {
+      "fingerprint": "architecture:universal-functions:dead-notification-methods",
+      "severity": "MEDIUM",
+      "title": "Dead methods updateNotificationBadge + addNotification — zero callers across codebase",
+      "file": "assets/js/universal-functions.js",
+      "status": "fixed",
+      "fixedInCommit": "9b8a950",
+      "foundAt": "2026-04-09T11:14:00Z"
     }
   ]
 }

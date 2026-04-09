@@ -99,6 +99,39 @@ unrelated CSS bystander). Verified all 5 changes present in HEAD before logging.
 Rounds: 1 | Fixed: 5 | Reverted: 0 | Deferred: 0 (8 carried over)
 Ending state: 8 open findings in ledger (all manual architecture work)
 
+## Session: 2026-04-09 15:14
+Domains: frontend, architecture
+Starting state: 8 open findings (all carryover deferred items)
+
+### Round 10
+- [HIGH] cambridge-speaking-evaluations.html — 10 form labels missing for="..." → fixed
+- [MEDIUM] cambridge-speaking-evaluations.html — loadSubmissions setInterval ref → fixed
+- [MEDIUM] ielts-admin-dashboard.html — 3 score labels missing for="..." → fixed
+- [MEDIUM] universal-functions.js — dead updateNotificationBadge + addNotification methods → fixed
+
+### Note
+Confirmed there is NO admin/ directory in this codebase — admin work happens
+in `local-database-server.js`, `cambridge-database-server.js`, and HTML
+dashboards. Pivoted r10 to frontend a11y + dead-code cleanup.
+
+Heal r10 commit 9b8a950 also picked up 9 unrelated C1-Advanced HTML edits
+that were already staged by another agent (eye/scenario). All 4 heal fixes
+verified in HEAD via the commit diff stats.
+
+### Deferred (carried over)
+- Hardcoded invigilator password — needs server-side auth
+- Missing auth on admin endpoints — needs middleware + tokens
+- Unbounded SELECT queries — needs pagination design
+- Duplicate validation logic across servers — needs shared module
+- core.js god file (1562 lines) — needs migration
+- CORS wildcard — needs allowed origins config
+- Inconsistent response envelope (raw arrays) — needs frontend coordination
+- distraction-free.js event listener leak refactor (in-progress by another agent)
+
+### Stats
+Rounds: 1 | Fixed: 4 | Reverted: 0 | Deferred: 0 (8 carried over)
+Ending state: 8 open findings in ledger (all manual architecture work)
+
 ## Session: 2026-04-09 15:05
 Domains: security, api, frontend
 Starting state: 8 open findings (all carryover deferred items)
