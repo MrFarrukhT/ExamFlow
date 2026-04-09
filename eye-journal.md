@@ -438,13 +438,22 @@ Reference set: cae/examples/{1..8,l1..l5,w1,w2}.png
   Quality layer: 4-Polished → 5-Delightful
   Files: assets/js/cambridge/cambridge-c1-question-nav.js (+8 lines, split-writing skip), Cambridge/MOCKs-Cambridge/C1-Advanced/Listening Part 2.html (+script tag), Listening Part 4.html (+script tag), Writing Part 1.html (+script tag), Writing Part 2.html (+script tag)
 
-### Session Stats (rounds 3 + 4 + 5 cumulative)
-Pages explored: 14 C1 Advanced surfaces walked three times
-Rounds: 3 in this session
+### Round 6 (same session, cron-driven)
+**Explored:** Took a 1:1 viewport-only screenshot of Part 4 and laid it next to `cae/examples/4.png`. The page now matches the official almost exactly except for the rubric headline text, which read **"Part 4 — Key word transformation (Questions 25–30)"** in our copy versus **"Questions 25–30"** in the official. Surveyed `<h3 class="scorableItemHeadline">` across all 14 C1 surfaces — every single one carried the redundant `Part N — type` prefix. Also confirmed that the footer Part-tab buttons (Part 1, Part 2, … Part 8) actually navigate to the right HTML file when clicked (inline `partFiles[]` map present in every page) — no fix needed there.
+
+- [T3] All 14 C1 Advanced surfaces — stripped the `Part N — type` prefix from the `scorableItemHeadline` so each rubric reads just `Questions N–M` (or `Question 1` / `Questions 2–4` for the writing pages). The instruction text below the headline is unchanged. After: every headline matches the official Inspera screenshots — Part 4 now reads `Questions 25–30` exactly like 4.png; Part 1 `Questions 1–8` like 1.png; Listening 1 `Questions 1–6` like l1.png; Writing 1 `Question 1` like w1.png; Writing 2 `Questions 2–4` like w2.png.
+  Verified: re-screenshotted Part 4 at 1440×900 — rubric box now matches 4.png pixel-for-pixel.
+  Mode: polish (textual parity)
+  Quality layer: 4-Polished → 5-Delightful
+  Files: 14 HTML files (Part 1-8.html, Listening Part 1-4.html, Writing Part 1-2.html — single-line edit each)
+
+### Session Stats (rounds 3 + 4 + 5 + 6 cumulative)
+Pages explored: 14 C1 Advanced surfaces walked four times
+Rounds: 4 in this session
 Rebuilds landed: 1 (Part 4 single-question pagination)
-Polishes landed: 3 (Part 1 popover gap, bookmark icon parity for reading + listening + writing)
+Polishes landed: 4 (Part 1 popover gap, bookmark icons reading/listening/writing, rubric headline cleanup)
 Reverted: 0
-Files touched: 11 across all three rounds
+Files touched: 25 across all four rounds (some files touched in multiple rounds)
 
 ---
 
