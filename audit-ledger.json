@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "lastRunAt": "2026-04-09T11:18:00Z",
-  "lastRunCommit": "9b8a950",
+  "lastRunAt": "2026-04-09T11:25:00Z",
+  "lastRunCommit": "26a8e55",
   "runs": [
     {
       "id": "heal-2026-04-08-r1",
@@ -105,6 +105,16 @@
       "reverted": 0,
       "deferred": 0,
       "note": "Confirmed admin/ directory does not exist; pivoted to a11y + dead-code cleanup. Heal r10 commit 9b8a950 piggybacked 9 unrelated C1-Advanced HTML edits from parallel agent stage."
+    },
+    {
+      "id": "heal-2026-04-09-r11",
+      "type": "heal",
+      "startedAt": "2026-04-09T11:21:00Z",
+      "domains": ["frontend", "architecture"],
+      "round": 11,
+      "fixed": 4,
+      "reverted": 0,
+      "deferred": 0
     }
   ],
   "findings": [
@@ -620,6 +630,42 @@
       "status": "fixed",
       "fixedInCommit": "9b8a950",
       "foundAt": "2026-04-09T11:14:00Z"
+    },
+    {
+      "fingerprint": "frontend:a1-movers-answer-sync:setinterval-no-reference",
+      "severity": "HIGH",
+      "title": "Auto-consolidate setInterval ID not stored in a1-movers-answer-sync.js (5s tick)",
+      "file": "assets/js/cambridge/a1-movers-answer-sync.js",
+      "status": "fixed",
+      "fixedInCommit": "26a8e55",
+      "foundAt": "2026-04-09T11:21:00Z"
+    },
+    {
+      "fingerprint": "frontend:cambridge-answer-sync:setinterval-no-reference",
+      "severity": "HIGH",
+      "title": "Periodic background save setInterval ID not stored in cambridge-answer-sync.js",
+      "file": "assets/js/cambridge/cambridge-answer-sync.js",
+      "status": "fixed",
+      "fixedInCommit": "26a8e55",
+      "foundAt": "2026-04-09T11:21:00Z"
+    },
+    {
+      "fingerprint": "frontend:cambridge-admin-dashboard:missing-label-for",
+      "severity": "MEDIUM",
+      "title": "6 score input labels missing for=\"...\" across 3 modal templates (mixed-skills, generic, writing)",
+      "file": "cambridge-admin-dashboard.html",
+      "status": "fixed",
+      "fixedInCommit": "26a8e55",
+      "foundAt": "2026-04-09T11:21:00Z"
+    },
+    {
+      "fingerprint": "frontend:cambridge-exam-progress:setinterval-no-reference",
+      "severity": "MEDIUM",
+      "title": "Two setInterval IDs not stored in cambridge-exam-progress.js (deliver-button poller, badge poller)",
+      "file": "assets/js/cambridge/cambridge-exam-progress.js",
+      "status": "fixed",
+      "fixedInCommit": "26a8e55",
+      "foundAt": "2026-04-09T11:21:00Z"
     }
   ]
 }

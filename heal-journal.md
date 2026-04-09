@@ -99,6 +99,35 @@ unrelated CSS bystander). Verified all 5 changes present in HEAD before logging.
 Rounds: 1 | Fixed: 5 | Reverted: 0 | Deferred: 0 (8 carried over)
 Ending state: 8 open findings in ledger (all manual architecture work)
 
+## Session: 2026-04-09 15:21
+Domains: frontend, architecture
+Starting state: 8 open findings (all carryover deferred items)
+
+### Round 11
+- [HIGH] a1-movers-answer-sync.js auto-consolidate setInterval ref → fixed
+- [HIGH] cambridge-answer-sync.js periodic background save setInterval ref → fixed
+- [MEDIUM] cambridge-admin-dashboard.html — 6 score labels missing for="..." (3 templates) → fixed
+- [MEDIUM] cambridge-exam-progress.js — 2 setInterval refs (deliver-button + badge) → fixed
+
+### Note
+Scenario agent landed round 30 (IELTS GET parity + LIKE wildcard escape).
+Eye is currently working on options-menu.js div-button a11y (round 33).
+Both deferred items now in active progress by other agents — heal stays out
+of those files.
+
+### Deferred (carried over)
+- Hardcoded invigilator password — needs server-side auth
+- Missing auth on admin endpoints — needs middleware + tokens
+- Unbounded SELECT queries — needs pagination design
+- Duplicate validation logic across servers — needs shared module
+- core.js god file (1562 lines) — needs migration
+- CORS wildcard — needs allowed origins config
+- Inconsistent response envelope (raw arrays) — needs frontend coordination
+
+### Stats
+Rounds: 1 | Fixed: 4 | Reverted: 0 | Deferred: 0 (8 carried over)
+Ending state: 8 open findings in ledger (all manual architecture work)
+
 ## Session: 2026-04-09 15:14
 Domains: frontend, architecture
 Starting state: 8 open findings (all carryover deferred items)
