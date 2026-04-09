@@ -1149,7 +1149,7 @@ class CambridgeBridge {
         });
         
         // Auto-save periodically
-        setInterval(() => this.saveAnswersForCurrentPart(), 10000);
+        this._autosaveInterval = setInterval(() => this.saveAnswersForCurrentPart(), 10000);
         
         // Load answers for current part
         this.loadAnswersForCurrentPart();
