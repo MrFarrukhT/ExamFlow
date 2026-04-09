@@ -74,10 +74,12 @@ const { chromium } = require(path.join(process.env.APPDATA, 'npm/node_modules/@p
             console.log(`  Q${q}: ${val}`);
         }
 
-        // Part 1: Q7-13 (text inputs)
+        // Part 1: Q7-13 (text inputs — click first to remove readonly)
         const textAnswers7_13 = ['army', 'gardens', 'mosaic floors', 'wall', '93', 'gold ring', 'museum'];
         for (let i = 0; i < 7; i++) {
             const q = i + 7;
+            await page.click(`#q${q}`);
+            await page.waitForTimeout(100);
             await page.fill(`#q${q}`, textAnswers7_13[i]);
             console.log(`  Q${q}: ${textAnswers7_13[i]}`);
         }
