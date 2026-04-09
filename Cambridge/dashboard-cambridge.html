@@ -308,6 +308,12 @@
                 document.getElementById('levelSelection').style.display = 'block';
                 document.getElementById('modulesSection').style.display = 'none';
                 localStorage.removeItem('cambridgeLevel');
+
+                // Reset the header level badge to its default. Without this, the
+                // badge keeps showing the previous level (e.g. "A2 Key") even
+                // after the student has returned to level selection.
+                const levelInfo = document.getElementById('levelInfo');
+                if (levelInfo) levelInfo.textContent = 'Select Level';
             }
         }
 
