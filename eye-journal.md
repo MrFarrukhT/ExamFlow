@@ -1,5 +1,22 @@
 # Eye Journal
 
+## Session: 2026-04-09 17:20 — End-to-End Rounds 9-10: B1-Preliminary Writing + Listening
+Persona: Student (99934 / Eye Bot B1) → Admin | System: Cambridge (port 3003)
+
+### Round 9 — B1-Preliminary Writing
+- [PASS] 2 writing answers (email + story), submit → 200 OK
+- [PASS] DB: `99934 | B1-Preliminary | writing | 2 answers`
+- [PASS] Admin: Writing row visible
+
+### Round 10 — B1-Preliminary Listening
+- [PASS] 25 listening answers (L1-L25), submit → 200 OK
+- [PASS] DB: `99934 | B1-Preliminary | listening | 25 answers`
+- [PASS] Admin: All 3 B1-Preliminary rows visible (Reading, Writing, Listening)
+
+**B1-Preliminary fully tested:** Reading (30 ans) + Writing (2 ans) + Listening (25 ans)
+
+---
+
 ## Session: 2026-04-09 17:05 — End-to-End Test Round 8: Cambridge B1-Preliminary Reading Mock 1
 Persona: Student (99934 / Eye Bot B1) → Admin | System: Cambridge (port 3003)
 
