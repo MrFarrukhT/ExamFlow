@@ -140,7 +140,11 @@
     "clamp-vs-force-null-policy-confusion-when-field-has-admin-grading-workflow",
     "upper-bound-only-time-validation-misses-impossibly-fast-forged-submissions",
     "sibling-endpoint-partial-drift-submit-speaking-vs-cambridge-submissions-r26",
-    "esm-cjs-drift-now-6-occurrences-spans-student-and-admin-paths-r26"
+    "esm-cjs-drift-now-6-occurrences-spans-student-and-admin-paths-r26",
+    "patch-endpoints-lag-behind-post-endpoint-validations-r27-three-instances",
+    "pg-error-messages-leak-column-types-via-generic-try-catch-r27",
+    "validation-ranges-untied-to-real-world-constraints-eventually-wrong-by-order-of-magnitude-r27",
+    "drift-count-now-8-occurrences-r20-r27"
   ],
   "untestedAreas": [
     "browser-based-c1-advanced-exam-flow"
@@ -165,10 +169,10 @@
       "reason": "Every enum addition requires a paired DB migration. Architect should add a code review checklist."
     },
     {
-      "title": "ESM↔CJS drift recurring (6 occurrences as of R26)",
+      "title": "ESM↔CJS drift + sibling-endpoint partial drift (8 occurrences as of R27)",
       "severity": "CRITICAL",
       "since": "2026-04-09",
-      "reason": "6 occurrences across R20-R26. R24 had production-fully-exploitable score tampering hidden by drift; R26 found admin /update-score CJS missing the bandScore validation that ESM has. Architect MUST automate sync or deprecate one server NOW."
+      "reason": "8 occurrences across R20-R27. R24 had production-fully-exploitable score tampering hidden by drift; R26 found CJS missing bandScore validation; R27 found 2 PATCH endpoints lagging behind POST sibling validations and a 0-200 score range that nobody validated against real-world maxes. Architect MUST automate sync or deprecate one server NOW; the cron will keep mining this seam every round."
     },
     {
       "title": "Submissions list returns 5604+ rows unpaginated",
@@ -215,9 +219,9 @@
     }
   ],
   "stats": {
-    "scenariosTested": 154,
-    "bugsFound": 53,
-    "bugsFixed": 48,
+    "scenariosTested": 158,
+    "bugsFound": 56,
+    "bugsFixed": 51,
     "bugsDeferred": 10
   }
 }
