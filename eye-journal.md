@@ -1,5 +1,51 @@
 # Eye Journal
 
+## Session: 2026-04-09 (round 37) — Scoring Workflow End to End
+Persona: Admin scoring a full set of student submissions
+System: Both (admin-common.js base class + ielts-admin-dashboard.html override + cambridge-admin-dashboard.html override)
+Pages explored: ielts-admin-dashboard.html scoring modal (answer comparison + score inputs + AI suggestion), admin-common.js scoring queue (getScoringQueue / navigateScoring / advanceAfterScore / _isUnscored), local-database-server.js /update-score endpoint
+Starting state: The scoring workflow was well-built overall — scoring queue with prev/next keyboard nav, auto-advance after save, AI suggestion for writing, proper filter-then-score batch flow. But a subtle bug in `_isUnscored()` meant that a student with a legitimate 0 score would loop forever in the "unscored" queue.
+
+### Round 1 — Polish: fix 0-score infinite loop in scoring queue
+
+**Findings (4 total):**
+- [T1] **admin-common.js base `_isUnscored()` uses `!submission.score` which treats 0 as unscored.** A student with 0/40 has `submission.score === 0`, and `!0 === true`, so the scoring queue perpetually considers this submission "unscored". The admin scores it 0, saves, `advanceAfterScore()` reloads submissions, the 0-score submission reappears in the queue. Infinite loop. Both IELTS and Cambridge dashboard overrides already used the correct `=== null || === undefined` check, but the base class fallback was still broken. Fixed: `submission.score == null`.
+- [T1] **IELTS _isUnscored() writing branch uses `!submission.band_score`.** Same bug for writing — a band score of 0.0 ("did not attempt or responses not related to the task") is a valid IELTS band score, but `!0 === true` flags it as unscored. Fixed: `submission.band_score == null`.
+- [T0] **No score summary after completing a batch.** After scoring 15 submissions, the admin just sees `alert('All submissions scored!')`. No session summary (total scored, average, time spent).
+- [T0] **No loading indicator on Save Score button.** Click Save → wait → auto-advance. If the network is slow, the button is still clickable (double-click risk). Same pattern as round 31 for other buttons.
+
+**Action:** POLISH 2 fixes (2 one-liners) in admin-common.js + ielts-admin-dashboard.html.
+
+**Files touched:**
+1. **assets/js/admin-common.js** `_isUnscored()` — changed from `!submission.score` to `submission.score == null` so 0 is recognized as a valid scored state.
+2. **ielts-admin-dashboard.html** `_isUnscored()` override — writing branch changed from `!submission.band_score` to `submission.band_score == null` so band score 0.0 is valid.
+
+Cambridge dashboard's `_isUnscored()` was already correct (`=== null || === undefined`) — no change needed.
+
+**Verification:** `node --check assets/js/admin-common.js` ✅. Code review: `0 == null` → `false` (so 0 is correctly treated as scored). `null == null` → `true` (so null is correctly treated as unscored). `undefined == null` → `true` (so undefined is also unscored).
+
+### Quality Map (after round 37)
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| Scoring queue _isUnscored base class | 1-Functional (infinite loop on 0) → 4-Polished | `== null` handles both null and undefined correctly |
+| IELTS writing band_score check | 1-Functional (infinite loop on 0.0) → 4-Polished | Same fix for the writing skill branch |
+
+### Deferred
+- **Save Score button loading state.** Same gap as other buttons (round 31 pattern). Click → wait → auto-advance with no visual feedback during the network call.
+- **Scoring session summary.** After completing all unscored submissions, show total scored, average score, and time spent instead of just `alert('All scored!')`.
+- **Score validation for band_score "0.0" input.** The `saveWritingScore()` validation `if (!bandScore || ...)` would reject an empty string but not "0.0" since `!"0.0"` is false. This is correct. However, the `parseFloat("0.0") === 0` which passes `bandNum >= 0` and `(0 * 2) % 1 === 0`. So 0.0 input IS valid. Good.
+
+### Session Stats (round 37)
+Pages explored: 3 files (admin-common.js, ielts-admin-dashboard.html, cambridge-admin-dashboard.html for comparison)
+Findings: 4 (2× T1 broken, 2× T0 unremarkable)
+Polishes landed: 2 (base class _isUnscored + IELTS writing branch)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Files touched: 2 (assets/js/admin-common.js, ielts-admin-dashboard.html)
+
+---
+
 ## Session: 2026-04-09 (round 36) — Answer Key Management
 Persona: Admin managing answer keys on both IELTS and Cambridge dashboards
 System: Both (assets/js/admin-common.js shared module + ielts-admin-dashboard.html + cambridge-admin-dashboard.html)

@@ -857,7 +857,10 @@ class AdminDashboard {
 
     /** Override per exam to define what "unscored" means. */
     _isUnscored(submission) {
-        return !submission.score;
+        // Use == null (covers both null and undefined) instead of !submission.score,
+        // because a legitimate score of 0 (0/40) is falsy but IS a valid scored state.
+        // The old check caused 0-score submissions to loop forever in the scoring queue.
+        return submission.score == null;
     }
 
     /** Get the list of unscored submissions from the current filtered set. */

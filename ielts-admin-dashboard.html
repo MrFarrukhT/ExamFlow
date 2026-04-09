@@ -643,8 +643,10 @@
 
         // ── Override: _isUnscored (IELTS: writing uses band_score, others use score) ──
         dashboard._isUnscored = function (submission) {
-            if (submission.skill === 'writing') return !submission.band_score;
-            return submission.score === null || submission.score === undefined;
+            // Writing uses band_score (0.0–9.0), not raw score. A band of 0.0 is
+            // a valid scored state ("did not attempt"), so use == null not !value.
+            if (submission.skill === 'writing') return submission.band_score == null;
+            return submission.score == null;
         };
 
         // ── IELTS-only: openAnswerComparison ──
