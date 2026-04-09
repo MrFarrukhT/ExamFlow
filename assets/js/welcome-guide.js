@@ -18,9 +18,15 @@
     function showWelcomeGuide(examType, storageKey) {
         const isIELTS = examType === 'IELTS';
         const examName = isIELTS ? 'IELTS Academic' : 'Cambridge English';
+        // Per official handbooks both tests have a fixed module sequence:
+        //   IELTS:     Listening → Reading → Writing → Speaking
+        //   Cambridge: Reading (& UoE) → Writing → Listening → Speaking (varies by level)
+        // The dashboards already render module cards in the correct order;
+        // this text just makes the order explicit so candidates aren't told
+        // they can pick "any order" (the original copy did, which was wrong).
         const modulesText = isIELTS
-            ? 'Listening (~30 min), Reading (60 min), and Writing (60 min)'
-            : 'the modules shown on your dashboard (timing varies by level)';
+            ? 'Listening (~30 min), then Reading (60 min), then Writing (60 min)'
+            : 'the modules shown on your dashboard, in the order they are listed (timing varies by level)';
 
         const overlay = document.createElement('div');
         overlay.id = 'welcome-guide-overlay';
@@ -93,7 +99,7 @@
                         <div class="wg-step-icon" aria-hidden="true">&#128196;</div>
                         <div class="wg-step-text">
                             <div class="wg-step-title">Your Test Modules</div>
-                            <div class="wg-step-desc">You will complete ${modulesText}. You can do them in any order.</div>
+                            <div class="wg-step-desc">You will complete ${modulesText}. Follow the order shown on the dashboard.</div>
                         </div>
                     </li>
                     <li class="wg-step">
