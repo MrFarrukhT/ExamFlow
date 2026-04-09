@@ -26,7 +26,7 @@ class OptionsMenu {
                     <div class="option-icon">
                         <i class="fa fa-send" aria-hidden="true"></i>
                     </div>
-                    <div class="option-text">Go to submission page</div>
+                    <div class="option-text">Submit this section</div>
                     <div class="option-arrow">
                         <i class="fa fa-chevron-right" aria-hidden="true"></i>
                     </div>
@@ -151,23 +151,38 @@ class OptionsMenu {
     }
 
     goToSubmission() {
-        if (confirm('Are you sure you want to go to the dashboard? This will end your current session.')) {
+        // Delegate to the existing deliver button (the green checkmark in the
+        // footer). That handler runs the proper submission flow:
+        //   - opens the review modal (if examProgress is loaded), so the
+        //     student sees how many answers they have before finalizing
+        //   - calls _executeSubmission which actually POSTs to the database
+        //   - falls back to a confirm() if the review modal isn't available
+        // Previously this method just flipped localStorage status to "completed"
+        // and redirected, which left the student thinking they had submitted
+        // when in fact no database row was created. Both paths now converge.
+        this.modalManager.closePopup();
+
+        const deliverBtn = document.getElementById('deliver-button');
+        if (deliverBtn) {
+            // Use a microtask so the popup-close transition can finish first
+            setTimeout(() => deliverBtn.click(), 0);
+            return;
+        }
+
+        // Fallback: no deliver button on this page (older test pages, edge
+        // cases). Use a clearer confirm message and the original flow.
+        if (confirm('Submit this section now? You will return to the dashboard and cannot resume this section.')) {
             const currentModule = this.getCurrentModule();
             if (currentModule) {
                 localStorage.setItem(`${currentModule}Status`, 'completed');
                 localStorage.setItem(`${currentModule}EndTime`, new Date().toISOString());
             }
-
             this.modalManager.showToast('Redirecting to dashboard...', 'info');
-            this.modalManager.closePopup();
-
             setTimeout(() => {
                 const isCambridge = this.isCambridgeTest();
-                if (isCambridge) {
-                    window.location.href = '../../dashboard-cambridge.html';
-                } else {
-                    window.location.href = '../../student-dashboard.html';
-                }
+                window.location.href = isCambridge
+                    ? '../../dashboard-cambridge.html'
+                    : '../../student-dashboard.html';
             }, 1000);
         }
     }

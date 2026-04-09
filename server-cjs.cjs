@@ -639,6 +639,21 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
         if (elapsedMin <= 0) {
             return res.status(400).json({ success: false, message: 'endTime must be after startTime' });
         }
+        // R31: absolute timestamp window — endTime must be within ±24h of server clock.
+        // Catches cheaters who backdate (claim submission was before answer keys leaked)
+        // or forward-date (year 2050/9999) to manipulate dashboard chronology.
+        // Allows 5min clock-skew forward and 24h backward (delayed submission delivery).
+        const nowMs = Date.now();
+        const MAX_FUTURE_SKEW_MS = 5 * 60 * 1000;
+        const MAX_BACKDATE_MS = 24 * 60 * 60 * 1000;
+        if (end.getTime() > nowMs + MAX_FUTURE_SKEW_MS) {
+            console.warn(`🚨 SUBMISSION REJECTED: Student ${studentCheck.studentId} sent endTime in the future (${end.toISOString()})`);
+            return res.status(400).json({ success: false, message: 'Submission rejected: endTime is in the future.' });
+        }
+        if (end.getTime() < nowMs - MAX_BACKDATE_MS) {
+            console.warn(`🚨 SUBMISSION REJECTED: Student ${studentCheck.studentId} sent backdated endTime (${end.toISOString()})`);
+            return res.status(400).json({ success: false, message: 'Submission rejected: endTime is too far in the past.' });
+        }
         // Minimum-time guard: an exam taking less than 30s is physically impossible.
         // Even reading mock has 40 questions; reading them at 1s each is 40s. This catches
         // DevTools cheaters who skip the UI entirely and POST a forged submission with

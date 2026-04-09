@@ -133,7 +133,18 @@
       attempts++;
       var a = getAudioElement();
       if (a && !a.__c1Hooked) attachAudioListeners(a);
-      if (attempts >= 20) clearInterval(interval);
+      if (attempts >= 20) {
+        clearInterval(interval);
+        // No audio element ever showed up — these standalone Part pages
+        // are typically served inside the listening.html wrapper which
+        // owns the audio element. When viewed standalone there is no
+        // real audio, so leaving the badge stuck at "loading" looks
+        // broken. Show the playing state instead — that's what the
+        // official l2/l3.png screenshots show too.
+        if (!getAudioElement()) {
+          setStatus('playing', 'Audio is playing');
+        }
+      }
     }, 500);
 
     if (isListeningPart1()) {
