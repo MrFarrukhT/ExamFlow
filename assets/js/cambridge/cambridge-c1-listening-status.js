@@ -97,7 +97,9 @@
     backdrop.setAttribute('aria-modal', 'true');
     backdrop.innerHTML =
       '<div class="c1-audio-modal">' +
-      '  <div class="c1-audio-modal__icon" aria-hidden="true">♪</div>' +
+      '  <div class="c1-audio-modal__icon" aria-hidden="true">' +
+      '    <i class="fa fa-headphones"></i>' +
+      '  </div>' +
       '  <p class="c1-audio-modal__text">' +
       '    You will be listening to an audio clip during this test. You will ' +
       '    not be permitted to pause or rewind the audio while answering the ' +
