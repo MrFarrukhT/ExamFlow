@@ -909,10 +909,17 @@ app.post('/api/ai-score-suggestion', requireAdmin, aiScoreLimiter, async (req, r
             return res.status(502).json({ success: false, message: 'AI returned invalid response format' });
         }
 
-        const isValidBand = (b) => typeof b === 'number' && b >= 0 && b <= 9;
+        // Per the official IELTS spec, every band score is on the 0–9 scale
+        // in 0.5 increments (0, 0.5, 1.0, 1.5, … 8.5, 9.0). The AI prompt
+        // already says "use .5 increments" but a hallucination could still
+        // hand back 7.3 — reject anything that isn't a half-band.
+        const isValidBand = (b) =>
+            typeof b === 'number' && Number.isFinite(b) &&
+            b >= 0 && b <= 9 &&
+            Math.round(b * 2) === b * 2;
         if (!isValidBand(result.task1Band) || !isValidBand(result.task2Band) || !isValidBand(result.overallBand)) {
-            console.error('❌ AI returned out-of-range bands:', result);
-            return res.status(502).json({ success: false, message: 'AI returned invalid band scores' });
+            console.error('❌ AI returned out-of-range or non-half-band scores:', result);
+            return res.status(502).json({ success: false, message: 'AI returned invalid band scores (must be 0–9 in 0.5 increments)' });
         }
 
         console.log(`✅ AI suggested scores - Task 1: ${result.task1Band}, Task 2: ${result.task2Band}, Overall: ${result.overallBand}`);

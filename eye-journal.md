@@ -1,5 +1,68 @@
 # Eye Journal
 
+## Session: 2026-04-09 — Result-viewing flow round 5: student-results auth + date-group a11y (loop /eye full re-run)
+Persona: Admin entering results manually + admin navigating with keyboard
+System: Both
+Pages explored: cambridge-student-results.html (auth + Add New Result + live calc), Today's Submissions filter, scoring queue Prev/Next, IELTS View by Date a11y.
+
+The fifth cron-fired run. Round 4 deferred: date filter combinations, Today's Submissions, Cambridge Add New Result, scoring queue state, View by Date a11y. This round walked all of them and shipped 2 fixes.
+
+### What I verified works
+- **Today's Submissions filter**: 11887 total → 20 filtered to today. Combined with skill=writing → 6 filtered. dateFrom/dateTo set to today's local date (UTC matches local right now).
+- **Date filter combinations**: today + writing skill = 6 results, no edge cases broken.
+- **IELTS Scoring queue Prev/Next**: 1 of 3915 → Next → 2 of 3915 (R25 Legit Writing) → Next → 3 of 3915 (R25v3 Precision) → Prev → 2 of 3915. State preservation perfect, counter accurate, modal title updates.
+- **Cambridge Add New Result with live calc**: B2-First with L 20/30, R 32/52, W 35/40, S 60/75, UoE 22/30 → live preview shows L 165, R 173, W 181, S 190, UoE 172, **Overall 176, CEFR B2-Merit, Passed**. Save → POST body sent with all 5 scales + overall_scale + cefr_level + passed → DB row 24 verified: scale 176, cefr B2-Merit, listening_scale 165, writing_scale 181, passed true.
+
+### Bug 10 (T1 silent fail): cambridge-student-results.html had the same auth-crash pattern as cambridge-speaking-evaluations from round 3
+Same systemic issue I fixed for speaking-evaluations: this page has no own login form and depends on `cambridgeAdminToken` being set by the dashboard. Without a token (bookmark, server restart, expired session), `loadResults()` got 401 from `/cambridge-student-results`, treated `existingResults` as `[]`, then crashed on `submissions.forEach` because `/cambridge-submissions` ALSO returned a 401 JSON object. Even worse, the `saveResult()` and `deleteResult()` action handlers showed unhelpful "Failed to save: Authentication required" alerts with no path forward — the admin sat staring at a half-filled form.
+Fix in 3 places in `cambridge-student-results.html`:
+1. `loadResults()` — check `resultsResponse.status === 401` BEFORE parsing the body. Render a "🔒 Authentication required" empty state with a link straight to `cambridge-admin-dashboard.html`. Reset stat counters (totalResults / passedCount / avgScale / passRate) to em-dashes so the user doesn't read stale data alongside the auth banner.
+2. `saveResult()` — check `response.status === 401` and alert "Your session has expired. Please log in again via the Cambridge Admin Dashboard, then re-open this page." then close the modal cleanly. Replaces the unhelpful "Failed to save: Authentication required" message.
+3. `deleteResult()` — same actionable 401 alert in place of the technical error.
+Verified end-to-end: cleared localStorage, opened the page → "🔒 Authentication required" + working login link, stats show "—". Logged in via the dashboard, returned → 1494 total results / 10/11 passed / 15 rows visible, Add New Result with all 5 components persists correctly.
+
+### Bug 11 (T3 a11y): View by Date date-group headers were not keyboard-accessible
+The deferred item was "View by Date toggle keyboard focus jumps to top" — actually testing it, the headers weren't focusable in the first place. Each `.date-group-header` was a `<div onclick>`:
+- No tabindex → keyboard users couldn't reach it
+- No role="button" → screen readers announced it as a generic div
+- No keydown handler → Enter/Space didn't activate it
+- No aria-expanded → no signal of collapse state
+
+Fix in `assets/js/admin-common.js::displaySubmissionsByDate` and `toggleDateGroup`:
+- Added `role="button"`, `tabindex="0"`, `aria-expanded` (mirroring .collapsed state), `aria-controls` (pointing to the body div) to every date-group header.
+- Added an `onkeydown` handler that triggers toggle on Enter or Space (with preventDefault to avoid page scroll on Space).
+- `toggleDateGroup()` now updates `aria-expanded` whenever the .collapsed class flips, so screen readers hear the state change in real time.
+- Marked the chevron `▼` as `aria-hidden="true"` since it's decorative — the role + state convey the same info to AT.
+
+Verified: 19 date headers all carry role="button" + tabindex="0" + aria-expanded="true" + aria-controls. Focused the second header (initially collapsed, aria-expanded="false"), pressed Enter via KeyboardEvent → aria-expanded "false" → "true", .collapsed class true → false. Pressed Space on the third header → also toggled. Both Enter and Space activate.
+
+### Files touched this round
+1. `cambridge-student-results.html` — auth-aware loadResults + 401 actionable messages in saveResult/deleteResult
+2. `assets/js/admin-common.js` — date-group-header keyboard a11y (focusable, role, aria, key handlers)
+
+### Quality Map (after round 5)
+| Page | Layer (before round 5 → after) | Notes |
+|------|--------------------------------|-------|
+| cambridge-student-results.html — no auth | 1-Functional → 4-Polished | Was crashing silently; now actionable empty state + actionable error alerts |
+| IELTS View by Date — keyboard navigation | 2-Clear → 4-Polished | Date headers now reachable + activatable + announce state |
+
+### Deferred (next round)
+- The student-results form's "Calculated Results" section could itself be sticky like the score-section in the Compare/View modal — admin scrolling through level + mock + 5 fields loses sight of the live preview at the bottom.
+- B2-First requires Use of English but the form doesn't visually flag it as required for that level — silent contamination if missed (I hit this myself testing EYE-R5-002).
+- Speaking-evaluations 60-second auto-refresh doesn't update its 3 stat cards (round 3 still-deferred).
+- The IELTS dashboard doesn't surface a similar role="button" pattern on `.date-group-submission` rows either — those are also `<div onclick>` and need the same treatment if a keyboard user wants to drill into a single submission from date view.
+
+### Session Stats (round 5)
+Pages explored: 5 deep flows (today's filter, queue nav, student-results auth + Add Result, date-group a11y)
+Bugs found: 2 (1 T1 silent-fail, 1 T3 a11y)
+Polishes landed: 1 (date-group a11y)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Files touched: 2
+
+---
+
 ## Session: 2026-04-09 (round 33) — IELTS Navigation Flows
 Persona: Student walking the full IELTS flow end-to-end (launcher → login → dashboard → reading → exit)
 System: IELTS (port 3002)

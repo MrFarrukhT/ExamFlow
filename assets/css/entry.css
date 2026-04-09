@@ -522,6 +522,10 @@ body.cambridge .admin-link {
     position: absolute;
     top: 2rem;
     right: 3rem;
+    /* Keep "Go to Invigilator Login →" on a single line so it doesn't
+       wrap and visually collide with the Cambridge exam badge that sits
+       in the same top-right region of the header. */
+    white-space: nowrap;
 }
 
 body.cambridge .welcome-title {

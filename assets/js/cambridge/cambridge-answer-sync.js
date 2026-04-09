@@ -99,7 +99,10 @@
         { part: 6, min: 27, max: 32 }
       ];
     }
-    // Default: A2 Key / A1 Movers ranges
+    // Default: A2 Key — 7 parts, 32 questions per the official KET spec.
+    // (A1 Movers does NOT use these ranges — it loads its own
+    // assets/js/cambridge/a1-movers-answer-sync.js with a 6-part / 35-question
+    // MOVERS_STRUCTURE that matches the official YLE Movers handbook.)
     return [
       { part: 1, min: 1,  max: 6 },
       { part: 2, min: 7,  max: 13 },
