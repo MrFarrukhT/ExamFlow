@@ -1869,3 +1869,81 @@ Trigger: heal r9 (`4424c5d`) added validation to GET `/cambridge-submissions`, `
 
 ### Stats (Round 30)
 Tested: 4 | Passed: 2 (after restart) | Failed: 2 (LOW × 2) | Fixed: 2 | Deferred: 0
+
+---
+
+## Session: 2026-04-09 19:30
+Focus: R31 — pick up the R30 "for-next-run" target (concurrent submissions / race conditions on dedup lock) and the lingering question of WHO ELSE has unbounded timestamp acceptance. Restarted servers at the start of the round per R30's stale-process lesson.
+Trigger: R30 cursor flagged dedup races as untested. heal r10 + concurrent eye commits brought no new server-side surface, so the focus stays on behavioral edges that prior rounds didn't reach.
+
+### Scenarios
+
+- S1: Grep for other LIKE clauses needing escape after R30 [Pattern hunt] → **PASS (only one in codebase, already fixed)**
+  - Searched all `*.{js,cjs}` files for `ILIKE|LIKE \$`. Only result was the one I escaped in R30. No additional LIKE-pattern injection sites exist.
+  - Logged as "no further LIKE-injection surface" — clears the pattern from the audit list.
+
+- S2: 20 concurrent identical IELTS POST `/submissions` to test dedup lock + rate limiter under burst [Multitasker] → **PASS**
+  - 1 → 200 OK (legitimate first row)
+  - 9 → 409 Conflict (dedup lock + DB dupCheck working correctly under contention)
+  - 10 → 429 Rate Limited (rate limiter capping at 10/min)
+  - The in-memory `submissionLocks` Set correctly serializes the dedup check + add as a single synchronous block. Awaits between body validation and the lock acquisition don't break the invariant because the `has`-then-`add` pair runs atomically in Node's event loop.
+  - **Belief confirmed**: the autopilot's dedup lock pattern is correct under burst.
+
+- S3: Skipped (rate limiter under burst was implicitly tested in S2 — passed)
+
+- S4: Cambridge POST `/cambridge-submissions` with `startTime`/`endTime` in year 2050, 1970, 9999 [State Corruptor] → **BUG (MEDIUM)**
+  - Year 2050: ACCEPTED, stored. The submission appears as taken in 24 years.
+  - Year 1970: ACCEPTED, stored. Backdated by 56 years.
+  - Year 9999: ACCEPTED, stored. Even more absurd.
+  - Same start/end (elapsedMin = 0): correctly rejected
+  - "Infinity" string: correctly rejected (NaN check works)
+  - Existing duration validation enforces `elapsedMin > 30s` and `<= limit*3` but NEVER bounds the absolute timestamp range. A cheater can backdate to claim "I took the test before the answer keys leaked" or forward-date to game first-to-complete metrics.
+  - Same gap exists across all 4 submission paths (IELTS server-cjs.cjs, IELTS local-database-server.js ESM, Cambridge cambridge-submissions, Cambridge submit-speaking).
+
+### Fixes
+
+**Fix — Absolute timestamp window (5min future skew, 24h backdate window) on all 4 submission paths:**
+```js
+const nowMs = Date.now();
+const MAX_FUTURE_SKEW_MS = 5 * 60 * 1000;
+const MAX_BACKDATE_MS = 24 * 60 * 60 * 1000;
+if (end.getTime() > nowMs + MAX_FUTURE_SKEW_MS) {
+    return res.status(400).json({ success: false, message: 'Submission rejected: endTime is in the future.' });
+}
+if (end.getTime() < nowMs - MAX_BACKDATE_MS) {
+    return res.status(400).json({ success: false, message: 'Submission rejected: endTime is too far in the past.' });
+}
+```
+- `server-cjs.cjs` POST `/submissions` (line 642)
+- `local-database-server.js` POST `/submissions` (ESM parity)
+- `cambridge-database-server.js` POST `/cambridge-submissions`
+- `cambridge-database-server.js` POST `/submit-speaking` (sibling parity)
+- 5min forward skew tolerates client/server clock drift; 24h backdate window allows for delayed submission delivery (network outage, browser-tab left open). All four paths log the rejection with student ID for auditing.
+
+### Verification (post-fix, fresh server restart)
+
+- V1 Cambridge POST 2050 → 400 "endTime is in the future" ✓
+- V2 Cambridge POST 1970 → 400 "endTime is too far in the past" ✓
+- V3 Cambridge POST year 9999 → 400 "endTime is in the future" ✓
+- V4 Cambridge POST current-time-minus-30min → 200 saved ✓ (regression)
+- V5 Cambridge `/submit-speaking` year 2050 → 400 "endTime is in the future" ✓
+- V6 IELTS POST 1970 → 400 ✓
+- V7 IELTS POST 2050 → 400 ✓
+
+### Pattern Analysis
+
+- **Bidirectional time bounds, like bidirectional value bounds, are easy to forget.** R26 found the *minimum*-time gap (only `<= 0` and `> limit*3` were checked). R31 found the *absolute*-time gap (no clock-bounded check at all). The pattern: every numeric or temporal field needs both lower AND upper bounds, AND in the temporal case, an absolute window relative to "now". Two checks are not enough; three is the minimum (lower bound, upper bound, anchor to current time).
+
+- **Concurrency tests are cheap once you have the harness.** S2's 20-request burst took ~2 seconds and verified TWO important invariants (dedup lock and rate limiter) at once. The Node http module makes this trivial — no need to spawn a browser. **Lesson: when a behavioral concern can be tested with parallel curl, do it; don't reach for a browser agent unless the bug requires actual UI state.**
+
+- **/scenario keeps catching what concurrent agents miss.** heal r10's commit was pure cleanup (a11y, dead code, interval refs) — no new validation. eye's commits were UI-only. Yet this round still found a new MEDIUM-severity bug in the timestamp validation that's been live since the system was built. **The cron-driven /scenario loop is genuinely additive: even on rounds where no new code lands, deeper attack scenarios surface dormant bugs.**
+
+### Intelligence Update
+
+- Proven solid: dedup lock + rate limiter correct under 20-request burst, all 4 submission paths now enforce absolute timestamp window (5min future skew + 24h backdate)
+- New weak pattern logged: bidirectional bounds — temporal fields need lower-bound, upper-bound, AND absolute-window anchored to current time
+- Drift count update: 12 occurrences (R31 added a 4-path fix synchronously, no new drift instance introduced — matched siblings on the same patch)
+- Coverage: 173 scenarios across 31 rounds, 64 bugs found, 59 fixed
+
+### Stats (Round 31)
+Tested: 4 (S1 pattern hunt, S2 concurrency, S3 skipped, S4 timestamp window) | Passed: 2 | Failed: 1 (MEDIUM, 4 paths) | Fixed: 1 (synchronously across 4 paths) | Deferred: 0

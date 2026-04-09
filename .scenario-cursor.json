@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-09 19:10",
-  "totalRuns": 30,
+  "lastRun": "2026-04-09 19:30",
+  "totalRuns": 31,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -126,7 +126,10 @@
     "heal-r8-skill-validation-cjs-parity-confirmed-r29",
     "heal-r9-cambridge-get-endpoint-validation-verified-r30",
     "ielts-cjs-mock-answers-get-delete-skill-enum-synced-r30",
-    "cambridge-student-results-search-like-wildcards-escaped-r30"
+    "cambridge-student-results-search-like-wildcards-escaped-r30",
+    "no-further-like-pattern-injection-surface-r31",
+    "dedup-lock-rate-limiter-correct-under-20-request-burst-r31",
+    "absolute-timestamp-window-5min-future-24h-backdate-all-4-submission-paths-r31"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
@@ -161,7 +164,9 @@
     "bulk-fixes-pay-for-themselves-r29-12-fixes-vs-r28-4-fixes-same-time-budget",
     "stale-running-process-trap-when-concurrent-agents-commit-between-rounds-restart-before-testing-r30",
     "like-pattern-injection-parameterized-queries-dont-escape-percent-underscore-r30",
-    "drift-count-now-12-occurrences-r20-r30"
+    "drift-count-now-12-occurrences-r20-r30",
+    "bidirectional-bounds-temporal-fields-need-lower-upper-and-absolute-window-anchored-to-now-r31",
+    "scenario-keeps-finding-dormant-bugs-on-rounds-where-no-new-code-lands-r31"
   ],
   "untestedAreas": [
     "browser-based-c1-advanced-exam-flow"
@@ -236,9 +241,9 @@
     }
   ],
   "stats": {
-    "scenariosTested": 169,
-    "bugsFound": 63,
-    "bugsFixed": 58,
+    "scenariosTested": 173,
+    "bugsFound": 64,
+    "bugsFixed": 59,
     "bugsDeferred": 11
   }
 }
