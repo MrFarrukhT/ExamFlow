@@ -308,7 +308,7 @@
         });
 
         // Auto-refresh every 5 seconds
-        setInterval(function() {
+        window.__sessionRefreshInterval = setInterval(function() {
             updateSessionInfo();
             if (isCambridge) { updateCurrentLevel(); updateCurrentMock(); }
         }, 5000);
@@ -760,7 +760,7 @@
 
         // Load room activity on page load and refresh every 30s
         document.addEventListener('DOMContentLoaded', loadRoomActivity);
-        setInterval(loadRoomActivity, 30000);
+        window.__roomActivityInterval = setInterval(loadRoomActivity, 30000);
 
         // ── Navigation ──────────────────────────────────────────────
         function goBackToTest() {

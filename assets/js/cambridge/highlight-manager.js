@@ -33,7 +33,7 @@ class CambridgeHighlightManager {
         });
         
         // Save periodically
-        setInterval(() => {
+        this._highlightSaveInterval = setInterval(() => {
             this.saveHighlights();
         }, 5000);
         

@@ -228,7 +228,7 @@ class CambridgeNotesManager {
         });
         
         // Save periodically
-        setInterval(() => {
+        this._notesSaveInterval = setInterval(() => {
             this.saveNotes();
         }, 5000);
         

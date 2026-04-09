@@ -808,16 +808,26 @@ app.get('/cambridge-submissions', requireAdmin, async (req, res) => {
             params.push(student_id);
         }
         if (level) {
+            if (!VALID_LEVELS.includes(level)) {
+                return res.status(400).json({ success: false, message: `Invalid level. Must be one of: ${VALID_LEVELS.join(', ')}` });
+            }
             conditions.push(`level = $${params.length + 1}`);
             params.push(level);
         }
         if (skill) {
+            if (!VALID_SKILLS.includes(skill)) {
+                return res.status(400).json({ success: false, message: `Invalid skill. Must be one of: ${VALID_SKILLS.join(', ')}` });
+            }
             conditions.push(`skill = $${params.length + 1}`);
             params.push(skill);
         }
         if (mock_test) {
+            const mockNum = parseInt(mock_test, 10);
+            if (isNaN(mockNum) || mockNum < 1 || mockNum > 100) {
+                return res.status(400).json({ success: false, message: 'mock_test must be a positive integer between 1 and 100' });
+            }
             conditions.push(`mock_test = $${params.length + 1}`);
-            params.push(mock_test);
+            params.push(String(mockNum));
         }
 
         if (conditions.length > 0) {
@@ -1001,10 +1011,26 @@ app.get('/cambridge-answers', requireAdmin, async (req, res) => {
             });
         }
 
+        if (!VALID_LEVELS.includes(level)) {
+            return res.status(400).json({ success: false, message: `Invalid level. Must be one of: ${VALID_LEVELS.join(', ')}` });
+        }
+        if (!VALID_SKILLS.includes(skill)) {
+            return res.status(400).json({ success: false, message: `Invalid skill. Must be one of: ${VALID_SKILLS.join(', ')}` });
+        }
+
+        let mockTest = null;
+        if (mock != null && mock !== '') {
+            const mockNum = parseInt(mock, 10);
+            if (isNaN(mockNum) || mockNum < 1 || mockNum > 100) {
+                return res.status(400).json({ success: false, message: 'Mock must be a positive integer between 1 and 100' });
+            }
+            mockTest = String(mockNum);
+        }
+
         const dbClient = await ensureConnection();
 
-        const mockCondition = mock ? 'AND mock_test = $3' : '';
-        const params = mock ? [level, skill, mock] : [level, skill];
+        const mockCondition = mockTest ? 'AND mock_test = $3' : '';
+        const params = mockTest ? [level, skill, mockTest] : [level, skill];
 
         const result = await dbClient.query(`
             SELECT answers, mock_test
@@ -1131,12 +1157,19 @@ app.get('/cambridge-student-results', requireAdmin, async (req, res) => {
         const conditions = [];
 
         if (level) {
+            if (!VALID_LEVELS.includes(level)) {
+                return res.status(400).json({ success: false, message: `Invalid level. Must be one of: ${VALID_LEVELS.join(', ')}` });
+            }
             conditions.push(`level = $${params.length + 1}`);
             params.push(level);
         }
         if (mock_test) {
+            const mockNum = parseInt(mock_test, 10);
+            if (isNaN(mockNum) || mockNum < 1 || mockNum > 100) {
+                return res.status(400).json({ success: false, message: 'mock_test must be a positive integer between 1 and 100' });
+            }
             conditions.push(`mock_test = $${params.length + 1}`);
-            params.push(mock_test);
+            params.push(String(mockNum));
         }
         if (search) {
             conditions.push(`(student_name ILIKE $${params.length + 1} OR student_id ILIKE $${params.length + 2})`);
