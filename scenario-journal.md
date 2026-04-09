@@ -1411,3 +1411,86 @@ Trigger: Commit e01f9ba added a server-side score recompute path to local-databa
 
 ### Stats (Round 24)
 Tested: 6 | Passed: 4 | Failed: 2 (1 critical, 1 silent bug) | Fixed: 2 (combined into 1 patch) | Deferred: 0
+
+---
+
+## Session: 2026-04-09 17:30
+Focus: R25 — attack the autopilot's R24 IELTS score recompute follow-ups. Specifically the writing/speaking branch (which "clamps" client bandScore instead of forcing null), the absence of a min-time guard, and the deferred scoreTamper-not-surfaced finding.
+Trigger: R24 clean-up — three deferred concerns from the prior round, all touching the score-recompute path that was just synced to CJS.
+
+### Scenarios
+
+- S1: IELTS writing bandScore=9 with two-character answers [Cheater] → **BUG (HIGH)**
+  - Cheater POSTs `skill=writing, bandScore=9` with `answers={task1:"x",task2:"y"}` → server stored band_score="9"
+  - But the IELTS admin dashboard has a `writingBandScore` input (line 727) — writing is supposed to be admin-graded
+  - The R24 sync added an `else` branch that "clamps" client bandScore to 0–9; this is the wrong policy. Should be force-null, identical to how Cambridge forces score=null.
+
+- S2: IELTS speaking bandScore=9 with empty audio [Cheater] → **BUG (HIGH)**
+  - Same pattern as S1. Speaking is also rubric-graded and the client bandScore should never be trusted.
+
+- S3: IELTS writing bandScore=8.7 (invalid IELTS band) [Explorer] → **BUG (MEDIUM)**
+  - 8.7 is not a valid IELTS band (must be .0 or .5). Server stored "8.7" verbatim.
+  - Same root cause as S1/S2: the clamp branch passes any number in [0, 9] without enforcing IELTS band granularity. The fix (force-null) makes the precision question moot.
+
+- S4: Reading recompute correctness — score=40 with 5 garbage answers [Cheater] → **PASS**
+  - Server detected tampering, recomputed score=0, stored band_score="0.0" (bandScoreFromRaw correctly maps 0 → "0.0")
+  - Server log: "🚨 SCORE TAMPERING DETECTED: Student R25S4 sent score=40, server computed 0"
+  - R24's bandScoreFromRaw helper works as designed for the lowest-boundary case.
+
+- S5: Reading exam in 500 milliseconds [State Corruptor] → **BUG (HIGH)**
+  - Cheater POSTs `startTime=...10:00:00.000Z, endTime=...10:00:00.500Z` for a 60-min reading test → accepted, stored
+  - The duration check only rejects `elapsedMin <= 0` and `> limit*3`. There is no minimum-time guard.
+  - A 60-min reading test cannot be completed in half a second by any human; the only way to produce this is a forged DevTools POST. The score recompute would still catch the score-cheating, but the impossibly-fast submission itself is a clear cheating signal that the system was silently swallowing.
+
+- S6: scoreTamper flag visibility in admin dashboard [Verification of R24 deferred] → **BUG (MEDIUM)**
+  - `assets/js/admin-common.js` `hasAntiCheatViolations` checks durationFlag, tabSwitches, fullscreenExits, etc. — but NOT `scoreTamper`. R24 stored the flag but the badge never lit up for it. Confirms the deferred finding.
+
+### Fixes
+
+**Fix A — Force null on writing/speaking bandScore (both servers):**
+- `server-cjs.cjs`: replaced the "clamp 0-9" else-branch with a force-null + tampering log + scoreTamper flag (with `clientBandScore` payload)
+- `local-database-server.js`: same change synced. Now ESM and CJS both reject any client-supplied bandScore for writing/speaking.
+
+**Fix B — Minimum-time guard (all three submission paths):**
+- Added `MIN_ELAPSED_SEC = 30` rejection right after the existing `elapsedMin <= 0` check
+- Synced to `server-cjs.cjs`, `local-database-server.js`, and `cambridge-database-server.js`
+- 30 seconds is conservative — even reading a single mock question takes 1+ second; 40 questions × 1s minimum = 40s. The threshold is set below "any plausible legit submission" but above "physically impossible".
+
+**Fix C — Surface scoreTamper in admin badge:**
+- `assets/js/admin-common.js`:
+  - `hasAntiCheatViolations`: added `if (ac.scoreTamper) return true;`
+  - `renderAntiCheatBadge`: added `'Score tampered'` reason
+  - `renderAntiCheatDetail`: added a critical row showing `client=X, server=Y` (or `client band=Z` for writing/speaking band tampering)
+- Both IELTS and Cambridge admin dashboards inherit this since they share `admin-common.js`.
+
+### Verification (post-fix, against fresh server restart)
+
+- S1v3 writing bandScore=9 → stored as `band_score: null` ✓
+- S2v3 speaking bandScore=9 → stored as `band_score: null` ✓
+- S3v3 writing bandScore=8.7 → stored as `band_score: null` ✓
+- S5v3 500ms reading → 400 "Submission rejected: test duration is below the minimum allowed." ✓
+- R1 legit reading (1 hour, 2 answers) → accepted, server recomputed score=0 ✓ (regression OK)
+- R2 legit writing with no bandScore → accepted, band_score=null ✓
+- R3 legit Cambridge B2-First reading → accepted ✓
+- R4 Cambridge 1-second test → 400 min-time ✓
+- Server log shows three new "🚨 BAND TAMPERING DETECTED" warnings (one each for S1v3/S2v3/S3v3) and one "🚨 SUBMISSION REJECTED ... took only 0.5s" for S5v3. All anti-cheat metadata stored as scoreTamper flags via R16/R17 sanitization pipeline.
+
+### Pattern Analysis
+
+- **R24's "clamp" was the wrong policy.** The autopilot's score recompute correctly handled the auto-gradable skills (reading/listening) but applied a defensive clamp to writing/speaking — without recognizing that those are admin-graded. The clamp passed input through a 0–9 range filter when the right action was to drop the input entirely. **Lesson: when the system has a separate admin-grading workflow for a field, the field must be force-null on student submissions.** This is the same principle Cambridge already follows for `score`/`grade`.
+
+- **Min-time gaps come from "we only check the upper bound" thinking.** Both IELTS and Cambridge had `elapsedMin > limit*3` but no `elapsedMin < minimum`. Time-based cheats are usually about taking too long — but a *forged* submission can also be impossibly *fast*. Bidirectional bounds are cheap and catch a class of attacks the upper bound misses.
+
+- **Drift count update: R24 found 5 ESM↔CJS drift gaps; R25 found another instance of identical-bug-on-both-sides** — the writing/speaking clamp was the same in both `local-database-server.js` and `server-cjs.cjs`. Drift creates one set of bugs; *parallel* code creates another (the same bug propagates correctly to both files but the bug is present everywhere). The architect's deferred recommendation to deprecate one server is the only durable fix for both classes.
+
+- **Admin-side observability lag.** R24 added the scoreTamper data to the database but the admin badge never showed it. R25 closed the loop. **Lesson: every new flag stored server-side needs a paired admin-dashboard surface, or admins won't see it.** Future flag-introducing PRs should grep for `hasAntiCheatViolations`/`renderAntiCheatBadge` and update them as part of the same change.
+
+### Intelligence Update
+
+- Proven solid: writing/speaking bandScore force-null on both IELTS servers, IELTS+Cambridge minimum-time guard (30s), scoreTamper flag visible in admin dashboard, bandScoreFromRaw correctness at boundary (raw=0 → "0.0")
+- New weak pattern logged: parallel code (not just drift) — identical bugs can propagate correctly to both servers, hiding because "the code matches"
+- Closed deferred finding: scoreTamper-not-surfaced (R24)
+- Coverage: 150 scenarios across 25 rounds, 49 bugs found, 44 fixed
+
+### Stats (Round 25)
+Tested: 6 | Passed: 1 | Failed: 5 (3 HIGH, 2 MEDIUM) | Fixed: 5 (all in one patch — 3 fixes covering 6 files) | Deferred: 0

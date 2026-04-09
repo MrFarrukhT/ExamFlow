@@ -106,6 +106,7 @@ class AdminDashboard {
     static hasAntiCheatViolations(submission) {
         const ac = AdminDashboard.parseAntiCheat(submission);
         if (!ac) return false;
+        if (ac.scoreTamper) return true;
         if (ac.durationFlag) return true;
         if ((ac.tabSwitches || 0) > 0) return true;
         if ((ac.windowBlurs || 0) > 0) return true;
@@ -121,6 +122,7 @@ class AdminDashboard {
         if (!AdminDashboard.hasAntiCheatViolations(submission)) return '';
         const ac = AdminDashboard.parseAntiCheat(submission);
         const reasons = [];
+        if (ac.scoreTamper) reasons.push('Score tampered');
         if (ac.durationFlag) reasons.push('Overtime');
         if ((ac.tabSwitches || 0) > 0) reasons.push(ac.tabSwitches + ' tab\u00A0switch' + (ac.tabSwitches > 1 ? 'es' : ''));
         if ((ac.fullscreenExits || 0) > 0) reasons.push(ac.fullscreenExits + ' fs\u00A0exit' + (ac.fullscreenExits > 1 ? 's' : ''));
@@ -137,6 +139,12 @@ class AdminDashboard {
         const ac = AdminDashboard.parseAntiCheat(submission);
         if (!ac) return '';
         const rows = [];
+        if (ac.scoreTamper) {
+            const detail = (ac.clientScore != null && ac.serverScore != null)
+                ? 'client=' + ac.clientScore + ', server=' + ac.serverScore
+                : (ac.clientBandScore != null ? 'client band=' + ac.clientBandScore : 'client value rejected');
+            rows.push(['Score tampering', detail, true]);
+        }
         if (ac.durationFlag) rows.push(['Time limit', 'Exceeded 2x the allowed duration', true]);
         if ((ac.tabSwitches || 0) > 0) rows.push(['Tab switches', ac.tabSwitches, false]);
         if ((ac.fullscreenExits || 0) > 0) rows.push(['Fullscreen exits', ac.fullscreenExits, false]);

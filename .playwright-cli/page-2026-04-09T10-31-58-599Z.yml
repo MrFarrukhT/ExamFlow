@@ -1,0 +1,102 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - heading "Cambridge Invigilator Control Panel" [level=1] [ref=e4]
+    - paragraph [ref=e5]: Monitor test sessions and manage test data
+    - generic [ref=e6]:
+      - button "← Back to Test" [ref=e7] [cursor=pointer]
+      - button "← Back to Index" [ref=e8] [cursor=pointer]
+      - button "Admin Dashboard →" [ref=e9] [cursor=pointer]
+  - generic [ref=e10]:
+    - heading "Test Level Information" [level=3] [ref=e11]
+    - paragraph [ref=e13]:
+      - strong [ref=e14]: "Note:"
+      - text: Test level is selected by the student in the Dashboard and cannot be changed from here to maintain test integrity.
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]: A1
+        - strong [ref=e18]: Movers
+        - text: "- Basic level English"
+        - generic [ref=e19]: "Modules: Reading & Writing (combined), Listening"
+        - text: 🔒
+      - generic [ref=e20]:
+        - generic [ref=e21]: A2
+        - strong [ref=e22]: Key (KET)
+        - text: "- Elementary level English"
+        - generic [ref=e23]: "Modules: Reading & Writing (combined), Listening"
+        - text: 🔒
+      - generic [ref=e24]:
+        - generic [ref=e25]: B1
+        - strong [ref=e26]: Preliminary (PET)
+        - text: "- Intermediate level English"
+        - generic [ref=e27]: "Modules: Reading, Writing, Listening"
+        - text: 🔒
+      - generic [ref=e28]:
+        - generic [ref=e29]: B2
+        - strong [ref=e30]: First (FCE)
+        - text: "- Upper-intermediate level English"
+        - generic [ref=e31]: "Modules: Reading & Use of English, Writing, Listening"
+        - text: 🔒
+    - paragraph [ref=e32]: "Current Student Level: Not Set (Student hasn't selected a level yet)"
+  - generic [ref=e33]:
+    - heading "Room Activity — Today's Submissions" [level=3] [ref=e34]
+    - generic [ref=e35]:
+      - generic [ref=e36]:
+        - generic [ref=e37]: —
+        - generic [ref=e38]: Students
+      - generic [ref=e39]:
+        - generic [ref=e40]: —
+        - generic [ref=e41]: Submissions
+      - generic [ref=e42]:
+        - generic [ref=e43]: —
+        - generic [ref=e44]: Scored
+      - generic [ref=e45]:
+        - generic [ref=e46]: —
+        - generic [ref=e47]: Pending
+      - generic [ref=e48]:
+        - generic [ref=e49]: —
+        - generic [ref=e50]: Flagged
+    - generic [ref=e51]:
+      - textbox "Search student name or ID..." [ref=e52]
+      - combobox [ref=e53]:
+        - option "All Skills" [selected]
+        - option "Reading"
+        - option "Writing"
+        - option "Listening"
+        - option "Speaking"
+        - option "Reading & Writing"
+      - combobox [ref=e54]:
+        - option "All Status" [selected]
+        - option "Scored"
+        - option "Pending"
+      - combobox "Filter by exam type (Cambridge vs Olympiada)" [ref=e55]:
+        - option "All Exams" [selected]
+        - option "Cambridge"
+        - option "Olympiada"
+    - paragraph [ref=e57]: Connecting to server...
+    - generic [ref=e58]:
+      - generic [ref=e59]: —
+      - button "Refresh" [ref=e60] [cursor=pointer]
+  - generic [ref=e61]:
+    - heading "Mock Test Configuration" [level=3] [ref=e62]
+    - paragraph [ref=e64]:
+      - strong [ref=e65]: "Warning:"
+      - text: Mock test should be set BEFORE the student starts the test. Changing it after test start may cause data integrity issues.
+    - generic [ref=e66]:
+      - generic [ref=e67]: "Select Mock Test:"
+      - combobox "Select Mock Test:" [ref=e68]:
+        - option "Mock Test 1" [selected]
+        - option "Mock Test 2"
+        - option "Mock Test 3"
+      - button "Set Mock Test" [ref=e69] [cursor=pointer]
+    - paragraph [ref=e70]: "Currently Selected: Mock Test 1"
+  - generic [ref=e71]:
+    - heading "Test Results & Data Management" [level=3] [ref=e72]
+    - generic [ref=e73]:
+      - button "Download Current Test (TXT)" [ref=e74] [cursor=pointer]
+      - button "Export Current Test (JSON)" [ref=e75] [cursor=pointer]
+      - button "View Test History" [ref=e76] [cursor=pointer]
+      - button "Reset Current Session" [ref=e77] [cursor=pointer]
+      - button "Clear All Data" [ref=e78] [cursor=pointer]
+  - generic [ref=e79]:
+    - heading "Current Session" [level=3] [ref=e80]
+    - paragraph [ref=e82]: No active session

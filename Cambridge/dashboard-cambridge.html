@@ -315,12 +315,27 @@
             const modulesGrid = document.getElementById('modulesGrid');
             modulesGrid.innerHTML = '';
 
+            // Per official Cambridge English specs (durations in minutes):
+            //   A1 Movers:      R&W 30,  Listening 25, Speaking 5–7
+            //   A2 Key:         R&W 60,  Listening 30, Speaking 8–10
+            //   B1 Preliminary: R 45, W 45,  Listening 35, Speaking 12–17
+            //   B2 First:       R&UoE 75, W 80,  Listening 40, Speaking 14
+            //   C1 Advanced:    R&UoE 90, W 90,  Listening 40, Speaking 15
+            const durations = {
+                'A1-Movers':      { 'reading-writing': 30, 'listening': 25, 'speaking': 7 },
+                'A2-Key':         { 'reading-writing': 60, 'listening': 30, 'speaking': 10 },
+                'B1-Preliminary': { 'reading': 45, 'writing': 45, 'listening': 35, 'speaking': 12 },
+                'B2-First':       { 'reading': 75, 'writing': 80, 'listening': 40, 'speaking': 14 },
+                'C1-Advanced':    { 'reading': 90, 'writing': 90, 'listening': 40, 'speaking': 15 }
+            };
+            const d = durations[level] || {};
+
             if (level === 'A1-Movers' || level === 'A2-Key') {
                 // Combined Reading & Writing + Listening + Speaking
                 modulesGrid.innerHTML = `
                     <div class="module-card" id="readingWritingCard" data-module="reading-writing">
                         <h3 class="module-title">Reading & Writing</h3>
-                        <p class="module-duration">~60 minutes</p>
+                        <p class="module-duration">~${d['reading-writing']} minutes</p>
                         <p class="module-hint">Multiple parts. Read texts, match words, and write short answers.</p>
                         <span class="status-badge" id="readingWritingStatus">Not Started</span>
                         <button class="module-button" id="readingWritingButton">Start Reading & Writing</button>
@@ -328,7 +343,7 @@
 
                     <div class="module-card" id="listeningCard" data-module="listening">
                         <h3 class="module-title">Listening</h3>
-                        <p class="module-duration">~30 minutes</p>
+                        <p class="module-duration">~${d['listening']} minutes</p>
                         <p class="module-hint">Listen to audio recordings and answer questions. Audio cannot be paused.</p>
                         <span class="status-badge" id="listeningStatus">Not Started</span>
                         <button class="module-button" id="listeningButton">Start Listening</button>
@@ -336,7 +351,7 @@
 
                     <div class="module-card" id="speakingCard" data-module="speaking">
                         <h3 class="module-title">Speaking</h3>
-                        <p class="module-duration">~${level === 'A1-Movers' ? '7' : '10'} minutes</p>
+                        <p class="module-duration">~${d['speaking']} minutes</p>
                         <p class="module-hint">Record yourself answering questions. You'll test your microphone first.</p>
                         <span class="status-badge" id="speakingStatus">Not Started</span>
                         <button class="module-button" id="speakingButton">Start Speaking</button>
@@ -364,7 +379,7 @@
                 modulesGrid.innerHTML = `
                     <div class="module-card" id="readingCard" data-module="reading">
                         <h3 class="module-title">Reading${showUseOfEnglish ? ' & Use of English' : ''}</h3>
-                        <p class="module-duration">~60 minutes</p>
+                        <p class="module-duration">~${d['reading']} minutes</p>
                         <p class="module-hint">Read texts and answer comprehension questions across multiple parts.</p>
                         <span class="status-badge" id="readingStatus">Not Started</span>
                         <button class="module-button" id="readingButton">Start Reading</button>
@@ -372,7 +387,7 @@
 
                     <div class="module-card" id="writingCard" data-module="writing">
                         <h3 class="module-title">Writing</h3>
-                        <p class="module-duration">~45 minutes</p>
+                        <p class="module-duration">~${d['writing']} minutes</p>
                         <p class="module-hint">Write responses to prompts. Follow the word count guidance for each task.</p>
                         <span class="status-badge" id="writingStatus">Not Started</span>
                         <button class="module-button" id="writingButton">Start Writing</button>
@@ -380,7 +395,7 @@
 
                     <div class="module-card" id="listeningCard" data-module="listening">
                         <h3 class="module-title">Listening</h3>
-                        <p class="module-duration">~40 minutes</p>
+                        <p class="module-duration">~${d['listening']} minutes</p>
                         <p class="module-hint">Listen to audio recordings and answer questions. Audio cannot be paused.</p>
                         <span class="status-badge" id="listeningStatus">Not Started</span>
                         <button class="module-button" id="listeningButton">Start Listening</button>
@@ -388,7 +403,7 @@
 
                     <div class="module-card" id="speakingCard" data-module="speaking">
                         <h3 class="module-title">Speaking</h3>
-                        <p class="module-duration">~${level === 'B1-Preliminary' ? '12' : (level === 'C1-Advanced' ? '15' : '14')} minutes</p>
+                        <p class="module-duration">~${d['speaking']} minutes</p>
                         <p class="module-hint">Record yourself answering questions. You'll test your microphone first.</p>
                         <span class="status-badge" id="speakingStatus">Not Started</span>
                         <button class="module-button" id="speakingButton">Start Speaking</button>

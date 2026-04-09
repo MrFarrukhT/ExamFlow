@@ -1,0 +1,246 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "header.logo"
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - status [ref=e11]: Connected
+            - generic [ref=e13]: 
+          - button "Messages" [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: Messages
+              - generic [ref=e17]: 
+          - button "Options" [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: Options
+              - generic [ref=e21]: 
+          - button "Show notes" [ref=e22]:
+            - generic [ref=e23]:
+              - generic [ref=e24]: Show notes
+              - generic [ref=e25]: 
+        - generic [ref=e28]:
+          - generic [ref=e29]: Candidate ID
+          - generic [ref=e30]: TEST001
+          - status [ref=e31]: ◐ Audio is loading
+  - generic [ref=e35]:
+    - generic [ref=e37]:
+      - heading "Part 3 — Multiple choice (Questions 15–20)" [level=3] [ref=e38]
+      - generic [ref=e39]: You will hear an interview with two chefs. For questions 15–20, choose the answer (A, B, C or D) which fits best according to what you hear.
+    - main [ref=e41]:
+      - group [ref=e43]:
+        - paragraph [ref=e49]:
+          - text: You will hear an interview with two chefs,
+          - strong [ref=e50]: Pearl Benuga
+          - text: and
+          - strong [ref=e51]: Jim Davis
+          - text: . For questions 15–20, choose the answer (A, B, C or D) which fits best according to what you hear.
+    - main [ref=e54]:
+      - generic [ref=e55]:
+        - group [ref=e56]:
+          - radiogroup "15 What does Pearl say about working in her father’s restaurant?" [ref=e62]:
+            - paragraph [ref=e64]:
+              - generic [ref=e65]: "15"
+              - strong [ref=e67]: What does Pearl say about working in her father’s restaurant?
+            - list [ref=e68]:
+              - listitem [ref=e69]:
+                - radio "She wasn’t given special treatment." [ref=e70]
+                - generic [ref=e72]: She wasn’t given special treatment.
+              - listitem [ref=e73]:
+                - radio "She didn’t appreciate her good fortune." [ref=e74]
+                - generic [ref=e76]: She didn’t appreciate her good fortune.
+              - listitem [ref=e77]:
+                - radio "She didn’t accomplish as much as expected." [ref=e78]
+                - generic [ref=e80]: She didn’t accomplish as much as expected.
+              - listitem [ref=e81]:
+                - radio "She wasn’t confident about her level of experience." [ref=e82]
+                - generic [ref=e84]: She wasn’t confident about her level of experience.
+            - button "Flag question 15":
+              - generic [ref=e85]: Flag question 15
+        - button "Flag question 15" [ref=e88]:
+          - generic: 
+          - generic [ref=e89]: Flag question 15
+    - main [ref=e91]:
+      - generic [ref=e92]:
+        - group [ref=e93]:
+          - radiogroup "16 What aspect of Jim’s job gives him the most satisfaction?" [ref=e99]:
+            - paragraph [ref=e101]:
+              - generic [ref=e102]: "16"
+              - strong [ref=e104]: What aspect of Jim’s job gives him the most satisfaction?
+            - list [ref=e105]:
+              - listitem [ref=e106]:
+                - radio "the knowledge that his work is appreciated" [ref=e107]
+                - generic [ref=e109]: the knowledge that his work is appreciated
+              - listitem [ref=e110]:
+                - radio "the close relationships he has built up" [ref=e111]
+                - generic [ref=e113]: the close relationships he has built up
+              - listitem [ref=e114]:
+                - radio "the security of having a regular income" [ref=e115]
+                - generic [ref=e117]: the security of having a regular income
+              - listitem [ref=e118]:
+                - radio "the praise he receives from colleagues" [ref=e119]
+                - generic [ref=e121]: the praise he receives from colleagues
+            - button "Flag question 16":
+              - generic [ref=e122]: Flag question 16
+        - button "Flag question 16" [ref=e125]:
+          - generic: 
+          - generic [ref=e126]: Flag question 16
+    - main [ref=e128]:
+      - generic [ref=e129]:
+        - group [ref=e130]:
+          - radiogroup "17 What constant aspect of her work does Pearl dislike?" [ref=e136]:
+            - paragraph [ref=e138]:
+              - generic [ref=e139]: "17"
+              - strong [ref=e141]: What constant aspect of her work does Pearl dislike?
+            - list [ref=e142]:
+              - listitem [ref=e143]:
+                - radio "having to find new staff" [ref=e144]
+                - generic [ref=e146]: having to find new staff
+              - listitem [ref=e147]:
+                - radio "having to check for imperfections" [ref=e148]
+                - generic [ref=e150]: having to check for imperfections
+              - listitem [ref=e151]:
+                - radio "having to give instructions" [ref=e152]
+                - generic [ref=e154]: having to give instructions
+              - listitem [ref=e155]:
+                - radio "having to stick to a schedule" [ref=e156]
+                - generic [ref=e158]: having to stick to a schedule
+            - button "Flag question 17":
+              - generic [ref=e159]: Flag question 17
+        - button "Flag question 17" [ref=e162]:
+          - generic: 
+          - generic [ref=e163]: Flag question 17
+    - main [ref=e165]:
+      - generic [ref=e166]:
+        - group [ref=e167]:
+          - radiogroup "18 What do Pearl and Jim say inspires them?" [ref=e173]:
+            - paragraph [ref=e175]:
+              - generic [ref=e176]: "18"
+              - strong [ref=e178]: What do Pearl and Jim say inspires them?
+            - list [ref=e179]:
+              - listitem [ref=e180]:
+                - radio "exposure to the ideas of other chefs" [ref=e181]
+                - generic [ref=e183]: exposure to the ideas of other chefs
+              - listitem [ref=e184]:
+                - radio "discussions about food with other people" [ref=e185]
+                - generic [ref=e187]: discussions about food with other people
+              - listitem [ref=e188]:
+                - radio "unconventional recipes they come across online" [ref=e189]
+                - generic [ref=e191]: unconventional recipes they come across online
+              - listitem [ref=e192]:
+                - radio "limited availability of ingredients they can use" [ref=e193]
+                - generic [ref=e195]: limited availability of ingredients they can use
+            - button "Flag question 18":
+              - generic [ref=e196]: Flag question 18
+        - button "Flag question 18" [ref=e199]:
+          - generic: 
+          - generic [ref=e200]: Flag question 18
+    - main [ref=e202]:
+      - generic [ref=e203]:
+        - group [ref=e204]:
+          - radiogroup "19 When Jim goes to other people’s restaurants, he usually" [ref=e210]:
+            - paragraph [ref=e212]:
+              - generic [ref=e213]: "19"
+              - strong [ref=e215]: When Jim goes to other people’s restaurants, he usually
+            - list [ref=e216]:
+              - listitem [ref=e217]:
+                - radio "assesses whether they’re a threat to his business." [ref=e218]
+                - generic [ref=e220]: assesses whether they’re a threat to his business.
+              - listitem [ref=e221]:
+                - radio "tries to ensure no-one recognises him." [ref=e222]
+                - generic [ref=e224]: tries to ensure no-one recognises him.
+              - listitem [ref=e225]:
+                - radio "feels annoyed at the unreasonable prices." [ref=e226]
+                - generic [ref=e228]: feels annoyed at the unreasonable prices.
+              - listitem [ref=e229]:
+                - radio "selects dishes that require skill to produce." [ref=e230]
+                - generic [ref=e232]: selects dishes that require skill to produce.
+            - button "Flag question 19":
+              - generic [ref=e233]: Flag question 19
+        - button "Flag question 19" [ref=e236]:
+          - generic: 
+          - generic [ref=e237]: Flag question 19
+    - main [ref=e239]:
+      - generic [ref=e240]:
+        - group [ref=e241]:
+          - radiogroup "20 What does Pearl say about her future plans?" [ref=e247]:
+            - paragraph [ref=e249]:
+              - generic [ref=e250]: "20"
+              - strong [ref=e252]: What does Pearl say about her future plans?
+            - list [ref=e253]:
+              - listitem [ref=e254]:
+                - radio "They will be quite hard to finance." [ref=e255]
+                - generic [ref=e257]: They will be quite hard to finance.
+              - listitem [ref=e258]:
+                - radio "They will involve big changes." [ref=e259]
+                - generic [ref=e261]: They will involve big changes.
+              - listitem [ref=e262]:
+                - radio "They reflect her earlier interests." [ref=e263]
+                - generic [ref=e265]: They reflect her earlier interests.
+              - listitem [ref=e266]:
+                - radio "They are not very well developed." [ref=e267]
+                - generic [ref=e269]: They are not very well developed.
+            - button "Flag question 20":
+              - generic [ref=e270]: Flag question 20
+        - button "Flag question 20" [ref=e273]:
+          - generic: 
+          - generic [ref=e274]: Flag question 20
+  - contentinfo [ref=e276]:
+    - navigation "Previous / next question" [ref=e277]:
+      - button "Previous" [ref=e278]:
+        - generic [ref=e279]: 
+      - button "Next" [ref=e280]:
+        - generic [ref=e281]: 
+    - navigation "Questions" [ref=e282]:
+      - tablist [ref=e283]:
+        - tab "Part 1. 0 of 6 questions attempted." [ref=e284]:
+          - generic [ref=e285]:
+            - text: Part 1
+            - generic [ref=e286]: 0 of 6
+            - generic [ref=e287]: Part 1. 0 of 6 questions attempted.
+      - tablist [ref=e288]:
+        - tab "Part 2. 0 of 8 questions attempted." [ref=e289]:
+          - generic [ref=e290]:
+            - text: Part 2
+            - generic [ref=e291]: 0 of 8
+            - generic [ref=e292]: Part 2. 0 of 8 questions attempted.
+      - tablist [ref=e293]:
+        - tab "Part 3. 0 of 6 questions attempted." [ref=e294]:
+          - generic [ref=e295]:
+            - text: Part 3
+            - generic [ref=e296]: 0 of 6
+            - generic [ref=e297]: Part 3. 0 of 6 questions attempted.
+        - generic [ref=e298]:
+          - button "Question 15 Not attempted Active" [ref=e299]:
+            - generic [ref=e300]: Question 15
+            - text: "15"
+            - generic [ref=e301]: Not attempted Active
+          - button "Question 16 Not attempted" [ref=e302]:
+            - generic [ref=e303]: Question 16
+            - text: "16"
+            - generic [ref=e304]: Not attempted
+          - button "Question 17 Not attempted" [ref=e305]:
+            - generic [ref=e306]: Question 17
+            - text: "17"
+            - generic [ref=e307]: Not attempted
+          - button "Question 18 Not attempted" [ref=e308]:
+            - generic [ref=e309]: Question 18
+            - text: "18"
+            - generic [ref=e310]: Not attempted
+          - button "Question 19 Not attempted" [ref=e311]:
+            - generic [ref=e312]: Question 19
+            - text: "19"
+            - generic [ref=e313]: Not attempted
+          - button "Question 20 Not attempted" [ref=e314]:
+            - generic [ref=e315]: Question 20
+            - text: "20"
+            - generic [ref=e316]: Not attempted
+      - tablist [ref=e317]:
+        - tab "Part 4. 0 of 10 questions attempted." [ref=e318]:
+          - generic [ref=e319]:
+            - text: Part 4
+            - generic [ref=e320]: 0 of 10
+            - generic [ref=e321]: Part 4. 0 of 10 questions attempted.
+      - button "Review your answers" [ref=e322]:
+        - generic [ref=e323]: 

@@ -598,14 +598,19 @@ class ExamTimer {
         return `exam_timer_${ExamTimer.normalizeModuleKey(moduleIdentifier)}`;
     }
 
-    // Cambridge-specific duration lookup (kept for backward compat)
+    // Cambridge-specific duration lookup — values per official Cambridge English specs.
+    // YLE (A1 Movers): R&W 30 min, Listening ~25 min, Speaking 5–7 min.
+    // KET (A2 Key):    R&W 60 min, Listening ~30 min, Speaking 8–10 min.
+    // PET (B1):        R 45, W 45, Listening ~35 min, Speaking 12–17 min.
+    // FCE (B2 First):  R&UoE 75, W 80, Listening ~40, Speaking 14.
+    // CAE (C1 Adv):    R&UoE 90, W 90, Listening ~40, Speaking 15.
     static getTimerDuration(level, module) {
         const durations = {
-            'A1-Movers': { 'reading-writing': 35, 'listening': 30, 'speaking': 7 },
-            'A2-Key':    { 'reading-writing': 60, 'listening': 30, 'speaking': 10 },
-            'B1-Preliminary': { 'reading': 45, 'writing': 45, 'reading-writing': 90, 'listening': 40, 'speaking': 12 },
-            'B2-First':  { 'reading': 75, 'writing': 80, 'listening': 40, 'speaking': 14 },
-            'C1-Advanced': { 'reading': 90, 'writing': 90, 'listening': 40, 'speaking': 15 }
+            'A1-Movers':      { 'reading-writing': 30, 'listening': 25, 'speaking': 7 },
+            'A2-Key':         { 'reading-writing': 60, 'listening': 30, 'speaking': 10 },
+            'B1-Preliminary': { 'reading': 45, 'writing': 45, 'reading-writing': 90, 'listening': 35, 'speaking': 12 },
+            'B2-First':       { 'reading': 75, 'writing': 80, 'listening': 40, 'speaking': 14 },
+            'C1-Advanced':    { 'reading': 90, 'writing': 90, 'listening': 40, 'speaking': 15 }
         };
         return durations[level]?.[module] || 60;
     }
