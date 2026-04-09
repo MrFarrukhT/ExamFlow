@@ -1,5 +1,80 @@
 # Eye Journal
 
+## Session: 2026-04-09 (round 31) — Loading & Error States
+Persona: Student on a slow / unreliable connection
+System: Both — focused on launcher.html, index.html, Cambridge/dashboard-cambridge.html, plus the assets/css/launcher.css and entry.css that style their visible states
+Pages explored: launcher.html (entry status), index.html (login form + invigilator modal), Cambridge/dashboard-cambridge.html (dashboard invigilator modal), assets/js/writing/writing-handler.js (submission flow code review), assets/js/session-manager.js (saveTestToDatabase)
+Starting state: Several silent-failure paths existed: the launcher's "Offline" status had no retry button (refresh-only recovery) and the Launch button stayed clickable when offline; the login button "loading" class only dropped opacity (no spinner); both invigilator modals showed "Incorrect password" when the failure was actually a network error, so a user with the right password but bad WiFi would retype it forever. Submission flows on writing/listening also lacked button loading states and surfaced no feedback when the network call failed — but those touch deep submission code and were deferred.
+
+### Round 1 — Polish: surface honest loading + error feedback at every entry point
+
+**Findings (5 total):**
+- [T2] **launcher.html — Launch button stays clickable when status is Offline.** Student commits to a test that may not submit. No warning, no retry button on the status row.
+- [T0] **launcher.html — "Connecting..." status has no real motion cue.** Just a blinking dot color. Reads as static.
+- [T4] **index.html — Login button `.loading` is just opacity 0.8.** No spinner. Doesn't feel like anything is happening between click and redirect.
+- [T2] **index.html + Cambridge/dashboard-cambridge.html — verifyInvigilatorPassword conflates network errors with auth errors.** Both showed `password-error` with "Incorrect password. Please try again." Student with correct password but bad WiFi has no signal it's a network problem, just keeps retyping.
+- [T0] **Both invigilator modals — Submit button has no loading state.** Click → silent gap → result.
+
+**Action:** POLISH 5 fixes across 4 files (launcher.html + launcher.css + entry.css + index.html + Cambridge/dashboard-cambridge.html).
+
+**Files touched:**
+1. **launcher.html** (~30 lines added)
+   - `checkStatus()` is now a top-level function (was an IIFE) so the retry button can call it. Tracks `__ic_isOnline` global. Hides the new retry button while a check is in flight, shows it when status flips to Offline. Selector tightened to `.status-cluster .info-value` so it grabs the Status cell instead of the first .info-value (which was Version).
+   - New `<button id="status-retry" class="status-retry-btn" hidden>` next to the status value, with a refresh SVG and "Retry" label. Calls `checkStatus()` on click.
+   - `launchApp()` now checks `__ic_isOnline` and shows a `confirm()` warning if false: "The test system is currently offline. You can still take the test — answers save locally and submit when the connection comes back. Continue anyway?" Student can still proceed but knows what they're getting into.
+2. **assets/css/launcher.css** (~70 lines added)
+   - `.status-connecting::before` rebuilt as a real spinning ring (10×10 border with `border-top-color: #f39c12`) using a new `launcherSpin` keyframe — replaces the static blinking dot with actual motion.
+   - `.status-cluster` flex wrapper for the status value + retry button.
+   - `.status-retry-btn` — small red pill with a refresh icon, hover lift, focus styles. Hidden by default via `[hidden]`.
+3. **assets/css/entry.css** (~25 lines added)
+   - `.login-button.loading::before` — a 16×16 white spinning ring positioned absolutely on the left of the button, with a new `entrySpin` keyframe. The button gets `padding-left: 2.6rem` while loading so the label doesn't shift.
+4. **index.html** `verifyInvigilatorPassword()` (~30 lines changed)
+   - Resets the error UI and disables the submit button before each attempt.
+   - Wraps the fetch in `AbortSignal.timeout(8000)` so a hung server can't lock the modal forever.
+   - On HTTP non-OK: shows "Incorrect password. Please try again." (auth path).
+   - On exception (network/timeout): shows "Could not reach the server. Check your connection and try again." (network path).
+   - `finally` block restores the button label and re-enables it regardless of which branch ran.
+5. **Cambridge/dashboard-cambridge.html** `verifyInvigilatorPassword()` — same network/auth split applied to the Cambridge dashboard's modal so both entry points behave the same.
+
+**Verification (live, isolated playwright session):**
+| Check | Method | Result |
+|-------|--------|--------|
+| Launcher status row populates correctly | reload, wait 1.5s, screenshot | ✅ eye31-launcher-online2.png — Version 2.0.0, Build April 2026, Status "Ready" with green dot |
+| Selector regression caught | first run wrote "Ready" into the Version cell | ✅ Fixed by tightening to `.status-cluster .info-value` |
+| Offline state surfaces retry button | stub fetch to reject, call checkStatus(), screenshot | ✅ eye31-launcher-offline-real.png — red "Offline" pill + "Retry" button beside it |
+| Connecting state probe | click retry mid-flight | ✅ DOM probe returned `status: "Connecting...", retryHidden: true` during the in-flight window |
+| Login button shows real spinner | force `.loading` class on #startTest | ✅ eye31-login-spinner.png — small white ring rotating left of "Logging in..." text |
+| Invigilator modal — network error message | stub fetch to throw TypeError, click verify | ✅ eye31-invig-network-err.png — "Could not reach the server. Check your connection and try again." |
+| Invigilator modal — auth error preserved | stub fetch to return `{ok:false, status:401}` | ✅ #password-error textContent: "Incorrect password. Please try again." |
+
+### Quality Map (after round 31)
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| launcher.html offline recovery | 1-Functional (refresh only) → 4-Polished | Retry button + clickable confirm flow |
+| launcher.html connecting state | 2-Clear → 4-Polished | Real spinning ring, not just a dot |
+| Login button loading state | 2-Clear → 4-Polished | White spinner, padding shift to keep label stable |
+| Invigilator modal error messages | 2-Clear (misleading) → 3-Efficient | Network and auth errors are now distinguishable |
+| Invigilator modal submit feedback | 1-Functional (silent) → 3-Efficient | "Verifying..." label + disabled state during fetch |
+
+### Deferred (next time this prompt runs)
+- **Writing test submit flow** — `writing-handler.js submitWriting()` has no button loading state and silently swallows fetch failures (catch block redirects to dashboard regardless). Student has no idea their submission may have only been saved locally. Worth a dedicated round on `assets/js/writing/writing-handler.js` + the listening submission path in `assets/js/listening/listening.js`.
+- **Reading test submission** — same gap; goes through `session-manager.js saveTestToDatabase()` which has good fallback logic but no UI feedback during the multi-second fallback chain.
+- **Skeleton loaders for dashboards** — both student-dashboard.html and Cambridge/dashboard-cambridge.html flash empty content while loading from localStorage/session. Could add `.skeleton` shimmer placeholders.
+- **Background sync indicator** — `syncLocalDataToDatabase()` runs every 5s in the background. Students have no indication that their answers are queued and being retried.
+- **The launcher offline confirm() uses a native dialog** — should be replaced with a styled modal to match the rest of the app polish.
+
+### Session Stats (round 31)
+Pages explored: 5 (launcher.html, index.html, Cambridge/dashboard-cambridge.html, writing-handler.js, session-manager.js)
+Findings: 5 (2× T2, 1× T4, 2× T0)
+Polishes landed: 5
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Files touched: 5 (launcher.html, assets/css/launcher.css, assets/css/entry.css, index.html, Cambridge/dashboard-cambridge.html)
+Verification screenshots: 5 (eye31-launcher-online2.png, eye31-launcher-offline-real.png, eye31-launcher-connecting.png, eye31-login-spinner.png, eye31-invig-network-err.png)
+
+---
+
 ## Session: 2026-04-09 (round 30) — Responsive Tablet (768×1024 + 1024×768)
 Persona: Student opening the test on an iPad in both portrait and landscape
 System: Both (launcher.html + Cambridge B2-First Part 1.html as the representative test page)
