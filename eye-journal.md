@@ -1,5 +1,80 @@
 # Eye Journal
 
+## Session: 2026-04-09 (round 40) — Database & API Reliability (FINAL ROUND)
+Persona: DevOps monitoring system health
+System: Both — shared/database.js, local-database-server.js, cambridge-database-server.js
+Pages explored: shared/database.js (createDatabaseManager, ensureConnection, createRetryQueue), local-database-server.js /test endpoint, cambridge-database-server.js /test endpoint, launcher.html checkStatus() consumer
+Starting state: Both servers had a `/test` health endpoint that did `SELECT NOW()` and returned `success: true/false`. On failure, the catch block returned a generic `"message": "Database connection failed"` — no error classification, no hint about what went wrong. An admin looking at the launcher's "Offline" status had to SSH into the server and read logs to know if it was a DNS problem, auth failure, or timeout. The connection manager in shared/database.js used a single `Client` (appropriate for Neon pooler), had proper `error` event handling, and the retry queue with `.unref()` was well-designed.
+
+### Round 1 — Polish: classify health check errors
+
+**Findings (4 total):**
+- [T2] **Health check returns generic "Database connection failed" on any error.** No classification — admin can't distinguish DNS failure from auth error from timeout without reading server logs. The launcher's "Offline" status doesn't explain WHY it's offline.
+- [T2] **No retry queue visibility in the health response.** `createRetryQueue()` tracks `failedSubmissions` but the count is never surfaced via the API. An admin has no way to know submissions are queued.
+- [T3] **`ensureConnection()` can return a stale connection.** If TCP is silently reset (without firing an `error` event), the `client` object still exists, and the next query fails at the route level. The `error` event handler handles most disconnects but there's a small window.
+- [T0] **No separate `/health` liveness endpoint.** `/test` conflates "is the process alive?" with "is the database up?" A k8s-style liveness probe only needs the former.
+
+**Action:** POLISH 2 fixes — improve error classification in both `/test` endpoints.
+
+**Files touched:**
+1. **local-database-server.js** `/test` catch block — now maps `error.code` to a human-readable `reason` field:
+   - `ENOTFOUND` / `EAI_AGAIN` → `dns_resolution_failed`
+   - `ECONNREFUSED` → `connection_refused`
+   - `ETIMEDOUT` / `ECONNRESET` → `connection_timeout`
+   - `28P01` / `28000` → `authentication_failed` (PostgreSQL error codes)
+   - `3D000` → `database_not_found`
+   - error.message includes "timeout" → `query_timeout`
+   - else → `unknown`
+   Also added `uptime: Math.floor(process.uptime())` to the success response so admins can see how long the server has been running.
+2. **cambridge-database-server.js** — same error classification + uptime addition.
+
+**Verification:** `node --check` passes on both servers. Live `/test` endpoints return success with the existing running instances (the new `reason` field only appears in error responses which can't be triggered without breaking the connection). On-disk code is correct.
+
+### Quality Map (after round 40 — FINAL)
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| /test health endpoint error info | 2-Clear (generic "failed") → 3-Efficient (classified reason) | Admin gets actionable diagnosis without SSH |
+| /test uptime field | N/A → 3-Efficient | Visible in launcher polling |
+
+### Deferred (for future cycles)
+- **Expose retry queue size in /test response.** The `failedSubmissions.length` from createRetryQueue is closure-scoped. Would need to either expose it via a getter or pass it through createServer config.
+- **Add a `/health` liveness endpoint.** Return `200 OK` with just `{ ok: true }` without touching the database — pure process-alive check for k8s readiness probes.
+- **Connection pool (pg.Pool).** Single `Client` works for Neon pooler, but a proper `Pool` would handle stale connections automatically. Bigger refactor.
+- **ensureConnection ping-before-return.** Add a `SELECT 1` validation before returning the client to catch silently-dropped connections. Adds ~5ms latency per request.
+
+### Session Stats (round 40 — FINAL)
+Pages explored: 3 server files + 1 shared module
+Findings: 4 (2× T2, 1× T3, 1× T0)
+Polishes landed: 2 (IELTS + Cambridge health check error classification)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Files touched: 2 (local-database-server.js, cambridge-database-server.js)
+
+---
+
+## FULL CYCLE COMPLETE: 40/40 prompts
+
+### Summary of all 40 rounds (2026-04-09)
+| Round | Prompt | Changes | Key fix |
+|-------|--------|---------|---------|
+| 28 | Fullscreen & Anti-Cheat | 6 | Warning auto-dismiss, CapsLock fix, toast feedback, counter reset, back-nav tracking, Secure Mode badge |
+| 29 | Responsive Mobile 375px | 5 | Launcher overflow fix, 420px breakpoint, mobile advisory, badge reposition |
+| 30 | Responsive Tablet 768px | 3 | Universal badge safe-zone, tablet launcher width, breakpoint alignment |
+| 31 | Loading & Error States | 5 | Launcher retry button, connecting spinner, login spinner, invigilator network/auth error split |
+| 32 | Mock Test Content Integrity | 2 | Corrupted MOCK 9/10 reading.html headers + duplicate inventory documented |
+| 33 | Navigation Flows IELTS | 2 | goToSubmission delegated to deliver-button, label renamed |
+| 34 | Navigation Flows Cambridge | 2 | Stale level badge fix, admin link nowrap |
+| 35 | Cambridge Multi-Mock Nav | 1 | Mock indicator badge on Cambridge dashboard |
+| 36 | Answer Key Management | 1 | Unsaved-changes guard (dirty flag + beforeunload + confirm) |
+| 37 | Scoring Workflow E2E | 2 | _isUnscored 0-score infinite loop fix |
+| 38 | CSS Consistency | 2 | Font stack + primary blue unified across launcher + admin |
+| 39 | JS Module Architecture | 1 | Triplicate escapeHTML removed |
+| 40 | Database & API Reliability | 2 | Health check error classification |
+| **Total** | **13 rounds this session** | **34 changes** | — |
+
+---
+
 ## Session: 2026-04-09 — C1 Advanced UI fidelity round 2 (live verification)
 Persona: Student taking C1 Advanced exam
 System: Cambridge (port 3003) — live browser verification

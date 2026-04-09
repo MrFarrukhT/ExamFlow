@@ -354,13 +354,24 @@ app.get('/test', async (req, res) => {
             success: true,
             message: 'Cambridge Database connected successfully',
             timestamp: result.rows[0].current_time,
-            server: 'Cambridge Database Server'
+            server: 'Cambridge Database Server',
+            uptime: Math.floor(process.uptime())
         });
     } catch (error) {
         console.error('Database connection error:', error);
+        let reason = 'unknown';
+        const code = error.code || '';
+        if (code === 'ENOTFOUND' || code === 'EAI_AGAIN')  reason = 'dns_resolution_failed';
+        else if (code === 'ECONNREFUSED')                   reason = 'connection_refused';
+        else if (code === 'ETIMEDOUT' || code === 'ECONNRESET') reason = 'connection_timeout';
+        else if (code === '28P01' || code === '28000')      reason = 'authentication_failed';
+        else if (code === '3D000')                          reason = 'database_not_found';
+        else if (error.message?.includes('timeout'))        reason = 'query_timeout';
+
         res.status(500).json({
             success: false,
-            message: 'Database connection failed'
+            message: 'Database connection failed',
+            reason
         });
     }
 });
