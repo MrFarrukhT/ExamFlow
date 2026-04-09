@@ -208,14 +208,22 @@ Reference set: cae/examples/{1..8,l1..l5,w1,w2}.png
 | C1 Listening Parts 1-4 | 5-Delightful | Already shipped in round 2 |
 | C1 Writing Parts 1-2 | 5-Delightful | Already shipped in round 2 |
 
-### Session Stats
-Pages explored: 14 C1 Advanced surfaces (full mock walkthrough)
-Rounds: 1 (compounding round 2's foundation)
+### Round 4 (same session, cron-driven)
+**Explored:** All 14 surfaces revisited; verified round 3 changes still hold (Part 1 popover boxes + Part 4 single-question pagination both intact). Found one remaining inconsistency: Parts 1, 2, 3, 4, 7 had no bookmark/flag button on the right gutter, while the official Inspera UI (visible in 1.png, 4.png, 5.png, 7.png) shows a bookmark icon for every question/passage so candidates can flag items to revisit. Parts 5, 6, 8 already shipped with native flag elements (one per MCQ).
+
+- [T3] Reading Parts 1, 2, 3, 4, 7 — added the missing bookmark/flag button. Extended `assets/js/cambridge/cambridge-c1-question-nav.js` with `injectFlagButtons()` which walks every `.QuestionDisplay__questionBody___ZOMJ7` (the flex row that hosts the main content + the right gutter), skips bodies that already have a `.QuestionDisplay__visibleFlag___AmAom`, and appends a `.screen.question-margin.right` gutter containing a bookmark `<button>` styled to match Parts 5/6/8 exactly. The button has a visual-only toggle (clicks flip the icon between `fa-bookmark-o` and `fa-bookmark`), since the static clone has no real flag persistence layer. Wired the same script tag into Parts 2, 3, 7 (Parts 1 and 4 already loaded it from round 3).
+  Verified: Part 1 ends up with one flag at x=1430 in the right gutter (matches official); Part 4's single-question view shows the bookmark on each Q25-30 wrapper individually; Parts 5/6/8 still show their native flags only (no double injection because the script skips bodies that already have one).
+  Mode: polish (visual parity completion)
+  Quality layer: 4-Polished → 5-Delightful
+  Files: assets/js/cambridge/cambridge-c1-question-nav.js (+38 lines, injectFlagButtons), Cambridge/MOCKs-Cambridge/C1-Advanced/Part 2.html (+script tag), Cambridge/MOCKs-Cambridge/C1-Advanced/Part 3.html (+script tag), Cambridge/MOCKs-Cambridge/C1-Advanced/Part 7.html (+script tag)
+
+### Session Stats (rounds 3 + 4 cumulative)
+Pages explored: 14 C1 Advanced surfaces walked twice
+Rounds: 2 in this session
 Rebuilds landed: 1 (Part 4 single-question pagination)
-Polishes landed: 1 (Part 1 popover gap visual parity)
+Polishes landed: 2 (Part 1 popover gap, bookmark icon parity)
 Reverted: 0
-Files touched: 4 (CSS + new JS + 2 HTML)
-Verification screenshots: 8 (parts 1-8, listening 1-4, writing 1-2, plus before/after for Part 4 and Part 1)
+Files touched: 7 across both rounds
 
 ---
 
