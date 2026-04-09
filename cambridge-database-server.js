@@ -832,10 +832,10 @@ app.get('/cambridge-submissions', requireAdmin, async (req, res) => {
         res.json(result.rows);
     } catch (error) {
         console.error('Failed to fetch submissions:', error);
+        // R29: error.message strip — bulk completing the heal r7/r8 work that left admin handlers leaking
         res.status(500).json({
             success: false,
-            message: 'Failed to fetch submissions',
-            error: error.message
+            message: 'Failed to fetch submissions'
         });
     }
 });
@@ -985,7 +985,7 @@ app.delete('/cambridge-submissions/:id', requireAdmin, async (req, res) => {
         res.json({ success: true, message: `Submission ${submissionId} deleted` });
     } catch (error) {
         console.error('❌ Failed to delete Cambridge submission:', error);
-        res.status(500).json({ success: false, message: 'Failed to delete submission', error: error.message });
+        res.status(500).json({ success: false, message: 'Failed to delete submission' });
     }
 });
 
@@ -1031,8 +1031,7 @@ app.get('/cambridge-answers', requireAdmin, async (req, res) => {
         console.error('Failed to fetch Cambridge answers:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to fetch answers',
-            error: error.message
+            message: 'Failed to fetch answers'
         });
     }
 });
@@ -1156,8 +1155,7 @@ app.get('/cambridge-student-results', requireAdmin, async (req, res) => {
         console.error('Failed to fetch student results:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to fetch student results',
-            error: error.message
+            message: 'Failed to fetch student results'
         });
     }
 });
@@ -1258,8 +1256,7 @@ app.post('/cambridge-student-results', requireAdmin, async (req, res) => {
         console.error('❌ Failed to add student result:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to add student result',
-            error: error.message
+            message: 'Failed to add student result'
         });
     }
 });

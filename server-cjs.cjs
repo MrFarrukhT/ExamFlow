@@ -529,10 +529,10 @@ app.get('/test', async (req, res) => {
             server: 'Local Database Server'
         });
     } catch (error) {
+        console.error('❌ /test DB probe failed:', error);
         res.status(500).json({
             success: false,
-            message: 'Database connection failed',
-            error: error.message
+            message: 'Database connection failed'
         });
     }
 });
@@ -1039,7 +1039,7 @@ app.post('/mock-answers', requireAdmin, async (req, res) => {
         }
     } catch (error) {
         console.error('❌ Failed to save mock answers:', error);
-        res.status(500).json({ success: false, message: 'Failed to save answers', error: error.message });
+        res.status(500).json({ success: false, message: 'Failed to save answers' });
     }
 });
 
@@ -1059,7 +1059,7 @@ app.delete('/mock-answers', requireAdmin, async (req, res) => {
         res.json({ success: true, message: `Deleted ${result.rowCount} answers for Mock ${mock} - ${skill.toUpperCase()}`, count: result.rowCount });
     } catch (error) {
         console.error('❌ Failed to delete mock answers:', error);
-        res.status(500).json({ success: false, message: 'Failed to delete answers', error: error.message });
+        res.status(500).json({ success: false, message: 'Failed to delete answers' });
     }
 });
 

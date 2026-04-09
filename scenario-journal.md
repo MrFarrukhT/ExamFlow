@@ -1722,3 +1722,73 @@ Trigger: heal r7's commit (`03485b0`) stripped error.message from 5 admin endpoi
 
 ### Stats (Round 28)
 Tested: 5 | Passed: 1 | Failed: 4 (3 HIGH, 1 LOW; S5 documented but not fixed) | Fixed: 4 (Fix A: 4 endpoints across 3 files; Fix B: 1 endpoint) | Deferred: 1 (IELTS mock-answers upper bound — hygiene)
+
+---
+
+## Session: 2026-04-09 18:50
+Focus: R29 — execute the bulk error.message strip that R28 left as a "for-next-run" task. heal r8 (`dee207b`) ran in parallel and stripped 7 ESM IELTS handlers but never touched server-cjs.cjs (the running production server). The bulk fix is now small enough to do in one pass.
+Trigger: R28 cursor entry "12-admin-error-message-handlers-still-leak-after-r28-bulk-strip-needed" + heal r8's ESM-only commit revealing yet another ESM↔CJS drift instance.
+
+### Scenarios
+
+- S1: Verify CJS still leaks despite heal r8 [Verification] → **BUG (HIGH) — 11th drift instance**
+  - POST `/update-score` with `submissionId="abc"` returned `{"success":false,"message":"Failed to update score","error":"invalid input syntax for type integer: \"abc\""}`
+  - The error reveals: Postgres, the `submissionId` -> integer column type, the exact PG error format
+  - heal r8's commit modified ONLY `local-database-server.js` (ESM IELTS, dev copy). The running server is `server-cjs.cjs` (CJS bundle) — heal's "fix" was invisible to production.
+  - Drift count: 11 occurrences. The autopilot/heal pattern keeps fixing ESM and forgetting CJS, even when /scenario already documented this exact gap (R24 was the most critical instance).
+
+- S2: heal r8's skill validation on POST `/mock-answers` (CJS) [Verification] → **PASS**
+  - `skill="NotARealSkill"` → 400 "Invalid skill. Must be one of: reading, writing, listening, speaking"
+  - `skill="reading"` → 200 saved
+  - The validation IS in CJS too (line 991), independently from heal r8's ESM-only commit. So this drift is partial: the skill validator landed in both, but the error.message strip didn't.
+
+### Fixes
+
+**Fix A — Bulk strip `server-cjs.cjs` (7 handlers in one pass):**
+- Line 535: GET `/test` (DB connection probe)
+- Line 879: GET `/submissions` (admin list)
+- Line 899: DELETE `/submissions/:id` (admin delete)
+- Line 936: POST `/update-score` (admin grade)
+- Line 974: GET `/mock-answers` (admin read keys)
+- Line 1041: POST `/mock-answers` (admin write keys)
+- Line 1061: DELETE `/mock-answers` (admin delete keys)
+- All 7 now return generic 500 messages. `console.error` still logs the full error server-side for ops.
+
+**Fix B — Bulk strip `cambridge-database-server.js` (5 handlers in one pass):**
+- Line 838: GET `/cambridge-submissions` (admin list)
+- Line 988: DELETE `/cambridge-submissions/:id` (admin delete)
+- Line 1035: GET `/cambridge-answers` (admin read keys)
+- Line 1160: GET `/cambridge-student-results` (admin list results)
+- Line 1262: POST `/cambridge-student-results` (admin add result)
+- All 5 now return generic 500 messages.
+
+**Drift gap closed:** heal r8 fixed 7 ESM handlers; R29 fixed the corresponding 7 CJS handlers (plus the /test endpoint). ESM and CJS are now in parity for error.message disclosure across all admin paths.
+
+### Verification (post-fix, fresh server restart)
+
+- V1 IELTS POST `/update-score` submissionId="abc" → `{"success":false,"message":"Failed to update score"}` ✓ (was leaking integer syntax error)
+- V2 IELTS GET `/submissions` → 200 list (regression OK)
+- V3 IELTS DELETE `/submissions/2147483648` → `{"success":false,"message":"Failed to delete submission"}` ✓
+- V4 Cambridge PATCH `/cambridge-submissions/abc/score` → 400 "Invalid submission ID" (caught at app layer before reaching DB)
+- V5 Cambridge POST `/cambridge-student-results` reading_raw=2147483648 → 400 "must be between 0 and 300" (caught at app layer)
+- S2 CJS POST `/mock-answers` skill validation → invalid rejected, valid accepted ✓
+- Final grep: `error: error.message` matches in server-cjs.cjs = 0, in cambridge-database-server.js = 0, in local-database-server.js = 0
+
+### Pattern Analysis
+
+- **The heal/scenario sync gap is one-directional.** Heal sees /scenario's journal entries (or independently finds the same bugs) but applies fixes to ESM only because that's where the "source of truth" feels like it lives. /scenario then needs to round-trip the fix to CJS. **A simpler workflow: heal should grep for the pattern after fixing it in one file, not just fix the file it stumbled into.** R29 demonstrates the value of bulk mode: finding 12 instances, fixing 12 instances, verifying 12 instances — all in one round, no future round needs to revisit.
+
+- **Bulk fixes pay for themselves immediately.** R28 fixed 4 of 16 leaks, leaving 12 for "next run". R29 spent the same time budget fixing all 12 plus verifying. **Lesson: when /scenario finds a finite, enumerable list of identical bugs, prefer the bulk pass over the incremental approach.** Incremental looks safer (smaller diffs, easier review) but multiplies the round count and wastes triage cycles.
+
+- **Drift count is now 11 occurrences.** R29 didn't add a NEW pattern — it closed an instance of the existing ESM↔CJS drift pattern. The architectural fix (deduplicate) is the only durable solution; every heal/autopilot round risks adding instance #12.
+
+### Intelligence Update
+
+- Proven solid: ALL admin error.message handlers stripped across both servers (12 endpoints fixed in R29 + 4 in R28 = 16 total since the audit started)
+- New weak pattern logged: heal/autopilot fixes ESM-only when the bug exists in both servers (one-directional sync gap)
+- Drift count update: 11 occurrences (R29 closed one instance, didn't add new)
+- Coverage: 165 scenarios across 29 rounds, 60 bugs found, 55 fixed
+- For-next-run: now that error.message is fully stripped, the next high-value target is concurrent submissions / race conditions on the dedup lock release path (BH-1, BH-7, BH-12 from the reference library — none have been browser-tested under load)
+
+### Stats (Round 29)
+Tested: 2 | Passed: 1 | Failed: 1 (HIGH, 12 endpoints) | Fixed: 12 (bulk pass: 7 in CJS + 5 in Cambridge) | Deferred: 0
