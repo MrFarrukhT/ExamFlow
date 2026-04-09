@@ -2260,3 +2260,68 @@ Reverted: 0
 Files touched: 12 (10 writing.html + timer.js + dashboard-cambridge.html)
 Generator script written: 1 (e:/tmp/strip-writing-timer-controls.js — one-time tool)
 Verification screenshots: 2 (eye-compliance-writing.png, eye-compliance-cambridge-a1.png)
+
+---
+
+## Session: 2026-04-09 (round 2 — IELTS Writing word-limit + spellcheck compliance)
+Persona: Real IELTS candidate sitting Writing in a high-stakes session
+System: IELTS port 3002 (all 10 mocks share `assets/js/writing/writing-handler.js`)
+Pages explored: All 10 `MOCKs/MOCK N/writing.html` textarea blocks + `assets/js/writing/writing-handler.js` (`updateWordCount` method, lines 127–192)
+Starting state: After round 1 fixed timer/duration compliance, the writing handler **enforced an artificial 500-word maximum** by truncating the textarea via `textarea.dataset.lastValidText`, the placeholder told candidates "(minimum X words, maximum 500 words)", and the textareas had no spellcheck-disabling attributes — meaning the browser's red squiggle spellchecker was active by default.
+
+### Round 2 — direct prompt: same compliance brief, deeper pass
+
+**Findings (3 deviations):**
+- [T1] `assets/js/writing/writing-handler.js:127–192` — `updateWordCount` ENFORCED a 500-word maximum: when `wordCount > 500` it stored `dataset.lastValidText` and **wrote that back into the textarea**, silently dropping any new words the candidate typed. Real IELTS Writing has **no maximum** — Task 1 asks for a minimum of 150 words, Task 2 a minimum of 250 words, and well-prepared candidates routinely write 280–320 on Task 2. A real candidate hitting this limit would lose words mid-sentence and not understand why. The same function emitted the on-screen warning "Word limit reached (500 words). Please remove some words before adding new text." which directly contradicts the official IELTS rubric.
+- [T1] All 10 `MOCKs/MOCK N/writing.html` textarea placeholders read "(minimum 150 words, maximum 500 words)" / "(minimum 250 words, maximum 500 words)" — the same UI lie reinforced before the handler even ran.
+- [T1] All 10 `MOCKs/MOCK N/writing.html` textareas had **no `spellcheck` attribute**, so browsers default to `spellcheck="true"` — red squiggles under misspellings let candidates spot and fix errors they shouldn't be able to spot. The real computer-delivered IELTS test ships with the OS spellchecker disabled. Also missing: `autocomplete="off"`, `autocorrect="off"`, `autocapitalize="off"` (the latter two matter on iPad and mobile-Chrome).
+
+**Action:** REBUILD 1 (writing-handler.js word-count flow) + FIX 10 (textarea attributes across every IELTS mock).
+
+- [T1] `assets/js/writing/writing-handler.js:127–158` — `updateWordCount` rebuilt: deleted the truncation block, the `lastValidText` dataset stash, the `word-limit-warning` element creation, the `wordCount/500` display, and the "approaching limit" amber warning at 90%. Output simplified to `Word count: ${wordCount}` with two-state class coloring (`warning` below the per-task minimum, `good` once minimum is met). Header comment cites the official IELTS rule.
+  Mode: rebuild (function reduced from 65 lines to 31 lines, all behavior now matches official IELTS)
+  Quality layer: 1-Functional → 5-Delightful (correct + simple)
+  Files: assets/js/writing/writing-handler.js:127–158
+
+- [T1] All 10 `MOCKs/MOCK N/writing.html` — Task 1 + Task 2 textareas now carry `spellcheck="false"`, `autocomplete="off"`, `autocorrect="off"`, `autocapitalize="off"`. Placeholders rewritten to "Write your Task N response here… (minimum N words)" — the false maximum-words promise removed.
+  Mode: fix (compliance — disable browser writing aids, remove UI lie)
+  Quality layer: 1-Functional → 4-Polished
+  Files: MOCKs/MOCK 1..10/writing.html
+  One-time script: e:/tmp/fix-ielts-writing-compliance.js
+
+### Verification (browser walkthrough)
+| Surface | Verified state | Result |
+|---------|---------------|--------|
+| MOCK 1 task1 textarea attributes | `spellcheck=false`, `autocomplete="off"`, placeholder = "Write your Task 1 response here… (minimum 150 words)" | ✓ |
+| MOCK 1 task2 textarea attributes | `spellcheck=false`, `autocomplete="off"`, placeholder = "Write your Task 2 response here… (minimum 250 words)" | ✓ |
+| Type 510 words into Task 1 | Word counter shows `Word count: 510`, no truncation, no `.word-limit-warning` element, class = `word-count good`, bottom counter = `(510 words)` | ✓ matches official IELTS (no max) |
+| Timer | `59:44` counting down from 60:00 | ✓ unchanged |
+| `node --check` on writing-handler.js | syntax OK | ✓ |
+| Screenshot eye-compliance-writing-r2.png | Task 1 panel filled with 510 word tokens, footer shows "Task 1 (510 words)", no warning anywhere | ✓ |
+
+### Quality Map (after this round)
+| Page | Layer | Notes |
+|------|-------|-------|
+| assets/js/writing/writing-handler.js (updateWordCount) | 5-Delightful | 31 lines, no truncation, follows official IELTS |
+| MOCKs/MOCK 1..10/writing.html (textareas) | 5-Delightful | Spellcheck/autocorrect/autocapitalize disabled, honest placeholders |
+
+### Verified-not-needed (no extras found)
+- Cambridge writing pages — use Inspera's own spellchecker via `window.spellCheckerHost = 'https://spellcheckv2.inspera.com'`, which is the official Cambridge digital exam tool (not browser default). Compliant by design.
+- IELTS reading.html — verified 40 unique question identifiers across the file. Matches official IELTS (3 passages, 40 questions).
+- IELTS listening.html — verified 40 unique question identifiers. Matches official IELTS (4 sections, 40 questions).
+
+### Deferred (would need backend / content work, not UI compliance)
+- B2 First mock has 6 reading parts × 32 questions instead of the official 7 parts × 52 questions. Same applies to question content per part — fixing this would require generating ~20 new questions plus a new Part 7 (multiple matching). Not a UI compliance fix; needs new exam content.
+- A1 Movers question ranges in `cambridge-answer-sync.js` fall through to the A2 Key default (32q, 7 parts) instead of the A1 spec (35q, 6 parts). Worth fixing in a follow-up that has the actual A1 part content audited at the same time.
+- Cambridge writing wrappers (B1/B2/C1) hardcode their durations as `new CambridgeTimer(45, ...)` etc instead of going through `getTimerDuration` like Listening/Speaking/A2 R&W do. The hardcoded values all happen to match the official spec, so functionally fine — but it's a single-source-of-truth gap.
+
+### Session Stats
+Pages explored: 11 (10 IELTS writing mocks + writing-handler.js)
+Rounds: 1 (round 2 of the same compliance brief)
+Polishes landed: 0
+Rebuilds landed: 1 (updateWordCount, 65 → 31 lines)
+Fixes landed: 10 (textarea attributes across all 10 mocks)
+Reverted: 0
+Files touched: 11 (10 writing.html + writing-handler.js)
+Generator script written: 1 (e:/tmp/fix-ielts-writing-compliance.js — one-time tool)
+Verification screenshot: eye-compliance-writing-r2.png
