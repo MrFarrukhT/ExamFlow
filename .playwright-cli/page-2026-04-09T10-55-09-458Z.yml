@@ -1,0 +1,80 @@
+- generic [active] [ref=e1]:
+  - iframe [ref=e2]:
+    - generic [ref=f2e4]:
+      - banner [ref=f2e5]:
+        - generic [ref=f2e6]:
+          - generic [ref=f2e7]:
+            - img "header.logo"
+          - generic [ref=f2e8]:
+            - generic [ref=f2e9]:
+              - generic [ref=f2e10]:
+                - status [ref=f2e11]: Connected
+                - generic [ref=f2e13]: 
+              - button "Messages" [ref=f2e14]:
+                - generic [ref=f2e15]:
+                  - generic [ref=f2e16]: Messages
+                  - generic [ref=f2e17]: 
+              - button "Options" [ref=f2e18]:
+                - generic [ref=f2e19]:
+                  - generic [ref=f2e20]: Options
+                  - generic [ref=f2e21]: 
+              - button "Show notes" [ref=f2e22]:
+                - generic [ref=f2e23]:
+                  - generic [ref=f2e24]: Show notes
+                  - generic [ref=f2e25]: 
+            - generic [ref=f2e28]:
+              - generic [ref=f2e29]: Candidate ID
+              - generic [ref=f2e30]: TEST001
+      - generic [ref=f2e34]:
+        - generic [ref=f2e36]:
+          - heading "Part 1" [level=3] [ref=f2e37]
+          - generic [ref=f2e38]:
+            - text: You must answer this question. Write your answer in 140–190 words in an appropriate style.
+            - strong [ref=f2e39]: Question 1
+            - text: In your English class you have been talking about the environment. Now your English teacher has asked you to write an essay.
+        - main [ref=f2e41]:
+          - generic [ref=f2e42]:
+            - group [ref=f2e43]:
+              - generic [ref=f2e47]:
+                - generic [ref=f2e48]:
+                  - generic [ref=f2e49]:
+                    - generic [ref=f2e50]: In what ways can young people help to protect the environment?
+                    - generic [ref=f2e51]: Notes
+                    - generic [ref=f2e52]: "Write about:"
+                    - list [ref=f2e53]:
+                      - listitem [ref=f2e54]: saving energy at home
+                      - listitem [ref=f2e55]: recycling waste
+                      - listitem [ref=f2e56]: ........... (your own idea)
+                    - generic [ref=f2e57]: "Some opinions expressed in the discussion:"
+                    - generic [ref=f2e58]: "\"Most young people don't really think about the environment.\""
+                    - generic [ref=f2e59]: "\"Young people should set a good example for others to follow.\""
+                  - paragraph [ref=f2e60]:
+                    - text: Write your
+                    - strong [ref=f2e61]: essay
+                    - text: . Write your answer in
+                    - strong [ref=f2e62]: 140–190 words
+                    - text: in an appropriate style.
+                - generic [ref=f2e66]:
+                  - textbox "You are currently on the text editor. The text will be saved automatically" [ref=f2e67]
+                  - generic [ref=f2e69]: "Words: 0"
+            - generic [ref=f2e71]: 
+      - contentinfo [ref=f2e73]:
+        - navigation "Previous / next question" [ref=f2e74]:
+          - button "Previous" [disabled] [ref=f2e75]:
+            - generic [ref=f2e76]: 
+          - button "Next" [ref=f2e77]:
+            - generic [ref=f2e78]: 
+        - navigation "Questions" [ref=f2e79]:
+          - tablist [ref=f2e80]:
+            - tab [ref=f2e81]:
+              - generic [ref=f2e82]: Part 1
+          - tablist [ref=f2e83]:
+            - tab [ref=f2e84]:
+              - generic [ref=f2e85]: Part 2
+          - button "Review your answers" [ref=f2e86]:
+            - generic [ref=f2e87]: 
+  - generic [ref=e5]: 1:19:46
+  - generic "Questions answered": 0 / 2
+  - status:
+    - generic: ✓
+    - text: Answers saved

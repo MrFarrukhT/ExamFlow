@@ -69,8 +69,10 @@
       localStorage.setItem('cambridge-readingAnswers', JSON.stringify({}));
     }
 
-    // C1 Advanced Reading & Use of English: 90 minutes
-    const timer = new CambridgeTimer(90, 'Reading');
+    // Per Cambridge English official spec — single source of truth: timer.js getTimerDuration
+    const level = localStorage.getItem('cambridgeLevel') || 'C1-Advanced';
+    const timerDuration = CambridgeTimer.getTimerDuration(level, 'reading');
+    const timer = new CambridgeTimer(timerDuration, 'Reading');
 
     // Autosave answers periodically
     setInterval(() => {

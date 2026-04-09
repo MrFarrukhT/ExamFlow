@@ -1,0 +1,213 @@
+- generic [active] [ref=e1]:
+  - iframe [ref=e2]:
+    - generic [ref=f4e4]:
+      - banner [ref=f4e5]:
+        - generic [ref=f4e6]:
+          - generic [ref=f4e7]:
+            - img "header.logo"
+          - generic [ref=f4e8]:
+            - generic [ref=f4e9]:
+              - generic [ref=f4e10]:
+                - status [ref=f4e11]: Connected
+                - generic [ref=f4e13]: 
+              - button "Messages" [ref=f4e14]:
+                - generic [ref=f4e15]:
+                  - generic [ref=f4e16]: Messages
+                  - generic [ref=f4e17]: 
+              - button "Options" [ref=f4e18]:
+                - generic [ref=f4e19]:
+                  - generic [ref=f4e20]: Options
+                  - generic [ref=f4e21]: 
+              - button "Show notes" [ref=f4e22]:
+                - generic [ref=f4e23]:
+                  - generic [ref=f4e24]: Show notes
+                  - generic [ref=f4e25]: 
+            - generic [ref=f4e28]:
+              - generic [ref=f4e29]: Candidate ID
+              - generic [ref=f4e30]: TEST001
+      - generic [ref=f4e32]:
+        - generic [ref=f4e34]:
+          - generic [ref=f4e36]:
+            - heading "Questions 1–5" [level=3] [ref=f4e37]
+            - generic [ref=f4e38]: For each question, choose the correct answer.
+          - generic [ref=f4e39]:
+            - main [ref=f4e40]:
+              - generic [ref=f4e41]:
+                - group [ref=f4e42]:
+                  - generic [ref=f4e46]:
+                    - generic [ref=f4e49]:
+                      - img "Viewing platform sign"
+                    - radiogroup "1 What does this sign tell visitors?" [ref=f4e51]:
+                      - paragraph [ref=f4e53]:
+                        - generic [ref=f4e54]: "1"
+                        - strong [ref=f4e56]: What does this sign tell visitors?
+                      - list [ref=f4e57]:
+                        - listitem [ref=f4e58]:
+                          - radio "Children under 12 are not allowed on the viewing platform." [ref=f4e59]
+                          - generic [ref=f4e61]: Children under 12 are not allowed on the viewing platform.
+                        - listitem [ref=f4e62]:
+                          - radio "Adults must stay with any children they bring to the viewing platform." [ref=f4e63]
+                          - generic [ref=f4e65]: Adults must stay with any children they bring to the viewing platform.
+                        - listitem [ref=f4e66]:
+                          - radio "Groups of more than 15 people cannot use the viewing platform." [ref=f4e67]
+                          - generic [ref=f4e69]: Groups of more than 15 people cannot use the viewing platform.
+                      - button "Flag question 1":
+                        - generic [ref=f4e70]: Flag question 1
+                - generic [ref=f4e72]: 
+            - main [ref=f4e74]:
+              - generic [ref=f4e75]:
+                - group [ref=f4e76]:
+                  - generic [ref=f4e80]:
+                    - generic [ref=f4e83]:
+                      - img "Email from Mrs Ripton about end-of-term party"
+                    - radiogroup "2 Mrs Ripton wants students to" [ref=f4e85]:
+                      - paragraph [ref=f4e87]:
+                        - generic [ref=f4e88]: "2"
+                        - strong [ref=f4e90]: Mrs Ripton wants students to
+                      - list [ref=f4e91]:
+                        - listitem [ref=f4e92]:
+                          - radio "sign up for the end-of-term party." [ref=f4e93]
+                          - generic [ref=f4e95]: sign up for the end-of-term party.
+                        - listitem [ref=f4e96]:
+                          - radio "say how they can help with preparations." [ref=f4e97]
+                          - generic [ref=f4e99]: say how they can help with preparations.
+                        - listitem [ref=f4e100]:
+                          - radio "decide whether to have music or decorations." [ref=f4e101]
+                          - generic [ref=f4e103]: decide whether to have music or decorations.
+                      - button "Flag question 2":
+                        - generic [ref=f4e104]: Flag question 2
+                - generic [ref=f4e106]: 
+            - main [ref=f4e108]:
+              - generic [ref=f4e109]:
+                - group [ref=f4e110]:
+                  - generic [ref=f4e114]:
+                    - generic [ref=f4e117]:
+                      - img "Note from Jenny to Sally"
+                    - radiogroup "3 Why did Jenny write this note?" [ref=f4e119]:
+                      - paragraph [ref=f4e121]:
+                        - generic [ref=f4e122]: "3"
+                        - strong [ref=f4e124]: Why did Jenny write this note?
+                      - list [ref=f4e125]:
+                        - listitem [ref=f4e126]:
+                          - radio "to cancel a meeting with Sally" [ref=f4e127]
+                          - generic [ref=f4e129]: to cancel a meeting with Sally
+                        - listitem [ref=f4e130]:
+                          - radio "to change the time they are meeting" [ref=f4e131]
+                          - generic [ref=f4e133]: to change the time they are meeting
+                        - listitem [ref=f4e134]:
+                          - radio "to check if Sally can meet at 6 o'clock" [ref=f4e135]
+                          - generic [ref=f4e137]: to check if Sally can meet at 6 o'clock
+                      - button "Flag question 3":
+                        - generic [ref=f4e138]: Flag question 3
+                - generic [ref=f4e140]: 
+            - main [ref=f4e142]:
+              - generic [ref=f4e143]:
+                - group [ref=f4e144]:
+                  - generic [ref=f4e148]:
+                    - generic [ref=f4e151]:
+                      - img "Theatre notification about concert"
+                    - radiogroup "4 What does this notification tell customers?" [ref=f4e153]:
+                      - paragraph [ref=f4e155]:
+                        - generic [ref=f4e156]: "4"
+                        - strong [ref=f4e158]: What does this notification tell customers?
+                      - list [ref=f4e159]:
+                        - listitem [ref=f4e160]:
+                          - radio "The concert will now take place at a different venue." [ref=f4e161]
+                          - generic [ref=f4e163]: The concert will now take place at a different venue.
+                        - listitem [ref=f4e164]:
+                          - radio "They can get their money back or attend a rescheduled show." [ref=f4e165]
+                          - generic [ref=f4e167]: They can get their money back or attend a rescheduled show.
+                        - listitem [ref=f4e168]:
+                          - radio "They must visit the website to find out about the new date." [ref=f4e169]
+                          - generic [ref=f4e171]: They must visit the website to find out about the new date.
+                      - button "Flag question 4":
+                        - generic [ref=f4e172]: Flag question 4
+                - generic [ref=f4e174]: 
+            - main [ref=f4e176]:
+              - generic [ref=f4e177]:
+                - group [ref=f4e178]:
+                  - generic [ref=f4e182]:
+                    - generic [ref=f4e185]:
+                      - img "Leisure centre notice about volleyball club"
+                    - radiogroup "5 What does the notice say about the volleyball club?" [ref=f4e187]:
+                      - paragraph [ref=f4e189]:
+                        - generic [ref=f4e190]: "5"
+                        - strong [ref=f4e192]: What does the notice say about the volleyball club?
+                      - list [ref=f4e193]:
+                        - listitem [ref=f4e194]:
+                          - radio "It is only suitable for beginners." [ref=f4e195]
+                          - generic [ref=f4e197]: It is only suitable for beginners.
+                        - listitem [ref=f4e198]:
+                          - radio "It offers training for players of different abilities." [ref=f4e199]
+                          - generic [ref=f4e201]: It offers training for players of different abilities.
+                        - listitem [ref=f4e202]:
+                          - radio "It provides free t-shirts for all new members." [ref=f4e203]
+                          - generic [ref=f4e205]: It provides free t-shirts for all new members.
+                      - button "Flag question 5":
+                        - generic [ref=f4e206]: Flag question 5
+                - generic [ref=f4e208]: 
+        - contentinfo [ref=f4e210]:
+          - navigation "Previous / next question" [ref=f4e211]:
+            - button "Previous" [disabled] [ref=f4e212]:
+              - generic [ref=f4e213]: 
+            - button "Next" [ref=f4e214]:
+              - generic [ref=f4e215]: 
+          - navigation "Questions" [ref=f4e216]:
+            - tablist [ref=f4e217]:
+              - tab [ref=f4e218]:
+                - generic [ref=f4e219]: Part 1
+              - generic [ref=f4e220]:
+                - button "Question 1 Not attempted Active" [ref=f4e221]:
+                  - generic [ref=f4e222]: Question 1
+                  - text: "1"
+                  - generic [ref=f4e223]: Not attempted Active
+                - button "Question 2 Not attempted" [ref=f4e224]:
+                  - generic [ref=f4e225]: Question 2
+                  - text: "2"
+                  - generic [ref=f4e226]: Not attempted
+                - button "Question 3 Not attempted" [ref=f4e227]:
+                  - generic [ref=f4e228]: Question 3
+                  - text: "3"
+                  - generic [ref=f4e229]: Not attempted
+                - button "Question 4 Not attempted" [ref=f4e230]:
+                  - generic [ref=f4e231]: Question 4
+                  - text: "4"
+                  - generic [ref=f4e232]: Not attempted
+                - button "Question 5 Not attempted" [ref=f4e233]:
+                  - generic [ref=f4e234]: Question 5
+                  - text: "5"
+                  - generic [ref=f4e235]: Not attempted
+            - tablist [ref=f4e236]:
+              - tab "Part 2. 0 of 5 questions attempted." [ref=f4e237]:
+                - generic [ref=f4e238]:
+                  - text: Part 2
+                  - generic [ref=f4e239]: 0 of 5
+                  - generic [ref=f4e240]: Part 2. 0 of 5 questions attempted.
+            - tablist [ref=f4e241]:
+              - tab "Part 3. 0 of 5 questions attempted." [ref=f4e242]:
+                - generic [ref=f4e243]:
+                  - text: Part 3
+                  - generic [ref=f4e244]: 0 of 5
+                  - generic [ref=f4e245]: Part 3. 0 of 5 questions attempted.
+            - tablist [ref=f4e246]:
+              - tab "Part 4. 0 of 5 questions attempted." [ref=f4e247]:
+                - generic [ref=f4e248]:
+                  - text: Part 4
+                  - generic [ref=f4e249]: 0 of 5
+                  - generic [ref=f4e250]: Part 4. 0 of 5 questions attempted.
+            - tablist [ref=f4e251]:
+              - tab "Part 5. 0 of 6 questions attempted." [ref=f4e252]:
+                - generic [ref=f4e253]:
+                  - text: Part 5
+                  - generic [ref=f4e254]: 0 of 6
+                  - generic [ref=f4e255]: Part 5. 0 of 6 questions attempted.
+            - tablist [ref=f4e256]:
+              - tab "Part 6. 0 of 6 questions attempted." [ref=f4e257]:
+                - generic [ref=f4e258]:
+                  - text: Part 6
+                  - generic [ref=f4e259]: 0 of 6
+                  - generic [ref=f4e260]: Part 6. 0 of 6 questions attempted.
+            - button "Review your answers" [ref=f4e261]:
+              - generic [ref=f4e262]: 
+  - generic [ref=e5]: 45:00
+  - generic "Questions answered": 0 / 32

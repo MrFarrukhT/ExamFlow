@@ -72,8 +72,10 @@
       localStorage.setItem('cambridge-writingAnswers', JSON.stringify({}));
     }
 
-    // Initialize timer for Writing test - 45 minutes
-    const timer = new CambridgeTimer(45, 'Writing');
+    // Per Cambridge English official spec — single source of truth: timer.js getTimerDuration
+    const level = localStorage.getItem('cambridgeLevel') || 'B1-Preliminary';
+    const timerDuration = CambridgeTimer.getTimerDuration(level, 'writing');
+    const timer = new CambridgeTimer(timerDuration, 'Writing');
 
     // Autosave answers periodically
     setInterval(() => {

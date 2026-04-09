@@ -448,20 +448,26 @@
             </div>
         </div>
 
-        <!-- Statistics -->
+        <!-- Statistics —
+             Initial values are em-dashes, not zeros, so the cards visibly read "loading"
+             instead of looking like a real "0 submissions / 0 pending / 0 evaluated" state
+             during the half-second between page paint and the
+             /cambridge-submissions?skill=speaking fetch resolving. updateStatistics()
+             overwrites these on every load. Same convention as the IELTS / Cambridge
+             admin dashboards and the invigilator panel. -->
         <div class="stats-bar">
             <div class="stats-grid">
                 <div class="stat-item">
                     <h4>Total Submissions</h4>
-                    <p id="statTotal">0</p>
+                    <p id="statTotal">—</p>
                 </div>
                 <div class="stat-item">
                     <h4>Pending</h4>
-                    <p id="statPending" style="color: #ff9800;">0</p>
+                    <p id="statPending" style="color: #ff9800;">—</p>
                 </div>
                 <div class="stat-item">
                     <h4>Evaluated</h4>
-                    <p id="statEvaluated" style="color: #4caf50;">0</p>
+                    <p id="statEvaluated" style="color: #4caf50;">—</p>
                 </div>
             </div>
         </div>

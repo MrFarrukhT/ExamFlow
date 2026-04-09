@@ -67,8 +67,10 @@
       localStorage.setItem('cambridge-writingAnswers', JSON.stringify({}));
     }
 
-    // C1 Advanced Writing: 90 minutes
-    const timer = new CambridgeTimer(90, 'Writing');
+    // Per Cambridge English official spec — single source of truth: timer.js getTimerDuration
+    const level = localStorage.getItem('cambridgeLevel') || 'C1-Advanced';
+    const timerDuration = CambridgeTimer.getTimerDuration(level, 'writing');
+    const timer = new CambridgeTimer(timerDuration, 'Writing');
 
     // Autosave answers periodically
     setInterval(() => {

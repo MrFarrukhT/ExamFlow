@@ -1,0 +1,157 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "header.logo"
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - status [ref=e11]: Connected
+            - generic [ref=e13]: 
+          - button "Messages" [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: Messages
+              - generic [ref=e17]: 
+          - button "Options" [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: Options
+              - generic [ref=e21]: 
+          - button "Show notes" [ref=e22]:
+            - generic [ref=e23]:
+              - generic [ref=e24]: Show notes
+              - generic [ref=e25]: 
+        - generic [ref=e28]:
+          - generic [ref=e29]: Candidate ID
+          - generic [ref=e30]: TEST001
+  - generic [ref=e34]:
+    - generic [ref=e36]:
+      - heading "Part 2 — Open cloze (Questions 9–16)" [level=3] [ref=e37]
+      - generic [ref=e38]: For questions 9–16, read the text below and think of the word which best fits each gap. Use only one word in each gap.
+    - main [ref=e40]:
+      - generic [ref=e41]:
+        - group [ref=e42]:
+          - generic [ref=e47]:
+            - heading "The Museum of Modern Art — MoMA" [level=2] [ref=e48]
+            - paragraph [ref=e49]:
+              - text: When it opened in New York in 1929, MoMA prioritised contemporary rather than traditional art, and was quite
+              - textbox "Insert answer for question 9" [ref=e53]:
+                - /placeholder: "9"
+              - text: other art museums. The public's response was overwhelmingly enthusiastic, as was that of the art world generally. Over the next ten years, MoMA required more space and relocated several times. It ended
+              - textbox "Insert answer for question 10" [ref=e57]:
+                - /placeholder: "10"
+              - text: moving into the Manhattan building it still occupies to
+              - textbox "Insert answer for question 11" [ref=e61]:
+                - /placeholder: "11"
+              - text: day.
+            - paragraph [ref=e62]:
+              - text: Despite MoMA having more space, it struggles to house all of its collection, which has grown from just eight prints and one drawing to an impressive 200,000 works. These
+              - textbox "Insert answer for question 12" [ref=e66]:
+                - /placeholder: "12"
+              - text: include only paintings, sculptures, prints and photographs, but also media and performance art works and architectural models.
+              - textbox "Insert answer for question 13" [ref=e70]:
+                - /placeholder: "13"
+              - text: is more, MoMA also owns approximately two million film stills. To ensure that fresh material is always
+              - textbox "Insert answer for question 14" [ref=e74]:
+                - /placeholder: "14"
+              - text: display, the exhibitions are regularly changed.
+            - paragraph [ref=e75]:
+              - text: MoMA is dedicated
+              - textbox "Insert answer for question 15" [ref=e79]:
+                - /placeholder: "15"
+              - text: its role as an educational institution. For this reason, every department maintains a study centre available to students. Furthermore, its archives are,
+              - textbox "Insert answer for question 16" [ref=e83]:
+                - /placeholder: "16"
+              - text: a doubt, more comprehensive than those of any other modern art museum.
+        - button "Flag question" [ref=e86]:
+          - generic: 
+          - generic [ref=e87]: Flag question
+  - contentinfo [ref=e89]:
+    - navigation "Previous / next question" [ref=e90]:
+      - button "Previous" [ref=e91]:
+        - generic [ref=e92]: 
+      - button "Next" [ref=e93]:
+        - generic [ref=e94]: 
+    - navigation "Questions" [ref=e95]:
+      - tablist [ref=e96]:
+        - tab "Part 1. 0 of 8 questions attempted." [ref=e97]:
+          - generic [ref=e98]:
+            - text: Part 1
+            - generic [ref=e99]: 0 of 8
+            - generic [ref=e100]: Part 1. 0 of 8 questions attempted.
+      - tablist [ref=e101]:
+        - tab "Part 2. 0 of 8 questions attempted." [ref=e102]:
+          - generic [ref=e103]:
+            - text: Part 2
+            - generic [ref=e104]: 0 of 8
+            - generic [ref=e105]: Part 2. 0 of 8 questions attempted.
+        - generic [ref=e106]:
+          - button "Question 9 Not attempted Active" [ref=e107]:
+            - generic [ref=e108]: Question 9
+            - text: "9"
+            - generic [ref=e109]: Not attempted Active
+          - button "Question 10 Not attempted" [ref=e110]:
+            - generic [ref=e111]: Question 10
+            - text: "10"
+            - generic [ref=e112]: Not attempted
+          - button "Question 11 Not attempted" [ref=e113]:
+            - generic [ref=e114]: Question 11
+            - text: "11"
+            - generic [ref=e115]: Not attempted
+          - button "Question 12 Not attempted" [ref=e116]:
+            - generic [ref=e117]: Question 12
+            - text: "12"
+            - generic [ref=e118]: Not attempted
+          - button "Question 13 Not attempted" [ref=e119]:
+            - generic [ref=e120]: Question 13
+            - text: "13"
+            - generic [ref=e121]: Not attempted
+          - button "Question 14 Not attempted" [ref=e122]:
+            - generic [ref=e123]: Question 14
+            - text: "14"
+            - generic [ref=e124]: Not attempted
+          - button "Question 15 Not attempted" [ref=e125]:
+            - generic [ref=e126]: Question 15
+            - text: "15"
+            - generic [ref=e127]: Not attempted
+          - button "Question 16 Not attempted" [ref=e128]:
+            - generic [ref=e129]: Question 16
+            - text: "16"
+            - generic [ref=e130]: Not attempted
+      - tablist [ref=e131]:
+        - tab "Part 3. 0 of 8 questions attempted." [ref=e132]:
+          - generic [ref=e133]:
+            - text: Part 3
+            - generic [ref=e134]: 0 of 8
+            - generic [ref=e135]: Part 3. 0 of 8 questions attempted.
+      - tablist [ref=e136]:
+        - tab "Part 4. 0 of 6 questions attempted." [ref=e137]:
+          - generic [ref=e138]:
+            - text: Part 4
+            - generic [ref=e139]: 0 of 6
+            - generic [ref=e140]: Part 4. 0 of 6 questions attempted.
+      - tablist [ref=e141]:
+        - tab "Part 5. 0 of 6 questions attempted." [ref=e142]:
+          - generic [ref=e143]:
+            - text: Part 5
+            - generic [ref=e144]: 0 of 6
+            - generic [ref=e145]: Part 5. 0 of 6 questions attempted.
+      - tablist [ref=e146]:
+        - tab "Part 6. 0 of 4 questions attempted." [ref=e147]:
+          - generic [ref=e148]:
+            - text: Part 6
+            - generic [ref=e149]: 0 of 4
+            - generic [ref=e150]: Part 6. 0 of 4 questions attempted.
+      - tablist [ref=e151]:
+        - tab "Part 7. 0 of 6 questions attempted." [ref=e152]:
+          - generic [ref=e153]:
+            - text: Part 7
+            - generic [ref=e154]: 0 of 6
+            - generic [ref=e155]: Part 7. 0 of 6 questions attempted.
+      - tablist [ref=e156]:
+        - tab "Part 8. 0 of 10 questions attempted." [ref=e157]:
+          - generic [ref=e158]:
+            - text: Part 8
+            - generic [ref=e159]: 0 of 10
+            - generic [ref=e160]: Part 8. 0 of 10 questions attempted.
+      - button "Review your answers" [ref=e161]:
+        - generic [ref=e162]: 
