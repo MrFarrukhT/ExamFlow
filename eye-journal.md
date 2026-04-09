@@ -1,5 +1,64 @@
 # Eye Journal
 
+## Session: 2026-04-09 (round 30) — Responsive Tablet (768×1024 + 1024×768)
+Persona: Student opening the test on an iPad in both portrait and landscape
+System: Both (launcher.html + Cambridge B2-First Part 1.html as the representative test page)
+Pages explored: launcher.html, index.html, Cambridge B2-First Part 1.html — at 768×1024 portrait then 1024×768 landscape in an isolated playwright session
+Starting state: Round 29 added a `@media (max-width: 768px)` rule that pinned the Secure Mode badge to top:10/right:10. At exactly 768px (iPad portrait), the rule put the badge directly on top of Cambridge's top header icon row. Confirmed by DOM probe — badge text and Cambridge fa-pencil-square-o icons were both at top:16-50 right:736-758. Plus the JS advisory check `>= 768` and the CSS `max-width: 768px` were inconsistent at exactly 768.
+
+### Round 1 — Polish: universal safe-zone badge position + tablet launcher polish
+
+**Findings (4 total):**
+- [T2] **distraction-free.js — Round 29's mobile badge position overlaps Cambridge top header icons at 768px+.** Confirmed by DOM probe at 768×1024: badge text at top:16 right:748, Cambridge fa-pencil-square-o at top:23 right:736. Direct collision.
+- [T3] **distraction-free.js — Inconsistent breakpoints at exactly 768px.** JS check was `window.innerWidth >= 768` (desktop), CSS was `@media (max-width: 768px)` (mobile, includes 768). Result at 768px: badge moved to top-right (mobile) but advisory didn't fire (desktop). Logic split.
+- [T2] **launcher.html @ 768×1024 — Card feels lonely in the iPad canvas.** 500px max-width centered in 768px-wide viewport leaves big empty side gutters. Looks like a phone card stretched into the middle of an iPad screen.
+- [T0] **All test pages @ 1024×768 landscape — Look identical to desktop.** No tablet-specific affordances. Acceptable but uninspired.
+
+**Action:** POLISH 3 fixes (2 in distraction-free.js, 1 in launcher.css)
+
+**Files touched:**
+1. **assets/js/distraction-free.js**
+   - `.dfm-secure-badge` default position changed from `bottom: 14px; left: 14px` (round 28) to `top: 56px; right: 14px`. Universal safe zone — clear of Cambridge top header icons (top: 0-50px), bottom-left listening audio popup, footer Part navigation, and bottom-right Next button. Works at every viewport from 320 to 1920 without an override.
+   - `transform: translateY(8px)` (entrance from below) → `translateY(-8px)` (entrance from above) so the entrance animation matches the new top-right position.
+   - Removed the `@media (max-width: 768px)` repositioning that was the source of the round 29 bug. Replaced with a `@media (max-width: 480px)` rule that just shrinks padding/font slightly on phones and nudges top from 56 to 50.
+2. **assets/css/launcher.css**
+   - Added `@media (min-width: 601px) and (max-width: 1024px)` block. Increases launcher container max-width from 500 to 580, bumps padding to 3rem 3.5rem, gives system-info more padding, increases feature item vertical padding. Card now has visibly better proportions on iPad portrait while still center-stage.
+
+**Verification (live, isolated playwright session):**
+| Check | Method | Result |
+|-------|--------|--------|
+| Badge clears Cambridge top icons at 768×1024 | DOM probe `getBoundingClientRect()` after reload | ✅ Badge at y=56-82, Cambridge icons at y=23-47 — clear separation |
+| Badge clears Cambridge top icons at 1024×768 | reload landscape, screenshot | ✅ eye30-test-landscape-fixed.png — "Secure Mode" pill visible top-right under the icon row |
+| Launcher widens on iPad portrait | resize 768×1024, screenshot | ✅ eye30-launcher-tablet-fixed.png — card now 580px wide (vs old 500px) |
+| Desktop launcher unchanged at 1280×800 | resize, inspect `.launcher-container` width | ✅ containerWidth: 500 (unchanged) |
+| Test page badge visible at 768 | screenshot | ✅ eye30-test-portrait-fixed.png — "Secure Mode" pill visible top-right below header |
+| node --check on distraction-free.js | shell | ✅ syntax ok |
+
+### Quality Map (after round 30)
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| Secure Mode badge default position | 2-Clear (overlapped Cambridge icons at narrow widths) → 4-Polished | Universal top:56 right:14 — clear at every viewport |
+| launcher.html @ 768×1024 | 2-Clear → 3-Efficient | Wider card uses tablet canvas better |
+| 768px breakpoint consistency | 1-Functional (split brain) → 3-Efficient | Both JS and CSS now treat 768 as desktop |
+| Cambridge test page @ 1024×768 | 4-Polished (unchanged) → 4-Polished | Already worked; badge no longer collides |
+
+### Deferred
+- Tablet-specific touch target enlargement on Cambridge test pages — radio buttons, MC checkboxes, footer Part 1-7 chips still desktop-sized. Would need `@media (pointer: coarse)` across 200+ test pages.
+- iPad Pro 12.9" portrait (1024×1366) falls into 1024-max bucket — could verify but deferred.
+- Re-walk the listening tests to confirm the new badge position no longer overlaps the audio popup at desktop.
+
+### Session Stats (round 30)
+Pages explored: 3 (launcher.html, index.html, Cambridge B2 Part 1) at 768×1024 and 1024×768
+Findings: 4 (2× T2, 1× T3, 1× T0)
+Polishes landed: 3
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Files touched: 2 (assets/js/distraction-free.js, assets/css/launcher.css)
+Verification screenshots: 4
+
+---
+
 ## Session: 2026-04-09 — Result-viewing flow round 2: scoring, speaking, polish (loop /eye full re-run)
 Persona: Admin scoring submissions + invigilator following the full result lifecycle
 System: Both
