@@ -611,6 +611,18 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
         if (elapsedMin <= 0) {
             return res.status(400).json({ success: false, message: 'endTime must be after startTime' });
         }
+        // Minimum-time guard: an exam taking less than 30s is physically impossible.
+        // Even reading mock has 40 questions; reading them at 1s each is 40s. This catches
+        // DevTools cheaters who skip the UI entirely and POST a forged submission with
+        // endTime = startTime + a few hundred ms.
+        const MIN_ELAPSED_SEC = 30;
+        if (elapsedMin * 60 < MIN_ELAPSED_SEC) {
+            console.warn(`🚨 SUBMISSION REJECTED: Student ${studentCheck.studentId} took only ${(elapsedMin*60).toFixed(1)}s for ${submissionData.skill} mock ${submissionData.mockNumber} (min: ${MIN_ELAPSED_SEC}s)`);
+            return res.status(400).json({
+                success: false,
+                message: 'Submission rejected: test duration is below the minimum allowed.'
+            });
+        }
         const limit = IELTS_TIME_LIMITS[submissionData.skill] || 60;
 
         if (elapsedMin > limit * 3) {
@@ -696,9 +708,18 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
                     submissionData.score = (Number.isFinite(cs) && cs >= 0 && cs <= 40) ? Math.round(cs) : null;
                 }
             } else {
-                // Writing/speaking: clamp client bandScore to 0-9 band range, set raw score to null
-                const bs = Number(submissionData.bandScore);
-                submissionData.bandScore = (Number.isFinite(bs) && bs >= 0 && bs <= 9) ? bs : null;
+                // SECURITY: writing/speaking are admin-graded via the dashboard
+                // (ielts-admin-dashboard.html has a writingBandScore input). The student-side
+                // submission must NEVER carry a band_score — anything the client sends is
+                // tampering. Force to null and log it as an anti-cheat violation.
+                if (submissionData.bandScore != null) {
+                    console.warn(`🚨 BAND TAMPERING DETECTED: Student ${studentCheck.studentId} sent bandScore=${submissionData.bandScore} on ${submissionData.skill} mock ${submissionData.mockNumber}. Forcing to null (admin-graded only).`);
+                    submissionData.antiCheat = Object.assign({}, submissionData.antiCheat || {}, {
+                        scoreTamper: true,
+                        clientBandScore: submissionData.bandScore
+                    });
+                }
+                submissionData.bandScore = null;
                 submissionData.score = null;
             }
 

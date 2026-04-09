@@ -558,6 +558,16 @@ app.post('/cambridge-submissions', submissionLimiter, async (req, res) => {
         if (elapsedMin <= 0) {
             return res.status(400).json({ success: false, message: 'endTime must be after startTime' });
         }
+        // Minimum-time guard: an exam taking less than 30s is physically impossible.
+        // Catches DevTools cheaters who POST a forged submission with endTime = startTime + ms.
+        const MIN_ELAPSED_SEC = 30;
+        if (elapsedMin * 60 < MIN_ELAPSED_SEC) {
+            console.warn(`🚨 SUBMISSION REJECTED: Student ${submissionData.studentId} took only ${(elapsedMin*60).toFixed(1)}s for ${submissionData.level} ${submissionData.skill} (min: ${MIN_ELAPSED_SEC}s)`);
+            return res.status(400).json({
+                success: false,
+                message: 'Submission rejected: test duration is below the minimum allowed.'
+            });
+        }
         const levelLimits = CAMBRIDGE_TIME_LIMITS[submissionData.level] || {};
         const limit = levelLimits[submissionData.skill] || 90;
 

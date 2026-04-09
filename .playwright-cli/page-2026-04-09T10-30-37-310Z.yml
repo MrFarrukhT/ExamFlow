@@ -1,0 +1,302 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - heading "📊 IELTS Admin Dashboard" [level=1] [ref=e5]
+      - paragraph [ref=e6]: Submissions, scoring & mock answer management
+    - generic [ref=e7]:
+      - link "Invigilator Panel" [ref=e8] [cursor=pointer]:
+        - /url: invigilator.html
+      - generic [ref=e9]: Database Online
+      - button "Logout" [ref=e19] [cursor=pointer]
+  - generic [ref=e20]:
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e24]: "Search Student:"
+          - textbox "Search Student:" [ref=e25]:
+            - /placeholder: Student name or ID
+        - generic [ref=e26]:
+          - generic [ref=e27]: "Filter by Skill:"
+          - combobox "Filter by Skill:" [ref=e28]:
+            - option "All Skills" [selected]
+            - option "Reading"
+            - option "Writing"
+            - option "Listening"
+        - generic [ref=e29]:
+          - generic [ref=e30]: "Filter by Mock:"
+          - combobox "Filter by Mock:" [ref=e31]:
+            - option "All Mocks" [selected]
+            - option "Mock 1"
+            - option "Mock 2"
+            - option "Mock 3"
+            - option "Mock 4"
+            - option "Mock 5"
+            - option "Mock 6"
+            - option "Mock 7"
+            - option "Mock 8"
+            - option "Mock 9"
+            - option "Mock 10"
+        - generic [ref=e32]:
+          - generic [ref=e33]: "Date From:"
+          - textbox "Date From:" [ref=e34]: 2026-03-10
+        - generic [ref=e35]:
+          - generic [ref=e36]: "Date To:"
+          - textbox "Date To:" [ref=e37]: 2026-04-09
+        - generic [ref=e38]:
+          - generic [ref=e39]: "Score Status:"
+          - combobox "Score Status:" [ref=e40]:
+            - option "All Submissions" [selected]
+            - option "Scored"
+            - option "Unscored"
+      - generic [ref=e41]:
+        - button "🔍 Apply Filters" [ref=e42] [cursor=pointer]
+        - button "🔄 Clear Filters" [ref=e43] [cursor=pointer]
+        - button "📊 Refresh Data" [ref=e44] [cursor=pointer]
+        - button "📤 Export CSV" [ref=e45] [cursor=pointer]
+        - button "📅 View by Date" [ref=e46] [cursor=pointer]
+        - button "📅 Today's Submissions" [ref=e47] [cursor=pointer]
+        - button "📝 Start Scoring" [ref=e48] [cursor=pointer]
+    - generic [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e51]: "11872"
+        - generic [ref=e52]: Total Submissions
+      - generic [ref=e53]:
+        - generic [ref=e54]: "2235"
+        - generic [ref=e55]: Filtered Results
+      - generic [ref=e56]:
+        - generic [ref=e57]: "14"
+        - generic [ref=e58]: Average Score
+      - generic [ref=e59]:
+        - generic [ref=e60]: "129"
+        - generic [ref=e61]: Unique Students
+      - generic [ref=e62]:
+        - generic [ref=e63]: "1303"
+        - generic [ref=e64]: Needs Scoring
+      - generic [ref=e65]:
+        - generic [ref=e66]: 42%
+        - generic [ref=e67]: Scoring Progress
+    - generic [ref=e69] [cursor=pointer]:
+      - generic [ref=e70]: 📝 Manage Answer Keys
+      - generic [ref=e71]: ▼
+    - heading "IELTS Test Submissions" [level=2] [ref=e72]
+    - generic [ref=e76]:
+      - generic [ref=e77]: Showing 1-15 of 2235 submissions
+      - generic [ref=e78]:
+        - button "First" [disabled] [ref=e79]
+        - button "Previous" [disabled] [ref=e80]
+        - generic [ref=e81]: Page 1 of 149
+        - generic [ref=e82]:
+          - generic [ref=e83]: "Go to:"
+          - spinbutton "Go to:" [ref=e84]
+          - button "Go" [ref=e85] [cursor=pointer]
+        - button "Next" [ref=e86] [cursor=pointer]
+        - button "Last" [ref=e87] [cursor=pointer]
+    - table [ref=e88]:
+      - rowgroup [ref=e89]:
+        - row "Student ID Name Mock Skill Score Band Date Duration Flags Action" [ref=e90]:
+          - columnheader "Student ID" [ref=e91]
+          - columnheader "Name" [ref=e92]
+          - columnheader "Mock" [ref=e93]
+          - columnheader "Skill" [ref=e94]
+          - columnheader "Score" [ref=e95]
+          - columnheader "Band" [ref=e96]
+          - columnheader "Date" [ref=e97]
+          - columnheader "Duration" [ref=e98]
+          - columnheader "Flags" [ref=e99]
+          - columnheader "Action" [ref=e100]
+      - rowgroup [ref=e101]:
+        - row "R25S5 R25 Speed Cheater Mock 1 reading Unscored/40 0.0 4/9/2026 10:26 AM 0m — 📋 Compare 🗑️" [ref=e102]:
+          - cell "R25S5" [ref=e103]
+          - cell "R25 Speed Cheater" [ref=e104]
+          - cell "Mock 1" [ref=e105]
+          - cell "reading" [ref=e106]
+          - cell "Unscored/40" [ref=e107]
+          - cell "0.0" [ref=e108]
+          - cell "4/9/2026 10:26 AM" [ref=e109]
+          - cell "0m" [ref=e110]
+          - cell "—" [ref=e111]
+          - cell "📋 Compare 🗑️" [ref=e112]:
+            - button "📋 Compare" [ref=e113] [cursor=pointer]
+            - button "🗑️" [ref=e114] [cursor=pointer]
+        - row "R25S4 R25 Cheater Reading Mock 1 reading Unscored/40 0.0 4/9/2026 10:26 AM 60m — 📋 Compare 🗑️" [ref=e115]:
+          - cell "R25S4" [ref=e116]
+          - cell "R25 Cheater Reading" [ref=e117]
+          - cell "Mock 1" [ref=e118]
+          - cell "reading" [ref=e119]
+          - cell "Unscored/40" [ref=e120]
+          - cell "0.0" [ref=e121]
+          - cell "4/9/2026 10:26 AM" [ref=e122]
+          - cell "60m" [ref=e123]
+          - cell "—" [ref=e124]
+          - cell "📋 Compare 🗑️" [ref=e125]:
+            - button "📋 Compare" [ref=e126] [cursor=pointer]
+            - button "🗑️" [ref=e127] [cursor=pointer]
+        - row "R25S3 R25 Cheater Precision Mock 2 writing 8.7 8.7 4/9/2026 10:26 AM 30m — 📋 Compare 🗑️" [ref=e128]:
+          - cell "R25S3" [ref=e129]
+          - cell "R25 Cheater Precision" [ref=e130]
+          - cell "Mock 2" [ref=e131]
+          - cell "writing" [ref=e132]
+          - cell "8.7" [ref=e133]
+          - cell "8.7" [ref=e134]
+          - cell "4/9/2026 10:26 AM" [ref=e135]
+          - cell "30m" [ref=e136]
+          - cell "—" [ref=e137]
+          - cell "📋 Compare 🗑️" [ref=e138]:
+            - button "📋 Compare" [ref=e139] [cursor=pointer]
+            - button "🗑️" [ref=e140] [cursor=pointer]
+        - row "R25S2 R25 Cheater Speaking Mock 1 speaking Unscored/40 9 4/9/2026 10:26 AM 15m — 📋 Compare 🗑️" [ref=e141]:
+          - cell "R25S2" [ref=e142]
+          - cell "R25 Cheater Speaking" [ref=e143]
+          - cell "Mock 1" [ref=e144]
+          - cell "speaking" [ref=e145]
+          - cell "Unscored/40" [ref=e146]
+          - cell "9" [ref=e147]
+          - cell "4/9/2026 10:26 AM" [ref=e148]
+          - cell "15m" [ref=e149]
+          - cell "—" [ref=e150]
+          - cell "📋 Compare 🗑️" [ref=e151]:
+            - button "📋 Compare" [ref=e152] [cursor=pointer]
+            - button "🗑️" [ref=e153] [cursor=pointer]
+        - row "R25S1 R25 Cheater Writing Mock 1 writing 9 9 4/9/2026 10:25 AM 30m — 📋 Compare 🗑️" [ref=e154]:
+          - cell "R25S1" [ref=e155]
+          - cell "R25 Cheater Writing" [ref=e156]
+          - cell "Mock 1" [ref=e157]
+          - cell "writing" [ref=e158]
+          - cell "9" [ref=e159]
+          - cell "9" [ref=e160]
+          - cell "4/9/2026 10:25 AM" [ref=e161]
+          - cell "30m" [ref=e162]
+          - cell "—" [ref=e163]
+          - cell "📋 Compare 🗑️" [ref=e164]:
+            - button "📋 Compare" [ref=e165] [cursor=pointer]
+            - button "🗑️" [ref=e166] [cursor=pointer]
+        - row "S9-GUARD Guard Test Mock 900 reading Unscored/40 N/A 4/8/2026 05:33 PM 30m — 📋 Compare 🗑️" [ref=e167]:
+          - cell "S9-GUARD" [ref=e168]
+          - cell "Guard Test" [ref=e169]
+          - cell "Mock 900" [ref=e170]
+          - cell "reading" [ref=e171]
+          - cell "Unscored/40" [ref=e172]
+          - cell "N/A" [ref=e173]
+          - cell "4/8/2026 05:33 PM" [ref=e174]
+          - cell "30m" [ref=e175]
+          - cell "—" [ref=e176]
+          - cell "📋 Compare 🗑️" [ref=e177]:
+            - button "📋 Compare" [ref=e178] [cursor=pointer]
+            - button "🗑️" [ref=e179] [cursor=pointer]
+        - row "R8-MOCK-01 Mock Test Mock 1 reading Unscored/40 N/A 4/8/2026 05:29 PM 12m — 📋 Compare 🗑️" [ref=e180]:
+          - cell "R8-MOCK-01" [ref=e181]
+          - cell "Mock Test" [ref=e182]
+          - cell "Mock 1" [ref=e183]
+          - cell "reading" [ref=e184]
+          - cell "Unscored/40" [ref=e185]
+          - cell "N/A" [ref=e186]
+          - cell "4/8/2026 05:29 PM" [ref=e187]
+          - cell "12m" [ref=e188]
+          - cell "—" [ref=e189]
+          - cell "📋 Compare 🗑️" [ref=e190]:
+            - button "📋 Compare" [ref=e191] [cursor=pointer]
+            - button "🗑️" [ref=e192] [cursor=pointer]
+        - row "R8-SPK-01 Speaking Test Mock 800 speaking 6/40 6.5 4/8/2026 05:29 PM 12m — 📋 Compare 🗑️" [ref=e193]:
+          - cell "R8-SPK-01" [ref=e194]
+          - cell "Speaking Test" [ref=e195]
+          - cell "Mock 800" [ref=e196]
+          - cell "speaking" [ref=e197]
+          - cell "6/40" [ref=e198]
+          - cell "6.5" [ref=e199]
+          - cell "4/8/2026 05:29 PM" [ref=e200]
+          - cell "12m" [ref=e201]
+          - cell "—" [ref=e202]
+          - cell "📋 Compare 🗑️" [ref=e203]:
+            - button "📋 Compare" [ref=e204] [cursor=pointer]
+            - button "🗑️" [ref=e205] [cursor=pointer]
+        - row "DEDUP-R8 Dedup Test Mock 1 writing Not Graded N/A 4/8/2026 05:25 PM 30m — 📋 Compare 🗑️" [ref=e206]:
+          - cell "DEDUP-R8" [ref=e207]
+          - cell "Dedup Test" [ref=e208]
+          - cell "Mock 1" [ref=e209]
+          - cell "writing" [ref=e210]
+          - cell "Not Graded" [ref=e211]
+          - cell "N/A" [ref=e212]
+          - cell "4/8/2026 05:25 PM" [ref=e213]
+          - cell "30m" [ref=e214]
+          - cell "—" [ref=e215]
+          - cell "📋 Compare 🗑️" [ref=e216]:
+            - button "📋 Compare" [ref=e217] [cursor=pointer]
+            - button "🗑️" [ref=e218] [cursor=pointer]
+        - row "DEDUP-R8 Dedup Test Mock 1 reading Unscored/40 N/A 4/8/2026 05:25 PM 30m — 📋 Compare 🗑️" [ref=e219]:
+          - cell "DEDUP-R8" [ref=e220]
+          - cell "Dedup Test" [ref=e221]
+          - cell "Mock 1" [ref=e222]
+          - cell "reading" [ref=e223]
+          - cell "Unscored/40" [ref=e224]
+          - cell "N/A" [ref=e225]
+          - cell "4/8/2026 05:25 PM" [ref=e226]
+          - cell "30m" [ref=e227]
+          - cell "—" [ref=e228]
+          - cell "📋 Compare 🗑️" [ref=e229]:
+            - button "📋 Compare" [ref=e230] [cursor=pointer]
+            - button "🗑️" [ref=e231] [cursor=pointer]
+        - row "R8-IELTS-01 Normal Student Mock 800 listening 30/40 7.0 4/8/2026 05:25 PM 35m — 📋 Compare 🗑️" [ref=e232]:
+          - cell "R8-IELTS-01" [ref=e233]
+          - cell "Normal Student" [ref=e234]
+          - cell "Mock 800" [ref=e235]
+          - cell "listening" [ref=e236]
+          - cell "30/40" [ref=e237]
+          - cell "7.0" [ref=e238]
+          - cell "4/8/2026 05:25 PM" [ref=e239]
+          - cell "35m" [ref=e240]
+          - cell "—" [ref=e241]
+          - cell "📋 Compare 🗑️" [ref=e242]:
+            - button "📋 Compare" [ref=e243] [cursor=pointer]
+            - button "🗑️" [ref=e244] [cursor=pointer]
+        - row "R8-IELTS-01 Normal Student Mock 800 writing 6.0 6.0 4/8/2026 05:25 PM 55m — 📋 Compare 🗑️" [ref=e245]:
+          - cell "R8-IELTS-01" [ref=e246]
+          - cell "Normal Student" [ref=e247]
+          - cell "Mock 800" [ref=e248]
+          - cell "writing" [ref=e249]
+          - cell "6.0" [ref=e250]
+          - cell "6.0" [ref=e251]
+          - cell "4/8/2026 05:25 PM" [ref=e252]
+          - cell "55m" [ref=e253]
+          - cell "—" [ref=e254]
+          - cell "📋 Compare 🗑️" [ref=e255]:
+            - button "📋 Compare" [ref=e256] [cursor=pointer]
+            - button "🗑️" [ref=e257] [cursor=pointer]
+        - row "R8-IELTS-01 Normal Student Mock 800 reading 35/40 7.0 4/8/2026 05:25 PM 30m — 📋 Compare 🗑️" [ref=e258]:
+          - cell "R8-IELTS-01" [ref=e259]
+          - cell "Normal Student" [ref=e260]
+          - cell "Mock 800" [ref=e261]
+          - cell "reading" [ref=e262]
+          - cell "35/40" [ref=e263]
+          - cell "7.0" [ref=e264]
+          - cell "4/8/2026 05:25 PM" [ref=e265]
+          - cell "30m" [ref=e266]
+          - cell "—" [ref=e267]
+          - cell "📋 Compare 🗑️" [ref=e268]:
+            - button "📋 Compare" [ref=e269] [cursor=pointer]
+            - button "🗑️" [ref=e270] [cursor=pointer]
+        - row "RFIX10 Race Mock 961 writing Not Graded N/A 4/8/2026 05:21 PM 60m — 📋 Compare 🗑️" [ref=e271]:
+          - cell "RFIX10" [ref=e272]
+          - cell "Race" [ref=e273]
+          - cell "Mock 961" [ref=e274]
+          - cell "writing" [ref=e275]
+          - cell "Not Graded" [ref=e276]
+          - cell "N/A" [ref=e277]
+          - cell "4/8/2026 05:21 PM" [ref=e278]
+          - cell "60m" [ref=e279]
+          - cell "—" [ref=e280]
+          - cell "📋 Compare 🗑️" [ref=e281]:
+            - button "📋 Compare" [ref=e282] [cursor=pointer]
+            - button "🗑️" [ref=e283] [cursor=pointer]
+        - row "VRACE01 Race Fix Test Mock 901 writing Not Graded N/A 4/8/2026 05:18 PM 60m — 📋 Compare 🗑️" [ref=e284]:
+          - cell "VRACE01" [ref=e285]
+          - cell "Race Fix Test" [ref=e286]
+          - cell "Mock 901" [ref=e287]
+          - cell "writing" [ref=e288]
+          - cell "Not Graded" [ref=e289]
+          - cell "N/A" [ref=e290]
+          - cell "4/8/2026 05:18 PM" [ref=e291]
+          - cell "60m" [ref=e292]
+          - cell "—" [ref=e293]
+          - cell "📋 Compare 🗑️" [ref=e294]:
+            - button "📋 Compare" [ref=e295] [cursor=pointer]
+            - button "🗑️" [ref=e296] [cursor=pointer]
