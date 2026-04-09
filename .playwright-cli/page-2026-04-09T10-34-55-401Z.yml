@@ -1,0 +1,23 @@
+- main [ref=e2]:
+  - generic [ref=e6]:
+    - generic [ref=e7]:
+      - img "Innovative Centre" [ref=e8]
+      - generic [ref=e9]: Cambridge General English
+      - link "Go to Invigilator Login →" [ref=e10] [cursor=pointer]:
+        - /url: "#"
+    - generic "Candidate login form" [ref=e11]:
+      - heading "Welcome, Candidate" [level=1] [ref=e12]
+      - paragraph [ref=e13]: Cambridge General English Assessment
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - textbox "Student ID" [ref=e16]
+          - generic: Student ID
+          - generic [ref=e17]: Check your admission letter or ask your invigilator
+        - generic [ref=e18]:
+          - textbox "Full Name" [ref=e19]
+          - generic: Full Name
+        - button "Login" [ref=e20] [cursor=pointer]
+      - paragraph [ref=e21]: Trouble logging in? Contact your invigilator.
+      - paragraph [ref=e22]:
+        - link "← Back to exam selection" [ref=e23] [cursor=pointer]:
+          - /url: launcher.html

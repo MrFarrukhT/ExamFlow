@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-09 17:10",
-  "totalRuns": 24,
+  "lastRun": "2026-04-09 17:30",
+  "totalRuns": 25,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -107,7 +107,11 @@
     "ielts-cjs-server-side-score-recompute-synced",
     "ielts-bandScoreFromRaw-helper-defined",
     "ielts-score-tamper-flag-stored-in-anti-cheat",
-    "ielts-answers-array-coerced-to-empty-object"
+    "ielts-answers-array-coerced-to-empty-object",
+    "ielts-writing-speaking-bandscore-forced-null-both-servers",
+    "ielts-cambridge-minimum-time-guard-30s",
+    "scoretamper-flag-surfaced-in-admin-badge",
+    "bandscorefromraw-zero-boundary-correct"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
@@ -123,7 +127,11 @@
     "olympiada-cambridge-mock-test-numbers-collision-workflow",
     "autopilot-bulk-copy-paste-can-spread-syntax-errors-across-files",
     "defensive-feature-detection-can-hide-missing-function-bugs",
-    "autopilot-complete-status-unreliable-for-security-work"
+    "autopilot-complete-status-unreliable-for-security-work",
+    "parallel-code-bugs-propagate-identically-to-both-servers-not-just-drift",
+    "admin-dashboard-flag-surfaces-lag-behind-server-side-flag-introductions",
+    "clamp-vs-force-null-policy-confusion-when-field-has-admin-grading-workflow",
+    "upper-bound-only-time-validation-misses-impossibly-fast-forged-submissions"
   ],
   "untestedAreas": [
     "browser-based-c1-advanced-exam-flow"
@@ -193,13 +201,14 @@
       "title": "Admin dashboard renderAntiCheatBadge doesn't surface scoreTamper flag",
       "severity": "LOW",
       "since": "2026-04-09",
-      "reason": "R24's anti_cheat_data.scoreTamper is stored but not yet displayed in the badge — admin sees the row but not the warning. Minor follow-up for autopilot."
+      "resolved": "2026-04-09",
+      "reason": "RESOLVED in R25: hasAntiCheatViolations + renderAntiCheatBadge + renderAntiCheatDetail now all check ac.scoreTamper and surface 'Score tampered' with client/server values."
     }
   ],
   "stats": {
-    "scenariosTested": 144,
-    "bugsFound": 46,
-    "bugsFixed": 41,
-    "bugsDeferred": 11
+    "scenariosTested": 150,
+    "bugsFound": 51,
+    "bugsFixed": 46,
+    "bugsDeferred": 10
   }
 }
