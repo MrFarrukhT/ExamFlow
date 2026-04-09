@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "lastRunAt": "2026-04-09T10:30:00Z",
-  "lastRunCommit": "c44f883",
+  "lastRunAt": "2026-04-09T10:40:00Z",
+  "lastRunCommit": "758b1d8",
   "runs": [
     {
       "id": "heal-2026-04-08-r1",
@@ -52,6 +52,17 @@
       "fixed": 5,
       "reverted": 0,
       "deferred": 0
+    },
+    {
+      "id": "heal-2026-04-09-r6",
+      "type": "heal",
+      "startedAt": "2026-04-09T10:35:00Z",
+      "domains": ["security", "api", "architecture", "frontend"],
+      "round": 6,
+      "fixed": 5,
+      "reverted": 0,
+      "deferred": 0,
+      "note": "Fix commits were absorbed into parallel checkpoint 758b1d8 (race with eye/scenario agents). Heal r6 commit 7485e27 only carries the CSS bystander; all 5 actual fixes verified present in HEAD."
     }
   ],
   "findings": [
@@ -360,6 +371,51 @@
       "status": "fixed",
       "fixedInCommit": "c44f883",
       "foundAt": "2026-04-09T10:25:00Z"
+    },
+    {
+      "fingerprint": "frontend:admin-common:window-onclick-override",
+      "severity": "HIGH",
+      "title": "window.onclick = ... clobbers other handlers in setupModalCloseOnOutsideClick",
+      "file": "assets/js/admin-common.js",
+      "status": "fixed",
+      "fixedInCommit": "758b1d8",
+      "foundAt": "2026-04-09T10:35:00Z"
+    },
+    {
+      "fingerprint": "security:servers:db-test-error-message-disclosure",
+      "severity": "HIGH",
+      "title": "/db-test failure handlers leak error.message to client (both servers)",
+      "file": "cambridge-database-server.js, local-database-server.js",
+      "status": "fixed",
+      "fixedInCommit": "758b1d8",
+      "foundAt": "2026-04-09T10:35:00Z"
+    },
+    {
+      "fingerprint": "api:local-database-server:bandScore-no-validation",
+      "severity": "HIGH",
+      "title": "IELTS POST /update-score accepts arbitrary bandScore values without range/format check",
+      "file": "local-database-server.js",
+      "status": "fixed",
+      "fixedInCommit": "758b1d8",
+      "foundAt": "2026-04-09T10:35:00Z"
+    },
+    {
+      "fingerprint": "architecture:core:dead-getFirstQuestionOfPart",
+      "severity": "MEDIUM",
+      "title": "Dead function getFirstQuestionOfPart in core.js — zero callers",
+      "file": "assets/js/core.js",
+      "status": "fixed",
+      "fixedInCommit": "758b1d8",
+      "foundAt": "2026-04-09T10:35:00Z"
+    },
+    {
+      "fingerprint": "frontend:admin-common:setinterval-no-reference",
+      "severity": "MEDIUM",
+      "title": "startAutoRefresh setInterval ID not stored — cannot clearInterval on cleanup",
+      "file": "assets/js/admin-common.js",
+      "status": "fixed",
+      "fixedInCommit": "758b1d8",
+      "foundAt": "2026-04-09T10:35:00Z"
     }
   ]
 }

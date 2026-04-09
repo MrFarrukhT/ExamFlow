@@ -69,3 +69,32 @@ Starting state: 8 open findings (all deferred — architecture/migration blocker
 ### Stats
 Rounds: 1 | Fixed: 5 | Reverted: 0 | Deferred: 0 (8 carried over)
 Ending state: 8 open findings in ledger (all carryovers, all needing manual architecture work)
+
+## Session: 2026-04-09 14:35
+Domains: security, api, architecture, frontend
+Starting state: 8 open findings (all carryover deferred items)
+
+### Round 6
+- [HIGH] window.onclick = ... clobbers other handlers → fixed — `assets/js/admin-common.js`
+- [HIGH] /db-test handlers leak error.message → fixed — both server files
+- [HIGH] IELTS bandScore accepted without range validation → fixed — `local-database-server.js`
+- [MEDIUM] Dead getFirstQuestionOfPart function → fixed — `assets/js/core.js`
+- [MEDIUM] startAutoRefresh setInterval ID not stored → fixed — `assets/js/admin-common.js`
+
+### Note
+All 5 fix edits were absorbed into parallel agent checkpoint commit `758b1d8`
+(scenario agent picked them up while my own heal commit `7485e27` only got an
+unrelated CSS bystander). Verified all 5 changes present in HEAD before logging.
+
+### Deferred (carried over)
+- Hardcoded invigilator password — needs server-side auth
+- Missing auth on admin endpoints — needs middleware + tokens
+- Unbounded SELECT queries — needs pagination design
+- Duplicate validation logic across servers — needs shared module
+- core.js god file (1562 lines) — needs migration
+- CORS wildcard — needs allowed origins config
+- Inconsistent response envelope (raw arrays) — needs frontend coordination
+
+### Stats
+Rounds: 1 | Fixed: 5 | Reverted: 0 | Deferred: 0 (8 carried over)
+Ending state: 8 open findings in ledger (all manual architecture work)
