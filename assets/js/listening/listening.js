@@ -1090,16 +1090,29 @@
             }
         };
         
-        // Calculate band score for listening test
+        // Calculate band score for listening test — per official IELTS Listening
+        // band table (Cambridge Assessment / IDP / British Council):
+        //   9.0: 39-40   8.5: 37-38   8.0: 35-36   7.5: 32-34   7.0: 30-31
+        //   6.5: 26-29   6.0: 23-25   5.5: 18-22   5.0: 16-17   4.5: 13-15
+        //   4.0: 10-12
+        // NB: This table is DIFFERENT from the IELTS Academic Reading table at
+        // scores 32, 26, 18, and 15. The earlier version of this function used
+        // the Reading table by mistake, which silently downgraded students at
+        // boundary raw scores. The server's bandScoreFromRaw also uses the
+        // skill-correct table on submission.
         function calculateBandScore(score) {
             if (!score) return '0.0';
 
             const bandMapping = {
-                40: '9.0', 39: '9.0', 38: '8.5', 37: '8.5', 36: '8.0', 35: '8.0', 34: '7.5',
-                33: '7.5', 32: '7.0', 31: '7.0', 30: '7.0', 29: '6.5', 28: '6.5', 27: '6.5',
-                26: '6.0', 25: '6.0', 24: '6.0', 23: '5.5', 22: '5.5', 21: '5.5', 20: '5.5',
-                19: '5.0', 18: '5.0', 17: '5.0', 16: '5.0', 15: '5.0', 14: '4.5', 13: '4.5',
-                12: '4.0', 11: '4.0', 10: '4.0', 9: '3.5', 8: '3.5', 7: '3.0', 6: '3.0',
+                40: '9.0', 39: '9.0', 38: '8.5', 37: '8.5', 36: '8.0', 35: '8.0',
+                34: '7.5', 33: '7.5', 32: '7.5', 31: '7.0', 30: '7.0',
+                29: '6.5', 28: '6.5', 27: '6.5', 26: '6.5',
+                25: '6.0', 24: '6.0', 23: '6.0',
+                22: '5.5', 21: '5.5', 20: '5.5', 19: '5.5', 18: '5.5',
+                17: '5.0', 16: '5.0',
+                15: '4.5', 14: '4.5', 13: '4.5',
+                12: '4.0', 11: '4.0', 10: '4.0',
+                9: '3.5', 8: '3.5', 7: '3.0', 6: '3.0',
                 5: '2.5', 4: '2.5'
             };
 

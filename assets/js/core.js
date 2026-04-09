@@ -676,14 +676,26 @@ async function loadAnswers() {
             highlightCorrectAnswersInPassage();
         }
 
+        // Per official IELTS Academic Reading band table (Cambridge / IDP /
+        // British Council):
+        //   9.0: 39-40   8.5: 37-38   8.0: 35-36   7.5: 33-34   7.0: 30-32
+        //   6.5: 27-29   6.0: 23-26   5.5: 19-22   5.0: 15-18   4.5: 13-14
+        //   4.0: 10-12
+        // The earlier version of this table had scores 23 and 19 in the wrong
+        // band (5.5 and 5.0 instead of 6.0 and 5.5), which silently downgraded
+        // students at the boundary.
         function calculateBandScore(score) {
             if (score >= 39) return '9.0';
             const mapping = {
-                40: 9.0, 39: 9.0, 38: 8.5, 37: 8.5, 36: 8.0, 35: 8.0, 34: 7.5,
-                33: 7.5, 32: 7.0, 31: 7.0, 30: 7.0, 29: 6.5, 28: 6.5, 27: 6.5,
-                26: 6.0, 25: 6.0, 24: 6.0, 23: 5.5, 22: 5.5, 21: 5.5, 20: 5.5,
-                19: 5.0, 18: 5.0, 17: 5.0, 16: 5.0, 15: 5.0, 14: 4.5, 13: 4.5,
-                12: 4.0, 11: 4.0, 10: 4.0, 9: 3.5, 8: 3.5, 7: 3.0, 6: 3.0,
+                40: 9.0, 39: 9.0, 38: 8.5, 37: 8.5, 36: 8.0, 35: 8.0,
+                34: 7.5, 33: 7.5, 32: 7.0, 31: 7.0, 30: 7.0,
+                29: 6.5, 28: 6.5, 27: 6.5,
+                26: 6.0, 25: 6.0, 24: 6.0, 23: 6.0,
+                22: 5.5, 21: 5.5, 20: 5.5, 19: 5.5,
+                18: 5.0, 17: 5.0, 16: 5.0, 15: 5.0,
+                14: 4.5, 13: 4.5,
+                12: 4.0, 11: 4.0, 10: 4.0,
+                9: 3.5, 8: 3.5, 7: 3.0, 6: 3.0,
                 5: 2.5, 4: 2.5
             };
             if (score <= 0) return 0.0;

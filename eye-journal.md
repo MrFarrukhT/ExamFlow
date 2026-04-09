@@ -2859,3 +2859,80 @@ Fixes landed: 0
 Reverted: 0
 Files touched: 1 (assets/js/welcome-guide.js)
 Verification: curl-served JS contents inspected on port 3002
+
+---
+
+## Session: 2026-04-09 (round 5 — A1 Movers dashboard order + IELTS band score table compliance)
+Persona: Real candidate whose final IELTS score is computed by the platform, AND a YLE Movers candidate landing on the dashboard
+System: Both — IELTS Reading/Listening scoring + Cambridge A1 Movers dashboard
+Pages explored: `Cambridge/dashboard-cambridge.html` (`loadModulesForLevel` combined-level branch), `local-database-server.js` (`bandScoreFromRaw` recompute path), `server-cjs.cjs` (CJS twin), `assets/js/listening/listening.js` (`calculateBandScore`), `assets/js/core.js` (Reading `calculateBandScore`), `assets/js/session-manager.js` (Reading `calculateBandScore`)
+Starting state: Round 4 noted A1 Movers dashboard ordering as deferred. Round 4 also said the platform "follows official IELTS rules" for scoring — but a deeper read of the band score functions revealed that **all five places** that compute an IELTS band score from a raw score were using a SINGLE table that's basically the Reading table — so for Listening submissions every boundary score returned the wrong band, and even for Reading two boundary scores (23 and 19) were one band too low.
+
+### Round 5 — direct prompt: same compliance brief, deeper pass
+
+**Findings:**
+- [T3] `Cambridge/dashboard-cambridge.html:333–375` — combined-level branch (A1 + A2) rendered the same fixed `R&W → Listening → Speaking` order for both, but official YLE Movers order is **Listening → R&W → Speaking** while A2 Key is `R&W → Listening → Speaking`. The dashboard was confusing A1 candidates by leading with Reading & Writing.
+- [T1] `local-database-server.js:15–22` — `IELTS_BAND_MAPPING` table had **6 wrong values vs the official IELTS Listening band table** (32→7.0 should be 7.5, 26→6.0 should be 6.5, 23→5.5 should be 6.0, 18→5.0 should be 5.5, 19→5.0 should be 5.5, 15→5.0 should be 4.5) and **2 wrong values vs the official Reading table** (23→5.5 should be 6.0, 19→5.0 should be 5.5). The single-table approach was fundamentally broken: Reading and Listening have **different** band boundaries at scores 32, 26, 18, and 15, so they need separate tables. `bandScoreFromRaw(score)` didn't even take a skill parameter, so the recompute path couldn't pick the right table even if both existed.
+- [T1] `local-database-server.js:286–296` — the `score === 'reading' || 'listening'` recompute branch called `bandScoreFromRaw(correct)` without the skill, so the tampered/recomputed band score that gets persisted to `band_score` in the DB is wrong by up to 0.5 band at the boundary. This is the band the student actually receives.
+- [T1] `server-cjs.cjs:504–518` — CJS twin of the same wrong table + same skill-blind function. Same submission path, same broken result.
+- [T1] `assets/js/listening/listening.js:1094–1111` — client-side `calculateBandScore` for Listening used the Reading-style table. The band shown to the student on the post-test modal was wrong at 32, 26, 23, 18, 19, 15.
+- [T1] `assets/js/core.js:679–694` — client-side Reading `calculateBandScore` had the 23 and 19 errors.
+- [T1] `assets/js/session-manager.js:284–302` — third copy of the same Reading table with the same 23/19 errors. Used by the reading submission flow.
+- [T0] In `assets/js/listening/listening.js:849–867` there's a SECOND, IIFE-style band calculator that **was already correct** for Listening (uses ranges instead of a mapping table). It computes the on-modal "Band X" display. So the student saw the correct band on the modal but the WRONG band was the one persisted to the database via `calculateBandScore` → `submissionData.bandScore` → server recompute.
+
+**Action:** REBUILD 5 (per-skill band tables across every place that computes one) + POLISH 1 (A1 Movers dashboard ordering).
+
+- [T3] `Cambridge/dashboard-cambridge.html` — Refactored the combined-level branch to extract each card into a template variable and concatenate them in the order required by the level: `listening + readingWriting + speaking` for A1, `readingWriting + listening + speaking` for A2.
+  Mode: polish (UI compliance — the dashboard now matches the official YLE Movers test order)
+  Quality layer: 3-Efficient → 5-Delightful
+  Verified by DOM inspection at all 5 levels.
+
+- [T1] `local-database-server.js:13–60` — Replaced single `IELTS_BAND_MAPPING` with two new tables `IELTS_LISTENING_BAND_MAPPING` and `IELTS_READING_BAND_MAPPING`, each carrying the official boundaries from the Cambridge Assessment / IDP / British Council band tables. `bandScoreFromRaw` now takes `(score, skill)` and selects the right table; default + 'reading' fall through to the Reading table. The recompute call site was updated to pass `submissionData.skill`.
+  Mode: rebuild (single source of truth + correctness)
+  Quality layer: 1-Functional → 5-Delightful
+
+- [T1] `server-cjs.cjs:503–544` — Same rebuild applied to the CJS twin, with the recompute call site updated to pass the skill.
+
+- [T1] `assets/js/listening/listening.js:1094–1124` — `calculateBandScore` rewritten with the official Listening table (the 6 boundary scores fixed). Header comment notes that this is the Listening table and that the previous version was using the Reading table by mistake.
+
+- [T1] `assets/js/core.js:679–706` — Reading `calculateBandScore` table updated: scores 23 and 19 moved into the correct bands (6.0 and 5.5).
+
+- [T1] `assets/js/session-manager.js:284–315` — Same Reading boundary fix applied to the third copy of the table.
+
+### Verification (unit + browser)
+| Surface | Verification | Result |
+|---------|--------------|--------|
+| Cambridge A1 Movers dashboard | DOM read of `.module-card .module-title` | `["Listening", "Reading & Writing", "Speaking"]` ✓ |
+| Cambridge A2 Key dashboard | DOM read | `["Reading & Writing", "Listening", "Speaking"]` ✓ unchanged |
+| Cambridge B1 Preliminary dashboard | DOM read | `["Reading", "Writing", "Listening", "Speaking"]` ✓ unchanged |
+| local-database-server.js bandScoreFromRaw | Unit script `e:/tmp/verify-band-tables.js` — extracts the const tables + function via string parsing, requires them, and asserts every entry against the official Listening + Reading tables (62 score-to-band assertions) | All pass ✓ |
+| Boundary tests via bandScoreFromRaw | listening:32→7.5, 26→6.5, 23→6.0, 19→5.5, 18→5.5, 15→4.5; reading:32→7.0, 26→6.0, 23→6.0, 19→5.5, 18→5.0, 15→5.0 (12 cases) | All pass ✓ |
+| `node --check` on all 5 modified files | clean ✓ | |
+
+### Quality Map (after this round)
+| Page / file | Layer | Notes |
+|------|-------|-------|
+| Cambridge/dashboard-cambridge.html (A1+A2 combined branch) | 5-Delightful | Per-level card ordering |
+| local-database-server.js (band score recompute) | 5-Delightful | Per-skill tables, official boundaries |
+| server-cjs.cjs (band score recompute) | 5-Delightful | Same fix applied to CJS twin |
+| assets/js/listening/listening.js calculateBandScore | 5-Delightful | Official Listening table (was Reading-by-mistake) |
+| assets/js/core.js calculateBandScore | 5-Delightful | Reading boundaries 23 and 19 fixed |
+| assets/js/session-manager.js calculateBandScore | 5-Delightful | Same Reading boundary fix |
+
+### Verified-not-needed (no extras found)
+- The IIFE band calculator at `listening.js:849–867` was already correct (uses ranges) — left untouched. It computes the on-modal "Band X" display so students never saw the bug, but the database and admin dashboard were getting the wrong number.
+- Cambridge band scoring uses CEFR scaled scores, not IELTS bands — out of scope.
+
+### Deferred (still)
+- B2 First mock content shape (6 parts × 32 questions vs official 7 × 52)
+- A1 Movers question ranges in `cambridge-answer-sync.js` fall through to A2 Key default
+
+### Session Stats
+Pages explored: 6 files
+Rounds: 1 (round 5 of the same compliance brief)
+Polishes landed: 1 (A1 Movers dashboard ordering)
+Rebuilds landed: 5 (band score tables across every place that computes one)
+Fixes landed: 0
+Reverted: 0
+Files touched: 6
+Verification scripts: 1 (e:/tmp/verify-band-tables.js — 74 assertions, all pass)

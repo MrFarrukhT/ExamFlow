@@ -10,22 +10,54 @@ import { createServer } from './shared/server-bootstrap.js';
 import { validateScore, validateStudentInfo, stripHtmlTags, sanitizeAntiCheat } from './shared/validation.js';
 import { requireAdmin, rateLimit } from './shared/auth.js';
 
-// IELTS raw → band score mapping (copied from assets/js/session-manager.js)
-// Used by the server-side score recompute path so a cheater can't tamper bandScore.
-const IELTS_BAND_MAPPING = {
-    40: '9.0', 39: '9.0', 38: '8.5', 37: '8.5', 36: '8.0', 35: '8.0', 34: '7.5',
-    33: '7.5', 32: '7.0', 31: '7.0', 30: '7.0', 29: '6.5', 28: '6.5', 27: '6.5',
-    26: '6.0', 25: '6.0', 24: '6.0', 23: '5.5', 22: '5.5', 21: '5.5', 20: '5.5',
-    19: '5.0', 18: '5.0', 17: '5.0', 16: '5.0', 15: '5.0', 14: '4.5', 13: '4.5',
-    12: '4.0', 11: '4.0', 10: '4.0', 9: '3.5', 8: '3.5', 7: '3.0', 6: '3.0',
+// IELTS raw → band score mappings — per the official IELTS band score tables
+// published by Cambridge Assessment / IDP / British Council. Reading and
+// Listening have different boundaries (notably at scores 32, 26, 23, 19, 18, 15)
+// so they need separate tables.
+//
+// LISTENING (raw out of 40 → band):
+//   9.0: 39-40   8.5: 37-38   8.0: 35-36   7.5: 32-34   7.0: 30-31
+//   6.5: 26-29   6.0: 23-25   5.5: 18-22   5.0: 16-17   4.5: 13-15
+//   4.0: 10-12
+const IELTS_LISTENING_BAND_MAPPING = {
+    40: '9.0', 39: '9.0', 38: '8.5', 37: '8.5', 36: '8.0', 35: '8.0',
+    34: '7.5', 33: '7.5', 32: '7.5', 31: '7.0', 30: '7.0',
+    29: '6.5', 28: '6.5', 27: '6.5', 26: '6.5',
+    25: '6.0', 24: '6.0', 23: '6.0',
+    22: '5.5', 21: '5.5', 20: '5.5', 19: '5.5', 18: '5.5',
+    17: '5.0', 16: '5.0',
+    15: '4.5', 14: '4.5', 13: '4.5',
+    12: '4.0', 11: '4.0', 10: '4.0',
+    9: '3.5', 8: '3.5', 7: '3.0', 6: '3.0',
     5: '2.5', 4: '2.5'
 };
-function bandScoreFromRaw(score) {
+
+// ACADEMIC READING (raw out of 40 → band):
+//   9.0: 39-40   8.5: 37-38   8.0: 35-36   7.5: 33-34   7.0: 30-32
+//   6.5: 27-29   6.0: 23-26   5.5: 19-22   5.0: 15-18   4.5: 13-14
+//   4.0: 10-12
+const IELTS_READING_BAND_MAPPING = {
+    40: '9.0', 39: '9.0', 38: '8.5', 37: '8.5', 36: '8.0', 35: '8.0',
+    34: '7.5', 33: '7.5', 32: '7.0', 31: '7.0', 30: '7.0',
+    29: '6.5', 28: '6.5', 27: '6.5',
+    26: '6.0', 25: '6.0', 24: '6.0', 23: '6.0',
+    22: '5.5', 21: '5.5', 20: '5.5', 19: '5.5',
+    18: '5.0', 17: '5.0', 16: '5.0', 15: '5.0',
+    14: '4.5', 13: '4.5',
+    12: '4.0', 11: '4.0', 10: '4.0',
+    9: '3.5', 8: '3.5', 7: '3.0', 6: '3.0',
+    5: '2.5', 4: '2.5'
+};
+
+function bandScoreFromRaw(score, skill) {
     if (typeof score !== 'number' || !Number.isFinite(score)) return null;
     if (score <= 0) return '0.0';
     if (score === 1) return '1.0';
     if (score <= 3) return '2.0';
-    return IELTS_BAND_MAPPING[score] || '0.0';
+    const table = (skill === 'listening')
+        ? IELTS_LISTENING_BAND_MAPPING
+        : IELTS_READING_BAND_MAPPING; // default + 'reading'
+    return table[score] || '0.0';
 }
 
 // Initialize OpenAI client (will work if API key is configured)
@@ -289,9 +321,11 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
                             submissionData.antiCheat = Object.assign({}, submissionData.antiCheat || {}, { scoreTamper: true, clientScore: clientScore, serverScore: correct });
                         }
                         submissionData.score = correct;
-                        // Recompute band score from the corrected raw score
+                        // Recompute band score from the corrected raw score using
+                        // the official band table for THIS skill (Reading vs Listening
+                        // have different boundaries — see IELTS_*_BAND_MAPPING above).
                         if (typeof bandScoreFromRaw === 'function') {
-                            submissionData.bandScore = bandScoreFromRaw(correct);
+                            submissionData.bandScore = bandScoreFromRaw(correct, submissionData.skill);
                         }
                     } else {
                         // No answer key in DB — clamp client score to valid range to prevent garbage
