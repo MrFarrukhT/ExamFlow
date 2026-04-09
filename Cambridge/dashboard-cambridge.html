@@ -184,6 +184,7 @@
                 <div class="modules-section" id="modulesSection" style="display: none;">
                     <div class="level-info-bar">
                         <span id="selectedLevelDisplay"></span>
+                        <span id="mockInfo" class="mock-badge" style="display:inline-block; margin-left:10px; padding:3px 12px; background:#e8f5e9; color:#2e7d32; border-radius:12px; font-size:0.82rem; font-weight:600; letter-spacing:0.02em; vertical-align:middle;"></span>
                         <button class="change-level-btn" onclick="changeLevelSelection()">Change Level</button>
                     </div>
                     <h2 class="section-title">Select a Module to Begin</h2>
@@ -276,6 +277,11 @@
             // Update UI
             document.getElementById('levelInfo').textContent = level.replace('-', ' ');
             document.getElementById('selectedLevelDisplay').textContent = level.replace('-', ' ');
+
+            // Show which mock the student will take. Default is '1' (set by invigilator).
+            const mockNum = localStorage.getItem('selectedCambridgeMock') || '1';
+            const mockEl = document.getElementById('mockInfo');
+            if (mockEl) mockEl.textContent = 'Mock ' + mockNum;
 
             // Hide level selection, show modules
             document.getElementById('levelSelection').style.display = 'none';

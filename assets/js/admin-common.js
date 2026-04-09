@@ -519,8 +519,14 @@ class AdminDashboard {
         const esc = AdminDashboard.escapeHtml;
         const flagged = AdminDashboard.hasAntiCheatViolations(submission);
         const acBadge = AdminDashboard.renderAntiCheatBadge(submission);
+        // Keyboard-accessible: role="button" + tabindex + Enter/Space activation.
+        // Same pattern as the date-group-header fix from round 5.
         return `
-            <div class="date-group-submission${flagged ? ' submission-flagged' : ''}" onclick="openAnswerComparison('${esc(submission.id)}')" style="cursor: pointer;">
+            <div class="date-group-submission${flagged ? ' submission-flagged' : ''}"
+                 role="button" tabindex="0"
+                 onclick="openAnswerComparison('${esc(submission.id)}')"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openAnswerComparison('${esc(submission.id)}');}"
+                 style="cursor: pointer;">
                 <div class="submission-info">
                     <div class="submission-name">${esc(submission.student_name)} (${esc(submission.student_id)})</div>
                     <div class="submission-details">

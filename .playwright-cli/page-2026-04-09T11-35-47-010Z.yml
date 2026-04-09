@@ -1,0 +1,88 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "header.logo"
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - status [ref=e11]: Connected
+            - generic [ref=e13]: 
+          - button "Messages" [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: Messages
+              - generic [ref=e17]: 
+          - button "Options" [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: Options
+              - generic [ref=e21]: 
+          - button "Show notes" [ref=e22]:
+            - generic [ref=e23]:
+              - generic [ref=e24]: Show notes
+              - generic [ref=e25]: 
+        - generic [ref=e28]:
+          - generic [ref=e29]: Candidate ID
+          - generic [ref=e30]: TEST001
+  - generic [ref=e32]:
+    - generic [ref=e34]:
+      - generic [ref=e36]:
+        - heading "Question 1" [level=3] [ref=e37]
+        - generic [ref=e38]: You must answer this question. Write your answer in 220–260 words in an appropriate style.
+      - main [ref=e40]:
+        - group [ref=e42]:
+          - generic [ref=e47]:
+            - paragraph [ref=e48]: "Your class has listened to a podcast about factors that contribute to people’s understanding of history. You have made the notes below:"
+            - generic [ref=e49]:
+              - strong [ref=e50]: "Factors that contribute to people’s understanding of history:"
+              - list [ref=e51]:
+                - listitem [ref=e52]: school lessons
+                - listitem [ref=e53]: public monuments
+                - listitem [ref=e54]: museums
+            - generic [ref=e55]:
+              - strong [ref=e56]: "Some opinions expressed in the podcast:"
+              - list [ref=e57]:
+                - listitem [ref=e58]: “Some teachers make learning history really interesting.”
+                - listitem [ref=e59]: “Statues in public areas show what local people think is important.”
+                - listitem [ref=e60]: “You can visit many museums online.”
+            - paragraph [ref=e61]:
+              - text: Write an
+              - strong [ref=e62]: essay
+              - text: for your tutor discussing
+              - strong [ref=e63]: two
+              - text: of the factors in your notes. You should
+              - strong [ref=e64]: explain which factor is more important
+              - text: for people’s understanding of history,
+              - strong [ref=e65]: giving reasons
+              - text: in support of your answer.
+            - paragraph [ref=e66]: You may, if you wish, make use of the opinions expressed in the podcast, but you should use your own words as far as possible.
+      - main [ref=e69]:
+        - generic [ref=e70]:
+          - group [ref=e71]:
+            - generic [ref=e76]:
+              - textbox "Essay answer for Question 1" [ref=e78]:
+                - /placeholder: Write your essay here…
+              - generic [ref=e79]: "Words: 0"
+          - button "Flag question" [ref=e81]:
+            - generic: 
+            - generic [ref=e82]: Flag question
+    - contentinfo [ref=e85]:
+      - navigation "Previous / next question" [ref=e86]:
+        - button "Previous" [disabled] [ref=e87]:
+          - generic [ref=e88]: 
+        - button "Next" [ref=e89]:
+          - generic [ref=e90]: 
+      - navigation "Questions" [ref=e91]:
+        - tablist [ref=e92]:
+          - tab "Part 1. 0 of 1 questions attempted." [ref=e93]:
+            - generic [ref=e94]:
+              - text: Part 1
+              - generic [ref=e95]: 0 of 1
+              - generic [ref=e96]: Part 1. 0 of 1 questions attempted.
+        - tablist [ref=e97]:
+          - tab "Part 2. 0 of 1 questions attempted." [ref=e98]:
+            - generic [ref=e99]:
+              - text: Part 2
+              - generic [ref=e100]: 0 of 1
+              - generic [ref=e101]: Part 2. 0 of 1 questions attempted.
+        - button "Review your answers" [ref=e102]:
+          - generic [ref=e103]: 

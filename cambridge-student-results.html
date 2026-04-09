@@ -1087,11 +1087,16 @@
                 `;
 
                 if (level === 'B2-First') {
+                    // Use of English is B2-First-only AND required for the overall scale
+                    // calculation. Without it, the overall scale is computed from only 4
+                    // components instead of 5, which silently deflates the result. Flagging
+                    // it with a "Required" badge and a teal left-border so the admin doesn't
+                    // miss it (I hit this myself in round 5 and submitted junk data).
                     html += `
-                        <div class="skill-row">
-                            <div class="skill-name">Use of English</div>
+                        <div class="skill-row" style="border-left: 3px solid #0d9488; padding-left: 12px; background: #f0fdfa;">
+                            <div class="skill-name">Use of English <span style="color:#0d9488; font-size:0.75em; font-weight:700; background:#ccfbf1; padding:2px 6px; border-radius:4px; margin-left:6px;">Required</span></div>
                             <div class="skill-input">
-                                <input type="number" id="useOfEnglish_raw" min="0" max="30" placeholder="0" oninput="calculateScores()">
+                                <input type="number" id="useOfEnglish_raw" min="0" max="30" placeholder="0" oninput="calculateScores()" required>
                                 <span>/ </span>
                                 <input type="number" id="useOfEnglish_max" value="30" min="1" style="width:50px" oninput="calculateScores()">
                             </div>
@@ -1242,6 +1247,15 @@
                     data.use_of_english_raw = getInputValue('useOfEnglish_raw');
                     data.use_of_english_max = getInputValue('useOfEnglish_max') || 30;
                     data.use_of_english_scale = convertRawToScale(data.use_of_english_raw, 'useOfEnglish', level);
+
+                    // B2-First requires Use of English for an accurate overall scale. Without
+                    // it the average is computed from only 4 components instead of 5, silently
+                    // deflating the result. Warn the admin rather than saving bad data.
+                    if (data.use_of_english_raw === null) {
+                        if (!confirm('Use of English score is empty — the overall scale will be calculated without it and may be inaccurate. Save anyway?')) {
+                            return;
+                        }
+                    }
                 } else {
                     data.use_of_english_raw = null;
                     data.use_of_english_max = null;

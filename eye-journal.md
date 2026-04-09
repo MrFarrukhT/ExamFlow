@@ -1,5 +1,52 @@
 # Eye Journal
 
+## Session: 2026-04-09 (round 35) — Cambridge Multi-Mock Navigation
+Persona: Student navigating mock selection on the Cambridge system
+System: Cambridge (port 3003)
+Pages explored: Cambridge/dashboard-cambridge.html (level selection → module selection with mock badge), startModule() code path, B2-First-MOCK-2/reading.html (verify correct folder navigation)
+Starting state: The Cambridge dashboard had NO visible mock indicator. The IELTS dashboard showed "Mock Test: 1" in the header, but Cambridge students had zero visual confirmation of which mock they'd been assigned. Mock selection is invigilator-controlled via `localStorage.selectedCambridgeMock` — the student just clicks "Start Reading" and the `startModule()` function silently routes to the right MOCK folder. If the invigilator assigned the wrong mock, the student had no way to know before starting.
+
+### Round 1 — Polish: add mock indicator to Cambridge dashboard
+
+**Findings (3 total):**
+- [T2] **Cambridge dashboard shows NO mock indicator.** Unlike IELTS (which has "Mock Test: 1" badge), Cambridge students have zero visual confirmation of which mock they're assigned. The mock number is only stored in localStorage (`selectedCambridgeMock`), invisible to the student.
+- [T2] **Default mock is '1' with no indication.** If `selectedCambridgeMock` is null, `startModule()` defaults to '1' silently. The student doesn't even know mock is a configurable dimension.
+- [T0] **No mock-switch notification.** If the invigilator changes the mock mid-session, the student would see the old mock badge until they re-select the level. Acceptable since mock changes are rare and invigilator-initiated.
+
+**Action:** POLISH 1 fix in Cambridge/dashboard-cambridge.html — add a mock badge to the modules section.
+
+**Files touched:**
+1. **Cambridge/dashboard-cambridge.html** (~6 lines added)
+   - New `<span id="mockInfo" class="mock-badge">` in the `.level-info-bar` between the level display and the "Change Level" button. Small green pill (background: #e8f5e9, color: #2e7d32, 12px border-radius, 0.82rem font). Inline-styled to avoid touching shared CSS.
+   - In the level selection handler (the function that runs when a level card is clicked), added: reads `localStorage.getItem('selectedCambridgeMock') || '1'` and sets `mockInfo.textContent = 'Mock ' + mockNum`. So the badge updates when the level is confirmed.
+
+**Verification (live, isolated playwright session):**
+| Check | Method | Result |
+|-------|--------|--------|
+| Mock 2 badge visible after B2 selection | set localStorage mock=2, select B2, screenshot | ✅ eye35-b2-mock2.png — "Mock 2" green pill visible between "B2 First" and "Change Level" |
+| Start Reading routes to correct MOCK-2 folder | click readingButton, check location.href | ✅ `B2-First-MOCK-2/reading.html` — correct folder path |
+| Default mock 1 shows correctly | set mock to null, select any level | ✅ badge shows "Mock 1" (from `|| '1'` default) |
+
+### Quality Map (after round 35)
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| Cambridge dashboard mock visibility | 1-Functional (invisible) → 3-Efficient | Students now see which mock they're on |
+
+### Deferred
+- Make the mock badge on the Cambridge dashboard also update live if the invigilator changes it while the student is on the dashboard. Would need a MutationObserver on localStorage or a polling check — low priority since invigilators change mocks before the student starts.
+- Match the IELTS mock badge styling (the IELTS dashboard uses a different blue badge in the header). CSS consistency across both systems could be improved.
+
+### Session Stats (round 35)
+Pages explored: 2 (Cambridge dashboard, B2-First-MOCK-2/reading.html)
+Findings: 3 (2× T2, 1× T0)
+Polishes landed: 1
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Files touched: 1 (Cambridge/dashboard-cambridge.html)
+
+---
+
 ## Session: 2026-04-09 (round 34) — Cambridge Navigation Flows
 Persona: Student walking the full Cambridge flow end-to-end (login → dashboard → A2 Key level selection → R&W test → Change Level)
 System: Cambridge (port 3003)

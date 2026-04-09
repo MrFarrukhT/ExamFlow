@@ -410,10 +410,14 @@
         };
 
         // ── Override: date-group row (IELTS shows mock_number) ──
+        // Keyboard-accessible: role + tabindex + Enter/Space activation (matches base class + headers).
         dashboard.renderDateGroupSubmissionRow = function (submission) {
             const esc = AdminDashboard.escapeHtml;
             return `
-                <div class="date-group-submission" onclick="openAnswerComparison('${esc(submission.id)}')" style="cursor: pointer;">
+                <div class="date-group-submission" role="button" tabindex="0"
+                     onclick="openAnswerComparison('${esc(submission.id)}')"
+                     onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openAnswerComparison('${esc(submission.id)}');}"
+                     style="cursor: pointer;">
                     <div class="submission-info">
                         <div class="submission-name">${esc(submission.student_name)} (${esc(submission.student_id)})</div>
                         <div class="submission-details">

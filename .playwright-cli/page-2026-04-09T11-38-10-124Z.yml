@@ -1,0 +1,84 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - img "Innovative Centre" [ref=e5]
+        - generic [ref=e6]: Cambridge General English
+        - generic [ref=e7]:
+          - generic [ref=e8]: Select Level
+          - link "Invigilator" [ref=e9] [cursor=pointer]:
+            - /url: "#"
+    - main [ref=e10]:
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - heading "Welcome, Eye Multi-Mock" [level=1] [ref=e13]
+          - paragraph [ref=e14]: "ID: 123"
+        - generic [ref=e15]:
+          - heading "Select Your Level" [level=2] [ref=e16]
+          - generic [ref=e17]:
+            - generic [ref=e18] [cursor=pointer]:
+              - generic [ref=e19]: A1
+              - heading "Movers" [level=3] [ref=e20]
+              - paragraph [ref=e21]: Basic level English
+              - list [ref=e22]:
+                - listitem [ref=e23]: ✓Reading & Writing (combined)
+                - listitem [ref=e24]: ✓Listening
+                - listitem [ref=e25]: ✓Speaking
+            - generic [ref=e26] [cursor=pointer]:
+              - generic [ref=e27]: A2
+              - heading "Key (KET)" [level=3] [ref=e28]
+              - paragraph [ref=e29]: Elementary level English
+              - list [ref=e30]:
+                - listitem [ref=e31]: ✓Reading & Writing (combined)
+                - listitem [ref=e32]: ✓Listening
+                - listitem [ref=e33]: ✓Speaking
+            - generic [ref=e34] [cursor=pointer]:
+              - generic [ref=e35]: B1
+              - heading "Preliminary (PET)" [level=3] [ref=e36]
+              - paragraph [ref=e37]: Intermediate level English
+              - list [ref=e38]:
+                - listitem [ref=e39]: ✓Reading
+                - listitem [ref=e40]: ✓Writing
+                - listitem [ref=e41]: ✓Listening
+                - listitem [ref=e42]: ✓Speaking
+            - generic [ref=e43] [cursor=pointer]:
+              - generic [ref=e44]: B2
+              - heading "First (FCE)" [level=3] [ref=e45]
+              - paragraph [ref=e46]: Upper-intermediate level English
+              - list [ref=e47]:
+                - listitem [ref=e48]: ✓Reading & Use of English
+                - listitem [ref=e49]: ✓Writing
+                - listitem [ref=e50]: ✓Listening
+                - listitem [ref=e51]: ✓Speaking
+            - text: ✓ ✓ ✓ ✓
+  - dialog "Welcome guide" [ref=e52]:
+    - generic [ref=e53]:
+      - generic [ref=e54]:
+        - generic [ref=e55]: 👋
+        - heading "Welcome to Your Cambridge English Test" [level=2] [ref=e56]
+        - paragraph [ref=e57]: Here's what you need to know before you begin
+      - list [ref=e58]:
+        - listitem [ref=e59]:
+          - generic [ref=e60]: 📄
+          - generic [ref=e61]:
+            - generic [ref=e62]: Your Test Modules
+            - generic [ref=e63]: You will complete the modules shown on your dashboard, in the order they are listed (timing varies by level). Follow the order shown on the dashboard.
+        - listitem [ref=e64]:
+          - generic [ref=e65]: 💾
+          - generic [ref=e66]:
+            - generic [ref=e67]: Your Answers Are Saved Automatically
+            - generic [ref=e68]: Every 30 seconds, your work is saved. You'll see a small confirmation at the bottom of the screen. Don't worry about losing your answers.
+        - listitem [ref=e69]:
+          - generic [ref=e70]: ⏲
+          - generic [ref=e71]:
+            - generic [ref=e72]: Watch the Timer
+            - generic [ref=e73]: Each module is timed. You'll get warnings at 10 minutes, 5 minutes, and 1 minute before time runs out.
+        - listitem [ref=e74]:
+          - generic [ref=e75]: ✅
+          - generic [ref=e76]:
+            - generic [ref=e77]: Submit When Ready
+            - generic [ref=e78]: When you finish a module, click Submit. You'll see a summary of your answers before confirming. After submitting, you'll return here to start the next module.
+      - generic [ref=e79]:
+        - generic [ref=e80]: 🔒
+        - generic [ref=e81]: If anything goes wrong (internet drops, page refreshes), your answers are safely stored on this device. Just log back in and continue where you left off.
+      - button "Got it — let's start" [active] [ref=e82] [cursor=pointer]
