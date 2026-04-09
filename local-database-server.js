@@ -623,8 +623,7 @@ app.get('/mock-answers', requireAdmin, async (req, res) => {
         console.error('❌ Failed to get mock answers:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to retrieve answers',
-            error: error.message
+            message: 'Failed to retrieve answers'
         });
     }
 });
@@ -736,8 +735,7 @@ app.post('/mock-answers', requireAdmin, async (req, res) => {
         console.error('❌ Failed to save mock answers:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to save answers',
-            error: error.message
+            message: 'Failed to save answers'
         });
     }
 });
@@ -787,8 +785,7 @@ app.delete('/mock-answers', requireAdmin, async (req, res) => {
         console.error('❌ Failed to delete mock answers:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to delete answers',
-            error: error.message
+            message: 'Failed to delete answers'
         });
     }
 });
