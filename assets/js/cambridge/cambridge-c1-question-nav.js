@@ -175,9 +175,17 @@
     var bodies = document.querySelectorAll(
       '#sectionContent .QuestionDisplay__questionBody___ZOMJ7'
     );
+    // In split-writing layouts (Writing Parts 1 & 2), there are two
+    // question bodies — the prompt pane on the left and the textarea
+    // pane on the right. The official Inspera UI shows the bookmark
+    // only beside the textarea (not the prompt), so we'd be flagging
+    // twice. Skip the prompt body so we end up with one flag.
+    var isSplitWriting = document.body.getAttribute('data-c1-layout') === 'split-writing';
     Array.prototype.forEach.call(bodies, function (body) {
       // Skip if a flag already exists inside this body
       if (body.querySelector('.QuestionDisplay__visibleFlag___AmAom')) return;
+      // In split-writing, only flag the body that owns the textarea
+      if (isSplitWriting && !body.querySelector('textarea, .c1-writing-pane')) return;
       var wrapper = body.closest(
         '.QuestionDisplay__questionDisplayWrapper___1n_b0'
       );

@@ -876,7 +876,8 @@ app.get('/submissions', requireAdmin, async (req, res) => {
         res.json({ success: true, submissions: result.rows });
     } catch (error) {
         console.error('Failed to fetch submissions:', error);
-        res.status(500).json({ success: false, message: 'Failed to fetch submissions', error: error.message });
+        // R29: error.message strip — was leaking PG schema details on admin paths
+        res.status(500).json({ success: false, message: 'Failed to fetch submissions' });
     }
 });
 
@@ -896,7 +897,7 @@ app.delete('/submissions/:id', requireAdmin, async (req, res) => {
         res.json({ success: true, message: `Submission ${submissionId} deleted` });
     } catch (error) {
         console.error('❌ Failed to delete submission:', error);
-        res.status(500).json({ success: false, message: 'Failed to delete submission', error: error.message });
+        res.status(500).json({ success: false, message: 'Failed to delete submission' });
     }
 });
 
@@ -933,7 +934,7 @@ app.post('/update-score', requireAdmin, async (req, res) => {
         res.json({ success: true, message: 'Score updated successfully', submission: result.rows[0] });
     } catch (error) {
         console.error('❌ Score update failed:', error);
-        res.status(500).json({ success: false, message: 'Failed to update score', error: error.message });
+        res.status(500).json({ success: false, message: 'Failed to update score' });
     }
 });
 
@@ -971,7 +972,7 @@ app.get('/mock-answers', requireAdmin, async (req, res) => {
         res.json({ success: true, answers, count: result.rows.length });
     } catch (error) {
         console.error('❌ Failed to get mock answers:', error);
-        res.status(500).json({ success: false, message: 'Failed to retrieve answers', error: error.message });
+        res.status(500).json({ success: false, message: 'Failed to retrieve answers' });
     }
 });
 
