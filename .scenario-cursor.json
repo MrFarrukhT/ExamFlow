@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-09 17:50",
-  "totalRuns": 26,
+  "lastRun": "2026-04-09 18:10",
+  "totalRuns": 27,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -114,7 +114,11 @@
     "bandscorefromraw-zero-boundary-correct",
     "cambridge-submit-speaking-duration-validation-parity",
     "admin-update-score-bandscore-validation-cjs-synced",
-    "min-time-boundary-30s-inclusive-correct"
+    "min-time-boundary-30s-inclusive-correct",
+    "validatescore-upper-bound-100-not-200",
+    "patch-cambridge-student-results-length-caps",
+    "patch-cambridge-evaluate-evaluator-notes-length-caps",
+    "striphtmltags-safe-against-entity-and-nested-tags-with-escapehtml-downstream"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",

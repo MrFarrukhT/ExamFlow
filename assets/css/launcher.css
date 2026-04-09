@@ -351,6 +351,25 @@ body {
     }
 }
 
+/* Tablet portrait (iPad-class): the default 500px max-width feels lonely
+   in the wider canvas. Bump to a more proportional width and let the card
+   breathe a bit more without losing center-stage focus. */
+@media (min-width: 601px) and (max-width: 1024px) {
+    .launcher-container {
+        max-width: 580px;
+        padding: 3rem 3.5rem;
+    }
+    .launcher-header {
+        margin-bottom: 2.25rem;
+    }
+    .system-info {
+        padding: 1.6rem 1.8rem;
+    }
+    .feature-item {
+        padding: 0.9rem 0;
+    }
+}
+
 /* Tighter layout on phone-sized viewports so the entire card fits without
    feeling cramped: smaller logo, tighter feature spacing, no big gaps. */
 @media (max-width: 420px) {

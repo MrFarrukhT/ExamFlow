@@ -1565,3 +1565,70 @@ Trigger: Updated cursor weak-pattern list flagged "parallel-code-bugs-propagate-
 
 ### Stats (Round 26)
 Tested: 4 | Passed: 2 | Failed: 2 (1 HIGH, 1 MEDIUM) | Fixed: 2 | Deferred: 0
+
+---
+
+## Session: 2026-04-09 18:10
+Focus: R27 — extend the sibling-endpoint partial-drift hunt to Cambridge admin endpoints (`/cambridge-submissions/:id/score`, `/cambridge-submissions/:id/evaluate`, PATCH/POST `/cambridge-student-results`). Also probe `validateScore`'s upper bound, since R26 found CJS missing the bandScore validator entirely and the score validator's 0-200 range looked suspiciously lenient.
+Trigger: R26 weak-pattern entry "sibling-endpoint partial drift" called out admin paths as the next obvious target.
+
+### Scenarios
+
+- S1: PATCH `/cambridge-student-results/:id` with 50KB `student_name` [Insider] → **PARTIAL → fixed (LOW)**
+  - PG schema (`varchar(200)`) catches it and raises a 500 with the raw error `"value too long for type character varying(200)"` — leaks the column type back to the client.
+  - The application has no length cap (POST endpoint at line 1156 does — sibling drift).
+  - Severity LOW because the data isn't actually corrupted (PG enforces) but the schema leak is poor hygiene and the 500 status is misleading.
+
+- S2: PATCH `/cambridge-submissions/:id/evaluate` with 100KB `evaluatorName` [Insider] → **PARTIAL → fixed (LOW)**
+  - Same shape: `varchar(200)` rejects, error message leaks schema. `evaluation_notes` is `TEXT` which would have no PG-side cap at all if I'd tried a 100MB payload.
+
+- S3: PATCH `/cambridge-submissions/:id/score` with `{score: 200}` on a B2-First reading-use-of-english submission [Insider] → **BUG → fixed (MEDIUM)**
+  - Accepted. Stored as 200. Real Cambridge raw max for B2-First reading-use-of-english is ≈ 75. Admin can grade fraudulent passes with non-physical scores.
+  - Root cause: `validateScore()` in `shared/validation.js` allows 0-200. The 200 cap doesn't reflect any real exam max for either Cambridge or IELTS — it's an unconstrained upper bound that the autopilot picked at some point.
+  - `score=-50` correctly rejected, `score=201` correctly rejected — only the 0-200 window was the gap.
+
+- S4: `stripHtmlTags` against `&lt;script&gt;…&lt;/script&gt;` and `<scr<script>ipt>` [Polyglot] → **PASS (defense-in-depth)**
+  - Entity-encoded payload stored as the literal text `&lt;script&gt;…` — when rendered through `escapeHtml` on the dashboard it shows as `&amp;lt;script&amp;gt;…` which is harmless.
+  - Nested `<scr<script>ipt>` was reduced to `ipt>alert(1)` (the non-greedy regex ate `<scr<script>` greedily through the first `>`). The residual is plain text, no remaining tags. Renders safely.
+  - Stored XSS would only happen if a downstream renderer skipped escapeHtml — which the existing dashboard code doesn't. No fix needed.
+
+### Fixes
+
+**Fix A — Lower `validateScore` upper bound from 200 → 100:**
+- `shared/validation.js`: changed `parsed > 200` → `parsed > 100`. Real Cambridge raw maxes top out at ≈ 90 (C1-Advanced); IELTS is 0-40. 100 is a safety net, not a per-skill cap. Comment explains the R27 trigger.
+- `server-cjs.cjs`: synced the same change to the CJS-private copy of `validateScore` (line 84). Both code paths now reject anything > 100.
+- Cambridge and IELTS-ESM both import from `shared/validation.js` and are auto-fixed.
+- The endpoint still SHOULD enforce a per-level/skill cap on top of this; that's a deeper fix deferred for the architect (would need a `CAMBRIDGE_MAX_RAW_SCORES` table mapped to actual exam papers).
+
+**Fix B — Explicit length validation in PATCH endpoints:**
+- `cambridge-database-server.js` PATCH `/cambridge-student-results/:id`: added `student_id`/`student_name`/`cefr_level` length caps (200/200/50) right after `stripHtmlTags`. Returns clean 400 with named-field error before reaching the DB.
+- `cambridge-database-server.js` PATCH `/cambridge-submissions/:id/evaluate`: added `evaluatorName` (200) and `evaluationNotes` (5000) caps right after `stripHtmlTags`. The 5000 on notes is a defensive cap because the underlying column is `TEXT` (no PG limit) — payloads bigger than that are abuse.
+- These match the validations the POST endpoints already have, eliminating the partial drift.
+
+### Verification (post-fix, after fresh server restart)
+
+- S1v2 50KB student_name → 400 "Student name must be at most 200 characters" (no schema leak) ✓
+- S2v2 100KB evaluator_name → 400 "evaluatorName must be at most 200 characters" ✓
+- S3v2 score=200 → 400 "Score must be between 0 and 100" ✓
+- S3 boundary score=99 → accepted ✓
+- S3 boundary score=101 → rejected ✓
+- S3 regression score=75 (legit B2-First reading max) → accepted ✓
+
+### Pattern Analysis
+
+- **Sibling-endpoint partial drift now confirmed across THREE pairs:** R26 found `/submit-speaking` vs `/cambridge-submissions`; R27 found PATCH `/cambridge-student-results/:id` vs POST `/cambridge-student-results` and PATCH `/cambridge-submissions/:id/evaluate` vs POST `/cambridge-submissions`. The autopilot adds POST validation more carefully than PATCH validation (probably because POST is "create new" and feels riskier, while PATCH is "modify existing" and feels safer). **This is a generalizable lesson: every POST validation should be replicated on the matching PATCH/PUT.**
+
+- **Database schema as last line of defense saved us, but leaked itself doing so.** The `varchar(200)` caps on `student_name` and `evaluator_name` blocked the 50KB/100KB attacks, but the PG error went straight to the client as a 500 with the raw error message. Two lessons: (1) DB constraints are great defense-in-depth but should never be the only check, and (2) the `try/catch` blocks in admin endpoints should sanitize PG errors before returning them — translating "value too long for type character varying(200)" into "field exceeds maximum length" without revealing the DB column type. R27 closes this for the two endpoints I touched, but a global fix (catch-and-sanitize PG errors at the express error handler) would be better.
+
+- **`validateScore`'s 0-200 upper bound was vestigial.** Looking at git blame, it's been 0-200 since the file was extracted into shared/. Neither IELTS (0-40) nor Cambridge (0-90 max) ever needed 200. The number 200 was a "round upper bound" that nobody validated against actual exam paper maxes. **Lesson: validation ranges that aren't tied to a real-world constraint will eventually be wrong by an order of magnitude.** The 100 cap is still loose but at least within an order of magnitude of reality.
+
+### Intelligence Update
+
+- Proven solid: PATCH `/cambridge-student-results/:id` length caps, PATCH `/cambridge-submissions/:id/evaluate` length caps, `validateScore` upper bound lowered to 100, stripHtmlTags safe against entity-encoded and nested tag payloads when rendered with escapeHtml downstream
+- New weak pattern logged: PATCH endpoints lag behind POST endpoint validations (third instance of sibling-endpoint partial drift)
+- New weak pattern logged: PG error messages leak column types when caught by generic try/catch blocks
+- Drift count update: 8 occurrences (R20-R27); R27 alone added 2 new sibling-drift instances
+- Coverage: 158 scenarios across 27 rounds, 54 bugs found, 49 fixed
+
+### Stats (Round 27)
+Tested: 4 | Passed: 1 | Failed: 3 (1 MEDIUM, 2 LOW) | Fixed: 3 | Deferred: 0

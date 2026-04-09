@@ -433,17 +433,14 @@ class DistractionFreeMode {
                 color: rgba(255,255,255,0.55) !important;
                 letter-spacing: 0.04em;
             }
-            /* On narrow viewports, the audio popup and other Cambridge UI
-               anchor to bottom-left. Move the Secure Mode badge to top-right
-               so it never overlaps and stays visible. */
-            @media (max-width: 768px) {
+            /* On phone-class viewports, tighten the badge so it doesn't
+               occupy too much horizontal space. Position is unchanged. */
+            @media (max-width: 480px) {
                 .dfm-secure-badge {
-                    bottom: auto;
-                    left: auto;
-                    top: 10px;
-                    right: 10px;
-                    padding: 6px 10px;
+                    padding: 5px 9px;
                     font-size: 11px;
+                    top: 50px;
+                    right: 8px;
                 }
             }
             .dfm-mobile-advisory {

@@ -169,14 +169,19 @@
      this static clone) but it visually matches the official
      screenshots and the existing CSS styles it correctly. */
   function injectFlagButtons() {
-    var wrappers = document.querySelectorAll(
-      '#sectionContent .QuestionDisplay__questionDisplayWrapper___1n_b0'
+    // Target the questionBody (which is the flex row that hosts the
+    // mainQuestionWrapper + the right gutter). This matches Part 5/6/8
+    // structure exactly so the existing CSS positions us correctly.
+    var bodies = document.querySelectorAll(
+      '#sectionContent .QuestionDisplay__questionBody___ZOMJ7'
     );
-    Array.prototype.forEach.call(wrappers, function (wrapper) {
-      // Skip if a flag sibling already exists inside the wrapper
-      if (wrapper.querySelector('.QuestionDisplay__visibleFlag___AmAom')) return;
-      // Build the gutter container + button
-      var num = wrapperOrderNumber(wrapper);
+    Array.prototype.forEach.call(bodies, function (body) {
+      // Skip if a flag already exists inside this body
+      if (body.querySelector('.QuestionDisplay__visibleFlag___AmAom')) return;
+      var wrapper = body.closest(
+        '.QuestionDisplay__questionDisplayWrapper___1n_b0'
+      );
+      var num = wrapper ? wrapperOrderNumber(wrapper) : null;
       var gutter = document.createElement('div');
       gutter.className = 'screen question-margin right no-title';
       var btn = document.createElement('button');
@@ -197,7 +202,7 @@
         }
       });
       gutter.appendChild(btn);
-      wrapper.appendChild(gutter);
+      body.appendChild(gutter);
     });
   }
 
