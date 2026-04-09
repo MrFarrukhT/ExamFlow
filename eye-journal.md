@@ -2014,3 +2014,78 @@ Elevations landed: 1 (throttle reduction)
 Reverted: 0
 Fixes landed: 0
 Changes shipped: 1 file modified
+
+---
+
+## Session: 2026-04-09 (IELTS + Cambridge official-spec compliance audit)
+Persona: Test administrator verifying that durations and student controls match the official IELTS and Cambridge handbooks
+System: Both (IELTS port 3002 + Cambridge port 3003)
+Pages explored: All 10 IELTS writing.html mocks, all 5 Cambridge dashboard levels, timer.js shared duration table, listening + reading wrappers
+Starting state: A real student opening the writing test could see four buttons claiming to start/pause/resume/reset their own exam timer (a UX promise that violates official IELTS rules). Cambridge dashboard hardcoded the same durations for every level even though the spec varies by level. Three Cambridge timer values in `getTimerDuration` did not match the official Cambridge English handbook.
+
+### Round 1 — direct prompt: "make sure that the platform follows the official IELTS and Cambridge guidelines and doesn't have anything extra"
+
+**Findings (4 deviations):**
+- [T1] IELTS Writing — All 10 `MOCKs/MOCK N/writing.html` files render a `.timer-tooltip` with `Start Timer / Pause / Resume / Reset` buttons. The buttons reference functions (`startTimer`, `pauseTimer`, `resumeTimer`, `resetTimer`, `showTimerTooltip`) that are **not defined anywhere in the IELTS codebase** — they are dead handlers AND a compliance violation. Real IELTS rules forbid student-controlled pause/reset/restart of the exam timer.
+- [T1] Cambridge timer.js `getTimerDuration` — wrong durations for 3 (level, module) pairs vs the official Cambridge handbook:
+  - A1 Movers Reading & Writing: 35 → should be 30
+  - A1 Movers Listening: 30 → should be 25
+  - B1 Preliminary Listening: 40 → should be 35
+- [T1] Cambridge dashboard — `loadModulesForLevel` rendered the same hardcoded `~60 / ~45 / ~40` minute strings on every separate-module level (B1/B2/C1) and the same `~60 / ~30` strings on every combined-module level (A1/A2). So a student opening the A1 Movers dashboard saw "~60 minutes" for Reading & Writing instead of 30, and the C1 dashboard claimed "~60 minutes" for Reading instead of 90. The displayed durations bore no relationship to the actual timer the test would launch with.
+- [T0] Cross-cutting — found no IELTS Speaking student page anywhere (correct: official IELTS Speaking is examiner-led, no candidate UI), and Cambridge Speaking pages exist for every level (correct). No "extras" beyond the two real systems.
+
+**Action:** POLISH 1 (timer.js single source of truth) + REBUILD 1 (dashboard duration lookup) + FIX 10 (strip non-compliant timer controls from every IELTS writing mock).
+
+- [T1] All 10 `MOCKs/MOCK N/writing.html` — Stripped the entire `<div class="timer-tooltip">` block and the `onclick="showTimerTooltip()"` handler from `.timer-display`. Replaced with the same `<span class="timer-display">60:00</span>` pattern used by reading.html and listening.html (no manual controls, runs from start to 0). Inline comment notes the IELTS rule.
+  Mode: fix (compliance + dead-code removal)
+  Quality layer: 1-Functional → 4-Polished
+  Files: MOCKs/MOCK 1..10/writing.html
+
+- [T1] `assets/js/timer.js` — `getTimerDuration` table corrected per official Cambridge English specs (A1 Movers 30/25, B1 Preliminary listening 35) and a header comment listing every level's official spec was added so the next person who touches this table can see the source of truth at a glance.
+  Mode: polish (compliance fix in single source of truth)
+  Quality layer: 3-Efficient → 5-Delightful (correct + documented)
+  Files: assets/js/timer.js:601-612
+
+- [T1] `Cambridge/dashboard-cambridge.html` — `loadModulesForLevel(level)` rebuilt to compute durations from a per-level lookup table instead of hardcoding the same numbers in every branch. Both branches (combined R&W vs separate R+W) now interpolate `~${d['<module>']} minutes` from the same table. Speaking durations also moved into the lookup so the inline ternary disappeared.
+  Mode: rebuild (single source of truth for displayed durations)
+  Quality layer: 1-Functional → 5-Delightful
+  Files: Cambridge/dashboard-cambridge.html:314-396
+
+### Verification (browser walkthrough)
+| Surface | Verified state | Result |
+|---------|---------------|--------|
+| IELTS MOCK 1 writing.html | Timer renders as `59:57` and counts down; no Start/Pause/Resume/Reset buttons in DOM | ✓ matches official IELTS rules |
+| IELTS MOCK 1 reading.html | Timer renders as `60:00` (60 min spec) | ✓ |
+| IELTS MOCK 1 listening.html | Timer renders as `32:00` (computer-delivered IELTS: ~30 min audio + 2 min review) | ✓ |
+| Cambridge A1 Movers dashboard | `R&W ~30 minutes / Listening ~25 minutes / Speaking ~7 minutes` | ✓ matches YLE Movers handbook |
+| Cambridge A2 Key dashboard (table verified) | `R&W ~60 / Listening ~30 / Speaking ~10` | ✓ matches KET handbook |
+| Cambridge B1 Preliminary dashboard | `Reading ~45 / Writing ~45 / Listening ~35 / Speaking ~12 minutes` | ✓ matches PET handbook |
+| Cambridge B2 First dashboard | `Reading & Use of English ~75 / Writing ~80 / Listening ~40 / Speaking ~14 minutes` | ✓ matches FCE handbook |
+| Cambridge C1 Advanced dashboard | `Reading & Use of English ~90 / Writing ~90 / Listening ~40 / Speaking ~15 minutes` | ✓ matches CAE handbook |
+
+### Quality Map (after this round)
+| Page | Layer | Notes |
+|------|-------|-------|
+| MOCKs/MOCK 1..10/writing.html (timer block) | 5-Delightful | Compliant single-display timer, dead handlers gone |
+| assets/js/timer.js (Cambridge duration table) | 5-Delightful | Correct values + spec citations in header comment |
+| Cambridge/dashboard-cambridge.html (module cards) | 5-Delightful | Per-level lookup, no hardcoded constants, single source of truth |
+
+### Verified-not-needed (no extras found)
+- IELTS Speaking — no candidate UI exists (correct: official IELTS Speaking is face-to-face only)
+- Olympiada (Zarmet University) — same launcher/dashboard pipeline as Cambridge, no spec deviations
+- Cambridge Speaking pages — exist for every level, recording-based (allowed alternative to in-person)
+
+### Deferred
+- Pre-existing console error `SyntaxError: Identifier 'showSaveIndicator' has already been declared` (session-manager.js) — unrelated to compliance, present before this session.
+- Hardcoded `Test Taker ID: 123456789` placeholder in IELTS writing.html headers — not a spec violation but worth replacing with the actual student ID at some point.
+
+### Session Stats
+Pages explored: 12 (10 IELTS writing mocks + Cambridge dashboard at 5 levels + 2 IELTS read/listen sanity checks)
+Rounds: 1
+Polishes landed: 1 (timer.js Cambridge duration table)
+Rebuilds landed: 1 (Cambridge dashboard duration lookup)
+Fixes landed: 10 (timer-control strip across MOCK 1..10 writing.html — 8 via one-time script, 2 already cleaned via Edit)
+Reverted: 0
+Files touched: 12 (10 writing.html + timer.js + dashboard-cambridge.html)
+Generator script written: 1 (e:/tmp/strip-writing-timer-controls.js — one-time tool)
+Verification screenshots: 2 (eye-compliance-writing.png, eye-compliance-cambridge-a1.png)
