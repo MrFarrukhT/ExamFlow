@@ -1,5 +1,18 @@
 # Eye Journal
 
+## Session: 2026-04-09 16:50 — End-to-End Test Round 7: Cambridge A2-Key Listening Mock 1
+Persona: Student (99924 / Eye Bot A2) → Admin
+System: Cambridge (port 3003)
+
+### Round 7 — Cambridge A2-Key Listening Mock 1
+- [PASS] Set 25 answers (L1-L25), submit → 200 OK
+- [PASS] DB: `99924 | A2-Key | listening | 25 answers`
+- [PASS] Admin: `99924 | Eye Bot A | A2-Key | Mock 1 | Listening | Unscored`
+
+**A2-Key fully tested:** R&W (30 answers) + Listening (25 answers)
+
+---
+
 ## Session: 2026-04-09 16:35 — End-to-End Test Round 6: Cambridge A2-Key Reading-Writing Mock 1
 Persona: Student (99924 / Eye Bot A2) → Admin
 System: Cambridge (port 3003)
