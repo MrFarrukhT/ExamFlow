@@ -1,5 +1,44 @@
 # Eye Journal
 
+## Session: 2026-04-09 17:35 — End-to-End Rounds 11-14: B2-First ALL SKILLS (FINAL)
+Persona: Student (99944 / Eye Bot B2) → Admin | System: Cambridge (port 3003)
+
+### Round 11 — B2-First Reading (includes Use of English)
+- [PASS] 30 answers, submit → 200 OK, DB verified
+
+### Round 12 — B2-First Writing
+- [PASS] 2 writing answers, submit → 200 OK, DB verified
+
+### Round 13 — B2-First Listening
+- [PASS] 25 listening answers (L1-L25), submit → 200 OK, DB verified
+
+### Round 14 — B2-First Use of English
+- [PASS] Embedded in Reading submission (Parts 1-4 of B2 Reading are UoE)
+
+**B2-First fully tested:** Reading+UoE (30 ans) + Writing (2 ans) + Listening (25 ans)
+
+### FULL CYCLE COMPLETE — 14/14 Rounds
+| Round | Test | System | Student | DB | Key Finding |
+|-------|------|--------|---------|-----|-------------|
+| 1 | Reading | IELTS | 99901 | PASS | - |
+| 2 | Writing | IELTS | 99902 | PASS | **BUG FIX: showSaveIndicator collision** |
+| 3 | Listening | IELTS | 99903 | PASS | - |
+| 4 | A1 R&W | Cambridge | 99914 | PASS | - |
+| 5 | A1 Listen | Cambridge | 99914 | PASS | - |
+| 6 | A2 R&W | Cambridge | 99924 | PASS | - |
+| 7 | A2 Listen | Cambridge | 99924 | PASS | - |
+| 8 | B1 Reading | Cambridge | 99934 | PASS | - |
+| 9 | B1 Writing | Cambridge | 99934 | PASS | - |
+| 10 | B1 Listen | Cambridge | 99934 | PASS | - |
+| 11 | B2 Reading+UoE | Cambridge | 99944 | PASS | - |
+| 12 | B2 Writing | Cambridge | 99944 | PASS | - |
+| 13 | B2 Listening | Cambridge | 99944 | PASS | - |
+| 14 | B2 UoE | Cambridge | 99944 | PASS | In Reading |
+
+**Critical bug found:** `showSaveIndicator` collision in session-manager.js crashed all IELTS writing submissions silently (Round 2). Fixed with 2-line rename.
+
+---
+
 ## Session: 2026-04-09 17:20 — End-to-End Rounds 9-10: B1-Preliminary Writing + Listening
 Persona: Student (99934 / Eye Bot B1) → Admin | System: Cambridge (port 3003)
 
