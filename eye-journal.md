@@ -348,13 +348,22 @@ Reference set: cae/examples/{1..8,l1..l5,w1,w2}.png
   Quality layer: 4-Polished → 5-Delightful
   Files: assets/js/cambridge/cambridge-c1-question-nav.js (+38 lines, injectFlagButtons), Cambridge/MOCKs-Cambridge/C1-Advanced/Part 2.html (+script tag), Cambridge/MOCKs-Cambridge/C1-Advanced/Part 3.html (+script tag), Cambridge/MOCKs-Cambridge/C1-Advanced/Part 7.html (+script tag)
 
-### Session Stats (rounds 3 + 4 cumulative)
-Pages explored: 14 C1 Advanced surfaces walked twice
-Rounds: 2 in this session
+### Round 5 (same session, cron-driven)
+**Explored:** Walked the four surfaces round 4 missed — Listening Parts 2 & 4 and Writing Parts 1 & 2 — and confirmed they had zero bookmark/flag buttons at runtime. Listening Parts 1 & 3 already shipped with 6 native flags each (one per MCQ); Listening 2 & 4 (sentence completion + multi-match task) had none. Writing Parts 1 & 2 had none. Then added the script tag to all four.
+
+- [T3] Listening Parts 2 & 4, Writing Parts 1 & 2 — wired `cambridge-c1-question-nav.js` into all four. Listening 2 ends up with 1 flag (single sentence-completion body), Listening 4 with 2 (one per task body — Task 1 and Task 2). Writing pages were a special case: split-writing has TWO question bodies (the prompt pane and the textarea pane) and the official screenshots show the bookmark only beside the textarea — naive injection produced 2 flags. Updated `injectFlagButtons()` to detect `body[data-c1-layout="split-writing"]` and skip bodies that don't contain a `<textarea>` or `.c1-writing-pane`. Both writing pages now end up with exactly 1 flag, matching w1.png / w2.png.
+  Verified: All 14 C1 surfaces now carry at least one flag (rounds 1-5 cumulative). Spot-checked Listening 2 (1), Listening 4 (2), Writing 1 (1), Writing 2 (1) — all match expectations.
+  Mode: polish (final visual parity completion)
+  Quality layer: 4-Polished → 5-Delightful
+  Files: assets/js/cambridge/cambridge-c1-question-nav.js (+8 lines, split-writing skip), Cambridge/MOCKs-Cambridge/C1-Advanced/Listening Part 2.html (+script tag), Listening Part 4.html (+script tag), Writing Part 1.html (+script tag), Writing Part 2.html (+script tag)
+
+### Session Stats (rounds 3 + 4 + 5 cumulative)
+Pages explored: 14 C1 Advanced surfaces walked three times
+Rounds: 3 in this session
 Rebuilds landed: 1 (Part 4 single-question pagination)
-Polishes landed: 2 (Part 1 popover gap, bookmark icon parity)
+Polishes landed: 3 (Part 1 popover gap, bookmark icon parity for reading + listening + writing)
 Reverted: 0
-Files touched: 7 across both rounds
+Files touched: 11 across all three rounds
 
 ---
 
