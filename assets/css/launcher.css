@@ -13,7 +13,11 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    /* Allow vertical scrolling on small viewports where the launcher card
+       is taller than the screen (iPhone SE, landscape mobile, small tablets). */
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 1rem 0;
 }
 
 .launcher-container {
@@ -332,18 +336,71 @@ body {
         padding: 2rem 1.5rem;
         margin: 1rem;
     }
-    
+
     .launcher-header h1 {
         font-size: 2rem;
     }
-    
+
     .launcher-header p {
         font-size: 1rem;
     }
-    
+
     .launch-button {
         padding: 0.8rem 2rem;
         font-size: 1.1rem;
+    }
+}
+
+/* Tighter layout on phone-sized viewports so the entire card fits without
+   feeling cramped: smaller logo, tighter feature spacing, no big gaps. */
+@media (max-width: 420px) {
+    .launcher-container {
+        padding: 1.5rem 1.25rem;
+        margin: 0.5rem;
+    }
+    .launcher-header {
+        margin-bottom: 1.25rem;
+    }
+    .logo-container .app-icon svg {
+        width: 64px;
+        height: 64px;
+    }
+    .launcher-header h1 {
+        font-size: 1.6rem;
+    }
+    .launcher-header p {
+        font-size: 0.9rem;
+    }
+    .system-info {
+        padding: 1rem 1.1rem;
+        margin-bottom: 1.25rem;
+    }
+    .info-item {
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+    .launch-button {
+        font-size: 1rem;
+        padding: 0.75rem 1.5rem;
+        margin-bottom: 0.8rem;
+    }
+    .launch-hint {
+        margin-bottom: 1.25rem;
+        font-size: 0.75rem;
+    }
+    .feature-item {
+        padding: 0.55rem 0;
+        font-size: 0.85rem;
+        gap: 10px;
+    }
+    .feature-item svg {
+        width: 16px;
+        height: 16px;
+    }
+    .launcher-footer {
+        padding-top: 1rem;
+        margin-top: 1rem;
+        font-size: 0.78rem;
     }
 }
 

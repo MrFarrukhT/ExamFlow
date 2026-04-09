@@ -1494,3 +1494,74 @@ Trigger: R24 clean-up — three deferred concerns from the prior round, all touc
 
 ### Stats (Round 25)
 Tested: 6 | Passed: 1 | Failed: 5 (3 HIGH, 2 MEDIUM) | Fixed: 5 (all in one patch — 3 fixes covering 6 files) | Deferred: 0
+
+---
+
+## Session: 2026-04-09 17:50
+Focus: R26 — hunt parallel-code drift between sibling endpoints. R25's "parallel code" pattern logged warned that identical bugs propagate everywhere; this round audited the *non-identical* sibling paths (e.g., `/submit-speaking` vs `/cambridge-submissions`) which the autopilot's recent fixes only updated on one side.
+Trigger: Updated cursor weak-pattern list flagged "parallel-code-bugs-propagate-identically-to-both-servers" — but the harder version is *partial* drift, where one sibling has the protection and the other doesn't.
+
+### Scenarios
+
+- S1: Cambridge `/submit-speaking` with 1-second duration / missing timestamps / endTime-before-startTime [Cheater] → **BUG (HIGH) — three failures in one endpoint**
+  - S1a: `startTime=...10:00:00.000Z, endTime=...10:00:01.000Z` → 200 OK, stored ❌
+  - S1b: omit startTime/endTime entirely → 200 OK, stored as NULL ❌
+  - S1c: endTime before startTime → 200 OK, stored as a "negative" duration ❌
+  - Root cause: `/submit-speaking` accepts `startTime, endTime` from req.body and inserts them straight into `cambridge_submissions` (line 728-730) with no parsing, NaN check, range check, or min-time guard. Sibling endpoint `/cambridge-submissions` has all of these. R25's min-time fix was applied to the regular submission endpoint but didn't touch the speaking endpoint.
+
+- S2: bandScoreFromRaw across full range — submit reading with score=4, 15, 30, 40, 41 [Explorer] → **PASS**
+  - All five tampering attempts correctly recomputed to 0 (since the answer payload doesn't match the stored answer keys). band_score consistently mapped to "0.0".
+  - Note: this doesn't actually exercise bandScoreFromRaw across non-zero outputs — the recompute always lands on 0 unless the cheater knows the real answer keys. Code review of `IELTS_BAND_MAPPING` (R25) covers the rest.
+
+- S3: Min-time boundary at exactly 30s, 29.9s, 30.001s [Explorer] → **PASS**
+  - exactly 30000ms → accepted (boundary is `< MIN_ELAPSED_SEC`, strict less-than)
+  - 29900ms → "Submission rejected: test duration is below the minimum allowed."
+  - 30001ms → accepted
+  - The R25 boundary is correct; off-by-one not present. (Tested on Cambridge to avoid IELTS rate-limit cooldown after S2 burned the per-IP quota.)
+
+- S4: Admin `/update-score` with bandScore = `'<script>alert(1)</script>'`, `100`, `8.7` [Insider] → **BUG (MEDIUM) — CJS-only**
+  - All three tampered values were accepted by `server-cjs.cjs` (the running IELTS server) and would have been written verbatim to `band_score`.
+  - `local-database-server.js` (ESM) already validates: `bandNum < 0 || bandNum > 9 || (bandNum * 2) % 1 !== 0`. CJS was missing the entire validation block.
+  - Classic R24-style ESM↔CJS drift, just on the admin path instead of the student path. Bringing the count to **6 occurrences**.
+  - Severity MEDIUM because admin auth is required and admin-side XSS is mitigated by escapeHtml downstream — but data quality and the open question of "what else differs between ESM/CJS admin paths" makes this worth fixing immediately.
+
+### Fixes
+
+**Fix A — Cambridge `/submit-speaking` duration validation block:**
+- Inserted the same require-timestamps + NaN check + reverse-time + min-time(30s) + over-time(speakLimit*3) guards that `/cambridge-submissions` already has, right before the dedup lock acquisition
+- Uses `CAMBRIDGE_TIME_LIMITS[level][skill]` with a 30-min default for the speaking limit
+- Logs both rejection cases with student ID and elapsed time (consistent with the regular endpoint's warnings)
+
+**Fix B — Admin `/update-score` bandScore validation in CJS:**
+- Synced the existing ESM validation block into `server-cjs.cjs`
+- Same logic: `bandNum < 0 || bandNum > 9 || (bandNum * 2) % 1 !== 0` rejects with a clear message
+- Drift count update: 6 occurrences (R20–R26 now); the architect's recommendation to deprecate one server is overdue.
+
+### Verification (post-fix, after fresh server restart)
+
+- S1av2 1-second speaking → 400 "duration is below the minimum allowed" ✓
+- S1bv2 missing timestamps → 400 "startTime and endTime are required" ✓
+- S1cv2 reverse time → 400 "endTime must be after startTime" ✓
+- R26R1 1-minute speaking → 200, stored ✓ (regression)
+- S4a `<script>` → 400 "Band score must be between 0.0 and 9.0 in 0.5 increments" ✓
+- S4b 100 → 400 same message ✓
+- S4c 8.7 → 400 same message ✓
+- S4 regression 7.5 → 200, stored as "7.5" ✓
+
+### Pattern Analysis
+
+- **Partial drift is harder to find than full drift.** R24 found drift where the protection existed on one server (ESM) and not the other (CJS) for the *same* endpoint. R26 found a different shape: the protection exists on one *endpoint* (`/cambridge-submissions`) and not the *sibling endpoint* (`/submit-speaking`) on the same server. Sibling endpoints share a logical purpose but each has its own copy of validation; updating one is not the same as updating both. This drift category needs its own grep target: any time a fix touches `app.post(...submission...)`, also check for `submit-speaking`, `submit-writing`, `submit-reading` siblings.
+
+- **Drift count is now 6.** R20–R26 found ESM↔CJS or sibling-endpoint drift in every single round bar one (R22). This is no longer "occasional" — it's the dominant bug source. The architectural fix (deprecate one server, deduplicate sibling routes through a shared handler) needs to land or scenario rounds will keep mining this single seam forever.
+
+- **Admin endpoints need parallel scrutiny.** R20-R25 attacked student-side endpoints because that's where unauthenticated abuse lives. R26 found that the admin path has the same drift problem — meaning a compromised admin token (or a malicious admin) gets weaker protection on CJS than ESM. The /update-score gap was MEDIUM only because the admin dashboard escapes the rendered value, but next time the gap could be in a path that has no downstream sanitization.
+
+### Intelligence Update
+
+- Proven solid: Cambridge `/submit-speaking` duration validation (full block, parity with `/cambridge-submissions`), admin `/update-score` bandScore validation in CJS, min-time boundary correctness at 30s mark, bandScoreFromRaw recompute landing on 0 across tampered scores
+- New weak pattern logged: sibling-endpoint partial drift (one of `/submit-speaking`, `/cambridge-submissions`, `/submissions` has a guard the others lack)
+- Drift count: 6 occurrences (was 5 after R24)
+- Coverage: 154 scenarios across 26 rounds, 51 bugs found, 46 fixed
+
+### Stats (Round 26)
+Tested: 4 | Passed: 2 | Failed: 2 (1 HIGH, 1 MEDIUM) | Fixed: 2 | Deferred: 0

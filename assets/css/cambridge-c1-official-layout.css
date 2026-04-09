@@ -485,11 +485,11 @@ body[data-c1-layout="single-question"]
 .c1-popover-gap select {
     border: 1px solid #1e3a5f;
     border-radius: 2px;
-    padding: 4px 6px;
+    padding: 4px 0 4px 0;
     font-size: 0.9em;
     background: #fff;
-    width: 56px;
-    min-width: 56px;
+    width: 44px;
+    min-width: 44px;
     text-align: center;
     text-align-last: center;
     font-weight: 700;
@@ -498,16 +498,19 @@ body[data-c1-layout="single-question"]
     -webkit-appearance: none;
     -moz-appearance: none;
     background-image: none;
+    /* Hide the visible selected-option text — the dropdown still
+       shows full text when opened. Our badge overlays the letter. */
+    color: transparent;
+    text-shadow: none;
+}
+/* Restore colour for the dropdown options themselves */
+.c1-popover-gap select option {
     color: #1e3a5f;
+    background: #fff;
 }
 .c1-popover-gap select:focus {
     outline: 2px solid #007a87;
     outline-offset: 1px;
-}
-/* Hide the placeholder dash so the select looks empty under the
-   number badge before the candidate picks anything. */
-.c1-popover-gap select option[value=""] {
-    color: transparent;
 }
 
 /* The badge sits centred over the select. JS swaps its text

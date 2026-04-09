@@ -13,6 +13,10 @@ class DistractionFreeMode {
         }
         // Always track focus/visibility events even if fullscreen disabled
         this._setupViolationTracking();
+        // Show a one-time mobile advisory when the test is loaded on a small viewport.
+        // The Cambridge/IELTS test UIs are designed for desktop computers; mobile users
+        // need to know before they get frustrated by a broken layout.
+        this._maybeShowMobileAdvisory();
     }
 
     _loadCounters() {
@@ -245,6 +249,45 @@ class DistractionFreeMode {
         append();
     }
 
+    // Tests are designed for desktop. On a narrow viewport, surface a friendly
+    // advisory once per session so the student knows what to expect — but don't
+    // hard-block, since invigilators may legitimately demo the test on a tablet.
+    _maybeShowMobileAdvisory() {
+        if (typeof window === 'undefined') return;
+        if (window.innerWidth >= 768) return;
+        try {
+            if (sessionStorage.getItem('dfmMobileAdvisoryDismissed') === 'true') return;
+        } catch (e) {}
+
+        const mount = () => {
+            if (!document.body) return setTimeout(mount, 16);
+            if (document.getElementById('dfm-mobile-advisory')) return;
+            const advisory = document.createElement('div');
+            advisory.id = 'dfm-mobile-advisory';
+            advisory.className = 'dfm-mobile-advisory';
+            advisory.setAttribute('role', 'status');
+            advisory.innerHTML = `
+                <div class="dfm-mobile-advisory-card">
+                    <div class="dfm-mobile-advisory-icon" aria-hidden="true">💻</div>
+                    <h3>Best on a desktop</h3>
+                    <p>This test is designed for a laptop or desktop computer. On a phone, some questions may be hard to read and audio controls can be cramped.</p>
+                    <div class="dfm-mobile-advisory-actions">
+                        <button type="button" data-dfm-action="advisory-dismiss" class="dfm-overlay-btn">I understand, continue</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(advisory);
+            const dismiss = advisory.querySelector('[data-dfm-action="advisory-dismiss"]');
+            if (dismiss) {
+                dismiss.addEventListener('click', () => {
+                    try { sessionStorage.setItem('dfmMobileAdvisoryDismissed', 'true'); } catch (e) {}
+                    if (advisory.parentNode) advisory.parentNode.removeChild(advisory);
+                });
+            }
+        };
+        mount();
+    }
+
     _injectStyles() {
         if (document.getElementById('dfm-styles')) return;
         const style = document.createElement('style');
@@ -385,6 +428,66 @@ class DistractionFreeMode {
                 font-size: 0.78rem !important;
                 color: rgba(255,255,255,0.55) !important;
                 letter-spacing: 0.04em;
+            }
+            /* On narrow viewports, the audio popup and other Cambridge UI
+               anchor to bottom-left. Move the Secure Mode badge to top-right
+               so it never overlaps and stays visible. */
+            @media (max-width: 768px) {
+                .dfm-secure-badge {
+                    bottom: auto;
+                    left: auto;
+                    top: 10px;
+                    right: 10px;
+                    padding: 6px 10px;
+                    font-size: 11px;
+                }
+            }
+            .dfm-mobile-advisory {
+                position: fixed;
+                inset: 0;
+                background: rgba(10, 16, 28, 0.88);
+                z-index: 999998;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 1rem;
+                animation: dfmOverlayIn 220ms ease both;
+            }
+            .dfm-mobile-advisory-card {
+                background: #fff;
+                color: #2c3e50;
+                border-radius: 14px;
+                padding: 1.6rem 1.4rem;
+                max-width: 340px;
+                width: 100%;
+                text-align: center;
+                box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+                font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            }
+            .dfm-mobile-advisory-icon {
+                font-size: 42px;
+                margin-bottom: 0.5rem;
+            }
+            .dfm-mobile-advisory-card h3 {
+                font-size: 1.25rem;
+                margin: 0 0 0.6rem;
+                color: #2c3e50;
+                font-weight: 700;
+            }
+            .dfm-mobile-advisory-card p {
+                font-size: 0.95rem;
+                margin: 0 0 1.25rem;
+                color: #5a6c7d;
+                line-height: 1.5;
+            }
+            .dfm-mobile-advisory-actions {
+                display: flex;
+                justify-content: center;
+            }
+            .dfm-mobile-advisory .dfm-overlay-btn {
+                width: 100%;
+                font-size: 0.95rem;
+                padding: 0.7rem 1.5rem;
             }
         `;
         // Append once DOM is ready enough

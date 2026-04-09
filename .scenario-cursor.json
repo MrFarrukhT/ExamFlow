@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-09 17:30",
-  "totalRuns": 25,
+  "lastRun": "2026-04-09 17:50",
+  "totalRuns": 26,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -111,7 +111,10 @@
     "ielts-writing-speaking-bandscore-forced-null-both-servers",
     "ielts-cambridge-minimum-time-guard-30s",
     "scoretamper-flag-surfaced-in-admin-badge",
-    "bandscorefromraw-zero-boundary-correct"
+    "bandscorefromraw-zero-boundary-correct",
+    "cambridge-submit-speaking-duration-validation-parity",
+    "admin-update-score-bandscore-validation-cjs-synced",
+    "min-time-boundary-30s-inclusive-correct"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
@@ -131,7 +134,9 @@
     "parallel-code-bugs-propagate-identically-to-both-servers-not-just-drift",
     "admin-dashboard-flag-surfaces-lag-behind-server-side-flag-introductions",
     "clamp-vs-force-null-policy-confusion-when-field-has-admin-grading-workflow",
-    "upper-bound-only-time-validation-misses-impossibly-fast-forged-submissions"
+    "upper-bound-only-time-validation-misses-impossibly-fast-forged-submissions",
+    "sibling-endpoint-partial-drift-submit-speaking-vs-cambridge-submissions-r26",
+    "esm-cjs-drift-now-6-occurrences-spans-student-and-admin-paths-r26"
   ],
   "untestedAreas": [
     "browser-based-c1-advanced-exam-flow"
@@ -156,10 +161,10 @@
       "reason": "Every enum addition requires a paired DB migration. Architect should add a code review checklist."
     },
     {
-      "title": "ESM↔CJS drift recurring (5 occurrences, R24 most critical)",
+      "title": "ESM↔CJS drift recurring (6 occurrences as of R26)",
       "severity": "CRITICAL",
       "since": "2026-04-09",
-      "reason": "5 occurrences. R24 had production-fully-exploitable score tampering hidden by drift. Architect MUST automate sync or deprecate one server NOW."
+      "reason": "6 occurrences across R20-R26. R24 had production-fully-exploitable score tampering hidden by drift; R26 found admin /update-score CJS missing the bandScore validation that ESM has. Architect MUST automate sync or deprecate one server NOW."
     },
     {
       "title": "Submissions list returns 5604+ rows unpaginated",
@@ -206,9 +211,9 @@
     }
   ],
   "stats": {
-    "scenariosTested": 150,
-    "bugsFound": 51,
-    "bugsFixed": 46,
+    "scenariosTested": 154,
+    "bugsFound": 53,
+    "bugsFixed": 48,
     "bugsDeferred": 10
   }
 }

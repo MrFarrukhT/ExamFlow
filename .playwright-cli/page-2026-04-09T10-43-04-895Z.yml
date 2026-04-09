@@ -1,0 +1,217 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img "header.logo"
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - generic [ref=e10]:
+              - status [ref=e11]: Connected
+              - generic [ref=e13]: 
+            - button "Messages" [ref=e14]:
+              - generic [ref=e15]:
+                - generic [ref=e16]: Messages
+                - generic [ref=e17]: 
+            - button "Options" [ref=e18]:
+              - generic [ref=e19]:
+                - generic [ref=e20]: Options
+                - generic [ref=e21]: 
+            - button "Show notes" [ref=e22]:
+              - generic [ref=e23]:
+                - generic [ref=e24]: Show notes
+                - generic [ref=e25]: 
+          - generic [ref=e28]:
+            - generic [ref=e29]: Candidate ID
+            - generic [ref=e30]: "123"
+    - generic [ref=e32]:
+      - generic [ref=e34]:
+        - generic [ref=e36]:
+          - 'heading "Part 1 — Use of English: Vocabulary in Context (Questions 1–5)" [level=3] [ref=e37]'
+          - generic [ref=e38]: For each text or sign below, choose the answer (A, B or C) which best matches its meaning.
+        - generic [ref=e39]:
+          - main [ref=e40]:
+            - generic [ref=e41]:
+              - group [ref=e42]:
+                - generic [ref=e46]:
+                  - generic [ref=e49]:
+                    - img "Text message from Leah"
+                  - radiogroup "1 Leah would like her dad to" [ref=e51]:
+                    - paragraph [ref=e53]:
+                      - generic [ref=e54]: "1"
+                      - strong [ref=e56]: Leah would like her dad to
+                    - list [ref=e57]:
+                      - listitem [ref=e58]:
+                        - radio "bring her a snack to eat at the office." [ref=e59]
+                        - generic [ref=e61]: bring her a snack to eat at the office.
+                      - listitem [ref=e62]:
+                        - radio "prepare a meal for her to eat later this evening." [ref=e63]
+                        - generic [ref=e65]: prepare a meal for her to eat later this evening.
+                      - listitem [ref=e66]:
+                        - radio "contact her if he needs her to buy some groceries." [ref=e67]
+                        - generic [ref=e69]: contact her if he needs her to buy some groceries.
+                    - button "Flag question 1":
+                      - generic [ref=e70]: Flag question 1
+              - generic [ref=e72]: 
+          - main [ref=e74]:
+            - generic [ref=e75]:
+              - group [ref=e76]:
+                - generic [ref=e80]:
+                  - generic [ref=e83]:
+                    - img "Delivery notification card"
+                  - radiogroup "2" [ref=e85]:
+                    - paragraph [ref=e87]:
+                      - generic [ref=e88]: "2"
+                    - list [ref=e89]:
+                      - listitem [ref=e90]:
+                        - radio "If another person is picking up your parcel, they'll need to take their ID." [ref=e91]
+                        - generic [ref=e93]: If another person is picking up your parcel, they'll need to take their ID.
+                      - listitem [ref=e94]:
+                        - radio "If you ask someone to get your parcel, they'll have to show two documents." [ref=e95]
+                        - generic [ref=e97]: If you ask someone to get your parcel, they'll have to show two documents.
+                      - listitem [ref=e98]:
+                        - radio "If you contact the office staff, they'll try to deliver your parcel again." [ref=e99]
+                        - generic [ref=e101]: If you contact the office staff, they'll try to deliver your parcel again.
+                    - button "Flag question 2":
+                      - generic [ref=e102]: Flag question 2
+              - generic [ref=e104]: 
+          - main [ref=e106]:
+            - generic [ref=e107]:
+              - group [ref=e108]:
+                - generic [ref=e112]:
+                  - generic [ref=e115]:
+                    - img "Text message from Josh"
+                  - radiogroup "3 Josh sent this message" [ref=e117]:
+                    - paragraph [ref=e119]:
+                      - generic [ref=e120]: "3"
+                      - strong [ref=e122]: Josh sent this message
+                    - list [ref=e123]:
+                      - listitem [ref=e124]:
+                        - radio "to suggest he and Tod meet despite the weather forecast." [ref=e125]
+                        - generic [ref=e127]: to suggest he and Tod meet despite the weather forecast.
+                      - listitem [ref=e128]:
+                        - radio "to warn Tod about how bad the weather forecast is." [ref=e129]
+                        - generic [ref=e131]: to warn Tod about how bad the weather forecast is.
+                      - listitem [ref=e132]:
+                        - radio "to find out Tod's opinion about the weather forecast." [ref=e133]
+                        - generic [ref=e135]: to find out Tod's opinion about the weather forecast.
+                    - button "Flag question 3":
+                      - generic [ref=e136]: Flag question 3
+              - generic [ref=e138]: 
+          - main [ref=e140]:
+            - generic [ref=e141]:
+              - group [ref=e142]:
+                - generic [ref=e146]:
+                  - generic [ref=e149]:
+                    - img "University notice"
+                  - radiogroup "4 What is the purpose of this notice?" [ref=e151]:
+                    - paragraph [ref=e153]:
+                      - generic [ref=e154]: "4"
+                      - strong [ref=e156]: What is the purpose of this notice?
+                    - list [ref=e157]:
+                      - listitem [ref=e158]:
+                        - radio "to tell students not to use two of the desks for certain issues" [ref=e159]
+                        - generic [ref=e161]: to tell students not to use two of the desks for certain issues
+                      - listitem [ref=e162]:
+                        - radio "to announce to students that one of the desks has changed location" [ref=e163]
+                        - generic [ref=e165]: to announce to students that one of the desks has changed location
+                      - listitem [ref=e166]:
+                        - radio "to let students know that general issues can be dealt with at any desk" [ref=e167]
+                        - generic [ref=e169]: to let students know that general issues can be dealt with at any desk
+                    - button "Flag question 4":
+                      - generic [ref=e170]: Flag question 4
+              - generic [ref=e172]: 
+          - main [ref=e174]:
+            - generic [ref=e175]:
+              - group [ref=e176]:
+                - generic [ref=e180]:
+                  - generic [ref=e183]:
+                    - img "Text message from Cara"
+                  - radiogroup "5 Why is Cara texting?" [ref=e185]:
+                    - paragraph [ref=e187]:
+                      - generic [ref=e188]: "5"
+                      - strong [ref=e190]: Why is Cara texting?
+                    - list [ref=e191]:
+                      - listitem [ref=e192]:
+                        - radio "to offer to get something for Katie" [ref=e193]
+                        - generic [ref=e195]: to offer to get something for Katie
+                      - listitem [ref=e196]:
+                        - radio "to let Katie know that she's been held up" [ref=e197]
+                        - generic [ref=e199]: to let Katie know that she's been held up
+                      - listitem [ref=e200]:
+                        - radio "to remind Katie of a change to their plan" [ref=e201]
+                        - generic [ref=e203]: to remind Katie of a change to their plan
+                    - button "Flag question 5":
+                      - generic [ref=e204]: Flag question 5
+              - generic [ref=e206]: 
+      - contentinfo [ref=e208]:
+        - navigation "Previous / next question" [ref=e209]:
+          - button "Previous" [disabled] [ref=e210]:
+            - generic [ref=e211]: 
+          - button "Next" [ref=e212]:
+            - generic [ref=e213]: 
+        - navigation "Questions" [ref=e214]:
+          - tablist [ref=e215]:
+            - tab [ref=e216]:
+              - generic [ref=e217]: Part 1
+            - generic [ref=e218]:
+              - button "Question 1 Not attempted Active" [ref=e219]:
+                - generic [ref=e220]: Question 1
+                - text: "1"
+                - generic [ref=e221]: Not attempted Active
+              - button "Question 2 Not attempted" [ref=e222]:
+                - generic [ref=e223]: Question 2
+                - text: "2"
+                - generic [ref=e224]: Not attempted
+              - button "Question 3 Not attempted" [ref=e225]:
+                - generic [ref=e226]: Question 3
+                - text: "3"
+                - generic [ref=e227]: Not attempted
+              - button "Question 4 Not attempted" [ref=e228]:
+                - generic [ref=e229]: Question 4
+                - text: "4"
+                - generic [ref=e230]: Not attempted
+              - button "Question 5 Not attempted" [ref=e231]:
+                - generic [ref=e232]: Question 5
+                - text: "5"
+                - generic [ref=e233]: Not attempted
+          - tablist [ref=e234]:
+            - tab "Part 2. 0 of 5 questions attempted." [ref=e235]:
+              - generic [ref=e236]:
+                - text: Part 2
+                - generic [ref=e237]: 0 of 5
+                - generic [ref=e238]: Part 2. 0 of 5 questions attempted.
+          - tablist [ref=e239]:
+            - tab "Part 3. 0 of 5 questions attempted." [ref=e240]:
+              - generic [ref=e241]:
+                - text: Part 3
+                - generic [ref=e242]: 0 of 5
+                - generic [ref=e243]: Part 3. 0 of 5 questions attempted.
+          - tablist [ref=e244]:
+            - tab "Part 4. 0 of 5 questions attempted." [ref=e245]:
+              - generic [ref=e246]:
+                - text: Part 4
+                - generic [ref=e247]: 0 of 5
+                - generic [ref=e248]: Part 4. 0 of 5 questions attempted.
+          - tablist [ref=e249]:
+            - tab "Part 5. 0 of 6 questions attempted." [ref=e250]:
+              - generic [ref=e251]:
+                - text: Part 5
+                - generic [ref=e252]: 0 of 6
+                - generic [ref=e253]: Part 5. 0 of 6 questions attempted.
+          - tablist [ref=e254]:
+            - tab "Part 6. 0 of 6 questions attempted." [ref=e255]:
+              - generic [ref=e256]:
+                - text: Part 6
+                - generic [ref=e257]: 0 of 6
+                - generic [ref=e258]: Part 6. 0 of 6 questions attempted.
+          - button "Review your answers" [ref=e259]:
+            - generic [ref=e260]: 
+  - generic "Secure exam mode is active":
+    - generic: Secure Mode
+  - status [ref=e261]:
+    - generic [ref=e262]:
+      - generic [ref=e263]: 💻
+      - heading "Best on a desktop" [level=3] [ref=e264]
+      - paragraph [ref=e265]: This test is designed for a laptop or desktop computer. On a phone, some questions may be hard to read and audio controls can be cramped.
+      - button "I understand, continue" [ref=e267]
