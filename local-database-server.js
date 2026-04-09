@@ -484,10 +484,11 @@ app.post('/update-score', requireAdmin, async (req, res) => {
     try {
         const { submissionId, score, bandScore } = req.body;
 
-        if (!submissionId) {
+        const parsedSubmissionId = parseInt(submissionId, 10);
+        if (isNaN(parsedSubmissionId) || parsedSubmissionId <= 0) {
             return res.status(400).json({
                 success: false,
-                message: 'Submission ID is required'
+                message: 'Submission ID must be a positive integer'
             });
         }
 
@@ -497,7 +498,7 @@ app.post('/update-score', requireAdmin, async (req, res) => {
             return res.status(400).json({ success: false, message: scoreResult.error });
         }
 
-        console.log(`📊 Updating score for submission ${submissionId}: ${score}/40, Band: ${bandScore}`);
+        console.log(`📊 Updating score for submission ${parsedSubmissionId}: ${score}/40, Band: ${bandScore}`);
 
         const dbClient = await ensureConnection();
         const result = await dbClient.query(`
@@ -505,7 +506,7 @@ app.post('/update-score', requireAdmin, async (req, res) => {
             SET score = $1, band_score = $2
             WHERE id = $3
             RETURNING id, score, band_score
-        `, [score, bandScore, submissionId]);
+        `, [score, bandScore, parsedSubmissionId]);
 
         if (result.rows.length === 0) {
             return res.status(404).json({
@@ -514,7 +515,7 @@ app.post('/update-score', requireAdmin, async (req, res) => {
             });
         }
 
-        console.log(`✅ Score updated for submission ${submissionId}`);
+        console.log(`✅ Score updated for submission ${parsedSubmissionId}`);
 
         res.json({
             success: true,

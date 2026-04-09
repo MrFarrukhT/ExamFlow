@@ -91,13 +91,14 @@ export function createRetryQueue(ensureConnection, insertFn) {
     }
 
     // Start background retry every 90 seconds
+    // .unref() so this timer doesn't keep the process alive on graceful shutdown
     setInterval(async () => {
         try {
             await backgroundRetry();
         } catch (error) {
             console.error('Background retry error:', error.message);
         }
-    }, 90000);
+    }, 90000).unref();
 
     return { saveWithRetry };
 }

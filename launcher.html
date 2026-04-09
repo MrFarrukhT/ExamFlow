@@ -276,6 +276,11 @@
                             : isCambridge ? 'index.html?exam=cambridge'
                             : 'index.html';
 
+            // Fresh test session starts here — clear any anti-cheat counters left
+            // over from a previous test in the same browser tab so this run is judged
+            // on its own merit.
+            try { sessionStorage.removeItem('antiCheatCounters'); } catch (e) {}
+
             Promise.resolve(fullscreenPromise).then(() => {
                 setTimeout(() => {
                     sessionStorage.setItem('distractionFreeMode', 'true');

@@ -6,7 +6,7 @@ import 'dotenv/config';
 import path from 'path';
 import { createRetryQueue } from './shared/database.js';
 import { createServer } from './shared/server-bootstrap.js';
-import { validateScore, validateGrade, validateScoreAndGrade, validateStudentInfo, stripHtmlTags, sanitizeAntiCheat } from './shared/validation.js';
+import { validateScoreAndGrade, validateStudentInfo, stripHtmlTags, sanitizeAntiCheat } from './shared/validation.js';
 import { requireAdmin, rateLimit } from './shared/auth.js';
 
 const { app, db, ensureConnection, __dirname: serverDir, start } = createServer({
@@ -794,7 +794,10 @@ app.get('/cambridge-submissions', requireAdmin, async (req, res) => {
 // Update score for a Cambridge submission (admin only)
 app.patch('/cambridge-submissions/:id/score', requireAdmin, async (req, res) => {
     try {
-        const { id } = req.params;
+        const submissionId = parseInt(req.params.id, 10);
+        if (isNaN(submissionId) || submissionId <= 0) {
+            return res.status(400).json({ success: false, message: 'Invalid submission ID' });
+        }
         const { score, grade } = req.body;
 
         // Validate score and grade
@@ -803,7 +806,7 @@ app.patch('/cambridge-submissions/:id/score', requireAdmin, async (req, res) => 
             return res.status(400).json(validationError);
         }
 
-        console.log(`📊 Updating score for Cambridge submission ${id}: ${score}, Grade: ${grade || 'N/A'}`);
+        console.log(`📊 Updating score for Cambridge submission ${submissionId}: ${score}, Grade: ${grade || 'N/A'}`);
 
         const dbClient = await ensureConnection();
         const result = await dbClient.query(`
@@ -811,7 +814,7 @@ app.patch('/cambridge-submissions/:id/score', requireAdmin, async (req, res) => 
             SET score = $1, grade = $2
             WHERE id = $3
             RETURNING *
-        `, [score, grade || null, id]);
+        `, [score, grade || null, submissionId]);
 
         if (result.rows.length === 0) {
             return res.status(404).json({
@@ -820,7 +823,7 @@ app.patch('/cambridge-submissions/:id/score', requireAdmin, async (req, res) => 
             });
         }
 
-        console.log(`✅ Score updated for Cambridge submission ${id}`);
+        console.log(`✅ Score updated for Cambridge submission ${submissionId}`);
 
         res.json({
             success: true,
@@ -841,7 +844,10 @@ app.patch('/cambridge-submissions/:id/score', requireAdmin, async (req, res) => 
 // Update speaking test evaluation (admin only)
 app.patch('/cambridge-submissions/:id/evaluate', requireAdmin, async (req, res) => {
     try {
-        const { id } = req.params;
+        const submissionId = parseInt(req.params.id, 10);
+        if (isNaN(submissionId) || submissionId <= 0) {
+            return res.status(400).json({ success: false, message: 'Invalid submission ID' });
+        }
         const {
             score,
             grade,
@@ -859,7 +865,7 @@ app.patch('/cambridge-submissions/:id/evaluate', requireAdmin, async (req, res) 
         const sanitizedEvaluatorName = stripHtmlTags(evaluatorName);
         const sanitizedEvaluationNotes = stripHtmlTags(evaluationNotes);
 
-        console.log(`🎤 Evaluating speaking test ${id} by ${sanitizedEvaluatorName}: ${score}, Grade: ${grade || 'N/A'}`);
+        console.log(`🎤 Evaluating speaking test ${submissionId} by ${sanitizedEvaluatorName}: ${score}, Grade: ${grade || 'N/A'}`);
 
         const dbClient = await ensureConnection();
         const result = await dbClient.query(`
@@ -872,7 +878,7 @@ app.patch('/cambridge-submissions/:id/evaluate', requireAdmin, async (req, res) 
                 evaluation_notes = $4
             WHERE id = $5
             RETURNING *
-        `, [score, grade || null, sanitizedEvaluatorName, sanitizedEvaluationNotes, id]);
+        `, [score, grade || null, sanitizedEvaluatorName, sanitizedEvaluationNotes, submissionId]);
 
         if (result.rows.length === 0) {
             return res.status(404).json({
@@ -881,7 +887,7 @@ app.patch('/cambridge-submissions/:id/evaluate', requireAdmin, async (req, res) 
             });
         }
 
-        console.log(`✅ Speaking test ${id} evaluated successfully`);
+        console.log(`✅ Speaking test ${submissionId} evaluated successfully`);
 
         res.json({
             success: true,
@@ -1195,7 +1201,10 @@ app.post('/cambridge-student-results', requireAdmin, async (req, res) => {
 // Update Cambridge student result (admin only)
 app.patch('/cambridge-student-results/:id', requireAdmin, async (req, res) => {
     try {
-        const { id } = req.params;
+        const resultId = parseInt(req.params.id, 10);
+        if (isNaN(resultId) || resultId <= 0) {
+            return res.status(400).json({ success: false, message: 'Invalid student result ID' });
+        }
         const data = req.body;
 
         // Sanitize text fields if provided
@@ -1229,7 +1238,7 @@ app.patch('/cambridge-student-results/:id', requireAdmin, async (req, res) => {
             }
         }
 
-        console.log(`📊 Updating student result ID ${id}`);
+        console.log(`📊 Updating student result ID ${resultId}`);
 
         const dbClient = await ensureConnection();
         const result = await dbClient.query(`
@@ -1277,7 +1286,7 @@ app.patch('/cambridge-student-results/:id', requireAdmin, async (req, res) => {
             data.overall_scale, data.cefr_level,
             data.shields_listening, data.shields_reading_writing, data.shields_speaking, data.total_shields,
             data.passed,
-            id
+            resultId
         ]);
 
         if (result.rows.length === 0) {
@@ -1287,7 +1296,7 @@ app.patch('/cambridge-student-results/:id', requireAdmin, async (req, res) => {
             });
         }
 
-        console.log(`✅ Student result ${id} updated successfully`);
+        console.log(`✅ Student result ${resultId} updated successfully`);
 
         res.json({
             success: true,
@@ -1308,14 +1317,17 @@ app.patch('/cambridge-student-results/:id', requireAdmin, async (req, res) => {
 // Delete Cambridge student result (admin only)
 app.delete('/cambridge-student-results/:id', requireAdmin, async (req, res) => {
     try {
-        const { id } = req.params;
+        const resultId = parseInt(req.params.id, 10);
+        if (isNaN(resultId) || resultId <= 0) {
+            return res.status(400).json({ success: false, message: 'Invalid student result ID' });
+        }
 
-        console.log(`🗑️ Deleting student result ID ${id}`);
+        console.log(`🗑️ Deleting student result ID ${resultId}`);
 
         const dbClient = await ensureConnection();
         const result = await dbClient.query(
             'DELETE FROM cambridge_student_results WHERE id = $1 RETURNING *',
-            [id]
+            [resultId]
         );
 
         if (result.rows.length === 0) {
@@ -1325,7 +1337,7 @@ app.delete('/cambridge-student-results/:id', requireAdmin, async (req, res) => {
             });
         }
 
-        console.log(`✅ Student result ${id} deleted`);
+        console.log(`✅ Student result ${resultId} deleted`);
 
         res.json({
             success: true,

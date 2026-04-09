@@ -207,13 +207,3 @@ export function sanitizeAntiCheat(input, serverManagedKeys = []) {
     return out;
 }
 
-/**
- * Send a standardized error response.
- */
-export function errorResponse(res, status, message, error) {
-    const body = { success: false, message };
-    if (error && error.message) {
-        body.error = error.message;
-    }
-    return res.status(status).json(body);
-}
