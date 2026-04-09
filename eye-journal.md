@@ -1,5 +1,15 @@
 # Eye Journal
 
+## Session: 2026-04-09 17:05 — End-to-End Test Round 8: Cambridge B1-Preliminary Reading Mock 1
+Persona: Student (99934 / Eye Bot B1) → Admin | System: Cambridge (port 3003)
+
+### Round 8 — B1-Preliminary Reading
+- [PASS] 30 answers set, submit → 200 OK
+- [PASS] DB: `99934 | B1-Preliminary | reading | 30 answers`
+- [PASS] Admin: `99934 | Eye Bot B | B1-Preliminary | Mock 1 | Reading | Unscored`
+
+---
+
 ## Session: 2026-04-09 16:50 — End-to-End Test Round 7: Cambridge A2-Key Listening Mock 1
 Persona: Student (99924 / Eye Bot A2) → Admin
 System: Cambridge (port 3003)
