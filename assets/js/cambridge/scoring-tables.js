@@ -46,6 +46,17 @@
             readingWriting: { max: 35, scale: generateConversionTable(35, 100, 120, 106, 21) },
             listening:      { max: 25, scale: generateConversionTable(25, 100, 120, 106, 15) },
             speaking:       { max: 15, scale: generateConversionTable(15, 100, 120, 106, 9) }
+        },
+        // C1 Advanced — official Cambridge English Scale 160-210, pass at 180
+        // (Grade C). Raw maxes match the platform's C1 Advanced mocks: Reading
+        // & UoE 56 questions across 8 parts, Listening 30 across 4 parts.
+        // passRaw values are the official "minimum raw to reach 180 (pass)"
+        // boundaries published in the Cambridge English C1 Advanced handbook.
+        'C1-Advanced': {
+            reading:   { max: 56, scale: generateConversionTable(56, 160, 210, 180, 33) },
+            writing:   { max: 40, scale: generateConversionTable(40, 160, 210, 180, 24) },
+            listening: { max: 30, scale: generateConversionTable(30, 160, 210, 180, 18) },
+            speaking:  { max: 60, scale: generateConversionTable(60, 160, 210, 180, 36) }
         }
     };
 
@@ -66,6 +77,18 @@
         'A1-Movers': {
             'A2': 100,
             minPass: 100
+        },
+        // C1 Advanced grade boundaries per official Cambridge spec:
+        //   Grade A (C2):     200-210
+        //   Grade B (C1):     193-199
+        //   Grade C (C1):     180-192   ← minimum pass
+        //   B2 (below pass):  160-179
+        'C1-Advanced': {
+            'C2':           200,
+            'C1-Merit':     193,
+            'C1':           180,
+            'B2':           160,
+            minPass:        180
         }
     };
 

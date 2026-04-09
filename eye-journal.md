@@ -3012,3 +3012,58 @@ Fixes landed: 0
 Reverted: 0
 Files touched: 6
 Verification scripts: 1 (e:/tmp/verify-band-tables.js — 74 assertions, all pass)
+
+---
+
+## Session: 2026-04-09 (round 6 — C1 Advanced Cambridge scoring tables added)
+Persona: Olympiada / C1 Advanced student waiting to see their CEFR result; admin opening cambridge-student-results.html for a C1 cohort
+System: Cambridge port 3003 — `assets/js/cambridge/scoring-tables.js`, consumed by `cambridge-student-results.html`
+Pages explored: `assets/js/cambridge/scoring-tables.js`, `cambridge-student-results.html`, `assets/js/cambridge/cambridge-answer-sync.js` (A1 Movers default branch audit), `assets/js/cambridge/a1-movers-answer-sync.js` (verified A1 has its own dedicated sync)
+Starting state: After round 5 fixed the IELTS band tables, attention turned to Cambridge scoring. The shared `CambridgeScoring` namespace exposed via `assets/js/cambridge/scoring-tables.js` had `CONVERSION_TABLES` and `GRADE_BOUNDARIES` for A2 Key, B1 Preliminary, B2 First, and A1 Movers — but **no C1 Advanced**. C1 Olympiada students therefore got no scale score, no CEFR level, and no pass/fail status displayed.
+
+### Round 6 — direct prompt: same compliance brief, deeper pass
+
+**Findings:**
+- [T0] `assets/js/cambridge/cambridge-answer-sync.js:102–111` — comment mentions "A2 Key / A1 Movers" but A1 Movers actually loads its own `a1-movers-answer-sync.js` with the official 5+6+6+5+7+6 = 35 question structure, so it never reaches this default branch. Misleading comment, no runtime bug.
+- [T1] `assets/js/cambridge/scoring-tables.js` — no `'C1-Advanced'` in `CONVERSION_TABLES` or `GRADE_BOUNDARIES`. Every C1 submission resolved to `null` scale, `'-'` CEFR, and `false` pass status in `cambridge-student-results.html`.
+- [T0] IELTS Writing AI scoring (`local-database-server.js:881`) — `(Task1 + Task2 + Task2) / 3` is mathematically equivalent to the official `(T1 + 2×T2) / 3` weighting. Spec-compliant, just expressed as an addition.
+
+**Action:** REBUILD 1 (add C1 Advanced to scoring-tables.js).
+
+- [T1] `assets/js/cambridge/scoring-tables.js` — Added `'C1-Advanced'` to `CONVERSION_TABLES` with the official Cambridge English C1 Advanced scale (160-210) and to `GRADE_BOUNDARIES` with the official Grade A/B/C/B2 thresholds (200/193/180/160).
+  - Reading & UoE: max 56 (matches platform), passRaw 33
+  - Writing: max 40, passRaw 24
+  - Listening: max 30 (matches platform), passRaw 18
+  - Speaking: max 60, passRaw 36
+  - Grade boundaries: C2 ≥ 200, C1-Merit ≥ 193, C1 ≥ 180, B2 ≥ 160, minPass 180
+  Header comment cites the official Cambridge English C1 Advanced handbook.
+  Mode: rebuild
+  Quality layer: 1-Functional → 5-Delightful (C1 results now displayable end-to-end)
+  Files: assets/js/cambridge/scoring-tables.js
+  Verified by: `e:/tmp/verify-c1-scoring.js` — 19 assertions covering boundary conversions (reading 0/33/56 → 160/180/210, listening 0/18/30 → 160/180/210), CEFR labels (159 Below, 160 B2, 179 B2, 180 C1, 192 C1, 193 C1-Merit, 199 C1-Merit, 200 C2, 210 C2), and pass status (179 fail, 180 pass, 200 pass). All pass.
+
+### Quality Map (after this round)
+| Page / file | Layer | Notes |
+|------|-------|-------|
+| assets/js/cambridge/scoring-tables.js (CONVERSION_TABLES) | 5-Delightful | C1 Advanced added with official 160-210 scale |
+| assets/js/cambridge/scoring-tables.js (GRADE_BOUNDARIES) | 5-Delightful | C1 Advanced grades C2/C1-Merit/C1/B2 per official handbook |
+| cambridge-student-results.html (C1 row rendering) | 5-Delightful | Now resolves scale + CEFR + pass status for C1 students |
+
+### Verified-not-needed (still no extras found)
+- A1 Movers answer sync — already correct; uses `a1-movers-answer-sync.js` with the official 35-question structure.
+- IELTS Writing AI overall band formula — already spec-compliant.
+
+### Deferred (still)
+- B2 First mock content shape (6 parts × 32 questions vs official 7 × 52)
+- `cambridge-answer-sync.js:102` comment misleading about A1 Movers
+- IELTS Writing AI band validation accepts any 0-9, not just 0.5 increments
+
+### Session Stats
+Pages explored: 4 files
+Rounds: 1 (round 6 of the same compliance brief)
+Polishes landed: 0
+Rebuilds landed: 1 (C1 Advanced added to Cambridge scoring tables)
+Fixes landed: 0
+Reverted: 0
+Files touched: 1 (assets/js/cambridge/scoring-tables.js)
+Verification scripts: 1 (e:/tmp/verify-c1-scoring.js — 19 assertions, all pass)
