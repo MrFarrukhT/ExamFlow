@@ -529,6 +529,260 @@ body[data-c1-layout="single-question"]
     line-height: 1;
 }
 .c1-popover-gap.has-value .c1-popover-num {
-    color: #007a87;
+    color: #fff;
     font-size: 0.95em;
+}
+
+/* === Gap dropdown: teal fill when answer selected (1.png) ===
+   Official exam shows a solid teal box when the candidate has
+   chosen an answer, with white letter overlay.
+   ============================================================ */
+.c1-popover-gap.has-value select {
+    background: #007a87 !important;
+    border-color: #007a87;
+}
+
+/* === Part 4 rubric: teal left border + cream bg (4.png) ======
+   Key Word Transformation instructions use a distinctive accent
+   box — teal left border, cream background — different from the
+   plain white rubric used in other parts.
+   ============================================================ */
+body[data-c1-layout="single-question"]
+    #sectionContent .DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE {
+    border-left: 4px solid #007a87;
+    background: #fdf8ec;
+}
+
+/* === Footer navigation arrows (all screenshots) ==============
+   Official exam shows teal rounded-square buttons with white
+   arrows at bottom-right of every page.
+   ============================================================ */
+.footer__arrowIconBtn___3AiJS {
+    background: #007a87 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 4px !important;
+    width: 36px !important;
+    height: 36px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: background 0.15s ease;
+}
+.footer__arrowIconBtn___3AiJS:hover {
+    background: #00606b !important;
+}
+.footer__arrowIconBtn___3AiJS:disabled {
+    background: #b0b0b0 !important;
+    cursor: default !important;
+}
+.footer__arrowIconBtn___3AiJS i {
+    color: #fff !important;
+    font-size: 14px;
+}
+
+/* === Deliver / submit checkmark button (all screenshots) =====
+   Teal square with white checkmark at far-right of footer bar.
+   ============================================================ */
+.footer__deliverButton___3FM07 {
+    background: #007a87 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 4px !important;
+    width: 36px !important;
+    height: 36px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: background 0.15s ease;
+}
+.footer__deliverButton___3FM07:hover {
+    background: #00606b !important;
+}
+.footer__deliverButton___3FM07 i {
+    color: #fff !important;
+}
+
+/* === Right-column question boxes (5.png, 6.png, 8.png) =======
+   In split-reading layout, each question on the right side has
+   a bordered box with a teal left accent — matching the official
+   exam's distinctive per-question card appearance.
+   ============================================================ */
+body[data-c1-layout="split-reading"]
+    .DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE
+    + .QuestionDisplay__questionDisplayWrapper___1n_b0
+    ~ .QuestionDisplay__questionDisplayWrapper___1n_b0 {
+    border: 1px solid #d6d6d6;
+    border-left: 3px solid #007a87;
+    border-radius: 2px;
+    padding: 12px 16px;
+    background: #fff;
+}
+
+/* Question numbers in right-column boxes already use .order-number
+   which is styled globally below — no extra rules needed here. */
+
+/* === Inline text entry gaps (2.png, 4.png) ===================
+   Official exam shows compact bordered boxes for write-in gaps
+   with the question number as a subtle placeholder.
+   ============================================================ */
+.textEntryInteractionValue {
+    border: 1px solid #1e3a5f !important;
+    border-radius: 2px !important;
+    padding: 4px 8px !important;
+    font-size: 0.95em !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    min-width: 100px;
+    background: #fff !important;
+}
+.textEntryInteractionValue:focus {
+    outline: 2px solid #007a87 !important;
+    outline-offset: 1px;
+}
+.textEntryInteractionValue::placeholder {
+    color: #999 !important;
+    font-weight: 400 !important;
+}
+
+/* === Footer Part tabs — active state (all screenshots) =======
+   The currently-selected Part tab in the footer has a distinct
+   visual treatment: darker background and bold text.
+   ============================================================ */
+.footer__questionWrapper___1tZ46.selected .footer__questionNo___3WNct,
+.footer__questionWrapper___1tZ46.selected > button[role="tab"] {
+    background: #e8f0f5 !important;
+    color: #1e3a5f !important;
+    font-weight: 700 !important;
+    border-bottom: 2px solid #007a87 !important;
+}
+
+/* Sub-question number pills: active state */
+.footer__subquestionWrapper___9GgoP .subQuestion.active {
+    background: #007a87 !important;
+    color: #fff !important;
+    border-radius: 2px;
+    font-weight: 700;
+}
+
+/* Sub-question: attempted state */
+.footer__subquestionWrapper___9GgoP .subQuestion.attempted {
+    background: #e0f2f1 !important;
+    color: #007a87 !important;
+}
+
+/* === Footer layout refinements ================================
+   Ensure the footer bar matches the official clean horizontal
+   layout with vertical separators between Part tabs.
+   ============================================================ */
+.footer__questionWrapper___1tZ46 {
+    border-right: 1px solid #e0e0e0;
+}
+.footer__questionWrapper___1tZ46:last-of-type {
+    border-right: none;
+}
+
+/* === Question number circles (l2.png, 5.png, 6.png, 8.png) ===
+   Official exam shows question numbers (1, 2, 3…) as teal
+   bordered circles next to the question text in multiple-choice
+   layouts.
+   ============================================================ */
+.order-number {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: 2px solid #007a87;
+    border-radius: 50%;
+    color: #007a87;
+    font-weight: 700;
+    font-size: 0.85em;
+    flex-shrink: 0;
+    margin-right: 8px;
+    vertical-align: middle;
+    line-height: 1;
+}
+.order-number.active {
+    background: #007a87;
+    color: #fff;
+}
+
+/* === Listening Part 3 active question highlight (l4.png) =====
+   Official exam highlights the currently-playing question with
+   a teal left accent bar.
+   ============================================================ */
+.QuestionDisplay__questionDisplayWrapper___1n_b0.c1-active-extract {
+    border-left: 3px solid #007a87;
+    padding-left: 12px;
+    background: #f5fafa;
+}
+
+/* === Radio button styling refinements (l2.png, 5.png) ========
+   Official exam shows clean radio buttons with consistent
+   spacing. The label text has comfortable line-height.
+   ============================================================ */
+.choiceInteraction__choiceInteraction___3W0MH ul.vertical li {
+    padding: 6px 0;
+    line-height: 1.5;
+}
+.choiceInteraction__choiceInteraction___3W0MH ul.vertical li label {
+    cursor: pointer;
+    padding-left: 4px;
+}
+
+/* === Interaction prompt (question text) ======================
+   Make the question text stand out with proper weight and size.
+   ============================================================ */
+.interaction-prompt .text strong {
+    color: #1e3a5f;
+}
+
+/* === Passage text line spacing ================================
+   The official exam uses generous line spacing for reading
+   passages, making them easy to read.
+   ============================================================ */
+.double-line-spacing {
+    line-height: 1.8 !important;
+}
+
+/* === Part 7 gap input refinement ==============================
+   Ensure gap inputs in the gapped text match official 7.png:
+   bordered box with number, centered text.
+   ============================================================ */
+.c1-gap-input:focus {
+    outline: 2px solid #007a87;
+    outline-offset: 1px;
+}
+
+/* === Writing Part 2 question selector (w2.png) ===============
+   The official exam shows an "Answering this question?" panel
+   with question selection UI.
+   ============================================================ */
+.c1-writing-qselect-label {
+    font-size: 0.85em;
+    color: #555;
+    font-weight: 600;
+}
+.c1-writing-qselect .c1-q-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 2px solid #007a87;
+    border-radius: 50%;
+    background: #fff;
+    color: #007a87;
+    font-weight: 700;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+.c1-writing-qselect .c1-q-btn.selected,
+.c1-writing-qselect .c1-q-btn:hover {
+    background: #007a87;
+    color: #fff;
 }
