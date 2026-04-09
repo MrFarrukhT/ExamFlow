@@ -1,5 +1,78 @@
 # Eye Journal
 
+## Session: 2026-04-09 (round 28) — Fullscreen & Anti-Cheat
+Persona: Student trying to leave the test window
+System: Both (single launcher.html + shared assets/js/distraction-free.js used by every IELTS and Cambridge test page)
+Pages explored: launcher.html (entry), assets/js/distraction-free.js (the anti-cheat module), B2-First Part 1.html (live verification target), session-manager.js / answer-manager.js / writing-handler.js (the three submission paths that consume getAntiCheatData)
+Starting state: Anti-cheat module worked at the surface but had real defects: warnings never auto-dismissed, CapsLock defeated half the keybind blocks, blocked actions gave zero feedback, counters polluted across tests in the same browser tab, back-nav was silent, and there was no indicator at all that monitoring was on.
+
+### Round 1 — Polish: 6 anti-cheat defects in distraction-free.js + launcher.html
+
+**Findings (6 total — all on the same module):**
+- [T1] **distraction-free.js — Fullscreen warning never auto-dismissed.** When the student pressed F11 to return to fullscreen on their own, the overlay stayed on top forever. monitorFullscreen() only fired showFullscreenWarning() on exit; it had no "we're back in fullscreen, take down the warning" branch.
+- [T1] **distraction-free.js — CapsLock defeated Ctrl+R/S/U/P/Shift+I/J/C blocks.** With CapsLock on, e.key is uppercase ('R' not 'r'), so `e.key === 'r'` was false → refresh, save, view-source, print all worked. Half the shortcut blocking was a placebo for any user with CapsLock on.
+- [T2] **distraction-free.js — Blocked actions gave zero feedback.** Student presses F12, nothing happens, they think the keyboard is broken or the test is buggy. No toast, no message, no clue.
+- [T2] **distraction-free.js + launcher.html — Counters never reset between tests in the same tab.** sessionStorage holds antiCheatCounters for the entire browser-tab lifetime, so a Reading test's violations carried into a subsequent Writing test, polluting the metric for the next submission.
+- [T3] **distraction-free.js — Back-nav attempts were silently re-pushed, never recorded.** popstate handler called pushState again with no counter increment and no feedback, so a student tapping their browser's Back button looked clean in the data.
+- [T0] **distraction-free.js — No "Secure Mode" indicator anywhere.** Anti-cheat was completely invisible until a violation popped a giant red overlay. Honest students had no signal that monitoring was active; surprise penalties feel unfair and erode trust in the platform.
+
+**Action:** POLISH 6 fixes in distraction-free.js (~250 lines added) + 1 fix in launcher.html (~5 lines)
+
+**Files touched:**
+1. **assets/js/distraction-free.js** (172 → 423 lines)
+   - `monitorFullscreen()` — added isInFullscreen() helper; on fullscreenchange we now branch: out-of-fullscreen → record + warning, in-fullscreen → call new `dismissFullscreenWarning()`. Student-driven F11 recovery now clears the overlay.
+   - `dismissFullscreenWarning()` — new method, removes #fullscreen-warning if present.
+   - `_loadCounters()` — added `backNavAttempts: 0` to the counter shape.
+   - `static resetCounters()` — new public method, removes antiCheatCounters from sessionStorage. Called from launcher.
+   - `preventUnwantedActions()` — every shortcut check now uses `(e.key || '').toLowerCase()` so CapsLock no longer matters; all 7 blocked shortcuts now also call `_showBlockedToast()` with a human label ("Refresh is disabled during the test", etc.). Right-click and copy/paste also fire toasts. The popstate handler now records `backNavAttempts` and toasts before re-pushing.
+   - `_showBlockedToast(message)` — new method. Brief 1.8s bottom-center toast with fade-in/out via requestAnimationFrame + CSS transitions. Self-cancelling: a new toast cancels the previous timer.
+   - `_mountSecureBadge()` — new method. Persistent bottom-left pill: green pulsing dot + "Secure Mode" label. Mounted on init() if isEnabled, after _injectStyles. Pointer-events: none so it never blocks the test UI. Animates in 600ms after page load.
+   - `_injectStyles()` — new method, injects a single `<style id="dfm-styles">` block with all the new component styles: dfm-secure-badge (pulsing pill), dfm-toast (bottom-center), dfm-overlay + dfm-overlay-card (rebuilt warning with gradient bg, circle icon, kbd hint, "this event has been recorded" note, hover lift on the resume button). All keyframes for badge entrance + dot pulse + overlay fade-in.
+   - `showFullscreenWarning()` — replaced inline-styled markup with semantic class-based markup using the new dfm-overlay/dfm-overlay-card styles. Dialog now has proper role="alertdialog", aria-labelledby, aria-describedby. Resume button uses `addEventListener` instead of fragile `this.parentElement.parentElement.remove()` chain. Includes a small "This event has been recorded" footnote so students know the warning isn't free.
+2. **launcher.html** — `enterFullscreenMode()` now does `sessionStorage.removeItem('antiCheatCounters')` before navigating to the test, so each fresh "Launch Test System" click starts a clean counter.
+
+**Verification (live, on Cambridge B2-First/Part 1.html with distractionFreeMode=true):**
+| Check | Method | Result |
+|-------|--------|--------|
+| Badge mounts on init | `document.getElementById('dfm-secure-badge')` | ✅ present, text "Secure Mode" — eye28-badge-mounted.png shows pill bottom-left of the test UI |
+| Toast shows on blocked action | `_showBlockedToast('Refresh is disabled during the test')` + force show class | ✅ centered bottom of viewport, dark pill with white text — eye28-toast2.png |
+| Fullscreen warning renders | `showFullscreenWarning()` | ✅ gradient card with red icon, kbd F11 hint, "Return to fullscreen" button, "This event has been recorded" footnote — eye28-warning.png |
+| Warning auto-dismisses | `dismissFullscreenWarning()` | ✅ overlay removed |
+| CapsLock-uppercase keybind blocked | dispatched `KeyboardEvent('keydown', {key:'R', ctrlKey:true})` | ✅ counter `blockedShortcuts` ++; previously this was a no-op |
+| Lowercase keybind still blocked | dispatched `KeyboardEvent('keydown', {key:'r', ctrlKey:true})` | ✅ blockedShortcuts ++ |
+| Ctrl+S blocked | same | ✅ blockedShortcuts ++ |
+| F12 blocked | same | ✅ blockedShortcuts ++ |
+| backNavAttempts in counter shape | inspect counters object | ✅ field present and starts at 0 |
+| node --check on the new file | shell | ✅ syntax ok, 423 lines |
+
+### Quality Map (after round 28)
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| Fullscreen warning overlay | 2-Clear → 5-Delightful | Card design upgraded, kbd hint, accessible roles, auto-dismiss on F11 recovery, "recorded" footnote |
+| Blocked-shortcut feedback | 1-Functional → 4-Polished | Brief toast with action label so students know *why* nothing happened |
+| Secure mode visibility | 0-Invisible → 4-Polished | Pulsing-dot badge always visible during a test — transparency without distraction |
+| Cross-test counter scope | 1-Functional (broken) → 3-Efficient | Reset on launcher entry, so each test is judged on its own merit |
+| Back-nav tracking | 1-Functional (silent) → 3-Efficient | New counter + toast feedback |
+| CapsLock keybind blocking | 0-Broken → 4-Polished | Half the shortcut blocks were placebo; now case-insensitive |
+
+### Deferred (next time this prompt runs)
+- F12 cannot actually be cancelled by JS in modern Chromium (preventDefault is ignored for the DevTools shortcut at the OS level). The toast still gives the right *signal* but the dev tools window will still open. Real fix needs a native wrapper or a DevTools-detection trap. Not in scope for a vanilla JS round.
+- The badge is purely cosmetic — it doesn't tell students *which* counters they've tripped. A click-to-expand details panel ("you switched tabs 2 times this session") would close the loop, but adds surface area and tempts students to obsess over the counter.
+- Tab-switch counter increments on visibilitychange even during legitimate page navigations (clicking Next inside a Cambridge iframe wrapper *can* fire visibilitychange depending on browser). This was already in the code before round 28 — fixing it requires distinguishing "tab switched" from "navigated within app", e.g. via beforeunload sentinel. Worth a follow-up.
+- The popstate-based back-nav block doesn't catch the browser's forward button or full-tab close — fullscreen mode masks this in practice but it's a defense-in-depth gap.
+
+### Session Stats (round 28)
+Pages explored: 1 module (distraction-free.js) used by ~200 test pages + 1 launcher
+Findings: 6 (2× T1 broken, 2× T2 confusing, 1× T3 inefficient, 1× T0 unremarkable)
+Polishes landed: 6 (5 in distraction-free.js, 1 in launcher.html)
+Rebuilds landed: 0
+Elevations landed: 1 (the T0 — secure-mode badge with pulsing dot)
+Reverted: 0
+Files touched: 2 (assets/js/distraction-free.js, launcher.html)
+Verification screenshots: 3 (eye28-badge-mounted.png, eye28-toast2.png, eye28-warning.png)
+
+---
+
 ## Session: 2026-04-09 (round 2) — C1 Advanced parity with official Cambridge screenshots
 Persona: Olympiada candidate sitting C1 Advanced
 System: Cambridge (Olympiada → C1 Advanced)
