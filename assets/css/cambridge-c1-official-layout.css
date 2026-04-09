@@ -466,46 +466,63 @@ body[data-c1-layout="single-question"]
     .c1-paragraph-bank { position: static; max-height: none; border-left: none; border-top: 1px solid #d6d6d6; padding-left: 0; padding-top: 16px; margin-top: 16px; }
 }
 
-/* === Part 1 — inline popover MC ============================ */
+/* === Part 1 — inline numbered-box MC =======================
+   Matches official 1.png: each gap is a small bordered box that
+   shows the question number until the candidate selects an
+   answer, then shows the chosen letter (A/B/C/D). The select
+   element is the actual control — we strip its chevron and
+   sit the question-number badge on top of it via absolute
+   positioning, then hide the badge as soon as a value is set
+   (the .has-value class is toggled by inline JS in the page).
+   ============================================================ */
 .c1-popover-gap {
     display: inline-block;
     position: relative;
     margin: 0 4px;
     vertical-align: middle;
+    line-height: 1;
 }
 .c1-popover-gap select {
     border: 1px solid #1e3a5f;
     border-radius: 2px;
-    padding: 4px 22px 4px 8px;
-    font-size: 0.95em;
+    padding: 4px 6px;
+    font-size: 0.9em;
     background: #fff;
-    min-width: 80px;
+    width: 56px;
+    min-width: 56px;
     text-align: center;
+    text-align-last: center;
     font-weight: 700;
     cursor: pointer;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background-image: linear-gradient(45deg, transparent 50%, #1e3a5f 50%),
-                      linear-gradient(135deg, #1e3a5f 50%, transparent 50%);
-    background-position: calc(100% - 12px) 50%, calc(100% - 7px) 50%;
-    background-size: 5px 5px;
-    background-repeat: no-repeat;
+    background-image: none;
+    color: #1e3a5f;
 }
 .c1-popover-gap select:focus {
     outline: 2px solid #007a87;
     outline-offset: 1px;
 }
+/* Hide the placeholder dash so the select looks empty under the
+   number badge before the candidate picks anything. */
+.c1-popover-gap select option[value=""] {
+    color: transparent;
+}
 
-/* The number badge that shows beside an unanswered popover */
+/* The number badge sits centred over the select. JS adds
+   .has-value to the wrapper once a real option is chosen. */
 .c1-popover-num {
-    display: inline-block;
-    background: #1e3a5f;
-    color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #1e3a5f;
     font-weight: 700;
-    padding: 2px 6px;
-    border-radius: 2px;
     font-size: 0.78em;
-    margin-right: 4px;
-    vertical-align: middle;
+    pointer-events: none;
+    user-select: none;
+}
+.c1-popover-gap.has-value .c1-popover-num {
+    display: none;
 }
