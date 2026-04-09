@@ -481,16 +481,25 @@ class AdminDashboard {
                 const count = dateInfo.submissions.length;
                 const isCollapsed = index > 0;
 
+                // Date-group header is keyboard-accessible: real focusable element with role,
+                // aria-expanded mirroring the .collapsed state, and Enter/Space activation. The
+                // previous version was a plain <div onclick> that mouse users could click but
+                // keyboard users couldn't reach — tabbing past the table just landed them on the
+                // body again with no signal that the date headers were interactive.
                 html += `
                     <div class="date-group ${isCollapsed ? 'collapsed' : ''}" id="dateGroup_${dateKey}">
-                        <div class="date-group-header" onclick="toggleDateGroup('${dateKey}')">
+                        <div class="date-group-header" role="button" tabindex="0"
+                             aria-expanded="${isCollapsed ? 'false' : 'true'}"
+                             aria-controls="dateGroup_${dateKey}_body"
+                             onclick="toggleDateGroup('${dateKey}')"
+                             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleDateGroup('${dateKey}');}">
                             <div class="date-group-header-left">
-                                <span class="date-group-toggle">\u25BC</span>
+                                <span class="date-group-toggle" aria-hidden="true">\u25BC</span>
                                 <span>\uD83D\uDCC5 ${dateInfo.displayDate}</span>
                             </div>
                             <span class="date-group-count">${count} submission${count !== 1 ? 's' : ''}</span>
                         </div>
-                        <div class="date-group-submissions">
+                        <div class="date-group-submissions" id="dateGroup_${dateKey}_body">
                 `;
 
                 dateInfo.submissions.forEach(submission => {
@@ -548,7 +557,14 @@ class AdminDashboard {
 
     toggleDateGroup(dateKey) {
         const dateGroup = document.getElementById(`dateGroup_${dateKey}`);
-        if (dateGroup) dateGroup.classList.toggle('collapsed');
+        if (!dateGroup) return;
+        const collapsed = dateGroup.classList.toggle('collapsed');
+        // Mirror the visual collapse state into ARIA so screen-reader users hear "collapsed"
+        // / "expanded" alongside the visual chevron. The aria-expanded attribute is the
+        // standard signal for disclosure widgets — pairing it with the existing role="button"
+        // and tabindex="0" added in displaySubmissionsByDate gives full keyboard parity.
+        const header = dateGroup.querySelector('.date-group-header');
+        if (header) header.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
     }
 
     // ------------------------------------------------------------------

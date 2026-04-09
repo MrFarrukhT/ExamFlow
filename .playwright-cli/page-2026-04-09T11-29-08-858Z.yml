@@ -1,0 +1,213 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "header.logo"
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - status [ref=e11]: Connected
+            - generic [ref=e13]: 
+          - button "Messages" [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: Messages
+              - generic [ref=e17]: 
+          - button "Options" [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: Options
+              - generic [ref=e21]: 
+          - button "Show notes" [ref=e22]:
+            - generic [ref=e23]:
+              - generic [ref=e24]: Show notes
+              - generic [ref=e25]: 
+        - generic [ref=e28]:
+          - generic [ref=e29]: Candidate ID
+          - generic [ref=e30]: TEST001
+          - status [ref=e31]: ◐ Audio is loading
+  - generic [ref=e35]:
+    - generic [ref=e37]:
+      - heading "Questions 21–30" [level=3] [ref=e38]
+      - generic [ref=e39]: You will hear five short extracts in which people are talking about their work making and restoring violins. For Task 1 and Task 2, choose from the list A–G.
+    - main [ref=e41]:
+      - generic [ref=e42]:
+        - group [ref=e43]:
+          - generic [ref=e48]:
+            - paragraph [ref=e49]: You will hear five short extracts in which people are talking about their work making and restoring violins.
+            - generic [ref=e50]:
+              - heading "Task 1 — What inspired them to learn to make and restore violins" [level=3] [ref=e51]
+              - paragraph [ref=e52]: For questions 21–25, choose from the list A–G the option that best fits each speaker. There is one extra letter you do not need to use.
+              - generic [ref=e53]:
+                - generic [ref=e54]:
+                  - generic [ref=e55]: Speaker 1
+                  - textbox "Answer for Speaker 1 (question 21)" [ref=e57]:
+                    - /placeholder: "21"
+                - generic [ref=e58]:
+                  - generic [ref=e59]: Speaker 2
+                  - textbox "Answer for Speaker 2 (question 22)" [ref=e61]:
+                    - /placeholder: "22"
+                - generic [ref=e62]:
+                  - generic [ref=e63]: Speaker 3
+                  - textbox "Answer for Speaker 3 (question 23)" [ref=e65]:
+                    - /placeholder: "23"
+                - generic [ref=e66]:
+                  - generic [ref=e67]: Speaker 4
+                  - textbox "Answer for Speaker 4 (question 24)" [ref=e69]:
+                    - /placeholder: "24"
+                - generic [ref=e70]:
+                  - generic [ref=e71]: Speaker 5
+                  - textbox "Answer for Speaker 5 (question 25)" [ref=e73]:
+                    - /placeholder: "25"
+              - generic [ref=e74]:
+                - generic [ref=e75]:
+                  - generic [ref=e76]: A
+                  - text: having the chance to run a business
+                - generic [ref=e77]:
+                  - generic [ref=e78]: B
+                  - text: following the recommendation of a friend
+                - generic [ref=e79]:
+                  - generic [ref=e80]: C
+                  - text: playing someone else’s violin
+                - generic [ref=e81]:
+                  - generic [ref=e82]: D
+                  - text: handling the natural materials used
+                - generic [ref=e83]:
+                  - generic [ref=e84]: E
+                  - text: observing an expert at work
+                - generic [ref=e85]:
+                  - generic [ref=e86]: F
+                  - text: discovering the challenges of the job
+                - generic [ref=e87]:
+                  - generic [ref=e88]: G
+                  - text: hearing someone talk about their passion
+            - generic [ref=e89]:
+              - heading "Task 2 — How they feel about their work today" [level=3] [ref=e90]
+              - paragraph [ref=e91]: For questions 26–30, choose from the list A–G the option that best fits each speaker. There is one extra letter you do not need to use.
+              - generic [ref=e92]:
+                - generic [ref=e93]:
+                  - generic [ref=e94]: Speaker 1
+                  - textbox "Answer for Speaker 1 (question 26)" [ref=e96]:
+                    - /placeholder: "26"
+                - generic [ref=e97]:
+                  - generic [ref=e98]: Speaker 2
+                  - textbox "Answer for Speaker 2 (question 27)" [ref=e100]:
+                    - /placeholder: "27"
+                - generic [ref=e101]:
+                  - generic [ref=e102]: Speaker 3
+                  - textbox "Answer for Speaker 3 (question 28)" [ref=e104]:
+                    - /placeholder: "28"
+                - generic [ref=e105]:
+                  - generic [ref=e106]: Speaker 4
+                  - textbox "Answer for Speaker 4 (question 29)" [ref=e108]:
+                    - /placeholder: "29"
+                - generic [ref=e109]:
+                  - generic [ref=e110]: Speaker 5
+                  - textbox "Answer for Speaker 5 (question 30)" [ref=e112]:
+                    - /placeholder: "30"
+              - generic [ref=e113]:
+                - generic [ref=e114]:
+                  - generic [ref=e115]: A
+                  - text: Having to deal with paperwork is distracting.
+                - generic [ref=e116]:
+                  - generic [ref=e117]: B
+                  - text: It’s disappointing when people underestimate what’s involved.
+                - generic [ref=e118]:
+                  - generic [ref=e119]: C
+                  - text: It’s often thrilling to identify the original maker.
+                - generic [ref=e120]:
+                  - generic [ref=e121]: D
+                  - text: The craft has taken a long time to master.
+                - generic [ref=e122]:
+                  - generic [ref=e123]: E
+                  - text: Working on antiques is a privilege.
+                - generic [ref=e124]:
+                  - generic [ref=e125]: F
+                  - text: Earning a living is far from straightforward.
+                - generic [ref=e126]:
+                  - generic [ref=e127]: G
+                  - text: There’s a huge demand for their work.
+        - button "Flag question" [ref=e130]:
+          - generic: 
+          - generic [ref=e131]: Flag question
+    - main [ref=e133]:
+      - generic [ref=e134]:
+        - group [ref=e135]:
+          - generic [ref=e140]:
+            - heading "Task 2 — What each speaker says about their work now" [level=3] [ref=e141]
+            - paragraph [ref=e142]: For questions 26–30, choose from the list A–G.
+        - button "Flag question" [ref=e145]:
+          - generic: 
+          - generic [ref=e146]: Flag question
+  - contentinfo [ref=e148]:
+    - navigation "Previous / next question" [ref=e149]:
+      - button "Previous" [ref=e150]:
+        - generic [ref=e151]: 
+      - button "Next" [disabled] [ref=e152]:
+        - generic [ref=e153]: 
+    - navigation "Questions" [ref=e154]:
+      - tablist [ref=e155]:
+        - tab "Part 1. 0 of 6 questions attempted." [ref=e156]:
+          - generic [ref=e157]:
+            - text: Part 1
+            - generic [ref=e158]: 0 of 6
+            - generic [ref=e159]: Part 1. 0 of 6 questions attempted.
+      - tablist [ref=e160]:
+        - tab "Part 2. 0 of 8 questions attempted." [ref=e161]:
+          - generic [ref=e162]:
+            - text: Part 2
+            - generic [ref=e163]: 0 of 8
+            - generic [ref=e164]: Part 2. 0 of 8 questions attempted.
+      - tablist [ref=e165]:
+        - tab "Part 3. 0 of 6 questions attempted." [ref=e166]:
+          - generic [ref=e167]:
+            - text: Part 3
+            - generic [ref=e168]: 0 of 6
+            - generic [ref=e169]: Part 3. 0 of 6 questions attempted.
+      - tablist [ref=e170]:
+        - tab "Part 4. 0 of 10 questions attempted." [ref=e171]:
+          - generic [ref=e172]:
+            - text: Part 4
+            - generic [ref=e173]: 0 of 10
+            - generic [ref=e174]: Part 4. 0 of 10 questions attempted.
+        - generic [ref=e175]:
+          - button "Question 21 Not attempted Active" [ref=e176]:
+            - generic [ref=e177]: Question 21
+            - text: "21"
+            - generic [ref=e178]: Not attempted Active
+          - button "Question 22 Not attempted" [ref=e179]:
+            - generic [ref=e180]: Question 22
+            - text: "22"
+            - generic [ref=e181]: Not attempted
+          - button "Question 23 Not attempted" [ref=e182]:
+            - generic [ref=e183]: Question 23
+            - text: "23"
+            - generic [ref=e184]: Not attempted
+          - button "Question 24 Not attempted" [ref=e185]:
+            - generic [ref=e186]: Question 24
+            - text: "24"
+            - generic [ref=e187]: Not attempted
+          - button "Question 25 Not attempted" [ref=e188]:
+            - generic [ref=e189]: Question 25
+            - text: "25"
+            - generic [ref=e190]: Not attempted
+          - button "Question 26 Not attempted" [ref=e191]:
+            - generic [ref=e192]: Question 26
+            - text: "26"
+            - generic [ref=e193]: Not attempted
+          - button "Question 27 Not attempted" [ref=e194]:
+            - generic [ref=e195]: Question 27
+            - text: "27"
+            - generic [ref=e196]: Not attempted
+          - button "Question 28 Not attempted" [ref=e197]:
+            - generic [ref=e198]: Question 28
+            - text: "28"
+            - generic [ref=e199]: Not attempted
+          - button "Question 29 Not attempted" [ref=e200]:
+            - generic [ref=e201]: Question 29
+            - text: "29"
+            - generic [ref=e202]: Not attempted
+          - button "Question 30 Not attempted" [ref=e203]:
+            - generic [ref=e204]: Question 30
+            - text: "30"
+            - generic [ref=e205]: Not attempted
+      - button "Review your answers" [ref=e206]:
+        - generic [ref=e207]: 
