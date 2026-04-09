@@ -631,6 +631,29 @@
             try {
                 // First, load existing results from cambridge_student_results
                 const resultsResponse = await authFetch(`${API_BASE}/cambridge-student-results`);
+
+                // Auth-aware error handling — like cambridge-speaking-evaluations.html, this
+                // page has no own login form and depends on cambridgeAdminToken being set by
+                // cambridge-admin-dashboard.html. Without this branch, an unauthenticated visit
+                // (bookmark, refresh after server restart) silently treated `existingResults`
+                // as `[]` and then crashed on `submissions.forEach` when /cambridge-submissions
+                // also returned a 401 JSON object instead of an array.
+                if (resultsResponse.status === 401) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 50px 20px; background: white; border-radius: 12px;">
+                            <h3 style="color: #0d9488; margin-bottom: 10px;">🔒 Authentication required</h3>
+                            <p style="color: #555; margin-bottom: 8px;">Your admin session has expired or you haven't logged in yet.</p>
+                            <p><a href="cambridge-admin-dashboard.html" style="color:#0d9488;font-weight:600;text-decoration:underline;">Log in via the Cambridge Admin Dashboard</a>, then return to this page.</p>
+                        </div>
+                    `;
+                    // Clear the stat counters so the user doesn't read stale data alongside the auth banner.
+                    ['totalResults', 'passedCount', 'avgScale', 'passRate'].forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.textContent = '—';
+                    });
+                    return;
+                }
+
                 const existingResults = resultsResponse.ok ? await resultsResponse.json() : [];
 
                 // Then, load all submissions to get the list of students who took tests
@@ -1251,6 +1274,15 @@
                     body: JSON.stringify(data)
                 });
 
+                // 401 path: actionable message with a path back to login. Replaces the previous
+                // "Failed to save: Authentication required" which left the admin staring at a
+                // half-filled form with no idea what to do next.
+                if (response.status === 401) {
+                    alert('Your session has expired. Please log in again via the Cambridge Admin Dashboard, then re-open this page.');
+                    closeModal();
+                    return;
+                }
+
                 const result = await response.json();
 
                 if (result.success) {
@@ -1273,6 +1305,11 @@
                 const response = await authFetch(`${API_BASE}/cambridge-student-results/${id}`, {
                     method: 'DELETE'
                 });
+
+                if (response.status === 401) {
+                    alert('Your session has expired. Please log in again via the Cambridge Admin Dashboard, then re-open this page.');
+                    return;
+                }
 
                 const result = await response.json();
 

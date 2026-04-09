@@ -558,6 +558,20 @@ app.post('/cambridge-submissions', submissionLimiter, async (req, res) => {
         if (elapsedMin <= 0) {
             return res.status(400).json({ success: false, message: 'endTime must be after startTime' });
         }
+        // R31: absolute timestamp window — endTime must be within ±24h of server clock.
+        // Catches cheaters who backdate (claim submission was before answer keys leaked)
+        // or forward-date (year 2050/9999) to manipulate dashboard chronology.
+        const nowMs = Date.now();
+        const MAX_FUTURE_SKEW_MS = 5 * 60 * 1000;
+        const MAX_BACKDATE_MS = 24 * 60 * 60 * 1000;
+        if (end.getTime() > nowMs + MAX_FUTURE_SKEW_MS) {
+            console.warn(`🚨 SUBMISSION REJECTED: Student ${submissionData.studentId} sent endTime in the future (${end.toISOString()})`);
+            return res.status(400).json({ success: false, message: 'Submission rejected: endTime is in the future.' });
+        }
+        if (end.getTime() < nowMs - MAX_BACKDATE_MS) {
+            console.warn(`🚨 SUBMISSION REJECTED: Student ${submissionData.studentId} sent backdated endTime (${end.toISOString()})`);
+            return res.status(400).json({ success: false, message: 'Submission rejected: endTime is too far in the past.' });
+        }
         // Minimum-time guard: an exam taking less than 30s is physically impossible.
         // Catches DevTools cheaters who POST a forged submission with endTime = startTime + ms.
         const MIN_ELAPSED_SEC = 30;
@@ -703,6 +717,18 @@ app.post('/submit-speaking', submissionLimiter, async (req, res) => {
         const speakElapsedMin = (speakEnd - speakStart) / 60000;
         if (speakElapsedMin <= 0) {
             return res.status(400).json({ success: false, message: 'endTime must be after startTime' });
+        }
+        // R31: absolute timestamp window (sibling parity with /cambridge-submissions).
+        const speakNowMs = Date.now();
+        const SPEAK_MAX_FUTURE_SKEW_MS = 5 * 60 * 1000;
+        const SPEAK_MAX_BACKDATE_MS = 24 * 60 * 60 * 1000;
+        if (speakEnd.getTime() > speakNowMs + SPEAK_MAX_FUTURE_SKEW_MS) {
+            console.warn(`🚨 SPEAKING SUBMISSION REJECTED: Student ${trimmedId} sent endTime in the future (${speakEnd.toISOString()})`);
+            return res.status(400).json({ success: false, message: 'Submission rejected: endTime is in the future.' });
+        }
+        if (speakEnd.getTime() < speakNowMs - SPEAK_MAX_BACKDATE_MS) {
+            console.warn(`🚨 SPEAKING SUBMISSION REJECTED: Student ${trimmedId} sent backdated endTime (${speakEnd.toISOString()})`);
+            return res.status(400).json({ success: false, message: 'Submission rejected: endTime is too far in the past.' });
         }
         // Minimum-time guard: 30s minimum (same threshold as the regular submission endpoint).
         // A speaking test has a 15-min slot; sub-30s is impossible by any human and indicates a forged POST.

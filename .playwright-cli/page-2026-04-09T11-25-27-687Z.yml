@@ -1,0 +1,63 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - heading "Cambridge Student Results" [level=1] [ref=e5]
+      - paragraph [ref=e6]: Manage and view Cambridge exam results with official score calculations
+    - generic [ref=e8]: Database Offline
+  - navigation [ref=e9]:
+    - link "Submissions" [ref=e10] [cursor=pointer]:
+      - /url: cambridge-admin-dashboard.html
+    - link "Student Results" [ref=e11] [cursor=pointer]:
+      - /url: cambridge-student-results.html
+    - link "Speaking Evaluations" [ref=e12] [cursor=pointer]:
+      - /url: cambridge-speaking-evaluations.html
+    - link "Invigilator Panel" [ref=e13] [cursor=pointer]:
+      - /url: invigilator.html
+  - generic [ref=e14]:
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - generic [ref=e18]: "Search Student:"
+          - textbox "Search Student:" [ref=e19]:
+            - /placeholder: Name or ID
+        - generic [ref=e20]:
+          - generic [ref=e21]: "Filter by Level:"
+          - combobox "Filter by Level:" [ref=e22]:
+            - option "All Levels" [selected]
+            - option "A1 Movers"
+            - option "A2 Key"
+            - option "B1 Preliminary"
+            - option "B2 First"
+        - generic [ref=e23]:
+          - generic [ref=e24]: "Filter by Mock:"
+          - combobox "Filter by Mock:" [ref=e25]:
+            - option "All Mocks" [selected]
+            - option "Mock 1"
+            - option "Mock 2"
+            - option "Mock 3"
+      - generic [ref=e26]:
+        - button "Search" [ref=e27] [cursor=pointer]
+        - button "Clear Filters" [ref=e28] [cursor=pointer]
+        - button "Refresh" [ref=e29] [cursor=pointer]
+        - button "+ Add New Result" [ref=e30] [cursor=pointer]
+        - button "Export CSV" [ref=e31] [cursor=pointer]
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - generic [ref=e34]: —
+        - generic [ref=e35]: Total Results
+      - generic [ref=e36]:
+        - generic [ref=e37]: —
+        - generic [ref=e38]: Passed / Scored
+      - generic [ref=e39]:
+        - generic [ref=e40]: "0"
+        - generic [ref=e41]: Average Scale
+      - generic [ref=e42]:
+        - generic [ref=e43]: —
+        - generic [ref=e44]: Pass Rate
+    - generic [ref=e46]:
+      - heading "🔒 Authentication required" [level=3] [ref=e47]
+      - paragraph [ref=e48]: Your admin session has expired or you haven't logged in yet.
+      - paragraph [ref=e49]:
+        - link "Log in via the Cambridge Admin Dashboard" [ref=e50] [cursor=pointer]:
+          - /url: cambridge-admin-dashboard.html
+        - text: ", then return to this page."
