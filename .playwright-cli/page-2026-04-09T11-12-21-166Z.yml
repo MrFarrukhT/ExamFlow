@@ -1,0 +1,215 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "header.logo"
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - status [ref=e11]: Connected
+            - generic [ref=e13]: 
+          - button "Messages" [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: Messages
+              - generic [ref=e17]: 
+          - button "Options" [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: Options
+              - generic [ref=e21]: 
+          - button "Show notes" [ref=e22]:
+            - generic [ref=e23]:
+              - generic [ref=e24]: Show notes
+              - generic [ref=e25]: 
+        - generic [ref=e28]:
+          - generic [ref=e29]: Candidate ID
+          - generic [ref=e30]: TEST001
+  - generic [ref=e34]:
+    - generic [ref=e36]:
+      - heading "Part 6 — Cross-text multiple matching (Questions 37–40)" [level=3] [ref=e37]
+      - generic [ref=e38]: You are going to read four extracts from articles in which park rangers discuss national parks. For questions 37–40, choose the answer (A, B, C or D). Each answer may be chosen more than once.
+    - main [ref=e40]:
+      - group [ref=e42]:
+        - generic [ref=e47]:
+          - heading "National parks" [level=2] [ref=e48]
+          - heading "Park ranger A" [level=3] [ref=e49]
+          - paragraph [ref=e50]: Many types of human activity, including hiking, cycling and horse-riding, have an impact on nature. Even small trails used by ecotourists and birdwatchers scare away some sensitive wildlife species or cause them to alter their behaviour. However, visitors help fund the operation of national parks and provide vital income for local people in many parts of the world. Therefore, putting a cap on how many come or banning their sporting activities is not a viable proposition. Introducing 'no-go' zones within a park, on the other hand, would protect wildlife while allowing visitors to enjoy the rest of the park. Such zones could be in more remote locations, away from roads. The majority of national parks already had roads running through them before they were given national park status. Closing these would prove unpopular, and in any case they are necessary infrastructure for both staff and visitors.
+          - heading "Park ranger B" [level=3] [ref=e51]
+          - paragraph [ref=e52]: National parks expose people to nature and increase the likelihood that they’ll support environmental protection measures. If we introduce ceilings on how many can enjoy the parks, we risk losing that support. Having said that, I do think some changes are called for. Thanks to photo-sharing websites, picturesque vistas are being completely spoiled by crowds of tourists desperate to take the perfect selfie, and ecology should always be at the forefront of what we do. There are other issues too. Rather than continuing to allow outdoor sports such as off-road cycling in national parks, we need to identify more suitable spaces. And even for less damaging visitor pastimes, human activity must be restricted to particular sectors of the parks, using signage and physical barriers, while retaining the remainder for wildlife to live without human disturbance.
+          - heading "Park ranger C" [level=3] [ref=e53]
+          - paragraph [ref=e54]: The activities people do in national parks are changing, and park authorities need to keep up with that, whether it means introducing mountain bike trails or improving wi-fi access so tourists can use the internet. And park managers need to embrace the data which technology can provide. For example, GPS tagging shows that half of all photos by visitors are taken in less than 1% of each park. In other words, most visitors use a small, highly trafficked area of each park. Therefore, there’s no need to set up visitor-free areas — there are plenty of those already. Roads are another matter, however. Existing ones need to be re-routed to avoid national parks, and new ones constructed outside park boundaries. Of course, this means other transport links must be improved. We have to allow as many people to visit as want to. If people can’t go to national parks, they won’t want to protect them, and we’ll lose the parks completely.
+          - heading "Park ranger D" [level=3] [ref=e55]
+          - paragraph [ref=e56]: Can national parks continue to embrace ever-increasing levels of tourism while retaining what makes them unique? I can’t see how. At one US national park, for example, a site which used to attract a few thousand visitors annually now gets two million a year, mainly because of tourists posting pictures of it online. This isn’t an isolated case, and the consequences are disastrous — something we need to communicate to visitors. The time has come to draw a line. Parks must decide on a maximum number of people who can enter on a daily basis, both to protect wildlife and habitats and to ensure these continue to be pleasant places for people to visit. We also need to look at visitor activities. For example, forests maintained for commercial harvest offer a more appropriate setting for sports such as cross country cycling than national parks. Roads through national parks should also be closed so that traffic no longer goes through them, and visitors encouraged to travel to parks by other means.
+    - main [ref=e59]:
+      - generic [ref=e60]:
+        - group [ref=e61]:
+          - radiogroup "37 Which park ranger shares an opinion with D about mountain biking in national parks?" [ref=e67]:
+            - paragraph [ref=e69]:
+              - generic [ref=e70]: "37"
+              - strong [ref=e72]: Which park ranger shares an opinion with D about mountain biking in national parks?
+            - list [ref=e73]:
+              - listitem [ref=e74]:
+                - radio "Park ranger A" [ref=e75]
+                - generic [ref=e77]: Park ranger A
+              - listitem [ref=e78]:
+                - radio "Park ranger B" [ref=e79]
+                - generic [ref=e81]: Park ranger B
+              - listitem [ref=e82]:
+                - radio "Park ranger C" [ref=e83]
+                - generic [ref=e85]: Park ranger C
+              - listitem [ref=e86]:
+                - radio "Park ranger D" [ref=e87]
+                - generic [ref=e89]: Park ranger D
+            - button "Flag question 37":
+              - generic [ref=e90]: Flag question 37
+        - button "Flag question 37" [ref=e93]:
+          - generic: 
+          - generic [ref=e94]: Flag question 37
+    - main [ref=e96]:
+      - generic [ref=e97]:
+        - group [ref=e98]:
+          - radiogroup "38 Which park ranger has a different view from C about roads in national parks?" [ref=e104]:
+            - paragraph [ref=e106]:
+              - generic [ref=e107]: "38"
+              - strong [ref=e109]: Which park ranger has a different view from C about roads in national parks?
+            - list [ref=e110]:
+              - listitem [ref=e111]:
+                - radio "Park ranger A" [ref=e112]
+                - generic [ref=e114]: Park ranger A
+              - listitem [ref=e115]:
+                - radio "Park ranger B" [ref=e116]
+                - generic [ref=e118]: Park ranger B
+              - listitem [ref=e119]:
+                - radio "Park ranger C" [ref=e120]
+                - generic [ref=e122]: Park ranger C
+              - listitem [ref=e123]:
+                - radio "Park ranger D" [ref=e124]
+                - generic [ref=e126]: Park ranger D
+            - button "Flag question 38":
+              - generic [ref=e127]: Flag question 38
+        - button "Flag question 38" [ref=e130]:
+          - generic: 
+          - generic [ref=e131]: Flag question 38
+    - main [ref=e133]:
+      - generic [ref=e134]:
+        - group [ref=e135]:
+          - radiogroup "39 Which park ranger expresses a different view from the others about limiting visitor numbers to national parks?" [ref=e141]:
+            - paragraph [ref=e143]:
+              - generic [ref=e144]: "39"
+              - strong [ref=e146]: Which park ranger expresses a different view from the others about limiting visitor numbers to national parks?
+            - list [ref=e147]:
+              - listitem [ref=e148]:
+                - radio "Park ranger A" [ref=e149]
+                - generic [ref=e151]: Park ranger A
+              - listitem [ref=e152]:
+                - radio "Park ranger B" [ref=e153]
+                - generic [ref=e155]: Park ranger B
+              - listitem [ref=e156]:
+                - radio "Park ranger C" [ref=e157]
+                - generic [ref=e159]: Park ranger C
+              - listitem [ref=e160]:
+                - radio "Park ranger D" [ref=e161]
+                - generic [ref=e163]: Park ranger D
+            - button "Flag question 39":
+              - generic [ref=e164]: Flag question 39
+        - button "Flag question 39" [ref=e167]:
+          - generic: 
+          - generic [ref=e168]: Flag question 39
+    - main [ref=e170]:
+      - generic [ref=e171]:
+        - group [ref=e172]:
+          - radiogroup "40 Which park ranger shares D’s view about the impact of social media on national parks?" [ref=e178]:
+            - paragraph [ref=e180]:
+              - generic [ref=e181]: "40"
+              - strong [ref=e183]: Which park ranger shares D’s view about the impact of social media on national parks?
+            - list [ref=e184]:
+              - listitem [ref=e185]:
+                - radio "Park ranger A" [ref=e186]
+                - generic [ref=e188]: Park ranger A
+              - listitem [ref=e189]:
+                - radio "Park ranger B" [ref=e190]
+                - generic [ref=e192]: Park ranger B
+              - listitem [ref=e193]:
+                - radio "Park ranger C" [ref=e194]
+                - generic [ref=e196]: Park ranger C
+              - listitem [ref=e197]:
+                - radio "Park ranger D" [ref=e198]
+                - generic [ref=e200]: Park ranger D
+            - button "Flag question 40":
+              - generic [ref=e201]: Flag question 40
+        - button "Flag question 40" [ref=e204]:
+          - generic: 
+          - generic [ref=e205]: Flag question 40
+  - contentinfo [ref=e207]:
+    - navigation "Previous / next question" [ref=e208]:
+      - button "Previous" [ref=e209]:
+        - generic [ref=e210]: 
+      - button "Next" [ref=e211]:
+        - generic [ref=e212]: 
+    - navigation "Questions" [ref=e213]:
+      - tablist [ref=e214]:
+        - tab "Part 1. 0 of 8 questions attempted." [ref=e215]:
+          - generic [ref=e216]:
+            - text: Part 1
+            - generic [ref=e217]: 0 of 8
+            - generic [ref=e218]: Part 1. 0 of 8 questions attempted.
+      - tablist [ref=e219]:
+        - tab "Part 2. 0 of 8 questions attempted." [ref=e220]:
+          - generic [ref=e221]:
+            - text: Part 2
+            - generic [ref=e222]: 0 of 8
+            - generic [ref=e223]: Part 2. 0 of 8 questions attempted.
+      - tablist [ref=e224]:
+        - tab "Part 3. 0 of 8 questions attempted." [ref=e225]:
+          - generic [ref=e226]:
+            - text: Part 3
+            - generic [ref=e227]: 0 of 8
+            - generic [ref=e228]: Part 3. 0 of 8 questions attempted.
+      - tablist [ref=e229]:
+        - tab "Part 4. 0 of 6 questions attempted." [ref=e230]:
+          - generic [ref=e231]:
+            - text: Part 4
+            - generic [ref=e232]: 0 of 6
+            - generic [ref=e233]: Part 4. 0 of 6 questions attempted.
+      - tablist [ref=e234]:
+        - tab "Part 5. 0 of 6 questions attempted." [ref=e235]:
+          - generic [ref=e236]:
+            - text: Part 5
+            - generic [ref=e237]: 0 of 6
+            - generic [ref=e238]: Part 5. 0 of 6 questions attempted.
+      - tablist [ref=e239]:
+        - tab "Part 6. 0 of 4 questions attempted." [ref=e240]:
+          - generic [ref=e241]:
+            - text: Part 6
+            - generic [ref=e242]: 0 of 4
+            - generic [ref=e243]: Part 6. 0 of 4 questions attempted.
+        - generic [ref=e244]:
+          - button "Question 37 Not attempted Active" [ref=e245]:
+            - generic [ref=e246]: Question 37
+            - text: "37"
+            - generic [ref=e247]: Not attempted Active
+          - button "Question 38 Not attempted" [ref=e248]:
+            - generic [ref=e249]: Question 38
+            - text: "38"
+            - generic [ref=e250]: Not attempted
+          - button "Question 39 Not attempted" [ref=e251]:
+            - generic [ref=e252]: Question 39
+            - text: "39"
+            - generic [ref=e253]: Not attempted
+          - button "Question 40 Not attempted" [ref=e254]:
+            - generic [ref=e255]: Question 40
+            - text: "40"
+            - generic [ref=e256]: Not attempted
+      - tablist [ref=e257]:
+        - tab "Part 7. 0 of 6 questions attempted." [ref=e258]:
+          - generic [ref=e259]:
+            - text: Part 7
+            - generic [ref=e260]: 0 of 6
+            - generic [ref=e261]: Part 7. 0 of 6 questions attempted.
+      - tablist [ref=e262]:
+        - tab "Part 8. 0 of 10 questions attempted." [ref=e263]:
+          - generic [ref=e264]:
+            - text: Part 8
+            - generic [ref=e265]: 0 of 10
+            - generic [ref=e266]: Part 8. 0 of 10 questions attempted.
+      - button "Review your answers" [ref=e267]:
+        - generic [ref=e268]: 

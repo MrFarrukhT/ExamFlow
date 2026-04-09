@@ -859,23 +859,24 @@
                     <div style="font-weight: bold; color: #7b1fa2; margin-bottom: 10px;">${esc(part.key)} (${part.wordCount} words)</div>
                     <div style="white-space: pre-wrap; line-height: 1.6; font-family: 'Times New Roman', serif; font-size: 14px;">${esc(part.text)}</div></div>`;
             });
+            // Layout: flat children (score-section as direct child of #modalContent) so the
+            // sticky CSS pins against the modal-body scroll container. See generateWritingComparison
+            // in ielts-admin-dashboard.html for the matching reasoning.
             return `
-                <div style="display: grid; gap: 20px;">
-                    ${AdminDashboard.renderAntiCheatDetail(submission)}
-                    <div class="score-section">
-                        <h3>Writing Assessment</h3>
-                        <div class="score-input">
-                            <label><strong>Score (%):</strong></label>
-                            <input type="number" id="writingScore" min="0" max="100" value="${esc(submission.score || '')}" placeholder="0-100" />
-                            <label><strong>Grade:</strong></label>
-                            <input type="text" id="writingGrade" value="${esc(submission.grade || '')}" placeholder="e.g. A, B, C" />
-                            <button class="btn btn-success" onclick="saveWritingScore('${esc(submission.id)}')">Save Score</button>
-                        </div>
+                ${AdminDashboard.renderAntiCheatDetail(submission)}
+                <div class="score-section">
+                    <h3>Writing Assessment</h3>
+                    <div class="score-input">
+                        <label><strong>Score (%):</strong></label>
+                        <input type="number" id="writingScore" min="0" max="100" value="${esc(submission.score || '')}" placeholder="0-100" />
+                        <label><strong>Grade:</strong></label>
+                        <input type="text" id="writingGrade" value="${esc(submission.grade || '')}" placeholder="e.g. A, B, C" />
+                        <button class="btn btn-success" onclick="saveWritingScore('${esc(submission.id)}')">Save Score</button>
                     </div>
-                    <div class="student-answers">
-                        <div class="answers-header">Student Writing - Total: ${totalWordCount} words (${writingParts.length} task${writingParts.length !== 1 ? 's' : ''})</div>
-                        <div class="answers-content">${writingHTML}</div>
-                    </div>
+                </div>
+                <div class="student-answers" style="margin-top: 20px;">
+                    <div class="answers-header">Student Writing - Total: ${totalWordCount} words (${writingParts.length} task${writingParts.length !== 1 ? 's' : ''})</div>
+                    <div class="answers-content">${writingHTML}</div>
                 </div>`;
         }
 

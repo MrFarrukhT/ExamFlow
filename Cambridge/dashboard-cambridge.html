@@ -331,8 +331,14 @@
             const d = durations[level] || {};
 
             if (level === 'A1-Movers' || level === 'A2-Key') {
-                // Combined Reading & Writing + Listening + Speaking
-                modulesGrid.innerHTML = `
+                // Combined-level layout: Reading & Writing + Listening + Speaking.
+                // Per official Cambridge English handbooks, the module sequence
+                // differs between the two combined levels:
+                //   A1 Movers: Listening → Reading & Writing → Speaking
+                //   A2 Key:    Reading & Writing → Listening → Speaking
+                // We render the same three card templates in the order required
+                // by the level so the dashboard reflects the official sequence.
+                const readingWritingCard = `
                     <div class="module-card" id="readingWritingCard" data-module="reading-writing">
                         <h3 class="module-title">Reading & Writing</h3>
                         <p class="module-duration">~${d['reading-writing']} minutes</p>
@@ -340,7 +346,9 @@
                         <span class="status-badge" id="readingWritingStatus">Not Started</span>
                         <button class="module-button" id="readingWritingButton">Start Reading & Writing</button>
                     </div>
+                `;
 
+                const listeningCard = `
                     <div class="module-card" id="listeningCard" data-module="listening">
                         <h3 class="module-title">Listening</h3>
                         <p class="module-duration">~${d['listening']} minutes</p>
@@ -348,7 +356,9 @@
                         <span class="status-badge" id="listeningStatus">Not Started</span>
                         <button class="module-button" id="listeningButton">Start Listening</button>
                     </div>
+                `;
 
+                const speakingCard = `
                     <div class="module-card" id="speakingCard" data-module="speaking">
                         <h3 class="module-title">Speaking</h3>
                         <p class="module-duration">~${d['speaking']} minutes</p>
@@ -357,6 +367,10 @@
                         <button class="module-button" id="speakingButton">Start Speaking</button>
                     </div>
                 `;
+
+                modulesGrid.innerHTML = (level === 'A1-Movers')
+                    ? listeningCard + readingWritingCard + speakingCard
+                    : readingWritingCard + listeningCard + speakingCard;
 
                 // Add event listeners
                 document.getElementById('readingWritingButton').addEventListener('click', function() {
