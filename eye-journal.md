@@ -2443,3 +2443,72 @@ Reverted: 0
 Files touched: 11 (10 writing.html + writing-handler.js)
 Generator script written: 1 (e:/tmp/fix-ielts-writing-compliance.js — one-time tool)
 Verification screenshot: eye-compliance-writing-r2.png
+
+---
+
+## Session: 2026-04-09 (round 3 — Cambridge wrapper duration single source of truth + anti-cheat audit)
+Persona: Maintainer trying to update a Cambridge module duration without missing a place
+System: Cambridge port 3003 — 14 wrapper files across B1/B2/C1 and their alt mocks
+Pages explored: 14 Cambridge writing/reading wrappers + `assets/js/distraction-free.js` + `assets/js/listening/listening.js` audio control flow
+Starting state: After rounds 1 and 2, durations were correct in `timer.js getTimerDuration` and the dashboard rendered them dynamically. But the B1, B2, and C1 reading + writing wrappers all hardcoded the duration in a literal `new CambridgeTimer(45, 'Writing')` style — bypassing the lookup. Anyone updating Cambridge timing in `timer.js` would silently miss these 14 files. The compliance was correct today but only by coincidence.
+
+### Round 3 — direct prompt: same compliance brief, deeper pass
+
+**Findings:**
+- [T2] 14 Cambridge wrapper files — `B1-Preliminary{,/-MOCK-2,/-MOCK-3}/{reading,writing}.html`, `B2-First{,/-MOCK-2,/-MOCK-3}/{reading,writing}.html`, and `C1-Advanced/{reading,writing}.html` — all instantiated `CambridgeTimer` with a literal number (45/45 for B1, 75/80 for B2, 90/90 for C1) instead of routing through `getTimerDuration(level, module)` like the listening / speaking / A2 R&W wrappers already do.
+- [T0] Anti-cheat verified — `assets/js/distraction-free.js` enforces fullscreen, tracks tab switches / window blurs / fullscreen exits / right-click attempts / blocked shortcuts / back navigation / copy / paste / cut, persists counters across page navigations via sessionStorage, and the test pages all load it (30 IELTS files + every Cambridge wrapper). Compliant with how real exam centers run lockdown.
+- [T0] IELTS Listening audio — pause/resume helpers exist (`pauseTimerAndAudio` / `resumeTimerAndAudio`) but only get called from `handleSessionStatus` and `handleCandidateStatus` polling — i.e., from the **invigilator panel**, not the student. Real exam rule: candidates can't pause; invigilators can pause for emergencies. Compliant by design. The hidden `<audio id="global-audio-player" preload="auto" style="display: none;">` element has no `controls` attribute, so candidates can't seek or replay either.
+- [T0] IELTS Writing copy/paste/cut prevention — `writing-handler.js:86–104` already attaches `preventDefault` listeners on `copy`, `paste`, and `cut` events for both task textareas. Compliant.
+- [T0] Hardcoded `Test Taker ID: 123456789` placeholder in IELTS writing.html headers — investigated and confirmed **not a compliance issue**: `assets/js/session-manager.js:75–104` (`initializeSession`) replaces `.test-taker-info` content with the real student ID at runtime, and writing.html includes session-manager.js. The literal "123456789" only appears when the page is loaded directly without a logged-in session — admin preview only.
+
+**Action:** REBUILD 14 (one-shot single-source-of-truth conversion).
+
+- [T2] All 14 Cambridge writing/reading wrappers — Replaced the literal `const timer = new CambridgeTimer(<n>, '<Label>');` line with the lookup pattern already used by listening/speaking:
+  ```js
+  // Per Cambridge English official spec — single source of truth: timer.js getTimerDuration
+  const level = localStorage.getItem('cambridgeLevel') || '<defaultLevelForThisFile>';
+  const timerDuration = CambridgeTimer.getTimerDuration(level, '<module>');
+  const timer = new CambridgeTimer(timerDuration, '<Label>');
+  ```
+  Default level is per file (B1/B2/C1) so the wrapper still works if `cambridgeLevel` somehow isn't set in localStorage (e.g., admin preview). Now the only place a Cambridge module duration lives is `assets/js/timer.js:601–612` — fix it once, fix it everywhere.
+  Mode: rebuild (single-source-of-truth refactor across 14 files)
+  Quality layer: 3-Efficient → 5-Delightful (one place to update)
+  Files: 14 Cambridge wrapper HTML files
+  Generator script: e:/tmp/fix-cambridge-wrapper-durations.js — first attempt produced extra blank lines because the regex captured trailing newlines into the indent group; reverted via `git checkout --` and reran with a corrected regex that captures only spaces.
+
+### Verification (browser walkthrough)
+| Surface | Verified state | Result |
+|---------|---------------|--------|
+| C1 Advanced writing wrapper | Timer renders `1:30:00` (90 min from getTimerDuration) | ✓ |
+| B2 First writing wrapper | Timer renders `1:19:46` (started from `1:20:00` = 80 min) | ✓ |
+| B1 Preliminary reading wrapper | Timer renders `45:00` (45 min from getTimerDuration) | ✓ |
+| Console errors on reload | All pre-existing — react-modal "no element for #wrapper", from the Inspera bundle.js shell. None added by my changes. | ✓ unchanged |
+
+### Quality Map (after this round)
+| Page | Layer | Notes |
+|------|-------|-------|
+| Cambridge wrappers (B1/B2/C1 reading + writing × 3 mocks) | 5-Delightful | All 14 now route through `getTimerDuration`, defaultLevel fallback for admin preview |
+| assets/js/distraction-free.js | 5-Delightful (verified, untouched) | Fullscreen + tab/blur/copy/paste/right-click + persisted counters |
+| assets/js/listening/listening.js audio control | 5-Delightful (verified, untouched) | Audio hidden, no controls, only invigilator can pause |
+| assets/js/writing/writing-handler.js copy/paste/cut prevention | 5-Delightful (verified, untouched) | preventDefault on all three event types |
+
+### Verified-not-needed (still no extras found)
+- Hardcoded "Test Taker ID: 123456789" — replaced at runtime by session-manager.js, only visible during admin preview
+- IELTS Listening audio element — hidden, no controls, no seek/replay
+- IELTS Writing copy/paste — prevented in writing-handler.js
+- Anti-cheat — fullscreen + violation tracking via distraction-free.js
+
+### Deferred (still — would need new exam content, not UI fixes)
+- B2 First mock has 6 reading parts × 32 questions instead of the official 7 × 52 questions. Needs ~20 new questions plus a Part 7 (multiple matching).
+- A1 Movers question ranges in `cambridge-answer-sync.js` fall through to A2 Key default (32q, 7 parts) instead of A1's spec (35q, 6 parts).
+
+### Session Stats
+Pages explored: 14 wrappers + 4 anti-cheat infrastructure files (audited, no fixes needed)
+Rounds: 1 (round 3 of the same compliance brief)
+Polishes landed: 0
+Rebuilds landed: 14 (wrapper duration lookup conversion)
+Fixes landed: 0
+Reverted: 1 (first regex pass produced extra blank lines, fixed and reran)
+Files touched: 14 Cambridge wrapper files
+Generator script written: 1 (e:/tmp/fix-cambridge-wrapper-durations.js — with one revision)
+Verification: DOM + timer state inspected on C1, B2, B1 wrappers via playwright-cli
