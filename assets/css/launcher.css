@@ -138,15 +138,67 @@ body {
     color: #f39c12;
 }
 
+/* Small inline spinner for the connecting state — replaces the static
+   blinking dot with a real motion cue so the student can tell the page
+   is actively trying to reach the server. */
 .status-connecting::before {
     content: '';
-    width: 8px;
-    height: 8px;
-    background: #f39c12;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
+    border: 2px solid rgba(243, 156, 18, 0.28);
+    border-top-color: #f39c12;
     display: inline-block;
     margin-right: 8px;
-    animation: blink 0.6s ease-in-out infinite;
+    vertical-align: -1px;
+    animation: launcherSpin 0.7s linear infinite;
+    background: transparent;
+}
+
+@keyframes launcherSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* Status row cluster — keeps the value pill and the retry button on
+   one line and aligned with the label. */
+.status-cluster {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-retry-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px 3px 7px;
+    background: rgba(231, 76, 60, 0.12);
+    border: 1px solid rgba(231, 76, 60, 0.35);
+    color: #c0392b;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 160ms ease, transform 160ms ease, border-color 160ms ease;
+    line-height: 1;
+}
+
+.status-retry-btn[hidden] {
+    display: none;
+}
+
+.status-retry-btn:hover {
+    background: rgba(231, 76, 60, 0.2);
+    border-color: rgba(231, 76, 60, 0.55);
+    transform: translateY(-1px);
+}
+
+.status-retry-btn:active {
+    transform: translateY(0);
+}
+
+.status-retry-btn svg {
+    color: #c0392b;
 }
 
 .info-value.status-offline {

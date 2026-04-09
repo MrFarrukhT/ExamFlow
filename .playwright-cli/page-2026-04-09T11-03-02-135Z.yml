@@ -1,0 +1,106 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "header.logo"
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - status [ref=e11]: Connected
+            - generic [ref=e13]: 
+          - button "Messages" [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: Messages
+              - generic [ref=e17]: 
+          - button "Options" [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: Options
+              - generic [ref=e21]: 
+          - button "Show notes" [ref=e22]:
+            - generic [ref=e23]:
+              - generic [ref=e24]: Show notes
+              - generic [ref=e25]: 
+        - generic [ref=e28]:
+          - generic [ref=e29]: Candidate ID
+          - generic [ref=e30]: TEST001
+  - generic [ref=e32]:
+    - generic [ref=e34]:
+      - generic [ref=e36]:
+        - heading "Part 2 — Choose ONE task" [level=3] [ref=e37]
+        - generic [ref=e38]: Answer one of the questions 2–4. Write your answer in 220–260 words in an appropriate style.
+      - main [ref=e40]:
+        - generic [ref=e41]:
+          - group [ref=e42]:
+            - generic [ref=e47]:
+              - heading "Questions 2–4" [level=2] [ref=e48]
+              - paragraph [ref=e49]:
+                - text: Answer
+                - strong [ref=e50]: one
+                - text: of these questions. Write
+                - strong [ref=e51]: 220–260 words
+                - text: in an appropriate style.
+              - generic [ref=e52]:
+                - strong [ref=e53]: Question 2 — Email to a friend
+                - paragraph [ref=e54]: "This is part of an email you receive from a friend:"
+                - paragraph [ref=e55]:
+                  - text: "From: Alex"
+                  - text: "Subject: Event"
+                  - text: Every year the International Club at my college organises an event based on the traditions of a specific country. Next year we’d like to do something from your country. Can you recommend what we should do for the event, and why you think it would be enjoyable for our students? Could you suggest how we can make it feel really authentic?
+                - paragraph [ref=e56]:
+                  - text: Write your
+                  - strong [ref=e57]: email
+                  - text: .
+              - generic [ref=e58]:
+                - strong [ref=e59]: Question 3 — Hotel review
+                - paragraph [ref=e60]:
+                  - text: You recently stayed in a hotel that was very different from what you expected. Write a
+                  - strong [ref=e61]: review
+                  - text: for a hotel review website in which you explain what you had expected from the hotel, and how your experience of it differed from your expectations.
+              - generic [ref=e62]:
+                - strong [ref=e63]: Question 4 — Proposal to the College Principal
+                - paragraph [ref=e64]:
+                  - text: You would like to create a study skills vlog which would be posted on the website of the international college where you study. You decide to send a
+                  - strong [ref=e65]: proposal
+                  - text: to the College Principal about your idea. Explain why you want to create the vlog, summarise what would be in it, and say what help you might need.
+          - button "Flag question" [ref=e68]:
+            - generic: 
+            - generic [ref=e69]: Flag question
+      - main [ref=e71]:
+        - generic [ref=e72]:
+          - group [ref=e73]:
+            - generic [ref=e77]:
+              - generic [ref=e78]:
+                - generic [ref=e79]: Answering this question?
+                - combobox "Which question are you answering?" [ref=e80]:
+                  - option "Undecided" [selected]
+                  - option "Question 2"
+                  - option "Question 3"
+                  - option "Question 4"
+              - generic [ref=e81]:
+                - textbox "Response for Part 2" [ref=e83]:
+                  - /placeholder: Write your response here…
+                - generic [ref=e84]: "Words: 0 · 0 of 1 questions selected"
+          - button "Flag question" [ref=e86]:
+            - generic: 
+            - generic [ref=e87]: Flag question
+    - contentinfo [ref=e90]:
+      - navigation "Previous / next question" [ref=e91]:
+        - button "Previous" [ref=e92]:
+          - generic [ref=e93]: 
+        - button "Next" [disabled] [ref=e94]:
+          - generic [ref=e95]: 
+      - navigation "Questions" [ref=e96]:
+        - tablist [ref=e97]:
+          - tab "Part 1. 0 of 1 questions attempted." [ref=e98]:
+            - generic [ref=e99]:
+              - text: Part 1
+              - generic [ref=e100]: 0 of 1
+              - generic [ref=e101]: Part 1. 0 of 1 questions attempted.
+        - tablist [ref=e102]:
+          - tab "Part 2. 0 of 1 questions attempted." [ref=e103]:
+            - generic [ref=e104]:
+              - text: Part 2
+              - generic [ref=e105]: 0 of 1
+              - generic [ref=e106]: Part 2. 0 of 1 questions attempted.
+        - button "Review your answers" [ref=e107]:
+          - generic [ref=e108]: 

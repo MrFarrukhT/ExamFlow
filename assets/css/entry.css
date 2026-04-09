@@ -234,7 +234,28 @@ body {
 
 .login-button.loading {
     pointer-events: none;
-    opacity: 0.8;
+    opacity: 0.92;
+    /* Make space for the inline spinner so the label doesn't shift */
+    padding-left: 2.6rem;
+    position: relative;
+}
+
+.login-button.loading::before {
+    content: '';
+    position: absolute;
+    left: 1.4rem;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    margin-top: -8px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #ffffff;
+    animation: entrySpin 0.7s linear infinite;
+}
+
+@keyframes entrySpin {
+    to { transform: rotate(360deg); }
 }
 
 /* Exam badge */

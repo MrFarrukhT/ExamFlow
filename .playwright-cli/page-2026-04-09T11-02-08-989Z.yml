@@ -1,0 +1,42 @@
+- generic [ref=e2]:
+  - generic [ref=e5]:
+    - img "Innovative Centre logo" [ref=e7]:
+      - generic [ref=e9]: IC
+    - heading "Innovative Centre" [level=1] [ref=e10]
+    - paragraph [ref=e11]: Test System
+  - generic [ref=e12]:
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - generic [ref=e15]: "Version:"
+        - generic [ref=e16]: Connecting...
+      - generic [ref=e17]:
+        - generic [ref=e18]: "Build:"
+        - generic [ref=e19]: April 2026
+      - generic [ref=e20]:
+        - generic [ref=e21]: "Status:"
+        - generic [ref=e23]: Ready
+    - button "Launch Test System" [ref=e24] [cursor=pointer]:
+      - img [ref=e26]
+      - generic [ref=e28]: Launch Test System
+    - generic [ref=e29]:
+      - text: Press
+      - generic [ref=e30]: Enter
+      - text: to launch
+    - list "Test system features" [ref=e31]:
+      - listitem [ref=e32]:
+        - img [ref=e33]
+        - generic [ref=e36]: Distraction-Free Environment
+      - listitem [ref=e37]:
+        - img [ref=e38]
+        - generic [ref=e40]: Fullscreen Mode
+      - listitem [ref=e41]:
+        - img [ref=e42]
+        - generic [ref=e44]: Secure Test Environment
+      - listitem [ref=e45]:
+        - img [ref=e46]
+        - generic [ref=e49]: Auto-Save & Session Management
+  - generic [ref=e50]:
+    - paragraph [ref=e51]: © 2026 Innovative Centre. All rights reserved.
+    - button "Invigilator Access" [ref=e53] [cursor=pointer]:
+      - img [ref=e54]
+      - text: Invigilator Access

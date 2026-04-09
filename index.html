@@ -276,22 +276,54 @@
 
         async function verifyInvigilatorPassword() {
             const password = document.getElementById('invigilator-password').value;
+            const errorEl = document.getElementById('password-error');
+            const submitBtn = document.querySelector('#invigilator-modal .modal-submit-btn');
+
+            // Reset error UI before each attempt
+            if (errorEl) {
+                errorEl.style.display = 'none';
+                errorEl.textContent = 'Incorrect password. Please try again.';
+            }
+
+            // Disable button + show loading label so the user knows the request is in flight
+            const originalLabel = submitBtn ? submitBtn.textContent : 'Access Invigilator Page';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('loading');
+                submitBtn.textContent = 'Verifying...';
+            }
+
             try {
                 const response = await fetch('/verify-invigilator', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password })
+                    body: JSON.stringify({ password }),
+                    signal: AbortSignal.timeout(8000)
                 });
                 if (response.ok) {
                     window.location.href = 'invigilator.html';
-                } else {
-                    document.getElementById('password-error').style.display = 'block';
-                    document.getElementById('invigilator-password').value = '';
-                    document.getElementById('invigilator-password').focus();
+                    return;
                 }
-            } catch (error) {
-                document.getElementById('password-error').style.display = 'block';
+                // Auth failure (wrong password) — clear and refocus
+                if (errorEl) {
+                    errorEl.textContent = 'Incorrect password. Please try again.';
+                    errorEl.style.display = 'block';
+                }
                 document.getElementById('invigilator-password').value = '';
+                document.getElementById('invigilator-password').focus();
+            } catch (error) {
+                // Network/timeout failure — distinct from "wrong password" so the
+                // user doesn't keep retyping a correct password forever.
+                if (errorEl) {
+                    errorEl.textContent = 'Could not reach the server. Check your connection and try again.';
+                    errorEl.style.display = 'block';
+                }
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('loading');
+                    submitBtn.textContent = originalLabel;
+                }
             }
         }
 

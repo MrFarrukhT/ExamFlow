@@ -1,0 +1,99 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "header.logo"
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - status [ref=e11]: Connected
+            - generic [ref=e13]: 
+          - button "Messages" [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: Messages
+              - generic [ref=e17]: 
+          - button "Options" [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: Options
+              - generic [ref=e21]: 
+          - button "Show notes" [ref=e22]:
+            - generic [ref=e23]:
+              - generic [ref=e24]: Show notes
+              - generic [ref=e25]: 
+        - generic [ref=e28]:
+          - generic [ref=e29]: Candidate ID
+          - generic [ref=e30]: TEST001
+  - generic [ref=e32]:
+    - generic [ref=e34]:
+      - generic [ref=e36]:
+        - heading "Part 1 — Essay (compulsory)" [level=3] [ref=e37]
+        - generic [ref=e38]: You must answer this question. Write your answer in 220–260 words in an appropriate style.
+      - main [ref=e40]:
+        - generic [ref=e41]:
+          - group [ref=e42]:
+            - generic [ref=e47]:
+              - heading "Question 1" [level=2] [ref=e48]
+              - paragraph [ref=e49]:
+                - text: You
+                - strong [ref=e50]: must
+                - text: answer this question. Write your answer in
+                - strong [ref=e51]: 220–260 words
+                - text: in an appropriate style.
+              - paragraph [ref=e52]: "Your class has listened to a podcast about factors that contribute to people’s understanding of history. You have made the notes below:"
+              - generic [ref=e53]:
+                - strong [ref=e54]: "Factors that contribute to people’s understanding of history:"
+                - list [ref=e55]:
+                  - listitem [ref=e56]: school lessons
+                  - listitem [ref=e57]: public monuments
+                  - listitem [ref=e58]: museums
+              - generic [ref=e59]:
+                - strong [ref=e60]: "Some opinions expressed in the podcast:"
+                - list [ref=e61]:
+                  - listitem [ref=e62]: “Some teachers make learning history really interesting.”
+                  - listitem [ref=e63]: “Statues in public areas show what local people think is important.”
+                  - listitem [ref=e64]: “You can visit many museums online.”
+              - paragraph [ref=e65]:
+                - text: Write an
+                - strong [ref=e66]: essay
+                - text: for your tutor discussing
+                - strong [ref=e67]: two
+                - text: of the factors in your notes. You should
+                - strong [ref=e68]: explain which factor is more important
+                - text: for people’s understanding of history,
+                - strong [ref=e69]: giving reasons
+                - text: in support of your answer.
+              - paragraph [ref=e70]: You may, if you wish, make use of the opinions expressed in the podcast, but you should use your own words as far as possible.
+          - button "Flag question" [ref=e73]:
+            - generic: 
+            - generic [ref=e74]: Flag question
+      - main [ref=e76]:
+        - generic [ref=e77]:
+          - group [ref=e78]:
+            - generic [ref=e83]:
+              - textbox "Essay answer for Question 1" [ref=e85]:
+                - /placeholder: Write your essay here…
+              - generic [ref=e86]: "Words: 0"
+          - button "Flag question" [ref=e88]:
+            - generic: 
+            - generic [ref=e89]: Flag question
+    - contentinfo [ref=e92]:
+      - navigation "Previous / next question" [ref=e93]:
+        - button "Previous" [disabled] [ref=e94]:
+          - generic [ref=e95]: 
+        - button "Next" [ref=e96]:
+          - generic [ref=e97]: 
+      - navigation "Questions" [ref=e98]:
+        - tablist [ref=e99]:
+          - tab "Part 1. 0 of 1 questions attempted." [ref=e100]:
+            - generic [ref=e101]:
+              - text: Part 1
+              - generic [ref=e102]: 0 of 1
+              - generic [ref=e103]: Part 1. 0 of 1 questions attempted.
+        - tablist [ref=e104]:
+          - tab "Part 2. 0 of 1 questions attempted." [ref=e105]:
+            - generic [ref=e106]:
+              - text: Part 2
+              - generic [ref=e107]: 0 of 1
+              - generic [ref=e108]: Part 2. 0 of 1 questions attempted.
+        - button "Review your answers" [ref=e109]:
+          - generic [ref=e110]: 

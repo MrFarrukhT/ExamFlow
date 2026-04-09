@@ -767,34 +767,33 @@
             const totalCorrect = rwComp.correctCount + lisComp.correctCount;
             const totalQ = rwComp.totalQuestions + lisComp.totalQuestions;
             const overallPct = totalQ > 0 ? Math.round((totalCorrect / totalQ) * 100) : 0;
+            // NOTE on layout: score-section is a direct child of #modalContent (not nested
+            // in a grid cell) so `position: sticky; top: 0` pins against the .modal-body
+            // scroll container. See the matching IELTS comment for the full reasoning.
             return `
-                <div class="answer-comparison">
-                    <div style="grid-column: 1 / -1;">
-                        ${AdminDashboard.renderAntiCheatDetail(submission)}
-                        <div class="score-section">
-                            <h3>Overall Scoring</h3>
-                            <p><strong>Total Score:</strong> ${totalCorrect}/${totalQ} correct answers (${overallPct}%)</p>
-                            <p style="margin-top: 10px;"><strong>Reading & Writing:</strong> ${rwComp.correctCount}/${rwComp.totalQuestions} (${rwComp.percentage}%) &nbsp;|&nbsp;
-                                <strong>Listening:</strong> ${lisComp.correctCount}/${lisComp.totalQuestions} (${lisComp.percentage}%)</p>
-                            <div class="score-input">
-                                <label><strong>Final Score (%):</strong></label>
-                                <input type="number" id="finalScore" min="0" max="100" value="${esc(submission.score || overallPct)}" />
-                                <label><strong>Grade:</strong></label>
-                                <input type="text" id="gradeInput" value="${esc(submission.grade || '')}" placeholder="e.g. A, B, C" />
-                                <button class="btn btn-success" onclick="saveScore('${esc(submission.id)}')">Save Score</button>
-                            </div>
-                        </div>
+                ${AdminDashboard.renderAntiCheatDetail(submission)}
+                <div class="score-section">
+                    <h3>Overall Scoring</h3>
+                    <p><strong>Total Score:</strong> ${totalCorrect}/${totalQ} correct answers (${overallPct}%)</p>
+                    <p style="margin-top: 10px;"><strong>Reading & Writing:</strong> ${rwComp.correctCount}/${rwComp.totalQuestions} (${rwComp.percentage}%) &nbsp;|&nbsp;
+                        <strong>Listening:</strong> ${lisComp.correctCount}/${lisComp.totalQuestions} (${lisComp.percentage}%)</p>
+                    <div class="score-input">
+                        <label><strong>Final Score (%):</strong></label>
+                        <input type="number" id="finalScore" min="0" max="100" value="${esc(submission.score || overallPct)}" />
+                        <label><strong>Grade:</strong></label>
+                        <input type="text" id="gradeInput" value="${esc(submission.grade || '')}" placeholder="e.g. A, B, C" />
+                        <button class="btn btn-success" onclick="saveScore('${esc(submission.id)}')">Save Score</button>
                     </div>
-                    <div style="grid-column: 1 / -1; margin-top: 20px;">
-                        <h3 style="background: linear-gradient(135deg, #ff9800, #f57c00); color: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                            \uD83D\uDCDD Reading & Writing Section (${rwComp.correctCount}/${rwComp.totalQuestions} correct)</h3>
-                        <div class="answers-content">${rwComp.rows}</div>
-                    </div>
-                    <div style="grid-column: 1 / -1; margin-top: 30px;">
-                        <h3 style="background: linear-gradient(135deg, #4caf50, #388e3c); color: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                            \uD83C\uDFA7 Listening Section (${lisComp.correctCount}/${lisComp.totalQuestions} correct)</h3>
-                        <div class="answers-content">${lisComp.rows}</div>
-                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <h3 style="background: linear-gradient(135deg, #ff9800, #f57c00); color: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        \uD83D\uDCDD Reading & Writing Section (${rwComp.correctCount}/${rwComp.totalQuestions} correct)</h3>
+                    <div class="answers-content">${rwComp.rows}</div>
+                </div>
+                <div style="margin-top: 30px;">
+                    <h3 style="background: linear-gradient(135deg, #4caf50, #388e3c); color: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        \uD83C\uDFA7 Listening Section (${lisComp.correctCount}/${lisComp.totalQuestions} correct)</h3>
+                    <div class="answers-content">${lisComp.rows}</div>
                 </div>`;
         }
 
@@ -818,27 +817,22 @@
                 comparisonRows.push(`<div class="answer-row ${rowClass}"><div class="question-id">${displayKey}:</div><div style="display: flex; gap: 20px; flex: 1;"><div style="flex: 1;"><strong>Student:</strong> ${esc(studentAnswer)}</div><div style="flex: 1;"><strong>Correct:</strong> ${esc(displayCorrect)}</div></div></div>`);
             }
             const pctScore = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
+            // Layout: score-section as direct child of #modalContent for sticky pinning.
             return `
-                <div class="answer-comparison">
-                    <div style="grid-column: 1 / -1;">
-                        ${AdminDashboard.renderAntiCheatDetail(submission)}
-                        <div class="score-section">
-                            <h3>Scoring</h3>
-                            <p><strong>Automatic Score:</strong> ${correctCount}/${totalQuestions} correct answers (${pctScore}%)</p>
-                            <div class="score-input">
-                                <label><strong>Final Score (%):</strong></label>
-                                <input type="number" id="finalScore" min="0" max="100" value="${esc(submission.score || pctScore)}" />
-                                <label><strong>Grade:</strong></label>
-                                <input type="text" id="gradeInput" value="${esc(submission.grade || '')}" placeholder="e.g. A, B, C" />
-                                <button class="btn btn-success" onclick="saveScore('${esc(submission.id)}')">Save Score</button>
-                            </div>
-                        </div>
+                ${AdminDashboard.renderAntiCheatDetail(submission)}
+                <div class="score-section">
+                    <h3>Scoring</h3>
+                    <p><strong>Automatic Score:</strong> ${correctCount}/${totalQuestions} correct answers (${pctScore}%)</p>
+                    <div class="score-input">
+                        <label><strong>Final Score (%):</strong></label>
+                        <input type="number" id="finalScore" min="0" max="100" value="${esc(submission.score || pctScore)}" />
+                        <label><strong>Grade:</strong></label>
+                        <input type="text" id="gradeInput" value="${esc(submission.grade || '')}" placeholder="e.g. A, B, C" />
+                        <button class="btn btn-success" onclick="saveScore('${esc(submission.id)}')">Save Score</button>
                     </div>
-                    <div style="grid-column: 1 / -1;">
-                        <div class="answers-header">Answer Comparison (Green = Correct, Red = Incorrect)</div>
-                        <div class="answers-content">${comparisonRows.join('')}</div>
-                    </div>
-                </div>`;
+                </div>
+                <div class="answers-header">Answer Comparison (Green = Correct, Red = Incorrect)</div>
+                <div class="answers-content">${comparisonRows.join('')}</div>`;
         }
 
         // ── Cambridge: generateWritingComparison ──

@@ -686,27 +686,27 @@
                         </div>
                     </div>`);
             }
+            // NOTE on layout: the score-section must be a DIRECT child of #modalContent (not
+            // nested inside a wrapper) for `position: sticky; top: 0` to actually pin against
+            // the .modal-body scroll container. When this was wrapped in a grid cell its sticky
+            // boundary was constrained to that cell's tiny height, so scrolling 40 answer rows
+            // hid the score input anyway. The anti-cheat banner sits above it (not sticky —
+            // it's audit context, not an action target) and the answer rows render below.
             return `
-                <div class="answer-comparison">
-                    <div style="grid-column: 1 / -1;">
-                        ${AdminDashboard.renderAntiCheatDetail(submission)}
-                        <div class="score-section">
-                            <h3>Scoring</h3>
-                            <p><strong>Automatic Score:</strong> ${correctCount}/${totalQuestions} correct answers</p>
-                            <div class="score-input">
-                                <label><strong>Final Score (0-40):</strong></label>
-                                <input type="number" id="finalScore" min="0" max="40" value="${submission.score || correctCount}" />
-                                <label><strong>Band Score:</strong></label>
-                                <input type="text" id="bandScore" value="${submission.band_score || ''}" placeholder="e.g. 6.5" />
-                                <button class="btn btn-success" onclick="saveScore('${esc(submission.id)}')">Save Score</button>
-                            </div>
-                        </div>
+                ${AdminDashboard.renderAntiCheatDetail(submission)}
+                <div class="score-section">
+                    <h3>Scoring</h3>
+                    <p><strong>Automatic Score:</strong> ${correctCount}/${totalQuestions} correct answers</p>
+                    <div class="score-input">
+                        <label><strong>Final Score (0-40):</strong></label>
+                        <input type="number" id="finalScore" min="0" max="40" value="${submission.score || correctCount}" />
+                        <label><strong>Band Score:</strong></label>
+                        <input type="text" id="bandScore" value="${submission.band_score || ''}" placeholder="e.g. 6.5" />
+                        <button class="btn btn-success" onclick="saveScore('${esc(submission.id)}')">Save Score</button>
                     </div>
-                    <div style="grid-column: 1 / -1;">
-                        <div class="answers-header">Answer Comparison (Green = Correct, Red = Incorrect)</div>
-                        <div class="answers-content">${comparisonRows.join('')}</div>
-                    </div>
-                </div>`;
+                </div>
+                <div class="answers-header">Answer Comparison (Green = Correct, Red = Incorrect)</div>
+                <div class="answers-content">${comparisonRows.join('')}</div>`;
         }
 
         // ── IELTS-only: generateWritingComparison ──

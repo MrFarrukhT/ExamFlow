@@ -1,0 +1,152 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "header.logo"
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - status [ref=e11]: Connected
+            - generic [ref=e13]: 
+          - button "Messages" [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: Messages
+              - generic [ref=e17]: 
+          - button "Options" [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: Options
+              - generic [ref=e21]: 
+          - button "Show notes" [ref=e22]:
+            - generic [ref=e23]:
+              - generic [ref=e24]: Show notes
+              - generic [ref=e25]: 
+        - generic [ref=e28]:
+          - generic [ref=e29]: Candidate ID
+          - generic [ref=e30]: TEST001
+          - status [ref=e31]: ◐ Audio is loading
+  - generic [ref=e35]:
+    - generic [ref=e37]:
+      - heading "Part 2 — Sentence completion (Questions 7–14)" [level=3] [ref=e38]
+      - generic [ref=e39]: You will hear an archaeology student called Hannah Miller giving a talk about an archaeological dig. For questions 7–14, complete the sentences with a word or short phrase.
+    - main [ref=e41]:
+      - generic [ref=e42]:
+        - group [ref=e43]:
+          - generic [ref=e48]:
+            - heading "FIRST-YEAR ARCHAEOLOGICAL DIG" [level=2] [ref=e49]
+            - paragraph [ref=e50]:
+              - strong [ref=e51]: "7."
+              - text: Hannah warns that there is more
+              - textbox "Insert answer for question 7" [ref=e55]:
+                - /placeholder: "7"
+              - text: involved in a dig than most students expect.
+            - paragraph [ref=e56]:
+              - strong [ref=e57]: "8."
+              - text: Hannah struggled with distinguishing between the
+              - textbox "Insert answer for question 8" [ref=e61]:
+                - /placeholder: "8"
+              - text: that the team found as they dug.
+            - paragraph [ref=e62]:
+              - strong [ref=e63]: "9."
+              - text: Hannah says that past
+              - textbox "Insert answer for question 9" [ref=e67]:
+                - /placeholder: "9"
+              - text: sometimes made it difficult to determine which materials belonged to which building.
+            - paragraph [ref=e68]:
+              - strong [ref=e69]: "10."
+              - text: Hannah thinks that
+              - textbox "Insert answer for question 10" [ref=e73]:
+                - /placeholder: "10"
+              - text: are the type of object that is hard to identify if you lack experience.
+            - paragraph [ref=e74]:
+              - strong [ref=e75]: "11."
+              - text: Hannah explains why archaeologists need to be careful about using
+              - textbox "Insert answer for question 11" [ref=e79]:
+                - /placeholder: "11"
+              - text: while a dig is ongoing.
+            - paragraph [ref=e80]:
+              - strong [ref=e81]: "12."
+              - text: Hannah feels that
+              - textbox "Insert answer for question 12" [ref=e85]:
+                - /placeholder: "12"
+              - text: is a good way to combat theft and vandalism around archaeological digs.
+            - paragraph [ref=e86]:
+              - strong [ref=e87]: "13."
+              - text: Hannah was particularly grateful for the support that the
+              - textbox "Insert answer for question 13" [ref=e91]:
+                - /placeholder: "13"
+              - text: gave her during the dig.
+            - paragraph [ref=e92]:
+              - strong [ref=e93]: "14."
+              - text: Doing her first dig helped Hannah realise that
+              - textbox "Insert answer for question 14" [ref=e97]:
+                - /placeholder: "14"
+              - text: was the aspect of archaeology she’d like to study in the future.
+        - button "Flag question" [ref=e100]:
+          - generic: 
+          - generic [ref=e101]: Flag question
+  - contentinfo [ref=e103]:
+    - navigation "Previous / next question" [ref=e104]:
+      - button "Previous" [ref=e105]:
+        - generic [ref=e106]: 
+      - button "Next" [ref=e107]:
+        - generic [ref=e108]: 
+    - navigation "Questions" [ref=e109]:
+      - tablist [ref=e110]:
+        - tab "Part 1. 0 of 6 questions attempted." [ref=e111]:
+          - generic [ref=e112]:
+            - text: Part 1
+            - generic [ref=e113]: 0 of 6
+            - generic [ref=e114]: Part 1. 0 of 6 questions attempted.
+      - tablist [ref=e115]:
+        - tab "Part 2. 0 of 8 questions attempted." [ref=e116]:
+          - generic [ref=e117]:
+            - text: Part 2
+            - generic [ref=e118]: 0 of 8
+            - generic [ref=e119]: Part 2. 0 of 8 questions attempted.
+        - generic [ref=e120]:
+          - button "Question 7 Not attempted Active" [ref=e121]:
+            - generic [ref=e122]: Question 7
+            - text: "7"
+            - generic [ref=e123]: Not attempted Active
+          - button "Question 8 Not attempted" [ref=e124]:
+            - generic [ref=e125]: Question 8
+            - text: "8"
+            - generic [ref=e126]: Not attempted
+          - button "Question 9 Not attempted" [ref=e127]:
+            - generic [ref=e128]: Question 9
+            - text: "9"
+            - generic [ref=e129]: Not attempted
+          - button "Question 10 Not attempted" [ref=e130]:
+            - generic [ref=e131]: Question 10
+            - text: "10"
+            - generic [ref=e132]: Not attempted
+          - button "Question 11 Not attempted" [ref=e133]:
+            - generic [ref=e134]: Question 11
+            - text: "11"
+            - generic [ref=e135]: Not attempted
+          - button "Question 12 Not attempted" [ref=e136]:
+            - generic [ref=e137]: Question 12
+            - text: "12"
+            - generic [ref=e138]: Not attempted
+          - button "Question 13 Not attempted" [ref=e139]:
+            - generic [ref=e140]: Question 13
+            - text: "13"
+            - generic [ref=e141]: Not attempted
+          - button "Question 14 Not attempted" [ref=e142]:
+            - generic [ref=e143]: Question 14
+            - text: "14"
+            - generic [ref=e144]: Not attempted
+      - tablist [ref=e145]:
+        - tab "Part 3. 0 of 6 questions attempted." [ref=e146]:
+          - generic [ref=e147]:
+            - text: Part 3
+            - generic [ref=e148]: 0 of 6
+            - generic [ref=e149]: Part 3. 0 of 6 questions attempted.
+      - tablist [ref=e150]:
+        - tab "Part 4. 0 of 10 questions attempted." [ref=e151]:
+          - generic [ref=e152]:
+            - text: Part 4
+            - generic [ref=e153]: 0 of 10
+            - generic [ref=e154]: Part 4. 0 of 10 questions attempted.
+      - button "Review your answers" [ref=e155]:
+        - generic [ref=e156]: 

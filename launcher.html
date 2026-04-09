@@ -150,7 +150,16 @@
                 </div>
                 <div class="info-item">
                     <span class="info-label">Status:</span>
-                    <span class="info-value status-ready">Ready</span>
+                    <span class="status-cluster">
+                        <span class="info-value status-ready">Ready</span>
+                        <button type="button" id="status-retry" class="status-retry-btn" hidden onclick="checkStatus()" aria-label="Retry connection check">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                            </svg>
+                            Retry
+                        </button>
+                    </span>
                 </div>
             </div>
 
@@ -233,13 +242,23 @@
             document.getElementById('feature-1').textContent = '4 Levels: A1, A2, B1, B2';
         }
 
-        // Live status check
-        (async function checkStatus() {
-            const statusEl = document.querySelector('.info-value.status-ready');
+        // Live status check. Tracks online/offline state and exposes a retry
+        // affordance when the database server can't be reached, so the student
+        // doesn't have to refresh the whole page.
+        let __ic_isOnline = false;
+
+        async function checkStatus() {
+            // The Status row's value cell starts with the .status-ready class.
+            // Find by .status-cluster .info-value to keep this resilient even
+            // after the className changes between connecting / ready / offline.
+            const statusEl = document.querySelector('.status-cluster .info-value');
             if (!statusEl) return;
 
             statusEl.textContent = 'Connecting...';
             statusEl.className = 'info-value status-connecting';
+            // Hide the retry button while a check is in flight
+            const retryBtn = document.getElementById('status-retry');
+            if (retryBtn) retryBtn.hidden = true;
 
             try {
                 const res = await fetch('/test', { signal: AbortSignal.timeout(5000) });
@@ -247,19 +266,36 @@
                 if (data.success) {
                     statusEl.textContent = 'Ready';
                     statusEl.className = 'info-value status-ready';
+                    __ic_isOnline = true;
                 } else {
-                    statusEl.textContent = 'Offline';
-                    statusEl.className = 'info-value status-offline';
+                    throw new Error('server reported failure');
                 }
             } catch {
                 statusEl.textContent = 'Offline';
                 statusEl.className = 'info-value status-offline';
+                __ic_isOnline = false;
+                if (retryBtn) retryBtn.hidden = false;
             }
-        })();
+        }
+        checkStatus();
 
         function launchApp() {
             const btn = document.getElementById('launch-btn');
             if (btn.classList.contains('launching')) return;
+
+            // If the server is unreachable, warn the student before they commit
+            // to the test. They can still proceed (answers fall back to local
+            // storage), but they need to know what they're getting into.
+            if (!__ic_isOnline) {
+                const proceed = confirm(
+                    'The test system is currently offline.\n\n' +
+                    'You can still take the test — your answers will be saved locally and ' +
+                    'submitted automatically when the connection comes back.\n\n' +
+                    'Continue anyway?'
+                );
+                if (!proceed) return;
+            }
+
             btn.classList.add('launching');
             btn.querySelector('.launch-text').textContent = 'Launching...';
             enterFullscreenMode();
