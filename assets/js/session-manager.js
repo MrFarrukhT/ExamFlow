@@ -1,10 +1,7 @@
 // Test Session Management Integration
 // This script should be included in all test pages (reading.html, listening.html, writing.html)
-
-function escapeHTML(str) {
-    if (str == null) return '';
-    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
-}
+// NOTE: escapeHTML() is provided by universal-functions.js (loaded before this file on every page).
+// A local copy was removed in round 39 to eliminate the triplicate definition across the codebase.
 
 // Concurrency guards to prevent race conditions between periodic saves and submission
 let _isSaving = false;
