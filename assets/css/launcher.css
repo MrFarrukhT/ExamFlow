@@ -81,11 +81,11 @@ body {
 }
 
 .system-info {
-    background: rgba(52, 152, 219, 0.1);
+    background: rgba(25, 118, 210, 0.1);
     border-radius: 15px;
     padding: 1.5rem;
     margin-bottom: 2rem;
-    border: 1px solid rgba(52, 152, 219, 0.2);
+    border: 1px solid rgba(25, 118, 210, 0.2);
 }
 
 .info-item {
@@ -216,7 +216,7 @@ body {
 }
 
 .launch-button {
-    background: linear-gradient(135deg, #3498db, #2980b9);
+    background: linear-gradient(135deg, #1976d2, #1565c0);
     border: none;
     border-radius: 50px;
     color: white;
@@ -230,7 +230,7 @@ body {
     gap: 12px;
     margin: 0 auto 1.2rem;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+    box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
     width: 100%;
     max-width: 280px;
     position: relative;
@@ -240,17 +240,17 @@ body {
 
 @keyframes glowPulse {
     0%, 100% {
-        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
     }
     50% {
-        box-shadow: 0 4px 25px rgba(52, 152, 219, 0.5), 0 0 40px rgba(52, 152, 219, 0.15);
+        box-shadow: 0 4px 25px rgba(25, 118, 210, 0.5), 0 0 40px rgba(25, 118, 210, 0.15);
     }
 }
 
 .launch-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
-    background: linear-gradient(135deg, #2980b9, #3498db);
+    box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
+    background: linear-gradient(135deg, #1565c0, #1976d2);
     animation: none;
 }
 
@@ -345,7 +345,7 @@ body {
 }
 
 .feature-item svg {
-    color: #3498db;
+    color: #1976d2;
     flex-shrink: 0;
 }
 
@@ -577,14 +577,14 @@ body {
 
 .modal-body input[type="password"]:focus {
     outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    border-color: #1976d2;
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
 }
 
 .modal-submit-btn {
     width: 100%;
     padding: 12px;
-    background: linear-gradient(135deg, #3498db, #2980b9);
+    background: linear-gradient(135deg, #1976d2, #1565c0);
     color: white;
     border: none;
     border-radius: 6px;
@@ -595,8 +595,8 @@ body {
 }
 
 .modal-submit-btn:hover {
-    background: linear-gradient(135deg, #2980b9, #3498db);
-    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+    background: linear-gradient(135deg, #1565c0, #1976d2);
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
 }
 
 .modal-error {
