@@ -99,6 +99,36 @@ unrelated CSS bystander). Verified all 5 changes present in HEAD before logging.
 Rounds: 1 | Fixed: 5 | Reverted: 0 | Deferred: 0 (8 carried over)
 Ending state: 8 open findings in ledger (all manual architecture work)
 
+## Session: 2026-04-09 15:05
+Domains: security, api, frontend
+Starting state: 8 open findings (all carryover deferred items)
+
+### Round 9
+- [HIGH] GET /cambridge-submissions level/skill/mock_test missing enum + parseInt validation → fixed — `cambridge-database-server.js`
+- [MEDIUM] GET /cambridge-student-results level/mock_test missing validation → fixed — `cambridge-database-server.js`
+- [MEDIUM] GET /cambridge-answers level/skill/mock missing validation → fixed — `cambridge-database-server.js`
+- [MEDIUM] highlight-manager.js + notes-manager.js autosave setInterval IDs not stored → fixed — `assets/js/cambridge/`
+- [MEDIUM] invigilator.html session refresh + room activity setInterval IDs not stored → fixed — `invigilator.html`
+
+### Note
+Scenario agent ran rounds 28-29 in parallel, doing bulk error.message strip in
+cambridge-database-server.js. My validation fixes complemented their work — no
+race this round; clean commit `4424c5d` with all 4 files.
+
+### Deferred (carried over)
+- Hardcoded invigilator password — needs server-side auth
+- Missing auth on admin endpoints — needs middleware + tokens
+- Unbounded SELECT queries — needs pagination design
+- Duplicate validation logic across servers — needs shared module
+- core.js god file (1562 lines) — needs migration
+- CORS wildcard — needs allowed origins config
+- Inconsistent response envelope (raw arrays) — needs frontend coordination
+- distraction-free.js event listener leak refactor (in-progress by another agent)
+
+### Stats
+Rounds: 1 | Fixed: 5 | Reverted: 0 | Deferred: 0 (8 carried over)
+Ending state: 8 open findings in ledger (all manual architecture work)
+
 ## Session: 2026-04-09 14:55
 Domains: security, api, architecture
 Starting state: 8 open findings (carryover deferred items)

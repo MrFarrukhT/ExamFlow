@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "lastRunAt": "2026-04-09T11:00:00Z",
-  "lastRunCommit": "dee207b",
+  "lastRunAt": "2026-04-09T11:10:00Z",
+  "lastRunCommit": "4424c5d",
   "runs": [
     {
       "id": "heal-2026-04-08-r1",
@@ -84,6 +84,16 @@
       "reverted": 0,
       "deferred": 0,
       "note": "Listening.js dead-code deletions absorbed into eye checkpoint cd19135 (race). IELTS server fixes in heal r8 commit dee207b. Both verified present in HEAD."
+    },
+    {
+      "id": "heal-2026-04-09-r9",
+      "type": "heal",
+      "startedAt": "2026-04-09T11:05:00Z",
+      "domains": ["security", "api", "frontend"],
+      "round": 9,
+      "fixed": 5,
+      "reverted": 0,
+      "deferred": 0
     }
   ],
   "findings": [
@@ -518,6 +528,51 @@
       "status": "fixed",
       "fixedInCommit": "cd19135",
       "foundAt": "2026-04-09T10:55:00Z"
+    },
+    {
+      "fingerprint": "security:cambridge-database-server:get-submissions-no-validation",
+      "severity": "HIGH",
+      "title": "GET /cambridge-submissions accepted level/skill/mock_test query params without enum or parseInt validation",
+      "file": "cambridge-database-server.js",
+      "status": "fixed",
+      "fixedInCommit": "4424c5d",
+      "foundAt": "2026-04-09T11:05:00Z"
+    },
+    {
+      "fingerprint": "security:cambridge-database-server:get-student-results-no-validation",
+      "severity": "MEDIUM",
+      "title": "GET /cambridge-student-results accepted level/mock_test without validation",
+      "file": "cambridge-database-server.js",
+      "status": "fixed",
+      "fixedInCommit": "4424c5d",
+      "foundAt": "2026-04-09T11:05:00Z"
+    },
+    {
+      "fingerprint": "security:cambridge-database-server:get-answers-no-validation",
+      "severity": "MEDIUM",
+      "title": "GET /cambridge-answers accepted level/skill/mock without enum or parseInt validation",
+      "file": "cambridge-database-server.js",
+      "status": "fixed",
+      "fixedInCommit": "4424c5d",
+      "foundAt": "2026-04-09T11:05:00Z"
+    },
+    {
+      "fingerprint": "frontend:cambridge-managers:setinterval-no-reference",
+      "severity": "MEDIUM",
+      "title": "highlight-manager.js + notes-manager.js autosave setInterval IDs not stored — cannot clearInterval on cleanup",
+      "file": "assets/js/cambridge/highlight-manager.js, assets/js/cambridge/notes-manager.js",
+      "status": "fixed",
+      "fixedInCommit": "4424c5d",
+      "foundAt": "2026-04-09T11:05:00Z"
+    },
+    {
+      "fingerprint": "frontend:invigilator:setinterval-no-reference",
+      "severity": "MEDIUM",
+      "title": "Two setInterval calls (session refresh, room activity) not stored — cannot clearInterval",
+      "file": "invigilator.html",
+      "status": "fixed",
+      "fixedInCommit": "4424c5d",
+      "foundAt": "2026-04-09T11:05:00Z"
     }
   ]
 }
