@@ -307,7 +307,7 @@
         document.body.addEventListener('change', function () { updateBadge(badge); });
 
         // Also poll every 2 seconds (catches drag-drop and programmatic changes)
-        setInterval(function () { updateBadge(badge); }, 2000);
+        window.__examProgressBadgeInterval = setInterval(function () { updateBadge(badge); }, 2000);
     }
 
     // Wait for DOM

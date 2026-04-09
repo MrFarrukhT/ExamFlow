@@ -33,7 +33,7 @@
     }
     
     // Also check periodically in case textareas are dynamically added
-    setInterval(function() {
+    window.__disableCopyPasteInterval = setInterval(function() {
         const textareas = document.querySelectorAll('textarea:not([data-copy-paste-disabled])');
         if (textareas.length > 0) {
             textareas.forEach(textarea => {

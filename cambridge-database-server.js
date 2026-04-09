@@ -9,7 +9,7 @@ import { createServer } from './shared/server-bootstrap.js';
 import { validateScoreAndGrade, validateStudentInfo, stripHtmlTags, sanitizeAntiCheat } from './shared/validation.js';
 import { requireAdmin, rateLimit } from './shared/auth.js';
 
-const { app, db, ensureConnection, __dirname: serverDir, start } = createServer({
+const { app, ensureConnection, __dirname: serverDir, start } = createServer({
     port: 3003,
     name: 'Cambridge Database Server',
     callerUrl: import.meta.url,
@@ -881,8 +881,7 @@ app.patch('/cambridge-submissions/:id/score', requireAdmin, async (req, res) => 
         console.error('❌ Score update failed:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to update score',
-            error: error.message
+            message: 'Failed to update score'
         });
     }
 });
@@ -945,8 +944,7 @@ app.patch('/cambridge-submissions/:id/evaluate', requireAdmin, async (req, res) 
         console.error('❌ Evaluation failed:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to evaluate speaking test',
-            error: error.message
+            message: 'Failed to evaluate speaking test'
         });
     }
 });
@@ -1050,6 +1048,16 @@ app.post('/cambridge-answers', requireAdmin, async (req, res) => {
             return res.status(400).json({ success: false, message: 'Answers must be an object with at most 200 entries' });
         }
 
+        // Validate mock parameter — must be a positive integer if provided
+        let mockTest = '1';
+        if (mock != null && mock !== '') {
+            const mockNum = parseInt(mock, 10);
+            if (isNaN(mockNum) || mockNum < 1 || mockNum > 100) {
+                return res.status(400).json({ success: false, message: 'Mock must be a positive integer between 1 and 100' });
+            }
+            mockTest = String(mockNum);
+        }
+
         // Sanitize answer values — strip HTML tags
         const sanitizedAnswers = {};
         for (const [key, val] of Object.entries(answers)) {
@@ -1062,7 +1070,6 @@ app.post('/cambridge-answers', requireAdmin, async (req, res) => {
             }
         }
 
-        const mockTest = mock || '1';
         console.log(`💾 Saving Cambridge answer key: ${level} ${skill} Mock ${mockTest} (${Object.keys(sanitizedAnswers).length} answers)`);
 
         const dbClient = await ensureConnection();
@@ -1088,8 +1095,7 @@ app.post('/cambridge-answers', requireAdmin, async (req, res) => {
         console.error('Failed to save Cambridge answers:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to save answers',
-            error: error.message
+            message: 'Failed to save answers'
         });
     }
 });
@@ -1354,8 +1360,7 @@ app.patch('/cambridge-student-results/:id', requireAdmin, async (req, res) => {
         console.error('❌ Failed to update student result:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to update student result',
-            error: error.message
+            message: 'Failed to update student result'
         });
     }
 });
@@ -1394,8 +1399,7 @@ app.delete('/cambridge-student-results/:id', requireAdmin, async (req, res) => {
         console.error('❌ Failed to delete student result:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to delete student result',
-            error: error.message
+            message: 'Failed to delete student result'
         });
     }
 });
@@ -1440,8 +1444,7 @@ app.delete('/cambridge-answers', requireAdmin, async (req, res) => {
         console.error('Failed to delete Cambridge answers:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to delete answers',
-            error: error.message
+            message: 'Failed to delete answers'
         });
     }
 });
