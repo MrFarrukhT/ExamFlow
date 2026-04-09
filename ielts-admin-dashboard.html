@@ -811,7 +811,8 @@
                     body: JSON.stringify({ submissionId, score: parseInt(finalScore), bandScore })
                 });
                 if (response.ok) { advanceAfterScore(); }
-                else { alert('Failed to save score. Please try again.'); }
+                else if (response.status !== 401) { alert('Failed to save score. Please try again.'); }
+                // 401 is handled by _authFetch's _handleStaleToken — no redundant alert needed.
             } catch (error) { console.error('Error saving score:', error); alert('Error saving score. Please try again.'); }
         }
 
@@ -826,7 +827,8 @@
                     body: JSON.stringify({ submissionId, score: null, bandScore })
                 });
                 if (response.ok) { advanceAfterScore(); }
-                else { alert('Failed to save band score. Please try again.'); }
+                else if (response.status !== 401) { alert('Failed to save band score. Please try again.'); }
+                // 401 handled by _handleStaleToken — see saveScore comment above.
             } catch (error) { console.error('Error saving band score:', error); alert('Error saving band score. Please try again.'); }
         }
 

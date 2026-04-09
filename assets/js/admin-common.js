@@ -866,6 +866,10 @@ class AdminDashboard {
                 { method: 'DELETE' }
             );
             if (!response.ok) {
+                // 401 is already handled by _authFetch's _handleStaleToken hook (which
+                // bounces the user to the login form with a "session expired" banner).
+                // Skip the redundant alert in that case so the user only sees one error.
+                if (response.status === 401) return;
                 const text = await response.text();
                 let msg;
                 try { msg = JSON.parse(text).message; } catch (_) { msg = 'Server returned ' + response.status; }

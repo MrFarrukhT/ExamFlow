@@ -952,6 +952,10 @@ app.get('/mock-answers', requireAdmin, async (req, res) => {
         if (isNaN(mockNum) || mockNum <= 0) {
             return res.status(400).json({ success: false, message: 'Mock number must be a positive integer' });
         }
+        // R30: synced from heal r8 (ESM had this; CJS didn't — drift gap)
+        if (!VALID_IELTS_SKILLS.includes(skill)) {
+            return res.status(400).json({ success: false, message: `Invalid skill. Must be one of: ${VALID_IELTS_SKILLS.join(', ')}` });
+        }
 
         const dbClient = await ensureConnection();
         const result = await dbClient.query(
@@ -1052,6 +1056,10 @@ app.delete('/mock-answers', requireAdmin, async (req, res) => {
         const mockNum = parseInt(mock, 10);
         if (isNaN(mockNum) || mockNum <= 0) {
             return res.status(400).json({ success: false, message: 'Mock number must be a positive integer' });
+        }
+        // R30: synced from heal r8 (ESM had this; CJS didn't — drift gap)
+        if (!VALID_IELTS_SKILLS.includes(skill)) {
+            return res.status(400).json({ success: false, message: `Invalid skill. Must be one of: ${VALID_IELTS_SKILLS.join(', ')}` });
         }
 
         const dbClient = await ensureConnection();
