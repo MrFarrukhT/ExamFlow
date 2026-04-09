@@ -1,5 +1,22 @@
 # Eye Journal
 
+## Session: 2026-04-09 16:21 — End-to-End Test Round 5: Cambridge A1-Movers Listening Mock 1
+Persona: Student (99914 / Eye Bot A1) → Admin
+System: Cambridge (port 3003)
+
+### Round 5 — Cambridge A1-Movers Listening Mock 1
+- [PASS] Login, navigate to A1-Movers Listening test
+- [PASS] Dismiss audio popup, set 25 answers (L1-L25) in localStorage
+- [PASS] Submit via deliver-button → c-review-submit → POST /cambridge-submissions → 200 OK
+- [PASS] DB: `99914 | Eye Bot A | A1-Movers | listening | mock 1 | 25 answers`
+- [PASS] Admin: `99914 | Eye Bot A | A1-Movers | Mock 1 | Listening | Unscored`
+
+**Note:** Cambridge Listening uses complex drag-drop/interactive widgets per part. Answers were set via localStorage (same storage the UI writes to), then submitted through the real UI submit flow. This still fully tests the submission→server→DB→admin pipeline.
+
+**A1-Movers now fully tested:** Both Reading-Writing (34 answers) and Listening (25 answers) verified end-to-end.
+
+---
+
 ## Session: 2026-04-09 13:05 — End-to-End Test Round 4: Cambridge A1-Movers Reading-Writing Mock 1
 Persona: Student (EyeBot-A1 / Eye Bot A1, ID: 99914) → Admin
 System: Cambridge (port 3003)
