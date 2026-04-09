@@ -568,13 +568,28 @@ Reference set: cae/examples/{1..8,l1..l5,w1,w2}.png
   Quality layer: 4-Polished → 5-Delightful
   Files: 14 HTML files (Part 1-8.html, Listening Part 1-4.html, Writing Part 1-2.html — single-line edit each)
 
-### Session Stats (rounds 3 + 4 + 5 + 6 cumulative)
-Pages explored: 14 C1 Advanced surfaces walked four times
-Rounds: 4 in this session
+### Round 7 (same session, cron-driven)
+**Explored:** 1:1 comparison of `cae/examples/l1.png` against our Listening Part 1 modal, and a separate look at the audio status badge on standalone Listening Part 2/4. Found two real gaps:
+
+- The Play modal's icon was a music note (♪) — official l1.png shows a **headphones icon** in the dark blue circle.
+- The audio status badge under "Candidate ID" was stuck at **"Audio is loading"** indefinitely on standalone Part 2/4 because no `<audio>` element exists on those pages (audio is owned by the parent `listening.html` wrapper). Official l2.png and l3.png both show **"Audio is playing"** in the same slot.
+
+- [T3] `assets/js/cambridge/cambridge-c1-listening-status.js` — two refinements:
+  1. Replaced `<div>♪</div>` icon with `<i class="fa fa-headphones"></i>` (Font Awesome already loaded by every part page) so the modal icon matches l1.png.
+  2. Added a fallback in `init()`: after the 10-second polling interval (20 attempts × 500 ms) if no audio element ever shows up, flip the badge to `setStatus('playing', 'Audio is playing')`. Standalone Part 2/4 now show the same badge text as the official screenshots.
+
+  Verified: re-screenshotted Listening Part 1 — modal renders the headphones icon centered in the dark blue circle. Listening Part 2 — after 10s the header reads "Audio is playing" beneath "Candidate ID TEST001", matching l2.png.
+  Mode: polish (visual + textual parity refinements)
+  Quality layer: 4-Polished → 5-Delightful
+  Files: assets/js/cambridge/cambridge-c1-listening-status.js (+10 lines)
+
+### Session Stats (rounds 3 + 4 + 5 + 6 + 7 cumulative)
+Pages explored: 14 C1 Advanced surfaces walked five times
+Rounds: 5 in this session
 Rebuilds landed: 1 (Part 4 single-question pagination)
-Polishes landed: 4 (Part 1 popover gap, bookmark icons reading/listening/writing, rubric headline cleanup)
+Polishes landed: 5 (Part 1 popover gap, bookmark icons R/L/W, rubric headlines, listening modal + badge)
 Reverted: 0
-Files touched: 25 across all four rounds (some files touched in multiple rounds)
+Files touched: 26 across all five rounds (some files touched in multiple rounds)
 
 ---
 
