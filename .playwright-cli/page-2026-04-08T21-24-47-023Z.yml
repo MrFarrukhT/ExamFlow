@@ -1,0 +1,244 @@
+- generic [ref=e1]:
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img "header.logo"
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - generic [ref=e10]:
+              - status [ref=e11]: Connected
+              - generic [ref=e13]: 
+            - button "Messages" [ref=e14]:
+              - generic [ref=e15]:
+                - generic [ref=e16]: Messages
+                - generic [ref=e17]: 
+            - button "Options" [ref=e18]:
+              - generic [ref=e19]:
+                - generic [ref=e20]: Options
+                - generic [ref=e21]: 
+            - button "Show notes" [ref=e22]:
+              - generic [ref=e23]:
+                - generic [ref=e24]: Show notes
+                - generic [ref=e25]: 
+          - generic [ref=e28]:
+            - generic [ref=e29]: Candidate ID
+            - status [ref=e30]: ◐ TEST-C1
+    - generic [ref=e34]:
+      - generic [ref=e36]:
+        - heading "Part 1 — Multiple choice (Questions 1–6)" [level=3] [ref=e37]
+        - generic [ref=e38]: You will hear three different extracts. For each question, choose the answer (A, B or C) which fits best according to what you hear. There are two questions for each extract.
+      - main [ref=e40]:
+        - group [ref=e42]:
+          - generic [ref=e47]:
+            - paragraph [ref=e48]:
+              - strong [ref=e49]: "Audio:"
+              - text: The audio is playing in the background. You cannot pause or rewind it.
+            - heading "Extract One" [level=3] [ref=e50]
+            - paragraph [ref=e51]: You hear part of a discussion between two marine biologists about coral reefs.
+      - main [ref=e54]:
+        - generic [ref=e55]:
+          - group [ref=e56]:
+            - radiogroup "1 How does the woman feel about current research on coral reefs?" [ref=e62]:
+              - paragraph [ref=e64]:
+                - generic [ref=e65]: "1"
+                - strong [ref=e67]: How does the woman feel about current research on coral reefs?
+              - list [ref=e68]:
+                - listitem [ref=e69]:
+                  - radio "afraid that its value may be underestimated" [ref=e70]
+                  - generic [ref=e72]: afraid that its value may be underestimated
+                - listitem [ref=e73]:
+                  - radio "worried that not enough time is being spent on it" [ref=e74]
+                  - generic [ref=e76]: worried that not enough time is being spent on it
+                - listitem [ref=e77]:
+                  - radio "concerned about shortcomings in what the data is measuring" [ref=e78]
+                  - generic [ref=e80]: concerned about shortcomings in what the data is measuring
+              - button "Flag question 1":
+                - generic [ref=e81]: Flag question 1
+          - button "Flag question 1" [ref=e84]:
+            - generic: 
+            - generic [ref=e85]: Flag question 1
+      - main [ref=e87]:
+        - generic [ref=e88]:
+          - group [ref=e89]:
+            - radiogroup "2 When talking about conserving coral reefs, the man" [ref=e95]:
+              - paragraph [ref=e97]:
+                - generic [ref=e98]: "2"
+                - strong [ref=e100]: When talking about conserving coral reefs, the man
+              - list [ref=e101]:
+                - listitem [ref=e102]:
+                  - radio "outlines decisions that have affected it." [ref=e103]
+                  - generic [ref=e105]: outlines decisions that have affected it.
+                - listitem [ref=e106]:
+                  - radio "suggests practical approaches to take to it." [ref=e107]
+                  - generic [ref=e109]: suggests practical approaches to take to it.
+                - listitem [ref=e110]:
+                  - radio "identifies specific projects that have been successful." [ref=e111]
+                  - generic [ref=e113]: identifies specific projects that have been successful.
+              - button "Flag question 2":
+                - generic [ref=e114]: Flag question 2
+          - button "Flag question 2" [ref=e117]:
+            - generic: 
+            - generic [ref=e118]: Flag question 2
+      - main [ref=e120]:
+        - group [ref=e122]:
+          - generic [ref=e127]:
+            - heading "Extract Two" [level=3] [ref=e128]
+            - paragraph [ref=e129]: You hear two friends talking about birdwatching.
+      - main [ref=e132]:
+        - generic [ref=e133]:
+          - group [ref=e134]:
+            - radiogroup "3 Why has the woman’s opinion of birdwatching changed?" [ref=e140]:
+              - paragraph [ref=e142]:
+                - generic [ref=e143]: "3"
+                - strong [ref=e145]: Why has the woman’s opinion of birdwatching changed?
+              - list [ref=e146]:
+                - listitem [ref=e147]:
+                  - radio "She experienced the excitement of recognising an unusual species." [ref=e148]
+                  - generic [ref=e150]: She experienced the excitement of recognising an unusual species.
+                - listitem [ref=e151]:
+                  - radio "She was persuaded by the man’s enthusiasm for the activity." [ref=e152]
+                  - generic [ref=e154]: She was persuaded by the man’s enthusiasm for the activity.
+                - listitem [ref=e155]:
+                  - radio "She had the opportunity to witness natural behaviour first hand." [ref=e156]
+                  - generic [ref=e158]: She had the opportunity to witness natural behaviour first hand.
+              - button "Flag question 3":
+                - generic [ref=e159]: Flag question 3
+          - button "Flag question 3" [ref=e162]:
+            - generic: 
+            - generic [ref=e163]: Flag question 3
+      - main [ref=e165]:
+        - generic [ref=e166]:
+          - group [ref=e167]:
+            - radiogroup "4 The man says that while birdwatching, he has developed" [ref=e173]:
+              - paragraph [ref=e175]:
+                - generic [ref=e176]: "4"
+                - strong [ref=e178]: The man says that while birdwatching, he has developed
+              - list [ref=e179]:
+                - listitem [ref=e180]:
+                  - radio "an interest in promoting the conservation of certain creatures." [ref=e181]
+                  - generic [ref=e183]: an interest in promoting the conservation of certain creatures.
+                - listitem [ref=e184]:
+                  - radio "an appreciation of the astonishing variety of species that exist." [ref=e185]
+                  - generic [ref=e187]: an appreciation of the astonishing variety of species that exist.
+                - listitem [ref=e188]:
+                  - radio "an understanding of the connection between an environment and its wildlife." [ref=e189]
+                  - generic [ref=e191]: an understanding of the connection between an environment and its wildlife.
+              - button "Flag question 4":
+                - generic [ref=e192]: Flag question 4
+          - button "Flag question 4" [ref=e195]:
+            - generic: 
+            - generic [ref=e196]: Flag question 4
+      - main [ref=e198]:
+        - group [ref=e200]:
+          - generic [ref=e205]:
+            - heading "Extract Three" [level=3] [ref=e206]
+            - paragraph [ref=e207]: You hear a choreographer and a dancer talking about their work.
+      - main [ref=e210]:
+        - generic [ref=e211]:
+          - group [ref=e212]:
+            - radiogroup "5 What does the man think about his work as a choreographer?" [ref=e218]:
+              - paragraph [ref=e220]:
+                - generic [ref=e221]: "5"
+                - strong [ref=e223]: What does the man think about his work as a choreographer?
+              - list [ref=e224]:
+                - listitem [ref=e225]:
+                  - radio "There is constant pressure on him to produce popular ballets." [ref=e226]
+                  - generic [ref=e228]: There is constant pressure on him to produce popular ballets.
+                - listitem [ref=e229]:
+                  - radio "It’s important for him to seek out new sources of inspiration." [ref=e230]
+                  - generic [ref=e232]: It’s important for him to seek out new sources of inspiration.
+                - listitem [ref=e233]:
+                  - radio "He has a responsibility to widen people’s experiences." [ref=e234]
+                  - generic [ref=e236]: He has a responsibility to widen people’s experiences.
+              - button "Flag question 5":
+                - generic [ref=e237]: Flag question 5
+          - button "Flag question 5" [ref=e240]:
+            - generic: 
+            - generic [ref=e241]: Flag question 5
+      - main [ref=e243]:
+        - generic [ref=e244]:
+          - group [ref=e245]:
+            - radiogroup "6 What do they both think about dancers and choreographers creating new ballets together?" [ref=e251]:
+              - paragraph [ref=e253]:
+                - generic [ref=e254]: "6"
+                - strong [ref=e256]: What do they both think about dancers and choreographers creating new ballets together?
+              - list [ref=e257]:
+                - listitem [ref=e258]:
+                  - radio "It’s a physically demanding way of working." [ref=e259]
+                  - generic [ref=e261]: It’s a physically demanding way of working.
+                - listitem [ref=e262]:
+                  - radio "It can be difficult to achieve genuine collaboration." [ref=e263]
+                  - generic [ref=e265]: It can be difficult to achieve genuine collaboration.
+                - listitem [ref=e266]:
+                  - radio "It may not always produce a satisfactory outcome." [ref=e267]
+                  - generic [ref=e269]: It may not always produce a satisfactory outcome.
+              - button "Flag question 6":
+                - generic [ref=e270]: Flag question 6
+          - button "Flag question 6" [ref=e273]:
+            - generic: 
+            - generic [ref=e274]: Flag question 6
+    - contentinfo [ref=e276]:
+      - navigation "Previous / next question" [ref=e277]:
+        - button "Previous" [disabled] [ref=e278]:
+          - generic [ref=e279]: 
+        - button "Next" [ref=e280]:
+          - generic [ref=e281]: 
+      - navigation "Questions" [ref=e282]:
+        - tablist [ref=e283]:
+          - tab "Part 1. 0 of 6 questions attempted." [ref=e284]:
+            - generic [ref=e285]:
+              - text: Part 1
+              - generic [ref=e286]: 0 of 6
+              - generic [ref=e287]: Part 1. 0 of 6 questions attempted.
+          - generic [ref=e288]:
+            - button "Question 1 Not attempted Active" [ref=e289]:
+              - generic [ref=e290]: Question 1
+              - text: "1"
+              - generic [ref=e291]: Not attempted Active
+            - button "Question 2 Not attempted" [ref=e292]:
+              - generic [ref=e293]: Question 2
+              - text: "2"
+              - generic [ref=e294]: Not attempted
+            - button "Question 3 Not attempted" [ref=e295]:
+              - generic [ref=e296]: Question 3
+              - text: "3"
+              - generic [ref=e297]: Not attempted
+            - button "Question 4 Not attempted" [ref=e298]:
+              - generic [ref=e299]: Question 4
+              - text: "4"
+              - generic [ref=e300]: Not attempted
+            - button "Question 5 Not attempted" [ref=e301]:
+              - generic [ref=e302]: Question 5
+              - text: "5"
+              - generic [ref=e303]: Not attempted
+            - button "Question 6 Not attempted" [ref=e304]:
+              - generic [ref=e305]: Question 6
+              - text: "6"
+              - generic [ref=e306]: Not attempted
+        - tablist [ref=e307]:
+          - tab "Part 2. 0 of 8 questions attempted." [ref=e308]:
+            - generic [ref=e309]:
+              - text: Part 2
+              - generic [ref=e310]: 0 of 8
+              - generic [ref=e311]: Part 2. 0 of 8 questions attempted.
+        - tablist [ref=e312]:
+          - tab "Part 3. 0 of 6 questions attempted." [ref=e313]:
+            - generic [ref=e314]:
+              - text: Part 3
+              - generic [ref=e315]: 0 of 6
+              - generic [ref=e316]: Part 3. 0 of 6 questions attempted.
+        - tablist [ref=e317]:
+          - tab "Part 4. 0 of 10 questions attempted." [ref=e318]:
+            - generic [ref=e319]:
+              - text: Part 4
+              - generic [ref=e320]: 0 of 10
+              - generic [ref=e321]: Part 4. 0 of 10 questions attempted.
+        - button "Review your answers" [ref=e322]:
+          - generic [ref=e323]: 
+  - dialog [ref=e324]:
+    - generic [ref=e325]:
+      - generic [ref=e326]: ♪
+      - paragraph [ref=e327]: You will be listening to an audio clip during this test. You will not be permitted to pause or rewind the audio while answering the questions.
+      - paragraph [ref=e328]: To continue, click Play
+      - button "▶ Play" [active] [ref=e329]

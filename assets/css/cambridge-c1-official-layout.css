@@ -4,6 +4,159 @@
    shell matches the published Inspera Cambridge English UI.
    ============================================================ */
 
+/* === Restore the per-question bookmark/flag buttons =========
+   The C1 part files copied a B2-First override that did
+   `.QuestionDisplay__visibleFlag___AmAom { display: none }`. The
+   official Inspera UI keeps these buttons visible — they sit in
+   the right gutter of every question and let candidates flag
+   items to revisit. Restore them with a higher-specificity
+   selector. ============================================================ */
+.QuestionDisplay__questionDisplayWrapper___1n_b0
+    .QuestionDisplay__txtButton___3AYy9.QuestionDisplay__visibleFlag___AmAom {
+    display: inline-block !important;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #555;
+    font-size: 1.2em;
+    padding: 4px 6px;
+}
+.QuestionDisplay__questionDisplayWrapper___1n_b0
+    .QuestionDisplay__txtButton___3AYy9.QuestionDisplay__visibleFlag___AmAom:hover {
+    color: #1e3a5f;
+}
+.QuestionDisplay__questionDisplayWrapper___1n_b0
+    .QuestionDisplay__txtButton___3AYy9.QuestionDisplay__visibleFlag___AmAom[aria-pressed="true"] {
+    color: #c8a000;
+}
+/* The right-side gutter that holds the flag button */
+.QuestionDisplay__questionDisplayWrapper___1n_b0
+    .screen.question-margin.right {
+    display: flex !important;
+    width: 36px !important;
+    flex: 0 0 36px;
+    justify-content: flex-end;
+    padding-top: 4px;
+}
+
+/* === Section rubric scroll offset ===========================
+   The fixed header (80px tall) was hiding the section rubric
+   ("Part 1 — Multiple choice (Questions 1–6)") at the top of
+   #sectionContent. Add scroll-padding to the content area so
+   the rubric reads at the top of the visible area on load.
+   ============================================================ */
+#sectionContent .DisplayTypeContainer__upperLevelQuestionDynamicRubricBlock___31xpE {
+    background: #fff;
+    border: 1px solid #d6d6d6;
+    border-radius: 2px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+}
+#sectionContent .scorableItemHeadline {
+    margin: 0 0 4px 0;
+    font-size: 0.95em;
+    font-weight: 700;
+    color: #1e3a5f;
+}
+#sectionContent .QuestionDisplay__rubricContent___1byNW {
+    color: #333;
+    font-size: 0.92em;
+    line-height: 1.45;
+}
+
+/* === Listening header status indicator =====================
+   Official l2.png shows "Audio is playing" beneath "Candidate
+   ID" when audio is active. Style the live region we'll add
+   via JS in cambridge-c1-listening-status.js.
+   ============================================================ */
+.c1-audio-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78em;
+    color: #555;
+    font-weight: 400;
+    margin-left: 4px;
+}
+.c1-audio-status::before {
+    content: "▶";
+    color: #007a87;
+    font-size: 0.85em;
+}
+.c1-audio-status[data-state="loading"]::before { content: "◐"; }
+.c1-audio-status[data-state="loading"] { color: #b85c00; }
+.c1-audio-status[data-state="paused"]::before { content: "⏸"; }
+.c1-audio-status[data-state="ended"]::before { content: "■"; color: #888; }
+
+/* === Listening Part 1 audio play modal =====================
+   Matches official l1.png — full-screen overlay with audio icon
+   + instruction text + Play button.
+   ============================================================ */
+.c1-audio-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(245, 247, 250, 0.85);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+}
+.c1-audio-modal {
+    text-align: center;
+    max-width: 540px;
+    padding: 32px 40px;
+}
+.c1-audio-modal__icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #1e3a5f;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 16px;
+}
+.c1-audio-modal__text {
+    font-size: 0.95em;
+    color: #333;
+    line-height: 1.55;
+    margin: 0 0 8px 0;
+}
+.c1-audio-modal__hint {
+    font-size: 0.85em;
+    color: #666;
+    margin: 0 0 16px 0;
+}
+.c1-audio-modal__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 28px;
+    background: #007a87;
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s ease;
+}
+.c1-audio-modal__button:hover {
+    background: #00606b;
+}
+.c1-audio-modal__button::before {
+    content: "▶";
+    font-size: 0.85em;
+}
+
 /* === Two-column "split reading" (Parts 5, 6, 7, 8) =========
    The first .QuestionDisplay__questionDisplayWrapper inside
    #sectionContent contains the passage; subsequent wrappers
