@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-04-09 18:50",
-  "totalRuns": 29,
+  "lastRun": "2026-04-09 19:10",
+  "totalRuns": 30,
   "provenSolid": [
     "sql-injection-parameterized-queries",
     "idor-id-validation",
@@ -123,7 +123,10 @@
     "delete-cambridge-answers-mock-level-skill-validation-parity-r28",
     "heal-r7-mock-validation-1-100-on-post-cambridge-answers",
     "all-admin-error-message-handlers-stripped-both-servers-r29-bulk",
-    "heal-r8-skill-validation-cjs-parity-confirmed-r29"
+    "heal-r8-skill-validation-cjs-parity-confirmed-r29",
+    "heal-r9-cambridge-get-endpoint-validation-verified-r30",
+    "ielts-cjs-mock-answers-get-delete-skill-enum-synced-r30",
+    "cambridge-student-results-search-like-wildcards-escaped-r30"
   ],
   "weakPatterns": [
     "answer-keys-writable-without-auth",
@@ -155,7 +158,10 @@
     "drift-count-now-11-occurrences-r20-r29-r29-closed-one-instance",
     "ielts-mock-answers-no-upper-bound-deferred-low-r28",
     "heal-autopilot-fixes-esm-only-when-bug-exists-in-both-servers-one-directional-sync-gap-r29",
-    "bulk-fixes-pay-for-themselves-r29-12-fixes-vs-r28-4-fixes-same-time-budget"
+    "bulk-fixes-pay-for-themselves-r29-12-fixes-vs-r28-4-fixes-same-time-budget",
+    "stale-running-process-trap-when-concurrent-agents-commit-between-rounds-restart-before-testing-r30",
+    "like-pattern-injection-parameterized-queries-dont-escape-percent-underscore-r30",
+    "drift-count-now-12-occurrences-r20-r30"
   ],
   "untestedAreas": [
     "browser-based-c1-advanced-exam-flow"
@@ -180,10 +186,10 @@
       "reason": "Every enum addition requires a paired DB migration. Architect should add a code review checklist."
     },
     {
-      "title": "ESM↔CJS + sibling-endpoint + concentric drift (11 occurrences as of R29)",
+      "title": "ESM↔CJS + sibling-endpoint + concentric drift (12 occurrences as of R30)",
       "severity": "CRITICAL",
       "since": "2026-04-09",
-      "reason": "11 occurrences across R20-R29. R29 confirmed yet another ESM-only fix from heal r8 (error.message strip in IELTS) that left CJS leaking. Each round finds a new ring: same-endpoint drift (R20-R24), POST/POST sibling drift (R25-R26), POST/PATCH drift (R27), unauthenticated/admin error.message drift (R28), heal-fixes-ESM-not-CJS one-directional sync (R29). Architect MUST deduplicate sibling routes through a shared handler — the cron will keep mining new rings every round otherwise."
+      "reason": "12 occurrences across R20-R30. R30 closed yet another heal-ESM-only-leaving-CJS-broken instance (heal r8 added skill enum to ESM GET/DELETE mock-answers; CJS was unsynced). Each round finds a new ring or a new instance of an existing ring. The architect's deduplication recommendation is the only durable fix; 12+ rounds of /scenario have demonstrated that heal/autopilot will keep introducing instance #13."
     },
     {
       "title": "Submissions list returns 5604+ rows unpaginated",
@@ -230,9 +236,9 @@
     }
   ],
   "stats": {
-    "scenariosTested": 165,
-    "bugsFound": 61,
-    "bugsFixed": 56,
+    "scenariosTested": 169,
+    "bugsFound": 63,
+    "bugsFixed": 58,
     "bugsDeferred": 11
   }
 }

@@ -500,21 +500,47 @@ app.post('/verify-invigilator', authLimiter, (req, res) => {
     }
 });
 
-// IELTS raw → band score mapping (server-side, used for anti-tamper recompute)
-const IELTS_BAND_MAPPING = {
-    40: '9.0', 39: '9.0', 38: '8.5', 37: '8.5', 36: '8.0', 35: '8.0', 34: '7.5',
-    33: '7.5', 32: '7.0', 31: '7.0', 30: '7.0', 29: '6.5', 28: '6.5', 27: '6.5',
-    26: '6.0', 25: '6.0', 24: '6.0', 23: '5.5', 22: '5.5', 21: '5.5', 20: '5.5',
-    19: '5.0', 18: '5.0', 17: '5.0', 16: '5.0', 15: '5.0', 14: '4.5', 13: '4.5',
-    12: '4.0', 11: '4.0', 10: '4.0', 9: '3.5', 8: '3.5', 7: '3.0', 6: '3.0',
+// IELTS raw → band score mappings (server-side, anti-tamper recompute) — per
+// the official IELTS band tables. Reading and Listening have different
+// boundaries at scores 32, 26, 23, 19, 18, 15, so they need separate tables.
+//
+// LISTENING: 9.0:39-40, 8.5:37-38, 8.0:35-36, 7.5:32-34, 7.0:30-31,
+//            6.5:26-29, 6.0:23-25, 5.5:18-22, 5.0:16-17, 4.5:13-15, 4.0:10-12
+const IELTS_LISTENING_BAND_MAPPING = {
+    40: '9.0', 39: '9.0', 38: '8.5', 37: '8.5', 36: '8.0', 35: '8.0',
+    34: '7.5', 33: '7.5', 32: '7.5', 31: '7.0', 30: '7.0',
+    29: '6.5', 28: '6.5', 27: '6.5', 26: '6.5',
+    25: '6.0', 24: '6.0', 23: '6.0',
+    22: '5.5', 21: '5.5', 20: '5.5', 19: '5.5', 18: '5.5',
+    17: '5.0', 16: '5.0',
+    15: '4.5', 14: '4.5', 13: '4.5',
+    12: '4.0', 11: '4.0', 10: '4.0',
+    9: '3.5', 8: '3.5', 7: '3.0', 6: '3.0',
     5: '2.5', 4: '2.5'
 };
-function bandScoreFromRaw(score) {
+// ACADEMIC READING: 9.0:39-40, 8.5:37-38, 8.0:35-36, 7.5:33-34, 7.0:30-32,
+//                   6.5:27-29, 6.0:23-26, 5.5:19-22, 5.0:15-18, 4.5:13-14, 4.0:10-12
+const IELTS_READING_BAND_MAPPING = {
+    40: '9.0', 39: '9.0', 38: '8.5', 37: '8.5', 36: '8.0', 35: '8.0',
+    34: '7.5', 33: '7.5', 32: '7.0', 31: '7.0', 30: '7.0',
+    29: '6.5', 28: '6.5', 27: '6.5',
+    26: '6.0', 25: '6.0', 24: '6.0', 23: '6.0',
+    22: '5.5', 21: '5.5', 20: '5.5', 19: '5.5',
+    18: '5.0', 17: '5.0', 16: '5.0', 15: '5.0',
+    14: '4.5', 13: '4.5',
+    12: '4.0', 11: '4.0', 10: '4.0',
+    9: '3.5', 8: '3.5', 7: '3.0', 6: '3.0',
+    5: '2.5', 4: '2.5'
+};
+function bandScoreFromRaw(score, skill) {
     if (typeof score !== 'number' || !Number.isFinite(score)) return null;
     if (score <= 0) return '0.0';
     if (score === 1) return '1.0';
     if (score <= 3) return '2.0';
-    return IELTS_BAND_MAPPING[score] || '0.0';
+    const table = (skill === 'listening')
+        ? IELTS_LISTENING_BAND_MAPPING
+        : IELTS_READING_BAND_MAPPING; // default + 'reading'
+    return table[score] || '0.0';
 }
 
 // Test endpoint
@@ -693,7 +719,9 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
                             submissionData.antiCheat = Object.assign({}, submissionData.antiCheat || {}, { scoreTamper: true, clientScore: clientScore, serverScore: correct });
                         }
                         submissionData.score = correct;
-                        submissionData.bandScore = bandScoreFromRaw(correct);
+                        // Use the official band table for THIS skill — Reading
+                        // and Listening have different boundaries.
+                        submissionData.bandScore = bandScoreFromRaw(correct, submissionData.skill);
                     } else {
                         // No answer key in DB — clamp client score to valid range to prevent garbage
                         const cs = Number(submissionData.score);

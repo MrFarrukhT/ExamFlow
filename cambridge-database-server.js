@@ -1172,8 +1172,13 @@ app.get('/cambridge-student-results', requireAdmin, async (req, res) => {
             params.push(String(mockNum));
         }
         if (search) {
-            conditions.push(`(student_name ILIKE $${params.length + 1} OR student_id ILIKE $${params.length + 2})`);
-            params.push(`%${search}%`, `%${search}%`);
+            // R30: escape LIKE wildcards (% and _) and the escape char (\) so user input
+            // can't act as a pattern. Without this, search='%' returned all rows and
+            // search='_30A' matched any single char before "30A". Use ESCAPE '\' so PG
+            // treats the escaped chars literally.
+            const escapedSearch = String(search).replace(/[\\%_]/g, '\\$&');
+            conditions.push(`(student_name ILIKE $${params.length + 1} ESCAPE '\\' OR student_id ILIKE $${params.length + 2} ESCAPE '\\')`);
+            params.push(`%${escapedSearch}%`, `%${escapedSearch}%`);
         }
 
         if (conditions.length > 0) {

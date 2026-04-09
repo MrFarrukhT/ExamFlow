@@ -1792,3 +1792,80 @@ Trigger: R28 cursor entry "12-admin-error-message-handlers-still-leak-after-r28-
 
 ### Stats (Round 29)
 Tested: 2 | Passed: 1 | Failed: 1 (HIGH, 12 endpoints) | Fixed: 12 (bulk pass: 7 in CJS + 5 in Cambridge) | Deferred: 0
+
+---
+
+## Session: 2026-04-09 19:10
+Focus: R30 — verify heal r9's new GET-endpoint validations (Cambridge admin) AND hunt the surrounding gaps that heal r9 didn't touch. Heal r9 added level/skill/mock validation to 3 GET endpoints; R30 attacked the remaining unvalidated parameters and the IELTS parity copies.
+Trigger: heal r9 (`4424c5d`) added validation to GET `/cambridge-submissions`, `/cambridge-student-results`, `/cambridge-answers`. /scenario must always re-test areas heal touches AND look for what heal missed.
+
+### Scenarios
+
+- S1: heal r9 GET `/cambridge-submissions` validation [Verification] → **PASS (after fresh restart)**
+  - **Initial test FAILED**: invalid level/skill/mock_test all returned `200 []` instead of 400. The validation code IS in the file at line 811 — the running process had STALE code.
+  - The Cambridge process I inherited had been auto-restarted by some intermediate agent (eye/heal/playwright-cli) BEFORE heal r9's commit landed but AFTER my R29 restart. PIDs 11344/29220 were not the ones I started in R29.
+  - After R30's fresh restart with the latest source, heal r9's validation works correctly: invalid level → 400, invalid skill → 400, invalid mock_test → 400, legit query → 200 with rows.
+
+- S2: GET `/cambridge-student-results` `search` parameter LIKE wildcard escape [Polyglot] → **BUG (LOW)**
+  - `?search=%25` (URL-encoded `%`) returned 17 rows (all student-results in DB)
+  - `?search=_30A` matched "R30A" (the `_` is a single-char wildcard)
+  - `?search=R30A` correctly matched 1 row
+  - The user-supplied `search` value is concatenated into the LIKE pattern as `%search%` without escaping `%` or `_`. PG ILIKE treats both as wildcards, letting an attacker bypass the intended substring match.
+  - SQL injection is not possible (parameterized binding) — this is a LIKE-pattern injection, lower severity. But the inconsistent search semantics are surprising and let an admin-token holder exfiltrate the entire table with `search=%`.
+
+- S3: heal r9 GET `/cambridge-answers` validation [Verification] → **PASS**
+  - `level=NotALevel` → 400
+  - `skill=NotASkill` → 400
+  - `mock=999` → 400 "must be between 1 and 100"
+
+- S4: IELTS CJS GET/DELETE `/mock-answers` parity vs heal r8 ESM-only fix [Insider] → **BUG (LOW, drift)**
+  - heal r8 (`dee207b`) added `VALID_IELTS_SKILLS.includes(skill)` to GET and DELETE `/mock-answers` in `local-database-server.js` (ESM)
+  - **CJS `server-cjs.cjs` was not synced** — GET and DELETE both still allowed any string for `skill`, resulting in DB queries with arbitrary skill values that just return 0 rows (parameterized so SQL injection safe, but inconsistent and noisy).
+  - Same heal-fixes-ESM-only pattern logged in R29. Drift count: 12 occurrences.
+
+### Fixes
+
+**Fix A — Sync `VALID_IELTS_SKILLS` check to CJS GET and DELETE `/mock-answers`:**
+- `server-cjs.cjs` line 955: added the check after the mockNum validation, mirrors the ESM version that heal r8 added.
+- `server-cjs.cjs` line 1059: same change for DELETE handler.
+- POST already had the check (line 991, from earlier work). Now all three CJS handlers (GET/POST/DELETE) enforce the enum.
+
+**Fix B — Escape LIKE wildcards in `/cambridge-student-results` search:**
+- `cambridge-database-server.js` line 1174: replaced raw `search` interpolation with an escape pass:
+  ```js
+  const escapedSearch = String(search).replace(/[\\%_]/g, '\\$&');
+  ILIKE $... ESCAPE '\\'
+  ```
+- The escape regex matches `\`, `%`, `_` and prefixes them with `\` so PG treats them literally. The `ESCAPE '\\'` clause tells PG which char is the escape.
+- search='%' now matches literal `%` substrings (none exist → 0 rows). search='_30A' now matches literal `_30A` (none exist → 0 rows). search='R30A' still matches literally (1 row).
+
+### Verification (post-fix, fresh server restart)
+
+- S1v2 GET `/cambridge-submissions?level=NotALevel` → 400 (works once running code is fresh) ✓
+- S2v2 search='%' → 0 rows ✓ (was 17)
+- S2v2 search='_30A' → 0 rows ✓ (was 1)
+- S2v2 search='R30A' → 1 row ✓ (regression — literal match still works)
+- S2v2 empty search → 17 rows ✓ (regression — no filter still returns all)
+- S3v2 GET `/cambridge-answers` invalid level/skill/mock → 400 ✓
+- S4v2 IELTS GET `/mock-answers?skill=NotASkill` → 400 "Invalid skill…" ✓
+- S4v2 IELTS DELETE `/mock-answers?skill=invalidskill` → 400 ✓
+- S4v2 IELTS GET `/mock-answers?skill=reading` → 200 with answers ✓ (regression)
+
+### Pattern Analysis
+
+- **Stale-process trap**: When concurrent agents commit fixes between /scenario rounds, the running server may not reflect the latest source. R30 hit this on S1: heal r9's validation was in the file but the running process had been restarted by another agent BEFORE heal r9's commit landed. **Lesson: every /scenario round should restart the server before testing fixes from prior rounds.** Faster than debugging "why isn't the new code running".
+
+- **The drift list keeps growing because the autopilot edits files without grepping for siblings.** R29's "heal fixes ESM-only" pattern repeated in R30 (heal r8 GET `/mock-answers` skill check landed in ESM only). This is a workflow gap, not a code gap. The architectural fix is to deduplicate the servers; the workflow fix is for heal/autopilot to grep for `validateScore`/`VALID_IELTS_SKILLS`/`stripHtmlTags` after touching either file.
+
+- **LIKE-pattern injection is its own bug class.** Parameterized queries protect against SQL injection but don't escape LIKE wildcards. Every endpoint that uses `LIKE/ILIKE $1` with user input as part of the pattern needs to escape `%`, `_`, and `\`. R30 fixed one instance; the codebase should be grepped for `LIKE` to find others.
+
+### Intelligence Update
+
+- Proven solid: heal r9 GET endpoint validations (cambridge-submissions, cambridge-student-results, cambridge-answers), IELTS CJS GET/DELETE mock-answers skill enum (R30 fix), Cambridge student-results search no longer leaks via LIKE wildcards
+- New weak pattern logged: stale running process traps (when concurrent agent commits land between /scenario rounds, restart before testing)
+- New weak pattern logged: LIKE-pattern injection — parameterized queries don't escape `%`/`_` so user input as LIKE pattern lets wildcards through
+- Drift count update: 12 occurrences (R30 closed instance #12 — IELTS CJS GET/DELETE mock-answers skill enum)
+- Coverage: 169 scenarios across 30 rounds, 63 bugs found, 58 fixed
+
+### Stats (Round 30)
+Tested: 4 | Passed: 2 (after restart) | Failed: 2 (LOW × 2) | Fixed: 2 | Deferred: 0
