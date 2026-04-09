@@ -1,5 +1,66 @@
 # Eye Journal
 
+## Session: 2026-04-09 (round 33) — IELTS Navigation Flows
+Persona: Student walking the full IELTS flow end-to-end (launcher → login → dashboard → reading → exit)
+System: IELTS (port 3002)
+Pages explored: launcher.html, index.html, student-dashboard.html, MOCKs/MOCK 1/reading.html (test interface), the in-test Options menu (Submit / Contrast / Text size), and the underlying assets/js/options-menu.js + assets/js/session-manager.js handleTestCompletion path.
+Starting state: The IELTS test interface had TWO different exit paths with different behaviors. The footer green-checkmark deliver-button properly ran handleTestCompletion → review modal → database submission. But the in-test Options menu's "Go to submission page" item bypassed all of that — it just confirmed, marked the module as completed in localStorage, and redirected to the dashboard. No database POST. Students who used the menu thought they had submitted when in fact only their localStorage flag had flipped.
+
+### Round 1 — Polish: converge both exit paths on the proper submission flow
+
+**Findings (4 total):**
+- [T1] **assets/js/options-menu.js goToSubmission() silently marked the module as completed without actually submitting.** Code path: confirm() → `localStorage.setItem('readingStatus', 'completed')` → toast → redirect. NO call to handleTestCompletion(), NO call to saveTestToDatabase(), NO review modal. So a student who used the in-test Options menu instead of the green checkmark would see their dashboard show "Reading: Completed ✓" but no row would exist in the test_submissions table. Their answers stayed in localStorage forever.
+- [T2] **"Go to submission page" copy is misleading.** Most students hear "submission page" and expect a review screen showing their answers. There's no actual submission page — the menu item is a one-step "exit early and finalize" action. Two different things called the same name (this menu item AND the deliver-button) had two different behaviors.
+- [T2] **confirm() copy is generic.** "Are you sure you want to go to the dashboard? This will end your current session." doesn't tell the student whether they have unanswered questions, doesn't mention that the module gets marked complete, doesn't warn about the database save. Generic enough to be useless.
+- [T0] **No visible "save and exit later" path.** Every exit option marks the module as complete. A student who clicks Start Reading by accident has no escape — their only option is "submit a 0/40 reading test".
+
+**Action:** POLISH 2 fixes in assets/js/options-menu.js — converge the two exit paths AND honesty in the menu label.
+
+**Files touched:**
+1. **assets/js/options-menu.js** (~25 lines changed)
+   - **goToSubmission()** rewritten to delegate to the existing `#deliver-button` click handler (the green checkmark in the footer). That button is wired up by session-manager.js setupSessionHandlers() with handleTestCompletion, which:
+     1. Opens the review modal (`window.examProgress.showReviewModal`) so the student sees how many answers they have BEFORE finalizing
+     2. Calls _executeSubmission which saves answers, marks status completed, and POSTs to the database via saveTestToDatabase / cambridgeAnswerManager
+     3. Falls back to a clearer confirm() and the original local-only path only if the deliver button doesn't exist on the page (fallback for older test pages / edge cases)
+   - The popup is closed first via closePopup() so the transition can finish, then the deliver button click is queued via setTimeout(0) so the modal doesn't visually overlap the review modal that opens next.
+   - **Menu label** changed from "Go to submission page" to **"Submit this section"** — describes what actually happens. Same icon, same red-highlight styling.
+
+**Verification (live, isolated playwright session at 1280×800):**
+| Check | Method | Result |
+|-------|--------|--------|
+| Login → dashboard navigation | fill form, click Login, check location | ✅ http://localhost:3002/student-dashboard.html (auto-redirect on submit) |
+| Dashboard → reading test | click readingButton via JS | ✅ MOCKs/MOCK%201/reading.html loaded with title "Innovative Centre MOCK 1 - Reading Practice" |
+| Reading page menu opens | call toggleOptionsMenu() | ✅ "Options" modal with new label |
+| Menu label correct | screenshot | ✅ eye33-options-fixed.png — "Submit this section" instead of "Go to submission page" |
+| Menu click delegates to deliver button | stub deliver-button click listener with capture flag, click .submit-option, check stub | ✅ `__delivered() === true` after 200ms — both exit paths now converge on handleTestCompletion |
+| node --check on options-menu.js | shell | ✅ syntax ok |
+
+### Quality Map (after round 33)
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| Options menu Submit path | 1-Functional (silent failure) → 4-Polished | Now goes through review modal + database POST |
+| Submit path label honesty | 2-Clear (misleading) → 3-Efficient | "Submit this section" matches what happens |
+| Two exit paths consistency | 1-Functional (split brain) → 4-Polished | Single handleTestCompletion entry point |
+
+### Deferred (next time this prompt runs)
+- **Add a "Save & exit (return later)" option** for the case where a student needs to step out without finalizing. Would need session-resume support in the test page to honor an `in-progress` status on reload. Bigger scope.
+- **Show unanswered question count in the review modal** more prominently — currently the modal lists answered/unanswered but the count of unanswered isn't a banner. examProgress.showReviewModal worth a deeper polish round.
+- **Dashboard "Mock Test: 1" badge is not clickable** — student needs to ask invigilator to change. Could surface a hint "Need a different mock? Ask your invigilator." on hover.
+- **Welcome onboarding modal blocks immediate dashboard interaction** — could be dismissable with Esc or a click outside, currently requires the "Got it — let's start" button.
+- **Browser back button still triggers a generic alert.** session-manager.js setupSessionHandlers() popstate handler shows `alert('Please use the navigation buttons within the test.')` — distraction-free.js round 28 added a backNavAttempts counter + toast for the same scenario, so the alert is now redundant and could be removed.
+
+### Session Stats (round 33)
+Pages explored: 4 student-facing pages (launcher, login, dashboard, reading test) + 2 JS modules (options-menu.js, session-manager.js)
+Findings: 4 (1× T1 broken, 2× T2 confusing, 1× T0 unremarkable)
+Polishes landed: 2 (goToSubmission delegation + menu label rename)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Files touched: 1 (assets/js/options-menu.js)
+Verification screenshots: 4 (eye33-launcher.png, eye33-dashboard-after.png, eye33-reading.png, eye33-options-fixed.png)
+
+---
+
 ## Session: 2026-04-09 — Result-viewing flow round 4: writing modal sticky + 401 double-alert (loop /eye full re-run)
 Persona: Admin scoring writing tasks + admin handling expired sessions mid-action
 System: Both
