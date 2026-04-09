@@ -1,5 +1,86 @@
 # Eye Journal
 
+## Session: 2026-04-09 (round 32) — Mock Test Content Integrity
+Persona: Test content manager auditing all 10 IELTS mocks + Cambridge multi-mock variants
+System: IELTS (MOCKs/MOCK 1-10) + Cambridge (B2-First/MOCK-2/MOCK-3, A2-Key, B1-Preliminary)
+Pages explored: All 10 IELTS mock directories (file counts, audio files, listening.html / reading.html / writing.html, answer key directories), Cambridge B2-First × 3 mock variants (md5 sums of all parts + writing + speaking), invigilator.html populateMockOptions() + dropdown UI
+Starting state: Loop never audited content integrity. The mock dropdowns let invigilators pick MOCK 1-10 (IELTS) or Mock 1-3 (Cambridge) without any indication that some are duplicates of others — and two of the IELTS reading.html files were silently corrupted.
+
+### Round 1 — Polish: clean up corrupted MOCK 9/10 reading.html + document the duplicate inventory
+
+**Findings (5 total):**
+- [T1] **MOCKs/MOCK 9/reading.html and MOCKs/MOCK 10/reading.html have malformed HTML at the top.** First 5 lines were a corrupted pre-`<head>` block: `<!DOC    <title>...` followed by 4 link/comment lines and a leftover `<link...> html>`. The DOCTYPE was incomplete, content was jammed before `<html>`, and the `html>` was left over from a botched edit. The original `<title>MOCK 3 - Reading Practice</title>` (or MOCK 5) was ALSO still inside the proper `<head>` on a later line — duplicate titles. MOCK 10's case was worse: line 8 had a passage paragraph ("Before toothbrushes, many used chew sticks…") jammed into the middle of `<meta charset="UTF-8">`, breaking the meta tag entirely.
+- [T1] **CONTENT INTEGRITY — IELTS MOCK 9 = MOCK 3, IELTS MOCK 10 = MOCK 5 (verbatim).** Verified by md5: same audio files (`IC_003.mp3` and `IC_005.mp3` are identical bytes between the duplicated mock pairs), listening.html files differ only in `data-mock` and `<title>`, all answer keys (listening/reading/writing) are byte-identical between MOCK 9↔3 and MOCK 10↔5. So "10 unique mocks" advertised in the invigilator dropdown is actually 8 unique + 2 silent duplicates.
+- [T1] **CONTENT INTEGRITY — Cambridge B2-First Mock 1/2/3 share IDENTICAL Part 1, Part 2, Part 5, Part 8 reading content + identical speaking.html.** md5: `90e158…` for Listening-Part-1 across all 3 variants, `7131…` for Part 1, `8d11…` for Part 2, `5a56…` for Part 5, `6dbc…` for Part 8, `3911…` for speaking.html. Only writing.html actually differs across the 3 mocks. The "multi-mock" feature is mostly cosmetic — students who take Mock 2 after Mock 1 will see the same reading passages and questions.
+- [T2] **invigilator.html populateMockOptions() — Mock dropdown labels MOCK 1-10 (IELTS) or Mock 1-3 (Cambridge) with no indication that some are duplicates.** Invigilators have no way to know they're assigning a relabeled copy, so students can be unintentionally given the same test twice.
+- [T0] **No content audit script.** Nothing in the repo flags duplicate files across mocks. Future content edits could silently re-introduce the same drift.
+
+**Action:** POLISH 2 fixes (corrupted HTML in 2 reading.html files) + DOCUMENT the duplicate inventory for future rounds. Did not delete or hide the duplicate mocks since admin/scoring data may already be tied to MOCK 9/10 — that's a content authoring decision, not a code fix.
+
+**Files touched:**
+1. **MOCKs/MOCK 9/reading.html** — Replaced the broken pre-`<head>` block (5 lines of `<!DOC ... html>`) AND the duplicate `<head>` section that followed (which still said "MOCK 3 - Reading Practice"). Now a single clean `<!DOCTYPE html>` + `<head>` with the correct MOCK 9 title and all expected stylesheet links. data-mock="9" preserved on the body.
+2. **MOCKs/MOCK 10/reading.html** — Same fix, plus removed the corrupted `<meta charBefore toothbrushes...alternative...et="UTF-8">` tag where a passage paragraph had been pasted into the middle of the meta charset attribute. Verified the toothbrush text was NOT a real reading passage — it doesn't appear anywhere in MOCK 5's reading.html either, so it was an editor accident, not legitimate content. Title now correctly reads "Innovative Centre MOCK 10 - Reading Practice".
+
+**Verification (live, isolated playwright session):**
+| Check | Method | Result |
+|-------|--------|--------|
+| MOCK 9 reading.html parses cleanly | Read first 15 lines | ✅ Lines 1-13 are a clean DOCTYPE + head with the correct MOCK 9 title |
+| MOCK 10 reading.html parses cleanly | Read first 15 lines | ✅ Same — proper meta charset, correct MOCK 10 title |
+| MOCK 10 page loads in browser | playwright goto + DOM probe | ✅ title="Innovative Centre MOCK 10 - Reading Practice", body data-mock="10", 4 reading passages found |
+| MOCK 9 page loads in browser | playwright goto + DOM probe | ✅ title="Innovative Centre MOCK 9 - Reading Practice", body data-mock="9", 4 reading passages found |
+| Reading content intact after fix | passage count + first passage snippet | ✅ "READING PASSAGE 1\nYou should spend about 20 minutes on Questions 1-13..." — content preserved |
+
+### Duplicate Inventory (for next time someone curates content)
+**IELTS — 8 unique mocks under 10 dropdown slots:**
+| Slot | Status | Audio file | Notes |
+|------|--------|-----------|-------|
+| MOCK 1 | unique | IC001 | |
+| MOCK 2 | unique | IC002 | |
+| MOCK 3 | unique | IC_003 | (also served by MOCK 9) |
+| MOCK 4 | unique | IC_004 | |
+| MOCK 5 | unique | IC_005 | (also served by MOCK 10) |
+| MOCK 6 | unique | IC006 | |
+| MOCK 7 | unique | IC007 | |
+| MOCK 8 | unique | IC_008 | |
+| MOCK 9 | **DUPLICATE of MOCK 3** | IC_003 (copy) | listening, reading, writing, all answer keys identical to MOCK 3. Only data-mock + title differ. |
+| MOCK 10 | **DUPLICATE of MOCK 5** | IC_005 (copy) | listening, reading identical; writing.html differs. Reading answer key identical. |
+
+**Cambridge B2-First — 1 unique reading test under 3 dropdown slots:**
+| Slot | Reading parts (md5) | Writing (md5) | Speaking (md5) |
+|------|---------------------|----------------|-----------------|
+| B2-First (Mock 1) | Part 1: 7131…, Part 2: 8d11…, Part 5: 5a56…, Part 8: 6dbc…, Listening-Part-1: 90e1… | 3ef3654…unique | 3911…shared |
+| B2-First-MOCK-2 | identical to Mock 1 | 1403ff…unique | identical |
+| B2-First-MOCK-3 | identical to Mock 1 | 4951e8…unique | identical |
+
+A2-Key and B1-Preliminary multi-mock variants likely have the same shape but were not exhaustively md5-sum-checked this round.
+
+### Quality Map (after round 32)
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| MOCKs/MOCK 9/reading.html HTML validity | 1-Functional (browser tolerated broken markup) → 4-Polished | Single clean DOCTYPE, correct title, no duplicate head |
+| MOCKs/MOCK 10/reading.html HTML validity | 1-Functional (broken meta charset) → 4-Polished | Removed accidental passage-text-in-meta, correct title |
+| MOCK 9/10 dropdown labels | 2-Clear (silent duplicates) → 2-Clear (still silent) | Documented but not yet flagged in UI — see Deferred |
+| Cambridge B2-First multi-mock dropdown | 2-Clear (silent duplicates) → 2-Clear | Same — documented for next pass |
+
+### Deferred (next time this prompt runs)
+- **Flag duplicate mocks in the invigilator dropdown.** Add `(variant of Mock 3)` / `(variant of Mock 5)` suffixes to the IELTS dropdown options and `(same reading as Mock 1)` to Cambridge B2-First Mock 2/3. Doesn't break existing data, just makes the duplication visible at the assign-time decision.
+- **Write a content audit script.** A small Node script `tools/audit-mock-content.js` that walks every mock directory and reports md5 collisions across mocks. Could run in CI to catch silent regressions.
+- **Real content for MOCK 9/10.** Out of scope for code rounds — needs an IELTS content writer to author actual unique listening audio + questions + answers.
+- **Real Cambridge B2-First Mock 2/3 reading content.** Same situation — needs a Cambridge content writer to source new official sample tests for the additional mocks.
+- **md5-check A2-Key and B1-Preliminary multi-mock variants.** Almost certainly the same duplication pattern but unverified this round.
+
+### Session Stats (round 32)
+Pages explored: 21 IELTS mock files + 9 Cambridge B2-First files + 1 invigilator.html (md5/diff comparisons across them)
+Findings: 5 (3× T1, 1× T2, 1× T0)
+Polishes landed: 2 (corrupted HTML cleanup in MOCKs/MOCK 9/reading.html and MOCKs/MOCK 10/reading.html)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Files touched: 2
+Verification: page title + body data-mock + passage count probed in browser for both MOCK 9 and MOCK 10 reading.html
+
+---
+
 ## Session: 2026-04-09 — Result-viewing flow round 3: speaking auth, sticky scoring (loop /eye full re-run)
 Persona: Admin scoring 40-question reading tests + invigilator going to speaking-evaluations from a bookmark
 System: Both
