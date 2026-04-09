@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "lastRunAt": "2026-04-09T10:50:00Z",
-  "lastRunCommit": "03485b0",
+  "lastRunAt": "2026-04-09T11:00:00Z",
+  "lastRunCommit": "dee207b",
   "runs": [
     {
       "id": "heal-2026-04-08-r1",
@@ -73,6 +73,17 @@
       "fixed": 5,
       "reverted": 0,
       "deferred": 0
+    },
+    {
+      "id": "heal-2026-04-09-r8",
+      "type": "heal",
+      "startedAt": "2026-04-09T10:55:00Z",
+      "domains": ["security", "api", "architecture"],
+      "round": 8,
+      "fixed": 5,
+      "reverted": 0,
+      "deferred": 0,
+      "note": "Listening.js dead-code deletions absorbed into eye checkpoint cd19135 (race). IELTS server fixes in heal r8 commit dee207b. Both verified present in HEAD."
     }
   ],
   "findings": [
@@ -471,6 +482,42 @@
       "status": "fixed",
       "fixedInCommit": "03485b0",
       "foundAt": "2026-04-09T10:45:00Z"
+    },
+    {
+      "fingerprint": "security:local-database-server:admin-error-message-disclosure",
+      "severity": "HIGH",
+      "title": "error.message leaked in 7 IELTS admin error handlers (GET /submissions, DELETE /submissions/:id, POST /update-score, POST /api/ai-score-suggestion, GET/POST/DELETE /mock-answers)",
+      "file": "local-database-server.js",
+      "status": "fixed",
+      "fixedInCommit": "dee207b",
+      "foundAt": "2026-04-09T10:55:00Z"
+    },
+    {
+      "fingerprint": "security:local-database-server:get-mock-answers-skill-validation",
+      "severity": "HIGH",
+      "title": "GET /mock-answers accepted skill query parameter without whitelist validation",
+      "file": "local-database-server.js",
+      "status": "fixed",
+      "fixedInCommit": "dee207b",
+      "foundAt": "2026-04-09T10:55:00Z"
+    },
+    {
+      "fingerprint": "security:local-database-server:delete-mock-answers-skill-validation",
+      "severity": "HIGH",
+      "title": "DELETE /mock-answers accepted skill query parameter without whitelist validation",
+      "file": "local-database-server.js",
+      "status": "fixed",
+      "fixedInCommit": "dee207b",
+      "foundAt": "2026-04-09T10:55:00Z"
+    },
+    {
+      "fingerprint": "architecture:listening:dead-modal-functions",
+      "severity": "MEDIUM",
+      "title": "Dead functions in listening.js: showWifiModal, showBellModal, showDarkModeOptions, showHelp, saveNotes, updateWifiStatus",
+      "file": "assets/js/listening/listening.js",
+      "status": "fixed",
+      "fixedInCommit": "cd19135",
+      "foundAt": "2026-04-09T10:55:00Z"
     }
   ]
 }
