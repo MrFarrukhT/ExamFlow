@@ -1,5 +1,60 @@
 # Eye Journal
 
+## Session: 2026-04-09 — Result-viewing flow round 6: UoE required + submission-row a11y (loop /eye full re-run)
+Persona: Admin entering B2-First results + admin navigating date view with keyboard
+System: Both
+Pages explored: cambridge-student-results.html (Add New Result form for B2-First), IELTS + Cambridge admin dashboard View by Date submission rows.
+
+The sixth cron-fired run. Round 5 deferreds: sticky calculated-results panel, UoE required indicator, speaking-eval auto-refresh, date-group-submission row a11y. This round verified auto-refresh already works (dropped), pivoted away from sticky (marginal value), and shipped 2 high-value fixes + 1 polish.
+
+### Bug 12 (T2 confusing → T4 polished): B2-First "Use of English" field had no visual indicator that it's required for accurate scoring
+The Add New Result modal in cambridge-student-results.html renders 5 skill input rows for B2-First (L/R/W/S/UoE). The UoE row appeared with identical styling to the others — no label, no color, no badge indicating it's important. I literally missed this field myself in round 5 and submitted junk data (EYE-R5-002 had `overall_scale: null` because all 5 scales were null). The form didn't warn, didn't block, and silently saved contaminated data.
+Fix in 2 parts:
+1. **Visual indicator**: `updateSkillFields()` now renders the UoE row with a teal left-border (`3px solid #0d9488`), a tinted background (`#f0fdfa`), and a "Required" badge (`<span style="...">Required</span>`) next to the label. The `<input>` also has the `required` HTML attribute for native form validation.
+2. **Save-time validation**: in `saveResult()`, when `level === 'B2-First'` and `use_of_english_raw === null`, the admin sees `confirm("Use of English score is empty — the overall scale will be calculated without it and may be inaccurate. Save anyway?")`. Clicking Cancel aborts the save.
+Verified: selecting B2-First shows the UoE row with the badge + border. Clicking Save without filling UoE shows the confirm dialog. Clicking Cancel prevents the save.
+
+### Bug 13 (T3 a11y): Date-group submission rows were not keyboard-accessible
+Round 5 fixed the date-group HEADERS with role/tabindex/keyboard activation. But each SUBMISSION ROW inside those groups (`<div class="date-group-submission" onclick="openAnswerComparison(...)">`) was also a plain `<div onclick>` — not focusable, not keyboard-activatable.
+Needed fixing in 3 places:
+1. `assets/js/admin-common.js::renderDateGroupSubmissionRow` (the base class)
+2. `ielts-admin-dashboard.html::renderDateGroupSubmissionRow` (IELTS override)
+3. `cambridge-admin-dashboard.html::renderDateGroupSubmissionRow` (Cambridge override)
+Fix: added `role="button"`, `tabindex="0"`, and `onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openAnswerComparison(...)}"` to all 3.
+Verified: 2254 IELTS submission rows now carry `role="button"` + `tabindex="0"` + `onkeydown` handler. Keyboard users can tab into date groups and press Enter/Space to open any submission.
+
+### Deferred item verified + dropped
+Speaking-evaluations 60-second auto-refresh stat cards — verified that `loadSubmissions()` (which runs on the interval) already calls `applyFilters()` AND `updateStatistics()`. The round 3 deferred was wrong. Dropped.
+
+### Files touched this round
+1. `cambridge-student-results.html` — UoE "Required" badge + border + validation confirm
+2. `assets/js/admin-common.js` — base class `renderDateGroupSubmissionRow` a11y (role/tabindex/keydown)
+3. `ielts-admin-dashboard.html` — IELTS override `renderDateGroupSubmissionRow` a11y
+4. `cambridge-admin-dashboard.html` — Cambridge override `renderDateGroupSubmissionRow` a11y
+
+### Quality Map (after round 6)
+| Page | Layer (before round 6 → after) | Notes |
+|------|--------------------------------|-------|
+| cambridge-student-results Add Result — B2-First | 2-Clear → 4-Polished | UoE now visually distinct + validated |
+| IELTS View by Date — submission rows | 2-Clear → 4-Polished | 2254 rows keyboard-accessible |
+| Cambridge View by Date — submission rows | 2-Clear → 4-Polished | Same |
+
+### Deferred (next round)
+- Sticky "Calculated Results" panel in Add New Result modal — marginal value, kept for future polish round
+- Date-group-submission rows are now keyboard-accessible, but the focus ring style is the browser default — could be polished with a custom `:focus-visible` outline matching the teal theme
+- Same keyboard a11y treatment needed on the IELTS table rows (the paginated table view, not just date view)
+
+### Session Stats (round 6)
+Pages explored: 3 flows (UoE indicator, IELTS date-group rows, Cambridge date-group rows)
+Bugs found: 2 (1 T2 missing-indicator, 1 T3 a11y)
+Polishes landed: 1 (UoE required badge + validation)
+Elevations landed: 0
+Rebuilds landed: 0
+Reverted: 0
+Files touched: 4
+
+---
+
 ## Session: 2026-04-09 (round 35) — Cambridge Multi-Mock Navigation
 Persona: Student navigating mock selection on the Cambridge system
 System: Cambridge (port 3003)
