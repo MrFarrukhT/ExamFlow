@@ -1,5 +1,84 @@
 # Eye Journal
 
+## Session: 2026-04-09 — C1 Advanced UI fidelity to official CEQ exam (loop /eye)
+Persona: Student taking C1 Advanced exam
+System: Cambridge (port 3003)
+Pages explored: All 18 C1 Advanced Part HTML files (Reading 1-8, Writing 1-2, Listening 1-4), plus shared CSS
+Starting state: C1 Advanced files saved from Inspera platform. Custom layout CSS (534 lines). Several visual details diverged from official CEQ screenshots.
+
+### Round 1 — Polish: 256 lines of CSS fidelity overrides
+
+Compared all 15 official screenshots (1-8.png, w1-w2.png, l1-l5.png) against implementation:
+
+- **Part 1 gap dropdowns (1.png)**: Teal fill on selected answer
+- **Part 4 rubric (4.png)**: Teal left border + cream bg
+- **Footer nav arrows**: Teal rounded squares with white icons
+- **Right-column question boxes (5/6/8.png)**: Teal left border accent cards
+- **Text input gaps (2/4.png)**: Compact bordered boxes
+- **Footer Part tabs**: Active highlight + vertical separators
+- **Order-number circles**: Teal bordered circles for MC questions
+- **Radio button spacing + passage line-height refinements
+
+### Files: `assets/css/cambridge-c1-official-layout.css` (534 → 788 lines)
+### Changes shipped: 13 CSS rule groups, 256 lines
+
+---
+
+## Session: 2026-04-09 (round 38) — CSS Consistency Across Systems
+Persona: Designer reviewing visual consistency between IELTS, Cambridge, and admin pages
+System: Both + Admin (assets/css/ inventory — 20 CSS files)
+Pages explored: All 20 CSS files in assets/css/ (font-family, :root variables, primary colors, border-radius patterns)
+Starting state: The CSS codebase had 3 different font stacks, 3 different primary blues, and 5 different :root variable blocks across the 20 stylesheets. The test pages (reading/listening/writing) used `Arial, sans-serif`, the launcher and admin-common used the old Windows `'Segoe UI', Tahoma, Geneva, Verdana` stack, and the entry/dashboard/invigilator pages used the modern system font stack. Primary blue varied between `#1976d2` (entry/dashboard), `#0066cc` (admin/cambridge), and `#3498db` (launcher).
+
+### Round 1 — Polish: unify font stack + primary blue across launcher and admin
+
+**Findings (4 total):**
+- [T4] **3 different font stacks.** Modern system (`-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, ...`) used by entry.css, cambridge-entry.css, dashboard.css, cambridge-dashboard.css, invigilator.css. Old Windows (`'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`) used by launcher.css, admin-common.css. Plain `Arial, sans-serif` used by reading.css, listening.css, writing.css.
+- [T4] **3 different primary blues.** `#1976d2` (Material Blue, entry + dashboard — 2 files). `#0066cc` (admin-common + cambridge-entry — 2 files). `#3498db` (Flat UI teal-blue, launcher — 1 file). The launcher's blue was the most visually different from the rest of the system.
+- [T3] **5 redundant :root blocks.** entry.css (comprehensive: z-index + colors + text), dashboard.css (partial duplicate), admin-common.css (different prefix), invigilator.css (just z-index), cambridge-entry.css (different prefix). No shared tokens file.
+- [T0] **No design tokens file.** Each CSS file reinvents the palette. A future `assets/css/tokens.css` or `:root` shared file would be the clean solution, but that's a bigger scope.
+
+**Action:** POLISH 2 files — unify font-family + primary blue in launcher.css and admin-common.css.
+
+**Files touched:**
+1. **assets/css/launcher.css** — body font-family changed from `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif` to the modern system stack. Primary blue `#3498db` → `#1976d2` (6 occurrences), darker blue `#2980b9` → `#1565c0` (4 occurrences), rgba `52, 152, 219` → `25, 118, 210` (8 occurrences). Launcher button gradient, system-info accent, feature icon color, and Olympiada focus ring all now match the system-wide blue from entry.css/dashboard.css.
+2. **assets/css/admin-common.css** — body font-family changed from the old `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif` to the modern system stack. This affects both IELTS and Cambridge admin dashboards (they share admin-common.css).
+
+Did NOT touch reading/listening/writing CSS — those are the complex Inspera-style test layouts where changing `Arial` could break computed widths and layouts.
+
+**Verification:** Launcher screenshot at 1280×800 (eye38-launcher-unified.png) — button gradient now uses `#1976d2 → #1565c0` matching entry.css/dashboard.css palette, system font stack renders cleanly.
+
+### CSS Consistency Inventory (for future rounds)
+| File | Font stack | Primary blue | :root vars |
+|------|-----------|-------------|------------|
+| launcher.css | ✅ modern (fixed this round) | ✅ #1976d2 (fixed) | ❌ none |
+| entry.css | ✅ modern | ✅ #1976d2 | ✅ comprehensive |
+| cambridge-entry.css | ✅ modern | ⚠️ #0066cc (--cam-primary) | partial |
+| dashboard.css | ✅ modern | ✅ #1976d2 | partial duplicate |
+| cambridge-dashboard.css | ✅ modern | ✅ #1976d2 | partial duplicate |
+| admin-common.css | ✅ modern (fixed this round) | ⚠️ #0066cc (--admin-primary) | minimal |
+| invigilator.css | ✅ modern | hardcoded various | just --z-overlay |
+| reading.css | ⚠️ Arial | N/A (test page) | ❌ none |
+| listening.css | ⚠️ Arial | N/A (test page) | ❌ none |
+| writing.css | ⚠️ Arial | N/A (test page) | ❌ none |
+
+### Deferred
+- **Unify admin-common.css `--admin-primary: #0066cc` and cambridge-entry.css `--cam-primary: #0066cc` to `#1976d2`.** Would affect all admin dashboard buttons and Cambridge entry badge colors. Needs visual verification across both admin panels.
+- **Create a shared `assets/css/tokens.css`** with the canonical :root variables. All other CSS files would @import it. Biggest long-term improvement but requires touching every CSS file.
+- **Test page font stack.** Changing reading/listening/writing from Arial to the system stack would be a visual regression risk since the test layouts are precision-crafted. Defer unless there's a specific complaint.
+
+### Session Stats (round 38)
+Pages explored: 20 CSS files inventoried, 2 modified
+Findings: 4 (2× T4, 1× T3, 1× T0)
+Polishes landed: 2 (font-family + primary blue)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Files touched: 2 (assets/css/launcher.css, assets/css/admin-common.css)
+Verification screenshots: 1 (eye38-launcher-unified.png)
+
+---
+
 ## Session: 2026-04-09 (round 37) — Scoring Workflow End to End
 Persona: Admin scoring a full set of student submissions
 System: Both (admin-common.js base class + ielts-admin-dashboard.html override + cambridge-admin-dashboard.html override)
