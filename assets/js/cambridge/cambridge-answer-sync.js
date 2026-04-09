@@ -530,7 +530,7 @@
     document.addEventListener('input', onInput, true);
     
     // Periodic background save
-    setInterval(periodicSave, PERIODIC_SAVE_INTERVAL);
+    window.__cambridgeAnswerSyncInterval = setInterval(periodicSave, PERIODIC_SAVE_INTERVAL);
     
     // Save when tab hidden or window closed
     document.addEventListener('visibilitychange', onVisibilityChange);

@@ -207,7 +207,7 @@
   window.consolidateMoversAnswers = consolidateAnswers;
   
   // Auto-consolidate every 5 seconds to keep reading-writingAnswers in sync
-  setInterval(consolidateAnswers, 5000);
+  window.__a1MoversConsolidateInterval = setInterval(consolidateAnswers, 5000);
   
   // Consolidate immediately on load
   setTimeout(consolidateAnswers, 1000);

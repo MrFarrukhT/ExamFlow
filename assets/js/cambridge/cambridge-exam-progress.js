@@ -372,7 +372,7 @@
         }
 
         // Poll every 1.5s — picks up the button after iframe navigates between parts
-        setInterval(attach, 1500);
+        window.__cambridgeDeliverInterceptorInterval = setInterval(attach, 1500);
         attach();
     }
 
@@ -381,7 +381,7 @@
         if (badge) {
             updateBadge(badge);
             window.addEventListener('storage', function () { updateBadge(badge); });
-            setInterval(function () { updateBadge(badge); }, 2000);
+            window.__cambridgeBadgePollInterval = setInterval(function () { updateBadge(badge); }, 2000);
         }
 
         // Set up review modal interceptor (works even without badge)
