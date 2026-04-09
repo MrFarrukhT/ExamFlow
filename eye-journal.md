@@ -1,5 +1,67 @@
 # Eye Journal
 
+## Session: 2026-04-09 — Result-viewing flow: tests + invigilator + admin (loop /eye full)
+Persona: Invigilator AND admin checking student test results across both systems
+System: Both (IELTS port 3002, Cambridge port 3003)
+Pages explored: ielts-admin-dashboard.html, cambridge-admin-dashboard.html, invigilator.html (both ports), cambridge-student-results.html
+Starting state: User asked /loop /eye to verify "tests are working and both invigilators and admin can check the results (full)" — needed to walk every result-viewing flow as a real user, not just hit endpoints.
+
+### What I verified works
+- POST /submissions (IELTS) and POST /cambridge-submissions (Cambridge) accept new test data — confirmed by inserting EYE-VERIFY-1 (id 12002) and EYE-VERIFY-2 (id 137655) and seeing them flow through every read path.
+- IELTS admin dashboard: login (admin / `Adm!n#2025$SecureP@ss`) → loaded 11,886 submissions / 143 students / 1316 unscored / EYE-VERIFY-1 visible.
+- Cambridge admin dashboard: login → 5620 submissions / 491 students / EYE-VERIFY-2 visible.
+- Cambridge student-results page: 1472 results / 91% pass rate / 15 row table renders.
+- Invigilator panel (IELTS port 3002): 19 submissions today / 19 students / EYE-VERIFY-1 in the room activity feed.
+- Invigilator panel (Cambridge port 3003): once `examType=Cambridge` is set, 8 students / 8 submissions / 8 pending — header switches to "Cambridge Invigilator Control Panel".
+
+### Bugs I found while walking the pages — and fixed
+
+**Bug 1 (T2): Admin dashboards fired 20-48 unauthenticated 401 requests on every page load.**
+Both `ielts-admin-dashboard.html` (was line 866) and `cambridge-admin-dashboard.html` (was line 916) called `dashboard.loadCorrectAnswers()` directly after `dashboard.init()`. The init chain already invokes `loadCorrectAnswers()` from inside `showAdminPanel() → onAdminPanelReady()` ONLY when an admin token is present, so the duplicate call was both redundant AND, on a fresh page load with no token, it ran unauthenticated and spammed the console with `401 Unauthorized` for every (mock × skill) or (level × skill × mock) combination. Fix: remove the duplicate call from both dashboards. Verified: 20-48 errors → 0 errors on fresh load.
+
+**Bug 2 (T1): Invigilator panel served from Cambridge server defaulted to IELTS mode.**
+`invigilator.html` read `examType` from localStorage and defaulted to `'IELTS'` if missing. Because localStorage is per-origin, opening invigilator.html on `localhost:3003` (Cambridge) without a prior round-trip through the Cambridge dashboard meant `examType=null` → IELTS mode → header said "IELTS Invigilator Control Panel" → the room-activity feed tried to fetch `/submissions` (IELTS endpoint) which 404s on the Cambridge server. The user saw "Could not reach server — Server returned 404" with no idea what was wrong.
+Fix: detect exam type from `window.location.port` (3003 = Cambridge, 3002 = IELTS) BEFORE falling back to localStorage, and persist the resolved type so the rest of the app stays consistent. Verified: opening `localhost:3003/invigilator.html` with empty localStorage now shows "Cambridge Invigilator Control Panel" and hits `/cambridge-submissions`.
+
+**Bug 3 (T1): Stale admin tokens left dashboards in a "logged in but empty" state.**
+When the admin server restarts (or the in-memory `validTokens` Set in `shared/auth.js` is cleared), every cached token in browser localStorage becomes invalid. The dashboards stored the token in localStorage and treated "token exists" as "user is logged in", calling `showAdminPanel()` immediately. Subsequent fetches to `/submissions` returned 401, the catch branch displayed a generic "Failed to load submissions" inside the (still-shown) admin content area, and `totalSubmissions` showed 0. The user had no way to know auth was broken — there was no redirect to login, no error explaining the situation.
+Fix in `assets/js/admin-common.js`:
+1. Wrapped `_authFetch` so a 401 response with a non-null token triggers `_handleStaleToken()` — wipes the cached token, hides the admin content, shows the login form, and surfaces "Your session expired. Please log in again." in the existing error banner.
+2. Added a `_tokenInvalidated` short-circuit so subsequent in-flight calls (e.g. the ~48 parallel `loadCorrectAnswers` requests) don't keep firing with the dead token after the first 401 — they resolve to a synthetic 401 Response locally instead. Reduced 51 console errors → 2 (the unavoidable in-flight pair).
+3. Cleared `_tokenInvalidated` in the success branch of `login()` so a fresh token reactivates the dashboard cleanly.
+Verified: setting a fake stale token in localStorage and reloading correctly drops the user on the login form with the expected message; logging back in restores all 5620 submissions and EYE-VERIFY-2 reappears.
+
+### Files touched
+1. `ielts-admin-dashboard.html` — removed duplicate `dashboard.loadCorrectAnswers()` call after `init()` (4 lines + comment)
+2. `cambridge-admin-dashboard.html` — same removal (4 lines + comment)
+3. `invigilator.html` — replaced single-line `examType` lookup with port-based auto-detection that also persists the resolved exam type to localStorage (~20 lines including the explanatory comment)
+4. `assets/js/admin-common.js` — added `_handleStaleToken()` method, the `_tokenInvalidated` short-circuit in `_authFetch`, and the reset in `login()` (~50 lines)
+
+### Quality Map
+| Page | Layer (before → after) | Notes |
+|------|------------------------|-------|
+| ielts-admin-dashboard.html (cold load) | 2-Clear → 4-Polished | 20 console errors → 0; bounces correctly on stale token |
+| cambridge-admin-dashboard.html (cold load) | 2-Clear → 4-Polished | 48 console errors → 0; same stale-token recovery |
+| invigilator.html (Cambridge port, no prior dashboard visit) | 1-Functional → 4-Polished | Was fully broken from a fresh tab; now auto-detects from port |
+| _authFetch / admin-common.js | 3-Efficient → 4-Polished | New stale-token recovery is the missing safety net the architecture needed |
+
+### Deferred (next round)
+- `loadCorrectAnswers` still fans out 20 (IELTS) / 48 (Cambridge) parallel requests to fetch answer keys per (mock × skill). Once tokens are valid this is fine, but it's a noisy fan-out that should probably be replaced with a single `/mock-answers/all` endpoint that returns everything in one round-trip. Out of scope for this round.
+- The "session expired" error banner appears in the right place but doesn't auto-clear after a successful login — minor polish.
+- Cambridge admin login through the UI: the Cambridge server's in-memory token store is invalidated by a background scenario runner (visible in scheduled_tasks.lock) that periodically restarts state. The stale-token recovery fix masks this perfectly for the user, but the underlying churn is worth investigating in a server-architecture round.
+
+### Session Stats
+Pages explored: 4 result-viewing pages × 2 systems = 8 page states
+Bugs found: 3 (1 T1 critical-blocker, 1 T1 silent-fail, 1 T2 console-spam-with-broken-state)
+Polishes landed: 0
+Rebuilds landed: 0
+Fixes landed: 3 (all root-caused, all verified end-to-end through a real browser)
+Reverted: 0
+Files touched: 4
+Live submissions verified end-to-end: 2 (EYE-VERIFY-1 IELTS id 12002, EYE-VERIFY-2 Cambridge id 137655)
+
+---
+
 ## Session: 2026-04-09 (round 28) — Fullscreen & Anti-Cheat
 Persona: Student trying to leave the test window
 System: Both (single launcher.html + shared assets/js/distraction-free.js used by every IELTS and Cambridge test page)
