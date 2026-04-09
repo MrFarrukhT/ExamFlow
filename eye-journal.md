@@ -1,5 +1,68 @@
 # Eye Journal
 
+## Session: 2026-04-09 (round 29) — Responsive Mobile (375px)
+Persona: Student opening the test on an iPhone (375 × 812)
+System: Both (launcher.html + every Cambridge/IELTS test page that loads distraction-free.js)
+Pages explored: launcher.html, index.html (login), Cambridge B2-First Part 1.html (representative test page) — all at 375px viewport in an isolated playwright session
+Starting state: launcher.css had a `@media (max-width: 600px)` block but body had `overflow: hidden`, so on iPhone-class viewports the launcher card got CLIPPED instead of scrolling. The login form rendered fine when given time to paint. The Cambridge test pages had zero mobile breakpoints — Inspera UI is designed for desktop, mobile users see a garbled layout with no warning. Round 28's Secure Mode badge (bottom-left) overlapped the listening audio popup at narrow widths.
+
+### Round 1 — Polish + Elevate: launcher fits at 375px, mobile-aware badge, friendly mobile advisory
+
+**Findings (5 total):**
+- [T1] **launcher.html — Container clips off-screen at small viewports.** Container measured 858px tall at 375×812; viewport is 812. Container top was at -14px. body { overflow: hidden } meant users on iPhone SE / landscape mobile / small tablets could not scroll to reach the features list, the Press Enter hint, or the Invigilator Access button.
+- [T1] **All Cambridge test pages — Completely unusable at 375px.** Cambridge Inspera UI has zero mobile breakpoints. Passages, MC questions, footer navigation, audio popups all squished into unusable sizes. Students who land on mobile see broken UI rather than a clear "use a desktop" signal.
+- [T2] **distraction-free.js — Round 28's Secure Mode badge overlaps listening audio popup at narrow widths.** Both pin to bottom-left. The badge becomes invisible behind the popup precisely when the student needs to know they're being monitored.
+- [T3] **launcher.html — Tight 375px viewport feels cramped.** The 600px breakpoint padding (2rem 1.5rem) is still too generous, the 80px logo is oversized, the system-info card padding eats vertical space, the feature items have 0.8rem padding stacking 4 deep.
+- [T0] **All test pages — No "mobile not supported" guard.** First-time mobile users get garbled UI before they understand the test isn't designed for their device.
+
+**Action:** POLISH 4 fixes in launcher.css + distraction-free.js + ELEVATE 1 (mobile advisory)
+
+**Files touched:**
+1. **assets/css/launcher.css** (479 → 540 lines)
+   - body: replaced `overflow: hidden` with `overflow-x: hidden; overflow-y: auto` and added `padding: 1rem 0` so the launcher card scrolls into view on viewports shorter than the card. No more clipping on iPhone SE / landscape / small tablets.
+   - New `@media (max-width: 420px)` breakpoint targeting phone viewports specifically: shrink padding (1.5rem 1.25rem), shrink logo SVG to 64×64, reduce title to 1.6rem, system-info to 1rem padding, feature item padding to 0.55rem with 0.85rem font + 16×16 icons, footer top spacing to 1rem. Result: the entire launcher fits cleanly in 375×812 with everything visible after animations complete.
+2. **assets/js/distraction-free.js** (423 → 526 lines)
+   - Constructor calls new `_maybeShowMobileAdvisory()` after `_setupViolationTracking()`.
+   - `_maybeShowMobileAdvisory()` — new method. Returns early if window.innerWidth >= 768 OR if `dfmMobileAdvisoryDismissed` is set in sessionStorage. Otherwise mounts a centered modal card: laptop emoji, "Best on a desktop" heading, friendly explanation about mobile limitations, and a single "I understand, continue" button that sets the dismissal flag and removes the modal. Not a hard block — invigilators legitimately demoing on tablets can still proceed.
+   - `_injectStyles()` — added a `@media (max-width: 768px)` rule that re-pins `.dfm-secure-badge` to top:10px / right:10px (and tightens padding/font) so it never overlaps the bottom-left audio popup at narrow widths. Also added `.dfm-mobile-advisory` + `.dfm-mobile-advisory-card` styles: white card on dark backdrop, max-width 340px, full-width button, dfm-overlay fade-in animation reused. Reuses `.dfm-overlay-btn` styling for visual consistency with the fullscreen warning's resume button.
+
+**Verification (live, isolated playwright session at 375 × 812):**
+| Check | Method | Result |
+|-------|--------|--------|
+| Launcher fits in 375px viewport | screenshot after 2.2s wait for animations | ✅ eye29-launcher-fixed.png — logo, title, system-info, Launch button, Press Enter hint, all 4 feature items, copyright, Invigilator Access all visible without scrolling |
+| Mobile advisory shows on test page | reload Cambridge B2-First Part 1 with `distractionFreeMode='true'` and dismissal cleared | ✅ eye29-test-advisory.png — centered card with laptop emoji, "Best on a desktop" heading, dismiss button |
+| Advisory dismiss persists across reload | click dismiss → reload → check #dfm-mobile-advisory | ✅ `advisoryShows: false` after reload, badge still mounted |
+| Secure Mode badge moves to top-right at 375px | DOM inspect after dismiss | ✅ `top: 10px, right: 10px` on viewport <768px (was bottom: 14px / left: 14px on desktop) |
+| Desktop badge unchanged at 1280px | resize to 1280×800, reload, inspect | ✅ Badge back at bottom: 14px / left: 14px, NO advisory triggered (viewport ≥ 768px) |
+| node --check on distraction-free.js | shell | ✅ syntax ok, 526 lines |
+
+### Quality Map (after round 29)
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| launcher.html @ 375px | 1-Functional (clipped) → 4-Polished | Scrollable, tight padding, full content visible |
+| Cambridge/IELTS test pages @ 375px | 1-Functional (broken UI, no warning) → 3-Efficient | Friendly advisory before the broken UI; honest expectation-setting |
+| Secure Mode badge @ 375px | 2-Clear (overlapped audio popup) → 4-Polished | Top-right repositioning avoids all bottom-left UI |
+| Mobile advisory dismissal flow | N/A → 4-Polished | One-click dismiss, persists per session, never blocks invigilators |
+
+### Deferred (next time this prompt runs)
+- The Cambridge Inspera test pages still have no real mobile layout — the advisory warns students but doesn't fix the underlying garbled UI. A true mobile rebuild of the test pages would be a multi-round project (every part page is an 800-1000 line saved Inspera HTML). Out of scope for one polish round.
+- iPhone SE (320×568) is even more constrained than 375×812. The launcher should still work at 320px since it now scrolls, but I didn't verify visually.
+- Landscape mobile (812×375) wasn't tested — the launcher should scroll fine since overflow is auto, but could be cramped.
+- The IELTS index.html login form looked correct in viewport-only screenshots but the playwright `--full-page` mode rendered it in a faded "loading" state on the first paint. Could be a playwright quirk or could indicate a real first-paint issue worth investigating.
+- The mobile advisory only fires on test pages that load distraction-free.js — student dashboards, admin pages, etc. don't get the warning. Could move to a shared mobile-guard.js loaded site-wide.
+
+### Session Stats (round 29)
+Pages explored: 3 (launcher.html, index.html, Cambridge B2 Part 1) at 375px in an isolated playwright session
+Findings: 5 (2× T1 broken, 1× T2 confusing, 1× T3 inefficient, 1× T0 unremarkable)
+Polishes landed: 4 (launcher.css overflow + 420px breakpoint, badge repositioning, advisory module + styles)
+Rebuilds landed: 0
+Elevations landed: 1 (the T0 — friendly mobile advisory with persistent dismissal)
+Reverted: 0
+Files touched: 2 (assets/css/launcher.css, assets/js/distraction-free.js)
+Verification screenshots: 4 (eye29-launcher-fixed.png, eye29-test-advisory.png, eye29-test-badge-tr.png, eye29-launcher-iso-vp.png as the before-state reference)
+
+---
+
 ## Session: 2026-04-09 — C1 Advanced parity with official Cambridge screenshots (round 3)
 Persona: Student taking the C1 Advanced (CAE) mock test across all 14 surfaces
 System: Cambridge (port 3003)

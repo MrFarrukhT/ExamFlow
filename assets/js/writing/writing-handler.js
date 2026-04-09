@@ -125,69 +125,35 @@ class WritingHandler {
     }
 
     updateWordCount(taskId) {
+        // Official IELTS Writing has NO maximum word count — only minimums
+        // (Task 1: 150 words, Task 2: 250 words). Real candidates can write
+        // as much as they need. Anything else would let an artificial UI
+        // constraint cut off a valid answer mid-sentence — see eye-journal.
         const textarea = document.getElementById(`${taskId}-textarea`);
         const wordCountEl = document.getElementById(`${taskId}-word-count`);
         const bottomCountEl = document.getElementById(`bottom-${taskId}-count`);
-        
+
         if (!textarea || !wordCountEl) return;
-        
-        let text = textarea.value.trim();
-        let wordCount = text === '' ? 0 : text.split(/\s+/).length;
-        const maxWords = 500; // 500 word limit
-        
-        // Enforce 500 word limit - show warning and prevent further input (do NOT delete existing text)
-        if (wordCount > maxWords) {
-            // Store the previous valid text if not already stored
-            if (!textarea.dataset.lastValidText) {
-                const words = text.split(/\s+/);
-                textarea.dataset.lastValidText = words.slice(0, maxWords).join(' ');
-            }
-            // Restore to the last valid text (prevents new words, keeps existing text)
-            textarea.value = textarea.dataset.lastValidText;
-            wordCount = maxWords;
-        } else {
-            // Update the last valid text whenever we're within the limit
-            textarea.dataset.lastValidText = text;
-        }
 
-        // Show or hide the word limit warning message
-        let warningEl = textarea.parentElement.querySelector('.word-limit-warning');
-        if (wordCount >= maxWords) {
-            if (!warningEl) {
-                warningEl = document.createElement('div');
-                warningEl.className = 'word-limit-warning';
-                warningEl.style.cssText = 'color: #e74c3c; font-weight: bold; padding: 6px 10px; margin-top: 4px; background: #fdecea; border: 1px solid #e74c3c; border-radius: 4px; font-size: 13px;';
-                textarea.parentElement.appendChild(warningEl);
-            }
-            warningEl.textContent = 'Word limit reached (500 words). Please remove some words before adding new text.';
-            warningEl.style.display = 'block';
-        } else if (warningEl) {
-            warningEl.style.display = 'none';
-        }
+        const text = textarea.value.trim();
+        const wordCount = text === '' ? 0 : text.split(/\s+/).length;
 
-        // Update main word count display with limit
-        const limitMessage = wordCount >= maxWords ? ' (Limit reached)' : '';
-        wordCountEl.textContent = `Word count: ${wordCount}/500${limitMessage}`;
-        
+        // Plain word count — no slash, no max, no truncation
+        wordCountEl.textContent = `Word count: ${wordCount}`;
+
         // Update bottom navigation count
         if (bottomCountEl) {
             bottomCountEl.textContent = `(${wordCount} words)`;
         }
-        
-        // Color coding for word count
+
+        // Color coding by minimum-word target
         const minWords = taskId === 'task1' ? 150 : 250;
-        
-        if (wordCount >= maxWords) {
-            wordCountEl.className = 'word-count limit';
-        } else if (wordCount < minWords) {
-            wordCountEl.className = 'word-count warning';
-        } else if (wordCount >= maxWords * 0.9) {
-            // Warning when approaching limit (90% = 450 words)
+        if (wordCount === 0 || wordCount < minWords) {
             wordCountEl.className = 'word-count warning';
         } else {
             wordCountEl.className = 'word-count good';
         }
-        
+
         return wordCount;
     }
 
