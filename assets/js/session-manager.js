@@ -11,7 +11,7 @@ let _lastSaveIndicatorTime = 0;
 
 // ── Auto-save indicator ──────────────────────────────────────────
 // Shows a subtle "Answers saved" message so nervous students know their work is safe.
-function showSaveIndicator() {
+function showSessionSaveIndicator() {
     const now = Date.now();
     // Throttle: show at most once every 25 seconds to avoid spamming
     if (now - _lastSaveIndicatorTime < 25000) return;
@@ -516,7 +516,7 @@ function saveAnswersToSession() {
 
     // Show save indicator (only during periodic saves, not during submission)
     if (!_isSubmitting && Object.keys(answers).length > 0) {
-        showSaveIndicator();
+        showSessionSaveIndicator();
     }
 }
 
