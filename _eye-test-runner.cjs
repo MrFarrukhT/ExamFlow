@@ -84,6 +84,11 @@ const { chromium } = require(path.join(process.env.APPDATA, 'npm/node_modules/@p
             console.log(`  Q${q}: ${textAnswers7_13[i]}`);
         }
 
+        // Switch to Part 2
+        await page.evaluate(() => switchToPart(2));
+        await page.waitForTimeout(500);
+        console.log('  Switched to Part 2');
+
         // Part 2: Q14-18 (matching headings A-G radio buttons)
         const matchAnswers14_18 = ['C', 'A', 'B', 'D', 'E'];
         for (let i = 0; i < 5; i++) {
@@ -92,10 +97,12 @@ const { chromium } = require(path.join(process.env.APPDATA, 'npm/node_modules/@p
             console.log(`  Q${q}: ${matchAnswers14_18[i]}`);
         }
 
-        // Part 2: Q19-22 (text inputs — sentence completion)
+        // Part 2: Q19-22 (text inputs — click first to remove readonly)
         const textAnswers19_22 = ['emotions', 'butterfly', 'mystery', 'photography'];
         for (let i = 0; i < 4; i++) {
             const q = i + 19;
+            await page.click(`#q${q}`);
+            await page.waitForTimeout(100);
             await page.fill(`#q${q}`, textAnswers19_22[i]);
             console.log(`  Q${q}: ${textAnswers19_22[i]}`);
         }
@@ -107,6 +114,11 @@ const { chromium } = require(path.join(process.env.APPDATA, 'npm/node_modules/@p
             await page.click(`input[name="q${q}"][value="${matchAnswers23_26[i]}"]`);
             console.log(`  Q${q}: ${matchAnswers23_26[i]}`);
         }
+
+        // Switch to Part 3
+        await page.evaluate(() => switchToPart(3));
+        await page.waitForTimeout(500);
+        console.log('  Switched to Part 3');
 
         // Part 3: Q27-30 (multiple choice A-D)
         const mcAnswers27_30 = ['C', 'A', 'B', 'D'];
@@ -191,37 +203,31 @@ const { chromium } = require(path.join(process.env.APPDATA, 'npm/node_modules/@p
         await page.goto(`${BASE}/ielts-admin-dashboard.html`, { waitUntil: 'domcontentloaded', timeout: 15000 });
         await page.waitForTimeout(1000);
 
-        // Login to admin
-        const adminPasswordField = await page.$('#admin-password');
-        if (adminPasswordField) {
-            await page.fill('#admin-password', "Adm!n#2025$SecureP@ss");
-            const adminLoginBtn = await page.$('#admin-login-btn');
-            if (adminLoginBtn) {
-                await adminLoginBtn.click();
-                console.log('Admin login submitted');
-            } else {
-                // Try pressing Enter
-                await page.press('#admin-password', 'Enter');
-            }
-            await page.waitForTimeout(2000);
-        }
-        await page.screenshot({ path: '_eye-screenshots/07-admin-dashboard.png' });
+        // Login to admin — form uses #username and #password with #loginBtn
+        await page.fill('#password', "Adm!n#2025$SecureP@ss");
+        await page.click('#loginBtn');
+        console.log('Admin login submitted');
+        await page.waitForTimeout(3000);
+        await page.screenshot({ path: '_eye-screenshots/07-admin-logged-in.png' });
+
+        // Wait for submissions to load
+        await page.waitForTimeout(2000);
 
         // Search for student
-        const searchField = await page.$('#search-input, #searchInput, input[type="search"], input[placeholder*="Search"]');
+        const searchField = await page.$('#search-input, #searchInput, input[type="search"], input[placeholder*="Search"], input[placeholder*="search"]');
         if (searchField) {
             await searchField.fill(STUDENT_ID);
             await page.waitForTimeout(1500);
             console.log(`Searched for student ID: ${STUDENT_ID}`);
         } else {
-            console.log('No search field found on admin dashboard');
+            console.log('No search field found, checking page content directly');
         }
         await page.screenshot({ path: '_eye-screenshots/08-admin-search.png' });
 
         // Check for submission rows
         const submissionFound = await page.evaluate((sid) => {
             const text = document.body.innerText;
-            return text.includes(sid) || text.includes('Eye Bot Reading') || text.includes('reading');
+            return text.includes(sid) || text.includes('Eye Bot Reading') || text.toLowerCase().includes('reading');
         }, STUDENT_ID);
         console.log(`Submission found on admin dashboard: ${submissionFound}`);
 

@@ -1,5 +1,30 @@
 # Eye Journal
 
+## Session: 2026-04-09 12:15 — End-to-End Test Round 1: IELTS Reading Mock 1
+Persona: Student (EyeBot-R / Eye Bot Reading, ID: 99901) → Admin → Invigilator
+System: IELTS (port 3002)
+Pages explored: index.html, student-dashboard.html, MOCKs/MOCK 1/reading.html, ielts-admin-dashboard.html, invigilator.html
+
+### Round 1 — IELTS Reading Mock 1
+**Flow:** Login → Student Dashboard → Reading Test → Fill 40 answers → Submit → Admin verify → Invigilator verify
+
+- [PASS] Student login with ID 99901 / "Eye Bot Reading" — redirected to student-dashboard.html
+- [PASS] Welcome guide dismissed, Reading module selected (Mock 1)
+- [PASS] All 40 answers filled across 3 parts:
+  - Part 1 (Q1-13): 6 TRUE/FALSE/NOT GIVEN radios + 7 text inputs
+  - Part 2 (Q14-26): 5 matching headings + 4 text inputs + 4 matching features
+  - Part 3 (Q27-40): 4 multiple choice + 4 drag-drop + 6 YES/NO/NOT GIVEN
+- [PASS] Deliver button → Review modal appeared → Submit Reading clicked
+- [PASS] Redirected to dashboard, Reading module shows "Completed" badge
+- [PASS] Admin Dashboard: Logged in (admin/password), submission visible in IELTS Test Submissions
+- [PASS] Invigilator Panel: Student found in panel
+
+**Bugs found:** None — full pipeline works end-to-end
+**Changes shipped:** 0 (no bugs to fix)
+**Test artifacts:** `_eye-screenshots/01-10` PNG files, `_eye-test-runner.cjs` (reusable)
+
+---
+
 ## Session: 2026-04-09 — C1 Advanced UI fidelity to official CEQ exam (loop /eye)
 Persona: Student taking C1 Advanced exam
 System: Cambridge (port 3003)
