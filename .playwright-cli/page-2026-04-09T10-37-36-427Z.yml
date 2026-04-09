@@ -1,0 +1,82 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - heading "📊 IELTS Admin Dashboard" [level=1] [ref=e5]
+      - paragraph [ref=e6]: Submissions, scoring & mock answer management
+    - generic [ref=e7]:
+      - link "Invigilator Panel" [ref=e8] [cursor=pointer]:
+        - /url: invigilator.html
+      - generic [ref=e9]: Database Online
+      - button "Logout" [ref=e19] [cursor=pointer]
+  - generic [ref=e20]:
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e24]: "Search Student:"
+          - textbox "Search Student:" [ref=e25]:
+            - /placeholder: Student name or ID
+        - generic [ref=e26]:
+          - generic [ref=e27]: "Filter by Skill:"
+          - combobox "Filter by Skill:" [ref=e28]:
+            - option "All Skills" [selected]
+            - option "Reading"
+            - option "Writing"
+            - option "Listening"
+        - generic [ref=e29]:
+          - generic [ref=e30]: "Filter by Mock:"
+          - combobox "Filter by Mock:" [ref=e31]:
+            - option "All Mocks" [selected]
+            - option "Mock 1"
+            - option "Mock 2"
+            - option "Mock 3"
+            - option "Mock 4"
+            - option "Mock 5"
+            - option "Mock 6"
+            - option "Mock 7"
+            - option "Mock 8"
+            - option "Mock 9"
+            - option "Mock 10"
+        - generic [ref=e32]:
+          - generic [ref=e33]: "Date From:"
+          - textbox "Date From:" [ref=e34]: 2026-03-10
+        - generic [ref=e35]:
+          - generic [ref=e36]: "Date To:"
+          - textbox "Date To:" [ref=e37]: 2026-04-09
+        - generic [ref=e38]:
+          - generic [ref=e39]: "Score Status:"
+          - combobox "Score Status:" [ref=e40]:
+            - option "All Submissions" [selected]
+            - option "Scored"
+            - option "Unscored"
+      - generic [ref=e41]:
+        - button "🔍 Apply Filters" [ref=e42] [cursor=pointer]
+        - button "🔄 Clear Filters" [ref=e43] [cursor=pointer]
+        - button "📊 Refresh Data" [ref=e44] [cursor=pointer]
+        - button "📤 Export CSV" [ref=e45] [cursor=pointer]
+        - button "📅 View by Date" [ref=e46] [cursor=pointer]
+        - button "📅 Today's Submissions" [ref=e47] [cursor=pointer]
+        - button "📝 Start Scoring" [ref=e48] [cursor=pointer]
+    - generic [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e51]: "0"
+        - generic [ref=e52]: Total Submissions
+      - generic [ref=e53]:
+        - generic [ref=e54]: "0"
+        - generic [ref=e55]: Filtered Results
+      - generic [ref=e56]:
+        - generic [ref=e57]: "0"
+        - generic [ref=e58]: Average Score
+      - generic [ref=e59]:
+        - generic [ref=e60]: "0"
+        - generic [ref=e61]: Unique Students
+      - generic [ref=e62]:
+        - generic [ref=e63]: "0"
+        - generic [ref=e64]: Needs Scoring
+      - generic [ref=e65]:
+        - generic [ref=e66]: 0%
+        - generic [ref=e67]: Scoring Progress
+    - generic [ref=e69] [cursor=pointer]:
+      - generic [ref=e70]: 📝 Manage Answer Keys
+      - generic [ref=e71]: ▼
+    - heading "IELTS Test Submissions" [level=2] [ref=e72]
+    - generic [ref=e74]: Loading submissions...

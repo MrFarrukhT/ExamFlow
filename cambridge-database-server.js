@@ -357,10 +357,10 @@ app.get('/test', async (req, res) => {
             server: 'Cambridge Database Server'
         });
     } catch (error) {
+        console.error('Database connection error:', error);
         res.status(500).json({
             success: false,
-            message: 'Database connection failed',
-            error: error.message
+            message: 'Database connection failed'
         });
     }
 });

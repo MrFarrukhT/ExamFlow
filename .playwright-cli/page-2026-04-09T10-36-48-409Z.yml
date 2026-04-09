@@ -1,0 +1,103 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - heading "🎓 Cambridge Admin Dashboard" [level=1] [ref=e5]
+      - paragraph [ref=e6]: Submissions, scoring & answer key management
+    - generic [ref=e7]:
+      - generic [ref=e8]: Database Online
+      - button "Logout" [ref=e18] [cursor=pointer]
+  - navigation [ref=e19]:
+    - link "Submissions" [ref=e20] [cursor=pointer]:
+      - /url: cambridge-admin-dashboard.html
+    - link "Student Results" [ref=e21] [cursor=pointer]:
+      - /url: cambridge-student-results.html
+    - link "Speaking Evaluations" [ref=e22] [cursor=pointer]:
+      - /url: cambridge-speaking-evaluations.html
+    - link "Invigilator Panel" [ref=e23] [cursor=pointer]:
+      - /url: invigilator.html
+  - generic [ref=e24]:
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - generic [ref=e28]: "Search Student:"
+          - textbox "Search Student:" [ref=e29]:
+            - /placeholder: Student name or ID
+        - generic [ref=e30]:
+          - generic [ref=e31]: "Filter by Level:"
+          - combobox "Filter by Level:" [ref=e32]:
+            - option "All Levels" [selected]
+            - option "A1 Movers"
+            - option "A2 Key"
+            - option "B1 Preliminary"
+            - option "B2 First"
+            - option "C1 Advanced"
+        - generic [ref=e33]:
+          - generic [ref=e34]: "Exam Type:"
+          - combobox "Exam Type:" [ref=e35]:
+            - option "All" [selected]
+            - option "Cambridge"
+            - option "Olympiada (Zarmet)"
+        - generic [ref=e36]:
+          - generic [ref=e37]: "Filter by Skill:"
+          - combobox "Filter by Skill:" [ref=e38]:
+            - option "All Skills" [selected]
+            - option "Reading"
+            - option "Writing"
+            - option "Listening"
+            - option "Speaking"
+            - option "Reading & Writing"
+            - option "Reading & Use of English"
+        - generic [ref=e39]:
+          - generic [ref=e40]: "Filter by Mock:"
+          - combobox "Filter by Mock:" [ref=e41]:
+            - option "All Mocks" [selected]
+            - option "Mock 1"
+            - option "Mock 2"
+            - option "Mock 3"
+        - generic [ref=e42]:
+          - generic [ref=e43]: "Date From:"
+          - textbox "Date From:" [ref=e44]: 2026-03-10
+        - generic [ref=e45]:
+          - generic [ref=e46]: "Date To:"
+          - textbox "Date To:" [ref=e47]: 2026-04-09
+        - generic [ref=e48]:
+          - generic [ref=e49]: "Score Status:"
+          - combobox "Score Status:" [ref=e50]:
+            - option "All Submissions" [selected]
+            - option "Scored"
+            - option "Unscored"
+      - generic [ref=e51]:
+        - button "🔍 Apply Filters" [ref=e52] [cursor=pointer]
+        - button "🔄 Clear Filters" [ref=e53] [cursor=pointer]
+        - button "📊 Refresh Data" [ref=e54] [cursor=pointer]
+        - button "📤 Export CSV" [ref=e55] [cursor=pointer]
+        - button "📅 View by Date" [ref=e56] [cursor=pointer]
+        - button "📅 Today's Submissions" [ref=e57] [cursor=pointer]
+        - button "📝 Start Scoring" [ref=e58] [cursor=pointer]
+    - generic [ref=e59]:
+      - generic [ref=e60]:
+        - generic [ref=e61]: "0"
+        - generic [ref=e62]: Total Submissions
+      - generic [ref=e63]:
+        - generic [ref=e64]: "0"
+        - generic [ref=e65]: Filtered Results
+      - generic [ref=e66]:
+        - generic [ref=e67]: "0"
+        - generic [ref=e68]: Average Score
+      - generic [ref=e69]:
+        - generic [ref=e70]: "0"
+        - generic [ref=e71]: Unique Students
+      - generic [ref=e72]:
+        - generic [ref=e73]: "0"
+        - generic [ref=e74]: Needs Scoring
+      - generic [ref=e75]:
+        - generic [ref=e76]: "0"
+        - generic [ref=e77]: Speaking Tests
+      - generic [ref=e78]:
+        - generic [ref=e79]: 0%
+        - generic [ref=e80]: Scoring Progress
+    - generic [ref=e82] [cursor=pointer]:
+      - generic [ref=e83]: 📝 Manage Cambridge Answer Keys
+      - generic [ref=e84]: ▼
+    - heading "Cambridge Test Submissions" [level=2] [ref=e85]
+    - generic [ref=e87]: Loading submissions...

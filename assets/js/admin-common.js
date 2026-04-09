@@ -578,10 +578,10 @@ class AdminDashboard {
     }
 
     setupModalCloseOnOutsideClick() {
-        window.onclick = (event) => {
+        window.addEventListener('click', (event) => {
             const modal = document.getElementById('answerModal');
             if (event.target === modal) this.closeModal();
-        };
+        });
     }
 
     // ------------------------------------------------------------------
@@ -681,7 +681,7 @@ class AdminDashboard {
     // ------------------------------------------------------------------
 
     startAutoRefresh(intervalMs = 60000) {
-        setInterval(() => {
+        this.autoRefreshInterval = setInterval(() => {
             if (this.authToken && document.getElementById('adminContent').style.display !== 'none') {
                 this.loadSubmissions();
             }

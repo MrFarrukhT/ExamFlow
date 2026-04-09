@@ -391,6 +391,26 @@ body[data-c1-layout="split-writing"]
     margin-right: 6px;
 }
 
+/* === Single-question pagination (Part 4) ====================
+   The official Cambridge Part 4 (Key word transformation) shows
+   ONE question at a time, with the bottom nav (25 26 27 28 29 30)
+   used to switch between them. Hide every question wrapper that
+   isn't .c1-active-q. Companion JS:
+     assets/js/cambridge/cambridge-c1-question-nav.js
+   ============================================================ */
+body[data-c1-layout="single-question"]
+  #sectionContent
+  .QuestionDisplay__questionDisplayWrapper___1n_b0:not(.c1-active-q) {
+    display: none !important;
+}
+/* Give the active question some breathing room so the page
+   doesn't feel cramped, matching the empty-bottom look in 4.png */
+body[data-c1-layout="single-question"]
+  #sectionContent
+  .QuestionDisplay__questionDisplayWrapper___1n_b0.c1-active-q {
+    min-height: 380px;
+}
+
 /* === Part 7 — gapped text with paragraph bank sidebar ====== */
 .container.generic.c1-gap-layout,
 .c1-gap-layout {
