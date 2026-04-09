@@ -2,8 +2,15 @@
 // ADR-020: Extracted from cambridge-database-server.js to share across both servers
 
 /**
- * Validate a score value (integer, 0-200 range).
+ * Validate a score value (integer, 0-100 range).
  * Returns { valid, error?, value? } where value is the parsed integer.
+ *
+ * Range note: 100 is a safety net, NOT a per-skill cap. Real Cambridge raw maxes
+ * top out around 90 (C1-Advanced); IELTS raw is 0-40. R27 lowered the upper bound
+ * from 200 → 100 because admin /cambridge-submissions/:id/score was accepting 200
+ * for B2-First reading (real max ≈ 75), enabling fraudulent grading. The endpoint
+ * SHOULD enforce a per-level/skill cap on top of this; this function only catches
+ * the most egregious values.
  */
 export function validateScore(score) {
     if (score === null || score === undefined || score === '') {
@@ -13,8 +20,8 @@ export function validateScore(score) {
     if (!Number.isInteger(parsed)) {
         return { valid: false, error: 'Score must be an integer' };
     }
-    if (parsed < 0 || parsed > 200) {
-        return { valid: false, error: 'Score must be between 0 and 200' };
+    if (parsed < 0 || parsed > 100) {
+        return { valid: false, error: 'Score must be between 0 and 100' };
     }
     return { valid: true, value: parsed };
 }

@@ -159,8 +159,51 @@
     });
   }
 
+  /* Bookmark / flag button injection — Parts 5, 6, 8 already
+     ship with `.question-margin.right` siblings holding a bookmark
+     button per question (the official Inspera UI keeps these on
+     the right gutter so candidates can flag items to revisit).
+     Parts 1, 2, 3, 4, 7 shipped without them. Inject one per
+     question wrapper that doesn't already have a flag sibling.
+     The button is non-functional (no real flag persistence in
+     this static clone) but it visually matches the official
+     screenshots and the existing CSS styles it correctly. */
+  function injectFlagButtons() {
+    var wrappers = document.querySelectorAll(
+      '#sectionContent .QuestionDisplay__questionDisplayWrapper___1n_b0'
+    );
+    Array.prototype.forEach.call(wrappers, function (wrapper) {
+      // Skip if a flag sibling already exists inside the wrapper
+      if (wrapper.querySelector('.QuestionDisplay__visibleFlag___AmAom')) return;
+      // Build the gutter container + button
+      var num = wrapperOrderNumber(wrapper);
+      var gutter = document.createElement('div');
+      gutter.className = 'screen question-margin right no-title';
+      var btn = document.createElement('button');
+      btn.setAttribute('aria-pressed', 'false');
+      btn.className =
+        'QuestionDisplay__txtButton___3AYy9 QuestionDisplay__visibleFlag___AmAom';
+      btn.type = 'button';
+      btn.innerHTML =
+        '<i class="fa fa-bookmark-o" aria-hidden="true"></i>' +
+        '<span class="sr-only">Flag question' + (num != null ? ' ' + num : '') + '</span>';
+      // Visual-only toggle so the bookmark icon flips when clicked
+      btn.addEventListener('click', function () {
+        var pressed = btn.getAttribute('aria-pressed') === 'true';
+        btn.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+        var icon = btn.querySelector('i');
+        if (icon) {
+          icon.className = pressed ? 'fa fa-bookmark-o' : 'fa fa-bookmark';
+        }
+      });
+      gutter.appendChild(btn);
+      wrapper.appendChild(gutter);
+    });
+  }
+
   function init() {
     bindPopoverBadges();
+    injectFlagButtons();
     if (!isSingleQuestionPage()) return;
     var wrappers = getWrappers();
     if (!wrappers.length) return;

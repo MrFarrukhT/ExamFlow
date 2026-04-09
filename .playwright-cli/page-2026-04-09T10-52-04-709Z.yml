@@ -1,0 +1,205 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "header.logo"
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - status [ref=e11]: Connected
+            - generic [ref=e13]: 
+          - button "Messages" [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: Messages
+              - generic [ref=e17]: 
+          - button "Options" [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: Options
+              - generic [ref=e21]: 
+          - button "Show notes" [ref=e22]:
+            - generic [ref=e23]:
+              - generic [ref=e24]: Show notes
+              - generic [ref=e25]: 
+        - generic [ref=e28]:
+          - generic [ref=e29]: Candidate ID
+          - generic [ref=e30]: TEST001
+  - generic [ref=e34]:
+    - generic [ref=e36]:
+      - heading "Part 1 — Multiple-choice cloze (Questions 1–8)" [level=3] [ref=e37]
+      - generic [ref=e38]: For questions 1–8, read the text below and decide which answer (A, B, C or D) best fits each gap.
+    - generic [ref=e39]:
+      - main [ref=e40]:
+        - group [ref=e42]:
+          - generic [ref=e47]:
+            - heading "Bridges for wildlife" [level=2] [ref=e48]
+            - paragraph [ref=e49]:
+              - text: The act of annual migration is common to many species. They migrate towards more
+              - generic [ref=e50]:
+                - generic: "1"
+                - combobox "Answer for gap 1" [ref=e51]:
+                  - option "—" [selected]
+                  - option "A – supportive"
+                  - option "B – favourable"
+                  - option "C – hopeful"
+                  - option "D – worthwhile"
+              - text: climates, or return to breeding sites and feeding grounds. Roads and traffic, however, can
+              - generic [ref=e52]:
+                - generic: "2"
+                - combobox "Answer for gap 2" [ref=e53]:
+                  - option "—" [selected]
+                  - option "A – raise"
+                  - option "B – pose"
+                  - option "C – create"
+                  - option "D – establish"
+              - text: a significant threat to some species' survival. To
+              - generic [ref=e54]:
+                - generic: "3"
+                - combobox "Answer for gap 3" [ref=e55]:
+                  - option "—" [selected]
+                  - option "A – address"
+                  - option "B – oppose"
+                  - option "C – challenge"
+                  - option "D – approach"
+              - text: this problem, environmentalists and engineers around the world have put their heads together to devise 'wildlife bridges'.
+            - paragraph [ref=e56]:
+              - text: In Canada, grizzly bears, wolverines and toads are just a few of the species
+              - generic [ref=e57]:
+                - generic: "4"
+                - combobox "Answer for gap 4" [ref=e58]:
+                  - option "—" [selected]
+                  - option "A – putting"
+                  - option "B – gaining"
+                  - option "C – making"
+                  - option "D – getting"
+              - text: use of grass-covered, cement bridges that cross the Trans-Canada Highway.
+              - generic [ref=e59]:
+                - generic: "5"
+                - combobox "Answer for gap 5" [ref=e60]:
+                  - option "—" [selected]
+                  - option "A – Respectively"
+                  - option "B – Comparably"
+                  - option "C – Similarly"
+                  - option "D – Correspondingly"
+              - text: ", on Australia's Christmas Island, a five-metre-high bridge across a busy road enables red crabs to pass safely from the rainforest to the ocean. The bridge has significantly reduced their casualty"
+              - generic [ref=e61]:
+                - generic: "6"
+                - combobox "Answer for gap 6" [ref=e62]:
+                  - option "—" [selected]
+                  - option "A – quota"
+                  - option "B – percentage"
+                  - option "C – scale"
+                  - option "D – rate"
+              - text: and averted traffic chaos.
+            - paragraph [ref=e63]:
+              - text: In Sweden, plans are being
+              - generic [ref=e64]:
+                - generic: "7"
+                - combobox "Answer for gap 7" [ref=e65]:
+                  - option "—" [selected]
+                  - option "A – shown"
+                  - option "B – backed"
+                  - option "C – drawn"
+                  - option "D – worked"
+              - text: up for a series of bridges across a main highway, which will allow the country's 250,000 reindeer to reach the mountains. Engineers must take
+              - generic [ref=e66]:
+                - generic: "8"
+                - combobox "Answer for gap 8" [ref=e67]:
+                  - option "—" [selected]
+                  - option "A – advantage"
+                  - option "B – account"
+                  - option "C – control"
+                  - option "D – effect"
+              - text: of the fact that reindeer are easily frightened by traffic, and so make the bridge walls high enough to prevent the deer from jumping off.
+      - button "Flag question" [ref=e70]:
+        - generic [ref=e71]: 
+        - generic [ref=e72]: Flag question
+  - contentinfo [ref=e74]:
+    - navigation "Previous / next question" [ref=e75]:
+      - button "Previous" [disabled] [ref=e76]:
+        - generic [ref=e77]: 
+      - button "Next" [ref=e78]:
+        - generic [ref=e79]: 
+    - navigation "Questions" [ref=e80]:
+      - tablist [ref=e81]:
+        - tab "Part 1. 0 of 8 questions attempted." [ref=e82]:
+          - generic [ref=e83]:
+            - text: Part 1
+            - generic [ref=e84]: 0 of 8
+            - generic [ref=e85]: Part 1. 0 of 8 questions attempted.
+        - generic [ref=e86]:
+          - button "Question 1 Not attempted Active" [ref=e87]:
+            - generic [ref=e88]: Question 1
+            - text: "1"
+            - generic [ref=e89]: Not attempted Active
+          - button "Question 2 Not attempted" [ref=e90]:
+            - generic [ref=e91]: Question 2
+            - text: "2"
+            - generic [ref=e92]: Not attempted
+          - button "Question 3 Not attempted" [ref=e93]:
+            - generic [ref=e94]: Question 3
+            - text: "3"
+            - generic [ref=e95]: Not attempted
+          - button "Question 4 Not attempted" [ref=e96]:
+            - generic [ref=e97]: Question 4
+            - text: "4"
+            - generic [ref=e98]: Not attempted
+          - button "Question 5 Not attempted" [ref=e99]:
+            - generic [ref=e100]: Question 5
+            - text: "5"
+            - generic [ref=e101]: Not attempted
+          - button "Question 6 Not attempted" [ref=e102]:
+            - generic [ref=e103]: Question 6
+            - text: "6"
+            - generic [ref=e104]: Not attempted
+          - button "Question 7 Not attempted" [ref=e105]:
+            - generic [ref=e106]: Question 7
+            - text: "7"
+            - generic [ref=e107]: Not attempted
+          - button "Question 8 Not attempted" [ref=e108]:
+            - generic [ref=e109]: Question 8
+            - text: "8"
+            - generic [ref=e110]: Not attempted
+      - tablist [ref=e111]:
+        - tab "Part 2. 0 of 8 questions attempted." [ref=e112]:
+          - generic [ref=e113]:
+            - text: Part 2
+            - generic [ref=e114]: 0 of 8
+            - generic [ref=e115]: Part 2. 0 of 8 questions attempted.
+      - tablist [ref=e116]:
+        - tab "Part 3. 0 of 8 questions attempted." [ref=e117]:
+          - generic [ref=e118]:
+            - text: Part 3
+            - generic [ref=e119]: 0 of 8
+            - generic [ref=e120]: Part 3. 0 of 8 questions attempted.
+      - tablist [ref=e121]:
+        - tab "Part 4. 0 of 6 questions attempted." [ref=e122]:
+          - generic [ref=e123]:
+            - text: Part 4
+            - generic [ref=e124]: 0 of 6
+            - generic [ref=e125]: Part 4. 0 of 6 questions attempted.
+      - tablist [ref=e126]:
+        - tab "Part 5. 0 of 6 questions attempted." [ref=e127]:
+          - generic [ref=e128]:
+            - text: Part 5
+            - generic [ref=e129]: 0 of 6
+            - generic [ref=e130]: Part 5. 0 of 6 questions attempted.
+      - tablist [ref=e131]:
+        - tab "Part 6. 0 of 4 questions attempted." [ref=e132]:
+          - generic [ref=e133]:
+            - text: Part 6
+            - generic [ref=e134]: 0 of 4
+            - generic [ref=e135]: Part 6. 0 of 4 questions attempted.
+      - tablist [ref=e136]:
+        - tab "Part 7. 0 of 6 questions attempted." [ref=e137]:
+          - generic [ref=e138]:
+            - text: Part 7
+            - generic [ref=e139]: 0 of 6
+            - generic [ref=e140]: Part 7. 0 of 6 questions attempted.
+      - tablist [ref=e141]:
+        - tab "Part 8. 0 of 10 questions attempted." [ref=e142]:
+          - generic [ref=e143]:
+            - text: Part 8
+            - generic [ref=e144]: 0 of 10
+            - generic [ref=e145]: Part 8. 0 of 10 questions attempted.
+      - button "Review your answers" [ref=e146]:
+        - generic [ref=e147]: 

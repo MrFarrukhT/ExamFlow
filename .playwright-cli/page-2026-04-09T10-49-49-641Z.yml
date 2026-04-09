@@ -1,0 +1,270 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "header.logo"
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - status [ref=e11]: Connected
+            - generic [ref=e13]: 
+          - button "Messages" [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: Messages
+              - generic [ref=e17]: 
+          - button "Options" [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: Options
+              - generic [ref=e21]: 
+          - button "Show notes" [ref=e22]:
+            - generic [ref=e23]:
+              - generic [ref=e24]: Show notes
+              - generic [ref=e25]: 
+        - generic [ref=e28]:
+          - generic [ref=e29]: Candidate ID
+          - generic [ref=e30]: TEST001
+  - generic [ref=e34]:
+    - generic [ref=e36]:
+      - heading "Part 5 — Multiple choice (Questions 31–36)" [level=3] [ref=e37]
+      - generic [ref=e38]: You are going to read a newspaper article about how athletes cope with stress. For questions 31–36, choose the answer (A, B, C or D) which you think fits best according to the text.
+    - main [ref=e40]:
+      - group [ref=e42]:
+        - generic [ref=e47]:
+          - heading "Athletes under extreme pressure sometimes can’t perform. This is called ‘choking’, but why does it happen?" [level=2] [ref=e48]
+          - paragraph [ref=e49]: Cricket is a simple game played with a ball and a bat. One player runs up and bowls the ball towards a player from the opposing team, who tries to hit it. This should be relatively straightforward, but when Scott Boswell stood at the start of his bowling run-up at the 2001 English cricket cup final, he froze, unable to do the very thing he had been practising for years, uncomprehending as to what this incapacitating sensation was. It should have been the highlight of his career, but trepidation had been flowing through him since he’d found out he’d been selected. It had been touch and go — his man-of-the-match performance in the semi-final had earned him the right to play, but Boswell had lost form in the intervening three weeks, and his place had become less secure. At 10 p.m. the night before, the coach had asked Boswell whether he was up for it — the seed of doubt had been planted.
+          - paragraph [ref=e50]: Sports anxiety is a reaction to pressure in a match, and an athlete’s failure to manage it at a crucial moment can lead to a catastrophic drop in performance. The symptoms of anxiety are psychological — worry and fear — and physiological — including sweaty palms and an increased heart rate. This is something we might all go through, but it is clear we mere amateurs experience something which lacks the same dreadful intensity. Anxiety uses up attention and working memory, hindering performance. Athletes find themselves overthinking normally automatic processes. All this can result in an athlete ‘choking’ and this was Boswell’s experience.
+          - paragraph [ref=e51]: When non-elite athletes get anxious, it hampers their performance. In the last 30 seconds of tight basketball games players are 5.8% less likely to score than at other moments in the game. However, elite athletes manage to channel the anxiety they feel positively. They are also more adept at brushing off disappointments during competition. The champion golfer Annika Sorenstam jokes that she never hit a bad shot in her life because she doesn’t dwell on them. Lesser players can be consumed by a blunder, but Sorenstam quickly grasps what’s happened, files it away at the back of her mind, then gets on with the business of trying to repair the damage.
+          - paragraph [ref=e52]: Anxiety doesn’t just affect individuals. In everyday life, people can suffer by dint of simply being assigned to a collective in terms of, for example, age or gender. In sport, the team you play on can have a similar effect. In one study on stereotyping, scientists asked older and younger people to do some tasks that tested memory and the data produced revealed some fascinating insights into how we act. Some older participants were told that older and younger people did equally well on the tasks; others that younger people did better. When older people were told that they were just as capable as younger people, they subsequently achieved scores similar to the young people in the study. When they were told that they tended to do worse, they indeed did worse on the tasks. One sporting example of this ‘stereotype effect’ is provided by the South African cricket team. Between 1999 and 2017, South Africa played 19 major international tournaments and never qualified for a final. It was hard to deny that at crucial moments mistakes were consistently made which were explicable only by reference to a collective form of choking, the fact that they were playing together in a particular group.
+          - paragraph [ref=e53]: So if anxiety in sport is such a pervasive factor, affecting individuals and groups alike, what can be done to remedy it? While some athletes are gifted with innate psychological advantages, there’s nothing to suggest that coaches can’t enable all players to benefit by employing a few simple ideas. It is often said that nothing can exactly equal the high stress of the biggest moments in matches. This notwithstanding, more pressurised realistic coaching can help athletes begin to cope with pressure on the field. A consequence of this will be that coaching can also help players develop a series of automatic reactions under pressure, without making them less alert to the unexpected, so they don’t need to think consciously and worry about their actions.
+    - main [ref=e56]:
+      - generic [ref=e57]:
+        - group [ref=e58]:
+          - radiogroup "31 When describing Boswell’s problem in the first paragraph, the writer suggests that Boswell" [ref=e64]:
+            - paragraph [ref=e66]:
+              - generic [ref=e67]: "31"
+              - strong [ref=e69]: When describing Boswell’s problem in the first paragraph, the writer suggests that Boswell
+            - list [ref=e70]:
+              - listitem [ref=e71]:
+                - radio "hadn’t been worried about playing in the match." [ref=e72]
+                - generic [ref=e74]: hadn’t been worried about playing in the match.
+              - listitem [ref=e75]:
+                - radio "had suffered similar issues in the past." [ref=e76]
+                - generic [ref=e78]: had suffered similar issues in the past.
+              - listitem [ref=e79]:
+                - radio "didn’t want to let his coach down." [ref=e80]
+                - generic [ref=e82]: didn’t want to let his coach down.
+              - listitem [ref=e83]:
+                - radio "was unsure what was happening." [ref=e84]
+                - generic [ref=e86]: was unsure what was happening.
+            - button "Flag question 31":
+              - generic [ref=e87]: Flag question 31
+        - button "Flag question 31" [ref=e90]:
+          - generic: 
+          - generic [ref=e91]: Flag question 31
+    - main [ref=e93]:
+      - generic [ref=e94]:
+        - group [ref=e95]:
+          - radiogroup "32 What is the writer’s purpose in the second paragraph?" [ref=e101]:
+            - paragraph [ref=e103]:
+              - generic [ref=e104]: "32"
+              - strong [ref=e106]: What is the writer’s purpose in the second paragraph?
+            - list [ref=e107]:
+              - listitem [ref=e108]:
+                - radio "to summarise an argument" [ref=e109]
+                - generic [ref=e111]: to summarise an argument
+              - listitem [ref=e112]:
+                - radio "to elaborate on a condition" [ref=e113]
+                - generic [ref=e115]: to elaborate on a condition
+              - listitem [ref=e116]:
+                - radio "to explain his attitude" [ref=e117]
+                - generic [ref=e119]: to explain his attitude
+              - listitem [ref=e120]:
+                - radio "to provide an example" [ref=e121]
+                - generic [ref=e123]: to provide an example
+            - button "Flag question 32":
+              - generic [ref=e124]: Flag question 32
+        - button "Flag question 32" [ref=e127]:
+          - generic: 
+          - generic [ref=e128]: Flag question 32
+    - main [ref=e130]:
+      - generic [ref=e131]:
+        - group [ref=e132]:
+          - radiogroup "33 Which of these words in the second paragraph is used dismissively?" [ref=e138]:
+            - paragraph [ref=e140]:
+              - generic [ref=e141]: "33"
+              - strong [ref=e143]: Which of these words in the second paragraph is used dismissively?
+            - list [ref=e144]:
+              - listitem [ref=e145]:
+                - radio "catastrophic" [ref=e146]
+                - generic [ref=e148]: catastrophic
+              - listitem [ref=e149]:
+                - radio "mere" [ref=e150]
+                - generic [ref=e152]: mere
+              - listitem [ref=e153]:
+                - radio "dreadful" [ref=e154]
+                - generic [ref=e156]: dreadful
+              - listitem [ref=e157]:
+                - radio "automatic" [ref=e158]
+                - generic [ref=e160]: automatic
+            - button "Flag question 33":
+              - generic [ref=e161]: Flag question 33
+        - button "Flag question 33" [ref=e164]:
+          - generic: 
+          - generic [ref=e165]: Flag question 33
+    - main [ref=e167]:
+      - generic [ref=e168]:
+        - group [ref=e169]:
+          - radiogroup "34 In the third paragraph, the writer stresses that elite athletes can" [ref=e175]:
+            - paragraph [ref=e177]:
+              - generic [ref=e178]: "34"
+              - strong [ref=e180]: In the third paragraph, the writer stresses that elite athletes can
+            - list [ref=e181]:
+              - listitem [ref=e182]:
+                - radio "play just as poorly under pressure as non-elite athletes." [ref=e183]
+                - generic [ref=e185]: play just as poorly under pressure as non-elite athletes.
+              - listitem [ref=e186]:
+                - radio "access higher levels of self-confidence than non-elite athletes." [ref=e187]
+                - generic [ref=e189]: access higher levels of self-confidence than non-elite athletes.
+              - listitem [ref=e190]:
+                - radio "cope with their mistakes differently from non-elite athletes." [ref=e191]
+                - generic [ref=e193]: cope with their mistakes differently from non-elite athletes.
+              - listitem [ref=e194]:
+                - radio "analyse their errors more carefully than non-elite athletes." [ref=e195]
+                - generic [ref=e197]: analyse their errors more carefully than non-elite athletes.
+            - button "Flag question 34":
+              - generic [ref=e198]: Flag question 34
+        - button "Flag question 34" [ref=e201]:
+          - generic: 
+          - generic [ref=e202]: Flag question 34
+    - main [ref=e204]:
+      - generic [ref=e205]:
+        - group [ref=e206]:
+          - radiogroup "35 In the fourth paragraph, the writer mentions a study in order to highlight that" [ref=e212]:
+            - paragraph [ref=e214]:
+              - generic [ref=e215]: "35"
+              - strong [ref=e217]: In the fourth paragraph, the writer mentions a study in order to highlight that
+            - list [ref=e218]:
+              - listitem [ref=e219]:
+                - radio "sports teams can overcome a collective form of nervousness." [ref=e220]
+                - generic [ref=e222]: sports teams can overcome a collective form of nervousness.
+              - listitem [ref=e223]:
+                - radio "performance can be negatively affected by inclusion in a group." [ref=e224]
+                - generic [ref=e226]: performance can be negatively affected by inclusion in a group.
+              - listitem [ref=e227]:
+                - radio "statistics can be a powerful tool for analysing behaviour." [ref=e228]
+                - generic [ref=e230]: statistics can be a powerful tool for analysing behaviour.
+              - listitem [ref=e231]:
+                - radio "pressure can affect areas of experience outside sport." [ref=e232]
+                - generic [ref=e234]: pressure can affect areas of experience outside sport.
+            - button "Flag question 35":
+              - generic [ref=e235]: Flag question 35
+        - button "Flag question 35" [ref=e238]:
+          - generic: 
+          - generic [ref=e239]: Flag question 35
+    - main [ref=e241]:
+      - generic [ref=e242]:
+        - group [ref=e243]:
+          - radiogroup "36 What does the writer say is key to helping sportspeople overcome anxiety?" [ref=e249]:
+            - paragraph [ref=e251]:
+              - generic [ref=e252]: "36"
+              - strong [ref=e254]: What does the writer say is key to helping sportspeople overcome anxiety?
+            - list [ref=e255]:
+              - listitem [ref=e256]:
+                - radio "drawing on a player’s natural resources of calm" [ref=e257]
+                - generic [ref=e259]: drawing on a player’s natural resources of calm
+              - listitem [ref=e260]:
+                - radio "helping players learn relaxation techniques" [ref=e261]
+                - generic [ref=e263]: helping players learn relaxation techniques
+              - listitem [ref=e264]:
+                - radio "making players realise that change is their responsibility" [ref=e265]
+                - generic [ref=e267]: making players realise that change is their responsibility
+              - listitem [ref=e268]:
+                - radio "exposing players to authentic match conditions in training" [ref=e269]
+                - generic [ref=e271]: exposing players to authentic match conditions in training
+            - button "Flag question 36":
+              - generic [ref=e272]: Flag question 36
+        - button "Flag question 36" [ref=e275]:
+          - generic: 
+          - generic [ref=e276]: Flag question 36
+  - contentinfo [ref=e278]:
+    - navigation "Previous / next question" [ref=e279]:
+      - button "Previous" [ref=e280]:
+        - generic [ref=e281]: 
+      - button "Next" [ref=e282]:
+        - generic [ref=e283]: 
+    - navigation "Questions" [ref=e284]:
+      - tablist [ref=e285]:
+        - tab "Part 1. 0 of 8 questions attempted." [ref=e286]:
+          - generic [ref=e287]:
+            - text: Part 1
+            - generic [ref=e288]: 0 of 8
+            - generic [ref=e289]: Part 1. 0 of 8 questions attempted.
+      - tablist [ref=e290]:
+        - tab "Part 2. 0 of 8 questions attempted." [ref=e291]:
+          - generic [ref=e292]:
+            - text: Part 2
+            - generic [ref=e293]: 0 of 8
+            - generic [ref=e294]: Part 2. 0 of 8 questions attempted.
+      - tablist [ref=e295]:
+        - tab "Part 3. 0 of 8 questions attempted." [ref=e296]:
+          - generic [ref=e297]:
+            - text: Part 3
+            - generic [ref=e298]: 0 of 8
+            - generic [ref=e299]: Part 3. 0 of 8 questions attempted.
+      - tablist [ref=e300]:
+        - tab "Part 4. 0 of 6 questions attempted." [ref=e301]:
+          - generic [ref=e302]:
+            - text: Part 4
+            - generic [ref=e303]: 0 of 6
+            - generic [ref=e304]: Part 4. 0 of 6 questions attempted.
+      - tablist [ref=e305]:
+        - tab "Part 5. 0 of 6 questions attempted." [ref=e306]:
+          - generic [ref=e307]:
+            - text: Part 5
+            - generic [ref=e308]: 0 of 6
+            - generic [ref=e309]: Part 5. 0 of 6 questions attempted.
+        - generic [ref=e310]:
+          - button "Question 31 Not attempted Active" [ref=e311]:
+            - generic [ref=e312]: Question 31
+            - text: "31"
+            - generic [ref=e313]: Not attempted Active
+          - button "Question 32 Not attempted" [ref=e314]:
+            - generic [ref=e315]: Question 32
+            - text: "32"
+            - generic [ref=e316]: Not attempted
+          - button "Question 33 Not attempted" [ref=e317]:
+            - generic [ref=e318]: Question 33
+            - text: "33"
+            - generic [ref=e319]: Not attempted
+          - button "Question 34 Not attempted" [ref=e320]:
+            - generic [ref=e321]: Question 34
+            - text: "34"
+            - generic [ref=e322]: Not attempted
+          - button "Question 35 Not attempted" [ref=e323]:
+            - generic [ref=e324]: Question 35
+            - text: "35"
+            - generic [ref=e325]: Not attempted
+          - button "Question 36 Not attempted" [ref=e326]:
+            - generic [ref=e327]: Question 36
+            - text: "36"
+            - generic [ref=e328]: Not attempted
+      - tablist [ref=e329]:
+        - tab "Part 6. 0 of 4 questions attempted." [ref=e330]:
+          - generic [ref=e331]:
+            - text: Part 6
+            - generic [ref=e332]: 0 of 4
+            - generic [ref=e333]: Part 6. 0 of 4 questions attempted.
+      - tablist [ref=e334]:
+        - tab "Part 7. 0 of 6 questions attempted." [ref=e335]:
+          - generic [ref=e336]:
+            - text: Part 7
+            - generic [ref=e337]: 0 of 6
+            - generic [ref=e338]: Part 7. 0 of 6 questions attempted.
+      - tablist [ref=e339]:
+        - tab "Part 8. 0 of 10 questions attempted." [ref=e340]:
+          - generic [ref=e341]:
+            - text: Part 8
+            - generic [ref=e342]: 0 of 10
+            - generic [ref=e343]: Part 8. 0 of 10 questions attempted.
+      - button "Review your answers" [ref=e344]:
+        - generic [ref=e345]: 

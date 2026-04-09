@@ -1,0 +1,46 @@
+- generic [ref=e2]:
+  - navigation [ref=e3]:
+    - link "Submissions" [ref=e4] [cursor=pointer]:
+      - /url: cambridge-admin-dashboard.html
+    - link "Student Results" [ref=e5] [cursor=pointer]:
+      - /url: cambridge-student-results.html
+    - link "Speaking Evaluations" [ref=e6] [cursor=pointer]:
+      - /url: cambridge-speaking-evaluations.html
+    - link "Invigilator Panel" [ref=e7] [cursor=pointer]:
+      - /url: invigilator.html
+  - generic [ref=e8]:
+    - heading "🎤 Cambridge Speaking Test Evaluations" [level=1] [ref=e9]
+    - paragraph [ref=e10]: Review student speaking test recordings and provide evaluations
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e13]: "Level:"
+        - combobox [ref=e14] [cursor=pointer]:
+          - option "All Levels" [selected]
+          - option "A1 Movers"
+          - option "A2 Key"
+          - option "B1 Preliminary"
+          - option "B2 First"
+      - generic [ref=e15]:
+        - generic [ref=e16]: "Status:"
+        - combobox [ref=e17] [cursor=pointer]:
+          - option "All" [selected]
+          - option "Pending Evaluation"
+          - option "Evaluated"
+      - generic [ref=e18]:
+        - generic [ref=e19]: "Mock Test:"
+        - combobox [ref=e20] [cursor=pointer]:
+          - option "All Tests" [selected]
+          - option "Mock 1"
+          - option "Mock 2"
+          - option "Mock 3"
+      - button "🔄 Refresh" [ref=e21] [cursor=pointer]
+  - generic [ref=e23]:
+    - generic [ref=e24]:
+      - heading "Total Submissions" [level=4] [ref=e25]
+      - paragraph [ref=e26]: "0"
+    - generic [ref=e27]:
+      - heading "Pending" [level=4] [ref=e28]
+      - paragraph [ref=e29]: "0"
+    - generic [ref=e30]:
+      - heading "Evaluated" [level=4] [ref=e31]
+      - paragraph [ref=e32]: "0"

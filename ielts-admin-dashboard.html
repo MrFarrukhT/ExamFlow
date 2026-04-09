@@ -159,30 +159,34 @@
                 </div>
             </div>
 
-            <!-- Statistics -->
+            <!-- Statistics —
+                 Initial values are em-dashes, not zeros, so the cards visibly read "loading"
+                 instead of looking like a real "0 submissions / 0 students" state during the
+                 half-second between page paint and the /submissions fetch resolving. updateStats()
+                 overwrites these on every load. -->
             <div class="stats-grid" id="statsGrid">
                 <div class="stat-card">
-                    <div class="stat-value" id="totalSubmissions">0</div>
+                    <div class="stat-value" id="totalSubmissions">—</div>
                     <div class="stat-label">Total Submissions</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value" id="filteredSubmissions">0</div>
+                    <div class="stat-value" id="filteredSubmissions">—</div>
                     <div class="stat-label">Filtered Results</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value" id="averageScore">0</div>
+                    <div class="stat-value" id="averageScore">—</div>
                     <div class="stat-label">Average Score</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value" id="totalStudents">0</div>
+                    <div class="stat-value" id="totalStudents">—</div>
                     <div class="stat-label">Unique Students</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value" id="unscoredCount">0</div>
+                    <div class="stat-value" id="unscoredCount">—</div>
                     <div class="stat-label">Needs Scoring</div>
                 </div>
                 <div class="stat-card" style="background:linear-gradient(135deg,#27ae60,#1e8449);">
-                    <div class="stat-value" id="scoringProgress">0%</div>
+                    <div class="stat-value" id="scoringProgress">—</div>
                     <div class="stat-label">Scoring Progress</div>
                 </div>
             </div>

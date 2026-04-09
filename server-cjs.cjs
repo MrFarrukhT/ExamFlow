@@ -81,7 +81,9 @@ function validateScore(score) {
     if (score === null || score === undefined || score === '') return { valid: true };
     const parsed = Number(score);
     if (!Number.isInteger(parsed)) return { valid: false, error: 'Score must be an integer' };
-    if (parsed < 0 || parsed > 200) return { valid: false, error: 'Score must be between 0 and 200' };
+    // R27: lowered from 200 to 100. Real Cambridge raw maxes top out around 90; IELTS is 0-40.
+    // 200 was permitting fraudulent admin grading like B2-First reading score=200 (real max ≈ 75).
+    if (parsed < 0 || parsed > 100) return { valid: false, error: 'Score must be between 0 and 100' };
     return { valid: true, value: parsed };
 }
 

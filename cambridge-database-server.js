@@ -910,6 +910,17 @@ app.patch('/cambridge-submissions/:id/evaluate', requireAdmin, async (req, res) 
         const sanitizedEvaluatorName = stripHtmlTags(evaluatorName);
         const sanitizedEvaluationNotes = stripHtmlTags(evaluationNotes);
 
+        // R27: enforce length caps at the application layer. Without this, PG raises a
+        // 500 with the raw schema error "value too long for type character varying(200)"
+        // leaking the column type. evaluator_name maps to varchar(200); evaluation_notes
+        // is TEXT but capped at 5000 to keep response payloads sane.
+        if (typeof sanitizedEvaluatorName === 'string' && sanitizedEvaluatorName.length > 200) {
+            return res.status(400).json({ success: false, message: 'evaluatorName must be at most 200 characters' });
+        }
+        if (typeof sanitizedEvaluationNotes === 'string' && sanitizedEvaluationNotes.length > 5000) {
+            return res.status(400).json({ success: false, message: 'evaluationNotes must be at most 5000 characters' });
+        }
+
         console.log(`🎤 Evaluating speaking test ${submissionId} by ${sanitizedEvaluatorName}: ${score}, Grade: ${grade || 'N/A'}`);
 
         const dbClient = await ensureConnection();
@@ -1263,6 +1274,20 @@ app.patch('/cambridge-student-results/:id', requireAdmin, async (req, res) => {
         if (data.student_name != null) data.student_name = stripHtmlTags(String(data.student_name).trim());
         if (data.student_id != null) data.student_id = String(data.student_id).trim();
         if (data.cefr_level != null) data.cefr_level = stripHtmlTags(String(data.cefr_level));
+
+        // R27: enforce length caps at the application layer (sibling drift fix —
+        // POST endpoint already has these). Without this, PG raises a 500 with the
+        // raw schema error "value too long for type character varying(200)" leaking
+        // the column type back to the client.
+        if (data.student_id != null && data.student_id.length > 200) {
+            return res.status(400).json({ success: false, message: 'Student ID must be at most 200 characters' });
+        }
+        if (data.student_name != null && data.student_name.length > 200) {
+            return res.status(400).json({ success: false, message: 'Student name must be at most 200 characters' });
+        }
+        if (data.cefr_level != null && data.cefr_level.length > 50) {
+            return res.status(400).json({ success: false, message: 'CEFR level must be at most 50 characters' });
+        }
 
         // Validate level if provided
         if (data.level && !VALID_LEVELS.includes(data.level)) {
