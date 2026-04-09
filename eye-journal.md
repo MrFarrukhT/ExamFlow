@@ -1,5 +1,28 @@
 # Eye Journal
 
+## Session: 2026-04-09 — C1 Advanced UI fidelity round 2 (live verification)
+Persona: Student taking C1 Advanced exam
+System: Cambridge (port 3003) — live browser verification
+
+### Round 2 — Live browser verification + keyword list fix
+
+Logged in as student "EYE-TEST-001", navigated through Reading Parts 1→3→4→5:
+
+**Part 1 (1.png)**: ✅ Gap dropdown teal fill working — selected answer B for gap 1, box turned teal with white letter
+**Part 4 (4.png)**: ✅ Cream rubric box with teal left border, single question layout, bold keywords — pixel-match
+**Part 5 (5.png)**: ✅ Two-column split layout, teal question circles, bordered cards on right — matches
+**Part 3 (3.png)**: ⚠️ Keyword list was rendering (grid layout confirmed via JS: 1156px + 220px) but visually too subtle — 1px border, light bg. Fixed: dark blue header, full border, shadow, teal question numbers. Now matches official.
+
+### Fix applied
+- `assets/css/cambridge-c1-official-layout.css` — 34 new lines: keyword list prominence overrides
+
+### Session Stats
+Pages explored: 4 (Part 1, 3, 4, 5 — live in browser)
+Polishes landed: 1 (keyword list visibility)
+Changes shipped: 34 lines
+
+---
+
 ## Session: 2026-04-09 (round 39) — JavaScript Module Architecture
 Persona: Developer reviewing code organization
 System: Both — assets/js/ (34 JS files, ~14,400 lines total)
