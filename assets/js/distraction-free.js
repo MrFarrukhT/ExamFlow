@@ -295,8 +295,12 @@ class DistractionFreeMode {
         style.textContent = `
             .dfm-secure-badge {
                 position: fixed;
-                bottom: 14px;
-                left: 14px;
+                /* Universal safe zone: top-right just below the Cambridge Inspera
+                   header icon row (~50px), clear of the bottom-left listening
+                   audio popup, the bottom footer Part navigation, and the
+                   bottom-right Next button. Works at every viewport. */
+                top: 56px;
+                right: 14px;
                 z-index: 999990;
                 display: inline-flex;
                 align-items: center;
@@ -313,7 +317,7 @@ class DistractionFreeMode {
                 user-select: none;
                 pointer-events: none;
                 opacity: 0;
-                transform: translateY(8px);
+                transform: translateY(-8px);
                 animation: dfmBadgeIn 380ms cubic-bezier(.2,.8,.2,1) 600ms forwards;
             }
             .dfm-secure-dot {
