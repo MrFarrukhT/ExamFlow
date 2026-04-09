@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "lastRunAt": "2026-04-09T11:25:00Z",
-  "lastRunCommit": "26a8e55",
+  "lastRunAt": "2026-04-09T11:35:00Z",
+  "lastRunCommit": "95317ea",
   "runs": [
     {
       "id": "heal-2026-04-08-r1",
@@ -112,6 +112,16 @@
       "startedAt": "2026-04-09T11:21:00Z",
       "domains": ["frontend", "architecture"],
       "round": 11,
+      "fixed": 4,
+      "reverted": 0,
+      "deferred": 0
+    },
+    {
+      "id": "heal-2026-04-09-r12",
+      "type": "heal",
+      "startedAt": "2026-04-09T11:30:00Z",
+      "domains": ["frontend", "architecture"],
+      "round": 12,
       "fixed": 4,
       "reverted": 0,
       "deferred": 0
@@ -666,6 +676,24 @@
       "status": "fixed",
       "fixedInCommit": "26a8e55",
       "foundAt": "2026-04-09T11:21:00Z"
+    },
+    {
+      "fingerprint": "frontend:cambridge-bridge:setinterval-no-reference",
+      "severity": "HIGH",
+      "title": "Autosave setInterval ID not stored in cambridge-bridge.js (10s tick)",
+      "file": "assets/js/cambridge/cambridge-bridge.js",
+      "status": "fixed",
+      "fixedInCommit": "95317ea",
+      "foundAt": "2026-04-09T11:30:00Z"
+    },
+    {
+      "fingerprint": "architecture:css:dead-notification-badge",
+      "severity": "MEDIUM",
+      "title": "Dead .notification-badge CSS rule blocks in listening.css, reading.css, writing.css (4 blocks total, 65 lines)",
+      "file": "assets/css/listening.css, assets/css/reading.css, assets/css/writing.css",
+      "status": "fixed",
+      "fixedInCommit": "95317ea",
+      "foundAt": "2026-04-09T11:30:00Z"
     }
   ]
 }
