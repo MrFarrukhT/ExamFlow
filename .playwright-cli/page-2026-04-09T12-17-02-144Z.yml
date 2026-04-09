@@ -1,0 +1,190 @@
+- generic [ref=e1]:
+  - iframe [active] [ref=e2]:
+    - generic [ref=f1e4]:
+      - banner [ref=f1e5]:
+        - generic [ref=f1e6]:
+          - generic [ref=f1e7]:
+            - img "header.logo"
+          - generic [ref=f1e8]:
+            - generic [ref=f1e9]:
+              - generic [ref=f1e10]:
+                - status [ref=f1e11]: Connected
+                - generic [ref=f1e13]: 
+              - button "Messages" [ref=f1e14]:
+                - generic [ref=f1e15]:
+                  - generic [ref=f1e16]: Messages
+                  - generic [ref=f1e17]: 
+              - button "Options" [ref=f1e18]:
+                - generic [ref=f1e19]:
+                  - generic [ref=f1e20]: Options
+                  - generic [ref=f1e21]: 
+              - button "Show notes" [ref=f1e22]:
+                - generic [ref=f1e23]:
+                  - generic [ref=f1e24]: Show notes
+                  - generic [ref=f1e25]: 
+            - generic [ref=f1e28]:
+              - generic [ref=f1e29]: Candidate ID
+              - generic [ref=f1e30]: "0"
+      - generic [ref=f1e32]:
+        - generic [ref=f1e34]:
+          - generic [ref=f1e36]:
+            - heading "Questions 17–24" [level=3] [ref=f1e37]
+            - generic [ref=f1e38]: For each question, use the word in CAPITALS on the right to form a word that fits in the gap.
+          - main [ref=f1e40]:
+            - generic [ref=f1e41]:
+              - group [ref=f1e42]:
+                - generic [ref=f1e47]:
+                  - generic [ref=f1e48]:
+                    - heading "Hundreds of people rush to view a special bird" [level=2] [ref=f1e49]
+                    - paragraph [ref=f1e50]: Hundreds of birdwatchers recently rushed to a park in Washington DC, in the US, to catch a glimpse of a new arrival.
+                    - paragraph [ref=f1e51]:
+                      - text: Despite the
+                      - textbox "Insert answer for question 17" [ref=f1e55]:
+                        - /placeholder: "17"
+                      - text: low winter temperatures, people came out to see a Painted Bunting, a small, brightly coloured bird that usually spends the winter in the warmer climate of Florida. The bird was a male — highly distinctive with its brilliant blue head, red breast and flashes of green and red on its back.
+                    - paragraph [ref=f1e56]:
+                      - text: The bird's
+                      - textbox "Insert answer for question 18" [ref=f1e60]:
+                        - /placeholder: "18"
+                      - text: was announced on a birdwatchers' website and would have been
+                      - textbox "Insert answer for question 19" [ref=f1e64]:
+                        - /placeholder: "19"
+                      - text: just a few years ago. The
+                      - textbox "Insert answer for question 20" [ref=f1e68]:
+                        - /placeholder: "20"
+                      - text: sighting can probably be attributed to the
+                      - textbox "Insert answer for question 21" [ref=f1e72]:
+                        - /placeholder: "21"
+                      - text: that climate change is causing for hundreds of bird species.
+                    - paragraph [ref=f1e73]:
+                      - textbox "Insert answer for question 22" [ref=f1e77]:
+                        - /placeholder: "22"
+                      - text: species all over the world are being pushed towards cooler areas as conditions heat up, or are losing suitable habitats altogether. Researchers warn that two thirds of North American bird species are now at risk of extinction. However, thanks to reports from community scientists all across the country, data about bird populations and their locations can be
+                      - textbox "Insert answer for question 23" [ref=f1e81]:
+                        - /placeholder: "23"
+                      - text: on maps in real time, and conservation efforts planned
+                      - textbox "Insert answer for question 24" [ref=f1e85]:
+                        - /placeholder: "24"
+                      - text: .
+                  - complementary "Keyword List" [ref=f1e86]:
+                    - heading "Keyword List" [level=3] [ref=f1e87]
+                    - list [ref=f1e88]:
+                      - listitem [ref=f1e89]:
+                        - generic [ref=f1e90]: "17"
+                        - text: COMMON
+                      - listitem [ref=f1e91]:
+                        - generic [ref=f1e92]: "18"
+                        - text: PRESENT
+                      - listitem [ref=f1e93]:
+                        - generic [ref=f1e94]: "19"
+                        - text: THINK
+                      - listitem [ref=f1e95]:
+                        - generic [ref=f1e96]: "20"
+                        - text: EXCEPT
+                      - listitem [ref=f1e97]:
+                        - generic [ref=f1e98]: "21"
+                        - text: DISRUPT
+                      - listitem [ref=f1e99]:
+                        - generic [ref=f1e100]: "22"
+                        - text: COUNT
+                      - listitem [ref=f1e101]:
+                        - generic [ref=f1e102]: "23"
+                        - text: VISUAL
+                      - listitem [ref=f1e103]:
+                        - generic [ref=f1e104]: "24"
+                        - text: ACCORD
+              - button "Flag question" [ref=f1e107]:
+                - generic: 
+                - generic [ref=f1e108]: Flag question
+        - contentinfo [ref=f1e110]:
+          - navigation "Previous / next question" [ref=f1e111]:
+            - button "Previous" [ref=f1e112] [cursor=pointer]:
+              - generic [ref=f1e113]: 
+            - button "Next" [ref=f1e114] [cursor=pointer]:
+              - generic [ref=f1e115]: 
+          - navigation "Questions" [ref=f1e116]:
+            - tablist [ref=f1e117]:
+              - tab "Part 1. 0 of 8 questions attempted." [ref=f1e118]:
+                - generic [ref=f1e119]:
+                  - text: Part 1
+                  - generic [ref=f1e120]: 1 of 8
+                  - generic [ref=f1e121]: Part 1. 0 of 8 questions attempted.
+            - tablist [ref=f1e122]:
+              - tab "Part 2. 0 of 8 questions attempted." [ref=f1e123]:
+                - generic [ref=f1e124]:
+                  - text: Part 2
+                  - generic [ref=f1e125]: 0 of 8
+                  - generic [ref=f1e126]: Part 2. 0 of 8 questions attempted.
+            - tablist [ref=f1e127]:
+              - tab "Part 3. 0 of 8 questions attempted." [ref=f1e128]:
+                - generic [ref=f1e129]:
+                  - text: Part 3
+                  - generic [ref=f1e130]: 0 of 8
+                  - generic [ref=f1e131]: Part 3. 0 of 8 questions attempted.
+              - generic [ref=f1e132]:
+                - button "Question 17 Not attempted Active" [ref=f1e133]:
+                  - generic [ref=f1e134]: Question 17
+                  - text: "17"
+                  - generic [ref=f1e135]: Not attempted Active
+                - button "Question 18 Not attempted" [ref=f1e136]:
+                  - generic [ref=f1e137]: Question 18
+                  - text: "18"
+                  - generic [ref=f1e138]: Not attempted
+                - button "Question 19 Not attempted" [ref=f1e139]:
+                  - generic [ref=f1e140]: Question 19
+                  - text: "19"
+                  - generic [ref=f1e141]: Not attempted
+                - button "Question 20 Not attempted" [ref=f1e142]:
+                  - generic [ref=f1e143]: Question 20
+                  - text: "20"
+                  - generic [ref=f1e144]: Not attempted
+                - button "Question 21 Not attempted" [ref=f1e145]:
+                  - generic [ref=f1e146]: Question 21
+                  - text: "21"
+                  - generic [ref=f1e147]: Not attempted
+                - button "Question 22 Not attempted" [ref=f1e148]:
+                  - generic [ref=f1e149]: Question 22
+                  - text: "22"
+                  - generic [ref=f1e150]: Not attempted
+                - button "Question 23 Not attempted" [ref=f1e151]:
+                  - generic [ref=f1e152]: Question 23
+                  - text: "23"
+                  - generic [ref=f1e153]: Not attempted
+                - button "Question 24 Not attempted" [ref=f1e154]:
+                  - generic [ref=f1e155]: Question 24
+                  - text: "24"
+                  - generic [ref=f1e156]: Not attempted
+            - tablist [ref=f1e157]:
+              - tab "Part 4. 0 of 6 questions attempted." [ref=f1e158]:
+                - generic [ref=f1e159]:
+                  - text: Part 4
+                  - generic [ref=f1e160]: 0 of 6
+                  - generic [ref=f1e161]: Part 4. 0 of 6 questions attempted.
+            - tablist [ref=f1e162]:
+              - tab "Part 5. 0 of 6 questions attempted." [ref=f1e163]:
+                - generic [ref=f1e164]:
+                  - text: Part 5
+                  - generic [ref=f1e165]: 0 of 6
+                  - generic [ref=f1e166]: Part 5. 0 of 6 questions attempted.
+            - tablist [ref=f1e167]:
+              - tab "Part 6. 0 of 4 questions attempted." [ref=f1e168]:
+                - generic [ref=f1e169]:
+                  - text: Part 6
+                  - generic [ref=f1e170]: 0 of 4
+                  - generic [ref=f1e171]: Part 6. 0 of 4 questions attempted.
+            - tablist [ref=f1e172]:
+              - tab "Part 7. 0 of 6 questions attempted." [ref=f1e173]:
+                - generic [ref=f1e174]:
+                  - text: Part 7
+                  - generic [ref=f1e175]: 0 of 6
+                  - generic [ref=f1e176]: Part 7. 0 of 6 questions attempted.
+            - tablist [ref=f1e177]:
+              - tab "Part 8. 0 of 10 questions attempted." [ref=f1e178]:
+                - generic [ref=f1e179]:
+                  - text: Part 8
+                  - generic [ref=f1e180]: 0 of 10
+                  - generic [ref=f1e181]: Part 8. 0 of 10 questions attempted.
+            - button "Review your answers" [ref=f1e182] [cursor=pointer]:
+              - generic [ref=f1e183]: 
+  - generic [ref=e5]: 1:26:18
+  - generic "Questions answered": 1 / 56

@@ -55,11 +55,10 @@ const { chromium } = require(path.join(process.env.APPDATA, 'npm/node_modules/@p
         await page.waitForURL('**/reading.html**', { timeout: 10000 });
         console.log('Navigated to reading test');
 
-        // Set start time
+        // Set start time to 2 minutes ago to pass minimum duration check (30s)
         await page.evaluate(() => {
-            if (!localStorage.getItem('readingStartTime')) {
-                localStorage.setItem('readingStartTime', new Date().toISOString());
-            }
+            const twoMinAgo = new Date(Date.now() - 2 * 60 * 1000).toISOString();
+            localStorage.setItem('readingStartTime', twoMinAgo);
         });
         await page.screenshot({ path: '_eye-screenshots/03-reading-start.png' });
 
