@@ -818,8 +818,13 @@
 
         async function saveWritingScore(submissionId) {
             const bandScore = document.getElementById('writingBandScore').value;
-            if (!bandScore || isNaN(parseFloat(bandScore)) || parseFloat(bandScore) < 0 || parseFloat(bandScore) > 9) {
-                alert('Please enter a valid band score between 0 and 9 (e.g., 6.5)'); return;
+            // Per official IELTS spec, every band score is a 0.5-step value
+            // on the 0–9 scale. The server's /update-score endpoint enforces
+            // this — match it client-side so the admin gets immediate feedback
+            // before submitting.
+            const bandNum = parseFloat(bandScore);
+            if (!bandScore || isNaN(bandNum) || bandNum < 0 || bandNum > 9 || (bandNum * 2) % 1 !== 0) {
+                alert('Please enter a valid band score between 0.0 and 9.0 in 0.5 increments (e.g., 6.5)'); return;
             }
             try {
                 const response = await dashboard._authFetch(`${API_BASE}/update-score`, {

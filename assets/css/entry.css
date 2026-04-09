@@ -518,13 +518,16 @@ body.cambridge .logo {
     margin-bottom: 10px;
 }
 
-body.cambridge .admin-link {
+body.cambridge .admin-link,
+html.cambridge .admin-link {
     position: absolute;
     top: 2rem;
     right: 3rem;
     /* Keep "Go to Invigilator Login →" on a single line so it doesn't
        wrap and visually collide with the Cambridge exam badge that sits
-       in the same top-right region of the header. */
+       in the same top-right region of the header. The exam-type class
+       can land on either <html> (set by the early-detect script in
+       index.html) or <body> (older code paths), so cover both. */
     white-space: nowrap;
 }
 
