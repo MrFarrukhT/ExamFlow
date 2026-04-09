@@ -98,3 +98,28 @@ unrelated CSS bystander). Verified all 5 changes present in HEAD before logging.
 ### Stats
 Rounds: 1 | Fixed: 5 | Reverted: 0 | Deferred: 0 (8 carried over)
 Ending state: 8 open findings in ledger (all manual architecture work)
+
+## Session: 2026-04-09 14:45
+Domains: security, api, architecture, frontend
+Starting state: 8 open findings (all carryover deferred items)
+
+### Round 7
+- [HIGH] error.message leaked in 6 Cambridge admin error handlers → fixed — `cambridge-database-server.js`
+- [HIGH] POST /cambridge-answers mock parameter not validated → fixed — `cambridge-database-server.js`
+- [MEDIUM] Badge poller setInterval ID not stored → fixed — `assets/js/exam-progress.js`
+- [MEDIUM] Textarea scanner setInterval ID not stored → fixed — `assets/js/cambridge/disable-copy-paste.js`
+- [LOW] Unused `db` variable destructured from createServer() → fixed — `cambridge-database-server.js`
+
+### Deferred (carried over)
+- Hardcoded invigilator password — needs server-side auth
+- Missing auth on admin endpoints — needs middleware + tokens
+- Unbounded SELECT queries — needs pagination design
+- Duplicate validation logic across servers — needs shared module
+- core.js god file (1562 lines) — needs migration
+- CORS wildcard — needs allowed origins config
+- Inconsistent response envelope (raw arrays) — needs frontend coordination
+- distraction-free.js event listener leak refactor (in-progress by another agent)
+
+### Stats
+Rounds: 1 | Fixed: 5 | Reverted: 0 | Deferred: 0 (8 carried over)
+Ending state: 8 open findings in ledger (all manual architecture work)

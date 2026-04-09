@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "lastRunAt": "2026-04-09T10:40:00Z",
-  "lastRunCommit": "758b1d8",
+  "lastRunAt": "2026-04-09T10:50:00Z",
+  "lastRunCommit": "03485b0",
   "runs": [
     {
       "id": "heal-2026-04-08-r1",
@@ -63,6 +63,16 @@
       "reverted": 0,
       "deferred": 0,
       "note": "Fix commits were absorbed into parallel checkpoint 758b1d8 (race with eye/scenario agents). Heal r6 commit 7485e27 only carries the CSS bystander; all 5 actual fixes verified present in HEAD."
+    },
+    {
+      "id": "heal-2026-04-09-r7",
+      "type": "heal",
+      "startedAt": "2026-04-09T10:45:00Z",
+      "domains": ["security", "api", "architecture", "frontend"],
+      "round": 7,
+      "fixed": 5,
+      "reverted": 0,
+      "deferred": 0
     }
   ],
   "findings": [
@@ -416,6 +426,51 @@
       "status": "fixed",
       "fixedInCommit": "758b1d8",
       "foundAt": "2026-04-09T10:35:00Z"
+    },
+    {
+      "fingerprint": "security:cambridge-database-server:admin-error-message-disclosure",
+      "severity": "HIGH",
+      "title": "error.message leaked in 6 Cambridge admin handlers (PATCH score/evaluate/student-results, DELETE student-results/answers, POST answers)",
+      "file": "cambridge-database-server.js",
+      "status": "fixed",
+      "fixedInCommit": "03485b0",
+      "foundAt": "2026-04-09T10:45:00Z"
+    },
+    {
+      "fingerprint": "security:cambridge-database-server:post-answers-mock-validation",
+      "severity": "HIGH",
+      "title": "POST /cambridge-answers mock parameter accepted without validation",
+      "file": "cambridge-database-server.js",
+      "status": "fixed",
+      "fixedInCommit": "03485b0",
+      "foundAt": "2026-04-09T10:45:00Z"
+    },
+    {
+      "fingerprint": "frontend:exam-progress:setinterval-no-reference",
+      "severity": "MEDIUM",
+      "title": "Badge poller setInterval ID not stored — cannot clearInterval",
+      "file": "assets/js/exam-progress.js",
+      "status": "fixed",
+      "fixedInCommit": "03485b0",
+      "foundAt": "2026-04-09T10:45:00Z"
+    },
+    {
+      "fingerprint": "frontend:disable-copy-paste:setinterval-no-reference",
+      "severity": "MEDIUM",
+      "title": "Textarea scanner setInterval ID not stored — cannot clearInterval",
+      "file": "assets/js/cambridge/disable-copy-paste.js",
+      "status": "fixed",
+      "fixedInCommit": "03485b0",
+      "foundAt": "2026-04-09T10:45:00Z"
+    },
+    {
+      "fingerprint": "architecture:cambridge-database-server:unused-db-destructure",
+      "severity": "LOW",
+      "title": "Unused db variable destructured from createServer()",
+      "file": "cambridge-database-server.js",
+      "status": "fixed",
+      "fixedInCommit": "03485b0",
+      "foundAt": "2026-04-09T10:45:00Z"
     }
   ]
 }
