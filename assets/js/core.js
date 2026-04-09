@@ -25,16 +25,6 @@
         let activeQuestionElement = null;
         let selectedDragItem = null;
 
-        // --- GLOBAL FUNCTIONS ---
-        function getFirstQuestionOfPart(part) {
-            switch(part) {
-                case 1: return 1;
-                case 2: return 14;
-                case 3: return 27;
-                default: return 1;
-            }
-        }
-
         // --- DOM ELEMENTS ---
         const timerDisplay = document.querySelector('.timer-display');
         const timerToggleButton = document.getElementById('timer-toggle-btn');

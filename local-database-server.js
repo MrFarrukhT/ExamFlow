@@ -518,6 +518,14 @@ app.post('/update-score', requireAdmin, async (req, res) => {
             return res.status(400).json({ success: false, message: scoreResult.error });
         }
 
+        // Validate band score: must be 0.0–9.0 in 0.5 increments, or null
+        if (bandScore != null) {
+            const bandNum = Number(bandScore);
+            if (isNaN(bandNum) || bandNum < 0 || bandNum > 9 || (bandNum * 2) % 1 !== 0) {
+                return res.status(400).json({ success: false, message: 'Band score must be between 0.0 and 9.0 in 0.5 increments' });
+            }
+        }
+
         console.log(`📊 Updating score for submission ${parsedSubmissionId}: ${score}/40, Band: ${bandScore}`);
 
         const dbClient = await ensureConnection();

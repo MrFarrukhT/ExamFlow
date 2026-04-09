@@ -274,9 +274,29 @@
             return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
 
-        // Invigilator password verified server-side via /verify-invigilator
-        const examType = localStorage.getItem('examType') || 'IELTS';
+        // Invigilator password verified server-side via /verify-invigilator.
+        //
+        // Exam type detection (in priority order):
+        //   1. window.location.port — 3003 = Cambridge, 3002 = IELTS. Authoritative because the
+        //      page is served by the matching server, and /submissions vs /cambridge-submissions
+        //      lives on different ports.
+        //   2. localStorage.examType — fallback for the rare file:// case (and for keeping the
+        //      sessionInfo / mock keys consistent with what the student dashboard wrote).
+        //   3. 'IELTS' — final default.
+        //
+        // Without the port-based detection, opening invigilator.html on the Cambridge server with
+        // an empty localStorage silently fell back to IELTS mode and tried to fetch /submissions,
+        // which 404s on port 3003 and rendered "Could not reach server" to the invigilator.
+        var portExam = (window.location.port === '3003') ? 'Cambridge'
+                     : (window.location.port === '3002') ? 'IELTS'
+                     : null;
+        const examType = portExam || localStorage.getItem('examType') || 'IELTS';
         const isCambridge = examType === 'Cambridge';
+        // Persist the resolved exam type so the rest of the app (mock keys, sessionInfo, etc.)
+        // stays consistent without the user needing to round-trip through the dashboard.
+        if (portExam && localStorage.getItem('examType') !== portExam) {
+            localStorage.setItem('examType', portExam);
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
             applyExamTheme();

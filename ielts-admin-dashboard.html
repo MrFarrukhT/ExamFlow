@@ -861,9 +861,12 @@
         }
 
         // ── Bootstrap ──
+        // Note: dashboard.init() chains showAdminPanel() → onAdminPanelReady() → loadCorrectAnswers()
+        // when an admin token is already present, so we don't call loadCorrectAnswers() here.
+        // Calling it unconditionally fired ~20 unauthenticated /mock-answers requests on every page
+        // load (all 401), spamming the console and pulling answer keys nobody had asked for.
         dashboard.setupModalCloseOnOutsideClick();
         dashboard.init();
-        dashboard.loadCorrectAnswers();
         dashboard.startAutoRefresh();
     </script>
 </body>
