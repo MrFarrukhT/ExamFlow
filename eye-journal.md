@@ -1,5 +1,65 @@
 # Eye Journal
 
+## Session: 2026-04-09 — Result-viewing flow round 4: writing modal sticky + 401 double-alert (loop /eye full re-run)
+Persona: Admin scoring writing tasks + admin handling expired sessions mid-action
+System: Both
+Pages explored: IELTS Compare modal (writing skill), Cambridge View modal (writing skill), Manage Answer Keys, Start Scoring queue, Delete submission flow.
+
+The fourth cron-fired run. Round 3 fixed sticky for the non-writing modals but logged "writing modal needs visual verification" as deferred. This round verified the writing modals were still broken (round 3 only fixed `generateAnswerComparison`, not `generateWritingComparison`) and shipped the fix. Then walked the remaining write paths and found a UX papercut on every 401 → recovery flow.
+
+### Bug 8 (T3): Writing modal score-section was NOT sticky — round 3's CSS rule applied but the structure prevented it
+Round 3 added `.score-section { position: sticky; top: 0 }` and lifted score-section out of `.answer-comparison` in the non-writing generators. But `generateWritingComparison` (both IELTS and Cambridge) had its OWN wrapping `<div style="display: grid; gap: 20px;">` that I missed. Result: `position: sticky` applied, but the containing block was the grid-cell wrapper — sticky had nothing to stick against.
+Verified by injecting 1500px of filler into modalContent and scrolling: score-section moved -1065px with the scroll, NOT pinned.
+Fix: same flat-children pattern. Lifted IELTS + Cambridge `generateWritingComparison` so score-section + anti-cheat banner + task panels + criteria card are all DIRECT children of `#modalContent`. Removed the wrapping grid div. Preserved the inner Task 1/Task 2 split grid (it's local to the task panels, not the whole modal).
+Verified post-fix: scrollMax 1419 IELTS / 1231 Cambridge, score-section pinned at relative-top 20px on both.
+
+### Bug 9 (T4 → T5): Double error UX on every authenticated request that gets a 401
+When a session expired mid-action (delete a submission, save a score), the user got TWO error messages back-to-back:
+1. A modal `alert("Failed to delete: Invalid or expired token")` from the action handler's `if (!response.ok)` branch
+2. THEN the dashboard auto-redirected to the login form with the "Your session expired. Please log in again." banner from `_handleStaleToken()`
+Both messages described the same problem. The alert blocked the page until dismissed, was redundant with the recovery, and broke the otherwise-clean recovery experience from round 1.
+Fix: in 5 places, gate the redundant alert behind `response.status !== 401` so it ONLY fires for non-auth errors. The 401 path falls through silently and lets `_handleStaleToken` (already triggered by `_authFetch`) own the user experience.
+- `assets/js/admin-common.js::deleteSubmission` (shared between IELTS and Cambridge)
+- `ielts-admin-dashboard.html::saveScore` (POST /update-score)
+- `ielts-admin-dashboard.html::saveWritingScore` (POST /update-score with band-only)
+- `cambridge-admin-dashboard.html::saveScore` (PATCH /cambridge-submissions/:id/score)
+- `cambridge-admin-dashboard.html::saveWritingScore` (same PATCH)
+Verified: forced an in-session 401 by corrupting the cached token, clicked delete on a row → no alert fired, login form shown, "Your session expired" banner displayed.
+
+### Other paths verified this round (no fix needed)
+- **IELTS Manage Answer Keys**: collapsible panel, mock + skill selectors, "Loaded N/40 answers" feedback, 40 question inputs, Load/Save/Clear buttons all wired
+- **IELTS Start Scoring queue**: opens first unscored submission directly into Compare modal with scoring nav (Prev/Next) visible
+- **Delete submission**: confirms before action, calls right endpoint, refreshes table on success — the 401 path was the only papercut and it's now fixed
+
+### Files touched this round
+1. `ielts-admin-dashboard.html` — `generateWritingComparison` flat-children restructure + saveScore/saveWritingScore 401 alert gate
+2. `cambridge-admin-dashboard.html` — `generateWritingComparison` flat-children restructure + saveScore/saveWritingScore 401 alert gate
+3. `assets/js/admin-common.js` — deleteSubmission 401 alert gate
+
+### Quality Map (after round 4)
+| Page | Layer (before round 4 → after) | Notes |
+|------|--------------------------------|-------|
+| IELTS Compare modal — writing skill | 3-Efficient → 5-Delightful | Score-section now stays in view scrolling task1/task2 + criteria |
+| Cambridge View modal — writing skill | 3-Efficient → 5-Delightful | Same |
+| Stale-token recovery on action | 3-Efficient → 5-Delightful | Single recovery banner, no alert+banner double-tap |
+
+### Deferred (next round)
+- Date filter combinations (date + skill + mock) — unverified
+- Today's Submissions button — not walked
+- Cambridge "+ Add New Result" on student-results page
+- Scoring queue Prev/Next across many submissions — verify state preservation
+- View by Date toggle keyboard focus jumps (round 3 deferred)
+
+### Session Stats (round 4)
+Pages explored: 5 deep flows
+Bugs found: 2 (1 T3 sticky regression, 1 T4 double-alert)
+Polishes landed: 1 (401 alert gating, 5 handlers)
+Elevations landed: 1 (writing modal sticky structure)
+Reverted: 0
+Files touched: 3
+
+---
+
 ## Session: 2026-04-09 (round 32) — Mock Test Content Integrity
 Persona: Test content manager auditing all 10 IELTS mocks + Cambridge multi-mock variants
 System: IELTS (MOCKs/MOCK 1-10) + Cambridge (B2-First/MOCK-2/MOCK-3, A2-Key, B1-Preliminary)
