@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "lastRunAt": "2026-04-08T10:40:00Z",
-  "lastRunCommit": "3a2ce2a",
+  "lastRunAt": "2026-04-09T10:30:00Z",
+  "lastRunCommit": "c44f883",
   "runs": [
     {
       "id": "heal-2026-04-08-r1",
@@ -42,6 +42,16 @@
       "fixed": 5,
       "reverted": 0,
       "deferred": 8
+    },
+    {
+      "id": "heal-2026-04-09-r5",
+      "type": "heal",
+      "startedAt": "2026-04-09T10:25:00Z",
+      "domains": ["security", "api", "database", "architecture", "frontend"],
+      "round": 5,
+      "fixed": 5,
+      "reverted": 0,
+      "deferred": 0
     }
   ],
   "findings": [
@@ -305,6 +315,51 @@
       "status": "open",
       "note": "Needs frontend coordination — changing format would break admin dashboard",
       "foundAt": "2026-04-08T10:35:00Z"
+    },
+    {
+      "fingerprint": "security:cambridge-database-server:patch-id-no-validation",
+      "severity": "HIGH",
+      "title": "Missing parseInt validation on Cambridge PATCH/DELETE :id endpoints (4 endpoints)",
+      "file": "cambridge-database-server.js",
+      "status": "fixed",
+      "fixedInCommit": "c44f883",
+      "foundAt": "2026-04-09T10:25:00Z"
+    },
+    {
+      "fingerprint": "security:local-database-server:update-score-no-validation",
+      "severity": "MEDIUM",
+      "title": "IELTS POST /update-score only checks truthiness of submissionId",
+      "file": "local-database-server.js",
+      "status": "fixed",
+      "fixedInCommit": "c44f883",
+      "foundAt": "2026-04-09T10:25:00Z"
+    },
+    {
+      "fingerprint": "database:shared-database:interval-unref",
+      "severity": "MEDIUM",
+      "title": "Background retry setInterval missing .unref() — blocks graceful shutdown",
+      "file": "shared/database.js",
+      "status": "fixed",
+      "fixedInCommit": "c44f883",
+      "foundAt": "2026-04-09T10:25:00Z"
+    },
+    {
+      "fingerprint": "architecture:validation:dead-errorresponse",
+      "severity": "MEDIUM",
+      "title": "Dead exported function errorResponse — zero callers across codebase",
+      "file": "shared/validation.js",
+      "status": "fixed",
+      "fixedInCommit": "c44f883",
+      "foundAt": "2026-04-09T10:25:00Z"
+    },
+    {
+      "fingerprint": "architecture:cambridge-database-server:unused-imports",
+      "severity": "LOW",
+      "title": "Unused validateScore and validateGrade imports in cambridge server",
+      "file": "cambridge-database-server.js",
+      "status": "fixed",
+      "fixedInCommit": "c44f883",
+      "foundAt": "2026-04-09T10:25:00Z"
     }
   ]
 }

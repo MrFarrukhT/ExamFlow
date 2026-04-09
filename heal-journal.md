@@ -45,3 +45,27 @@ Starting state: 0 open findings in ledger
 ### Stats
 Rounds: 4 | Fixed: 20 | Reverted: 0 | Deferred: 8
 Ending state: 8 open findings in ledger
+
+## Session: 2026-04-09 14:25
+Domains: security, api, database, architecture, frontend
+Starting state: 8 open findings (all deferred — architecture/migration blockers)
+
+### Round 5
+- [HIGH] Missing parseInt validation on 4 Cambridge PATCH/DELETE :id endpoints → fixed — `cambridge-database-server.js`
+- [MEDIUM] IELTS /update-score only checks truthiness of submissionId → fixed — `local-database-server.js`
+- [MEDIUM] Background retry setInterval missing .unref() (blocks graceful shutdown) → fixed — `shared/database.js`
+- [MEDIUM] Dead exported function errorResponse (zero callers) → fixed — `shared/validation.js`
+- [LOW] Unused validateScore/validateGrade imports → fixed — `cambridge-database-server.js`
+
+### Deferred (carried over from previous sessions)
+- Hardcoded invigilator password — needs server-side auth
+- Missing auth on admin endpoints — needs middleware + frontend tokens
+- Unbounded SELECT queries — needs pagination design
+- Duplicate validation logic across servers — needs shared module refactor
+- core.js god file (1562 lines) — needs migration
+- CORS wildcard — needs allowed origins config
+- Inconsistent response envelope (raw arrays) — needs frontend coordination
+
+### Stats
+Rounds: 1 | Fixed: 5 | Reverted: 0 | Deferred: 0 (8 carried over)
+Ending state: 8 open findings in ledger (all carryovers, all needing manual architecture work)
