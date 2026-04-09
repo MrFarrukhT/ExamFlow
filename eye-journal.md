@@ -1,5 +1,59 @@
 # Eye Journal
 
+## Session: 2026-04-09 (round 34) — Cambridge Navigation Flows
+Persona: Student walking the full Cambridge flow end-to-end (login → dashboard → A2 Key level selection → R&W test → Change Level)
+System: Cambridge (port 3003)
+Pages explored: index.html?exam=cambridge, Cambridge/dashboard-cambridge.html (level selection + module selection states), Cambridge/MOCKs-Cambridge/A2-Key/reading-writing.html (test interface)
+Starting state: The Cambridge entry flow had two real bugs: (1) the index.html "Go to Invigilator Login →" link was wrapping into 2 lines and visually colliding with the "Cambridge General English" exam badge in the top-right header (badge x=984-1119, link x=1119 wrapping into 2 lines because its computed width was only 112px), and (2) the Cambridge dashboard's `changeLevelSelection()` cleared `localStorage.cambridgeLevel` and toggled UI sections but DID NOT reset the visible `#levelInfo` header badge — the badge kept showing "A2 Key" even after the student returned to level selection.
+
+### Round 1 — Polish: stale level badge + admin link wrap
+
+**Findings (4 total):**
+- [T2] **Cambridge dashboard `changeLevelSelection()` doesn't reset the header level badge.** Confirmed by DOM probe at the moment after click: `#levelInfo.textContent === "A2 Key"` while `localStorage.getItem('cambridgeLevel') === null`. UI was inconsistent — the section visible to the student said "Select Your Level" but the header pill said "A2 Key".
+- [T2] **assets/css/entry.css `.admin-link` wraps into 2 lines on Cambridge index.html.** The `body.cambridge .admin-link` rule positions the link absolutely top:2rem right:3rem. With no width constraint, the browser fell back to shrink-to-fit, computing only 112px. "Go to Invigilator Login →" doesn't fit so it wrapped to 40px tall and visually crowded the badge. Also: the cambridge class actually lives on `<html>` (set by the early-detect script in index.html), not `<body>`, so the existing `body.cambridge` selector wasn't matching at all — the rule was already broken on this page.
+- [T0] **Cambridge test pages (e.g. A2 R&W reading-writing.html) have no in-test level indicator.** Once inside the test the student sees "Cambridge English" in the Inspera logo but no reminder of which level (A2/B1/B2) they're taking. Could be added as a small label near the candidate ID.
+- [T0] **Welcome onboarding modal is not dismissable via Esc or click-outside.** Same as IELTS round 33. Defer.
+
+**Action:** POLISH 2 fixes — `changeLevelSelection()` now also resets the badge text, and the admin link CSS rule covers both `body.cambridge` and `html.cambridge` selectors with `white-space: nowrap` so the link stays on a single line.
+
+**Files touched:**
+1. **Cambridge/dashboard-cambridge.html** `changeLevelSelection()` — added `document.getElementById('levelInfo').textContent = 'Select Level';` after the existing localStorage cleanup. The badge now correctly resets to its default text whenever the student goes back to level selection.
+2. **assets/css/entry.css** `.admin-link` rule — extended the selector from `body.cambridge .admin-link` to `body.cambridge .admin-link, html.cambridge .admin-link` so it actually applies on Cambridge index.html (the early-detect script puts the class on `<html>`, not `<body>`). Added `white-space: nowrap` so "Go to Invigilator Login →" stays on one line — measured width went from 112px wrapped (height 40px) to 172px single line (height 20px). Comment in the CSS explains why both selectors are needed.
+
+**Verification (live, isolated playwright session at 1280×800):**
+| Check | Method | Result |
+|-------|--------|--------|
+| Cambridge login admin link is single line | DOM probe `.admin-link` getBoundingClientRect | ✅ width=172, height=20 (was 112×40), whiteSpace="nowrap" |
+| Cambridge login badge + link don't visually collide | check vertical separation | ✅ link y=32-52, badge y=59-84, 7px gap — clean two-line stack |
+| Login → A2 Key selection sets badge correctly | DOM probe after card click | ✅ levelInfo: "A2 Key", storedLevel: "A2-Key" |
+| Change Level resets badge to "Select Level" | call changeLevelSelection(), accept confirm dialog, probe | ✅ levelInfoAfter: "Select Level", storedLevel: null (was: levelInfo stayed "A2 Key" while storedLevel was null) |
+| A2 R&W test page loads from dashboard | click readingWritingButton | ✅ Cambridge/MOCKs-Cambridge/A2-Key/reading-writing.html, title "Cambridge A2 Key MOCK 1 - Reading & Writing" |
+| Login flow end-to-end | fill form → click Login → dashboard → A2 → R&W | ✅ Full happy path works |
+
+### Quality Map (after round 34)
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| Cambridge dashboard level badge | 1-Functional (stale) → 4-Polished | Resets correctly on level change |
+| Cambridge index.html top-right header | 2-Clear (link wraps awkwardly) → 4-Polished | Single-line link sits cleanly above the badge |
+| `body.cambridge` CSS rules consistency | 1-Functional (rule never matched on index.html) → 3-Efficient | Both `body.cambridge` and `html.cambridge` selectors covered |
+
+### Deferred (next time this prompt runs)
+- **Add an in-test level indicator** (e.g. small "A2 Key" label near the Cambridge logo on the test page header) so students always know which level they're taking. Would touch many test page templates — needs a careful sweep.
+- **Welcome onboarding modal Esc/click-outside dismiss.** Same gap as IELTS round 33. Could be added to both dashboards in one pass.
+- **Other CSS rules in entry.css use `body.cambridge` selectors that might have the same root problem** (the class is on `<html>`, not `<body>`). Worth a sweep — `body.cambridge .header-section`, `body.cambridge .logo`, `body.cambridge .form-group input:focus`, `body.cambridge .login-button`, `body.cambridge .exam-badge`, `body.cambridge .exam-subtitle` were all defined but only some are visually active. Investigation needed.
+
+### Session Stats (round 34)
+Pages explored: 4 student-facing pages (Cambridge index, dashboard level selection, dashboard module selection, A2 R&W test) + 1 CSS file
+Findings: 4 (2× T2 broken, 2× T0 unremarkable)
+Polishes landed: 2 (changeLevelSelection badge reset + admin link nowrap with dual selector)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Files touched: 2 (Cambridge/dashboard-cambridge.html, assets/css/entry.css)
+Verification screenshots: 5 (eye34-cambridge-login.png, eye34-cambridge-login2.png, eye34-cambridge-dash-after.png, eye34-change-level.png, eye34-cambridge-login-fixed.png)
+
+---
+
 ## Session: 2026-04-09 — Result-viewing flow round 5: student-results auth + date-group a11y (loop /eye full re-run)
 Persona: Admin entering results manually + admin navigating with keyboard
 System: Both
