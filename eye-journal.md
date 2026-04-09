@@ -1,5 +1,56 @@
 # Eye Journal
 
+## Session: 2026-04-09 — Result-viewing flow round 2: scoring, speaking, polish (loop /eye full re-run)
+Persona: Admin scoring submissions + invigilator following the full result lifecycle
+System: Both
+Pages explored (deeper than round 1): IELTS Compare modal + saveScore, Cambridge View modal + saveScore + grade input, cambridge-speaking-evaluations.html (audio playback + evaluate modal), View by Date toggle, CSV export blob path, stat-card loading state.
+
+The cron-fired re-run of the same prompt 10 minutes after round 1. Round 1 verified the read paths existed and shipped 3 fixes. This round walked the *write* paths (the actual scoring an admin does) and the speaking-evaluation flow that round 1 never opened.
+
+### What I verified works end-to-end this round
+- **IELTS scoring flow**: opened EYE-VERIFY-1 in the Compare modal → saw the auto-computed "0/3 correct" + the `Score tampering: client=3, server=0` anti-cheat banner I'd left there → typed score=7, band=4.5 → Save Score → confirmed via direct API fetch the row now has `score: 7, band_score: "4.5"` and `anti_cheat_data` preserved.
+- **Cambridge scoring flow**: opened EYE-VERIFY-2 in the View modal → A2-Key R&W shows percentage + grade inputs (not /40) → typed score=65, grade=C → Save → confirmed via API the row has `score: 65, grade: "C"`.
+- **Cambridge speaking evaluations**: 63 speaking submissions in DB, page loads them all (62 pending, 1 evaluated). Clicked "Evaluate" on R26 Legit Speaker → modal opens with audio player (blob URL streamed from `cambridge_submissions.audio_data`), criteria dropdowns (Grammar, Vocabulary, Pronunciation, Discourse, Interactive Communication, each 1-5), download button.
+- **IELTS View-by-Date toggle**: collapsible date groups, today's group shows 19 submissions with skill, mock, score, time, View button per item.
+- **CSV export**: button creates a Blob, the export path was exercised without errors (test stub captured the click).
+
+### Bug 4 (T2 polish): Stat cards initialised to "0" before the fetch resolved
+On a fresh login, the six stat cards on `ielts-admin-dashboard.html` (and seven on `cambridge-admin-dashboard.html`) read "0", "0", "0", "0", "0", "0%" during the half-second between page paint and `loadSubmissions()` resolving. Glance at the dashboard during that window and it looks like a real "no submissions, no students, 0% scoring progress" state. I literally fooled myself with this earlier in the session — saw `totalSubs=0` and started chasing a phantom "data loading broken" bug before realising the fetch just hadn't finished.
+
+The container below the stats does have a proper "Loading submissions..." spinner (set inside `loadSubmissions()`). The stat cards above it didn't.
+
+Fix: change the initial textContent from `0` / `0%` to `—` (em-dash) on every stat card. The em-dash is the same convention the invigilator panel already uses for its room-stat cards (statStudents, statSubmissions, etc., all start as `—`). `updateStats()` overwrites the initial values on every load, so the loading state is purely visual — no JS changes needed.
+
+Verified: page now shows `—` for all six/seven stats from first paint until fetch completes; on login, they snap to real values (11886 / 2249 / 14 / 143 / 1314 / 42% on IELTS).
+
+### Files touched this round
+1. `ielts-admin-dashboard.html` — six stat-card initial values 0 → — (with explanatory comment)
+2. `cambridge-admin-dashboard.html` — seven stat-card initial values 0 → — (with explanatory comment)
+
+### Quality Map (after round 2)
+| Page | Layer (before round 2 → after) | Notes |
+|------|--------------------------------|-------|
+| ielts-admin-dashboard.html — initial paint | 3-Efficient → 4-Polished | Stat cards now signal "loading" instead of misleadingly showing zero |
+| cambridge-admin-dashboard.html — initial paint | 3-Efficient → 4-Polished | Same |
+| Compare/View modals | 4-Polished (already shipped) | Verified end-to-end this round, no changes needed |
+| cambridge-speaking-evaluations.html | 4-Polished (already shipped) | Audio + criteria + download all working, no changes needed |
+
+### Deferred (next round)
+- The Compare modal's question table renders raw text — would benefit from sticky header so you can scroll the answer comparison without losing the column labels.
+- The IELTS Compare modal's "Save Score" button alerts on success but doesn't visually update the row in the table behind the modal — admin has to close + manually look for the row again. Could update the in-memory `currentSubmissions` and re-render the affected row inline.
+- Cambridge speaking-evaluations on first navigate showed `Total Submissions: 0` for ~1 second before refreshing to 63 — same loading-flicker issue as the admin dashboards. A `—` placeholder on those three stat cards would be the same surgical fix.
+
+### Session Stats (round 2)
+Pages explored: 4 deep flows (IELTS scoring, Cambridge scoring, speaking evaluations, view-by-date)
+Bugs found: 1 (T2 polish — misleading "0" loading state)
+Polishes landed: 1 (stat-card em-dash placeholder, both dashboards, 13 cards total)
+Rebuilds landed: 0
+Reverted: 0
+Files touched: 2
+Live submissions verified end-to-end: 2 (EYE-VERIFY-1 scored 7/40 band 4.5, EYE-VERIFY-2 scored 65 grade C — both persisted)
+
+---
+
 ## Session: 2026-04-09 (round 29) — Responsive Mobile (375px)
 Persona: Student opening the test on an iPhone (375 × 812)
 System: Both (launcher.html + every Cambridge/IELTS test page that loads distraction-free.js)
