@@ -1,5 +1,33 @@
 # Eye Journal
 
+## Session: 2026-04-09 12:38 — End-to-End Test Round 2: IELTS Writing Mock 1
+Persona: Student (EyeBot-W / Eye Bot Writing, ID: 99902) → Admin → Invigilator
+System: IELTS (port 3002)
+
+### Round 2 — IELTS Writing Mock 1
+**Flow:** Login → Dashboard → Writing Test → Fill Task 1 (170 words) + Task 2 (310 words) → Submit → Admin verify → Invigilator verify
+
+**BUG FOUND — CRITICAL:**
+- `answer-manager.js:40` declares `const showSaveIndicator = showCambridgeSaveIndicator`
+- `session-manager.js:14` declares `function showSaveIndicator()`
+- `const` blocks the later `function` declaration, **crashing the entire session-manager.js**
+- Result: `saveTestToDatabase` is `undefined` on writing pages
+- **All writing submissions silently fail** — student sees "Completed" but no data saved to DB
+
+**FIX:** Renamed session-manager's copy to `showSessionSaveIndicator` (2-line change)
+**Commit:** ff7c2cf
+
+**After fix:**
+- [PASS] Student login 99902 / "Eye Bot Writing"
+- [PASS] Task 1 filled (170 words), Task 2 filled (310 words)
+- [PASS] Submit → POST /submissions 4200 bytes → 200 OK → saved to DB (id: 12021)
+- [PASS] Admin Dashboard: Row found `99902 | Eye Bot Writing | Mock 1 | writing | Not Graded`
+- [PASS] Invigilator: Student found in panel
+
+**Side finding:** Submit button fires twice (onclick + addEventListener) — server dedup catches the duplicate (409). Not a data integrity issue.
+
+---
+
 ## Session: 2026-04-09 (round 40) — Database & API Reliability (FINAL ROUND)
 Persona: DevOps monitoring system health
 System: Both — shared/database.js, local-database-server.js, cambridge-database-server.js
