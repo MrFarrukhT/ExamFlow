@@ -1,5 +1,18 @@
 # Eye Journal
 
+## Session: 2026-04-09 16:35 — End-to-End Test Round 6: Cambridge A2-Key Reading-Writing Mock 1
+Persona: Student (99924 / Eye Bot A2) → Admin
+System: Cambridge (port 3003)
+
+### Round 6 — Cambridge A2-Key Reading-Writing Mock 1
+- [PASS] Login, navigate to A2-Key R&W test (7 parts, 30 questions)
+- [PASS] Set 30 answers: Q1-6 MC, Q7-13 matching, Q14-18 MC, Q19-24 cloze, Q25-30 text fill
+- [PASS] Submit → 200 OK
+- [PASS] DB: `99924 | Eye Bot A | A2-Key | reading-writing | 30 answers`
+- [PASS] Admin: `99924 | Eye Bot A | A2-Key | Mock 1 | R&W | Unscored`
+
+---
+
 ## Session: 2026-04-09 16:21 — End-to-End Test Round 5: Cambridge A1-Movers Listening Mock 1
 Persona: Student (99914 / Eye Bot A1) → Admin
 System: Cambridge (port 3003)
