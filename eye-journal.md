@@ -2587,3 +2587,60 @@ Reverted: 1 (first regex pass produced extra blank lines, fixed and reran)
 Files touched: 14 Cambridge wrapper files
 Generator script written: 1 (e:/tmp/fix-cambridge-wrapper-durations.js — with one revision)
 Verification: DOM + timer state inspected on C1, B2, B1 wrappers via playwright-cli
+
+---
+
+## Session: 2026-04-09 (round 4 — welcome guide module-order accuracy)
+Persona: First-time student opening either dashboard, reading the orientation overlay
+System: Both (welcome-guide.js is shared by `student-dashboard.html` and `Cambridge/dashboard-cambridge.html`)
+Pages explored: `assets/js/welcome-guide.js`, both dashboard module orderings, IELTS module sequence vs official spec
+Starting state: After rounds 1–3, durations and writing controls were spec-compliant. But the welcome guide overlay told every first-time student "You can do them in any order." This is **wrong for both tests** — official IELTS sequence is Listening → Reading → Writing → Speaking, official Cambridge sequence is Reading (& UoE) → Writing → Listening → Speaking (varies by level). The dashboards already render module cards in the correct order, but the welcome guide actively contradicted that.
+
+### Round 4 — direct prompt: same compliance brief, deeper pass
+
+**Findings:**
+- [T2] `assets/js/welcome-guide.js:25` — `modulesText` for IELTS read `'Listening (~30 min), Reading (60 min), and Writing (60 min)'` — three commas, no order signal. Combined with the next-line "You can do them in any order." promise, candidates were told they could pick whichever first. Real IELTS is fixed-order. Rewrote to `'Listening (~30 min), then Reading (60 min), then Writing (60 min)'` so the sequence is explicit.
+- [T2] Same file, Cambridge branch — `'the modules shown on your dashboard (timing varies by level)'` was vague and the same "any order" line ran after it. Rewrote to `'the modules shown on your dashboard, in the order they are listed (timing varies by level)'`.
+- [T2] `assets/js/welcome-guide.js:96` — Step description ended with "You can do them in any order." Replaced with "Follow the order shown on the dashboard."
+- [T0] Verified IELTS dashboard module ordering on `student-dashboard.html` — `listeningCard` (line 55) → `readingCard` (line 64) → `writingCard` (line 73). Matches the official IELTS sequence. ✓
+- [T0] Verified Cambridge dashboard module ordering for B1/B2/C1 levels — `readingCard` → `writingCard` → `listeningCard` → `speakingCard`. Matches the official Cambridge sequence (Reading & UoE → Writing → Listening → Speaking). ✓
+- [T0] Verified A2 Key dashboard ordering — Reading & Writing → Listening → Speaking. Matches A2 Key official order. ✓
+- [T3] Cambridge A1 Movers dashboard renders Reading & Writing → Listening → Speaking, but **official YLE Movers order is Listening → Reading & Writing → Speaking**. The dashboard branches the same combined-level layout for both A1 and A2, even though the official orders differ. Logged as deferred (small fix, would need to special-case A1 in `loadModulesForLevel`).
+- [T0] `welcome-guide.js` "every 30 seconds, your work is saved" — verified accurate for IELTS (`writing-handler.js:321` autosaveInterval, `session-manager.js:150` `_periodicSaveIntervalId`). For Cambridge the autosave is more frequent (every 3s in wrappers, 5s in a1-movers-answer-sync, 10s in cambridge-bridge), so "every 30 seconds" is a conservative simplification — true and not misleading.
+
+**Action:** POLISH 1 (welcome-guide.js text rewrite).
+
+- [T2] `assets/js/welcome-guide.js:18–32, 99–102` — Both `modulesText` branches rewritten to make the official module order explicit; "any order" claim removed; step description now says "Follow the order shown on the dashboard." Header comment added that cites the official IELTS and Cambridge module sequences so the next person who touches this string knows where the source of truth lives.
+  Mode: polish (UI honesty + spec accuracy)
+  Quality layer: 2-Confusing → 5-Delightful (truthful copy that matches the dashboard)
+  Files: assets/js/welcome-guide.js
+  Verified by: `curl http://localhost:3002/assets/js/welcome-guide.js | grep` confirms the IELTS server is serving the new text and the "in any order" string only survives in the explanatory comment.
+
+### Quality Map (after this round)
+| Page | Layer | Notes |
+|------|-------|-------|
+| assets/js/welcome-guide.js | 5-Delightful | Module sequence explicit, "any order" UI lie removed |
+| student-dashboard.html (IELTS module order) | 5-Delightful (verified, untouched) | Listening → Reading → Writing matches official |
+| Cambridge/dashboard-cambridge.html (B1/B2/C1 order) | 5-Delightful (verified, untouched) | Reading → Writing → Listening → Speaking matches official |
+| Cambridge/dashboard-cambridge.html (A2 Key order) | 5-Delightful (verified, untouched) | R&W → Listening → Speaking matches official |
+
+### Verified-not-needed (still no extras found)
+- IELTS Listening "~30 min" claim — accurate vs the official spec wording even though the actual computer-delivered timer is 32 minutes (30 audio + 2 review).
+- "Every 30 seconds, your work is saved." — accurate for IELTS, conservative simplification for Cambridge.
+- IELTS dashboard module ordering — already correct.
+- Cambridge B1/B2/C1/A2 dashboard module ordering — already correct.
+
+### Deferred (would need new exam content / minor restructure)
+- B2 First mock has 6 reading parts × 32 questions instead of the official 7 × 52 questions. Needs ~20 new questions plus a Part 7 (multiple matching). Not a UI compliance fix.
+- A1 Movers question ranges in `cambridge-answer-sync.js` fall through to A2 Key default (32q, 7 parts) instead of A1's spec (35q, 6 parts).
+- Cambridge A1 Movers dashboard module ordering — currently R&W → Listening → Speaking, but official YLE order is Listening → R&W → Speaking. Would need a per-level branch in `loadModulesForLevel` (it currently shares the A2 Key layout).
+
+### Session Stats
+Pages explored: 1 file (welcome-guide.js) + DOM verification of 5 dashboards (IELTS, Cambridge A1/A2/B1/B2/C1)
+Rounds: 1 (round 4 of the same compliance brief)
+Polishes landed: 1 (welcome-guide.js text rewrite)
+Rebuilds landed: 0
+Fixes landed: 0
+Reverted: 0
+Files touched: 1 (assets/js/welcome-guide.js)
+Verification: curl-served JS contents inspected on port 3002
