@@ -4,46 +4,8 @@
         let darkMode = localStorage.getItem('darkMode') || 'off';
         let currentTextSize = localStorage.getItem('textSize') || 'medium';
 
-        // Modal functions
-        function showWifiModal() {
-            document.getElementById('wifi-modal').style.display = 'flex';
-            updateWifiStatus();
-        }
-
-        function showBellModal() {
-            document.getElementById('bell-modal').style.display = 'flex';
-        }
-
-        function showNotesModal() {
-            document.getElementById('notes-modal').style.display = 'flex';
-            loadNotes();
-        }
-
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
-        }
-
-        // WiFi functionality
-        function updateWifiStatus() {
-            const indicator = document.getElementById('wifi-indicator');
-            const statusText = document.getElementById('wifi-status-text');
-            const networkName = document.getElementById('network-name');
-            const signalStrength = document.getElementById('signal-strength');
-            
-            // Simulate WiFi status (in real app, this would check actual connection)
-            const isConnected = navigator.onLine;
-            
-            if (isConnected) {
-                indicator.classList.remove('disconnected');
-                statusText.textContent = 'Connected';
-                networkName.textContent = 'IELTS_Test_Network';
-                signalStrength.textContent = 'Excellent';
-            } else {
-                indicator.classList.add('disconnected');
-                statusText.textContent = 'Disconnected';
-                networkName.textContent = 'No Network';
-                signalStrength.textContent = 'No Signal';
-            }
         }
 
         // Options functionality
@@ -102,10 +64,6 @@
                     window.location.href = '../../student-dashboard.html';
                 }, 500);
             }
-        }
-
-        function showDarkModeOptions() {
-            document.getElementById('dark-mode-modal').style.display = 'flex';
         }
 
         function showTextSizeOptions() {
@@ -183,45 +141,6 @@
             `;
             document.body.appendChild(notification);
             setTimeout(() => notification.remove(), 2000);
-        }
-
-        function showHelp() {
-            alert('IELTS Listening Test Help:\n\n' +
-                  '• Use the navigation arrows to move between questions\n' +
-                  '• Click on question numbers at the bottom to jump to specific questions\n' +
-                  '• Type your answers in the input boxes\n' +
-                  '• Use drag and drop for matching questions\n' +
-                  '• Click "Check Answers" when finished\n' +
-                  '• You can highlight text and add notes during the test');
-        }
-
-        // Notes functionality
-        function saveNotes() {
-            const notesText = document.getElementById('notes-textarea').value;
-            localStorage.setItem('ielts-notes', notesText);
-            
-            const notification = document.createElement('div');
-            notification.textContent = 'Notes saved successfully!';
-            notification.style.cssText = `
-                position: fixed;
-                top: 80px;
-                right: 20px;
-                background: #28a745;
-                color: white;
-                padding: 10px 15px;
-                border-radius: 4px;
-                z-index: 3000;
-                font-size: 14px;
-            `;
-            document.body.appendChild(notification);
-            setTimeout(() => notification.remove(), 2000);
-        }
-
-        function loadNotes() {
-            const savedNotes = localStorage.getItem('ielts-notes');
-            if (savedNotes) {
-                document.getElementById('notes-textarea').value = savedNotes;
-            }
         }
 
         // Close modals when clicking outside

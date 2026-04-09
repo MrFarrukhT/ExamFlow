@@ -496,12 +496,23 @@ body {
     color: #721c24;
 }
 
-/* --- Score Section --- */
+/* --- Score Section ---
+   Sticky-pinned to the top of the scrolling modal body so admins can review
+   all 40 answer rows below and still see (and use) the score input without
+   scrolling back up. The modal-body has overflow-y:auto, which makes it the
+   sticky container; the first grid cell of .answer-comparison contains both
+   the anti-cheat banner and this score-section, so we sit at the top of the
+   flow naturally. The lifted shadow + z-index keep us visually above the
+   coloured answer rows once they slide underneath. */
 .score-section {
     margin-top: 20px;
     padding: 20px;
     background: #f8f9fa;
     border-radius: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .score-input {

@@ -333,10 +333,11 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
 
     } catch (error) {
         console.error('Submission save error:', error);
+        // R28: do not leak error.message to unauthenticated clients — it reveals
+        // PG schema details (column types, integer overflow boundaries, varchar caps).
         res.status(500).json({
             success: false,
-            message: 'Failed to save submission',
-            error: error.message
+            message: 'Failed to save submission'
         });
     }
 });
@@ -469,8 +470,7 @@ app.get('/submissions', requireAdmin, async (req, res) => {
         console.error('Failed to fetch submissions:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to fetch submissions',
-            error: error.message
+            message: 'Failed to fetch submissions'
         });
     }
 });
@@ -495,7 +495,7 @@ app.delete('/submissions/:id', requireAdmin, async (req, res) => {
         res.json({ success: true, message: `Submission ${submissionId} deleted` });
     } catch (error) {
         console.error('❌ Failed to delete submission:', error);
-        res.status(500).json({ success: false, message: 'Failed to delete submission', error: error.message });
+        res.status(500).json({ success: false, message: 'Failed to delete submission' });
     }
 });
 
@@ -555,13 +555,14 @@ app.post('/update-score', requireAdmin, async (req, res) => {
         console.error('❌ Score update failed:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to update score',
-            error: error.message
+            message: 'Failed to update score'
         });
     }
 });
 
 // Mock Answers API endpoints
+
+const VALID_IELTS_SKILLS = ['reading', 'listening', 'writing', 'speaking'];
 
 // GET /mock-answers?mock=1&skill=reading - Get answers for specific mock and skill (admin only)
 app.get('/mock-answers', requireAdmin, async (req, res) => {
@@ -580,6 +581,13 @@ app.get('/mock-answers', requireAdmin, async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: 'Mock number must be a positive integer'
+            });
+        }
+
+        if (!VALID_IELTS_SKILLS.includes(skill)) {
+            return res.status(400).json({
+                success: false,
+                message: `Invalid skill. Must be one of: ${VALID_IELTS_SKILLS.join(', ')}`
             });
         }
 
@@ -650,7 +658,6 @@ app.post('/mock-answers', requireAdmin, async (req, res) => {
         }
 
         // Validate skill
-        const VALID_IELTS_SKILLS = ['reading', 'listening', 'writing', 'speaking'];
         if (!VALID_IELTS_SKILLS.includes(skill)) {
             return res.status(400).json({
                 success: false,
@@ -752,6 +759,13 @@ app.delete('/mock-answers', requireAdmin, async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: 'Mock number must be a positive integer'
+            });
+        }
+
+        if (!VALID_IELTS_SKILLS.includes(skill)) {
+            return res.status(400).json({
+                success: false,
+                message: `Invalid skill. Must be one of: ${VALID_IELTS_SKILLS.join(', ')}`
             });
         }
 
@@ -870,8 +884,7 @@ app.post('/api/ai-score-suggestion', requireAdmin, aiScoreLimiter, async (req, r
         console.error('❌ AI scoring error:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to get AI suggestion',
-            error: error.message
+            message: 'Failed to get AI suggestion'
         });
     }
 });

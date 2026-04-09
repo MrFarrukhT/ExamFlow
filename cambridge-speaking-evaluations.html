@@ -639,9 +639,38 @@
         async function loadSubmissions() {
             try {
                 const response = await authFetch('http://localhost:3003/cambridge-submissions?skill=speaking');
+
+                // Auth-aware error handling — the page has no own login form and depends on
+                // the cambridgeAdminToken set by cambridge-admin-dashboard.html. If the token
+                // is missing or stale, the server returns 401 with a JSON object body, NOT an
+                // array. Without this branch the page sailed into displaySubmissions(), tried
+                // submissions.map(), and crashed with "submissions.map is not a function" —
+                // which the catch then mislabeled as a "Connection Error".
+                if (response.status === 401) {
+                    document.getElementById('submissionsContainer').style.display = 'none';
+                    document.getElementById('emptyState').style.display = 'block';
+                    document.getElementById('emptyState').innerHTML = `
+                        <h3>🔒 Authentication required</h3>
+                        <p>Your admin session has expired or you haven't logged in yet.</p>
+                        <p><a href="cambridge-admin-dashboard.html" style="color:#0d9488;font-weight:600;text-decoration:underline;">Log in via the Cambridge Admin Dashboard</a>, then return to this page.</p>
+                    `;
+                    document.getElementById('statTotal').textContent = '—';
+                    document.getElementById('statPending').textContent = '—';
+                    document.getElementById('statEvaluated').textContent = '—';
+                    return;
+                }
+
                 const data = await response.json();
-                
-                allSubmissions = data;
+
+                // Defence in depth: any non-array response (validation error, server fault,
+                // unexpected envelope) should be treated as "no data" rather than crashing
+                // .map() downstream.
+                if (!Array.isArray(data)) {
+                    console.warn('Unexpected /cambridge-submissions response shape:', data);
+                    allSubmissions = [];
+                } else {
+                    allSubmissions = data;
+                }
                 applyFilters();
                 updateStatistics();
             } catch (error) {

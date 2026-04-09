@@ -750,10 +750,11 @@ app.post('/submissions', submissionLimiter, async (req, res) => {
         }
     } catch (error) {
         console.error('Submission save error:', error);
+        // R28: do not leak error.message to unauthenticated clients — it reveals
+        // PG schema details (column types, integer overflow boundaries, varchar caps).
         res.status(500).json({
             success: false,
-            message: 'Failed to save submission',
-            error: error.message
+            message: 'Failed to save submission'
         });
     }
 });

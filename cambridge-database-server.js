@@ -619,10 +619,12 @@ app.post('/cambridge-submissions', submissionLimiter, async (req, res) => {
 
     } catch (error) {
         console.error('Cambridge submission save error:', error);
+        // R28: do not leak error.message to unauthenticated clients — it reveals
+        // PG schema details (e.g., "value too long for type character varying(10)"
+        // exposed the mock_test column type).
         res.status(500).json({
             success: false,
-            message: 'Failed to save Cambridge submission',
-            error: error.message
+            message: 'Failed to save Cambridge submission'
         });
     }
 });
@@ -778,10 +780,11 @@ app.post('/submit-speaking', submissionLimiter, async (req, res) => {
 
     } catch (error) {
         console.error('❌ Speaking submission failed:', error.message);
+        // R28: do not leak error.message to unauthenticated clients — same PG schema
+        // disclosure as POST /cambridge-submissions.
         res.status(500).json({
             success: false,
-            message: 'Failed to save speaking test',
-            error: error.message
+            message: 'Failed to save speaking test'
         });
     }
 });
@@ -1440,8 +1443,24 @@ app.delete('/cambridge-answers', requireAdmin, async (req, res) => {
                 message: 'Level and skill are required'
             });
         }
-
-        const mockTest = mock || '1';
+        // Validate level and skill against the same enums POST uses (sibling parity).
+        if (!VALID_LEVELS.includes(level)) {
+            return res.status(400).json({ success: false, message: `Invalid level. Must be one of: ${VALID_LEVELS.join(', ')}` });
+        }
+        if (!VALID_SKILLS.includes(skill)) {
+            return res.status(400).json({ success: false, message: `Invalid skill. Must be one of: ${VALID_SKILLS.join(', ')}` });
+        }
+        // R28: validate mock parameter — must be a positive integer 1-100 (sibling parity with POST /cambridge-answers).
+        // Without this, DELETE accepted 'abc', -1, 999 silently and would just return "not found",
+        // letting attackers probe the keyspace without rate-limiting penalties.
+        let mockTest = '1';
+        if (mock != null && mock !== '') {
+            const mockNum = parseInt(mock, 10);
+            if (isNaN(mockNum) || mockNum < 1 || mockNum > 100) {
+                return res.status(400).json({ success: false, message: 'Mock must be a positive integer between 1 and 100' });
+            }
+            mockTest = String(mockNum);
+        }
         console.log(`🗑️ Deleting Cambridge answer key: ${level} ${skill} Mock ${mockTest}`);
 
         const dbClient = await ensureConnection();
