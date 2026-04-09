@@ -530,6 +530,8 @@
         };
 
         dashboard.loadAnswerSet = async function () {
+            // Guard: warn if the admin has unsaved edits before loading new data
+            if (!this.confirmDiscardIfDirty()) return;
             const mockNum = document.getElementById('answerMockSelect').value;
             const skill = document.getElementById('answerSkillSelect').value;
             for (let i = 1; i <= 40; i++) { const el = document.getElementById(`answer_${i}`); if (el) el.value = ''; }
@@ -548,8 +550,10 @@
                     if (!this.correctAnswers[`mock${mockNum}`]) this.correctAnswers[`mock${mockNum}`] = {};
                     this.correctAnswers[`mock${mockNum}`][skill] = data.answers;
                     this.updateAnswerStatus(`\u2705 Loaded ${data.count}/40 answers for Mock ${mockNum} - ${skill.toUpperCase()}`);
+                    this.markAnswersCleanAfterLoad();
                 } else {
                     this.updateAnswerStatus(`\uD83D\uDCDD No saved answers found for Mock ${mockNum} - ${skill.toUpperCase()}`);
+                    this.markAnswersCleanAfterLoad();
                 }
             } catch (error) {
                 console.error('Error loading answers:', error);
@@ -600,6 +604,7 @@
                     if (!this.correctAnswers[`mock${mockNum}`]) this.correctAnswers[`mock${mockNum}`] = {};
                     this.correctAnswers[`mock${mockNum}`][skill] = answers;
                     localStorage.setItem(`answers_mock${mockNum}_${skill}`, JSON.stringify(answers));
+                    this.markAnswersClean();
                     this.updateAnswerStatus(`\u2705 ${data.message}`);
                 } else { this.updateAnswerStatus(`\u274C Failed to save: ${data.message}`); }
             } catch (error) {

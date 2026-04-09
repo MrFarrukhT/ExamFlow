@@ -1,5 +1,62 @@
 # Eye Journal
 
+## Session: 2026-04-09 (round 36) — Answer Key Management
+Persona: Admin managing answer keys on both IELTS and Cambridge dashboards
+System: Both (assets/js/admin-common.js shared module + ielts-admin-dashboard.html + cambridge-admin-dashboard.html)
+Pages explored: ielts-admin-dashboard.html "Manage Answer Keys" section (code review: initializeAnswerGrid, loadAnswerSet, saveAnswerSet, clearAnswerSet), cambridge-admin-dashboard.html same section, local-database-server.js mock-answers endpoints, MOCKs/MOCK 1/answers/ JS file format
+Starting state: The answer key management grid let admins type and save 40 answers, but had no guard against accidental data loss. Changing the mock/skill selector immediately cleared the grid and loaded new data — silently discarding any edits the admin had made but hadn't saved yet. No "unsaved changes" indicator, no confirm prompt, no beforeunload guard.
+
+### Round 1 — Polish: unsaved-changes guard across both admin dashboards
+
+**Findings (4 total):**
+- [T2] **No "unsaved changes" guard.** Changing the mock/skill/level selector in the answer management section immediately clears the grid and loads new data. If an admin had typed answers for 38 questions but forgot to click Save, switching to a different mock discards all their work silently. No dirty indicator, no confirmation prompt.
+- [T2] **Alternative answers inconsistent between skills.** Listening: comma-separated values → saved as array. Reading (IELTS): commas saved as literal string including the comma character. An admin entering "harbour, harbor" for a reading answer key gets the full "harbour, harbor" as the answer, not two alternatives. Cambridge is slightly better (always splits commas → array for all skills).
+- [T0] **No bulk import.** Admin types all 40 answers one by one. No paste-from-spreadsheet, no JSON upload, no CSV import.
+- [T0] **No "what changed" preview.** Admin clicks Save → immediate database overwrite with no diff or review step.
+
+**Action:** POLISH 1 fix in admin-common.js (shared module) + wired into both dashboards. Deferred the comma-handling inconsistency and bulk-import.
+
+**Files touched:**
+1. **assets/js/admin-common.js** (~50 lines added)
+   - `initializeAnswerGrid()` — added `this._answersDirty = false` init + a delegated `input` event listener on the grid container that sets `_answersDirty = true` and shows a "(unsaved changes)" indicator next to the status message. Also added a `beforeunload` listener that fires `e.preventDefault()` when dirty, so closing the browser tab with unsaved work triggers the native "Leave site?" prompt.
+   - `confirmDiscardIfDirty()` — new method. Returns true if no unsaved edits, or prompts with `confirm('You have unsaved answer key changes. Discard them?')` if dirty. Resets the dirty flag if the admin confirms. Called by both dashboards before loading a new answer set.
+   - `markAnswersClean()` — new method. Called after successful save.
+   - `markAnswersCleanAfterLoad()` — new method. Called after successful load (the grid now matches the database, so edits are clean).
+   - `_showDirtyIndicator(show)` — appends/removes a small "(unsaved changes)" orange label next to the status message.
+   - `updateAnswerStatus()` — updated to preserve the dirty indicator across status message changes.
+2. **ielts-admin-dashboard.html** (~3 lines added)
+   - `loadAnswerSet()` — added `if (!this.confirmDiscardIfDirty()) return;` at the top.
+   - After successful load: `this.markAnswersCleanAfterLoad();`
+   - After successful save: `this.markAnswersClean();`
+3. **cambridge-admin-dashboard.html** (~4 lines added)
+   - Same three hooks wired into the Cambridge dashboard's loadAnswerSet and saveAnswerSet.
+
+**Verification:**
+- `node --check assets/js/admin-common.js` ✅ syntax ok
+- Code review: `confirmDiscardIfDirty()` is called before every load path (mock/skill/level selector changes all trigger loadAnswerSet). The beforeunload guard catches browser close/refresh. Both `markAnswersClean()` and `markAnswersCleanAfterLoad()` reset the flag so the guard doesn't fire after a successful operation.
+
+### Quality Map (after round 36)
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| Admin answer grid data safety | 1-Functional (silent discard) → 3-Efficient | Confirm prompt + beforeunload guard + dirty indicator |
+| Both IELTS + Cambridge dashboards | Same treatment | Shared admin-common.js means both get the guard |
+
+### Deferred
+- **Fix comma-handling inconsistency.** IELTS reading saves commas as literal text while listening splits them into alternatives. Cambridge splits for all skills. Should unify to always split commas → alternatives array.
+- **Bulk import.** Paste-from-spreadsheet or JSON upload for the answer grid — would save significant admin time.
+- **Review-before-save.** Show a diff of what changed since the last load before committing to the database.
+
+### Session Stats (round 36)
+Pages explored: 3 files (admin-common.js, ielts-admin-dashboard.html, cambridge-admin-dashboard.html) + 2 server files for context
+Findings: 4 (2× T2, 2× T0)
+Polishes landed: 1 (unsaved-changes guard)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Files touched: 3 (assets/js/admin-common.js, ielts-admin-dashboard.html, cambridge-admin-dashboard.html)
+
+---
+
 ## Session: 2026-04-09 — Result-viewing flow round 6: UoE required + submission-row a11y (loop /eye full re-run)
 Persona: Admin entering B2-First results + admin navigating date view with keyboard
 System: Both

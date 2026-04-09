@@ -687,6 +687,7 @@ class AdminDashboard {
     initializeAnswerGrid() {
         const grid = document.getElementById('answerGrid');
         grid.innerHTML = '';
+        this._answersDirty = false;
         for (let i = 1; i <= 40; i++) {
             const inputGroup = document.createElement('div');
             inputGroup.className = 'answer-input-group';
@@ -696,15 +697,72 @@ class AdminDashboard {
             `;
             grid.appendChild(inputGroup);
         }
+        // Track edits so we can warn before the admin accidentally discards unsaved work.
+        grid.addEventListener('input', () => {
+            if (!this._answersDirty) {
+                this._answersDirty = true;
+                this._showDirtyIndicator(true);
+            }
+        });
+        // Guard: browser tab close / refresh with unsaved changes
+        window.addEventListener('beforeunload', (e) => {
+            if (this._answersDirty) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
         this.updateAnswerStatus('Ready to input answers');
+    }
+
+    /** Returns true if the admin has unsaved edits, and prompts to confirm discard.
+     *  Call this before loading a different mock/skill to prevent accidental data loss. */
+    confirmDiscardIfDirty() {
+        if (!this._answersDirty) return true;
+        const discard = confirm('You have unsaved answer key changes. Discard them?');
+        if (discard) {
+            this._answersDirty = false;
+            this._showDirtyIndicator(false);
+        }
+        return discard;
+    }
+
+    /** After a successful save, clear the dirty flag. */
+    markAnswersClean() {
+        this._answersDirty = false;
+        this._showDirtyIndicator(false);
+    }
+
+    /** After a load, reset dirty state (the grid now matches the database). */
+    markAnswersCleanAfterLoad() {
+        this._answersDirty = false;
+        this._showDirtyIndicator(false);
+    }
+
+    _showDirtyIndicator(show) {
+        const status = document.getElementById('answerStatus');
+        const existing = document.getElementById('answerDirtyDot');
+        if (show && !existing && status) {
+            const dot = document.createElement('span');
+            dot.id = 'answerDirtyDot';
+            dot.textContent = ' (unsaved changes)';
+            dot.style.cssText = 'color:#e67e22;font-weight:700;';
+            status.appendChild(dot);
+        } else if (!show && existing) {
+            existing.remove();
+        }
     }
 
     updateAnswerStatus(message) {
         const status = document.getElementById('answerStatus');
         if (status) {
+            // Preserve the dirty indicator if it exists
+            const dirtyDot = document.getElementById('answerDirtyDot');
             status.textContent = message;
             status.style.color = message.includes('\u2705') ? '#28a745' :
                 message.includes('\u274C') ? '#dc3545' : '#007bff';
+            if (dirtyDot && this._answersDirty) {
+                status.appendChild(dirtyDot);
+            }
         }
     }
 

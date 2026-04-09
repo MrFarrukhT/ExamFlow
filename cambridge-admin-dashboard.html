@@ -565,6 +565,7 @@
         }
 
         dashboard.loadAnswerSet = async function () {
+            if (!this.confirmDiscardIfDirty()) return;
             const level = document.getElementById('answerLevelSelect').value;
             const skill = document.getElementById('answerSkillSelect').value;
             const mock = document.getElementById('answerMockSelect').value;
@@ -583,8 +584,10 @@
                         }
                     }
                     this.correctAnswers[`${level}_${skill}_${mock}`] = data.answers;
+                    this.markAnswersCleanAfterLoad();
                     this.updateAnswerStatus(`\u2705 Loaded ${data.count}/40 answers for ${level} ${skill} Mock ${mock}`);
                 } else {
+                    this.markAnswersCleanAfterLoad();
                     this.updateAnswerStatus(`\uD83D\uDCDD No saved answers found for ${level} ${skill} Mock ${mock}`);
                 }
             } catch (error) {
@@ -620,6 +623,7 @@
                 const data = await response.json();
                 if (data.success) {
                     this.correctAnswers[`${level}_${skill}_${mock}`] = answers;
+                    this.markAnswersClean();
                     this.updateAnswerStatus(`\u2705 ${data.message}`);
                 } else { this.updateAnswerStatus(`\u274C Failed to save: ${data.message}`); }
             } catch (error) {
