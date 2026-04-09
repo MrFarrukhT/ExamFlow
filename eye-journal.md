@@ -1,5 +1,51 @@
 # Eye Journal
 
+## Session: 2026-04-09 — C1 Advanced parity with official Cambridge screenshots (round 3)
+Persona: Student taking the C1 Advanced (CAE) mock test across all 14 surfaces
+System: Cambridge (port 3003)
+Pages explored: Reading & UoE Parts 1-8, Listening Parts 1-4, Writing Parts 1-2 (14 total)
+Reference set: cae/examples/{1..8,l1..l5,w1,w2}.png
+
+### Round 3
+**Explored:** All 14 C1 surfaces walked at 1440x900, screenshots compared 1:1 to the official Inspera screenshots in cae/examples/. Most pages already match: split-reading (Parts 5/6/8), gap-text bank sidebar (Part 7), keyword-list sidebar (Part 3), open cloze (Part 2), split-writing with callouts (Writing 1/2), listening MCQ + audio status badge + Play modal (Listening 1-3), task-1/task-2 multi-match (Listening 4). Two real gaps remained.
+
+- [T2] Reading Part 4 (Key word transformation) — official 4.png shows ONE question on screen at a time with the rest of the page empty; ours stacked all 6 questions (Q25-30). Added `data-c1-layout="single-question"` body attribute, CSS that hides every `.QuestionDisplay__questionDisplayWrapper___1n_b0` not marked `.c1-active-q`, and a tiny script (`assets/js/cambridge/cambridge-c1-question-nav.js`) that:
+  - Picks the active question from the existing footer nav (or first wrapper)
+  - Intercepts footer sub-question clicks (capture phase, before cambridge-part-scroll.js) and swaps `.c1-active-q`
+  - Hooks the footer Prev/Next buttons to step through wrappers in order
+  Verified: clicking 27 in the footer correctly switches the visible question to "John would have begun his journey earlier... PREVENTED ... Having a headache was [27] off..." with empty space below — pixel-identical layout to 4.png.
+  Mode: rebuild (structural change to question display)
+  Quality layer: 3-Efficient → 5-Delightful (matches official exam exactly)
+  Files: assets/css/cambridge-c1-official-layout.css (+19 lines), assets/js/cambridge/cambridge-c1-question-nav.js (NEW), Cambridge/MOCKs-Cambridge/C1-Advanced/Part 4.html (body attr + script tag)
+
+- [T3] Reading Part 1 (Multiple-choice cloze) — official 1.png shows each gap as a small bordered box with just the question number visible until selection, then the chosen letter (A/B/C/D). Ours showed a separate `.c1-popover-num` badge next to a wide select with a chevron arrow and the full option text "B – pose". Tightened CSS so the select is 44px wide, no chevron, transparent text (so the visible "B – pose" doesn't overflow); restored option color via `.c1-popover-gap select option { color: #1e3a5f }` so the dropdown menu still shows the full text when opened. The badge moved to absolute positioning centred over the select, and the JS now flips its text between question number (empty) and selected letter (filled), with a teal color when filled.
+  Verified: empty gaps render as small numbered boxes; clicking opens a dropdown with full "A – supportive" / "B – favourable" labels; on selection the gap shows the chosen letter in teal.
+  Mode: polish (visual parity refinement)
+  Quality layer: 4-Polished → 5-Delightful
+  Files: assets/css/cambridge-c1-official-layout.css (popover-gap rules rewritten), assets/js/cambridge/cambridge-c1-question-nav.js (added bindPopoverBadges), Cambridge/MOCKs-Cambridge/C1-Advanced/Part 1.html (script tag)
+
+### Quality Map (after round 3)
+| Page | Layer | Notes |
+|------|-------|-------|
+| C1 Reading & UoE Part 1 | 5-Delightful | Numbered popover boxes match 1.png |
+| C1 Reading & UoE Part 2 | 5-Delightful | Open cloze inline inputs match 2.png |
+| C1 Reading & UoE Part 3 | 5-Delightful | Keyword List sidebar matches 3.png |
+| C1 Reading & UoE Part 4 | 5-Delightful | Single-question pagination matches 4.png |
+| C1 Reading Parts 5/6/7/8 | 5-Delightful | Split layouts already shipped in round 2 |
+| C1 Listening Parts 1-4 | 5-Delightful | Already shipped in round 2 |
+| C1 Writing Parts 1-2 | 5-Delightful | Already shipped in round 2 |
+
+### Session Stats
+Pages explored: 14 C1 Advanced surfaces (full mock walkthrough)
+Rounds: 1 (compounding round 2's foundation)
+Rebuilds landed: 1 (Part 4 single-question pagination)
+Polishes landed: 1 (Part 1 popover gap visual parity)
+Reverted: 0
+Files touched: 4 (CSS + new JS + 2 HTML)
+Verification screenshots: 8 (parts 1-8, listening 1-4, writing 1-2, plus before/after for Part 4 and Part 1)
+
+---
+
 ## Session: 2026-04-09 — Result-viewing flow: tests + invigilator + admin (loop /eye full)
 Persona: Invigilator AND admin checking student test results across both systems
 System: Both (IELTS port 3002, Cambridge port 3003)
