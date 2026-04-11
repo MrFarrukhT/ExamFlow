@@ -1,5 +1,99 @@
 # Eye Journal
 
+## Session: 2026-04-11 15:25 — Zarmet Olympiada Cambridge-Authentic UI — Round 11
+Persona: Student answering on a slow network (lab wifi, satellite, congested connection) | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: test.html reading — answer save latency measurement
+Starting state: Round 10 walked 409 bounce (no fix) + added input maxLength guards. This round picks slow-network from the deferred list.
+
+### Round 11 — Answer save latency (nav counter lag)
+
+**Explored:** What happens when the student changes an answer and the network is slow.
+
+**Finding:**
+
+- [T3 — latent perf bug] `saveAnswer()` called `renderBottomNav()` AFTER `await fetch(...)`. That means:
+  - Student picks radio B for Q1
+  - state.answers updates synchronously (immediate)
+  - localStorage mirror writes synchronously (immediate)
+  - radio checked state updates synchronously (immediate, browser native)
+  - **but the bottom nav `X of Y` counter waits for the fetch to resolve** before updating
+  - On localhost (~1ms RTT), the gap is imperceptible
+  - On a real exam lab wifi network (~50-200ms RTT), the nav counter visibly lags 50-200ms behind the student's input
+  - On a satellite/congested network (~1-3 seconds), the counter lags noticeably and students second-guess whether their answer was recorded
+  
+  Measurable even on localhost: sync check immediately after dispatching the `change` event returned `immediatelyAfter: 0` (zero answered questions), but a 100ms wait later showed `afterWait100ms: 1`. The state.answers was updated but renderBottomNav hadn't been called yet because the promise microtask for the fetch was still pending.
+
+**Action:** POLISH (1 change — reorder 3 lines in saveAnswer)
+
+- [T3] Moved `renderBottomNav()` BEFORE the `await fetch(...)` in `saveAnswer()`. The local state (state.answers + localStorage mirror) is updated synchronously, so the UI should reflect it synchronously. The server fetch becomes fire-and-forget from the UI perspective — it still runs, still saves to the server JSONL (ADR-035 durability), still logs failures, but the UI doesn't block on it.
+  Mode: polish | Quality: 3 → 5 | Files: public/js/test.js
+
+```js
+// Before:
+state.answers[qid] = value;
+localStorage.setItem(...);
+try { await fetch(...); } catch (e) { ... }
+renderBottomNav();   // ← runs after network round-trip
+
+// After:
+state.answers[qid] = value;
+localStorage.setItem(...);
+renderBottomNav();   // ← runs synchronously
+try { await fetch(...); } catch (e) { ... }  // ← fire-and-forget
+```
+
+### Verification (playwright-cli measurement)
+
+**Before fix:**
+```
+Change event fired, then immediately check: 0 answered
+Wait 100ms, then check: 1 answered
+```
+
+**After fix:**
+```
+Change event fired, then immediately check: 1 answered
+```
+
+The nav counter now updates synchronously. On a 3-second slow route the effect would be even more dramatic — the UI stays responsive while the server save happens in the background.
+
+Also verified no regressions:
+- state.answers still updates correctly
+- localStorage mirror still writes
+- Server JSONL still receives the POST
+- renderBottomNav doesn't break when called twice rapidly (next answer change re-runs it)
+
+### Quality Map (no layer changes — still 13/13 Crafted, but now latency-robust)
+
+### Deferred (shrinking more)
+- Concurrent tabs — two tabs on same session. Low-priority (single-student-per-machine by design in intent plan).
+- Bookmark icon clickability — placeholder by design; would be a new feature.
+- Test page inactive part segments as keyboard-jumpable buttons — arrows work; secondary improvement.
+
+### Session Stats
+Pages explored: 1 (test.html answer save flow)
+Screenshots captured: 0 (this was a timing measurement, not a visual walk)
+Rounds: 1
+Polishes landed: 1
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 1
+
+**Trajectory update:** Rounds 6-11 each found one legitimate fix by picking a new input dimension:
+- Round 6: wide viewport
+- Round 7: narrow viewport
+- Round 8: refresh (temporal state)
+- Round 9: keyboard-only (input mode)
+- Round 10: post-submit navigation + long input
+- Round 11: slow network (latency)
+
+Six rounds of "novel dimension + shipped fix" in a row. The pattern hasn't failed yet. The app is approaching but hasn't yet hit the ceiling — at least 2-3 more unwalked angles remain (concurrent tabs, bookmark interaction, inactive-part keyboard jump).
+
+If /eye keeps firing, eventually it will start producing "no-change" rounds where the scan reveals nothing new. That's the real ceiling signal. We're not there yet — round 11 still found a real latency bug hiding in the saveAnswer sequencing.
+
+---
+
 ## Session: 2026-04-11 15:15 — Zarmet Olympiada Cambridge-Authentic UI — Round 10
 Persona: Student doing edge-case things (going back to submitted module, pasting huge text) | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: 409 bounce path (test.html for already-submitted module), KWT input stress test

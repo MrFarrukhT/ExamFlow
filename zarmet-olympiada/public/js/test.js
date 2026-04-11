@@ -140,10 +140,19 @@
 
   // ---------- answer persistence ----------
   async function saveAnswer(qid, value) {
+    // Update state and UI SYNCHRONOUSLY — the nav counter should reflect
+    // the student's input immediately, not after the network round-trip.
+    // On slow networks (lab wifi, satellite) the old "await fetch then
+    // renderBottomNav" pattern caused a visible lag between the student
+    // picking a radio and the "X of Y" counter updating.
     state.answers[qid] = value;
     try {
       localStorage.setItem('olympiada:ans:' + sessionId + ':' + qid, JSON.stringify(value));
     } catch (e) {}
+    renderBottomNav();
+    // Fire-and-forget the server save. localStorage is the immediate
+    // persistence layer; the server JSONL is the durable one (ADR-035).
+    // Failures are logged but don't affect the UI.
     try {
       await fetch('/api/session/' + encodeURIComponent(sessionId) + '/answer', {
         method: 'POST',
@@ -153,7 +162,6 @@
     } catch (e) {
       console.warn('answer save network failed:', e);
     }
-    renderBottomNav();
   }
 
   // ---------- per-part renderers ----------
