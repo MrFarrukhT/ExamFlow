@@ -441,26 +441,73 @@
     }
 
     if (Array.isArray(part.taskGroups) && part.taskGroups.length) {
+      // Compact two-column layout per Cambridge reference l5.png:
+      //   Left = speaker rows with select inputs + question number
+      //   Right = reference options panel (A-H list, read-only)
       part.taskGroups.forEach((tg) => {
         const tgEl = el('div', 'ct-task-group');
         tgEl.appendChild(el('div', 'ct-task-group-instructions', tg.instructions || ''));
 
-        // Show options list as a reference
-        if (tg.options && tg.options.length) {
-          const olist = document.createElement('ul');
-          olist.className = 'ct-task-options';
-          tg.options.forEach((opt) => {
-            const li = document.createElement('li');
-            li.appendChild(el('span', 'ct-q-option-key', opt.key));
-            li.appendChild(el('span', null, opt.text));
-            olist.appendChild(li);
-          });
-          tgEl.appendChild(olist);
-        }
+        const layout = el('div', 'ct-task-layout');
 
+        // Left column — speaker rows
+        const speakers = el('div', 'ct-task-speakers');
         (tg.questions || []).forEach((q) => {
-          tgEl.appendChild(renderMatchingQuestion(q, tg.options || []));
+          const row = el('div', 'ct-task-speaker');
+          row.dataset.qid = q.id;
+          if (state.currentQid === q.id) row.classList.add('ct-task-speaker--active');
+
+          const label = el('span', 'ct-task-speaker-label', q.prompt || q.id);
+          row.appendChild(label);
+
+          const select = document.createElement('select');
+          select.className = 'ct-task-speaker-select';
+          const placeholder = document.createElement('option');
+          placeholder.value = '';
+          placeholder.textContent = '—';
+          select.appendChild(placeholder);
+          (tg.options || []).forEach((opt) => {
+            const o = document.createElement('option');
+            o.value = opt.key;
+            o.textContent = opt.key + '  ' + opt.text;
+            if (state.answers[q.id] === opt.key) o.selected = true;
+            select.appendChild(o);
+          });
+          select.addEventListener('change', () => {
+            saveAnswer(q.id, select.value);
+            state.currentQid = q.id;
+            // Update active row highlight in place (avoid full re-render)
+            document.querySelectorAll('.ct-task-speaker--active').forEach(n => n.classList.remove('ct-task-speaker--active'));
+            row.classList.add('ct-task-speaker--active');
+          });
+          select.addEventListener('focus', () => {
+            state.currentQid = q.id;
+            document.querySelectorAll('.ct-task-speaker--active').forEach(n => n.classList.remove('ct-task-speaker--active'));
+            row.classList.add('ct-task-speaker--active');
+          });
+          row.appendChild(select);
+
+          const num = el('span', 'ct-task-speaker-num', extractQuestionNumber(q) || '');
+          row.appendChild(num);
+
+          speakers.appendChild(row);
         });
+        layout.appendChild(speakers);
+
+        // Right column — options reference panel (read-only visual aid)
+        const panel = el('div', 'ct-task-options-panel');
+        const olist = document.createElement('ol');
+        olist.className = 'ct-task-options-list';
+        (tg.options || []).forEach((opt) => {
+          const li = document.createElement('li');
+          li.appendChild(el('span', 'ct-task-opt-key', opt.key));
+          li.appendChild(el('span', null, opt.text));
+          olist.appendChild(li);
+        });
+        panel.appendChild(olist);
+        layout.appendChild(panel);
+
+        tgEl.appendChild(layout);
         wrap.appendChild(tgEl);
       });
     } else {

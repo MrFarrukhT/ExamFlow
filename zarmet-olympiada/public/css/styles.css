@@ -684,31 +684,102 @@ body.zu-test-body h4 { font-size: 14px; }
 
 /* Listening — task-group labels and pre-play modal */
 .ct-task-group {
-  margin-bottom: 24px;
-  padding-bottom: 24px;
+  margin-bottom: 28px;
+  padding-bottom: 28px;
   border-bottom: 1px solid var(--ct-border);
 }
-.ct-task-group:last-child { border-bottom: none; }
+.ct-task-group:last-child { border-bottom: none; margin-bottom: 8px; padding-bottom: 0; }
 .ct-task-group-instructions {
   font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 12px;
+  font-weight: 700;
+  margin-bottom: 14px;
   padding: 10px 14px;
   background: var(--ct-banner-bg);
-  border-radius: 3px;
+  border-left: 3px solid var(--ct-teal);
+  border-radius: 2px;
   color: var(--ct-text);
 }
-.ct-task-options {
+
+/* Two-column task layout: speakers on the left, options on the right
+ * (matches cae/examples/l5.png exactly) */
+.ct-task-layout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 24px;
-  margin: 12px 0;
-  font-size: 13px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
 }
-.ct-task-options li {
-  list-style: none;
+.ct-task-speakers {
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  gap: 6px;
+}
+.ct-task-speaker {
+  display: grid;
+  grid-template-columns: 88px 1fr 24px;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  transition: background 0.12s, border-color 0.12s;
+}
+.ct-task-speaker:hover { background: #f9fafb; }
+.ct-task-speaker--active {
+  background: #ecfeff;
+  border-color: var(--ct-teal);
+}
+.ct-task-speaker-label {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ct-text);
+}
+.ct-task-speaker-select {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  padding: 5px 8px;
+  border: 1px solid var(--ct-border-strong);
+  background: #fff;
+  color: var(--ct-text);
+  border-radius: 2px;
+  width: 100%;
+  min-width: 0;
+}
+.ct-task-speaker-select:focus {
+  outline: none;
+  border-color: var(--ct-teal);
+  box-shadow: 0 0 0 1px var(--ct-teal);
+}
+.ct-task-speaker-num {
+  font-size: 12px;
+  color: var(--ct-text-muted);
+  text-align: right;
+  font-family: Arial, sans-serif;
+}
+
+/* Options reference panel — right column */
+.ct-task-options-panel {
+  background: var(--ct-banner-bg);
+  border: 1px solid var(--ct-border);
+  border-radius: 4px;
+  padding: 12px 16px;
+  font-size: 13px;
+  align-self: start;
+}
+.ct-task-options-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.ct-task-options-list li {
+  padding: 5px 0;
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 6px;
+  color: var(--ct-text);
+}
+.ct-task-options-list .ct-task-opt-key {
+  font-weight: 700;
+  color: var(--ct-text);
 }
 
 /* Pre-play modal */

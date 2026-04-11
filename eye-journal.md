@@ -1,5 +1,63 @@
 # Eye Journal
 
+## Session: 2026-04-11 14:05 — Zarmet Olympiada Cambridge-Authentic UI — Round 3
+Persona: Student taking English C1 Listening Part 4 (two-task matching) | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: Listening Part 4 (rebuild target), verified via navigation round-trip
+Starting state: Rounds 1+2 shipped 9 polishes; Listening Part 4 layout deferred as the only non-Crafted page
+
+### Round 3 — REBUILD: Listening Part 4 compact two-column task layout
+
+**Finding (from Round 2 deferred list):**
+
+- [T0 → rebuild] Listening Part 4 taskGroup rendering — functional but used vertical stacks of radio-button question cards with options listed inline as a `<ul>`. The Cambridge reference (cae/examples/l5.png) shows a much tighter two-column layout per task: LEFT = 5 speaker rows with label + select + question number, RIGHT = reference options panel listing A-H. This was labeled Layer 4 Polished in Round 2's quality map and deferred for rebuild.
+
+**Decision:** REBUILD mode. The information is in the right order (speakers paired with options) but the component pattern is wrong (vertical radio cards vs tight speaker-select rows + options panel).
+
+**Action:** REBUILD the taskGroups branch of `renderListeningPart`.
+
+- [REBUILD] renderListeningPart taskGroup branch — Replaced radio-button question cards with a `.ct-task-layout` grid:
+  - LEFT `.ct-task-speakers`: one `.ct-task-speaker` row per question with `88px | 1fr | 24px` grid (speaker label | select | question number). Cyan active highlight on the currently selected speaker row. Focus/change handlers update `state.currentQid` and re-highlight in-place (no full re-render) for smooth interaction.
+  - RIGHT `.ct-task-options-panel`: reference-only `<ol>` showing all options A-H with bold keys. Read-only visual aid, no interaction (students pick via the select, not by clicking options).
+  - Task header gets a teal left border accent (`border-left: 3px solid var(--ct-teal)`) to visually anchor each task.
+  Mode: rebuild | Quality: 4 → 5 | Files: public/css/styles.css (+80 lines), public/js/test.js (~50 lines replaced)
+
+### Verification
+
+Walked Part 4 via playwright-cli after the rebuild:
+- ✅ Task 1 header "Task 1 — For questions 21-25, choose from the list A-H what reason each speaker gives for changing their job." with teal left border
+- ✅ Task 1 speaker rows: Speaker 1 (active cyan) + Speaker 2, each with a select dropdown (showing "—" placeholder and full list on click) and question number (21, 22) on the right
+- ✅ Task 1 options panel on the right: A unfriendly colleagues / B poor holiday entitlement / C lacking a sense of purpose / D needing more of a challenge
+- ✅ Task 2 header with teal border + Task 2 speakers (26, 27) + Task 2 options (different list: A encouraged by early results / B hopeful about future success / ...)
+- ✅ Interaction test: Set Speaker 1 to "C" → select shows "C lacking a sense of purpose", active highlight preserved, server-side session JSONL records `lq21: "C"` (confirmed via `GET /api/session/:id`)
+- ✅ Navigation round-trip: Part 4 → Part 1 → back to Part 4 → Speaker 1 select still shows "C" (state.answers survived re-render)
+- ✅ Bottom nav Part 4 active showing `21 22 26 27` teal buttons
+
+Matches cae/examples/l5.png visually within the constraints of Zarmet-neutral branding. Compact, scannable, authentic.
+
+### Quality Map (updated)
+| Page | Layer | Notes |
+|------|-------|-------|
+| test.html Listening Part 4 | **5-Crafted** | Rebuild complete — matches Cambridge l5.png reference |
+
+All 8 reading parts + all 4 listening parts + welcome + dashboard + done = **12/12 pages at Layer 5 Crafted**.
+
+### Deferred
+- Real audio content transcription — out of /eye scope (content phase)
+- `cae/examples/` writing pages (w1.png, w2.png) — writing is out of scope per intent plan
+- Further improvements require real content or backend changes
+
+### Session Stats
+Pages explored: 1 (Listening Part 4)
+Screenshots captured: 2
+Rounds: 1 (within this session)
+Polishes landed: 0
+Rebuilds landed: 1
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 1 rebuild
+
+---
+
 ## Session: 2026-04-11 13:55 — Zarmet Olympiada Cambridge-Authentic UI — Round 2
 Persona: Student taking English C1 Reading + Listening | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: test Parts 2, 3, 6, 8, Listening Part 1 + Part 4 two-task, done.html
