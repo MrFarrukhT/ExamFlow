@@ -1,5 +1,84 @@
 # Eye Journal
 
+## Session: 2026-04-11 18:40 — Zarmed Olympiada Tab-Title Timer Prefix — Round 22g (parallel iteration)
+Persona: Student who has the exam tab in the background (e.g. accidentally clicked another tab, or opened a dictionary in a separate tab for German C1) — currently gets no warning that time is running low | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: test.html startTimer tick function + 3-state browser verification
+Starting state: Round 22c verified the `.ct-timer--warn` (<5min) and `.ct-timer--urgent` (<1min) class transitions work end-to-end. The VISIBLE timer pill changes color (gray → amber → red-pulsing). But the document.title stays static as "Zarmed Olympiada — Test" across all three states. A student who tab-switches away from the exam has no low-time warning in their tab-bar — they'd have to actively click back to the exam tab to see the countdown.
+
+### Round 22g — Tab-title timer prefix for backgrounded tabs
+
+**Problem:** `document.title` stays "Zarmed Olympiada — Test" forever. The browser tab-bar shows that title whether you're on the exam tab or some other tab. A student who accidentally backgrounds the exam (clicks a different tab, opens a dictionary in a new tab, gets distracted) can't see the remaining time at a glance — their exam tab just says "Zarmed Olympiada — Test" like always. If the timer enters the warn or urgent window while the tab is backgrounded, nothing visually alerts them.
+
+This matters more than it sounds: students DO background tabs during exams (even accidentally). The tab-title is the only cross-tab affordance the browser gives us.
+
+**Pattern:** The standard "tab title counter" pattern used by Gmail (`Gmail (5)` for unread), Google Calendar (`(1) Event — Calendar`), Discord (`(12) #channel`), etc. The parentheses prefix is familiar, unobtrusive, and shows up at a glance in the browser's tab list / OS window list.
+
+**Action:** POLISH (one helper + a 2-line dynamic update in the tick function)
+
+Edited `startTimer()` in public/js/test.js:
+
+1. Captured `const originalTitle = document.title;` at function scope so we can restore it if the timer ever leaves the warn/urgent window (defensive — in practice time only moves forward, but the extract-original pattern is cleaner than hardcoding the title string in JS).
+
+2. Factored out the `mmss` formatting so both the visible timer element AND the title prefix use the same string. Added local `isUrgent` / `isWarn` booleans (previously inline in the classList.toggle calls).
+
+3. Added the dynamic title update logic:
+   ```js
+   const desiredTitle = (isWarn || isUrgent)
+     ? ('(' + mmss + ') ' + originalTitle)
+     : originalTitle;
+   if (document.title !== desiredTitle) document.title = desiredTitle;
+   ```
+   Guard against the redundant assignment so we don't spam `document.title = ...` on every tick even when the title hasn't changed (browsers treat title change as a lightweight DOM mutation, but it's free optimization).
+
+4. On auto-submit (remaining <= 0), explicitly set `document.title = originalTitle` before calling `submit(true)` — clean up the `(00:00)` prefix so if there's any flash of the page before the dashboard navigation, the student isn't staring at a stuck "(00:00) ..." title.
+
+Mode: polish | Quality: 4 → 5 | Files: public/js/test.js (+17/-6 inside startTimer)
+
+### Verification
+
+**3-state browser walk** via localStorage timerEnd manipulation:
+
+| State | remaining | title | timerClasses |
+|---|---|---|---|
+| Normal (60min fresh) | 59:48 | `Zarmed Olympiada — Test` | `ct-timer` |
+| Warn (4:10 remaining) | 04:09 | `(04:09) Zarmed Olympiada — Test` | `ct-timer ct-timer--warn` |
+| Urgent (45s remaining) | 00:33 | `(00:33) Zarmed Olympiada — Test` | `ct-timer ct-timer--urgent` |
+
+The title prefix updates every tick as the counter decrements (33 → 32 → 31 in the urgent screenshot). The original title is correctly restored when the timer moves back above 5 minutes (simulated via setting timerEnd = +60min — title returned to `Zarmed Olympiada — Test`).
+
+Screenshot `r22g-title-urgent.png` captures the urgent state. The browser window title bar (visible in some captures) would show the prefix live, but Playwright only captures the main viewport, not the chrome — so the verification is via `document.title` readback.
+
+Syntax check: `node --check test.js` passes.
+
+### Quality Map
+| Concern | Layer | Notes |
+|---|---|---|
+| Timer tab-bar awareness (normal) | **5-Crafted** | Static title, no distraction |
+| Timer tab-bar awareness (warn) | **5-Crafted** | (MM:SS) prefix visible in backgrounded tabs |
+| Timer tab-bar awareness (urgent) | **5-Crafted** | Same prefix + red pulsing visible timer |
+| Auto-submit cleanup | **5-Crafted** | Title restored before redirect |
+
+### Deferred (thin)
+- **German title prefix** — a German student sees `(04:09) Zarmed Olympiada — Test` in their tab bar. The "Zarmed Olympiada — Test" part is still English. Could be localized but the parenthetical is universal. Skipping — not worth the complexity for a 3-word English suffix.
+- **Flashing / blinking title to grab attention at <10s** — feature territory, skipping. The existing `ct-timer--urgent` pulsing animation on the visible timer is already strong enough if the student is looking at the exam tab.
+- **Tab favicon change** — swap favicon to a red variant at urgent state. Would require a second favicon SVG and dynamic `<link rel="icon">` manipulation. Polish, but scope creep this round.
+
+### Session Stats
+Pages explored: 1 (test.html startTimer) + 3-state runtime verification
+Screenshots captured: 1 (r22g-title-urgent.png)
+Rounds: 1 concurrent iteration
+Polishes landed: 1 (timer title prefix)
+Rebuilds: 0 | Elevations: 0 | Reverted: 0
+Changes shipped: 1 file (public/js/test.js)
+
+**Trajectory update:** Round 22g extends the Round 22 series one more thin polish. The pattern is now: find a silent-failure mode → add the smallest possible polish to surface it → verify via direct state manipulation. Each round takes <30 minutes of focused work, ships one measurable improvement, and leaves the codebase better than it found it.
+
+**Key learning:** The browser tab-bar is a forgotten UX surface. Apps spend enormous effort on in-page chrome but leave `document.title` as a static string authored at build time. For any app with time-sensitive state, dynamic title updates are nearly free and dramatically improve cross-tab UX. Gmail/Calendar/Discord all do this. Exam apps SHOULD too.
+
+**Recommended next angle:** Favicon change at urgent state — a red 🔴 variant that replaces the normal favicon when `remaining < 60s`. Students would see both the tab title AND a red dot in the favicon, even at 1/4 window sizes where the title text gets truncated. Would require one extra favicon.svg variant + dynamic `<link rel="icon">` href swap. Similar scope to this round.
+
+---
+
 ## Session: 2026-04-11 18:38 — Zarmed Olympiada German H1/Subtitle Localization Gap — Round 31 (/loop iteration)
 Persona: German C1 student at the welcome page / dashboard who picked German from the dropdown and expected the full page — including the large h1 brand title — to be in German | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: index.html (welcome) + dashboard.html at 1920×1080, both with language=german-c1

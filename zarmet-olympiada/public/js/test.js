@@ -1330,19 +1330,35 @@
     const stored = localStorage.getItem(storeKey);
     state.timerEndMs = stored ? Number(stored) : Date.now() + durationMs;
     if (!stored) localStorage.setItem(storeKey, String(state.timerEndMs));
+    // Capture the original <title> so we can restore it when the timer
+    // leaves the warn/urgent threshold (unlikely in practice — time only
+    // moves forward — but defensively correct). When the timer enters
+    // the warn/urgent window, we prefix the title with "(MM:SS) " so a
+    // student who's backgrounded the tab sees the remaining time in
+    // their browser tab-bar at a glance. Matches the "tab title counter"
+    // pattern used by Gmail/Calendar/etc. Only the title chrome changes;
+    // no new UI.
+    const originalTitle = document.title;
     function tick() {
       const remaining = Math.max(0, state.timerEndMs - Date.now());
       const minutes = Math.floor(remaining / 60000);
       const seconds = Math.floor((remaining % 60000) / 1000);
+      const mmss = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
       const timerEl = document.getElementById('ct-timer');
-      timerEl.textContent =
-        String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+      timerEl.textContent = mmss;
       // Low-time warning: amber <5 min, red <1 min. Matches real CAE
       // Inspera's timer color cues.
-      timerEl.classList.toggle('ct-timer--urgent', remaining > 0 && remaining < 60 * 1000);
-      timerEl.classList.toggle('ct-timer--warn', remaining >= 60 * 1000 && remaining < 5 * 60 * 1000);
+      const isUrgent = remaining > 0 && remaining < 60 * 1000;
+      const isWarn = remaining >= 60 * 1000 && remaining < 5 * 60 * 1000;
+      timerEl.classList.toggle('ct-timer--urgent', isUrgent);
+      timerEl.classList.toggle('ct-timer--warn', isWarn);
+      // Tab-bar time prefix for backgrounded students. Only fire when
+      // title changes to avoid browser title-change overhead on every tick.
+      const desiredTitle = (isWarn || isUrgent) ? ('(' + mmss + ') ' + originalTitle) : originalTitle;
+      if (document.title !== desiredTitle) document.title = desiredTitle;
       if (remaining <= 0) {
         clearInterval(state.timerHandle);
+        document.title = originalTitle; // clean up before submit redirects
         submit(true);
       }
     }
