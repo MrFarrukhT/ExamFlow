@@ -311,6 +311,10 @@
       input.className = 'ct-kwt-input';
       input.autocomplete = 'off';
       input.spellcheck = false;
+      // Key-word transformations are at most 6 words; 150 chars is a
+      // generous upper bound that guards against accidental paste-bombs
+      // filling localStorage.
+      input.maxLength = 150;
       input.value = state.answers[q.id] || '';
       input.addEventListener('input', () => {
         saveAnswer(q.id, input.value);
@@ -555,6 +559,9 @@
           input.className = 'ct-kwt-input';
           input.autocomplete = 'off';
           input.spellcheck = false;
+          // Listening sentence completions are up to N words per the
+          // question's maxWords field; 100 chars is generous but finite.
+          input.maxLength = 100;
           input.value = state.answers[q.id] || '';
           input.addEventListener('input', () => { saveAnswer(q.id, input.value); state.currentQid = q.id; refreshActiveHighlight(); });
           block.appendChild(input);
@@ -752,6 +759,9 @@
     input.className = 'ct-gap-input';
     input.autocomplete = 'off';
     input.spellcheck = false;
+    // Single-word gaps (open-cloze, word-formation) — 50 chars is a
+    // generous single-word allowance and prevents accidental paste-bombs.
+    input.maxLength = 50;
     input.value = state.answers[q.id] || '';
     input.addEventListener('input', () => {
       saveAnswer(q.id, input.value);

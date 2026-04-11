@@ -1,5 +1,90 @@
 # Eye Journal
 
+## Session: 2026-04-11 15:15 — Zarmet Olympiada Cambridge-Authentic UI — Round 10
+Persona: Student doing edge-case things (going back to submitted module, pasting huge text) | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: 409 bounce path (test.html for already-submitted module), KWT input stress test
+Starting state: Round 9 fixed keyboard-only flow. This round walks two more unexplored angles: production edge cases.
+
+### Round 10 — Session 409 bounce + input stress
+
+**Explored:** Two new dimensions:
+1. Student manually navigates back to `test.html?module=reading` after completing that module (session 409 path)
+2. Student pastes/types a huge string into a KWT or gap input
+
+**Findings:**
+
+- [T5 ✅] Session 409 bounce path — walked end-to-end:
+  - Completed a Reading submission via API (studentId r10-dupetest)
+  - Navigated to `test.html?module=reading` as if the student went back manually
+  - Result: URL immediately landed on `dashboard.html`, Reading card showed "Submitted" with green ✓
+  - No visible flash of test.html UI (test.js calls `loadContent()` then `ensureSession()` then `renderCurrentPart()`; the 409 triggers the redirect BEFORE renderCurrentPart runs)
+  - ONE console error: `Failed to load resource: 409 Conflict @ /api/session/start:0` — this is a browser-level network log, unavoidable, developer-facing only, invisible to students
+  - The 4-line test.js handler I wrote in ADR-040 (`if (res.status === 409) { window.location.href = 'dashboard.html'; return; }`) works exactly as designed
+  - **No fix needed.** The flow is clean end-to-end.
+
+- [T4] KWT/gap-fill inputs — no maxLength guard. Typed/pasted a 3000-character lorem ipsum into the Part 4 KWT input. The input accepted all 3000 chars, stored them in state.answers, and saved to the server. The `.ct-kwt-block` layout held up (input scrolls horizontally inside its fixed width), but:
+  - A real student pasting something by accident would fill localStorage fast (every keystroke saves)
+  - CAE Part 4 answers are 3-6 words max (~30 chars); 3000 chars is absurd
+  - Real Cambridge Inspera limits KWT input length per the exam specification
+  
+  This is a defensive-polish opportunity — not broken, but unbounded input is a minor liability.
+
+**Action:** POLISH (1 change — input length caps)
+
+- [T4] `input.maxLength` caps on text-input question types:
+  - `.ct-kwt-input` inside Part 4 KWT blocks: `maxLength = 150` (CAE KWT is max ~6 words + punctuation; 150 is generous)
+  - `.ct-kwt-input` inside listening sentence-completion: `maxLength = 100` (listening answers are typically single words or short phrases)
+  - `.ct-gap-input` inside inline Part 2/3 gaps: `maxLength = 50` (single-word gaps)
+  
+  These are HTML-native limits enforced by the browser on user typing + pasting. They don't block programmatic `.value` assignment (which is documented HTML behavior), but a hostile student opening devtools to bypass maxlength can do much worse things anyway — the threat model is accidental paste-bombs, not malicious students.
+  Mode: polish | Quality: 4 → 5 | Files: public/js/test.js
+
+### Verification
+
+- ✅ 409 bounce path: URL landed on dashboard.html, Reading card shows ✓ Submitted, screenshot `r10-dashboard-after-409.png`
+- ✅ KWT stress before fix: typed 170 chars, all 170 stored (no cap)
+- ✅ KWT stress after fix: typed 170 chars, input.value.length === 150 (capped)
+- ✅ Gap input stress: confirmed maxLength = 50 on `.ct-gap-input`
+- ✅ Listening sentence-completion: confirmed maxLength = 100 on `.ct-kwt-input` in the listening branch
+- ✅ Programmatic `.value = ...` still bypasses maxLength (expected HTML behavior, not a regression)
+
+### Quality Map (no layer changes — all 13 pages still Crafted)
+| Page | Layer | Notes |
+|------|-------|-------|
+| test.html (KWT, gap-fill, sentence-completion inputs) | **5-Crafted** | Now guarded against accidental paste-bombs |
+
+### Deferred (shrinking list)
+- **Concurrent tabs** — two browser tabs on the same session, answer conflicts. Interesting but low-priority (single-machine-per-student model in the intent plan)
+- **Slow network** — throttled answer saves. Would validate localStorage fallback, but the fallback is already tested in ADR-035 smoke tests
+- **Bookmark icon clickability** — placeholder by design per ADR-036; making it clickable would be a new feature
+- **Test page inactive part segments as buttons** — still deferred; arrows work, direct jump would be a secondary improvement
+- Real content transcription — out of /eye scope
+
+### Session Stats
+Pages explored: 2 (409 bounce, KWT stress)
+Screenshots captured: 3
+Rounds: 1
+Polishes landed: 1 (3 input type variants got maxLength)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 1
+
+**Trajectory update:** Round 10 continues the pattern of "new dimension finds a legitimate improvement." Each of the last 5 rounds (6-10) has shipped exactly 1-2 fixes by picking an input dimension I'd never walked before. The 409 bounce path this round produced NO fix (it already works correctly — that's a win too) but validated the ADR-040 flow end-to-end. The maxLength guards are a small defensive polish, not a dramatic bug catch.
+
+The list of unwalked dimensions is shrinking. After round 10:
+- ✓ Viewport wide (round 6)
+- ✓ Viewport narrow (round 7)
+- ✓ Temporal state / refresh (round 8)
+- ✓ Keyboard-only (round 9)
+- ✓ Post-submit navigation (round 10)
+- ✓ Large input stress (round 10)
+- Remaining: concurrent tabs, slow network, bookmark interaction, inactive-part keyboard jump
+
+The loop is still finding things. The cron can keep firing.
+
+---
+
 ## Session: 2026-04-11 15:05 — Zarmet Olympiada Cambridge-Authentic UI — Round 9
 Persona: Keyboard-only student (imagine a student with a broken mouse, accessibility needs, or power-user preference) | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: welcome, dashboard, test page — Tab navigation only, no mouse
