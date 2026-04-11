@@ -1,5 +1,45 @@
 # Eye Journal
 
+## Session: 2026-04-11 17:46 — Zarmed Olympiada Verification Round — Round 23 (/loop iteration, ZERO CHANGES)
+Persona: Student trying to verify round 22's question-badge + finish-button changes visually | System: Zarmed Olympiada standalone (port 3004)
+Pages explored: Attempted Reading Part 1 verification — blocked by parallel iteration contention
+Starting state: Round 22 shipped question number badges + reverted finish-button color. This round's job: verify those changes render correctly in the browser.
+
+### Round 23 — ZERO CHANGES (verification round)
+
+**Why ZERO CHANGES:** A careful source-code audit shows all round 22 changes are intact:
+
+- `node --check zarmet-olympiada/public/js/test.js` → pass
+- `grep -c "buildQuestionPrompt|ct-q-num-badge" test.js` → 6 (definition + 3 call sites + 2 comment refs)
+- `grep -c "buildQuestionPrompt|ct-q-num-badge" styles.css` → 2 (base rule + active variant)
+- Brand literal safety sweep `grep -n "#f0f6ff|#f0fdfa|#ecfeff|#ccfbf1|#0d9488|#0f766e"` → no matches
+- `.ct-nav-finish` uses `var(--ct-teal)` (brand blue), not `var(--zu-success)` (green). Inline CSS comment still cites the intent plan + cae/examples/8.png as justification.
+
+**Browser verification blocked:** 6+ rapid-fire parallel /loop iterations (rounds 19c, 20b, 21b, German localization, submit-timeout modal, etc.) are closing/reopening the playwright browser mid-flow, navigating me between test.html, dashboard.html, admin.html, about:blank, and done.html on each command cycle. After multiple retries I could not maintain a stable session long enough to take a "Part 1 with badges" verification screenshot.
+
+**Parallel iteration signal:** The same contention caught an active error modal ("Submit failed: network timeout") from a concurrent iteration, which tells me the parallel work stream is actively stressing the submit path. That's useful signal for the next /scenario or /heal round but out of /eye scope.
+
+**Findings:** Zero. Round 22's changes are present in source, syntactically valid, and grep-clean. The app behaved correctly when I briefly landed on Reading Part 1 during the contention — the question prompts rendered and the page shell was intact.
+
+**Action:** No changes shipped. Per the /loop contract for ZERO CHANGES rounds, the cursor is NOT advanced. Next /loop firing will run the same `/eye` prompt again against this starting state.
+
+### Session Stats
+Pages explored: 1 (partial — contention)
+Rounds: 1 (round 23 = zero changes)
+Polishes landed: 0
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 0
+
+**Trajectory update:** Round 13 was the first ZERO CHANGES round (back button + concurrent tabs). Round 23 is the second. In between, rounds 14-22 kept finding genuine gaps by walking the app at different angles. Round 23 is a "verification-only" round where the intended action (browser verify of round 22) was blocked by infrastructure, not by quality ceiling.
+
+**Key learning:** When multiple /loop /eye iterations run in parallel, they fight for the same playwright-cli browser session. The one-browser-at-a-time constraint means serializing across iterations, but since each iteration can run up to 10 minutes and fires every 10 minutes, overlapping runs are inevitable. The honest move when contention blocks verification is: (a) do the source-level sanity checks, (b) log ZERO CHANGES, (c) don't advance the cursor, (d) let the next firing try again with potentially less contention.
+
+**Recommended for the user:** If you see many "parallel iteration" entries landing in the journal, the /loop might benefit from a shorter interval OR a single-flight lock so only one /eye runs at a time. The current 10-minute cadence with 5-minute-average runtime means ~50% overlap probability on any given firing.
+
+---
+
 ## Session: 2026-04-11 17:45 — Zarmed Olympiada Question Badges + Finish Color — Round 22 (/loop iteration)
 Persona: Student looking at question rendering vs cae/examples/l1.png + catching a finish-button spec drift | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: Listening Part 1 via real content, cae/examples l1.png / l2.png / 5.png / 8.png side-by-side
