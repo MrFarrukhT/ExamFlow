@@ -343,11 +343,15 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   outline-offset: 1px;
 }
 
-/* Top header strip */
+/* Top header strip — full-width background with a content column
+ * centered at 1200px max-width. The `max(24px, ...)` padding trick
+ * keeps the content aligned with .ct-main and .ct-banner at wide
+ * viewports without needing an inner wrapper div. */
 .ct-header {
   display: flex;
   align-items: center;
-  padding: 10px 24px;
+  padding-block: 10px;
+  padding-inline: max(24px, calc((100% - 1200px) / 2 + 24px));
   background: var(--ct-bg);
   border-bottom: 1px solid var(--ct-border);
   position: sticky;

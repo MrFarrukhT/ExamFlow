@@ -1,5 +1,62 @@
 # Eye Journal
 
+## Session: 2026-04-11 14:35 — Zarmet Olympiada Cambridge-Authentic UI — Round 6
+Persona: Student at a 1920×1080 lab monitor | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: dashboard completion banner (live), test page at 1920×1080, content 404 error path
+Starting state: Previous 5 rounds exhausted the obvious polish/rebuild/elevate opportunities on 13/13 pages. This round explicitly hunts for states never seen in a real browser.
+
+### Round 6 — Unexplored states: completion banner, wide viewport, content 404
+
+**Explored:** Three corners never walked in a real browser:
+1. Dashboard completion banner (both modules submitted)
+2. Test page at 1920×1080 (real lab monitor resolution)
+3. Content load 404 error path (triggered via bad lang slug in localStorage)
+
+**Findings:**
+
+- [T5 ✅] Dashboard completion banner — works beautifully. Big green check, "All Sections Complete" heading, clear instructions. Module grid replaced by the banner. Welcome panel still shows. No issues.
+- [T4] Test page at 1920×1080 — **header misalignment**. `.ct-header` spans full viewport width with padding 24px, so at 1920px the ZU shield is at position 24px and the timer is at position 1896px. Meanwhile `.ct-main` and `.ct-banner` are centered at 1200px max-width, so they start at (1920-1200)/2 = 360px from the left. Result: the header's "Zarmet University" is way off to the left of the "Studying black bears" heading below it. At default 1280px the misalignment is subtle (~40px off) but at 1920px it's glaring.
+- [T5 ✅] Content 404 error path — triggered via `localStorage.olympiada:lang = 'fake-lang-c1'`. Banner shows "Error" + "Failed to load the test. Please tell your invigilator. (content load failed (404))". Clear, actionable, no console spam. Timer shows `--:--`. Bottom nav empty. Good error handling.
+
+**Action:** POLISH (1 change shipped)
+
+- [T4] Header max-width alignment — Applied the `padding-inline: max(24px, calc((100% - 1200px) / 2 + 24px))` technique on `.ct-header`. At viewport widths up to 1248px the padding is 24px (unchanged). Above 1248px the padding grows symmetrically to center the header content at 1200px max-width, matching where `.ct-main` and `.ct-banner-wrap` center their content. The header background and border-bottom still span the full viewport width (authentic Cambridge strip pattern), but the content inside (shield, candidate ID, timer) now aligns with the body content column.
+  Mode: polish | Quality: 4 → 5 | Files: public/css/styles.css
+
+### Verification
+
+- ✅ **Dashboard completion banner** (`r6-dashboard-all-complete.png`) — gorgeous green completion panel, both modules replaced with the success state
+- ✅ **Wide viewport pre-fix** (`r6-test-wide-1920.png`) — showed the misalignment clearly: shield at far left, banner/content centered
+- ✅ **Wide viewport post-fix** (`r6-header-fixed-1920.png`) — shield, candidate ID, banner, and "Studying black bears" heading all start at the same 384px column; timer at the right edge of the same column; header background strip still full-width with border-bottom intact
+- ✅ **Default viewport** (`r6-header-fixed-1280.png`) — 1280px width unchanged visually; shield at 64px from left, banner at 64px from left, same column
+- ✅ **404 content error** (`r6-content-404.png`) — error banner displays cleanly, no console errors beyond the expected fetch 404
+
+### Quality Map (no layer changes — just validation of edge cases)
+| Page | Layer | Notes |
+|------|-------|-------|
+| dashboard.html (completion banner state) | **5-Crafted** | Live-verified, gorgeous |
+| test.html (wide viewport 1920×1080) | **5-Crafted** | Header now aligns with body column |
+| test.html (content 404 error) | **5-Crafted** | Clean error banner, no console spam |
+
+### Deferred (same as round 5)
+- Real content transcription — out of /eye scope
+- Keyboard arrow nav between questions — borderline new feature
+- Print stylesheet for admin detail — nice-to-have
+
+### Session Stats
+Pages explored: 3 (completion banner, wide viewport, 404 error)
+Screenshots captured: 5
+Rounds: 1
+Polishes landed: 1
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 1
+
+**Ceiling observation:** Every subsequent /eye round yields fewer legitimate findings. Round 1 shipped 7 fixes on untested territory. Round 4 shipped 5 on the unwalked admin page. Round 5 shipped 4 craft-layer state improvements. Round 6 shipped 1 wide-viewport fix found by simulating a 1920×1080 lab monitor. The app is approaching a real ceiling within /eye's hard boundary and the intent plan's scope.
+
+---
+
 ## Session: 2026-04-11 14:25 — Zarmet Olympiada Cambridge-Authentic UI — Round 5
 Persona: Student with bad inputs, approaching time limit | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: welcome (validation edge cases), dashboard (post-submit), test (timer warn + urgent states), submit flow
