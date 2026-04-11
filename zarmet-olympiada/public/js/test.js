@@ -852,8 +852,18 @@
       if (failureHandled) return;
       failureHandled = true;
       if (stallTimer) clearTimeout(stallTimer);
+      if (state.audioFinishedHideTimer) {
+        clearTimeout(state.audioFinishedHideTimer);
+        state.audioFinishedHideTimer = null;
+      }
       state.audioState[part.id] = 'finished';
-      document.getElementById('ct-audio-status').classList.remove('ct-audio-status--visible');
+      const statusEl = document.getElementById('ct-audio-status');
+      statusEl.classList.remove('ct-audio-status--visible');
+      // Restore the default "Audio is playing" label so next successful
+      // play doesn't render a stale "Audio finished" before the playing
+      // handler fires.
+      const label = statusEl.querySelector('span:last-child');
+      if (label) label.textContent = t.audioPlaying;
       showErrorModal(reason);
       renderCurrentPart();
       renderBottomNav();
@@ -1239,6 +1249,19 @@
           state.audioState[oldPart.id] = 'finished';
         }
       }
+      // Cancel the "Audio finished" hide timer if it's pending — we're
+      // leaving the listening part, so the brief confirmation message
+      // shouldn't linger on the next (possibly non-listening) part.
+      if (state.audioFinishedHideTimer) {
+        clearTimeout(state.audioFinishedHideTimer);
+        state.audioFinishedHideTimer = null;
+        const statusEl = document.getElementById('ct-audio-status');
+        if (statusEl) {
+          statusEl.classList.remove('ct-audio-status--visible');
+          const label = statusEl.querySelector('span:last-child');
+          if (label) label.textContent = t.audioPlaying;
+        }
+      }
       state.currentPartIndex = i;
       const firstQid = state.parts[i].flatQuestions[0] && state.parts[i].flatQuestions[0].qid;
       state.currentQid = firstQid || null;
@@ -1393,10 +1416,14 @@
       // canonical identifier in an Olympiada context); session fragment is
       // a tie-breaker shown as a subtitle inside the value.
       const candEl = document.getElementById('ct-candidate-id');
-      candEl.textContent = studentName || 'Student';
+      const candName = studentName || 'Student';
+      candEl.textContent = candName;
+      // Tooltip so long names that get truncated by CSS ellipsis are still
+      // discoverable on hover — matches expected behaviour for ellipsis UI.
+      candEl.setAttribute('title', candName);
       if (studentId) {
         const code = document.createElement('small');
-        code.style.cssText = 'display:block;font-weight:400;font-size:10px;color:var(--ct-text-muted);letter-spacing:0.05em;text-transform:uppercase;';
+        code.className = 'ct-header-id-code';
         code.textContent = studentId.slice(0, 8);
         candEl.appendChild(code);
       }

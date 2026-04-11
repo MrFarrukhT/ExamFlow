@@ -1,5 +1,77 @@
 # Eye Journal
 
+## Session: 2026-04-11 18:10 — Zarmed Olympiada Long-Name Overflow + Inline cssText — Round 28 (/loop iteration)
+Persona: Student with a 63-character name ("Alexander Maximilian Constantinopolitanoff-Rothschild von Habsburg III") + developer auditing inline styles that slipped past round 26's HTML-only grep | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: welcome, dashboard (long-name welcome panel), test runner header desktop+mobile, timer warn state, completion banner, welcome button focus-visible state
+Starting state: Round 26 shipped mobile breakpoint + hex tokens + HTML inline style cleanup. Round 27 (parallel iteration) was a timer verification zero-change round. Round 28 walks a **long-name edge case** + the **one inline style that round 26's HTML-only grep missed**.
+
+### Round 28 — 2 issues found + fixed
+
+**Findings:**
+
+- [T4] **Long student names break the header layout.** Tested with a 63-char name "Alexander Maximilian Constantinopolitanoff-Rothschild von Habsburg III":
+  - **Desktop 1920×1080**: The candidate ID block had no `max-width`, so the name pushed across ~50% of the header width and squeezed the timer to the far edge. Visually the student was dominating the chrome.
+  - **Mobile 375×812**: The name wrapped to FOUR lines inside the candidate ID column, pushing the header to ~120px tall (vs 60px normal) and consuming nearly 15% of the viewport on every test page.
+  - Welcome panel on the dashboard handles it fine via natural text wrap.
+
+- [T0] **Inline cssText on dynamically-created `<small>` in test.js:1379.** Round 26's grep swept `style="..."` in HTML files but missed `.style.cssText = "..."` in JS. The session-fragment code element (shown under the candidate name in the header) was being assigned a 6-property cssText string when created: `display:block;font-weight:400;font-size:10px;color:var(--ct-text-muted);letter-spacing:0.05em;text-transform:uppercase;`. Exactly the kind of drift round 26 was supposed to catch.
+
+**Action:** POLISH 2 fixes — both in the same .ct-header-id block.
+
+**Files touched:**
+
+1. **`zarmet-olympiada/public/js/test.js` — candidate ID rendering:**
+   - Captured `candName` into a local so we can set both `textContent` and `title` without mutating studentName.
+   - Added `candEl.setAttribute('title', candName)` — the full name is now discoverable on hover even when CSS ellipsis truncates.
+   - Replaced `code.style.cssText = '...'` with `code.className = 'ct-header-id-code'`.
+
+2. **`zarmet-olympiada/public/css/styles.css` — `.ct-header-id` constraints + new `.ct-header-id-code`:**
+   - `.ct-header-id` gets `min-width: 0; max-width: 280px; flex-shrink: 1;` — the min-width: 0 is load-bearing because flex items default to `min-width: auto` which ignores max-width when content is wider. With min-width: 0 the ellipsis can truncate.
+   - `.ct-header-id-value` gets `overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; max-width: 100%` — truncates at 280px on desktop.
+   - New `.ct-header-id-code` class — same 6 properties that used to be inline cssText, now living in styles.css where every other test-runner rule lives.
+   - Mobile `@media (max-width: 540px)` block: added `.ct-header-id { max-width: 150px; }` + `.ct-header-id-code { font-size: 9px; }` so the mobile truncation stays tight.
+
+### Verification
+
+**Desktop 1920×1080** (`eye-r27-10-long-name-desktop-fixed.png`): Header now shows "CANDIDATE ID / Alexander Maximilian Constantin... / R27LONGN" truncated cleanly at ~280px. Timer stays at the far right in its normal position. Hovering the name shows the full 63-char string via the title attribute.
+
+**Mobile 375×812** (`eye-r27-11-long-name-mobile-fixed.png` + `eye-r27-12-mobile-clean.png`): Header now shows "CANDIDATE ID / Alexander Maximili... / R27LONGN..." truncated at ~150px. Header stays at 60px tall instead of ballooning to 120px. Everything below (banner, passage, nav) keeps its normal vertical budget.
+
+**Timer warn state** (`eye-r27-06-timer-warn-forced.png`): Verified via injected CSS override that `.ct-timer--warn` produces amber bg `#fef3c7`, dark amber text `#92400e`, amber border `#f59e0b`. (The real `.ct-timer--warn` rule fires at <5min remaining; force-render confirms the CSS is correct.)
+
+**Completion banner** (`eye-r27-07-completion-banner.png`): Force-rendered via DOM toggle. Big green ✓ check, "All Sections Complete" heading in success green, muted slate subtitle "You have finished all test modules. Please remain seated and wait for your invigilator." Pale green bg, clean success framing.
+
+**Focus-visible on welcome Continue button** (`eye-r27-08-focus-welcome.png`): The `.zu-btn` `:focus-visible { outline: 3px solid var(--zu-focus); outline-offset: 3px }` rule produces a clear blue-400 ring at 3px offset. Keyboard users can see exactly where their focus is.
+
+**Syntax** — `node --check test.js` passes.
+
+### Quality Map
+
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| Test header long-name (desktop) | 3-Efficient (dominates) → **5-Crafted** | Ellipsis at 280px + title tooltip |
+| Test header long-name (mobile) | 3-Efficient (4-line wrap) → **5-Crafted** | Ellipsis at 150px |
+| Inline cssText in test.js | 4-Polished (inline) → **5-Crafted** | .ct-header-id-code class |
+
+### Deferred
+
+- **Empty admin list state.** When `/api/admin/submissions` returns zero rows, the `#empty-state` div shows "No submissions yet. / Results will appear here as students finish their modules." Didn't force-render to verify visual — low urgency.
+- **Error state on content load failure.** `test.js:1395` catch block sets the banner to `t.errorBanner` + `t.loadFailed(msg)`. Didn't visually verify (would need to disable the server).
+- **Back button from admin detail view.** The button exists and has an event listener; haven't verified the list state is preserved when clicking Back. Would need to fire up admin with >1 submission and walk the round trip.
+
+### Session Stats
+
+Pages explored: 6 live states (welcome focus, dashboard long-name, desktop test header long-name, mobile test header long-name, timer warn forced, completion banner forced)
+Findings: 2 (1× T4 long-name overflow, 1× T0 inline cssText)
+Polishes landed: 2 (grouped in one commit)
+Files touched: 2 (test.js, styles.css)
+
+**Trajectory note:** Round 26's grep sweep caught HTML inline styles but missed the JS `.style.cssText = ` pattern. **Future audits should grep for both patterns: `style="` (HTML) AND `\.style\.cssText` (JS).** A single grep on both patterns takes 3 seconds and catches every inline-style drift.
+
+**Key learning:** Long-name edge cases are the tier-4 polish issue that *always* gets missed until a real user shows up with a 60-char name. Every form that accepts a free-text name should have an explicit "how does this truncate at 280/150/whatever pixels" check. Build it into the exploration checklist.
+
+---
+
 ## Session: 2026-04-11 18:05 — Zarmed Olympiada Timer State Verification — Round 22c (zero-change)
 Persona: Student on minute 86 with ~4 minutes left, then at 30 seconds, then at 0:00 expiry | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: test.html reading + listening at simulated 4:30 / 2:48 / 0:45 / 0:20 / 0:00 via timerEnd localStorage manipulation
