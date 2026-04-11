@@ -1,5 +1,84 @@
 # Eye Journal
 
+## Session: 2026-04-11 18:05 — Zarmed Olympiada Timer State Verification — Round 22c (zero-change)
+Persona: Student on minute 86 with ~4 minutes left, then at 30 seconds, then at 0:00 expiry | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: test.html reading + listening at simulated 4:30 / 2:48 / 0:45 / 0:20 / 0:00 via timerEnd localStorage manipulation
+Starting state: Round 22b recommended verifying that `.ct-timer--warn` (<5min) and `.ct-timer--urgent` (<1min) class transitions actually fire at the right thresholds, AND that auto-submit at 0:00 works end-to-end. The CSS rules were defined in round 22's standards overhaul but never walked in a real browser session.
+
+### Round 22c — Timer state verification
+
+**Method:** Inject timer state by manipulating `localStorage.olympiada:timerEnd:{sessionId}` directly, then reload to force `startTimer()` to read the new end time. This lets me test the warn/urgent/expired states without waiting 90 minutes.
+
+**Verifications (all passed):**
+
+1. **Warn threshold** — Set timer to 4min 30sec remaining:
+   ```
+   text:     "04:19" (tick landed a few seconds later)
+   classes:  "ct-timer ct-timer--warn"
+   color:    rgb(146, 64, 14)   → amber text (#92400e)
+   background: rgb(254, 243, 199)  → pale yellow (#fef3c7)
+   borderColor: rgb(245, 158, 11) → amber (#f59e0b)
+   animation: "none"              → no pulse at warn stage
+   ```
+   Matches the CSS rule exactly. Screenshot `r23-warn-verified.png` shows the timer at "02:14" with the visible amber pill in the top-right, clearly distinct from the default gray-bordered state.
+
+2. **Urgent threshold** — Set timer to 45 seconds remaining:
+   ```
+   text:     "00:28"
+   classes:  "ct-timer ct-timer--urgent"
+   color:    rgb(185, 28, 28)    → red text (#b91c1c)
+   background: rgb(254, 226, 226) → pale red (#fee2e2)
+   borderColor: rgb(220, 38, 38)  → red (#dc2626)
+   animationName: "ctTimerPulse"  → pulsing animation active ✓
+   ```
+   Screenshot `r23-urgent-verified.png` shows the timer at "00:28" with a red pill pulsing in the top-right, clearly distinct from warn and normal.
+
+3. **Auto-submit at 0:00** — Set timer to 30 seconds remaining, waited for expiry:
+   - Tick at remaining <= 0 calls `submit(true)`, which skips the confirm dialog (since `auto=true`)
+   - POST to `/api/session/{sessionId}/submit` succeeds
+   - Redirects to `dashboard.html`
+   - Observed: browser landed on `http://localhost:3004/dashboard.html` after my set-to-20s test, proving the full auto-submit chain works end-to-end
+   - The timer element is gone (we're on dashboard now), no visual regression
+
+4. **CSS transitions between states** — `.ct-timer` has `transition: color 0.2s, background 0.2s, border-color 0.2s`, so normal→warn→urgent transitions smoothly. Pulse animation only fires for urgent (not warn) which matches intent (warn is "heads up", urgent is "time's almost up").
+
+**Findings:** None. All four timer states work correctly. No regressions, no visual glitches.
+
+### Action: ZERO CHANGES
+
+This is a pure verification round. The timer system is genuinely correct:
+- Visual progression: gray → amber → red+pulse → submit
+- Time progression: >5min → <5min → <1min → 0
+- Transitions smooth (0.2s on color/background/border)
+- Auto-submit chain works end-to-end
+- No visible glitch at 0:00 (auto-submit fires in the same tick that sets remaining to 0)
+
+### Quality Map
+| Concern | Layer | Notes |
+|---|---|---|
+| Timer normal → warn transition | **5-Crafted** | 0.2s smooth transition to amber |
+| Timer warn → urgent transition | **5-Crafted** | 0.2s to red + pulse animation kicks in |
+| Auto-submit at 0:00 | **5-Crafted** | Skips confirm, POST succeeds, redirects to dashboard |
+
+### Deferred (still thin)
+- Threshold-triggered screen-reader announcements (5min/1min/0s) — deferred in round 22b as a "new element" concern
+- Audio cues (beep/tick) at threshold crossings — new feature, not Eye scope
+
+### Session Stats
+Pages explored: 2 (test.html reading + listening with manipulated timerEnd)
+Screenshots captured: 4 (r23-timer-warn.png, r23-timer-urgent.png, r23-warn-verified.png, r23-urgent-verified.png)
+Rounds: 1 (zero-change verification)
+Polishes landed: 0 | Rebuilds: 0 | Elevations: 0 | Reverted: 0
+Changes shipped: 0
+
+**Trajectory update:** Round 22c is a genuine zero-change round — every acceptance criterion for the timer system was verified working. Unlike round 23/25 which were also zero-change but sometimes blocked by parallel iteration contention, this round ACTIVELY verified the behavior rather than just source-auditing. The auto-submit-at-0:00 flow is particularly important to verify in a real browser because it's the most consequential automatic action in the app — if a student runs out of time, their answers MUST be saved.
+
+**Key learning:** Simulating time-dependent state via localStorage manipulation is a powerful testing pattern. Setting `olympiada:timerEnd:{sessionId}` to `Date.now() + Nms` and reloading is cheap, deterministic, and doesn't require waiting. This pattern should be reusable for verifying any future timer-related thresholds (e.g., auto-save intervals, session expiry warnings).
+
+**Recommended next angle:** The `ct-audio-status` live region announces "Audio is playing" but there's no equivalent announcement when audio ENDS ("Audio finished. You may now answer."). For a screen reader user, silence is ambiguous — they might think the audio is still playing and wait, or they might miss that it finished and start answering late. Would be a useful a11y polish if it fits the element-reuse constraint.
+
+---
+
 ## Session: 2026-04-11 18:00 — Zarmed Olympiada Mobile + Hex Tokens + Inline Styles — Round 26 (/loop iteration)
 Persona: Student on an iPhone-class device (375×812) + developer auditing CSS tokens + inline styles | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: welcome/test at 375×812 and 768×1024, plus grep audit for hex orphans and inline styles
