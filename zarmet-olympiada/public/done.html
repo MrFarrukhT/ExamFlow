@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Zarmet Olympiada — Submitted</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="page page--narrow">
+  <header class="zu-header">
+    <div class="zu-shield">ZU</div>
+    <h1>Thank you</h1>
+    <p class="zu-subtitle">Your test has been submitted.</p>
+  </header>
+  <p style="text-align:center;">Please wait for your invigilator.</p>
+</div>
+<script>
+// Rotation safety + invigilator key combo (4-corner click, per ADR-037)
+// Clear any lingering session state so the next student starts clean.
+try {
+  Object.keys(localStorage).filter(k => k.startsWith('olympiada:')).forEach(k => localStorage.removeItem(k));
+  sessionStorage.clear();
+} catch (e) {}
+
+// 4-corner invigilator gate: TL -> TR -> BR -> BL within 3 seconds
+(function setupInvigilatorGate() {
+  const corners = ['TL', 'TR', 'BR', 'BL'];
+  let progress = [];
+  let timer = null;
+
+  function reset() { progress = []; if (timer) { clearTimeout(timer); timer = null; } }
+
+  document.addEventListener('click', e => {
+    const w = window.innerWidth, h = window.innerHeight;
+    const edge = 80;
+    let corner = null;
+    if (e.clientX < edge && e.clientY < edge) corner = 'TL';
+    else if (e.clientX > w - edge && e.clientY < edge) corner = 'TR';
+    else if (e.clientX > w - edge && e.clientY > h - edge) corner = 'BR';
+    else if (e.clientX < edge && e.clientY > h - edge) corner = 'BL';
+    if (!corner) { reset(); return; }
+
+    if (corners[progress.length] === corner) {
+      progress.push(corner);
+      if (!timer) timer = setTimeout(reset, 3000);
+      if (progress.length === corners.length) {
+        reset();
+        window.location.href = 'index.html';
+      }
+    } else {
+      reset();
+    }
+  });
+})();
+</script>
+</body>
+</html>

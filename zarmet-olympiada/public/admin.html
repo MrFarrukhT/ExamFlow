@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Zarmet Olympiada — Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="page">
+  <header class="zu-header">
+    <div class="zu-shield">ZU</div>
+    <h1>Olympiada Results</h1>
+    <p class="zu-subtitle">Invigilator / admin view</p>
+  </header>
+
+  <div id="login-view">
+    <form id="login-form" class="zu-form" autocomplete="off">
+      <div class="zu-field">
+        <label for="pw">Admin password</label>
+        <input type="password" id="pw" required>
+      </div>
+      <button type="submit" class="zu-btn">Unlock</button>
+      <p id="login-err" class="zu-error" hidden></p>
+    </form>
+  </div>
+
+  <div id="list-view" hidden>
+    <div class="zu-toolbar">
+      <button class="zu-btn zu-btn--ghost" id="refresh">Refresh</button>
+      <button class="zu-btn zu-btn--ghost" id="export-csv">Export CSV</button>
+      <button class="zu-btn zu-btn--ghost" id="export-json">Export JSON</button>
+    </div>
+    <table class="zu-admin-table" id="rows-table">
+      <thead>
+        <tr>
+          <th>Finished</th>
+          <th>Student</th>
+          <th>Group</th>
+          <th>Language</th>
+          <th>Skill</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody id="rows-body"></tbody>
+    </table>
+  </div>
+
+  <div id="detail-view" hidden>
+    <button class="zu-btn zu-btn--ghost" id="back-btn">← Back to list</button>
+    <div id="detail-body" style="margin-top:1rem;"></div>
+  </div>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>

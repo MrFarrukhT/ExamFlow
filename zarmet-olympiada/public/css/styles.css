@@ -1,0 +1,328 @@
+/* Zarmet Olympiada — radically simple frontend styles
+   One file, under 300 lines, no Cambridge reuse.
+   Palette matches the existing Zarmet theme (warm browns + cream). */
+
+:root {
+  --zu-primary: #7c2d12;
+  --zu-primary-dark: #431407;
+  --zu-accent: #c2410c;
+  --zu-cream: #fef3c7;
+  --zu-cream-soft: #f9f5f0;
+  --zu-text: #1f1209;
+  --zu-text-muted: #78716c;
+  --zu-border: #e7e5e4;
+  --zu-success: #166534;
+  --zu-danger: #991b1b;
+  --zu-focus: #fcd34d;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--zu-text);
+  background: var(--zu-cream-soft);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  color: var(--zu-primary-dark);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 0.5em;
+}
+
+h1 { font-size: 2.2rem; }
+h2 { font-size: 1.6rem; }
+h3 { font-size: 1.25rem; }
+
+/* ------------- layout shells ------------- */
+
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.page--narrow {
+  max-width: 560px;
+}
+
+.page--test {
+  max-width: 1100px;
+}
+
+.zu-header {
+  text-align: center;
+  padding: 2rem 1rem 1.5rem;
+  border-bottom: 2px solid var(--zu-primary);
+  margin-bottom: 2rem;
+}
+
+.zu-shield {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(160deg, var(--zu-primary) 0%, var(--zu-primary-dark) 100%);
+  color: var(--zu-cream);
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 4px 12px rgba(67, 20, 7, 0.25);
+}
+
+.zu-header h1 {
+  margin-bottom: 0.25rem;
+}
+
+.zu-header .zu-subtitle {
+  margin: 0;
+  color: var(--zu-text-muted);
+  font-style: italic;
+}
+
+/* ------------- form elements ------------- */
+
+.zu-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.zu-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.zu-field label {
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  color: var(--zu-primary-dark);
+}
+
+.zu-field input,
+.zu-field select {
+  font-family: inherit;
+  font-size: 1.1rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--zu-border);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--zu-text);
+}
+
+.zu-field input:focus,
+.zu-field select:focus {
+  outline: none;
+  border-color: var(--zu-accent);
+  box-shadow: 0 0 0 3px var(--zu-focus);
+}
+
+.zu-btn {
+  font-family: inherit;
+  font-size: 1.15rem;
+  font-weight: 700;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 4px;
+  background: var(--zu-primary);
+  color: var(--zu-cream);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.zu-btn:hover:not(:disabled) { background: var(--zu-primary-dark); }
+.zu-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.zu-btn--ghost {
+  background: transparent;
+  color: var(--zu-primary);
+  border: 2px solid var(--zu-primary);
+}
+
+.zu-btn--danger { background: var(--zu-danger); }
+.zu-btn--danger:hover:not(:disabled) { background: #7f1d1d; }
+
+/* ------------- test page ------------- */
+
+.zu-test-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: #fff;
+  border-bottom: 1px solid var(--zu-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.zu-test-title {
+  font-weight: 700;
+  color: var(--zu-primary-dark);
+}
+
+.zu-timer {
+  font-family: Georgia, serif;
+  font-size: 1.1rem;
+  color: var(--zu-text);
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--zu-border);
+  border-radius: 4px;
+  background: var(--zu-cream);
+}
+
+.zu-test-body {
+  display: grid;
+  grid-template-columns: 1fr 180px;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.zu-part {
+  background: #fff;
+  padding: 2rem;
+  border: 1px solid var(--zu-border);
+  border-radius: 4px;
+  margin-bottom: 2rem;
+}
+
+.zu-part h2 { color: var(--zu-primary); }
+
+.zu-part-instructions {
+  color: var(--zu-text-muted);
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.zu-passage {
+  background: var(--zu-cream-soft);
+  padding: 1.25rem 1.5rem;
+  border-left: 4px solid var(--zu-accent);
+  margin-bottom: 1.5rem;
+  white-space: pre-wrap;
+  line-height: 1.7;
+}
+
+.zu-audio-block {
+  background: var(--zu-cream);
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--zu-border);
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+}
+.zu-audio-block audio { width: 100%; margin-top: 0.5rem; }
+.zu-audio-note { font-size: 0.9rem; color: var(--zu-text-muted); }
+.zu-plays-left { font-weight: 600; color: var(--zu-primary); }
+
+.zu-question {
+  padding: 1rem 0;
+  border-top: 1px dashed var(--zu-border);
+}
+.zu-question:first-of-type { border-top: none; }
+
+.zu-question .zu-q-prompt { font-weight: 600; margin-bottom: 0.5rem; }
+.zu-options { display: flex; flex-direction: column; gap: 0.4rem; }
+.zu-options label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.zu-options label:hover { background: var(--zu-cream-soft); }
+.zu-options input[type="radio"],
+.zu-options input[type="checkbox"] { margin-top: 0.3rem; }
+
+.zu-gap-input {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--zu-border);
+  border-radius: 3px;
+  min-width: 120px;
+}
+
+/* question navigator — numbered buttons, no unanswered counter */
+.zu-nav {
+  position: sticky;
+  top: 5rem;
+  align-self: start;
+  background: #fff;
+  border: 1px solid var(--zu-border);
+  border-radius: 4px;
+  padding: 1rem;
+}
+.zu-nav h3 { font-size: 1rem; margin-bottom: 0.75rem; color: var(--zu-primary); }
+.zu-nav-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.35rem;
+}
+.zu-nav-grid button {
+  padding: 0.4rem 0;
+  font-family: inherit;
+  font-size: 0.85rem;
+  border: 1px solid var(--zu-border);
+  background: #fff;
+  color: var(--zu-text);
+  cursor: pointer;
+  border-radius: 3px;
+}
+.zu-nav-grid button:hover { background: var(--zu-cream-soft); }
+
+.zu-finish-bar {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+/* ------------- done + admin ------------- */
+
+.zu-done {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.zu-admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  margin-top: 1.5rem;
+}
+.zu-admin-table th,
+.zu-admin-table td {
+  text-align: left;
+  padding: 0.65rem 0.9rem;
+  border-bottom: 1px solid var(--zu-border);
+  font-size: 0.95rem;
+}
+.zu-admin-table th {
+  background: var(--zu-cream);
+  color: var(--zu-primary-dark);
+  font-weight: 700;
+}
+.zu-admin-table tr:hover td { background: var(--zu-cream-soft); cursor: pointer; }
+
+.zu-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.zu-error {
+  color: var(--zu-danger);
+  background: #fee2e2;
+  padding: 0.5rem 0.75rem;
+  border-radius: 3px;
+  margin-top: 0.5rem;
+}
