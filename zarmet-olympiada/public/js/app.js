@@ -1,5 +1,5 @@
-// Welcome page — rotation-safe student start
-// ADR-036: clear previous student state on load, then capture fresh entry.
+// Welcome page (ADR-040) — rotation-safe student entry.
+// Generates a fresh studentId on submit and navigates to the dashboard.
 
 (function () {
   'use strict';
@@ -22,42 +22,44 @@
     err.hidden = false;
   }
 
-  form.addEventListener('submit', async (e) => {
+  function generateStudentId() {
+    // Prefer crypto.randomUUID (desktop Chrome/Edge 92+), fall back to getRandomValues
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      const arr = new Uint8Array(16);
+      crypto.getRandomValues(arr);
+      return Array.from(arr, b => b.toString(16).padStart(2, '0')).join('');
+    }
+    // Last-resort fallback (never happens on supported browsers)
+    return 'stu-' + Date.now().toString(16) + '-' + Math.random().toString(16).slice(2);
+  }
+
+  form.addEventListener('submit', (e) => {
     e.preventDefault();
     err.hidden = true;
 
     const student = document.getElementById('f-name').value.trim();
     const group = document.getElementById('f-group').value.trim();
     const lang = document.getElementById('f-lang').value;
-    const skill = document.getElementById('f-skill').value;
 
     if (student.length < 2) {
       showError('Please enter your full name.');
       return;
     }
-
-    const btn = form.querySelector('button[type="submit"]');
-    btn.disabled = true;
-
-    try {
-      const res = await fetch('/api/session/start', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ student, group, lang, skill }),
-      });
-      const body = await res.json();
-      if (!res.ok) throw new Error(body.error || 'Failed to start');
-
-      // Persist the active session so test.html can pick it up
-      localStorage.setItem('olympiada:sessionId', body.sessionId);
-      localStorage.setItem('olympiada:lang', lang);
-      localStorage.setItem('olympiada:skill', skill);
-      localStorage.setItem('olympiada:student', student);
-
-      window.location.href = 'test.html';
-    } catch (e) {
-      showError(e.message);
-      btn.disabled = false;
+    if (!/^[\p{L}\s\-'.]+$/u.test(student)) {
+      showError('Name can only contain letters, spaces, hyphens, dots, and apostrophes.');
+      return;
     }
+
+    const studentId = generateStudentId();
+    localStorage.setItem('olympiada:studentId', studentId);
+    localStorage.setItem('olympiada:student', student);
+    localStorage.setItem('olympiada:studentName', student);
+    localStorage.setItem('olympiada:studentGroup', group);
+    localStorage.setItem('olympiada:lang', lang);
+
+    window.location.href = 'dashboard.html';
   });
 })();

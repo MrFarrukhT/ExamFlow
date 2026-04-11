@@ -17,7 +17,7 @@
   <form id="start-form" class="zu-form" autocomplete="off">
     <div class="zu-field">
       <label for="f-name">Full name</label>
-      <input type="text" id="f-name" required minlength="2" maxlength="80" pattern="[\p{L}\s\-'.]+" autocomplete="off">
+      <input type="text" id="f-name" required minlength="2" maxlength="80" autocomplete="off">
     </div>
     <div class="zu-field">
       <label for="f-group">Group (optional)</label>
@@ -30,14 +30,7 @@
         <option value="german-c1">German — C1 (Goethe)</option>
       </select>
     </div>
-    <div class="zu-field">
-      <label for="f-skill">Skill</label>
-      <select id="f-skill" required>
-        <option value="reading">Reading</option>
-        <option value="listening">Listening</option>
-      </select>
-    </div>
-    <button type="submit" class="zu-btn">Start Test</button>
+    <button type="submit" class="zu-btn">Continue</button>
     <p id="err" class="zu-error" hidden></p>
   </form>
 </div>

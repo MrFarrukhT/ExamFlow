@@ -231,7 +231,14 @@ function computeAnswersFromEvents(events) {
 
 function getSessionMeta(events) {
     const start = events.find(e => e.ev === 'start');
-    return start ? { student: start.student, group: start.group || '', lang: start.lang, skill: start.skill, startedAt: start.t } : null;
+    return start ? {
+        studentId: start.studentId || null,
+        student: start.student,
+        group: start.group || '',
+        lang: start.lang,
+        skill: start.skill,
+        startedAt: start.t
+    } : null;
 }
 
 // ------- atomic final JSON backup -------
@@ -343,6 +350,7 @@ function finalizeSession(sessionId, events, meta) {
     const submitEv = events.find(e => e.ev === 'submit');
     const record = {
         sessionId,
+        studentId: meta.studentId,
         student: meta.student,
         group: meta.group,
         lang: meta.lang,
@@ -403,23 +411,79 @@ app.get('/api/audio/:lang/:filename', (req, res) => {
     res.sendFile(filePath);
 });
 
-// Start a session — returns a new session ID
+// Student-status endpoint (ADR-040) — returns which modules this student has completed.
+// Scans backups/ for files matching the studentId. Never returns score data.
+app.get('/api/student-status', (req, res) => {
+    const studentId = String(req.query.studentId || '').trim();
+    if (!/^[a-zA-Z0-9-]{8,64}$/.test(studentId)) {
+        return res.status(400).json({ error: 'invalid studentId' });
+    }
+    try {
+        const files = fs.readdirSync(BACKUPS_DIR).filter(f => f.endsWith('.json'));
+        const completed = {};
+        for (const f of files) {
+            try {
+                const rec = JSON.parse(fs.readFileSync(path.join(BACKUPS_DIR, f), 'utf8'));
+                if (rec.studentId === studentId && rec.skill) {
+                    completed[rec.skill] = {
+                        done: true,
+                        sessionId: rec.sessionId,
+                        filename: f,
+                        startedAt: rec.startedAt,
+                        finishedAt: rec.finishedAt,
+                        lang: rec.lang
+                        // NOTE: score intentionally omitted from this response
+                    };
+                }
+            } catch {}
+        }
+        res.json({ studentId, completed });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Start a session — returns a new session ID (ADR-040: accepts studentId)
 app.post('/api/session/start', (req, res) => {
-    const { student, group, lang, skill } = req.body || {};
+    const { studentId, student, group, lang, skill } = req.body || {};
     if (!student || typeof student !== 'string' || student.trim().length < 2) {
         return res.status(400).json({ error: 'student name required (min 2 chars)' });
     }
     if (!/^[a-z0-9-]+$/.test(lang || '') || !/^[a-z0-9-]+$/.test(skill || '')) {
         return res.status(400).json({ error: 'invalid lang or skill' });
     }
+    if (studentId && !/^[a-zA-Z0-9-]{8,64}$/.test(studentId)) {
+        return res.status(400).json({ error: 'invalid studentId format' });
+    }
     try {
         loadContent(lang, skill); // validate content exists
     } catch (err) {
         return res.status(400).json({ error: err.message });
     }
-    const sessionId = crypto.randomBytes(12).toString('hex');
-    appendSessionEvent(sessionId, { ev: 'start', student: student.trim(), group: (group || '').trim(), lang, skill });
-    res.json({ sessionId });
+    // Duplicate-submit prevention: if this studentId has already completed this skill, refuse
+    if (studentId) {
+        try {
+            const files = fs.readdirSync(BACKUPS_DIR).filter(f => f.endsWith('.json'));
+            for (const f of files) {
+                try {
+                    const rec = JSON.parse(fs.readFileSync(path.join(BACKUPS_DIR, f), 'utf8'));
+                    if (rec.studentId === studentId && rec.skill === skill) {
+                        return res.status(409).json({ error: 'module already completed', filename: f });
+                    }
+                } catch {}
+            }
+        } catch {}
+    }
+    const newSessionId = crypto.randomBytes(12).toString('hex');
+    appendSessionEvent(newSessionId, {
+        ev: 'start',
+        studentId: studentId || null,
+        student: student.trim(),
+        group: (group || '').trim(),
+        lang,
+        skill
+    });
+    res.json({ sessionId: newSessionId });
 });
 
 // Record an audio-play event (ADR-039 — strict listening anti-refresh tracking)
