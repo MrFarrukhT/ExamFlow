@@ -5,6 +5,7 @@
 <title>Zarmed Olympiada — Admin</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
+<meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -34,19 +35,21 @@
       <button class="zu-btn zu-btn--ghost" id="export-csv">Export CSV</button>
       <button class="zu-btn zu-btn--ghost" id="export-json">Export JSON</button>
     </div>
-    <table class="zu-admin-table" id="rows-table">
-      <thead>
-        <tr>
-          <th>Finished</th>
-          <th>Student</th>
-          <th>Group</th>
-          <th>Language</th>
-          <th>Skill</th>
-          <th>Score</th>
-        </tr>
-      </thead>
-      <tbody id="rows-body"></tbody>
-    </table>
+    <div class="zu-admin-table-wrap">
+      <table class="zu-admin-table" id="rows-table">
+        <thead>
+          <tr>
+            <th>Finished</th>
+            <th>Student</th>
+            <th>Group</th>
+            <th>Language</th>
+            <th>Skill</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody id="rows-body"></tbody>
+      </table>
+    </div>
     <div id="empty-state" class="zu-empty-state" hidden>
       <p><strong>No submissions yet.</strong></p>
       <p>Results will appear here as students finish their modules.</p>

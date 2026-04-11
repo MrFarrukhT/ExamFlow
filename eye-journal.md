@@ -1,5 +1,71 @@
 # Eye Journal
 
+## Session: 2026-04-11 18:30 — Zarmed Olympiada Noindex Defensive Meta — Round 22f (parallel iteration)
+Persona: Security-minded admin who might accidentally expose the app via an ngrok tunnel or port-forward, plus a search crawler that somehow reaches a test URL | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: All 5 HTML pages (head meta audit + curl verification)
+Starting state: My round 22b added `color-scheme: light` to all 5 pages. My round 22f checks the analogous defensive-meta layer: is the app declared as non-indexable to search crawlers? The answer was no — no `robots` meta on any page, no `X-Robots-Tag` server header, no `robots.txt`. If the app is ever exposed beyond localhost (ngrok tunnel during a remote demo, accidental port-forward, tunneled dev environment), a crawler could potentially reach the test URLs and index exam content.
+
+### Round 22f — Defensive robots meta on all 5 HTML pages
+
+**Findings:**
+
+- [T4] **No `<meta name="robots">` anywhere.** The Olympiada pages serve exam content (questions, passages, answer keys lookup via admin). For an exam testing platform, crawler indexing would be catastrophic — Google caching exam questions could enable cheating across future sessions. Defense-in-depth demands explicit `noindex, nofollow` on every page, even if the app is "localhost-only" — because "localhost-only" is a configuration assumption, not a hard guarantee.
+- [T4] **No `X-Robots-Tag` HTTP header either.** Curl'd the server response — only default Express headers, no robots directives.
+
+**Action:** POLISH (5 × 1-line meta addition)
+
+- [T4 → T5] **Added `<meta name="robots" content="noindex, nofollow">` to all 5 HTML pages:**
+  - `index.html` (welcome)
+  - `dashboard.html` (module selection — not sensitive, but keeps the defensive pattern consistent)
+  - `test.html` (test runner — THE sensitive page; questions + passages + answers)
+  - `admin.html` (results viewer — sensitive)
+  - `done.html` (post-submission — low sensitivity, but still inside the exam flow)
+  
+  Placed immediately after `<meta name="color-scheme">` in each head, keeping the defensive-meta block colocated. Same pattern as round 22b's color-scheme meta.
+  
+  Mode: polish (defensive meta) | Quality: 4 → 5 | Files: 5 HTML files (+1 line each = +5/-0)
+
+### Verification
+
+**curl fetch of all 5 pages** — grep count of `name="robots"`:
+```
+/              → 1
+/dashboard.html → 1
+/test.html     → 1
+/admin.html    → 1
+/done.html     → 1
+```
+All 5 pages serve the meta tag exactly once. No duplicates, no missing pages.
+
+### Quality Map
+| Concern | Layer | Notes |
+|---|---|---|
+| Defensive meta: color-scheme (round 22b) | **5-Crafted** | Prevents Auto Dark Mode inversion |
+| Defensive meta: robots (round 22f) | **5-Crafted** | Prevents crawler indexing if app is accidentally exposed |
+| Defensive meta: viewport (pre-existing) | **5-Crafted** | Proper mobile layout |
+| Defensive meta: color-scheme light (round 22b) | **5-Crafted** | Prevents dark mode flip |
+
+### Deferred (thin, still)
+- **`X-Robots-Tag` HTTP header** on the Express server — would add belt-and-suspenders coverage at the HTTP layer (some crawlers prefer header over meta). But touching server.js for this is borderline — the intent plan says "do not touch the backend durability model (ADR-035)", and ADR-035 is about data persistence not HTTP headers. So this COULD be in scope for a future round, but I'm keeping this round to frontend-only meta to stay conservative.
+- **`robots.txt` at the URL root** — same story, requires an Express route. Out of scope for Eye.
+- **`Content-Security-Policy` meta** — another defensive layer. Large scope, needs testing. Deferred.
+
+### Session Stats
+Pages explored: 5 (HTML head audit + curl verification)
+Screenshots captured: 0 (meta changes are invisible by design)
+Rounds: 1 concurrent iteration
+Polishes landed: 1 (robots meta × 5 pages = 5 lines)
+Rebuilds: 0 | Elevations: 0 | Reverted: 0
+Changes shipped: 5 files
+
+**Trajectory update:** Round 22f completes the defensive-meta polish arc started by round 22b. The head block on every Olympiada page now has the full belt-and-braces set: `charset`, `viewport`, `color-scheme: light`, `robots: noindex, nofollow`, `favicon`, `stylesheet`. Every meta is there for a specific reason documented in its commit / journal. The pattern is now "add a meta to all 5 pages at once, grep-verify via curl" — cheap, deterministic, high confidence.
+
+**Key learning:** Defensive metadata is the cheapest polish category. One line per file, zero visual impact, protects against environmental hazards (dark mode, auto-indexing, encoding issues, viewport zoom). Every round 22 focused on SOMETHING that would otherwise silently go wrong in an edge-case environment — dark mode browsers (22b), screen readers (22b, 22d), timer state transitions (22c), German localization (22d, 22e), and now crawler exposure (22f). Each addressed a silent failure mode.
+
+**Recommended next angle:** `X-Robots-Tag` HTTP header in server.js — would require a 2-line change to the Express static middleware `setHeaders` option to send `X-Robots-Tag: noindex, nofollow` on every HTML response. Server-side headers cover the "what if the meta is stripped by a translator proxy" case. But it crosses the line into server.js territory, so worth confirming with the client first.
+
+---
+
 ## Session: 2026-04-11 18:25 — Zarmed Olympiada German handleFailure Verification — Round 22e (zero-change)
 Persona: German C1 student whose audio fails to load + invigilator checking the "You may continue to answer" fallback works | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: test.html listening (German) + runtime test.js code audit
