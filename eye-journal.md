@@ -1,5 +1,82 @@
 # Eye Journal
 
+## Session: 2026-04-11 18:00 — Zarmed Olympiada Meta + Timer A11y — Round 22b (parallel iteration)
+Persona: Student on an exam desktop with Windows dark-mode + Chrome Auto Dark Mode enabled; also screen-reader user who'd get spammed by a 90-minute countdown | System: Zarmed Olympiada standalone (port 3004)
+Pages explored: Source audit of 5 HTML pages (meta tags) + test.html timer aria
+Starting state: All 5 Olympiada HTML pages had `charset` + `viewport` meta tags but no `color-scheme` declaration. Without it, Chrome's Auto Dark Mode (enabled per-tab via chrome://flags or system-wide) can invert colors and make the Cambridge-white exam layout look wrong. Separately, the timer element had NO aria attributes — risking either spammy announcements (if any inference fires) or silence (if nothing reads it).
+
+### Round 22b — Two orthogonal a11y polishes
+
+**Two findings, both in the intent-plan spirit of "legitimate Cambridge look that works on real exam computers":**
+
+- [T4] **No `<meta name="color-scheme" content="light">` on any HTML page.** On Windows with dark mode + Chrome Auto Dark Mode, the browser can auto-invert the Cambridge-white backgrounds and Zarmed brand colors, making the test page look broken. `color-scheme: light` tells the browser explicitly "this is a light theme, don't flip it." A one-line fix per page.
+
+- [T4] **Timer element has no aria attributes at all.** On a 90-minute test, a student with a screen reader is in a precarious spot: either the timer gets announced every second (aural spam) OR it never gets announced at all (no warning). The right answer is explicit aria: declare it as a timer role, opt OUT of live auto-announcement, and make any on-demand read atomic so "89:47" is read as one unit.
+
+**Action:** POLISH (2 independent fixes)
+
+- [T4 → T5] **Added `<meta name="color-scheme" content="light">` to all 5 HTML pages** (index, dashboard, test, admin, done). Sits right after the viewport meta, before the favicon link. Declares the site is light-mode only so Chrome Auto Dark Mode / Edge / Firefox don't auto-flip the palette on exam computers with dark OS preferences.
+  
+  **NOTE:** This work was absorbed into commit `88d4ce7` (round 24 — "olympiada polish pass") by a parallel /loop iteration that committed the favicon addition at the same time my color-scheme edits were still in the working tree. Git captured both sets of changes in the same commit. My color-scheme meta is live on all 5 pages; round 24's commit message didn't mention it, so I'm documenting the provenance here. No code to recommit — just recording the work.
+
+- [T4 → T5] **Added `role="timer"` + `aria-live="off"` + `aria-atomic="true"` + `aria-label="Time remaining"` to `.ct-timer` in test.html.** Inline comment explains WHY each attribute is there (per WAI-ARIA 1.2 notes on timer's implicit live behavior), so the next round that touches the timer doesn't rip them out.
+  - `role="timer"` — declares the element as a live numerical counter for AT identification
+  - `aria-live="off"` — overrides the implicit live that `role="timer"` carries, so screen readers DON'T announce every second
+  - `aria-atomic="true"` — ensures intentional reads (arrow-key navigation) get the whole `MM:SS` as one unit, not character-by-character
+  - `aria-label="Time remaining"` — gives the timer a descriptive label; screen readers hear "Time remaining, 89:47" instead of just a cryptic number
+  
+  No new elements, no JS changes, no CSS changes — just 4 HTML attributes on an existing element.
+  Mode: polish | Quality: 3 → 5 | Files: public/test.html (+10/-1 inline comment + attributes)
+
+### Verification
+
+**color-scheme meta** (via fetch on all 5 pages):
+```
+/           → hasColorScheme: true
+/dashboard.html  → hasColorScheme: true
+/test.html?module=reading → hasColorScheme: true
+/admin.html → hasColorScheme: true
+/done.html  → hasColorScheme: true
+```
+All 5 pages serve the meta. The runtime `getComputedStyle(document.documentElement).colorScheme` returns `"normal"` because CSS `color-scheme` property wasn't set (only the meta) — but the meta tag is what browsers honor for the auto-dark-mode override, not the computed style.
+
+**Timer aria** (on test.html?module=reading with real CAE content):
+```
+role:       "timer"
+ariaLive:   "off"
+ariaAtomic: "true"
+ariaLabel:  "Time remaining"
+text:       "90:00" (counts down normally)
+```
+Screenshot `r22b-timer-aria.png` — visually unchanged from before the fix (aria is invisible by design), timer reads "89:47" in the top-right, bottom-nav Q# badges visible, Part 1 "Bridges for wildlife" real content, finish button still brand blue (round 22 color revert). No regressions.
+
+### Quality Map
+| Concern | Layer | Notes |
+|---|---|---|
+| All 5 HTML pages auto-dark-mode resilience | **5-Crafted** | color-scheme: light meta |
+| Timer screen-reader behavior | **5-Crafted** | role=timer, aria-live=off, atomic, labeled |
+
+### Deferred (thin)
+- **Threshold-triggered timer announcements** (e.g., "5 minutes remaining", "1 minute remaining", "Time's up"). Would require adding a NEW visually-hidden aria-live region element OR repurposing `.ct-audio-status` as a dual-purpose notification channel. The first adds an element (hard-boundary violation). The second conflates two semantic concerns. Both are product decisions, not Eye decisions.
+- **`<meta name="description">`** on the HTML pages — low-value (exam app never gets bookmarked), skipping.
+- **`<meta name="theme-color">`** for mobile browser chrome — desktop-only app per intent plan, skipping.
+
+### Session Stats
+Pages explored: 5 HTML files (source audit) + test.html browser verification
+Screenshots captured: 1 (r22b-timer-aria.png)
+Rounds: 1 concurrent side-work
+Polishes landed: 2 (color-scheme meta absorbed into 88d4ce7; timer aria shipped here)
+Rebuilds: 0 | Elevations: 0 | Reverted: 0
+Changes shipped: 1 file (public/test.html) — the color-scheme work was already absorbed into another commit
+
+**Trajectory update:** Round 22b is a pure a11y round — both fixes are invisible to normal users but meaningful to the subset that matters (dark-mode-enabled exam computers, screen-reader students). Neither is flashy, both are fundamental. Eye's ceiling of "5-Crafted" includes accessibility as a first-class concern, not an afterthought.
+
+**Key learning about concurrent iterations:** When I edit a file in the working tree and a parallel /loop iteration commits changes to that same file, git's pre-commit snapshot captures BOTH sets of edits in their commit. My color-scheme meta landed in commit 88d4ce7 despite never being mentioned in that commit's message. Lesson: when working under /loop contention, document work in the journal EVEN IF the git commit attribution is wrong — the journal is the source of truth for who-did-what.
+
+**Recommended next angle:** Audit the timer's threshold transitions for visual feedback clarity. The `.ct-timer--warn` class at <5min and `.ct-timer--urgent` class at <1min are defined in CSS (round 22 overhauled them) but I haven't verified they actually fire at the right thresholds with real content. Could simulate via eval: set `state.timerEndMs = Date.now() + 4*60*1000` and watch the classes toggle.
+
+---
+
 ## Session: 2026-04-11 17:55 — Zarmed Olympiada Source-Audit — Round 25 (/loop iteration, ZERO CHANGES)
 Persona: Source audit because browser verification is blocked by parallel /loop contention | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: None interactively — source-only audit

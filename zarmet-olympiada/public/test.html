@@ -27,7 +27,17 @@
     </div>
   </div>
   <div class="ct-header-right">
-    <div class="ct-timer" id="ct-timer">--:--</div>
+    <!-- role="timer" declares this is a live numerical counter so AT can identify
+         it. aria-live="off" overrides the implicit live (per WAI-ARIA 1.2) so
+         screen readers DON'T announce every second — that would be aural spam
+         during a 90-minute test. aria-atomic="true" ensures that when a student
+         intentionally navigates to the timer (arrow-key read), the whole "MM:SS"
+         is read as one unit instead of character-by-character. -->
+    <div class="ct-timer" id="ct-timer"
+         role="timer"
+         aria-live="off"
+         aria-atomic="true"
+         aria-label="Time remaining">--:--</div>
   </div>
 </header>
 
