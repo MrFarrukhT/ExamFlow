@@ -80,6 +80,24 @@
     try { return new Date(iso).toLocaleString(); } catch { return iso; }
   }
 
+  // Compact date/time for the list column. Full toLocaleString() like
+  // "4/11/2026, 11:04:56 PM" wraps to 3 lines in the mobile FINISHED
+  // column — this trims to "Apr 11, 11:04 PM" (~16 chars, no seconds,
+  // no year). Year is omitted because the results list is always
+  // recent and backup files are keyed by server timestamp anyway.
+  function fmtTimeShort(iso) {
+    if (!iso) return '';
+    try {
+      const d = new Date(iso);
+      return d.toLocaleString([], {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+      });
+    } catch { return iso; }
+  }
+
   // Humanize a language slug ("english-c1" → "English C1")
   function fmtLang(slug) {
     if (!slug) return '';
@@ -142,7 +160,7 @@
     rows.forEach((r) => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${fmtTime(r.finishedAt)}</td>
+        <td>${fmtTimeShort(r.finishedAt)}</td>
         <td>${escape(r.student)}</td>
         <td>${escape(r.group || '—')}</td>
         <td>${escape(fmtLang(r.lang))}</td>

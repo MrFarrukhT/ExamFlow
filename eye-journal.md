@@ -1,5 +1,91 @@
 # Eye Journal
 
+## Session: 2026-04-11 18:50 — Zarmed Olympiada Auto-Focus Polish — Round 22h (parallel iteration)
+Persona: Student/invigilator landing on a form and expecting to type immediately | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: welcome form, admin login, listening pre-play modal
+Starting state: All three pages have a "primary input" the user wants to touch first — but none of them auto-focus on load. The student/invigilator must click or Tab to the input before typing. Basic UX polish gap that's been there since round 1 and nobody noticed.
+
+### Round 22h — Auto-focus primary inputs on 3 surfaces
+
+**Findings:**
+
+- [T4] **Welcome page**: no focus on `#f-name` (Full name) on load. Student has to click or Tab to start typing their name. Matching pattern: Gmail/every-form-on-the-internet auto-focus the first input.
+- [T4] **Admin login**: no focus on `#pw` (admin password) when the login view is shown. Invigilator has to click. Same problem.
+- [T4] **Listening pre-play modal**: no focus on `.ct-preplay-btn` (Play button) when the modal renders. Keyboard-only user has to Tab through every other element first. Matches round 24's pattern on the submit confirm modal, which DID focus the "Yes, submit" button — so the pattern is already established, just missed for the pre-play modal.
+
+**Action:** POLISH (3 independent auto-focus additions, one file each)
+
+1. **`public/js/app.js`** — At the end of the IIFE boot, added:
+   ```js
+   setTimeout(() => {
+     try { nameInput.focus(); } catch (e) {}
+   }, 0);
+   ```
+   The `setTimeout(0)` defers until the next frame so screen readers have a chance to announce the page before focus jumps to the input. The try/catch guards against `focus()` throwing on a detached element in exotic teardown scenarios.
+
+2. **`public/js/admin.js`** — Inside `show(view)`, in the `view === loginView` branch, added the same pattern targeting `#pw`. This means auto-focus fires not only on initial load (first call to `show(loginView)`) but also when the admin is kicked back to login after a 401 from the api() helper.
+
+3. **`public/js/test.js`** — Inside `buildPrePlayModal(part)`, just before `return overlay`, added `setTimeout(() => btn.focus(), 0)`. The setTimeout is essential here — you can't focus a detached element, and the caller appends the overlay to the DOM AFTER this function returns. The 0-ms defer lets the append happen first.
+   
+   Matches the existing pattern in `showConfirmModal()` (round 24) where `setTimeout(() => yesBtn.focus(), 30)` focused the submit confirm button.
+
+Mode: polish | Quality: 4 → 5 | Files: app.js (+8/-1), admin.js (+10/-1), test.js (+11/-1)
+
+### Verification
+
+**Welcome page** (`http://localhost:3004/`):
+```
+active:   "f-name"        ← Full name textbox
+focused:  true
+```
+Playwright snapshot also marks the element as `textbox "Full name" [active]`.
+
+**Admin login** (`http://localhost:3004/admin.html`):
+```
+active:   "pw"            ← password input
+focused:  true
+```
+
+**Listening pre-play modal** (after navigating to `test.html?module=listening`):
+```
+active:       "ct-preplay-btn"
+text:         "Play"
+preplayBtnExists: true
+isPlayBtn:    true
+```
+The Play button gets focus on pre-play modal render, so a keyboard user can immediately press Enter to start audio — no Tab needed.
+
+All three JS files pass `node --check`.
+
+### Quality Map
+| Surface | Layer | Notes |
+|---|---|---|
+| Welcome `#f-name` | **5-Crafted** | Auto-focused on boot, student types immediately |
+| Admin `#pw` | **5-Crafted** | Auto-focused when login view shown (boot or 401 fallback) |
+| Pre-play modal Play button | **5-Crafted** | Auto-focused, keyboard Enter starts audio |
+| Submit confirm modal Yes button (round 24) | **5-Crafted** | Already had focus — pattern was there, just missed by 22h's 3 sites |
+
+### Deferred (thin)
+- **Test runner first-question focus.** When the test runner renders a part, no element gets auto-focus. Part 1 has a `<select>`, Part 2 has an `<input>`, Part 5 has radio buttons, etc. Figuring out the right element to focus per part type is non-trivial and could interfere with the existing `refreshActiveHighlight` logic. Skipping — the student is usually reading the passage first anyway, and focus-on-load would scroll the page to the first input unexpectedly.
+- **Language-dropdown tab order.** The welcome form has 3 fields (Name, Group, Language) — is Tab-order correct? Quick check: inputs are in document order, so Tab goes Name → Group → Language → Continue. That's correct.
+- **Dashboard module card auto-focus.** When a student lands on dashboard.html, no module card is focused. A keyboard user has to Tab to reach them. Could auto-focus the first available (non-completed) module, but that's borderline "doing the student's work for them" — they should read the welcome panel first and decide. Leaving as-is.
+
+### Session Stats
+Pages explored: 3 (welcome, admin login, listening pre-play)
+Screenshots captured: 0 (focus is invisible by design)
+Rounds: 1 concurrent iteration
+Polishes landed: 3 (welcome + admin + preplay auto-focus)
+Rebuilds: 0 | Elevations: 0 | Reverted: 0
+Changes shipped: 3 files (app.js, admin.js, test.js)
+
+**Trajectory update:** Round 22h is another thin round that found three silent UX gaps nobody had walked. The pattern is the same every time: pick an interaction layer that's been ignored (a11y, i18n, defensive meta, chrome awareness, focus management) and ship 1-3 focused polishes. The 22-series subscripts are getting long but each one is a measurable improvement.
+
+**Key learning:** Auto-focus is the cheapest keyboard-UX polish there is. A single `element.focus()` call, wrapped in `setTimeout(0)` and try/catch for safety. It's nearly invisible in QA (mouse users don't notice) but critical for keyboard users. Every form on every page should get it as a matter of course. The fact that round 24 added it for ONE modal (submit confirm) but missed the pre-play modal in the same file is a reminder: when you notice a pattern worth applying, grep for all the places it should apply and fix them all at once.
+
+**Recommended next angle:** Add `autocomplete="current-password"` to the admin `#pw` input so browser password managers can save/fill it. Small defensive polish, one HTML attribute. Or: add `autocomplete="name"` and `autocomplete="organization"` to the welcome form's Full name and Group inputs respectively, so browsers can offer to fill from profile data when an invigilator uses the same machine for multiple students.
+
+---
+
 ## Session: 2026-04-11 18:40 — Zarmed Olympiada Tab-Title Timer Prefix — Round 22g (parallel iteration)
 Persona: Student who has the exam tab in the background (e.g. accidentally clicked another tab, or opened a dictionary in a separate tab for German C1) — currently gets no warning that time is running low | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: test.html startTimer tick function + 3-state browser verification
