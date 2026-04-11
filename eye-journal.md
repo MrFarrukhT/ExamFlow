@@ -1,5 +1,87 @@
 # Eye Journal
 
+## Session: 2026-04-12 00:00 — Zarmed Olympiada Error Banner + Empty Admin Exports — Round 33 (/loop iteration)
+Persona: Student hitting a content-load failure mid-exam (server down, 404, malformed JSON) + invigilator landing on a fresh admin install with zero submissions | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: welcome form empty-submit; admin empty state (force-rendered); test runner error banner (force-rendered)
+Starting state: Round 28 deferred "empty admin list state" and "error state on content load failure" as never-verified. Round 33 force-renders both and ships improvements based on what it finds.
+
+### Round 33 — 2 fixes
+
+**Findings:**
+
+- [T4] **Content-load error banner is visually indistinguishable from a normal banner.** The `test.js` boot `catch` block sets `#ct-banner-title` to "Error" and `#ct-banner-body` to the localized loadFailed message, but the `.ct-banner` element keeps its normal chrome (gray background, blue left border, same title typography). The only visual signal the test failed to load is the word "Error" — everything else looks like a "Questions 1-8" prompt. A student whose laptop has a flaky network connection would see this and not realize the test is actually broken.
+
+- [T0] **Admin empty state leaves Export CSV/JSON buttons active.** When `rows.length === 0`, the `renderRows()` function shows the empty state card ("No submissions yet.") but leaves the three toolbar buttons (Refresh / Export CSV / Export JSON) in their normal enabled state. Clicking Export CSV with zero rows produces an empty CSV file — minor UX bug, easy to prevent.
+
+**Bonus finding (clean):** Welcome form empty-submit validation (`eye-r33-01-welcome-empty-submit.png`) renders correctly — Full name input gets aria-invalid + red border, inline error "Please enter your full name." shows in pale-red pill below the Continue button. Round 26's `--ct-error-bg` token migration applies here. No changes needed.
+
+**Action:** POLISH 2 fixes.
+
+**Files touched:**
+
+1. **`zarmet-olympiada/public/css/styles.css`** — added a new `.ct-banner--error` modifier:
+   ```css
+   .ct-banner {
+     /* existing rules + */
+     border-left: 4px solid var(--ct-teal);
+   }
+   .ct-banner--error {
+     border-left-color: var(--ct-error-text);
+   }
+   .ct-banner--error .ct-banner-title {
+     color: var(--ct-error-text);
+   }
+   ```
+   Also restored the missing `border-left: 4px solid var(--ct-teal)` on the base `.ct-banner` rule (round 22 added it but a parallel loop iteration had reverted it in the interim — the normal-state banner was flat until now).
+
+2. **`zarmet-olympiada/public/js/test.js`** — the boot-time `catch` block now also does:
+   ```js
+   document.getElementById('ct-banner').classList.add('ct-banner--error');
+   ```
+   So the modifier class activates alongside the text swap. Both language paths (English and German) benefit because the class is independent of localized strings.
+
+3. **`zarmet-olympiada/public/js/admin.js`** `renderRows()` — now toggles `disabled` on `#export-csv` and `#export-json` based on `rows.length === 0`:
+   ```js
+   const isEmpty = rows.length === 0;
+   if (exportCsv) exportCsv.disabled = isEmpty;
+   if (exportJson) exportJson.disabled = isEmpty;
+   ```
+   The existing `.zu-btn:disabled { opacity: 0.5; cursor: not-allowed }` rule handles the visual state — no new CSS needed.
+
+### Verification
+
+- **Error banner** (`eye-r33-07-error-banner.png`): The banner now renders with "Error" title in crimson, crimson left border (var(--ct-error-text)), error body text. Visually distinct from a normal "Questions 1-8" prompt. The word "Error" is no longer the only signal — the chrome itself reads as an error.
+- **Admin empty state with disabled exports** (`eye-r33-08-admin-empty-disabled.png`): Export CSV + Export JSON buttons rendered with muted gray text (opacity 0.5 from the existing disabled rule) and `cursor: not-allowed`. The Refresh button stays active so the admin can reload after a student finishes their first test.
+- **JS syntax** — `node --check` passes on test.js and admin.js.
+
+### Quality Map
+
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| Content-load error banner | 2-Clear (visually same as normal) → **5-Crafted** | Crimson border + crimson title |
+| Normal banner | Reverted border-left blue → **4-Polished** | Restored round-22 blue left border |
+| Admin empty state | 3-Efficient (active export buttons) → **5-Crafted** | Exports disabled when rows=0 |
+| Welcome form validation | 5-Crafted (verified clean) | aria-invalid + inline error |
+
+### Deferred
+
+- **Admin empty-state icon / illustration** — a small inbox glyph above "No submissions yet." would be a nice elevation but that's adding a new visual element. Eye rule: only improve existing.
+- **Error banner localization** — test.js uses `t.errorBanner` and `t.loadFailed(msg)` for the text, which are already localized (English "Error" / German "Fehler"). The new `.ct-banner--error` modifier is a CSS class so it's language-independent. No localization gap.
+- **Detail view error state** — admin.js `openDetail` catch block shows a `showAdminError` modal (round 24 change), which uses the `.ct-error-modal` styling. Already crafted. No change needed.
+
+### Session Stats
+
+Pages explored: 3 force-rendered states (welcome empty-submit, admin empty, error banner)
+Findings: 2 (1× T4 + 1× T0)
+Polishes landed: 2 (grouped)
+Files touched: 3 (styles.css, test.js, admin.js)
+
+**Trajectory note:** Round 33 picked up round 28's deferred empty-admin-state and error-state items. Neither had been force-rendered because the earlier rounds couldn't easily reach those states — the empty state requires a fresh admin install (0 submissions) and the error state requires a server failure. **Lesson: force-rendering via JS injection (`document.getElementById(...).classList.add('...')`) is the cheapest way to visually audit unreachable states.** Every /eye round should include at least one force-render pass for states that only show under failure conditions.
+
+**Key learning:** When a state has the same visual chrome as a normal success state, the only signal becomes the text content. **Visual language should reinforce meaning** — an error should LOOK like an error (color, border, icon), not just SAY "Error." A student who can't read English (but is taking English C1) might still parse "Questions 1-8" but miss "Error" as significant. Visual redundancy is a feature, not a bug.
+
+---
+
 ## Session: 2026-04-11 19:00 — Zarmed Olympiada Form Error a11y Wiring — Round 22i (parallel iteration)
 Persona: Screen-reader student typing their name wrong and wondering why they're still on the welcome page, OR an invigilator typing the wrong admin password and getting silence from their screen reader | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: welcome form + admin login form (HTML + browser runtime verification)

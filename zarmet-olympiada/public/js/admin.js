@@ -150,7 +150,15 @@
   function renderRows() {
     const tbody = document.getElementById('rows-body');
     tbody.innerHTML = '';
-    if (rows.length === 0) {
+    // Export CSV/JSON only make sense when there are rows to export.
+    // Disable them on the empty state so a new invigilator doesn't get
+    // an empty file when they click Export by habit.
+    const exportCsv = document.getElementById('export-csv');
+    const exportJson = document.getElementById('export-json');
+    const isEmpty = rows.length === 0;
+    if (exportCsv) exportCsv.disabled = isEmpty;
+    if (exportJson) exportJson.disabled = isEmpty;
+    if (isEmpty) {
       rowsTable.style.display = 'none';
       emptyState.hidden = false;
       return;

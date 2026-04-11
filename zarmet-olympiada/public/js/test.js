@@ -1477,6 +1477,12 @@
       console.error(e);
       document.getElementById('ct-banner-title').textContent = t.errorBanner;
       document.getElementById('ct-banner-body').textContent = t.loadFailed(e.message);
+      // Flag the banner as an error so the CSS modifier kicks in
+      // (crimson left border + crimson title). Without this the error
+      // banner is visually indistinguishable from a normal "Questions 1-8"
+      // prompt, which is confusing — the student sees "Error" as a word
+      // but the chrome looks the same as when the test is running fine.
+      document.getElementById('ct-banner').classList.add('ct-banner--error');
     }
   })();
 })();

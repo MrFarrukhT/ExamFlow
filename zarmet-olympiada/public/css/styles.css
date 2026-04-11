@@ -666,7 +666,20 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   background: var(--ct-banner-bg);
   border: none;
   border-bottom: 1px solid var(--ct-border);
+  border-left: 4px solid var(--ct-teal);
   border-radius: 0;
+}
+/* Error variant: when content load fails (test.js catch block sets
+ * banner title to "Error"), the banner gets a crimson left border + a
+ * crimson title color so the student immediately sees this isn't a
+ * normal "Questions N-M" prompt. Previously the error banner looked
+ * identical to a question banner — same blue left border, same title
+ * styling — and the only visual signal was the word "Error". */
+.ct-banner--error {
+  border-left-color: var(--ct-error-text);
+}
+.ct-banner--error .ct-banner-title {
+  color: var(--ct-error-text);
 }
 .ct-banner-title {
   font-size: 14px;
