@@ -1,5 +1,438 @@
 # Architecture Decisions
 
+## Session: 2026-04-11 — Zarmet Olympiada Scaffold
+
+**Context:** Client approved a full rebuild of the Zarmet University Olympiada as a standalone app. Current state: hacked onto the Cambridge system (hidden C1-Advanced level, `html.olympiada` CSS overrides, `Launch Zarmet Olympiada.bat` pointing at port 3003, ~7 branches in `cambridge-database-server.js`, theme hooks across `launcher.html` and `index.html`, filter dropdown in `cambridge-admin-dashboard.html`). Client wants: a tiny standalone app under `zarmet-olympiada/`, English C1 + German C1, Reading + Listening only, crash-safe durability across student rotation. Full intent in `docs/intent-olympiada.md`.
+
+**Scope of this session:** Five ADRs that lock the scaffold. Transcribing question content from `cae/` and `Nemis tili/` into the schema, and the rip-out of existing Cambridge Olympiada hooks, are deliberately NOT in this session — both are gated on the scaffold being in place and dry-run validated first.
+
+---
+
+### ADR-033: Zarmet Olympiada — Isolation & Directory Layout
+**Status:** Decided
+**Impact:** High | **Effort:** 15 min (scaffold only) | **Risk:** Low
+
+**Context:**
+The existing Olympiada is wedged into the Cambridge system because the original goal was "reuse everything." In practice it made both systems worse: Cambridge carries ~60 lines of conditional Olympiada logic, the Olympiada inherits Cambridge's heavyweight CSS and multi-level complexity, and the `Launch Zarmet Olympiada.bat` launcher depends on `cambridge-database-server.js` running. The client has explicitly said the Olympiada "isn't a serious thing" — serious platform, non-serious feature, wrong coupling.
+
+**Decision:**
+A new top-level folder `zarmet-olympiada/` contains the entire app:
+
+```
+zarmet-olympiada/
+├── server.js              # One Express file, port 3004
+├── package.json           # Own deps (express only — pg optional)
+├── README.md              # Operator instructions + defaults
+├── .gitignore             # sessions/, backups/, *.log
+├── public/
+│   ├── index.html         # Welcome / name entry
+│   ├── test.html          # The test itself
+│   ├── done.html          # Thank you screen
+│   ├── admin.html         # Results viewer (password-gated)
+│   ├── css/styles.css     # One stylesheet, no Cambridge reuse
+│   └── js/
+│       ├── app.js         # Welcome page logic
+│       ├── test.js        # Test runner
+│       └── admin.js       # Results viewer logic
+├── content/
+│   ├── SCHEMA.md          # Question bank schema reference
+│   ├── english-c1/
+│   │   ├── reading.json   # (stub — filled in Priority 1)
+│   │   ├── listening.json # (stub)
+│   │   └── audio/         # (populated in Priority 1)
+│   └── german-c1/
+│       ├── reading.json
+│       ├── listening.json
+│       └── audio/
+├── sessions/              # JSONL live state per in-progress session (gitignored)
+└── backups/               # Final JSON per completed submission (gitignored)
+```
+
+No file under `zarmet-olympiada/` imports from `assets/js/`, `shared/`, or any Cambridge/IELTS file. The ONLY exception: `shared/database.js` may be imported by `server.js` ONLY for the optional Postgres mirror — and only if `DATABASE_URL` is set in env. The app must run end-to-end with no Postgres and no network.
+
+Port 3004 (confirmed unused — grep returned no matches across all .js files).
+
+Launcher: `zarmet-olympiada/Launch Zarmet Olympiada.bat` (new path, new logic). The existing top-level `Launch Zarmet Olympiada.bat` stays in place for now — swap happens in the deferred rip-out.
+
+**Consequences:**
+
+Positive:
+- Cambridge codebase cleans up by ~60 lines once rip-out executes (deferred)
+- Zero risk of Olympiada changes breaking Cambridge
+- New developer can read the entire Olympiada app in one sitting
+- Can be packaged, copied, deployed independently
+
+Negative:
+- Some very small amount of code duplication (express boot, basic HTML patterns) — acceptable for the isolation gain
+- Two launcher .bat files exist simultaneously during the dry-run window — managed by deferring rip-out
+
+**Migration Path:**
+1. Create folder structure with placeholder files
+2. Add root-level `.gitignore` entries for `zarmet-olympiada/sessions/` and `zarmet-olympiada/backups/`
+3. Commit scaffold (empty but structurally correct)
+
+**Files Affected:**
+- NEW: `zarmet-olympiada/` (entire tree)
+- NEW: `zarmet-olympiada/package.json` — own deps
+- MODIFIED: `.gitignore` — add Olympiada runtime dirs
+
+**Alternatives Considered:**
+- Keep it under Cambridge with better abstractions — rejected: the coupling is the problem, not the abstractions
+- Make it a top-level file set (no subfolder) — rejected: pollutes root, complicates the eventual rip-out
+- Merge it INTO `shared/` as a "third exam" — rejected: explicit client direction was "separate thing"
+
+---
+
+### ADR-034: Unified C1 Question Bank JSON Schema
+**Status:** Decided
+**Impact:** High | **Effort:** 30 min | **Risk:** Low
+
+**Context:**
+The client chose "transcribe source material into structured JSON" (Option A) over reusing Cambridge's file-per-mock HTML approach. For a two-language, two-skill app, one generic schema beats two specialized ones. The same renderer must handle:
+- CAE Reading+Use-of-English (one 90-min combined paper with 8 parts, 6 distinct question types)
+- CAE Listening (4 parts, mostly MCQ + sentence completion)
+- Goethe C1 Lesen (~4 parts, matching + MCQ)
+- Goethe C1 Hören (3 parts, MCQ + T/F + speaker-matching, mixed replay rules)
+
+Researching the real exam content, the union of question types is: multiple-choice (single answer, 2–10 options), open-cloze (fill-in exact word), word-formation (transform a given word), key-word-transformation (rewrite sentence), gapped-text (slot paragraph into passage), matching (assign A-N to question), true-false, sentence-completion. Eight types, manageable.
+
+**Decision:**
+
+One JSON file per (language × skill). Schema:
+
+```json
+{
+  "id": "english-c1-reading",
+  "language": "en",
+  "languageLabel": "English",
+  "level": "C1",
+  "skill": "reading",
+  "title": "Cambridge C1 Advanced — Reading and Use of English",
+  "durationMinutes": 90,
+  "instructions": "Read the instructions for each part carefully...",
+  "parts": [
+    {
+      "id": "part1",
+      "title": "Part 1 — Multiple-choice cloze",
+      "instructions": "For questions 1-8, read the text...",
+      "passage": {
+        "type": "text",
+        "content": "The passage text with [[GAP:q1]] inline markers..."
+      },
+      "audio": null,
+      "questions": [
+        {
+          "id": "q1",
+          "type": "multiple-choice",
+          "prompt": "Question 1",
+          "options": [
+            { "key": "A", "text": "considerable" },
+            { "key": "B", "text": "substantial" },
+            { "key": "C", "text": "extensive" },
+            { "key": "D", "text": "generous" }
+          ],
+          "answer": "B",
+          "points": 1
+        }
+      ]
+    },
+    {
+      "id": "part-listening-3",
+      "title": "Part 3 — Multiple matching",
+      "audio": {
+        "src": "audio/part3.mp3",
+        "maxPlays": 2,
+        "note": "You will hear each extract twice."
+      },
+      "questions": [ ... ]
+    }
+  ],
+  "scoring": {
+    "mode": "per-question-points",
+    "totalPoints": 80
+  }
+}
+```
+
+**Question type registry** (all optional fields default to sensible values):
+
+| type | answer format | notes |
+|---|---|---|
+| `multiple-choice` | `"A"` (string, single option key) | `options` = array of `{key, text}` |
+| `multiple-choice-multi` | `["A", "C"]` (array of keys) | When 2+ answers accepted |
+| `gap-fill` | `"exactly"` or `["cat", "Cat"]` | Case-insensitive match against array |
+| `open-cloze` | same as gap-fill | Alias for readability |
+| `word-formation` | `"UNKNOWN"` | Given a root word, transform it |
+| `key-word-transformation` | `{ "required": ["not", "enough"], "maxWords": 6 }` | Must contain required words, ≤ max |
+| `matching` | `"C"` (option key) | `options` shared at the part level or per question |
+| `true-false` | `"true"` \| `"false"` \| `"not-given"` | |
+| `sentence-completion` | `["word1", "word2"]` | Up to N words from the listening |
+
+**Server-side answer stripping** (non-negotiable): When the server reads a content file to serve to the client, it walks the JSON and removes `answer`, `points`, and `scoring.totalPoints` fields. The client receives a sanitized version; the full version stays on the server for scoring at submit. This is enforced in `server.js` via a `stripAnswerKey()` function.
+
+**Stable question IDs** (`q1`, `q2`, …) are required — live-save persistence relies on them.
+
+**Consequences:**
+
+Positive:
+- One renderer handles both languages
+- Adding a new exam (B2 First, Goethe B1) is just a new JSON file, no code
+- Content is plain JSON — version controllable, diffable, AI-transcribable from the source .docx/.pdf
+- Answer stripping guarantees no leakage via network inspection
+
+Negative:
+- Authors must learn the schema — mitigated by `content/SCHEMA.md` reference doc with worked examples
+- The `[[GAP:q1]] ` inline marker in passages is a custom convention — must be rendered carefully in the client
+
+**Migration Path:**
+1. Write `content/SCHEMA.md` with one worked example per question type
+2. Create stub `english-c1/reading.json`, `english-c1/listening.json`, `german-c1/reading.json`, `german-c1/listening.json` — each valid JSON with 1 stub part so the server can load them
+3. Priority 1 (separate, manual phase) fills in the real content
+
+**Files Affected:**
+- NEW: `zarmet-olympiada/content/SCHEMA.md`
+- NEW: `zarmet-olympiada/content/english-c1/reading.json` (stub)
+- NEW: `zarmet-olympiada/content/english-c1/listening.json` (stub)
+- NEW: `zarmet-olympiada/content/german-c1/reading.json` (stub)
+- NEW: `zarmet-olympiada/content/german-c1/listening.json` (stub)
+
+**Alternatives Considered:**
+- Use JSON Schema (draft-07) for formal validation — rejected: overkill for 4 files, manual review is enough; revisit if we ever hit 20+ files
+- HTML-per-mock like Cambridge — rejected: explicitly the pattern the client said was "too complicated"
+- Markdown with YAML frontmatter — rejected: harder to diff, harder to embed answer arrays
+
+---
+
+### ADR-035: Server Architecture — Single File, Triple-Layer Durability (No SQLite)
+**Status:** Decided
+**Impact:** High | **Effort:** 1.5 hours | **Risk:** Medium
+
+**Context:**
+Client requirement: "nothing should be lost, ever." Three failure modes to defend against: (1) power cut mid-test, (2) server process crash, (3) human error (wrong student name, misclick).
+
+Originally considered `better-sqlite3` + JSON backup + Postgres mirror. After weighing: SQLite adds a native dep that can fail on Windows install, and its only benefit over pure-JSON is fast admin queries — which don't matter at 50-student scale. **Decision: drop SQLite entirely.** Two layers, not three, but both are filesystem-native and crash-proof.
+
+**Decision:**
+
+**Layer 1: Append-only JSONL per session** (primary, live writes)
+
+Every answer change sends a small POST to `/api/session/:id/answer`. Server appends one line to `sessions/{sessionId}.jsonl`:
+
+```
+{"t":"2026-04-11T14:23:01.123Z","ev":"start","student":"John Doe","lang":"english-c1","skill":"reading"}
+{"t":"2026-04-11T14:23:45.910Z","ev":"answer","qid":"q1","value":"B"}
+{"t":"2026-04-11T14:24:12.456Z","ev":"answer","qid":"q2","value":"in"}
+{"t":"2026-04-11T14:24:40.001Z","ev":"answer","qid":"q1","value":"C"}  // change of mind
+{"t":"2026-04-11T14:55:00.000Z","ev":"submit"}
+```
+
+Append-only means no partial-write corruption: the OS either wrote the line fully or didn't. If the server crashes mid-write, the worst case is one missing answer update — everything prior is on disk. On reload, the server reads the JSONL and computes the current answer state by taking the **latest value per `qid`**.
+
+Why JSONL not JSON-array: writing a JSON array requires seeking + rewriting the whole file on every change. JSONL is strict `fs.appendFileSync` with no parse/rewrite.
+
+**Layer 2: Atomic final JSON per completed submission** (secondary, on submit)
+
+When a student submits, the server:
+1. Reads the final answer state from the JSONL
+2. Scores against the answer key (server-side only)
+3. Writes `backups/{YYYY-MM-DD}_{sanitizedName}_{lang}_{skill}_{sessionId}.json` via write-temp-then-rename:
+   ```js
+   fs.writeFileSync(tmpPath, JSON.stringify(record, null, 2));
+   fs.renameSync(tmpPath, finalPath);  // atomic on Windows + POSIX
+   ```
+4. Only moves `sessions/{sessionId}.jsonl` to `sessions/_completed/` after the rename succeeds
+
+**Layer 3: Best-effort Postgres mirror** (tertiary, offsite belt)
+
+If `process.env.OLYMPIADA_DATABASE_URL` is set, after the final JSON is written the server POSTs the record to a `zarmet_olympiada_submissions` table via `shared/database.js`. **Failure is logged and ignored** — never blocks the student-facing response, never causes a visible error. The JSON backup is canonical.
+
+**Crash recovery protocol:**
+
+On startup, the server scans `sessions/` for any `.jsonl` files. For each:
+- If the file ends with a `submit` event but has no corresponding `backups/` entry → treat as incomplete submit, finalize it now (the crash happened between write-JSONL and write-backup)
+- Otherwise → leave it in place; if the student reloads the page with the same session cookie/id, they resume where they left off
+
+**Admin viewer reads directly from `backups/`:**
+- No DB query
+- Folder scan + JSON.parse each file
+- Sufficient for up to ~1000 submissions (<100ms on modern SSD)
+
+**No correct answers ever leave the server:**
+- Content routes (`GET /api/content/:lang/:skill`) run every response through `stripAnswerKey()`
+- Scoring happens only in the submit handler
+
+**Consequences:**
+
+Positive:
+- Zero native dependencies (only `express`, already a project dep)
+- Crash-proof by construction: filesystem append is the primitive
+- JSON files are inspectable with any text editor — debug-friendly
+- Can be copied/backed up with a file copy
+- Postgres mirror is optional and never a failure surface
+
+Negative:
+- Admin viewer has to parse N JSON files on each load — fine at 50 students, would be slow at 10,000 (not our problem)
+- `sessions/` folder can accumulate junk if students abandon half-finished tests — addressed by a housekeeping script that moves `sessions/*.jsonl` older than 48 hours to `sessions/_abandoned/`
+
+**Migration Path:**
+1. Write `zarmet-olympiada/server.js` with all routes, durability layers, answer stripping, score calculation
+2. Write `zarmet-olympiada/package.json` (type: module, deps: express, optional pg)
+3. Syntax check: `node --check zarmet-olympiada/server.js`
+4. Smoke test: start server, curl `/api/health`, curl `/api/content/english-c1/reading` and verify answers are stripped
+
+**Files Affected:**
+- NEW: `zarmet-olympiada/server.js`
+- NEW: `zarmet-olympiada/package.json`
+
+**Alternatives Considered:**
+- better-sqlite3 for primary storage — rejected: native dep risk, no benefit over JSON at our scale
+- Stream all answers to Postgres live — rejected: network outage = data loss, violates "nothing lost"
+- Full event sourcing (only JSONL, compute everything on read) — rejected: admin viewer would have to replay every session on each load; final JSON backup is the right optimization
+
+---
+
+### ADR-036: Frontend — Three Pages, Rotation-Safe, No Framework, No Cambridge Reuse
+**Status:** Decided
+**Impact:** High | **Effort:** 2 hours | **Risk:** Medium
+
+**Context:**
+Client direction: "super simple UI, no unanswered counter, no post-submit score". Current Cambridge frontend is powerful but opinionated — timer overlays, option menus, distraction-free mode, modal managers, context menus, mobile touch handlers, Inspera bridges. None of that is needed here, and reusing any of it creates coupling we just decided to avoid.
+
+**Decision:**
+
+Three pages, plus admin. Five JS files total. One CSS file. No build step, no bundler, no framework.
+
+**`public/index.html` — Welcome page**
+- Zarmet shield + title
+- Form: Full name (required), group (optional), language dropdown (English C1 / German C1)
+- One big "Start" button
+- On load, JS clears `localStorage` keys prefixed `olympiada:` and `sessionStorage` completely — this is the rotation safety boundary
+- No prior-student data visible
+
+**`public/test.html` — The test runner**
+- Skill-aware: the server tells it to do Reading first, then Listening (same URL, different query param — or: skill served by part index)
+- Actually: **reading and listening are two separate test sessions.** Easier flow: after welcome → reading test → welcome-like "Reading done, ready for Listening?" → listening test → done. This avoids stuffing two different skills into one session cookie.
+- Renders parts sequentially. Each part shows:
+  - Passage (if reading) or audio player (if listening)
+  - Questions for that part
+  - "Next" / "Previous" part buttons
+- Timer in the top-right: plain, grey, no color changes, no alarms
+- Question navigator: numbered buttons 1..N, clicked = scroll into view. **No "unanswered" counter. No "3 of 80 answered" label.**
+- Audio player: one `<audio>` element per part, `maxPlays` counted by JS and disabled after limit (defaults to 2 per CAE/Goethe convention)
+- Every answer change calls `POST /api/session/:id/answer` with `{qid, value}` → server appends to JSONL. Also writes to `localStorage` as a second line of defence in case of network hiccup
+- On "Finish test": one confirmation dialog with the text "Finish this test? You can't come back." — that's it. **No list of unanswered questions.** Submits, redirects to `done.html`.
+
+**`public/done.html` — Thank you screen**
+- "Your test has been submitted. Please wait for your invigilator."
+- No score, no stats, no breakdown
+- Per ADR-037 default: an invigilator key combo (hidden 4-corner click sequence) returns to welcome, NOT auto-redirect. Accidental restart is worse than a 30-second delay.
+
+**`public/admin.html` — Results viewer**
+- Password-gated (server-checked, password in env var `OLYMPIADA_ADMIN_PASSWORD`, not hardcoded in HTML)
+- Table of submissions: date, student name, language, skill, score, finish time
+- Click row → detail view with every question, their answer, the correct answer, per-question points
+- Buttons: Export CSV, Export JSON
+- Reads from `GET /api/admin/submissions` which scans `backups/`
+
+**CSS discipline:**
+- One file: `public/css/styles.css`
+- No reset libraries, no Tailwind
+- CSS variables for the two colors needed (primary, accent), everything else inherits
+- Zarmet palette: warm browns/oranges (to match the current `html.olympiada` theme the client chose — `#7c2d12`, `#431407`, `#fed7aa`)
+- Target: under 300 lines total
+
+**JS discipline:**
+- `app.js`, `test.js`, `admin.js` — one file per page, no module system (script tags)
+- No dependency on `assets/js/core.js`, `assets/js/timer.js`, `assets/js/session-manager.js`, etc.
+- Timer is ~30 lines of vanilla `setInterval`
+- Each JS file must be under 400 lines
+
+**Consequences:**
+
+Positive:
+- Entire frontend is understandable in 15 minutes
+- Nothing to break when Cambridge evolves
+- Rotation-safe by construction (clear on welcome load)
+- No "unanswered" counter means one less piece to build and zero way to accidentally show it
+
+Negative:
+- No mobile touch support — acceptable, this runs on desktop lab machines
+- No fancy highlighting / notes — out of scope, not requested
+- Admin viewer is unstyled compared to Cambridge dashboards — fine, it's for the operator not for students
+
+**Migration Path:**
+1. Write the 4 HTML files as static skeletons that can load and render the stub content
+2. Write `styles.css` with base typography and the Zarmet palette
+3. Write `app.js` (welcome), `test.js` (test runner), `admin.js` (results viewer)
+4. Manually load `http://localhost:3004/` and confirm welcome → test (stub) → done works end-to-end
+
+**Files Affected:**
+- NEW: `zarmet-olympiada/public/index.html`
+- NEW: `zarmet-olympiada/public/test.html`
+- NEW: `zarmet-olympiada/public/done.html`
+- NEW: `zarmet-olympiada/public/admin.html`
+- NEW: `zarmet-olympiada/public/css/styles.css`
+- NEW: `zarmet-olympiada/public/js/app.js`
+- NEW: `zarmet-olympiada/public/js/test.js`
+- NEW: `zarmet-olympiada/public/js/admin.js`
+
+**Alternatives Considered:**
+- Single-page app with client-side router — rejected: adds complexity, no benefit at 3 pages
+- Reuse `assets/js/core.js` + strip the unwanted parts — rejected: core.js is 1,432 lines of closure-coupled code; ripping out half would create more bugs than writing fresh
+- Use the existing `ExamTimer` class — rejected: overlay mode + localStorage prefix config is more than we need; 30 lines of setInterval is simpler
+
+---
+
+### ADR-037: Defaults for Open Questions (Done-Screen + Student Roster)
+**Status:** Decided
+**Impact:** Low | **Effort:** 10 min | **Risk:** Low
+
+**Context:**
+The intent plan left two questions open, noted as "not blockers — architect will default." These are:
+1. Done screen: auto-rotate back to welcome after N seconds, OR invigilator-gated?
+2. Student names: pre-loaded roster, OR typed at welcome?
+
+Client's explicit framing is "nothing should be lost" and "students may rotate." Those two constraints point to specific defaults.
+
+**Decision:**
+
+**Done-screen: invigilator-gated.** No auto-rotate. The done screen shows "Your test has been submitted. Please wait for your invigilator." and stays there. To return to welcome, the invigilator clicks the four corners of the screen in sequence (top-left → top-right → bottom-right → bottom-left) within 3 seconds. Hidden, no visible UI, no keyboard.
+
+**Why:** Auto-rotate is a footgun. A student accidentally clicking "Start" on a test they just finished is a disaster the client explicitly said they want to avoid ("nothing should be lost"). The 4-corner combo is standard invigilator-kiosk practice, invisible to students, instant for trained staff.
+
+**Student names: typed at welcome (for v1).** Every student types their full name and group into the welcome form. No pre-loaded roster file. The welcome form validates: non-empty, 2+ characters, basic pattern (letters + spaces + hyphens + dots + apostrophes — no numbers or symbols).
+
+**Why:** Pre-loaded rosters require a pre-exam workflow (invigilator uploads a file, picks from a dropdown). That's a whole extra feature that can wait for v2. Typed names are fine for a 50-student event where every submission also captures wall-clock time and is backup-stamped.
+
+**v2 placeholder:** Add a stub `roster.json` in the scaffold with a comment showing the future format, so when the client asks for pre-load later, the path is obvious.
+
+**Consequences:**
+
+Positive:
+- Two open questions resolved without blocking on more client input
+- Defaults documented in `README.md` so the client can see the rationale and override before execution
+- Rip-out safety: done-screen gating means one student can't accidentally nuke the next session
+
+Negative:
+- The 4-corner combo requires invigilator training (one-time, ~10 seconds)
+- Typed names mean a typo in "Ivan" vs "İvan" will show up as two entries — acceptable, the admin viewer can be searched/merged
+
+**Migration Path:**
+1. Document both defaults in `zarmet-olympiada/README.md` under an "Operator Notes" section
+2. Implement the 4-corner gate in `public/js/app.js` (done.html page initialization)
+3. Add the `roster.json` stub with commented future format
+
+**Files Affected:**
+- NEW: `zarmet-olympiada/README.md`
+- NEW: `zarmet-olympiada/content/roster.json` (empty stub with schema comment)
+
+**Alternatives Considered:**
+- Auto-rotate after 60 seconds — rejected: too risky for "nothing lost"
+- Keyboard shortcut (Ctrl+Shift+R) — rejected: students may press it by accident
+- Password on done-screen — rejected: invigilators mistype passwords under exam pressure
+
+---
+
 ## Session: 2026-04-08 (Round 7)
 
 ### ADR-029: Sync server-cjs.cjs with ESM Server Security
