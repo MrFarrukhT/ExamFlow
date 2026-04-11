@@ -1674,4 +1674,15 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   .ct-bottom-nav { height: 68px; }
   .ct-nav-arrows { padding: 0 12px; gap: 6px; }
   .ct-nav-arrow, .ct-nav-finish { width: 42px; height: 42px; font-size: 17px; }
+
+  /* .zu-page pages (dashboard / admin / done + welcome form) — tighten
+   * the page shell so 375px feels less padded. Applies to all pages that
+   * use .page without the narrow-welcome vertical centering. */
+  .page { padding: 1.5rem 1rem 3rem; }
+  .zu-header { padding: 1rem 0.5rem 1.25rem; margin-bottom: 1.5rem; }
+  .zu-header h1 { font-size: 1.9rem; }
+  .zu-welcome-panel { padding: 1.25rem 1.25rem; }
+  .zu-welcome-panel .zu-welcome-name { font-size: 1.25rem; }
+  .zu-module-card { padding: 1.5rem 1.25rem; }
+  .zu-module-card h3 { font-size: 1.25rem; }
 }

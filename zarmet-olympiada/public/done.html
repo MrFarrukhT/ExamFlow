@@ -15,7 +15,9 @@
     <h1>Thank you</h1>
     <p class="zu-subtitle">Your test has been submitted.</p>
   </header>
-  <p class="zu-done-instruction">Please wait for your invigilator.</p>
+  <main>
+    <p class="zu-done-instruction">Please wait for your invigilator.</p>
+  </main>
 </div>
 <script>
 // German C1 localization — runs BEFORE the rotation clear below so we can
@@ -32,7 +34,7 @@
     if (h1) h1.textContent = 'Vielen Dank';
     var subtitle = document.querySelector('.zu-header .zu-subtitle');
     if (subtitle) subtitle.textContent = 'Ihr Test wurde abgegeben.';
-    var instruction = document.querySelector('.page > p');
+    var instruction = document.querySelector('.zu-done-instruction');
     if (instruction) instruction.textContent = 'Bitte warten Sie auf Ihre Aufsicht.';
   } catch (e) { /* fail silently — English default is still acceptable */ }
 })();

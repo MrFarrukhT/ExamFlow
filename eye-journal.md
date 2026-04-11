@@ -1,5 +1,79 @@
 # Eye Journal
 
+## Session: 2026-04-11 18:20 — Zarmed Olympiada `<main>` Landmarks + Mobile .zu-page Padding — Round 29 (/loop iteration)
+Persona: Screen-reader user navigating by landmarks + mobile student on dashboard/admin/done at 375×812 | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: grep audit of aria/role/alt across all 5 HTML pages; dashboard at 375×812 and 1920×1080 verification
+Starting state: Rounds 22-28 polished the test runner chrome, modals, favicon, mobile breakpoint, hex tokens, inline styles, long-name ellipsis. Round 22b added timer a11y attributes (`role="timer" aria-live="off" aria-atomic="true" aria-label="Time remaining"`). But the landmark structure gap had never been audited: test.html had `<main>` and `<nav>` from the original rewrite, while **index / dashboard / done / admin had no `<main>` landmark at all** — just a `<div class="page">` wrapping everything.
+
+### Round 29 — 2 grouped fixes
+
+**Findings:**
+
+- [T4] **4 of 5 HTML pages missing `<main>` landmark.** Grep confirmed: `<main>` only exists in test.html:53 and `<nav>` only in test.html:56. The welcome, dashboard, done, and admin pages all render as a single `<div class="page">` → `<header class="zu-header">` + mixed sibling content with no landmark hierarchy. Screen readers using landmark navigation (JAWS "R" key, VoiceOver rotor "Landmarks") can't skip to the main content — they have to walk every element from the top.
+
+- [T0] **Dashboard/admin/done desktop padding bleeds through to mobile.** `.page { padding: 2.5rem 2rem 4rem }` is generous for 1920px but wastes ~34px horizontal on every 375px mobile viewport. The welcome and done pages are already centered via `body.zu-welcome`, but the dashboard and admin (which use full-width `.page`) still used desktop padding on mobile. Round 26 added mobile tightening for the test runner only — the `.zu-*` pages were an oversight.
+
+**Action:** POLISH 2 fixes grouped in one commit.
+
+**Files touched:**
+
+1. **`<main>` landmarks added to 4 HTML pages:**
+   - `index.html`: wrapped `#start-form` in `<main>`
+   - `dashboard.html`: wrapped `.zu-welcome-panel` + `#modules-section` + `#completion-section` in `<main>`
+   - `done.html`: wrapped `.zu-done-instruction` in `<main>`
+   - `admin.html`: wrapped `#login-view` + `#list-view` + `#detail-view` in a single `<main>` so all three view states stay inside the landmark
+
+2. **done.html localization selector hardening.** Previous selector was `.page > p` (targeted the instruction paragraph). After wrapping it in `<main>`, the `>` combinator would fail because the paragraph is now `.page > main > p`. Updated the selector to `.zu-done-instruction` — robust against any future DOM restructuring.
+
+3. **Mobile `.zu-page` padding tightening in `@media (max-width: 540px)`:**
+   - `.page { padding: 2.5rem 2rem 4rem → 1.5rem 1rem 3rem }`
+   - `.zu-header { padding: 2rem 1rem 1.75rem → 1rem 0.5rem 1.25rem; margin-bottom: 2.5rem → 1.5rem }`
+   - `.zu-header h1 { font-size: 2.6rem → 1.9rem }`
+   - `.zu-welcome-panel { padding: 1.75rem 2.25rem → 1.25rem 1.25rem }`
+   - `.zu-welcome-panel .zu-welcome-name { font-size: 1.55rem → 1.25rem }`
+   - `.zu-module-card { padding: 2rem 1.75rem → 1.5rem 1.25rem }`
+   - `.zu-module-card h3 { font-size: 1.5rem → 1.25rem }`
+   - Scoped inside the existing round-26 mobile breakpoint block so all mobile tweaks live together.
+
+### Verification
+
+- **Mobile dashboard** (`eye-r29-06-dashboard-mobile-tight2.png`): Header smaller, welcome panel tighter, module cards fit more comfortably. "Select a Module to Begin" wraps to 2 lines at 375px but that's inherent to the copy length, not a layout bug.
+- **Desktop dashboard** (`eye-r29-08-desktop-dashboard.png`): unchanged. Module cards side-by-side, welcome panel at 2.25rem padding, everything as before. `@media (max-width: 540px)` scope prevents desktop regression.
+- **Landmark audit** post-fix: grep for `<main` returns 5 hits (one per HTML page). Screen readers can now jump to content via landmark navigation on every page.
+- **JS syntax** — `node --check` passes on test.js, admin.js, dashboard.js.
+
+**Bonus sighting during verification** (`eye-r29-07-desktop-regression.png`): caught the German C1 listening test running at 1920×1080. "KANDIDATEN-ID / Mobile Check / R29CHECK" header, "Fragen 1-6" banner with full German instructions, 6 MC questions with German prompts, "Teil 1 / Teil 2 / Teil 3 / Teil 4" bottom nav, timer "39:12". Confirms rounds 20-22's German localization work is intact.
+
+### Quality Map
+
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| index.html landmarks | 2-Clear (no `<main>`) → **4-Polished** | `<main>` wrap around form |
+| dashboard.html landmarks | 2-Clear → **4-Polished** | `<main>` around welcome-panel + modules + completion |
+| done.html landmarks | 2-Clear → **4-Polished** | `<main>` + hardened German selector |
+| admin.html landmarks | 2-Clear → **4-Polished** | `<main>` around login/list/detail views |
+| Mobile .zu-page padding | 3-Efficient → **5-Crafted** | Page/header/panel/cards all scale down at 540px |
+
+### Deferred
+
+- **Skip link on test.html.** The test runner has a lot of header chrome before the main question content. A skip-to-content link (hidden until focus) would be a nice-to-have for keyboard users. Not shipped because the tab order already lands directly in `<main>` from `<body>` (there are no focusable elements in the header aside from the logo, and the banner has no focus). Marginal value.
+- **`role="banner"` on `.zu-header`.** Semantically the header should have `role="banner"` (or be a `<header>` which it already is — `<header class="zu-header">`). Screen readers should auto-identify it as a banner landmark. Verified via grep that all 5 pages use `<header>` correctly.
+- **Dashboard h2 "Select a Module to Begin" copy.** Wraps to 2 lines at 375px. Could be shortened to "Select a Module" at mobile via content-var, but that's copy work, not Eye scope.
+- **Admin list view mobile.** Didn't verify the results table at 375px. Tables are inherently wide — might need horizontal scroll or card-per-row rebuild. Flag as deferred.
+
+### Session Stats
+
+Pages explored: 5 (mobile dashboard, desktop dashboard, mobile listening test incidentally, grep audit, landmark check)
+Findings: 2 (1× T4 landmarks missing, 1× T0 mobile padding)
+Polishes landed: 2 (grouped)
+Files touched: 5 (index.html, dashboard.html, done.html, admin.html, styles.css)
+
+**Trajectory note:** Round 29's value was **landmark audit via grep + a single viewport resize**. The grep took 3 seconds, the mobile screenshot took 15, and both issues surfaced immediately. Every /eye session should include a 30-second grep sweep for missing a11y primitives (aria, role, main, nav, alt) as a zero-cost baseline check. Earlier rounds never ran the grep because they were focused on chrome visuals — the a11y gap sat there for 28 rounds.
+
+**Key learning:** Landmarks are invisible to sighted users but load-bearing for screen-reader navigation. `<main>` is the cheapest a11y win in HTML — every page should have exactly one. A skill that polishes the visuals for 28 rounds without checking landmarks is over-indexed on the eye.
+
+---
+
 ## Session: 2026-04-11 18:15 — Zarmed Olympiada Audio-Ended Announcement — Round 22d (parallel iteration)
 Persona: Screen-reader student listening to CAE audio — currently gets "Audio is playing" when playback starts, then SILENCE when it ends | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: test.js audio event handlers + listening verification
