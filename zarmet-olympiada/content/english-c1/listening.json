@@ -1,0 +1,41 @@
+{
+  "id": "english-c1-listening",
+  "language": "en",
+  "languageLabel": "English",
+  "level": "C1",
+  "skill": "listening",
+  "title": "Cambridge C1 Advanced — Listening",
+  "durationMinutes": 40,
+  "instructions": "This is a STUB content file. Real questions will be transcribed from cae/CAE Practice test listening.docx in Priority 1.",
+  "parts": [
+    {
+      "id": "part1",
+      "title": "Part 1 — Multiple choice (STUB)",
+      "instructions": "You will hear three different extracts. For questions 1–6, choose the answer (A, B or C) which fits best according to what you hear.",
+      "passage": null,
+      "audio": {
+        "src": "audio/part1.mp3",
+        "maxPlays": 2,
+        "note": "You will hear each extract twice."
+      },
+      "questions": [
+        {
+          "id": "q1",
+          "type": "multiple-choice",
+          "prompt": "1 (stub) — What is the speaker's main point?",
+          "options": [
+            { "key": "A", "text": "It is cheaper than expected." },
+            { "key": "B", "text": "It is more complicated than expected." },
+            { "key": "C", "text": "It is more popular than expected." }
+          ],
+          "answer": "C",
+          "points": 1
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "mode": "per-question-points",
+    "totalPoints": 1
+  }
+}

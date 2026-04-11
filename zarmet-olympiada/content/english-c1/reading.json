@@ -1,0 +1,41 @@
+{
+  "id": "english-c1-reading",
+  "language": "en",
+  "languageLabel": "English",
+  "level": "C1",
+  "skill": "reading",
+  "title": "Cambridge C1 Advanced — Reading and Use of English",
+  "durationMinutes": 90,
+  "instructions": "This is a STUB content file. Real questions will be transcribed from cae/Advanced reading practice.docx in Priority 1 of the intent plan.",
+  "parts": [
+    {
+      "id": "part1",
+      "title": "Part 1 — Multiple-choice cloze (STUB)",
+      "instructions": "For questions 1–8, read the text below and decide which answer (A, B, C or D) best fits each gap.",
+      "passage": {
+        "type": "text",
+        "content": "This is a placeholder passage for scaffold testing. The real CAE Part 1 passage will replace this text, complete with [[GAP:q1]] inline markers for the multiple-choice cloze."
+      },
+      "audio": null,
+      "questions": [
+        {
+          "id": "q1",
+          "type": "multiple-choice",
+          "prompt": "1 (stub)",
+          "options": [
+            { "key": "A", "text": "considerable" },
+            { "key": "B", "text": "substantial" },
+            { "key": "C", "text": "extensive" },
+            { "key": "D", "text": "generous" }
+          ],
+          "answer": "B",
+          "points": 1
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "mode": "per-question-points",
+    "totalPoints": 1
+  }
+}

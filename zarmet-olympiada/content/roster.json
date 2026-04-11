@@ -1,0 +1,12 @@
+{
+  "comment": "STUB — Pre-loaded student roster. For v1 this file is empty and students type their own name at the welcome screen. v2 future format shown below. See ADR-037.",
+  "_futureFormatExample": [
+    {
+      "id": "2026-CS-001",
+      "fullName": "Ivan Petrov",
+      "group": "CS-2A",
+      "allowedLanguages": ["english-c1", "german-c1"]
+    }
+  ],
+  "students": []
+}
