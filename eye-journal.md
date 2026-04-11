@@ -1,5 +1,84 @@
 # Eye Journal
 
+## Session: 2026-04-11 15:55 — Zarmet Olympiada Cambridge-Authentic UI — Round 14
+Persona: Student resizing the browser window mid-test (window snap, split-screen, external monitor disconnect) | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: test.html Part 7 at 1280px then live-resized to 700px
+Starting state: Round 13 was the first 0-change round. I predicted the loop would stay quiet. Round 14 found a legitimate T3 bug anyway by picking yet another novel dimension — live resize (not initial-load-at-width).
+
+### Round 14 — Active nav part off-screen after live resize
+
+**Explored:** Loaded test.html at 1280px, navigated to Part 7, then resized the browser viewport to 700px WITHOUT reloading the page. A real scenario: a student using split-screen, Windows snap, or disconnecting a second monitor mid-exam.
+
+**Finding:**
+
+- [T3] **Active part disappears from the bottom nav after live resize.** Exact measurements at 700px viewport after navigating to Part 7 at 1280px:
+  - `.ct-nav-parts` container: x=0 to x=519 (clientWidth 519, scrollWidth 760)
+  - Active Part 7: intrinsic position x=570 to x=665
+  - `scrollLeft: 0` (container hadn't scrolled)
+  - **Active Part 7's rendered position (570-665) is BEYOND the visible clip (0-519) of the parts container.** The student is on Part 7 but can't see "Part 7" in the nav. They'd have to manually horizontal-scroll to find it.
+  
+  Prior rounds tested initial-load-at-width (rounds 7, 12) which both rendered fresh with `scrollLeft: 0` from the start. That worked because at initial load the active part defaults to Part 1 (which is at the left edge of the intrinsic scroll area). Round 14's scenario is different: the student navigates to a later part at a wide viewport, THEN resizes — now the active part is deep in the intrinsic scroll area, and the scroll position isn't adjusted.
+
+**Action:** POLISH (2 related changes shipped)
+
+- [T3] `scrollIntoView` on the active segment after `renderBottomNav` — at the end of every nav render, find the `.ct-nav-part--active` element and call `scrollIntoView({ inline: 'nearest', block: 'nearest', behavior: 'auto' })`. This handles the case where the nav re-renders after a navigation (ensures the new active part is visible).
+  
+- [T3] Debounced window resize listener — added to the boot sequence. On window resize, after a 100ms debounce, call `scrollIntoView` on the current active segment. This handles the case where the student resizes without navigating (the original bug scenario).
+  Mode: polish | Quality: 3 → 5 | Files: public/js/test.js
+
+### Verification
+
+**Before fix, viewport 700, Part 7 active:**
+```
+activeLeft: 570, activeRight: 665
+partsLeft: 0, partsRight: 519
+visibleInParts: false ← active part outside clip
+scrollLeft: 0
+```
+
+**After fix, same scenario:**
+```
+activeLeft: 424, activeRight: 519
+partsLeft: 0, partsRight: 519
+visibleInParts: true ← fully inside
+scrollLeft: 146 ← container auto-scrolled right to bring active into view
+```
+
+Screenshot `r14-part7-resized-fixed.png` shows Part 7 visible at the right edge with its `41 42` question buttons expanded, immediately before the arrow controls.
+
+### Quality Map (no layer changes — still 13/13 Crafted, now resize-robust)
+
+### Deferred (final thin list)
+- Bookmark icon clickability — feature, out of mandate
+- Cross-tab session sync — feature, out of mandate
+- Right-click/copy-block on passages — anti-cheat feature, out of mandate
+- Real content transcription — out of /eye scope
+
+### Session Stats
+Pages explored: 1 (test.html Part 7 resize)
+Screenshots captured: 2
+Rounds: 1
+Polishes landed: 2 (scrollIntoView on render + resize listener)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 2
+
+**Trajectory update:** Round 13 was the first 0-change round and I predicted the loop would go quiet. Round 14 broke the prediction — found a genuine T3 bug by picking yet another novel dimension (live resize vs initial-load-at-width). The app's quality surface is still larger than I thought.
+
+Key insight: **"live state change" dimensions are a different category from "initial-load state" dimensions.** Loading at 700px behaves differently from loading at 1280 then resizing to 700. Round 14 is the first time I tested a *live* state transition rather than an initial load. That's a new angle I should remember for future rounds.
+
+Actual remaining live-transition angles:
+- Timer crosses the 5-minute boundary (warn state) — visual transition from grey to amber
+- Timer crosses the 1-minute boundary (urgent state) — amber to red with pulse
+- Audio plays then `ended` event fires — pre-play modal → playing → finished transition
+- Session submit → dashboard redirect → card update transition
+- Language change after dashboard loads (can't happen, language is locked on welcome)
+
+Most of these I've verified indirectly. The one that might still find something: the audio `ended` transition. But that needs a real audio file.
+
+---
+
 ## Session: 2026-04-11 15:45 — Zarmet Olympiada Cambridge-Authentic UI — Round 13 (ZERO CHANGES)
 Persona: Student doing two edge things — pressing browser back after submit, opening test in two tabs | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: Back button flow post-submit, concurrent tabs on same session

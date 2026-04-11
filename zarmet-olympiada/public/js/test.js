@@ -901,6 +901,15 @@
     document.getElementById('ct-next').disabled = state.currentPartIndex === state.parts.length - 1 && isCurrentLastQuestion() || advanceLocked;
     document.getElementById('ct-finish').disabled = advanceLocked || state.submitting;
 
+    // Ensure the active part is visible in the horizontally-scrollable nav.
+    // At narrow viewports (after resize or at zoom), the active part can
+    // end up clipped outside .ct-nav-parts's visible area. scrollIntoView
+    // on its parent scroll container brings it back in view.
+    const activeSeg = host.querySelector('.ct-nav-part--active');
+    if (activeSeg && typeof activeSeg.scrollIntoView === 'function') {
+      activeSeg.scrollIntoView({ inline: 'nearest', block: 'nearest', behavior: 'auto' });
+    }
+
     // Persist position on every nav render — single choke point for every
     // position change (goToPart, next/prev, direct nav click, answer change).
     savePosition();
@@ -1075,6 +1084,21 @@
       document.getElementById('ct-prev').addEventListener('click', prevQuestion);
       document.getElementById('ct-next').addEventListener('click', nextQuestion);
       document.getElementById('ct-finish').addEventListener('click', () => submit(false));
+
+      // Keep the active nav part visible when the student resizes the
+      // window. Without this, resizing to a narrower viewport can push
+      // the current part off-screen in the horizontally-scrollable nav.
+      // Debounced to avoid thrashing on drag-resize.
+      let resizeTimer = null;
+      window.addEventListener('resize', () => {
+        if (resizeTimer) clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          const activeSeg = document.querySelector('.ct-nav-part--active');
+          if (activeSeg && typeof activeSeg.scrollIntoView === 'function') {
+            activeSeg.scrollIntoView({ inline: 'nearest', block: 'nearest', behavior: 'auto' });
+          }
+        }, 100);
+      });
     } catch (e) {
       console.error(e);
       document.getElementById('ct-banner-title').textContent = 'Error';
