@@ -171,4 +171,12 @@
 
     window.location.href = 'dashboard.html';
   });
+
+  // Auto-focus the Full Name input on page load so a student can start
+  // typing immediately without clicking or tabbing. The setTimeout(0)
+  // defers to the next frame so screen readers have a chance to
+  // announce the page first before focus jumps to the input.
+  setTimeout(() => {
+    try { nameInput.focus(); } catch (e) { /* focus() can throw on detached */ }
+  }, 0);
 })();

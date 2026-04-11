@@ -25,6 +25,15 @@
     if (view === loginView) {
       adminPage.classList.add('page--narrow');
       document.body.classList.add('zu-welcome');
+      // Auto-focus the password input so the invigilator can start
+      // typing immediately. setTimeout(0) defers to the next frame so
+      // the view swap completes before focus moves.
+      setTimeout(() => {
+        try {
+          const pw = document.getElementById('pw');
+          if (pw) pw.focus();
+        } catch (e) { /* focus() can throw on detached */ }
+      }, 0);
     } else {
       adminPage.classList.remove('page--narrow');
       document.body.classList.remove('zu-welcome');

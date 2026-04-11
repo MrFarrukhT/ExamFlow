@@ -809,6 +809,14 @@
     btn.addEventListener('click', () => startAudio(part));
     card.appendChild(btn);
     overlay.appendChild(card);
+    // Auto-focus the Play button so a keyboard user can hit Enter to
+    // start audio immediately. setTimeout(0) defers until after the
+    // caller has appended the overlay to the DOM — you can't focus a
+    // detached element. Matches the pattern used in app.js welcome
+    // input focus and admin.js login password focus.
+    setTimeout(() => {
+      try { btn.focus(); } catch (e) { /* focus() can throw if removed */ }
+    }, 0);
     return overlay;
   }
 
