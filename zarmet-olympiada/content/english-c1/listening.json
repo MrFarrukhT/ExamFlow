@@ -6,135 +6,319 @@
   "skill": "listening",
   "title": "Cambridge C1 Advanced — Listening",
   "durationMinutes": 40,
-  "instructions": "This is a STUB content file. Real questions will be transcribed from cae/CAE Practice test listening.docx in Priority 1.",
+  "instructions": "You will hear a number of different recordings and you have to answer questions on what you hear. There are four parts to the test. You will hear each extract twice.",
   "parts": [
     {
       "id": "part-listening-1",
-      "title": "Part 1 — Multiple choice (STUB)",
-      "instructions": "You will hear three different extracts. For questions 1-6, choose the answer (A, B or C) which fits best according to what you hear.",
-      "passage": null,
+      "title": "Part 1 — Multiple choice",
+      "instructions": "You will hear three different extracts. For questions 1–6, choose the answer (A, B or C) which fits best according to what you hear. There are two questions for each extract.",
+      "passage": {
+        "type": "text",
+        "content": "Extract One\nYou hear part of a discussion between two marine biologists about coral reefs.\n\nExtract Two\nYou hear two friends talking about birdwatching.\n\nExtract Three\nYou hear a choreographer and a dancer talking about their work."
+      },
       "audio": {
-        "src": "audio/part1.mp3",
+        "src": "audio/cae-listening.mp3",
         "autoPlay": true,
-        "note": "Audio will auto-play. You will hear each extract twice within the audio file."
+        "maxPlays": 2,
+        "note": "Full CAE listening test audio — covers all four parts. You will hear each extract twice within the recording."
       },
       "questions": [
         {
           "id": "lq1",
           "type": "multiple-choice",
-          "prompt": "1. What is the speaker's main point?",
+          "prompt": "1. How does the woman feel about current research on coral reefs?",
           "options": [
-            { "key": "A", "text": "It is cheaper than expected." },
-            { "key": "B", "text": "It is more complicated than expected." },
-            { "key": "C", "text": "It is more popular than expected." }
+            { "key": "A", "text": "afraid that its value may be underestimated" },
+            { "key": "B", "text": "worried that not enough time is being spent on it" },
+            { "key": "C", "text": "concerned about shortcomings in what the data is measuring" }
           ],
           "answer": "C",
+          "points": 1
+        },
+        {
+          "id": "lq2",
+          "type": "multiple-choice",
+          "prompt": "2. When talking about conserving coral reefs, the man",
+          "options": [
+            { "key": "A", "text": "outlines decisions that have affected it." },
+            { "key": "B", "text": "suggests practical approaches to take to it." },
+            { "key": "C", "text": "identifies specific projects that have been successful." }
+          ],
+          "answer": "B",
+          "points": 1
+        },
+        {
+          "id": "lq3",
+          "type": "multiple-choice",
+          "prompt": "3. Why has the woman's opinion of birdwatching changed?",
+          "options": [
+            { "key": "A", "text": "She experienced the excitement of recognising an unusual species." },
+            { "key": "B", "text": "She was persuaded by the man's enthusiasm for the activity." },
+            { "key": "C", "text": "She had the opportunity to witness natural behaviour first hand." }
+          ],
+          "answer": "C",
+          "points": 1
+        },
+        {
+          "id": "lq4",
+          "type": "multiple-choice",
+          "prompt": "4. The man says that while birdwatching, he has developed",
+          "options": [
+            { "key": "A", "text": "an interest in promoting the conservation of certain creatures." },
+            { "key": "B", "text": "an appreciation of the astonishing variety of species that exist." },
+            { "key": "C", "text": "an understanding of the connection between an environment and its wildlife." }
+          ],
+          "answer": "C",
+          "points": 1
+        },
+        {
+          "id": "lq5",
+          "type": "multiple-choice",
+          "prompt": "5. What does the man think about his work as a choreographer?",
+          "options": [
+            { "key": "A", "text": "There is constant pressure on him to produce popular ballets." },
+            { "key": "B", "text": "It's important for him to seek out new sources of inspiration." },
+            { "key": "C", "text": "He has a responsibility to widen people's experiences." }
+          ],
+          "answer": "C",
+          "points": 1
+        },
+        {
+          "id": "lq6",
+          "type": "multiple-choice",
+          "prompt": "6. What do they both think about dancers and choreographers creating new ballets together?",
+          "options": [
+            { "key": "A", "text": "It's a physically demanding way of working." },
+            { "key": "B", "text": "It can be difficult to achieve genuine collaboration." },
+            { "key": "C", "text": "It may not always produce a satisfactory outcome." }
+          ],
+          "answer": "A",
           "points": 1
         }
       ]
     },
     {
       "id": "part-listening-2",
-      "title": "Part 2 — Sentence completion (STUB)",
-      "instructions": "You will hear a student called Josh talking about his trip to South Africa. For questions 7-14, complete the sentences with a word or short phrase.",
+      "title": "Part 2 — Sentence completion",
+      "instructions": "You will hear an archaeology student called Hannah Miller giving a talk to a group of fellow students about her first archaeological excavation, known as a dig. For questions 7–14, complete the sentences with a word or short phrase.",
+      "passage": {
+        "type": "text",
+        "content": "FIRST-YEAR ARCHAEOLOGICAL DIG\n\nComplete each sentence with a word or short phrase from what Hannah says."
+      },
       "audio": {
-        "src": "audio/part2.mp3",
-        "autoPlay": true
+        "src": "audio/cae-listening.mp3",
+        "autoPlay": false,
+        "maxPlays": 2,
+        "note": "Part 2 is in the second section of the shared CAE listening audio."
       },
       "questions": [
         {
           "id": "lq7",
           "type": "sentence-completion",
-          "prompt": "Josh's group planned to check out a particular region after a __________ that had occurred there.",
+          "prompt": "7. Hannah warns that there is more __________ involved in a dig than most students expect.",
           "maxWords": 3,
-          "answer": ["flood", "flash flood"],
+          "answer": ["manual labour", "manual labor", "labour", "labor"],
+          "points": 1
+        },
+        {
+          "id": "lq8",
+          "type": "sentence-completion",
+          "prompt": "8. Hannah struggled with distinguishing between the __________ that the team found as they dug.",
+          "maxWords": 4,
+          "answer": ["soil layers", "layers of soil"],
+          "points": 1
+        },
+        {
+          "id": "lq9",
+          "type": "sentence-completion",
+          "prompt": "9. Hannah says that past __________ sometimes made it difficult to determine which materials belonged to which building.",
+          "maxWords": 3,
+          "answer": ["farming", "farming practices"],
+          "points": 1
+        },
+        {
+          "id": "lq10",
+          "type": "sentence-completion",
+          "prompt": "10. Hannah thinks that __________ are the type of object that is hard to identify if you lack experience.",
+          "maxWords": 3,
+          "answer": ["animal teeth"],
+          "points": 1
+        },
+        {
+          "id": "lq11",
+          "type": "sentence-completion",
+          "prompt": "11. Hannah explains why archaeologists need to be careful about using __________ while a dig is ongoing.",
+          "maxWords": 3,
+          "answer": ["social media"],
+          "points": 1
+        },
+        {
+          "id": "lq12",
+          "type": "sentence-completion",
+          "prompt": "12. Hannah feels that __________ is a good way to combat theft and vandalism around archaeological digs.",
+          "maxWords": 3,
+          "answer": ["education"],
+          "points": 1
+        },
+        {
+          "id": "lq13",
+          "type": "sentence-completion",
+          "prompt": "13. Hannah was particularly grateful for the support that the __________ gave her during the dig.",
+          "maxWords": 3,
+          "answer": ["team leader"],
+          "points": 1
+        },
+        {
+          "id": "lq14",
+          "type": "sentence-completion",
+          "prompt": "14. Doing her first dig helped Hannah realise that __________ was the aspect of archaeology she'd like to study in the future.",
+          "maxWords": 3,
+          "answer": ["cultural heritage"],
           "points": 1
         }
       ]
     },
     {
       "id": "part-listening-3",
-      "title": "Part 3 — Multiple choice long interview (STUB)",
-      "instructions": "You will hear an interview with two journalists talking about their work. For questions 15-20, choose the answer (A, B, C or D).",
+      "title": "Part 3 — Multiple choice (long interview)",
+      "instructions": "You will hear an interview with two chefs, Pearl Benuga and Jim Davis. For questions 15–20, choose the answer (A, B, C or D) which fits best according to what you hear.",
+      "passage": null,
       "audio": {
-        "src": "audio/part3.mp3",
-        "autoPlay": true
+        "src": "audio/cae-listening.mp3",
+        "autoPlay": false,
+        "maxPlays": 2,
+        "note": "Part 3 is in the third section of the shared CAE listening audio."
       },
       "questions": [
         {
           "id": "lq15",
           "type": "multiple-choice",
-          "prompt": "15. What does Jenny say about the story which made her name?",
+          "prompt": "15. What does Pearl say about working in her father's restaurant?",
           "options": [
-            { "key": "A", "text": "She'd been on the lookout for just such a lucky break." },
-            { "key": "B", "text": "She resented colleagues trying to take the credit for it." },
-            { "key": "C", "text": "She wasn't actually responsible for the libeled article." },
-            { "key": "D", "text": "She asked for a more prestigious job in the aftermath of it." }
+            { "key": "A", "text": "She wasn't given special treatment." },
+            { "key": "B", "text": "She didn't appreciate her good fortune." },
+            { "key": "C", "text": "She didn't accomplish as much as expected." },
+            { "key": "D", "text": "She wasn't confident about her level of experience." }
+          ],
+          "answer": "A",
+          "points": 1
+        },
+        {
+          "id": "lq16",
+          "type": "multiple-choice",
+          "prompt": "16. What aspect of Jim's job gives him the most satisfaction?",
+          "options": [
+            { "key": "A", "text": "the knowledge that his work is appreciated" },
+            { "key": "B", "text": "the close relationships he has built up" },
+            { "key": "C", "text": "the security of having a regular income" },
+            { "key": "D", "text": "the praise he receives from colleagues" }
+          ],
+          "answer": "A",
+          "points": 1
+        },
+        {
+          "id": "lq17",
+          "type": "multiple-choice",
+          "prompt": "17. What constant aspect of her work does Pearl dislike?",
+          "options": [
+            { "key": "A", "text": "having to find new staff" },
+            { "key": "B", "text": "having to check for imperfections" },
+            { "key": "C", "text": "having to give instructions" },
+            { "key": "D", "text": "having to stick to a schedule" }
           ],
           "answer": "B",
+          "points": 1
+        },
+        {
+          "id": "lq18",
+          "type": "multiple-choice",
+          "prompt": "18. What do Pearl and Jim say inspires them?",
+          "options": [
+            { "key": "A", "text": "exposure to the ideas of other chefs" },
+            { "key": "B", "text": "discussions about food with other people" },
+            { "key": "C", "text": "unconventional recipes they come across online" },
+            { "key": "D", "text": "limited availability of ingredients they can use" }
+          ],
+          "answer": "D",
+          "points": 1
+        },
+        {
+          "id": "lq19",
+          "type": "multiple-choice",
+          "prompt": "19. When Jim goes to other people's restaurants, he usually",
+          "options": [
+            { "key": "A", "text": "assesses whether they're a threat to his business." },
+            { "key": "B", "text": "tries to ensure no-one recognises him." },
+            { "key": "C", "text": "feels annoyed at the unreasonable prices." },
+            { "key": "D", "text": "selects dishes that require skill to produce." }
+          ],
+          "answer": "A",
+          "points": 1
+        },
+        {
+          "id": "lq20",
+          "type": "multiple-choice",
+          "prompt": "20. What does Pearl say about her future plans?",
+          "options": [
+            { "key": "A", "text": "They will be quite hard to finance." },
+            { "key": "B", "text": "They will involve big changes." },
+            { "key": "C", "text": "They reflect her earlier interests." },
+            { "key": "D", "text": "They are not very well developed." }
+          ],
+          "answer": "D",
           "points": 1
         }
       ]
     },
     {
       "id": "part-listening-4",
-      "title": "Part 4 — Multiple matching (two tasks, STUB)",
-      "instructions": "You will hear five short extracts in which people are talking about changing their jobs.",
+      "title": "Part 4 — Multiple matching (two tasks)",
+      "instructions": "You will hear five short extracts in which people are talking about their work making and restoring violins. Look at Task 1 and Task 2. For each question, choose the answer (A, B, C, D, E, F or G). Complete both tasks as you listen.",
       "audio": {
-        "src": "audio/part4.mp3",
-        "autoPlay": true
+        "src": "audio/cae-listening.mp3",
+        "autoPlay": false,
+        "maxPlays": 2,
+        "note": "Part 4 is in the final section of the shared CAE listening audio."
       },
       "taskGroups": [
         {
           "id": "task1",
-          "instructions": "Task 1 — For questions 21-25, choose from the list A-H what reason each speaker gives for changing their job.",
+          "instructions": "Task 1 — For questions 21–25, choose from the list (A–G) what each speaker says inspired them to learn to make and restore violins.",
           "options": [
-            { "key": "A", "text": "unfriendly colleagues" },
-            { "key": "B", "text": "poor holiday entitlement" },
-            { "key": "C", "text": "lacking a sense of purpose" },
-            { "key": "D", "text": "needing more of a challenge" }
+            { "key": "A", "text": "having the chance to run a business" },
+            { "key": "B", "text": "following the recommendation of a friend" },
+            { "key": "C", "text": "playing someone else's violin" },
+            { "key": "D", "text": "handling the natural materials used" },
+            { "key": "E", "text": "observing an expert at work" },
+            { "key": "F", "text": "discovering the challenges of the job" },
+            { "key": "G", "text": "hearing someone talk about their passion" }
           ],
           "questions": [
-            {
-              "id": "lq21",
-              "type": "matching",
-              "prompt": "Speaker 1",
-              "answer": "C",
-              "points": 1
-            },
-            {
-              "id": "lq22",
-              "type": "matching",
-              "prompt": "Speaker 2",
-              "answer": "B",
-              "points": 1
-            }
+            { "id": "lq21", "type": "matching", "prompt": "Speaker 1", "answer": "E", "points": 1 },
+            { "id": "lq22", "type": "matching", "prompt": "Speaker 2", "answer": "C", "points": 1 },
+            { "id": "lq23", "type": "matching", "prompt": "Speaker 3", "answer": "F", "points": 1 },
+            { "id": "lq24", "type": "matching", "prompt": "Speaker 4", "answer": "D", "points": 1 },
+            { "id": "lq25", "type": "matching", "prompt": "Speaker 5", "answer": "G", "points": 1 }
           ]
         },
         {
           "id": "task2",
-          "instructions": "Task 2 — For questions 26-30, choose from the list A-H how each speaker feels about their new job.",
+          "instructions": "Task 2 — For questions 26–30, choose from the list (A–G) what each speaker says about their work now.",
           "options": [
-            { "key": "A", "text": "encouraged by early results" },
-            { "key": "B", "text": "hopeful about future success" },
-            { "key": "C", "text": "delighted by a change in lifestyle" },
-            { "key": "D", "text": "relieved the initial uncertainty is over" }
+            { "key": "A", "text": "Having to deal with paperwork is distracting." },
+            { "key": "B", "text": "It's disappointing when people underestimate what's involved." },
+            { "key": "C", "text": "It's often thrilling to identify the original maker." },
+            { "key": "D", "text": "The craft has taken a long time to master." },
+            { "key": "E", "text": "Working on antiques is a privilege." },
+            { "key": "F", "text": "Earning a living is far from straightforward." },
+            { "key": "G", "text": "There's a huge demand for their work." }
           ],
           "questions": [
-            {
-              "id": "lq26",
-              "type": "matching",
-              "prompt": "Speaker 1",
-              "answer": "C",
-              "points": 1
-            },
-            {
-              "id": "lq27",
-              "type": "matching",
-              "prompt": "Speaker 2",
-              "answer": "A",
-              "points": 1
-            }
+            { "id": "lq26", "type": "matching", "prompt": "Speaker 1", "answer": "D", "points": 1 },
+            { "id": "lq27", "type": "matching", "prompt": "Speaker 2", "answer": "B", "points": 1 },
+            { "id": "lq28", "type": "matching", "prompt": "Speaker 3", "answer": "E", "points": 1 },
+            { "id": "lq29", "type": "matching", "prompt": "Speaker 4", "answer": "G", "points": 1 },
+            { "id": "lq30", "type": "matching", "prompt": "Speaker 5", "answer": "C", "points": 1 }
           ]
         }
       ]
@@ -142,6 +326,6 @@
   ],
   "scoring": {
     "mode": "per-question-points",
-    "totalPoints": 7
+    "totalPoints": 30
   }
 }

@@ -6,53 +6,279 @@
   "skill": "reading",
   "title": "Goethe-Zertifikat C1 — Lesen",
   "durationMinutes": 65,
-  "instructions": "Dies ist eine PLATZHALTER-Datei. Die echten Fragen werden in Priority 1 aus Nemis tili/Reading.pdf transkribiert.",
+  "instructions": "Das Modul Lesen besteht aus vier Teilen. Sie haben insgesamt 65 Minuten Zeit.",
   "parts": [
     {
       "id": "part1",
-      "title": "Teil 1 — Lesen (STUB)",
-      "instructions": "Lesen Sie den folgenden Text. Beantworten Sie dann die Fragen.",
+      "title": "Lesen Teil 1 — Multiple-Choice-Lückentest",
+      "instructions": "Vorgeschlagene Arbeitszeit: 10 Minuten. Sie lesen in einer Zeitschrift einen Artikel über Archäologie. Wählen Sie für jede Lücke die richtige Lösung.",
       "passage": {
         "type": "text",
-        "content": "Dies ist ein Platzhaltertext für die Scaffold-Tests. Der echte Goethe C1 Lesetext wird diesen Text ersetzen."
+        "content": "Das verraten die Gene des Pompejaners\nForschungsteam entschlüsselt 2000 Jahre altes Erbgut\n\nWissenschaftlerinnen und Wissenschaftler aus Italien haben erstmals große Teile des Erbguts eines Menschen sequenziert, der vor fast 2000 Jahren in Pompeji beim (Beispiel 0) Ausbruch des Vesuvs umgekommen ist. Dabei fanden sie heraus, dass der Mann womöglich von Sardinien stammte und seine Vorfahren aus dem Gebiet des heutigen Iran und über Anatolien nach Europa gelangt [[GAP:g-q1]].\n\nIm Jahr 79 kam es zu mehreren gewaltigen Ausbrüchen des südöstlich von Neapel gelegenen Vulkans Vesuv. [[GAP:g-q2]] wurden die römischen Städte Herculaneum, Stabiae, Oplontis und Pompeji von Asche und anderen vulkanischen Materialien bedeckt. In Pompeji starben etwa 2000 Menschen, [[GAP:g-q3]] noch nicht aus der Stadt geflohen waren, durch einen mehrere 100 Grad Celsius heißen pyroklastischen Strom — ein [[GAP:g-q4]] aus heißer Asche, Gasen und Gesteinsstücken.\n\nNormalerweise zerstört große Hitze Knochenstrukturen und [[GAP:g-q5]] auch den Erbgutträger DNA. Es wurde jedoch festgestellt, dass auch genau das Gegenteil vorkommen kann: Die pyroklastischen Materialien bedecken die Überreste und somit [[GAP:g-q6]] die DNA vor Umwelteinflüssen abgeschirmt.\n\nIn den Knochen eines Toten — genannt Individuum A — fanden Scorrano und seine Kolleginnen und Kollegen gut erhaltene DNA. Vergleiche des rekonstruierten Erbguts mit Genomen in verschiedenen Gen-Datenbanken ergaben, dass der Mann zu 30,5 Prozent Gene aus der iranischen Jungsteinzeit und zu 51,6 Prozent Gene aus der anatolischen Jungsteinzeit in sich trug. Außerdem stammten 4,4 Prozent seiner DNA von Jägern und Sammlern und 13,5 Prozent von der Jamnaja-Kultur, die sich in der Bronzezeit aus der Region nördlich des Schwarzen Meeres bis weit nach Europa [[GAP:g-q7]].\n\nDas Forscherteam beschränkte sich nicht auf genetische Analysen, sondern untersuchte auch anatomische Eigenschaften des Pompejaners. An zwei Lendenwirbeln entdeckten die Wissenschaftlerinnen und Wissenschaftler Veränderungen, die auf eine Tuberkulose der Wirbelsäule hindeuteten. Sie untersuchten auch ein Individuum B, eine etwa 50 Jahre alte Frau, die neben dem Mann gefunden worden war. Bei ihr war der [[GAP:g-q8]] an genetischem Material jedoch zu gering."
       },
       "audio": null,
       "questions": [
         {
           "id": "g-q1",
           "type": "multiple-choice",
-          "prompt": "1 (Platzhalter)",
+          "prompt": "1",
           "options": [
-            { "key": "A", "text": "Option A" },
-            { "key": "B", "text": "Option B" },
-            { "key": "C", "text": "Option C" }
+            { "key": "A", "text": "haben" },
+            { "key": "B", "text": "hatten" },
+            { "key": "C", "text": "müssten" },
+            { "key": "D", "text": "waren" }
+          ],
+          "answer": "D",
+          "points": 1
+        },
+        {
+          "id": "g-q2",
+          "type": "multiple-choice",
+          "prompt": "2",
+          "options": [
+            { "key": "A", "text": "Für die Dauer" },
+            { "key": "B", "text": "im Laufe der Zeit" },
+            { "key": "C", "text": "In deren Verlauf" },
+            { "key": "D", "text": "Solange" }
+          ],
+          "answer": "C",
+          "points": 1
+        },
+        {
+          "id": "g-q3",
+          "type": "multiple-choice",
+          "prompt": "3",
+          "options": [
+            { "key": "A", "text": "deren" },
+            { "key": "B", "text": "die" },
+            { "key": "C", "text": "was" },
+            { "key": "D", "text": "wo" }
+          ],
+          "answer": "B",
+          "points": 1
+        },
+        {
+          "id": "g-q4",
+          "type": "multiple-choice",
+          "prompt": "4",
+          "options": [
+            { "key": "A", "text": "Gemisch" },
+            { "key": "B", "text": "Mischung" },
+            { "key": "C", "text": "Vermengen" },
+            { "key": "D", "text": "Vielfalt" }
           ],
           "answer": "A",
+          "points": 1
+        },
+        {
+          "id": "g-q5",
+          "type": "multiple-choice",
+          "prompt": "5",
+          "options": [
+            { "key": "A", "text": "dafür" },
+            { "key": "B", "text": "damit" },
+            { "key": "C", "text": "daraus" },
+            { "key": "D", "text": "davon" }
+          ],
+          "answer": "B",
+          "points": 1
+        },
+        {
+          "id": "g-q6",
+          "type": "multiple-choice",
+          "prompt": "6",
+          "options": [
+            { "key": "A", "text": "hat" },
+            { "key": "B", "text": "kann" },
+            { "key": "C", "text": "war" },
+            { "key": "D", "text": "wird" }
+          ],
+          "answer": "D",
+          "points": 1
+        },
+        {
+          "id": "g-q7",
+          "type": "multiple-choice",
+          "prompt": "7",
+          "options": [
+            { "key": "A", "text": "erweiterte" },
+            { "key": "B", "text": "verbreitete" },
+            { "key": "C", "text": "vergrößerte" },
+            { "key": "D", "text": "verteilte" }
+          ],
+          "answer": "B",
+          "points": 1
+        },
+        {
+          "id": "g-q8",
+          "type": "multiple-choice",
+          "prompt": "8",
+          "options": [
+            { "key": "A", "text": "Ergebnis" },
+            { "key": "B", "text": "Erlös" },
+            { "key": "C", "text": "Ernte" },
+            { "key": "D", "text": "Ertrag" }
+          ],
+          "answer": "D",
           "points": 1
         }
       ]
     },
     {
       "id": "part2",
-      "title": "Teil 2 — Lückentext (STUB)",
-      "instructions": "Ergänzen Sie die Lücken mit dem passenden Wort.",
+      "title": "Lesen Teil 2 — Multiple Choice zum Artikel",
+      "instructions": "Vorgeschlagene Arbeitszeit: 20 Minuten. Sie lesen im Internet einen Artikel über eine Studie über Sport und Abnehmen. Wählen Sie bei jeder Aufgabe die richtige Lösung.",
       "passage": {
         "type": "text",
-        "content": "Platzhalter für Lückentext. [[GAP:g-q2]] markiert die Lückenposition."
+        "content": "Ratgeber Gesundheit\nAbnehmen geht effizienter\n\nBisher war der Königsweg für Menschen mit Übergewicht, die abnehmen wollten, ausdauernd zu trainieren. Vergleicht man die schnellen 100-Meter-Läufer mit den besten Marathonläufern der Welt, so fällt einem sofort ins Auge: Ausdauersport scheint zum Erfolg zu führen. Denn während die muskelbepackten Sprinter wie Sumoringer aus einem Gladiatorenfilm wirken, möchte man den ausgedörrten Ausdauersportlern eher mal ein Drei-Gänge-Menü spendieren. Und es klingt ja auch logisch: Wer ausdauernd läuft, verbraucht mehr Kalorien als jemand, dessen sportlicher Aufwand schon nach zehn Sekunden zu Ende ist. Doch neue Studien zeigen, dass dies nicht der einzige Weg ist. Mehr noch — es geht effizienter, und zwar mit einem intensiven Intervalltraining.\n\nTatsächlich werden bei kurzen Anstrengungen nicht besonders viele Kalorien verbrannt. Aber sie lösen einen Stoffwechselmechanismus aus, der auf eine andere Art und Weise das Trainingsziel in größere Nähe rücken kann. Vorweg: Sport sollte immer so intensiv sein, dass er das Muskelwachstum anregt. »Denn Muskelmasse hat nicht nur während der Arbeit, sondern auch in Ruhe einen erhöhten Kalorienverbrauch«, sagt Winfried Banzer, emeritierter Sportmediziner von der Goethe-Universität in Frankfurt.\n\nDurch regelmäßiges Joggen und Radfahren kann es durchaus zum Muskelaufbau kommen, auch wenn der nicht so sichtbar ist. Die Muskelmasse nimmt zu, und damit auch der Grundumsatz an Kalorien. Vor allem im Alter ist dieser Effekt wichtig: Der Rückgang von Muskeln im fortgeschrittenen Alter führt zu einem geringeren Energieverbrauch. Wer nichts dagegen tut, verliert ab dem 25. Lebensjahr natürlicherweise Muskelmasse — mit dem Resultat, dass man mit 80 Jahren nur noch die Hälfte der Muskelmasse hat, die man mit 20 hatte. Der Verlust von drei Kilo Muskeln bedeutet eine Verringerung des Energiegrundumsatzes um etwa 100 Kalorien pro Tag.\n\nWie aber soll das Abnehmen ohne Langstreckenlauf und hohen Kalorienverbrauch funktionieren? Amerikanische Forscher haben gerade im renommierten Fachjournal »Nature« eine Reihe von Untersuchungen publiziert. Ein Stoff namens Lac-Phe ist dabei in den Fokus der Wissenschaftler geraten. Lac-Phe entsteht immer dann, wenn die Anstrengung sehr hoch ist. Als die Forscher den Stoff ihren Testmäusen injizierten, verloren diese deutlich ihre Lust am Fressen. Und als man ihn ihnen über mehrere Tage spritzte, verloren sie — weil sie weniger fraßen — auch an Körpergewicht. Umgekehrt wogen Mäuse, bei denen man genetisch die Bildung von Lac-Phe ausgeschaltet hatte, deutlich mehr als ihre Artgenossen, weil sie einen größeren Appetit hatten.\n\nZudem wollten die Forscher wissen, ob man den Lac-Phe-Pegel nicht nur per Spritze, sondern auch natürlicherweise — mit Sport — nach oben bringen kann. Also wurden acht junge Männer gebeten, drei unterschiedliche Formen des Körpertrainings zu absolvieren: ein 90-minütiges moderates Ausdauertraining auf dem Heimtrainer, ein Krafttraining an Hanteln und ein hochintensives Intervalltraining mit mehreren sehr kurzen Belastungsphasen. Im Anschluss an die jeweiligen Einheiten wurde der Lac-Phe-Wert im Blut gemessen. Das Ergebnis: Bei allen Trainingsformen ging der Lac-Phe-Pegel nach oben, doch am deutlichsten war der Anstieg im Anschluss an das hochintensive Intervalltraining, gefolgt vom Krafttraining. Bei intensiven Kurzbelastungen wird also im Körper besonders viel Lac-Phe freigesetzt.\n\nIn einer anderen kürzlich publizierten Studie wurde der Effekt von Intensivtraining bei 42 mäßig übergewichtigen Menschen genauer untersucht. Binnen vier Wochen reduzierte sich der Taillenumfang bei allen Probanden um rund zwei Zentimeter und der Körperfettanteil um etwa einen Prozentpunkt. Wissenschaftler fanden heraus, dass Intensivtraining zeitsparend und dennoch effizient ist: Die Intensiv-Sportler waren nur knapp 24 Minuten täglich aktiv, während die Ausdauer-Walker 60 Minuten pro Tag unterwegs waren — und dennoch erzielten beide Gruppen vergleichbare Effekte."
       },
+      "audio": null,
       "questions": [
         {
-          "id": "g-q2",
-          "type": "open-cloze",
-          "prompt": "2 (Platzhalter)",
-          "answer": ["der", "Der"],
+          "id": "g-q9",
+          "type": "multiple-choice",
+          "prompt": "9. Was besagen neueste Studien in Bezug aufs Abnehmen?",
+          "options": [
+            { "key": "A", "text": "Ausdauertraining ist weniger effizient als bisher angenommen." },
+            { "key": "B", "text": "Intensive Trainingseinheiten sind auch effizient." },
+            { "key": "C", "text": "Sprinter nehmen langsamer ab." }
+          ],
+          "answer": "B",
+          "points": 1
+        },
+        {
+          "id": "g-q10",
+          "type": "multiple-choice",
+          "prompt": "10. Beim kurzen Intensivtraining …",
+          "options": [
+            { "key": "A", "text": "benötigen die Muskeln Ruhephasen." },
+            { "key": "B", "text": "verbraucht man mehr Kalorien." },
+            { "key": "C", "text": "wird der Stoffwechsel angeregt." }
+          ],
+          "answer": "C",
+          "points": 1
+        },
+        {
+          "id": "g-q11",
+          "type": "multiple-choice",
+          "prompt": "11. Durch moderates Laufen oder Radfahren …",
+          "options": [
+            { "key": "A", "text": "kann man Gewicht in Form von Muskelmasse abbauen." },
+            { "key": "B", "text": "sinkt die Pulsfrequenz." },
+            { "key": "C", "text": "vermehrt sich die Muskelmasse." }
+          ],
+          "answer": "C",
+          "points": 1
+        },
+        {
+          "id": "g-q12",
+          "type": "multiple-choice",
+          "prompt": "12. Vor allem im Alter …",
+          "options": [
+            { "key": "A", "text": "beginnt der natürliche Muskelabbau." },
+            { "key": "B", "text": "führt der Rückgang von Muskeln zu weniger Energieverbrauch." },
+            { "key": "C", "text": "sollte man eher langsam joggen oder radeln." }
+          ],
+          "answer": "B",
+          "points": 1
+        },
+        {
+          "id": "g-q13",
+          "type": "multiple-choice",
+          "prompt": "13. Das Verabreichen von Lac-Phe führte bei Mäusen zu …",
+          "options": [
+            { "key": "A", "text": "Appetitlosigkeit." },
+            { "key": "B", "text": "Bequemlichkeit." },
+            { "key": "C", "text": "Fettleibigkeit." }
+          ],
+          "answer": "A",
+          "points": 1
+        },
+        {
+          "id": "g-q14",
+          "type": "multiple-choice",
+          "prompt": "14. Was zeigten Untersuchungen an Sportlern?",
+          "options": [
+            { "key": "A", "text": "Beim Krafttraining erhöhte sich der Lac-Phe-Wert am meisten." },
+            { "key": "B", "text": "Der Lac-Phe-Wert stieg ausnahmslos bei allen Probanden." },
+            { "key": "C", "text": "Intensives Training bremste den Hunger." }
+          ],
+          "answer": "B",
+          "points": 1
+        },
+        {
+          "id": "g-q15",
+          "type": "multiple-choice",
+          "prompt": "15. Wissenschaftler fanden heraus, dass Intensivtraining …",
+          "options": [
+            { "key": "A", "text": "für übergewichtige Menschen besonders geeignet ist." },
+            { "key": "B", "text": "mit moderatem Training kombiniert werden sollte." },
+            { "key": "C", "text": "zeitsparend und dennoch effizient ist." }
+          ],
+          "answer": "C",
           "points": 1
         }
+      ]
+    },
+    {
+      "id": "part3",
+      "title": "Lesen Teil 3 — Sätze zuordnen (Lückentext)",
+      "instructions": "Vorgeschlagene Arbeitszeit: 20 Minuten. Sie lesen in einer populärwissenschaftlichen Zeitschrift einen Kommentar. Welche Sätze passen in die Lücken? Zwei Sätze passen nicht.",
+      "passage": {
+        "type": "text",
+        "content": "Kitas sollten Innovationslabore sein!\n\nDie Arbeit von Kitas verändert sich: In einer Einwanderungsgesellschaft nehmen kulturelle und sprachliche Vielfalt immer zu. Mehr als jedes fünfte Kita-Kind hat laut Familienministerium heute eine Migrationsgeschichte. (Beispiel 0 = B) Gleichzeitig wird immer deutlicher, wie relevant die ersten Lebensjahre für die gesamte Bildungslaufbahn sind.\n\nLaut Studien zeigen sich bereits im ersten Jahr nach der Geburt deutliche herkunftsbedingte Kompetenzunterschiede. Bei der Einschulung werden die Diskrepanzen in dem, was Kinder können, immer größer. Höchste Zeit also, in der frühen Bildung neue Wege zu gehen. [[SLOT:g-q16]] Für viele Akteure in Politik und Wissenschaft, aber auch bei den Trägern und den Einrichtungen, sind die Begriffe »Kindergarten« und »Innovation« noch immer ein Gegensatzpaar.\n\nDabei können Kitas durchaus Innovationslabore sein. Aktuell zeigt sich das Problem besonders bei der Digitalisierung. In anderen Ländern ist die digitale pädagogische Arbeit wie auch die digitale Dokumentation von Bildungsprozessen deutlich weiter, etwa in Neuseeland und Finnland. [[SLOT:g-q17]] Mit deren Hilfe wird eine großartige Möglichkeit geschaffen, mit den Eltern Bildungsinhalte auszutauschen, Veränderungen bekannt zu machen und ihre Fragen zu beantworten.\n\n[[SLOT:g-q18]] In allen Bundesländern werden die deutschen Sprachkenntnisse der Kinder ein bis eineinhalb Jahre vor der Einschulung geprüft. Das Ziel ist, die Kinder in der Kita sprachlich so zu fördern, dass sie später in der Grundschule gut mitkommen und ihre Bildungschancen wahrnehmen können. [[SLOT:g-q19]] Zudem ist der Fachkräftemangel in Deutschland groß; er überfordert viele Menschen, die in dem Bereich arbeiten.\n\nIn anderen Ländern, etwa in Österreich, wurden standardisierte Verfahren verbindlich eingeführt. [[SLOT:g-q20]] Kaum zu glauben, aber Verfahren, die auf die wichtigen Herkunftssprachen wie Arabisch, Türkisch, Rumänisch oder Russisch zugeschnitten sind, sind in Deutschland so gut wie nicht verfügbar. Nicht zu unterschätzen ist auch die Elternarbeit bei Migrantinnen und Migranten. Klassische Elternabende oder Themenmittage werden aufgrund der mangelnden Sprachkenntnisse immer weniger nachgefragt.\n\nDie Corona-Pandemie hat einen erheblichen Veränderungsdruck ausgelöst, den Kitas mit beeindruckendem Engagement bewältigt haben: Plötzlich gab es digitale Plattformen für den Kontakt mit den Eltern, digitale Elternabende und Entwicklungsgespräche. [[SLOT:g-q21]] Doch die deutschen Strukturen in der frühkindlichen Bildung sind träge und konservativ. Längst nicht überall werden Neuerungen und gute Ideen weitergeführt. Insbesondere bei Politik und Verbänden wünschen wir uns eine innovationsfreudigere Haltung. Das gilt auch für den Transfer aus der Wissenschaft in die Praxis: In vielen Lebensbereichen ist das selbstverständlich. [[SLOT:g-q22]] Eine stärkere Verzahnung der Lehrstühle für Kindheitspädagogik mit der Kita-Praxis würde hier helfen.\n\nInnovationsfördernde Kreativlabore und hochschulnahe Denkfabriken sind in der frühen Bildung bislang nicht vorhanden; es gibt so gut wie keine Hochschul-Kitas, in denen auch geforscht wird. Kunst ist die Veränderung eine gemeinsame Anstrengung von Bund und Ländern, um der Digitalisierung im Klassenzimmer einen großen Schub zu geben. [[SLOT:g-q23]] Wie lange noch?"
+      },
+      "audio": null,
+      "paragraphBank": [
+        { "key": "A", "text": "Bei der sprachlichen Bildung ist die Digitalisierung ebenfalls von Vorteil." },
+        { "key": "C", "text": "Auch die Bereitstellung von Vorlesematerialien in Apps in verschiedenen Sprachen wäre eine bedeutende Innovation mit Blick auf frühe Mehrsprachigkeit." },
+        { "key": "D", "text": "Für die frühe Bildung fehlt ein solcher Digitalpakt bislang." },
+        { "key": "E", "text": "Doch woher sollen die Ideen für die frühe Bildung kommen?" },
+        { "key": "F", "text": "Hier ist Know-how entstanden, das jetzt weiterentwickelt werden sollte." },
+        { "key": "G", "text": "Dort hält das Personal die kindliche Entwicklung zum Beispiel mithilfe von Apps wie »Storypark« fest." },
+        { "key": "H", "text": "Dafür müssten die Pädagogen digital besser aufgestellt sein." },
+        { "key": "I", "text": "Doch von den 22 hierzulande gängigen Verfahren zur Feststellung des Sprachstands sind bislang nur fünf digital verfügbar." },
+        { "key": "J", "text": "In der frühen Bildung leider noch nicht." }
+      ],
+      "questions": [
+        { "id": "g-q16", "type": "gapped-text", "prompt": "16", "answer": "E", "points": 1 },
+        { "id": "g-q17", "type": "gapped-text", "prompt": "17", "answer": "G", "points": 1 },
+        { "id": "g-q18", "type": "gapped-text", "prompt": "18", "answer": "A", "points": 1 },
+        { "id": "g-q19", "type": "gapped-text", "prompt": "19", "answer": "I", "points": 1 },
+        { "id": "g-q20", "type": "gapped-text", "prompt": "20", "answer": "C", "points": 1 },
+        { "id": "g-q21", "type": "gapped-text", "prompt": "21", "answer": "F", "points": 1 },
+        { "id": "g-q22", "type": "gapped-text", "prompt": "22", "answer": "J", "points": 1 },
+        { "id": "g-q23", "type": "gapped-text", "prompt": "23", "answer": "D", "points": 1 }
+      ]
+    },
+    {
+      "id": "part4",
+      "title": "Lesen Teil 4 — Wer sagt was?",
+      "instructions": "Vorgeschlagene Arbeitszeit: 15 Minuten. Sie lesen in einer Fachzeitschrift Beiträge von Kunstexpertinnen und Kunstexperten. Wählen Sie bei jeder Aussage: Wer äußert das? Zwei Aussagen passen nicht. Markieren Sie in diesem Fall 0.",
+      "passage": {
+        "type": "text",
+        "content": "Zukunftsfragen unserer Gesellschaft\nModerne Kunst und ihr Markt\n\nA — Zoran Jovanovic, Galerist\nEs ist doch ganz einfach: Wie jede andere Ware unterliegen auch Kunstobjekte dem Prinzip von Angebot und Nachfrage. Will der Kunstschaffende seine Ware verkaufen, ergibt sich automatisch die Frage, welchen Preis er oder sie für den Kunstgegenstand verlangen kann. Der Geldwert wird nicht nur durch Größe, Aufwand und Materialien bestimmt, sondern auch durch den Bekanntheitsgrad des Objekts oder des Kunstschaffenden. Alle Kosten, die bei der Erstellung des Kunstobjekts anfallen, also zum Beispiel Arbeitszeit, Material, Werbung, Transport, Galerie- und Ausstellungskosten, Mieten, Lebenshaltungskosten und Versicherungen, müssen aufgeschlagen werden, da es selten Massenproduktionen von Kunstobjekten gibt. Wird ein Werk verkauft, so bekommen Galerist*innen und Kunsthändler*innen Provisionen. Verständlicherweise können demnach nur wenige Kunstschaffende vom Verkauf ihrer Kunst leben. Nur wer hochdotierte Kunstpreise bekommt, vielleicht sogar eine Auszeichnung auf einer der zunehmenden Auktionen und zu bekannten Museen ausstellt, darf auf dem Kunstolymp Platz nehmen. Kunden der teuren Kunst gibt es jedoch immer mehr, da die Kluft zwischen Arm und Reich stets größer wird, was auch zu mehr Millionären führt, die gern ein kleines Vermögen für ein Kunstwerk als lohnenswerte Kapitalanlage ausgeben.\n\nB — Andrea Huebner, Bildhauerin und Malerin\nHäufig werde ich gefragt, weshalb meine Bilder so preiswert seien. Das gelingt mir, da ich mir einfach ein zweites Standbein geschaffen habe, indem ich in meinem Atelier junge, talentierte Künstlerinnen und Künstler ausbilde, dadurch Freude an der Kunst vermittle und so genügend Geld verdiene, um davon leben zu können. Ich bin nicht auf Galerien und Ausstellungen angewiesen, was meine Kosten enorm senkt, denn so spare ich Werbung, Provisionen, Mieten usw. Auf diese Weise kann ich meinen künstlerischen Weg konsequent verfolgen, ohne auf die Wünsche zahlungskräftiger Kunden eingehen zu müssen. Ich wollte nie von meiner Kunst leben, denn unter diesem Existenzdruck könnte ich nicht kreativ arbeiten. Künstler verdienen in Deutschland im Durchschnitt ca. 11.000 Euro im Jahr. So gibt es Künstler, die am Existenzminimum leben müssen. Wenn da der Partner oder die Partnerin nicht durch ein geregeltes Einkommen helfen kann, ist ein Überleben fast unmöglich.\n\nC — Sithembile Meinhards, Kunsthistorikerin\nModerne Kunst ist leider teuer. Ob total weiße Leinwand oder abstrakte Gemälde mit scheinbar wahllos zusammengesetzten Farben: So etwas kann Millionen kosten. Modern Art umfasst den Zeitraum von 1870 bis 1970 und ist sehr breit gefächert. Erwähnt man aber die Kunstepoche gegenüber Straßenpassanten, so stellen sich viele nur eine wilde Kleckserei vor und schütteln mitleidvoll den Kopf. Geschuldet ist diese Auffassung von Moderner Kunst der Tatsache, dass die Künstlerinnen und Künstler nicht mehr naturgetreu darstellen mussten. Dafür gab es ja bereits die Fotografie. So erfuhren die Kunstschaffenden eine Art Befreiung, denn sie konnten nun wählen, warum und wie sie etwas darstellen wollten. Kunst wurde konzeptioneller und anspruchsvoller. Aber diese Veränderung kam nicht bei allen gut an. Umfragen ergaben, dass die Mehrzahl der Bevölkerung moderne Kunstwerke ablehnt; dennoch erreichen viele dieser Werke einen hohen Geldwert. Das liegt natürlich auch daran, dass echte Meisterwerke, egal aus welcher Epoche, selten sind."
+      },
+      "audio": null,
+      "matchingOptions": [
+        { "key": "A", "text": "Zoran Jovanovic, Galerist" },
+        { "key": "B", "text": "Andrea Huebner, Bildhauerin und Malerin" },
+        { "key": "C", "text": "Sithembile Meinhards, Kunsthistorikerin" },
+        { "key": "0", "text": "Niemand" }
+      ],
+      "questions": [
+        { "id": "g-q24", "type": "matching", "prompt": "24. Die Vorlieben auf dem Kunstmarkt werden sich auch in Zukunft immer wieder ändern.",   "answer": "0", "points": 1 },
+        { "id": "g-q25", "type": "matching", "prompt": "25. Moderne Kunst erzielt trotz allgemeiner Geringschätzung enorme Preise.",            "answer": "C", "points": 1 },
+        { "id": "g-q26", "type": "matching", "prompt": "26. Den Kunstschaffenden der Moderne geht es nicht mehr um die Abbildung der realen Welt.", "answer": "C", "points": 1 },
+        { "id": "g-q27", "type": "matching", "prompt": "27. Viele gutbetuchte Käuferinnen und Käufer betrachten Kunst als Investition.",         "answer": "A", "points": 1 },
+        { "id": "g-q28", "type": "matching", "prompt": "28. Die finanziellen Ausgaben schlagen sich im Preis des Objekts nieder.",              "answer": "A", "points": 1 },
+        { "id": "g-q29", "type": "matching", "prompt": "29. Durch finanzielle Unabhängigkeit ist man frei von den Erwartungen anderer.",        "answer": "B", "points": 1 },
+        { "id": "g-q30", "type": "matching", "prompt": "30. Der Wandel in der Kunstszene führte zu einem eklatanten Preisanstieg.",           "answer": "0", "points": 1 }
       ]
     }
   ],
   "scoring": {
     "mode": "per-question-points",
-    "totalPoints": 2
+    "totalPoints": 30
   }
 }

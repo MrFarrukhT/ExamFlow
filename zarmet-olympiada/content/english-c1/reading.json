@@ -6,7 +6,7 @@
   "skill": "reading",
   "title": "Cambridge C1 Advanced — Reading and Use of English",
   "durationMinutes": 90,
-  "instructions": "This is a STUB content file. Real questions will be transcribed from cae/Advanced reading practice.docx in Priority 1 of the intent plan.",
+  "instructions": "This paper has eight parts. You have 90 minutes to complete all questions.",
   "parts": [
     {
       "id": "part1",
@@ -14,7 +14,7 @@
       "instructions": "For questions 1–8, read the text below and decide which answer (A, B, C or D) best fits each gap.",
       "passage": {
         "type": "text",
-        "content": "Studying black bears\n\nAfter years of studying North America's black bears in the conventional way, wildlife biologist Luke Robertson felt no closer to understanding the creatures. He realised that he had to [[GAP:q1]] bear trust. Abandoning scientific detachment, he took the daring step of forming relationships with the animals, bringing them food to gain their acceptance."
+        "content": "Bridges for wildlife\n\nThe act of annual migration is common to many species. They migrate towards more [[GAP:q1]] climates, or return to breeding sites and feeding grounds. Roads and traffic, however, can [[GAP:q2]] a significant threat to some species' survival. To [[GAP:q3]] this problem, environmentalists and engineers around the world have put their heads together to devise 'wildlife bridges'.\n\nIn Canada, grizzly bears, wolverines and toads are just a few of the species [[GAP:q4]] use of grass-covered, cement bridges that cross the Trans-Canada Highway. [[GAP:q5]], on Australia's Christmas Island, a five-metre-high bridge across a busy road enables red crabs to pass safely from the rainforest to the ocean. The bridge has significantly reduced their casualty [[GAP:q6]] and averted traffic chaos.\n\nIn Sweden, plans are being [[GAP:q7]] up for a series of bridges across a main highway, which will allow the country's 250,000 reindeer to reach the mountains. Engineers must take [[GAP:q8]] of the fact that reindeer are easily frightened by traffic, and so make the bridge walls high enough to prevent the deer from jumping off."
       },
       "audio": null,
       "questions": [
@@ -23,10 +23,101 @@
           "type": "multiple-choice",
           "prompt": "1",
           "options": [
-            { "key": "A", "text": "win" },
-            { "key": "B", "text": "earn" },
-            { "key": "C", "text": "gain" },
-            { "key": "D", "text": "achieve" }
+            { "key": "A", "text": "supportive" },
+            { "key": "B", "text": "favourable" },
+            { "key": "C", "text": "hopeful" },
+            { "key": "D", "text": "worthwhile" }
+          ],
+          "answer": "B",
+          "points": 1
+        },
+        {
+          "id": "q2",
+          "type": "multiple-choice",
+          "prompt": "2",
+          "options": [
+            { "key": "A", "text": "raise" },
+            { "key": "B", "text": "pose" },
+            { "key": "C", "text": "create" },
+            { "key": "D", "text": "establish" }
+          ],
+          "answer": "B",
+          "points": 1
+        },
+        {
+          "id": "q3",
+          "type": "multiple-choice",
+          "prompt": "3",
+          "options": [
+            { "key": "A", "text": "address" },
+            { "key": "B", "text": "oppose" },
+            { "key": "C", "text": "challenge" },
+            { "key": "D", "text": "approach" }
+          ],
+          "answer": "A",
+          "points": 1
+        },
+        {
+          "id": "q4",
+          "type": "multiple-choice",
+          "prompt": "4",
+          "options": [
+            { "key": "A", "text": "putting" },
+            { "key": "B", "text": "gaining" },
+            { "key": "C", "text": "making" },
+            { "key": "D", "text": "getting" }
+          ],
+          "answer": "C",
+          "points": 1
+        },
+        {
+          "id": "q5",
+          "type": "multiple-choice",
+          "prompt": "5",
+          "options": [
+            { "key": "A", "text": "Respectively" },
+            { "key": "B", "text": "Comparably" },
+            { "key": "C", "text": "Similarly" },
+            { "key": "D", "text": "Correspondingly" }
+          ],
+          "answer": "C",
+          "points": 1
+        },
+        {
+          "id": "q6",
+          "type": "multiple-choice",
+          "prompt": "6",
+          "options": [
+            { "key": "A", "text": "quota" },
+            { "key": "B", "text": "percentage" },
+            { "key": "C", "text": "scale" },
+            { "key": "D", "text": "rate" }
+          ],
+          "answer": "D",
+          "points": 1
+        },
+        {
+          "id": "q7",
+          "type": "multiple-choice",
+          "prompt": "7",
+          "options": [
+            { "key": "A", "text": "shown" },
+            { "key": "B", "text": "backed" },
+            { "key": "C", "text": "drawn" },
+            { "key": "D", "text": "worked" }
+          ],
+          "answer": "C",
+          "points": 1
+        },
+        {
+          "id": "q8",
+          "type": "multiple-choice",
+          "prompt": "8",
+          "options": [
+            { "key": "A", "text": "advantage" },
+            { "key": "B", "text": "account" },
+            { "key": "C", "text": "control" },
+            { "key": "D", "text": "effect" }
           ],
           "answer": "B",
           "points": 1
@@ -35,58 +126,135 @@
     },
     {
       "id": "part2",
-      "title": "Part 2 — Open cloze (STUB)",
-      "instructions": "For questions 9-16, read the text below and think of the word which best fits each gap. Use only one word in each gap.",
+      "title": "Part 2 — Open cloze",
+      "instructions": "For questions 9–16, read the text below and think of the word which best fits each gap. Use only one word in each gap.",
       "passage": {
         "type": "text",
-        "content": "This is a placeholder open cloze passage. The real Part 2 passage will have [[GAP:q9]] markers for single-word gap fills."
+        "content": "The Museum of Modern Art — MoMA\n\nWhen it opened in New York in 1929, MoMA prioritised contemporary rather than traditional art, and was quite [[GAP:q9]] other art museums. The public's response was overwhelmingly enthusiastic, as was that of the art world generally. Over the next ten years, MoMA required more space and relocated several times. It ended [[GAP:q10]] moving into the Manhattan building it still occupies to [[GAP:q11]] day.\n\nDespite MoMA having more space, it struggles to house all of its collection, which has grown from just eight prints and one drawing to an impressive 200,000 works. These [[GAP:q12]] include only paintings, sculptures, prints and photographs, but also media and performance art works and architectural models. [[GAP:q13]] is more, MoMA also owns approximately two million film stills. To ensure that fresh material is always [[GAP:q14]] display, the exhibitions are regularly changed.\n\nMoMA is dedicated [[GAP:q15]] its role as an educational institution. For this reason, every department maintains a study centre available to students. Furthermore, its archives are, [[GAP:q16]] a doubt, more comprehensive than those of any other modern art museum."
       },
       "questions": [
-        {
-          "id": "q9",
-          "type": "open-cloze",
-          "prompt": "9 (stub)",
-          "answer": ["of", "Of"],
-          "points": 1
-        }
+        { "id": "q9",  "type": "open-cloze", "prompt": "9",  "answer": ["unlike"],                 "points": 1 },
+        { "id": "q10", "type": "open-cloze", "prompt": "10", "answer": ["up"],                     "points": 1 },
+        { "id": "q11", "type": "open-cloze", "prompt": "11", "answer": ["this"],                   "points": 1 },
+        { "id": "q12", "type": "open-cloze", "prompt": "12", "answer": ["not"],                    "points": 1 },
+        { "id": "q13", "type": "open-cloze", "prompt": "13", "answer": ["what"],                   "points": 1 },
+        { "id": "q14", "type": "open-cloze", "prompt": "14", "answer": ["on"],                     "points": 1 },
+        { "id": "q15", "type": "open-cloze", "prompt": "15", "answer": ["to"],                     "points": 1 },
+        { "id": "q16", "type": "open-cloze", "prompt": "16", "answer": ["without", "beyond"],      "points": 1 }
       ]
     },
     {
       "id": "part3",
-      "title": "Part 3 — Word formation (STUB)",
-      "instructions": "For questions 17-24, read the text below. Use the word given in capitals at the end of some of the lines to form a word that fits in the gap in the same line.",
+      "title": "Part 3 — Word formation",
+      "instructions": "For questions 17–24, read the text below. Use the word given in capitals at the end of some of the lines to form a word that fits in the gap in the same line.",
       "passage": {
         "type": "text",
-        "content": "Placeholder passage for word formation. Real content will have inline [[GAP:q17]] markers alongside the keyword list on the right column."
+        "content": "Hundreds of people rush to view a special bird\n\nHundreds of birdwatchers recently rushed to a park in Washington DC, in the US, to catch a glimpse of a new arrival.\n\nDespite the [[GAP:q17]] low winter temperatures, people came out to see a Painted Bunting, a small, brightly coloured bird that usually spends the winter in the warmer climate of Florida. The bird was a male — highly distinctive with its brilliant blue head, red breast and flashes of green and red on its back.\n\nThe bird's [[GAP:q18]] was announced on a birdwatchers' website and would have been [[GAP:q19]] just a few years ago. The [[GAP:q20]] sighting can probably be attributed to the [[GAP:q21]] that climate change is causing for hundreds of bird species.\n\n[[GAP:q22]] species all over the world are being pushed towards cooler areas as conditions heat up, or are losing suitable habitats altogether. Researchers warn that two thirds of North American bird species are now at risk of extinction. However, thanks to reports from community scientists all across the country, data about bird populations and their locations can be [[GAP:q23]] on maps in real time, and conservation efforts planned [[GAP:q24]]."
       },
       "questions": [
-        {
-          "id": "q17",
-          "type": "word-formation",
-          "prompt": "17 (stub)",
-          "rootWord": "COME",
-          "answer": ["outcome", "Outcome"],
-          "points": 1
-        }
+        { "id": "q17", "type": "word-formation", "prompt": "17", "rootWord": "COMMON",  "answer": ["uncommonly"],                "points": 1 },
+        { "id": "q18", "type": "word-formation", "prompt": "18", "rootWord": "PRESENT", "answer": ["presence"],                  "points": 1 },
+        { "id": "q19", "type": "word-formation", "prompt": "19", "rootWord": "THINK",   "answer": ["unthinkable"],               "points": 1 },
+        { "id": "q20", "type": "word-formation", "prompt": "20", "rootWord": "EXCEPT",  "answer": ["exceptional"],               "points": 1 },
+        { "id": "q21", "type": "word-formation", "prompt": "21", "rootWord": "DISRUPT", "answer": ["disruption"],                "points": 1 },
+        { "id": "q22", "type": "word-formation", "prompt": "22", "rootWord": "COUNT",   "answer": ["countless"],                 "points": 1 },
+        { "id": "q23", "type": "word-formation", "prompt": "23", "rootWord": "VISUAL",  "answer": ["visualised", "visualized"], "points": 1 },
+        { "id": "q24", "type": "word-formation", "prompt": "24", "rootWord": "ACCORD",  "answer": ["accordingly"],               "points": 1 }
       ]
     },
     {
       "id": "part4",
-      "title": "Part 4 — Key word transformation (STUB)",
-      "instructions": "For questions 25-30, complete the second sentence so that it has a similar meaning to the first, using the word given. Do not change the word given. You must use between three and six words, including the word given.",
+      "title": "Part 4 — Key word transformation",
+      "instructions": "For questions 25–30, complete the second sentence so that it has a similar meaning to the first, using the word given. Do not change the word given. You must use between three and six words, including the word given.",
       "questions": [
         {
           "id": "q25",
           "type": "key-word-transformation",
-          "prompt": "My brother now earns far less money than he did when he was younger.",
-          "keyWord": "NEARLY",
-          "leadIn": "My brother __________ much now as he did when he was younger.",
+          "prompt": "If you don't complete the form correctly, it will be rejected.",
+          "keyWord": "RESULT",
+          "leadIn": "Failure to complete the form correctly will __________ rejection.",
           "answer": {
-            "required": ["does", "not", "earn", "nearly", "as"],
+            "required": ["result", "in"],
             "maxWords": 6,
             "alternatives": [
-              ["doesn't", "earn", "nearly", "as"]
+              ["result", "in", "its"],
+              ["result", "in", "the", "form's"]
             ]
+          },
+          "points": 2
+        },
+        {
+          "id": "q26",
+          "type": "key-word-transformation",
+          "prompt": "By the end of the meeting, we hadn't made any progress.",
+          "keyWord": "CONCLUSION",
+          "leadIn": "The meeting came __________ any progress being made.",
+          "answer": {
+            "required": ["to", "a", "conclusion", "without"],
+            "maxWords": 6,
+            "alternatives": [
+              ["to", "its", "conclusion", "without"]
+            ]
+          },
+          "points": 2
+        },
+        {
+          "id": "q27",
+          "type": "key-word-transformation",
+          "prompt": "John would have begun his journey earlier if he hadn't had a headache.",
+          "keyWord": "PREVENTED",
+          "leadIn": "Having a headache was __________ off on his journey earlier.",
+          "answer": {
+            "required": ["what", "prevented", "john", "from", "setting"],
+            "maxWords": 6,
+            "alternatives": [
+              ["what", "prevented", "john", "from", "starting"],
+              ["what", "prevented", "john", "from", "heading"],
+              ["what", "prevented", "john", "from", "going"]
+            ]
+          },
+          "points": 2
+        },
+        {
+          "id": "q28",
+          "type": "key-word-transformation",
+          "prompt": "Never leave your bag unattended at the airport.",
+          "keyWord": "CIRCUMSTANCES",
+          "leadIn": "Under __________ left unattended at the airport.",
+          "answer": {
+            "required": ["no", "circumstances", "should", "your", "bag", "be"],
+            "maxWords": 6,
+            "alternatives": [
+              ["no", "circumstances", "must", "your", "bag", "be"]
+            ]
+          },
+          "points": 2
+        },
+        {
+          "id": "q29",
+          "type": "key-word-transformation",
+          "prompt": "I regret tolerating John's rudeness for so long.",
+          "keyWord": "PUT",
+          "leadIn": "I wish I __________ John's rudeness for so long.",
+          "answer": {
+            "required": ["hadn't", "put", "up", "with"],
+            "maxWords": 6,
+            "alternatives": [
+              ["had", "not", "put", "up", "with"]
+            ]
+          },
+          "points": 2
+        },
+        {
+          "id": "q30",
+          "type": "key-word-transformation",
+          "prompt": "Only time will tell whether the team's new manager will stay in post for long.",
+          "keyWord": "SEEN",
+          "leadIn": "It remains __________ long the team's new manager will stay in post.",
+          "answer": {
+            "required": ["to", "be", "seen", "how"],
+            "maxWords": 6,
+            "alternatives": []
           },
           "points": 2
         }
@@ -94,112 +262,194 @@
     },
     {
       "id": "part5",
-      "title": "Part 5 — Multiple choice reading (STUB)",
-      "instructions": "You are going to read an article. For questions 31-36, choose the answer (A, B, C or D) which you think fits best according to the text.",
+      "title": "Part 5 — Multiple choice",
+      "instructions": "You are going to read a newspaper article about how athletes cope with stress. For questions 31–36, choose the answer (A, B, C or D) which you think fits best according to the text.",
       "passage": {
         "type": "text",
-        "content": "Placeholder passage for multiple choice reading. The real Part 5 passage will be several paragraphs long in the left column with questions on the right."
+        "content": "Athletes under extreme pressure sometimes can't perform. This is called 'choking', but why does it happen?\n\nCricket is a simple game played with a ball and a bat. One player runs up and bowls the ball towards a player from the opposing team, who tries to hit it. This should be relatively straightforward, but when Scott Boswell stood at the start of his bowling run-up at the 2001 English cricket cup final, he froze, unable to do the very thing he had been practising for years, uncomprehending as to what this incapacitating sensation was. It should have been the highlight of his career, but trepidation had been flowing through him since he'd found out he'd been selected. It had been touch and go — his man-of-the-match performance in the semi-final had earned him the right to play, but Boswell had lost form in the intervening three weeks, and his place had become less secure. At 10 p.m. the night before, the coach had asked Boswell whether he was up for it — the seed of doubt had been planted.\n\nSports anxiety is a reaction to pressure in a match, and an athlete's failure to manage it at a crucial moment can lead to a catastrophic drop in performance. The symptoms of anxiety are psychological — worry and fear — and physiological — including sweaty palms and an increased heart rate. This is something we might all go through, but it is clear we mere amateurs experience something which lacks the same dreadful intensity. Anxiety uses up attention and working memory, hindering performance. Athletes find themselves overthinking normally automatic processes. All this can result in an athlete 'choking' and this was Boswell's experience.\n\nWhen non-elite athletes get anxious, it hampers their performance. In the last 30 seconds of tight basketball games players are 5.8% less likely to score than at other moments in the game. However, elite athletes manage to channel the anxiety they feel positively. They are also more adept at brushing off disappointments during competition. The champion golfer Annika Sorenstam jokes that she never hit a bad shot in her life because she doesn't dwell on them. Lesser players can be consumed by a blunder, but Sorenstam quickly grasps what's happened, files it away at the back of her mind, then gets on with the business of trying to repair the damage.\n\nAnxiety doesn't just affect individuals. In everyday life, people can suffer by dint of simply being assigned to a collective in terms of, for example, age or gender. In sport, the team you play on can have a similar effect. In one study on stereotyping, scientists asked older and younger people to do some tasks that tested memory and the data produced revealed some fascinating insights into how we act. Some older participants were told that older and younger people did equally well on the tasks; others that younger people did better. When older people were told that they were just as capable as younger people, they subsequently achieved scores similar to the young people in the study. When they were told that they tended to do worse, they indeed did worse on the tasks. One sporting example of this 'stereotype effect' is provided by the South African cricket team. Between 1999 and 2017, South Africa played 19 major international tournaments and never qualified for a final. It was hard to deny that at crucial moments mistakes were consistently made which were explicable only by reference to a collective form of choking, the fact that they were playing together in a particular group.\n\nSo if anxiety in sport is such a pervasive factor, affecting individuals and groups alike, what can be done to remedy it? While some athletes are gifted with innate psychological advantages, there's nothing to suggest that coaches can't enable all players to benefit by employing a few simple ideas. It is often said that nothing can exactly equal the high stress of the biggest moments in matches. This notwithstanding, more pressurised realistic coaching can help athletes begin to cope with pressure on the field. A consequence of this will be that coaching can also help players develop a series of automatic reactions under pressure, without making them less alert to the unexpected, so they don't need to think consciously and worry about their actions."
       },
       "questions": [
         {
           "id": "q31",
           "type": "multiple-choice",
-          "prompt": "31. What does the writer suggest in the first paragraph?",
+          "prompt": "31. When describing Boswell's problem in the first paragraph, the writer suggests that Boswell",
           "options": [
-            { "key": "A", "text": "Option A" },
-            { "key": "B", "text": "Option B" },
-            { "key": "C", "text": "Option C" },
-            { "key": "D", "text": "Option D" }
+            { "key": "A", "text": "hadn't been worried about playing in the match." },
+            { "key": "B", "text": "had suffered similar issues in the past." },
+            { "key": "C", "text": "didn't want to let his coach down." },
+            { "key": "D", "text": "was unsure what was happening." }
+          ],
+          "answer": "D",
+          "points": 2
+        },
+        {
+          "id": "q32",
+          "type": "multiple-choice",
+          "prompt": "32. What is the writer's purpose in the second paragraph?",
+          "options": [
+            { "key": "A", "text": "to summarise an argument" },
+            { "key": "B", "text": "to elaborate on a condition" },
+            { "key": "C", "text": "to explain his attitude" },
+            { "key": "D", "text": "to provide an example" }
           ],
           "answer": "B",
-          "points": 1
+          "points": 2
+        },
+        {
+          "id": "q33",
+          "type": "multiple-choice",
+          "prompt": "33. Which of these words in the second paragraph is used dismissively?",
+          "options": [
+            { "key": "A", "text": "catastrophic" },
+            { "key": "B", "text": "mere" },
+            { "key": "C", "text": "dreadful" },
+            { "key": "D", "text": "automatic" }
+          ],
+          "answer": "B",
+          "points": 2
+        },
+        {
+          "id": "q34",
+          "type": "multiple-choice",
+          "prompt": "34. In the third paragraph, the writer stresses that elite athletes can",
+          "options": [
+            { "key": "A", "text": "play just as poorly under pressure as non-elite athletes." },
+            { "key": "B", "text": "access higher levels of self-confidence than non-elite athletes." },
+            { "key": "C", "text": "cope with their mistakes differently from non-elite athletes." },
+            { "key": "D", "text": "analyse their errors more carefully than non-elite athletes." }
+          ],
+          "answer": "C",
+          "points": 2
+        },
+        {
+          "id": "q35",
+          "type": "multiple-choice",
+          "prompt": "35. In the fourth paragraph, the writer mentions a study in order to highlight that",
+          "options": [
+            { "key": "A", "text": "sports teams can overcome a collective form of nervousness." },
+            { "key": "B", "text": "performance can be negatively affected by inclusion in a group." },
+            { "key": "C", "text": "statistics can be a powerful tool for analysing behaviour." },
+            { "key": "D", "text": "pressure can affect areas of experience outside sport." }
+          ],
+          "answer": "B",
+          "points": 2
+        },
+        {
+          "id": "q36",
+          "type": "multiple-choice",
+          "prompt": "36. What does the writer say is key to helping sportspeople overcome anxiety?",
+          "options": [
+            { "key": "A", "text": "drawing on a player's natural resources of calm" },
+            { "key": "B", "text": "helping players learn relaxation techniques" },
+            { "key": "C", "text": "making players realise that change is their responsibility" },
+            { "key": "D", "text": "exposing players to authentic match conditions in training" }
+          ],
+          "answer": "D",
+          "points": 2
         }
       ]
     },
     {
       "id": "part6",
-      "title": "Part 6 — Cross-text multiple matching (STUB)",
-      "instructions": "You are going to read four reviews of a book on de Botton's ideas. For questions 37-40, choose from the reviewers A-D.",
+      "title": "Part 6 — Cross-text multiple matching",
+      "instructions": "You are going to read four extracts from articles in which park rangers discuss national parks. For questions 37–40, choose from the park rangers A–D. The park rangers may be chosen more than once.",
       "passage": {
         "type": "text",
-        "content": "Placeholder for the four reviewer sections. The real Part 6 will have four labeled sections A, B, C, D in the left column."
+        "content": "National parks\n\nA — Many types of human activity, including hiking, cycling and horse-riding, have an impact on nature. Even small trails used by ecotourists and birdwatchers scare away some sensitive wildlife species or cause them to alter their behaviour. However, visitors help fund the operation of national parks and provide vital income for local people in many parts of the world. Therefore, putting a cap on how many come or banning their sporting activities is not a viable proposition. Introducing 'no-go' zones within a park, on the other hand, would protect wildlife while allowing visitors to enjoy the rest of the park. Such zones could be in more remote locations, away from roads. The majority of national parks already had roads running through them before they were given national park status. Closing these would prove unpopular, and in any case they are necessary infrastructure for both staff and visitors.\n\nB — National parks expose people to nature and increase the likelihood that they'll support environmental protection measures. If we introduce ceilings on how many can enjoy the parks, we risk losing that support. Having said that, I do think some changes are called for. Thanks to photo-sharing websites, picturesque vistas are being completely spoiled by crowds of tourists desperate to take the perfect selfie, and ecology should always be at the forefront of what we do. There are other issues too. Rather than continuing to allow outdoor sports such as off-road cycling in national parks, we need to identify more suitable spaces. And even for less damaging visitor pastimes, human activity must be restricted to particular sectors of the parks, using signage and physical barriers, while retaining the remainder for wildlife to live without human disturbance.\n\nC — The activities people do in national parks are changing, and park authorities need to keep up with that, whether it means introducing mountain bike trails or improving wi-fi access so tourists can use the internet. And park managers need to embrace the data which technology can provide. For example, GPS tagging shows that half of all photos by visitors are taken in less than 1% of each park. In other words, most visitors use a small, highly trafficked area of each park. Therefore, there's no need to set up visitor-free areas — there are plenty of those already. Roads are another matter, however. Existing ones need to be re-routed to avoid national parks, and new ones constructed outside park boundaries. Of course, this means other transport links must be improved. We have to allow as many people to visit as want to. If people can't go to national parks, they won't want to protect them, and we'll lose the parks completely.\n\nD — Can national parks continue to embrace ever-increasing levels of tourism while retaining what makes them unique? I can't see how. At one US national park, for example, a site which used to attract a few thousand visitors annually now gets two million a year, mainly because of tourists posting pictures of it online. This isn't an isolated case, and the consequences are disastrous — something we need to communicate to visitors. The time has come to draw a line. Parks must decide on a maximum number of people who can enter on a daily basis, both to protect wildlife and habitats and to ensure these continue to be pleasant places for people to visit. We also need to look at visitor activities. For example, forests maintained for commercial harvest offer a more appropriate setting for sports such as cross country cycling than national parks. Roads through national parks should also be closed so that traffic no longer goes through them, and visitors encouraged to travel to parks by other means."
       },
       "matchingOptions": [
-        { "key": "A", "text": "Reviewer A" },
-        { "key": "B", "text": "Reviewer B" },
-        { "key": "C", "text": "Reviewer C" },
-        { "key": "D", "text": "Reviewer D" }
+        { "key": "A", "text": "Ranger A" },
+        { "key": "B", "text": "Ranger B" },
+        { "key": "C", "text": "Ranger C" },
+        { "key": "D", "text": "Ranger D" }
       ],
       "questions": [
         {
           "id": "q37",
           "type": "matching",
-          "prompt": "37. has a different opinion from the others on the confidence with which de Botton discusses architecture",
-          "answer": "C",
-          "points": 1
+          "prompt": "37. Which park ranger shares an opinion with D about mountain biking in national parks?",
+          "answer": "B",
+          "points": 2
+        },
+        {
+          "id": "q38",
+          "type": "matching",
+          "prompt": "38. Which park ranger has a different view from C about roads in national parks?",
+          "answer": "A",
+          "points": 2
+        },
+        {
+          "id": "q39",
+          "type": "matching",
+          "prompt": "39. Which park ranger expresses a different view from the others about limiting visitor numbers to national parks?",
+          "answer": "D",
+          "points": 2
+        },
+        {
+          "id": "q40",
+          "type": "matching",
+          "prompt": "40. Which park ranger shares D's view about the impact of social media on national parks?",
+          "answer": "B",
+          "points": 2
         }
       ]
     },
     {
       "id": "part7",
-      "title": "Part 7 — Gapped text (STUB)",
-      "instructions": "You are going to read an article about Scottish wildcats. Six paragraphs have been removed from the article. Choose from the paragraphs A-G the one which fits each gap (41-46). There is one extra paragraph which you do not need to use.",
+      "title": "Part 7 — Gapped text",
+      "instructions": "You are going to read an article about an author who recorded his own audiobook. Six paragraphs have been removed from the article. Choose from the paragraphs A–G the one which fits each gap (41–46). There is one extra paragraph which you do not need to use.",
       "passage": {
         "type": "text",
-        "content": "Scottish Wildcat\n\nIts long bushy coat and tail are a perfect camouflage.\n\n[[SLOT:q41]]\n\nHowever, the physical differences are tangible. The wildcat is a much larger animal than a domestic tabby cat.\n\n[[SLOT:q42]]\n\nIt is a huge range for such a small cat."
+        "content": "What it was like to record my own audiobook\n\nIt was around noon on the third gruelling day of recording the audiobook of my novel, The Gargoyle Hunters, when the disembodied voice of my director burst into my headset to inform me that my empty stomach was making noises loud enough to be picked up by the hypersensitive microphone.\n\n[[SLOT:q41]]\n\nAs it turned out, that had been deceptively simple. All the audiobook producer asked me to do was record myself reading the opening pages of my book in the comfort of my own home. But so I was sure she was in a position to fully evaluate my ability, I also recorded a comic sequence from another section of the novel, involving some verbal sparring between two teenage boys.\n\n[[SLOT:q42]]\n\nI was thrilled to hear it, but little did I know that reading into your phone for 16 minutes on a lazy Sunday at home in no way prepares you for the arduous ordeal of being locked in a tiny recording booth for six or seven hours a day — reading, reading, reading, with only the voice of a distant director for occasional company.\n\n[[SLOT:q43]]\n\nThis familiarity with the material wasn't enough, however. Before the promise of lunch was even a glimmer on the horizon, weariness set in, and it dawned on me that this was going to be an exhausting, long-distance slog during which, paradoxically, it was essential that I sounded alert and energetic the entire time.\n\n[[SLOT:q44]]\n\nTo make matters more difficult, I was fighting a nasty cold. Still, I'm a hard worker, and as the hours and days progressed, I began to figure out the craft of audiobook narration. I became acutely sensitized to the subtleties of mouth moisture, which generated sensations and sounds I had never in my life spent a moment considering.\n\n[[SLOT:q45]]\n\nIt occurred to me that my efforts in this regard were pretty analogous to what we novelists do. The whole idea is to hide the struggle of creation from the reader so that the words on the page appear to have arrived there with fluency and ease.\n\n[[SLOT:q46]]\n\nI was always very grateful for these tips, and overall, the experience of narrating my own audiobook proved immensely satisfying. As a complete novice with no technical training, I was never going to turn myself into an experienced narrator overnight. But I did have one ace up my sleeve: I happened to know the author's intention behind every line."
       },
       "paragraphBank": [
-        { "key": "A", "text": "Stealthy by nature, wildcats have been known to hunt alone for days at a stretch." },
-        { "key": "B", "text": "Genetic testing has confirmed the rarity of pure-bred individuals." },
-        { "key": "C", "text": "Yet despite its elusiveness, the Scottish wildcat is one of Britain's most iconic animals." },
-        { "key": "D", "text": "This is one reason conservationists have raised concerns about hybridisation." },
-        { "key": "E", "text": "Extra paragraph — not used." }
+        { "key": "A", "text": "It was my concern about having a stranger narrate episodes such as this that led me to try out for the job in the first place. I had a very specific way I wanted the dialogue to sound, and I wasn't entirely comfortable handing that task over to an unknown voice actor who might not share my take on it. A few days after I sent in my clips, the producer emailed me back to say she was willing to take me on." },
+        { "key": "B", "text": "Now, however, I began to pay a lot of attention to them. I developed my own routines around when I needed to sip water, suck on a lozenge, or clear my throat. I found I was at pains to conceal from my listeners the unpleasant realities behind the performance." },
+        { "key": "C", "text": "It seemed my solo performance had inadvertently become a duet. I hugged a pillow to my abdomen to mask the rumbling, and managed to complete the chapter. The truth is that the marathon task of recording my own audiobook over four long days was proving far more demanding than I had expected from my audition." },
+        { "key": "D", "text": "To give me the freedom I needed to generate this sense of flow, the director kept silent and let me plug away, breaking in only when my clothing rustled or my digestive system gurgled in open revolt. But she was a trained actress whose understanding of enunciation proved invaluable, as she always knew just which syllable I should emphasize in order to stop tripping over a word or phrase." },
+        { "key": "E", "text": "I turned up on the first day in that naïve state, and sailed through the first couple of chapters. Friends had predicted that performing my own work would be a strange experience, but I always read and re-read my prose aloud as I write. In fact I had probably read each page of my novel aloud 20 or 30 times before I ever leaned forward to speak into that microphone." },
+        { "key": "F", "text": "These I listened to and mimicked endlessly in my free time. On the final day, I walked into the sound studio and told the director that I wanted to re-record those specific lines of the book." },
+        { "key": "G", "text": "I began to appreciate that an almost athletic performance was required if we were to complete the reading in four days — the time normally allotted for an actual professional audiobook narrator. A fairly cracking pace would be required. Author or no, there was no glamour here." }
       ],
       "questions": [
-        {
-          "id": "q41",
-          "type": "gapped-text",
-          "prompt": "41",
-          "answer": "C",
-          "points": 1
-        },
-        {
-          "id": "q42",
-          "type": "gapped-text",
-          "prompt": "42",
-          "answer": "D",
-          "points": 1
-        }
+        { "id": "q41", "type": "gapped-text", "prompt": "41", "answer": "C", "points": 2 },
+        { "id": "q42", "type": "gapped-text", "prompt": "42", "answer": "A", "points": 2 },
+        { "id": "q43", "type": "gapped-text", "prompt": "43", "answer": "E", "points": 2 },
+        { "id": "q44", "type": "gapped-text", "prompt": "44", "answer": "G", "points": 2 },
+        { "id": "q45", "type": "gapped-text", "prompt": "45", "answer": "B", "points": 2 },
+        { "id": "q46", "type": "gapped-text", "prompt": "46", "answer": "D", "points": 2 }
       ]
     },
     {
       "id": "part8",
-      "title": "Part 8 — Multiple matching (STUB)",
-      "instructions": "You are going to read a magazine article in which five career consultants give advice about starting a career. For questions 47-56, choose from the consultants A-E.",
+      "title": "Part 8 — Multiple matching",
+      "instructions": "You are going to read an interview with the architect Frank Gehry, divided into four sections (A–D). For questions 47–56, choose from the sections A–D. The sections may be chosen more than once.",
       "passage": {
         "type": "text",
-        "content": "Placeholder for the five consultant sections. The real Part 8 will have five labeled sections A-E in the left column."
+        "content": "An interview with Frank Gehry, world-famous architect\n\nRowan Moore spoke to the award-winning genius behind iconic buildings such as the Guggenheim Museum in Spain and the Walt Disney Concert Hall in Los Angeles on his 90th birthday.\n\nA — 'I've taken up flying,' says the American-Canadian architect Frank Gehry, as he sits opposite me in his Los Angeles office. 'A little bit.' Then he tells the story of how, in his youth, his cousin had a plane and would take him up in it. How he'd wanted to do this again, and ended up flying with Harrison Ford, the Hollywood superstar. This story is typical Gehry. It shows his sociable nature. He has a fascination with celebrity and high achievers, as many photographs around his office attest. Fame is definitely a thing with Gehry, but an ambiguous one. 'I find it very comforting to be here in Los Angeles because there are no spotlights except on the Hollywood film industry here. It gives people like me a kind of cloud cover,' he says. It's not untypical that a boast ('I've taken up flying') is followed by deprecation ('A little bit'). Most of all, the plane story captures his addiction to adventure — physical, emotional and imaginative. Many people credit this trait as driving the spirit of experimentation and playfulness that is evident in Gehry's architecture, which, while sometimes criticised for its crudeness and unfinished look, can never be ignored. The sense of fun is ever-present in his buildings that often seem to blur or transcend categories.\n\nB — His love of adventure and leaps into the unknown can also be seen in work Gehry did early on in his career with schoolchildren, in collaboration with his teacher sister, which was captured in a documentary directed by Jon Boorstin. The children built an imaginary city out of painted blocks and cardboard — coincidentally a sort of haphazard anticipation of the architecture Gehry would later do. They debated planning issues and elected a mayor. The ensuing heated discussions were all too chaotic for the children's regular teacher (Gehry now regrets his lack of tact when dealing with her), who cancelled the project. 'The point she missed,' Gehry says in the film, 'is that the conflict, when they start arguing with each other, is the real involvement in the city planning process that they were robbed of.' This work with the schoolchildren is one of a number of 'cliff jumps' in Gehry's life.\n\nC — The most pivotal jump concerns the house in Santa Monica where Gehry lived until recently with his wife, Berta, which he remodelled in the 1970s with all the disrespect for convention for which he was not yet world-famous — jagged angles, rough edges, and unglamorous materials such as plywood and corrugated metal. At that time, Gehry had built up a sizeable portfolio designing not-bad but not-exceptional commercial projects — apartment blocks, offices, shopping centres — with a sideline doing houses and studios for his artist friends. In 1980, he hosted a dinner at his house to celebrate the opening of one of his distinctly bland and uninspiring shopping centres. His developer client looked around the house. 'Is this what you like?' he asked. Gehry said he did. 'Well, if you like this you can't possibly like the shopping centre. Why are you doing it?' So Gehry, aged a little past 50, stopped working on all his commercial projects. He chose, almost, to start over again.\n\nD — As midlife crises go, it was one of the more creative and productive ones. If Gehry struggled for a while, he would eventually build up a reputation based on small- to medium-sized projects: more houses, a law school, a library, an ice rink. With the opening of the Bilbao Guggenheim in 1997, his success became both popular and global. This celebrated constellation of titanium and stone gave its name to a phenomenon — the 'Bilbao effect' — whereby beaten-up old cities would try to reverse their fortunes with spectacular architecture that would attract new visitors. It became the icon of what would be called iconic architecture. Other landmarks followed, such as the Walt Disney Concert Hall in downtown Los Angeles. (In fact, it was commissioned before Bilbao, but drawn out by, among other things, Gehry's efforts to convince clients and funders that he really should be allowed to build it.) By the time the Hollywood director Sydney Pollack made a feature-length documentary about him in 2005, it was common to call Gehry a 'genius', a 'modern master' or 'the greatest architect in the world'."
       },
       "matchingOptions": [
-        { "key": "A", "text": "Consultant A" },
-        { "key": "B", "text": "Consultant B" },
-        { "key": "C", "text": "Consultant C" },
-        { "key": "D", "text": "Consultant D" },
-        { "key": "E", "text": "Consultant E" }
+        { "key": "A", "text": "Section A" },
+        { "key": "B", "text": "Section B" },
+        { "key": "C", "text": "Section C" },
+        { "key": "D", "text": "Section D" }
       ],
       "questions": [
-        {
-          "id": "q47",
-          "type": "matching",
-          "prompt": "47. Keep your final objective in mind when you are planning to change jobs.",
-          "answer": "A",
-          "points": 1
-        }
+        { "id": "q47", "type": "matching", "prompt": "47. Which section mentions the mixed feelings Gehry has about being the focus of attention?",                 "answer": "A", "points": 1 },
+        { "id": "q48", "type": "matching", "prompt": "48. Which section mentions the economic impact of Gehry's work?",                                          "answer": "D", "points": 1 },
+        { "id": "q49", "type": "matching", "prompt": "49. Which section mentions how Gehry decided to abandon his previous approach to architecture?",            "answer": "C", "points": 1 },
+        { "id": "q50", "type": "matching", "prompt": "50. Which section mentions an instance where Gehry showed a lack of interpersonal skills?",                  "answer": "B", "points": 1 },
+        { "id": "q51", "type": "matching", "prompt": "51. Which section mentions Gehry's concern to avoid appearing immodest?",                                    "answer": "A", "points": 1 },
+        { "id": "q52", "type": "matching", "prompt": "52. Which section mentions Gehry's indifference to established architectural rules?",                       "answer": "C", "points": 1 },
+        { "id": "q53", "type": "matching", "prompt": "53. Which section mentions a time when Gehry successfully used his powers of persuasion?",                   "answer": "D", "points": 1 },
+        { "id": "q54", "type": "matching", "prompt": "54. Which section mentions a period in Gehry's career when he produced less than inspiring work?",           "answer": "C", "points": 1 },
+        { "id": "q55", "type": "matching", "prompt": "55. Which section mentions an experiment that Gehry felt was misunderstood?",                                "answer": "B", "points": 1 },
+        { "id": "q56", "type": "matching", "prompt": "56. Which section mentions how Gehry's comments reveal fundamental aspects of his character?",               "answer": "A", "points": 1 }
       ]
     }
   ],
   "scoring": {
     "mode": "per-question-points",
-    "totalPoints": 10
+    "totalPoints": 78
   }
 }

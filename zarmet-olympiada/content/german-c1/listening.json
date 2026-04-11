@@ -6,47 +6,362 @@
   "skill": "listening",
   "title": "Goethe-Zertifikat C1 — Hören",
   "durationMinutes": 40,
-  "instructions": "Dies ist eine PLATZHALTER-Datei. Die echten Fragen werden in Priority 1 aus Nemis tili/Listening.pdf und answers.docx transkribiert.",
+  "instructions": "Das Modul Hören besteht aus vier Teilen. Sie haben insgesamt ca. 40 Minuten Zeit. Lesen Sie die Aufgaben, hören Sie dann den Text dazu.",
   "parts": [
     {
       "id": "part-listening-1",
-      "title": "Teil 1 — Richtig/Falsch (STUB)",
-      "instructions": "Sie hören einen Text. Entscheiden Sie, ob die Aussagen richtig oder falsch sind. Sie hören den Text einmal.",
-      "passage": null,
+      "title": "Hören Teil 1 — Zuordnung Podcast (Sport-Dokumentationen)",
+      "instructions": "Sie hören einen Podcast über neue Sport-Dokumentationen. Sie hören den Text einmal. Wählen Sie bei jeder Aufgabe, zu welcher Dokumentation die Aussage passt. Lesen Sie jetzt die Aufgaben 1 bis 6. Dazu haben Sie 60 Sekunden Zeit.",
+      "passage": {
+        "type": "text",
+        "content": "Beispiel 0: Es geht um eine Vorkämpferin für die Gleichberechtigung. → Doku 1 — Kampf der Geschlechter\n\nOrdnen Sie jede Aussage der passenden Dokumentation zu:\nA = Doku 1 — Kampf der Geschlechter\nB = Doku 2 — Geschichte der zweiten Klasse\nC = Doku 3 — Sport und Gleichberechtigung"
+      },
       "audio": {
         "src": "audio/part1.m4a",
         "autoPlay": true,
+        "maxPlays": 1,
         "note": "Sie hören den Text einmal."
+      },
+      "matchingOptions": [
+        { "key": "A", "text": "Doku 1 — Kampf der Geschlechter" },
+        { "key": "B", "text": "Doku 2 — Geschichte der zweiten Klasse" },
+        { "key": "C", "text": "Doku 3 — Sport und Gleichberechtigung" }
+      ],
+      "questions": [
+        { "id": "g-lq1", "type": "matching", "prompt": "1. Die Doku macht darauf aufmerksam, dass viele Leistungssportlerinnen oft ohne Unterstützung dastehen.", "answer": "B", "points": 1 },
+        { "id": "g-lq2", "type": "matching", "prompt": "2. Die Ungleichheit bei den Siegerprämien wird wirtschaftlich begründet.",                                "answer": "C", "points": 1 },
+        { "id": "g-lq3", "type": "matching", "prompt": "3. Die Doku beschreibt die Niederlage eines arroganten Mannes.",                                               "answer": "A", "points": 1 },
+        { "id": "g-lq4", "type": "matching", "prompt": "4. In der Dokumentation werden Lösungsansätze präsentiert.",                                                   "answer": "C", "points": 1 },
+        { "id": "g-lq5", "type": "matching", "prompt": "5. Man erfährt etwas über die Geschichte der Siegerprämien.",                                                  "answer": "A", "points": 1 },
+        { "id": "g-lq6", "type": "matching", "prompt": "6. Der Umgang mit dem Thema wird an Einzelschicksalen demonstriert.",                                          "answer": "B", "points": 1 }
+      ]
+    },
+    {
+      "id": "part-listening-2",
+      "title": "Hören Teil 2 — Radiointerview (Politikverdrossenheit)",
+      "instructions": "Sie hören ein Radiointerview mit einer Persönlichkeit aus der Wissenschaft. Sie hören den Text zweimal. Wählen Sie bei jeder Aufgabe die richtige Lösung. Lesen Sie jetzt die Aufgaben 7 bis 15. Dazu haben Sie 60 Sekunden Zeit.",
+      "passage": null,
+      "audio": {
+        "src": "audio/part2.m4a",
+        "autoPlay": true,
+        "maxPlays": 2,
+        "note": "Sie hören den Text zweimal."
       },
       "questions": [
         {
-          "id": "g-lq1",
-          "type": "true-false",
-          "prompt": "1 (Platzhalter) — Die Aussage entspricht dem Text.",
-          "answer": "true",
+          "id": "g-lq7",
+          "type": "multiple-choice",
+          "prompt": "7. In den Medien zeigt sich ein zunehmendes Desinteresse der Deutschen an Politik.",
+          "options": [
+            { "key": "A", "text": "stimmt" },
+            { "key": "B", "text": "stimmt nicht" },
+            { "key": "C", "text": "dazu wird nichts gesagt" }
+          ],
+          "answer": "B",
+          "points": 1
+        },
+        {
+          "id": "g-lq8",
+          "type": "multiple-choice",
+          "prompt": "8. Politikverdrossenheit ist ein von Wissenschaftlerinnen und Wissenschaftlern geprägter Ausdruck.",
+          "options": [
+            { "key": "A", "text": "stimmt" },
+            { "key": "B", "text": "stimmt nicht" },
+            { "key": "C", "text": "dazu wird nichts gesagt" }
+          ],
+          "answer": "B",
+          "points": 1
+        },
+        {
+          "id": "g-lq9",
+          "type": "multiple-choice",
+          "prompt": "9. Politikerinnen und Politiker aus verschiedenen Ländern bestreiten, sie würden die Wahrheit vertuschen.",
+          "options": [
+            { "key": "A", "text": "stimmt" },
+            { "key": "B", "text": "stimmt nicht" },
+            { "key": "C", "text": "dazu wird nichts gesagt" }
+          ],
+          "answer": "C",
+          "points": 1
+        },
+        {
+          "id": "g-lq10",
+          "type": "multiple-choice",
+          "prompt": "10. Das Misstrauen in die Politik äußert sich auch darin, dass große Parteien weniger Zulauf haben.",
+          "options": [
+            { "key": "A", "text": "stimmt" },
+            { "key": "B", "text": "stimmt nicht" },
+            { "key": "C", "text": "dazu wird nichts gesagt" }
+          ],
+          "answer": "A",
+          "points": 1
+        },
+        {
+          "id": "g-lq11",
+          "type": "multiple-choice",
+          "prompt": "11. Herr Josek meint, dass die Wahlprogramme eher den Interessen der älteren Generation entsprechen.",
+          "options": [
+            { "key": "A", "text": "stimmt" },
+            { "key": "B", "text": "stimmt nicht" },
+            { "key": "C", "text": "dazu wird nichts gesagt" }
+          ],
+          "answer": "A",
+          "points": 1
+        },
+        {
+          "id": "g-lq12",
+          "type": "multiple-choice",
+          "prompt": "12. Man kann auf der Politikverdrossenheit mit Aufklärung begegnen.",
+          "options": [
+            { "key": "A", "text": "stimmt" },
+            { "key": "B", "text": "stimmt nicht" },
+            { "key": "C", "text": "dazu wird nichts gesagt" }
+          ],
+          "answer": "A",
+          "points": 1
+        },
+        {
+          "id": "g-lq13",
+          "type": "multiple-choice",
+          "prompt": "13. Die Mehrheit der Deutschen würde einen eher autoritären Führungsstil begrüßen.",
+          "options": [
+            { "key": "A", "text": "stimmt" },
+            { "key": "B", "text": "stimmt nicht" },
+            { "key": "C", "text": "dazu wird nichts gesagt" }
+          ],
+          "answer": "B",
+          "points": 1
+        },
+        {
+          "id": "g-lq14",
+          "type": "multiple-choice",
+          "prompt": "14. Machtmissbrauch ist typisch für viele regierende Parteien.",
+          "options": [
+            { "key": "A", "text": "stimmt" },
+            { "key": "B", "text": "stimmt nicht" },
+            { "key": "C", "text": "dazu wird nichts gesagt" }
+          ],
+          "answer": "C",
+          "points": 1
+        },
+        {
+          "id": "g-lq15",
+          "type": "multiple-choice",
+          "prompt": "15. Deutsche neigen weniger zu Populismus als andere Nationen.",
+          "options": [
+            { "key": "A", "text": "stimmt" },
+            { "key": "B", "text": "stimmt nicht" },
+            { "key": "C", "text": "dazu wird nichts gesagt" }
+          ],
+          "answer": "A",
           "points": 1
         }
       ]
     },
     {
-      "id": "part-listening-2",
-      "title": "Teil 2 — Multiple Choice (STUB)",
-      "instructions": "Sie hören einen Monolog. Wählen Sie die richtige Antwort.",
+      "id": "part-listening-3",
+      "title": "Hören Teil 3 — Gespräch über nachhaltiges Reisen",
+      "instructions": "Sie hören ein Gespräch mit mehreren Personen über nachhaltiges Reisen. Sie hören den Text in vier Abschnitten jeweils einmal. Zu jedem Abschnitt gibt es zwei Aufgaben. Wählen Sie bei jeder Aufgabe die richtige Lösung.",
+      "passage": null,
       "audio": {
-        "src": "audio/part2.m4a",
-        "autoPlay": true
+        "src": "audio/part3.m4a",
+        "autoPlay": true,
+        "maxPlays": 1,
+        "note": "Sie hören den Text einmal (in vier Abschnitten)."
       },
       "questions": [
         {
-          "id": "g-lq2",
+          "id": "g-lq16",
           "type": "multiple-choice",
-          "prompt": "2 (Platzhalter)",
+          "prompt": "16. Frau Glauck wird in naher Zukunft …",
           "options": [
-            { "key": "A", "text": "Option A" },
-            { "key": "B", "text": "Option B" },
-            { "key": "C", "text": "Option C" }
+            { "key": "A", "text": "den Urlaubsaufenthalt ausdehnen." },
+            { "key": "B", "text": "eine Fernreise machen." },
+            { "key": "C", "text": "mit der Bahn an ihren Ferienort gelangen." }
+          ],
+          "answer": "C",
+          "points": 1
+        },
+        {
+          "id": "g-lq17",
+          "type": "multiple-choice",
+          "prompt": "17. Herr Dung sagt, dass die meisten deutschen Urlauberinnen und Urlauber …",
+          "options": [
+            { "key": "A", "text": "die Natur genießen wollen." },
+            { "key": "B", "text": "heutzutage nachhaltig reisen." },
+            { "key": "C", "text": "ihre Vorsätze nicht umsetzen." }
+          ],
+          "answer": "C",
+          "points": 1
+        },
+        {
+          "id": "g-lq18",
+          "type": "multiple-choice",
+          "prompt": "18. Die Tourismusindustrie …",
+          "options": [
+            { "key": "A", "text": "bietet zunehmend Reisen mit langer Aufenthaltsdauer an." },
+            { "key": "B", "text": "entwickelt neue Maßstäbe für die Reisebranche." },
+            { "key": "C", "text": "unterstützt Klimaschutz, wenn es sich rentiert." }
+          ],
+          "answer": "C",
+          "points": 1
+        },
+        {
+          "id": "g-lq19",
+          "type": "multiple-choice",
+          "prompt": "19. Die Idee des Reisens in einer Vakuumröhre …",
+          "options": [
+            { "key": "A", "text": "hatte schon Jules Verne." },
+            { "key": "B", "text": "ist noch eine Utopie." },
+            { "key": "C", "text": "wird bereits erprobt." }
+          ],
+          "answer": "C",
+          "points": 1
+        },
+        {
+          "id": "g-lq20",
+          "type": "multiple-choice",
+          "prompt": "20. Slow Travel bedeutet …",
+          "options": [
+            { "key": "A", "text": "auf dem Land- oder Wasserweg zu reisen." },
+            { "key": "B", "text": "die Welt zu Fuß oder per Autostopp zu erkunden." },
+            { "key": "C", "text": "sich bis zum Reiseziel Autos mit anderen zu teilen." }
+          ],
+          "answer": "A",
+          "points": 1
+        },
+        {
+          "id": "g-lq21",
+          "type": "multiple-choice",
+          "prompt": "21. Kreuzfahrten wären wieder ökologisch legitim, wenn …",
+          "options": [
+            { "key": "A", "text": "beim Bau der Schiffe auf Plastik verzichtet wird." },
+            { "key": "B", "text": "deren Antrieb auf nachhaltiger Basis beruht." },
+            { "key": "C", "text": "die Kapazität an Passagieren erhöht wird." }
           ],
           "answer": "B",
+          "points": 1
+        },
+        {
+          "id": "g-lq22",
+          "type": "multiple-choice",
+          "prompt": "22. Was wird die Digitalisierung u. a. bringen?",
+          "options": [
+            { "key": "A", "text": "Auch Ortsunkundige werden sich abseits der Sehenswürdigkeiten zurechtfinden." },
+            { "key": "B", "text": "Der leichtere Zugang zu Sehenswürdigkeiten erhöht die Besucherzahl." },
+            { "key": "C", "text": "Der Ticketverkauf wird durch den Einsatz verschiedener Apps optimiert." }
+          ],
+          "answer": "A",
+          "points": 1
+        },
+        {
+          "id": "g-lq23",
+          "type": "multiple-choice",
+          "prompt": "23. Wie kann Virtual Reality das Reisen verändern?",
+          "options": [
+            { "key": "A", "text": "Man braucht vor Ort seltener eine Reiseführerin oder einen Reiseführer." },
+            { "key": "B", "text": "Man hat konkretere Erwartungen an das Reiseziel." },
+            { "key": "C", "text": "Man wird kaum noch an Originalschauplätze fahren." }
+          ],
+          "answer": "B",
+          "points": 1
+        }
+      ]
+    },
+    {
+      "id": "part-listening-4",
+      "title": "Hören Teil 4 — Vortrag über Farben",
+      "instructions": "Sie hören einen Vortrag über den Einfluss der Farben auf den Menschen und die Gesellschaft. Sie hören den Text zweimal. Wählen Sie bei jeder Aufgabe die richtige Lösung. Lesen Sie jetzt die Aufgaben 24 bis 30. Dazu haben Sie 90 Sekunden Zeit.",
+      "passage": null,
+      "audio": {
+        "src": "audio/part4.m4a",
+        "autoPlay": true,
+        "maxPlays": 2,
+        "note": "Sie hören den Text zweimal."
+      },
+      "questions": [
+        {
+          "id": "g-lq24",
+          "type": "multiple-choice",
+          "prompt": "24. Die Farben in der Natur …",
+          "options": [
+            { "key": "A", "text": "lenken unser Verhalten." },
+            { "key": "B", "text": "nahmen unsere Vorfahren anders wahr." },
+            { "key": "C", "text": "werden von Kindern anders empfunden." }
+          ],
+          "answer": "A",
+          "points": 1
+        },
+        {
+          "id": "g-lq25",
+          "type": "multiple-choice",
+          "prompt": "25. Emotionale Reaktionen auf Farben …",
+          "options": [
+            { "key": "A", "text": "sind auch unabhängig von Kulturkreis." },
+            { "key": "B", "text": "basieren auf kultureller Prägung." },
+            { "key": "C", "text": "sind von der Natur vorgegeben." }
+          ],
+          "answer": "B",
+          "points": 1
+        },
+        {
+          "id": "g-lq26",
+          "type": "multiple-choice",
+          "prompt": "26. Farben …",
+          "options": [
+            { "key": "A", "text": "dienen als Unterscheidungsprinzip." },
+            { "key": "B", "text": "sind eine feste Substanz." },
+            { "key": "C", "text": "sind während der Evolution gleichzeitig entstanden." }
+          ],
+          "answer": "A",
+          "points": 1
+        },
+        {
+          "id": "g-lq27",
+          "type": "multiple-choice",
+          "prompt": "27. Rot …",
+          "options": [
+            { "key": "A", "text": "wandelte sich vom Symbol der Herrschenden zum Symbol der unteren Schichten." },
+            { "key": "B", "text": "wurde selbst im 19. Jahrhundert noch unter großem Aufwand produziert." },
+            { "key": "C", "text": "wurde zur Unterscheidung der Parteien genutzt." }
+          ],
+          "answer": "A",
+          "points": 1
+        },
+        {
+          "id": "g-lq28",
+          "type": "multiple-choice",
+          "prompt": "28. Welcher Unterschied zwischen Männern und Frauen wird angesprochen?",
+          "options": [
+            { "key": "A", "text": "Frauen sind häufiger von einer Farbenschwäche betroffen." },
+            { "key": "B", "text": "Männer erkennen feine graduelle Farbunterschiede weniger gut." },
+            { "key": "C", "text": "Männer sind bei der Farbenerkennung evolutionär im Vorteil." }
+          ],
+          "answer": "B",
+          "points": 1
+        },
+        {
+          "id": "g-lq29",
+          "type": "multiple-choice",
+          "prompt": "29. Der Schmuckstein Lapislazuli wurde im Altertum …",
+          "options": [
+            { "key": "A", "text": "auf mehreren Kontinenten entdeckt." },
+            { "key": "B", "text": "mehr geschätzt als Gold." },
+            { "key": "C", "text": "zum Impuls der bevorstehenden Globalisierung." }
+          ],
+          "answer": "C",
+          "points": 1
+        },
+        {
+          "id": "g-lq30",
+          "type": "multiple-choice",
+          "prompt": "30. Warum verwenden Werbestrategen oft Blau?",
+          "options": [
+            { "key": "A", "text": "Dieser Farbe geben die meisten Menschen den Vorzug." },
+            { "key": "B", "text": "Sie können so die verschiedenen Branchen kategorisieren." },
+            { "key": "C", "text": "Sie möchten die Verbraucher emotional beeinflussen." }
+          ],
+          "answer": "C",
           "points": 1
         }
       ]
@@ -54,6 +369,6 @@
   ],
   "scoring": {
     "mode": "per-question-points",
-    "totalPoints": 2
+    "totalPoints": 30
   }
 }
