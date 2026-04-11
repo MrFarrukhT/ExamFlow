@@ -316,6 +316,17 @@ body.zu-test-body {
   font-size: 15px;
   line-height: 1.5;
   padding-bottom: 88px; /* space for bottom nav */
+  min-height: 100vh;
+}
+/* The generic `html, body` rule at the top of this file sets a cream
+ * background on BOTH elements (for the welcome/dashboard pages). The
+ * body-level override switches body to white, but <html>'s cream still
+ * shows around the viewport padding. This rule ensures that while a
+ * test page is open, the html root is also white so the canvas reads
+ * as a solid Cambridge-authentic white sheet. */
+body.zu-test-body,
+html:has(body.zu-test-body) {
+  background: var(--ct-bg);
 }
 
 /* Reset typography inside the test runner — the Zarmed warm-brown
@@ -365,42 +376,36 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   position: sticky;
   top: 0;
   z-index: 40;
-  min-height: 56px;
+  min-height: 64px;
+  gap: 20px;
 }
+/* Brand: logo on top, sub-label directly below (matches Cambridge's shield +
+ * "English" stack in cae/examples/*.png). */
 .ct-header-brand {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
+  line-height: 1.05;
+  gap: 2px;
 }
 .ct-logo {
-  height: 36px;
+  height: 38px;
   width: auto;
   display: block;
   user-select: none;
   -webkit-user-drag: none;
 }
-.ct-brand-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.15;
-}
-.ct-brand-name {
-  font-family: Georgia, serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--ct-text);
-}
 .ct-brand-sub {
+  font-family: Arial, sans-serif;
   font-size: 11px;
   color: var(--ct-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.03em;
+  text-transform: none;
 }
 .ct-header-id {
   display: flex;
   flex-direction: column;
-  line-height: 1.15;
-  margin-left: 40px;
+  line-height: 1.2;
 }
 .ct-header-id-label {
   font-size: 12px;
@@ -413,11 +418,49 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   font-weight: 700;
   color: var(--ct-text);
 }
+.ct-header-audio {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
 .ct-header-right {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
+}
+/* Decorative status icons (WiFi / bell / menu / pencil) — match Cambridge's
+ * top-right icon row in cae/examples/*. SVG masks so they tint with
+ * currentColor; non-interactive visual aid only. */
+.ct-header-icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background: var(--ct-text);
+  opacity: 0.85;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+.ct-header-icon--wifi {
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z'/></svg>");
+  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z'/></svg>");
+}
+.ct-header-icon--bell {
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-4.5-6.32V4a1.5 1.5 0 1 0-3 0v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z'/></svg>");
+  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-4.5-6.32V4a1.5 1.5 0 1 0-3 0v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z'/></svg>");
+}
+.ct-header-icon--menu {
+  width: 20px;
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z'/></svg>");
+  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z'/></svg>");
+}
+.ct-header-icon--pencil {
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/></svg>");
+  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/></svg>");
 }
 .ct-audio-status {
   display: none;
@@ -438,16 +481,17 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 }
 .ct-timer {
   font-family: "Courier New", monospace;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ct-text);
-  padding: 6px 14px;
+  padding: 5px 12px;
   border: 1px solid var(--ct-border-strong);
-  border-radius: 4px;
+  border-radius: 3px;
   background: var(--ct-bg);
-  min-width: 78px;
+  min-width: 72px;
   text-align: center;
   transition: color 0.2s, background 0.2s, border-color 0.2s;
+  margin-right: 4px;
 }
 .ct-timer--warn {
   color: #92400e;
@@ -471,17 +515,18 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 .ct-banner-wrap {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 18px 24px 0;
+  padding: 0 24px;
   position: sticky;
-  top: 56px; /* right below the sticky header */
+  top: 64px; /* right below the sticky header (64px min-height) */
   background: var(--ct-bg);
   z-index: 35;
 }
 .ct-banner {
-  padding: 16px 22px;
+  padding: 14px 22px;
   background: var(--ct-banner-bg);
-  border: 1px solid var(--ct-border);
-  border-radius: 4px;
+  border: none;
+  border-bottom: 1px solid var(--ct-border);
+  border-radius: 0;
 }
 .ct-banner-title {
   font-size: 14px;
@@ -530,8 +575,8 @@ body.zu-test-body .ct-nav-finish:focus-visible {
  * reading a long passage while the answer options stay visible. */
 .ct-two-col > .ct-col:nth-child(2) {
   position: sticky;
-  top: 140px; /* clears the sticky header (~56px) + banner (~74px) + gap */
-  max-height: calc(100vh - 160px - 72px); /* 160 = header+banner reserve, 72 = bottom nav */
+  top: 130px; /* clears the sticky header (~64px) + banner (~50px) + gap */
+  max-height: calc(100vh - 150px - 72px); /* 150 = header+banner reserve, 72 = bottom nav */
   overflow-y: auto;
   align-self: start;
   /* Scroll affordance: force a visible thin scrollbar so Chrome/Edge
@@ -714,55 +759,139 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 }
 .ct-q-option-key { font-weight: 700; margin-right: 4px; }
 
-/* Part 1 inline MC cloze — gap shows A/B/C/D inline */
+/* Part 1 inline MC cloze — Cambridge-authentic bordered box. Number prefix
+ * sits inside the left of the box; <select> fills the right. No visible
+ * dropdown arrow; no placeholder text; box appears blank until chosen. */
 .ct-inline-mc {
   display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  align-items: stretch;
+  vertical-align: middle;
   margin: 0 3px;
-  padding: 1px 6px;
-  background: var(--ct-bg);
-  border: 1px solid var(--ct-border-strong);
-  border-radius: 3px;
-  font-size: 13px;
+  border: 1px solid var(--ct-text);
+  border-radius: 2px;
+  background: #fff;
+  height: 24px;
+  overflow: hidden;
+  line-height: 1;
 }
-.ct-inline-mc select {
+.ct-inline-mc-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  padding: 0 6px;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ct-text);
+  border-right: 1px solid var(--ct-border-strong);
+  background: #fff;
+}
+.ct-inline-mc-select {
   font-family: Arial, sans-serif;
   font-size: 13px;
   border: none;
   background: transparent;
   cursor: pointer;
+  padding: 0 10px 0 6px;
+  min-width: 90px;
+  outline: none;
+  color: var(--ct-text);
+  /* Hide the native dropdown arrow — the whole box IS the dropdown. */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
-.ct-inline-mc select:focus { outline: 1px solid var(--ct-teal); }
+.ct-inline-mc:focus-within {
+  border-color: var(--ct-teal);
+  box-shadow: 0 0 0 1px var(--ct-teal);
+}
 
-/* Part 4 — key word transformation (centered blocks) */
+/* Part 4 — key word transformation (left-aligned, inline input)
+ * Matches cae/examples/4.png: each KWT block is flush-left, no background
+ * pill, with the bordered input box (showing its question number inside)
+ * inlined where the ______ blank sits in the lead-in sentence. */
 .ct-kwt-block {
-  max-width: 720px;
-  margin: 20px auto 28px;
-  text-align: center;
+  max-width: 1100px;
+  margin: 0 0 40px;
+  text-align: left;
+  padding: 0;
+  /* Override the generic .ct-question--active background so selected KWT
+   * blocks don't render as big pale pills. Subtle left-accent only. */
+  background: transparent !important;
+  border: none !important;
+  border-left: 3px solid transparent;
+  padding-left: 12px;
+  transition: border-color 0.15s;
 }
-.ct-kwt-first,
-.ct-kwt-lead {
+.ct-kwt-block.ct-question--active {
+  border-left-color: var(--ct-teal);
+}
+.ct-kwt-first {
   font-size: 14px;
   color: var(--ct-text);
-  margin: 8px 0;
+  margin: 12px 0 6px;
 }
 .ct-kwt-keyword {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 900;
-  letter-spacing: 0.1em;
-  margin: 12px 0;
+  letter-spacing: 0.08em;
+  margin: 14px 0 10px;
   color: var(--ct-text);
+}
+.ct-kwt-lead-row {
+  font-size: 14px;
+  color: var(--ct-text);
+  line-height: 2.1;
+  position: relative;
+  padding-right: 28px;
+}
+/* Inline KWT gap — bordered box with the question number inside at left */
+.ct-kwt-gap {
+  display: inline-flex;
+  align-items: stretch;
+  vertical-align: middle;
+  margin: 0 4px;
+  border: 1px solid var(--ct-text);
+  border-radius: 2px;
+  background: #fff;
+  height: 28px;
+  overflow: hidden;
+}
+.ct-kwt-gap-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  padding: 0 8px;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ct-text);
+  border-right: 1px solid var(--ct-border-strong);
+  background: #fff;
 }
 .ct-kwt-input {
   font-family: Arial, sans-serif;
   font-size: 14px;
-  padding: 6px 10px;
-  border: 1px solid var(--ct-border-strong);
-  min-width: 280px;
-  text-align: left;
+  padding: 0 10px;
+  border: none;
+  min-width: 260px;
+  height: 100%;
+  background: transparent;
+  color: var(--ct-text);
+  outline: none;
 }
-.ct-kwt-input:focus { outline: none; border-color: var(--ct-teal); box-shadow: 0 0 0 1px var(--ct-teal); }
+.ct-kwt-gap:focus-within {
+  border-color: var(--ct-teal);
+  box-shadow: 0 0 0 1px var(--ct-teal);
+}
+.ct-kwt-bookmark {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
 
 /* Part 7 gapped text */
 .ct-slot {
@@ -1042,7 +1171,7 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   padding: 6px 14px;
 }
 .ct-nav-part--active .ct-nav-part-label {
-  color: var(--ct-teal);
+  color: var(--ct-text);
 }
 .ct-nav-part-numbers {
   display: flex;

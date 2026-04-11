@@ -237,17 +237,22 @@
   }
 
   // Part 1: multiple-choice cloze — passage with inline MC <select>
+  // Visual: Cambridge-authentic bordered box with the number prefix inside
+  // the left side and the <select> blended into the right side. When no
+  // option is selected, the box appears blank. When selected, only the
+  // chosen letter (A/B/C/D) is visible.
   function renderPart1(part) {
     const wrap = el('div', 'ct-part');
     wrap.appendChild(renderPassageHeading(part));
     const passage = renderPassageWithInlineGaps(part, (q) => {
       const inline = el('span', 'ct-inline-mc');
-      const num = el('span', null, (q.prompt || q.id) + '. ');
-      inline.appendChild(num);
+      const qNum = extractQuestionNumber(q) || q.id;
+      inline.appendChild(el('span', 'ct-inline-mc-num', qNum));
       const select = document.createElement('select');
+      select.className = 'ct-inline-mc-select';
       const placeholder = document.createElement('option');
       placeholder.value = '';
-      placeholder.textContent = '—';
+      placeholder.textContent = '';
       select.appendChild(placeholder);
       (q.options || []).forEach((opt) => {
         const o = document.createElement('option');
@@ -258,6 +263,10 @@
       });
       select.addEventListener('change', () => {
         saveAnswer(q.id, select.value);
+        state.currentQid = q.id;
+        refreshActiveHighlight();
+      });
+      select.addEventListener('focus', () => {
         state.currentQid = q.id;
         refreshActiveHighlight();
       });
@@ -304,32 +313,75 @@
     return wrap;
   }
 
-  // Part 4: key-word transformation — centered blocks
+  // Part 4: key-word transformation — left-aligned, inline input in the leadIn
+  // Authentic Cambridge layout: first sentence, bold keyword, then the lead-in
+  // sentence with the blank replaced by a bordered input box whose number prefix
+  // sits inside the same box (matches cae/examples/4.png exactly).
   function renderPart4(part) {
     const wrap = el('div', 'ct-part');
     (part.questions || []).forEach((q) => {
       const block = el('div', 'ct-kwt-block');
       block.dataset.qid = q.id;
       if (state.currentQid === q.id) block.classList.add('ct-question--active');
-      block.appendChild(el('div', 'ct-q-prompt', q.prompt || q.id));
-      if (q.keyWord) block.appendChild(el('div', 'ct-kwt-keyword', q.keyWord));
-      if (q.leadIn) block.appendChild(el('div', 'ct-kwt-lead', q.leadIn));
+
+      // First sentence (plain)
+      if (q.prompt) {
+        block.appendChild(el('div', 'ct-kwt-first', q.prompt));
+      }
+      // Bold UPPERCASE keyword
+      if (q.keyWord) {
+        block.appendChild(el('div', 'ct-kwt-keyword', q.keyWord));
+      }
+
+      // Lead-in sentence with inline input replacing the blank. Accept several
+      // blank patterns seen in content (______, _______, __________, etc.).
+      const leadRow = el('div', 'ct-kwt-lead-row');
+      const leadText = q.leadIn || '';
+      const blankMatch = leadText.match(/_{3,}/);
+      const qNum = extractQuestionNumber(q) || q.id;
       const input = document.createElement('input');
       input.type = 'text';
       input.className = 'ct-kwt-input';
       input.autocomplete = 'off';
       input.spellcheck = false;
-      // Key-word transformations are at most 6 words; 150 chars is a
-      // generous upper bound that guards against accidental paste-bombs
-      // filling localStorage.
       input.maxLength = 150;
       input.value = state.answers[q.id] || '';
+      input.dataset.qnum = qNum;
       input.addEventListener('input', () => {
         saveAnswer(q.id, input.value);
         state.currentQid = q.id;
         refreshActiveHighlight();
       });
-      block.appendChild(input);
+      input.addEventListener('focus', () => {
+        state.currentQid = q.id;
+        refreshActiveHighlight();
+      });
+
+      // Build the inline input wrapper — number prefix inside the same box
+      const gap = el('span', 'ct-kwt-gap');
+      gap.appendChild(el('span', 'ct-kwt-gap-num', qNum));
+      gap.appendChild(input);
+
+      if (blankMatch) {
+        const before = leadText.slice(0, blankMatch.index);
+        const after = leadText.slice(blankMatch.index + blankMatch[0].length);
+        if (before) leadRow.appendChild(document.createTextNode(before));
+        leadRow.appendChild(gap);
+        if (after) leadRow.appendChild(document.createTextNode(after));
+      } else {
+        // No blank token in leadIn — render text then input after it
+        if (leadText) leadRow.appendChild(document.createTextNode(leadText + ' '));
+        leadRow.appendChild(gap);
+      }
+
+      // Bookmark icon on the far right of the lead row
+      const bookmarkCell = el('span', 'ct-kwt-bookmark');
+      const bookmark = el('span', 'ct-bookmark');
+      bookmark.setAttribute('aria-hidden', 'true');
+      bookmarkCell.appendChild(bookmark);
+      leadRow.appendChild(bookmarkCell);
+
+      block.appendChild(leadRow);
       wrap.appendChild(block);
     });
     return wrap;

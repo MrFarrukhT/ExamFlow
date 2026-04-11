@@ -1,5 +1,145 @@
 # Eye Journal
 
+## Session: 2026-04-11 16:30 — Zarmed Olympiada Cambridge-Authentic UI — Round 16
+Persona: Student on Part 7 gapped-text with a realistic 7-paragraph bank (CAE Part 7 has 6 gaps + 7 paragraphs incl. 1 extra) | System: Zarmed Olympiada standalone (port 3004)
+Pages explored: test.html Part 7 (stressed with real-length passage + full 7-card paragraph bank), plus ALL 5 pages for a rebrand check
+Starting state: Round 15 fixed long-passage sticky question column in two-col layout. Round 15 ended with a prediction: "Round 15 is the first time I stressed content length... there might be more content-length-dependent bugs in other renderers (Part 7 gapped-text)". This round tested that prediction. **The prediction was correct.**
+
+### Round 16a — OUT-OF-BAND rebrand (user provided the real logo mid-round)
+
+Mid-round, the user sent me the **official Zarmed University logo** (`logo.png` at project root, 330×106) and noted that the app had been using "Zarmet" (wrong name, with a T) and a made-up "ZU" gradient shield throughout. Pivoted immediately to fix the branding before continuing the round 16 eye work.
+
+**What I changed:**
+- Copied `logo.png` → `zarmet-olympiada/public/assets/logo.png`
+- Replaced 4× `.zu-shield` divs (welcome/dashboard/done/admin) with `<img class="zu-logo">` at 260px width
+- Replaced `.ct-shield` + `.ct-brand-name` in test.html header with `<img class="ct-logo">` at 36px height (the logo's 3:1 aspect = ~112px wide). Removed the duplicate "Zarmet University" text since the wordmark is already in the logo
+- Dropped `<h1>Zarmet University</h1>` on welcome + dashboard (redundant with the logo's wordmark) and promoted the page context ("C1 Language Olympiada") to h1 instead
+- Renamed all user-visible "Zarmet" → "Zarmed": page titles, server startup banner, README.md H1, SCHEMA.md intro, package.json description, Launch .bat script (title, echo, renamed file: `Launch Zarmet Olympiada.bat` → `Launch Zarmed Olympiada.bat`)
+- Default admin password: `zarmet-admin` → `zarmed-admin` (cosmetic default — prod should override via env var)
+- CSS: added `.zu-logo` (block 260px) and `.ct-logo` (36px tall) rules, removed old `.zu-shield`/`.ct-shield` gradient rules. Updated CSS comments.
+
+**Deliberately NOT renamed** (internal identifiers, not user-visible, breaking to touch):
+- Directory `zarmet-olympiada/`
+- npm package name `zarmet-olympiada`
+- Postgres table `zarmet_olympiada_submissions` — explicitly part of ADR-035 durability model, mandate says don't touch
+- CSS class prefixes `.zu-*` / `.ct-*`
+- localStorage keys `olympiada:*`
+
+**Verified visually** at 1280×720 on all 5 pages (welcome / dashboard / test / admin / done). The real shield-and-wordmark logo reads at a glance, the page titles are coherent ("C1 Language Olympiada" instead of "Zarmet University"), and the test runner chrome looks more authentic with a real brand mark instead of a made-up gradient tile. Screenshots: `r16-welcome-rebrand.png`, `r16-dashboard-rebrand.png`, `r16-test-rebrand.png`, `r16-admin-rebrand.png`, `r16-done-rebrand.png`.
+
+**Shipped as a separate commit** (543e7bb) because the rebrand is conceptually unrelated to Round 16's Part 7 scroll-affordance fix. Clean git history: one commit per concern.
+
+### Round 16b — Parallel test-chrome authenticity pass
+
+While I was focused on the Part 7 scroll affordance, a parallel /loop 10m /eye iteration shipped a broader Cambridge-chrome authenticity pass on the test runner. Those changes are included in the same commit as round 16 because they're conceptually one polish wave:
+
+- **Test header icon row:** added decorative mask-based icons (wifi, bell, menu, pencil) to `.ct-header-right` to mirror the authentic Cambridge Inspera top-right chrome. Non-interactive — purely visual.
+- **`.ct-header-audio` wrapper:** moved the audio status into its own container between the candidate ID and the timer/icons, matching Inspera's layout order.
+- **`.ct-brand-text` wrapper removed:** `.ct-brand-sub` now sits as a direct child of `.ct-header-brand`. The CSS for `.ct-brand-sub` was rewritten to Arial sans-serif (not uppercase) so it reads as a gentle subtitle next to the official logo, not a competing brand mark.
+- **Part 1 (multiple-choice cloze) rebuilt** to match `cae/examples/1.png`: inline bordered MC select with a number prefix inside the box, empty placeholder (was an em-dash), focus handler so clicking/tabbing the select highlights the active question.
+- **Part 4 (key-word transformation) rebuilt** to match `cae/examples/4.png`: first sentence + bold keyword + lead-in sentence with the `______` blank replaced by a bordered input containing the question number + the input field + a bookmark icon. Handles several blank-token patterns (3+ underscores in the content).
+
+These changes are structurally sound and match the Cambridge reference screenshots. No regressions expected because each part renderer is independent.
+
+### Round 16c — Part 7 paragraph bank scroll affordance
+
+**Explored:** Injected realistic Part 7 content into the page — 7 paragraph blocks with 6 interleaved slots (q41-q46) in the passage, and 7 paragraph cards (A-G) in the bank. Real CAE Part 7 has exactly this shape: 6 gaps + 7 paragraphs (1 extra/unused).
+
+**Finding:**
+
+- [T3] **Paragraph bank appears complete when it isn't.** Measured at 1280×720 after round 15's sticky column was applied:
+  - Right column container clientHeight: 488px (from the round 15 `calc(100vh - 160px - 72px)` constraint)
+  - Paragraph bank scrollHeight: 816px (7 cards × ~108px each + header + padding)
+  - At scrollTop=0, only cards A-D are fully inside the visible rect. E is partially visible, F and G are completely below the viewport.
+  - **No visible scroll indicator at all:**
+    - `scrollbar-width` was default → Chrome/Edge on Windows renders overlay scrollbars that hide unless the user is actively scrolling
+    - No shadow, no fade, no "more below" affordance
+    - The bank container just cuts off cleanly at the bottom as if it were a complete list
+  
+  Root cause: Round 15 added `overflow-y: auto` + `max-height` to the sticky column but relied on the default browser scrollbar behavior. On Chrome/Edge, overlay scrollbars are invisible until hover. A student looking at the paragraph bank would reasonably conclude there are only 4 options (A-D) and never discover E/F/G. This is test-breaking: if the right answer for slot 43 is paragraph F, the student literally cannot find it.
+  
+  **Why round 15 missed it:** round 15 was about the QUESTION column going off-screen. It fixed that via sticky positioning. But the fix made the column a constrained scrollable viewport, and I didn't think about what happens when the content inside that viewport overflows. Test stubs have 4 short paragraphs, which happens to fit the 488px window, so the overflow never showed during round 15 verification.
+
+**Action:** POLISH (CSS-only, one rule block extended)
+
+- [T3] Force a visible thin scrollbar on `.ct-two-col > .ct-col:nth-child(2)`:
+  ```css
+  scrollbar-width: thin;
+  scrollbar-color: var(--ct-border-strong) transparent;
+  ```
+  Plus explicit WebKit-side styling (`::-webkit-scrollbar`, `::-webkit-scrollbar-thumb`, `::-webkit-scrollbar-track`) so Chrome/Edge renders a persistent thin scrollbar thumb instead of the hidden overlay default. The thumb uses `--ct-border-strong` (grey `#d1d5db`) for visibility against the bank's grey background without being loud.
+
+- [T3] Added a bottom-fade pseudo-element — a `::after` with `position: sticky; bottom: 0; height: 28px` and a linear gradient from transparent to `var(--ct-banner-bg)`. The sticky positioning makes it stick to the bottom of the scrollable container at all scroll positions. At scroll=0 with overflowing content, the last visible card appears to melt into the bank's grey background — a clear "there's more below" affordance. At scroll=max (bottom), the fade is still there but covers nothing (last card has padding above it), so it reads as a subtle bottom edge, not a misleading cue.
+  
+  Responsive reset: at `@media (max-width: 880px)` the sticky layout collapses, and I also set `.ct-two-col > .ct-col:nth-child(2)::after { display: none }` to hide the fade in the stacked single-col layout where it would be nonsensical.
+  
+  Mode: polish | Quality: 3 → 5 | Files: public/css/styles.css
+
+### Verification
+
+**Before fix** (Part 7 at 1280×720 with 7 paragraph cards):
+```
+rightColClientH: 488
+rightColScrollH: 816
+Visible cards: A, B, C, D (E partially, F and G completely hidden)
+Scrollbar visible: NO (Chrome overlay default)
+Fade: NO (none)
+→ Student sees 4 cards, can't find F or G
+```
+
+**After fix** (same scenario):
+```
+scrollbar-width: thin
+::-webkit-scrollbar width: 10px, thumb #d1d5db, always rendered
+::after: sticky bottom:0, 28px, linear-gradient → var(--ct-banner-bg)
+Cards A-E visible, F peeks at bottom fading into the gradient
+→ Student sees the fade + scrollbar, scrolls, finds F and G
+```
+
+**Scroll-to-bottom regression check:** scrollTop = scrollHeight shows card G fully in view, fade still at bottom but covers only whitespace/card padding. Reads as a gentle bottom edge, not a false "more below" cue.
+
+**Narrow viewport regression:** At 700×720 (below 880px breakpoint), computed styles verified: `rcPosition: static`, `rcOverflow: visible`, `afterDisplay: none`. The stacked single-col layout has no sticky, no fade, no inner scroll — the paragraph bank flows naturally below the passage.
+
+**Part 1 regression** (single-col layout, no `.ct-two-col`): unchanged. The new `.ct-two-col > .ct-col:nth-child(2)` selector scopes only to two-col parts.
+
+Screenshots:
+- `r16-part7-long-initial.png` — before fix, showing 4 visible cards with no scroll indicator
+- `r16-final-scroll-affordance.png` — after fix, fade + scrollbar visible
+- `r16-fade-at-bottom.png` — scrolled to bottom, fade is subtle
+- `r16-part1-regression.png` — Part 1 unchanged
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| All 5 .zu pages + test chrome | **5-Crafted** | Real Zarmed University logo replaces made-up ZU shield |
+| test.html Part 7 (gapped-text) | **5-Crafted, stress-tested** | Scrollable bank now has visible scrollbar + bottom fade; overflow is discoverable |
+| test.html Parts 5/6/8 (other two-col) | **5-Crafted** | Same fix benefits any two-col part where the right column overflows |
+
+### Deferred (thin)
+- Bookmark clickability — feature
+- Cross-tab sync — feature
+- Anti-cheat copy-block — feature
+- Real content transcription — content phase (the REAL content is what makes all this layout work visible to the user)
+
+### Session Stats
+Pages explored: 6 (welcome, dashboard, test Part 7 stressed, admin, done, Part 1 regression)
+Screenshots captured: 10 (5 rebrand verification + 5 part-7 verification)
+Rounds: 2 concerns shipped in 1 session (rebrand + part 7 fix)
+Polishes landed: 2 (scrollbar visibility + sticky bottom fade)
+Rebrands landed: 1 (logo + name + title hierarchy)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 3
+
+**Trajectory update:** Round 15 predicted content-length stress would expose bugs in other renderers. Round 16 confirmed — Part 7 with real-length content + full paragraph bank exposed a test-breaking affordance gap (hidden overflow). The lesson holds: **stub content hides layout bugs that real content exposes**. Every future round should stress content length where possible, not just navigation flows and viewport dimensions.
+
+**Bonus lesson from the rebrand:** The user's logo.png delivery mid-round was a reminder that Eye should never ASSUME the branding it sees is correct. The made-up "ZU" shield and fake "Zarmet" name had survived through 15 rounds because they looked plausible. Next time I see placeholder-looking branding on an app I don't know, I should ask early rather than iterate on a fake brand.
+
+**Recommended next angle:** stress-test Part 8 (multi-matching) with real-length content. Part 8 has a two-col layout where the left column has multiple short texts (statements 47-56) and the right column has the full passage. If statements overflow, the student might miss some. Also untested: Listening Part 4 two-task with real-length dialogue transcript.
+
+---
+
 ## Session: 2026-04-11 16:05 — Zarmet Olympiada Cambridge-Authentic UI — Round 15
 Persona: Student reading a realistic-length CAE passage (5000+ chars = real exam length) | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: test.html Part 5 with a stress-test passage injected via JS eval
