@@ -1,5 +1,64 @@
 # Eye Journal
 
+## Session: 2026-04-11 17:10 — Zarmed Olympiada Official-Exam Replication — Round 19 (/loop iteration)
+Persona: Student walking Parts 5-8 reading + Listening 1-4 with real content loaded | System: Zarmed Olympiada standalone (port 3004)
+Pages explored: Reading Part 5 (athletes under pressure), Part 6 (national parks), Part 7 (audiobook recording), Listening Part 1 (coral reefs), Listening Part 3 (chefs interview)
+Starting state: Round 17 shipped structural matches. Round 17b caught + reverted a spec-drift (decorative header icons — intent plan rejects them). Round 18 shipped listening sentence-completion inline inputs + Part 3 keyword list highlight + speaker chromeless select. Round 19 is the /loop's next firing — revisit the real-content parts looking for finer gaps that prior rounds couldn't find with stub content.
+
+**Intent-plan compliance check (per round 17b's lesson):** Re-read `docs/intent-olympiada-cambridge-ui.md` BEFORE shipping. Plan says Part 7 "passage shows `[[SLOT:q41]]` as a numbered box where a paragraph gets dropped" — my Part 7 slot cleanup moves closer to this ideal (literal numbered box, no helper text). ✅ No spec drift.
+
+### Round 19 — Two polishes: Part 7 slot cleanup + softened active pill
+
+**Explored:** Walked Reading Parts 5, 6, 7 + Listening Parts 1, 3 all with real transcribed content (Athletes under pressure, National parks reviewers, audiobook recording, coral reefs listening, chefs interview). Real content made two visual issues obvious.
+
+**Findings:**
+
+- [T3 — inefficient] **Part 7 gapped-text slot showed literal helper text "Click here, then click a paragraph to assign it"** inside each empty slot. Official `cae/examples/7.png` and the intent plan both describe a "numbered box" — no helper text. The text cluttered the passage flow and read as amateurish UX.
+
+- [T4 — rough] **Part 7 slots used DASHED borders** with pale gray background. Official uses SOLID 1px border on white background. Dashed variant reads as "placeholder / work in progress"; solid reads as "authentic exam input field".
+
+- [T4 — rough] **Active question pill too strong across MC parts** (Parts 5/6/8 reading + Listening Parts 1/3). Used `#ecfeff` background + full `var(--ct-teal)` border — jumped off the page. Official shows much subtler: pale `#f0fdfa` + thin soft-teal border. Old styling implied "this is your SELECTED answer" rather than "this is the question you're currently reading" — overloading the signal.
+
+**Action:** POLISH (3 changes — 1 JS + 2 CSS)
+
+- [T3] **Part 7 slot helper text removed** — `renderPart7` no longer appends "Click here, then click a paragraph..." for empty slots. Also switched the slot number source from `q.prompt` (could be a stray string) to `extractQuestionNumber(q)` for a guaranteed-clean number.
+  Mode: polish | Quality: 3 → 5 | Files: public/js/test.js
+
+- [T4] **Part 7 slot solid border** — `.ct-slot` rewritten: `2px dashed` → `1px solid var(--ct-text)`; background `#fafafa` → white; min-height 56→48; border-radius 3→2. Hover state now only swaps background (no border-style change). Active state uses a teal `box-shadow` outline instead of color swap. `.ct-slot-number` got a right-border separator matching `.ct-gap-num` / `.ct-inline-mc-num` visual language.
+  Mode: polish | Quality: 3 → 5 | Files: public/css/styles.css
+
+- [T4] **Active question pill softened** — `.ct-question--active` background `#ecfeff` → `#f0fdfa` (pale teal-soft), border-color `var(--ct-teal)` → `var(--ct-teal-soft)`. `.ct-question` padding adjusted, border-radius 3→2. Active question still clearly marked but no longer dominates the column with a loud outline. Matches Cambridge's more restrained look across l1/l3/l5/5.png.
+  Mode: polish | Quality: 4 → 5 | Files: public/css/styles.css
+
+### Verification
+
+Screenshots captured with real content and compared against official references:
+- `r19v-part7.png` vs `cae/examples/7.png` — matches. Slot 41 and 42 render as clean bordered empty rectangles with just the number. "What it was like to record my own audiobook" passage flows uninterrupted. Paragraph bank cards A-G on the right still work.
+- `r19v-part5.png` vs `cae/examples/5.png` — matches. Active question 31 ("When describing Boswell's problem...") has the softer pale-teal background. Questions 32, 33 plain. The passage + questions look much closer to Cambridge's restrained layout.
+- Real content: "Athletes under extreme pressure sometimes can't perform..." reads correctly in the left column with Questions 31-36 stacked in the right.
+
+No regressions: Part 4 KWT still uses its own `.ct-kwt-block.ct-question--active` override (border-left accent only — not affected by the softened base). Part 3 keyword list active-row still works. Listening Part 2 sentence-completion uses `.ct-listen-sc-row` override. All three scoped overrides continue to take precedence.
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| Reading Part 7 (gapped text) | **5-Crafted** | Clean bordered slots, no helper text clutter |
+| Reading Parts 5/6/8 active question | **5-Crafted** | Subtle pale teal, restrained active state |
+| Listening Parts 1/3 active question | **5-Crafted** | Same subtle active state (shared class) |
+
+### Session Stats
+Pages explored: 5 (Reading Parts 5, 6, 7 + Listening Parts 1, 3)
+Rounds: 1 (round 19 of the eye cycle)
+Polishes landed: 3
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 3
+
+**Trajectory update:** Each /loop iteration finds smaller, finer gaps. Round 17 was T5/T4 structural. Round 18 was T3/T4 (listening inline inputs, keyword highlight). Round 19 is T3/T4 polish (slot cleanup, active pill). The quality ceiling is close; remaining work is either micro-polish or content transcription (deferred per mandate). Round 17b's lesson was applied: I re-read the intent plan before shipping, and both changes are consistent with it.
+
+---
+
 ## Session: 2026-04-11 17:05 — Zarmed Olympiada Spec-Compliance Sweep — Round 17b (intent-plan revert)
 Persona: Student walking the full flow AND an invigilator comparing chrome against the intent spec | System: Zarmed Olympiada standalone (port 3004)
 Pages explored: welcome, dashboard, all 8 Reading parts, all 4 Listening parts (including Part 4 two-task), done page — 14 pages total

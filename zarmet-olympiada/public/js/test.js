@@ -32,7 +32,13 @@
     currentPartIndex: 0,
     currentQid: null,
     answers: {},
-    audioState: {},         // partId -> 'not-started' | 'playing' | 'finished'
+    audioState: {},         // partId -> 'not-started' | 'playing' | 'finished' (per-part audio — rarely used)
+    listeningGate: 'closed', // 'closed' | 'opened' — single gate for the WHOLE listening module.
+                             //   closed = show pre-play modal on first listening part visit
+                             //   opened = student clicked Play once; no modal on subsequent parts.
+                             // Rationale: real CAE Listening is a single continuous 40-minute
+                             // recording that covers all four parts. Showing a modal on every
+                             // part breaks the listener and contradicts the exam format.
     audioElement: null,     // currently live Audio instance (if any)
     activeSlotQid: null,    // for gapped-text: which slot is selected for assignment
     timerEndMs: null,
@@ -555,9 +561,12 @@
     const wrap = el('div', 'ct-part');
     wrap.dataset.partId = part.id;
 
-    // Check if pre-play modal needed
-    const audioState = state.audioState[part.id] || 'not-started';
-    if (part.audio && audioState === 'not-started') {
+    // Pre-play gate — shown ONCE for the entire listening module. Real CAE
+    // Listening is a single continuous 40-minute recording covering all four
+    // parts; showing a modal on every part break would be jarring and wrong.
+    // First listening part with audio shows the gate; subsequent parts skip it
+    // because state.listeningGate stays 'opened' for the rest of the session.
+    if (part.audio && state.listeningGate === 'closed') {
       const modal = buildPrePlayModal(part);
       wrap.appendChild(modal);
     }
@@ -716,12 +725,14 @@
     return overlay;
   }
 
-  // Start audio for a part (strict: auto-play, no controls)
+  // Start audio for a part (strict: auto-play, no controls). Flips the
+  // listeningGate permanently so subsequent listening parts don't re-prompt.
   function startAudio(part) {
     if (state.audioElement) {
       try { state.audioElement.pause(); } catch (e) {}
       state.audioElement = null;
     }
+    state.listeningGate = 'opened';
     state.audioState[part.id] = 'playing';
     // Log to server — used for refresh-sneakiness integrity flag
     fetch('/api/session/' + encodeURIComponent(sessionId) + '/audio-play', {
