@@ -1,0 +1,67 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Zarmed University" [ref=e4]
+      - generic [ref=e5]: C1 Olympiada
+    - generic [ref=e6]:
+      - generic [ref=e7]: Candidate ID
+      - generic [ref=e8]:
+        - text: Test Student
+        - generic [ref=e9]: c271f72b
+    - generic [ref=e11]: 83:16
+  - generic [ref=e17]:
+    - generic [ref=e18]: Questions 41–42
+    - text: You are going to read an article about Scottish wildcats. Six paragraphs have been removed from the article. Choose from the paragraphs A-G the one which fits each gap (41-46). There is one extra paragraph which you do not need to use.
+  - main [ref=e19]:
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - heading "Scottish Wildcat" [level=3] [ref=e23]
+        - generic [ref=e24]:
+          - text: Its long bushy coat and tail are a perfect camouflage.
+          - generic [ref=e25] [cursor=pointer]:
+            - generic [ref=e26]: "41"
+            - text: Click here, then click a paragraph to assign it
+          - text: However, the physical differences are tangible. The wildcat is a much larger animal than a domestic tabby cat.
+          - generic [ref=e27] [cursor=pointer]:
+            - generic [ref=e28]: "42"
+            - text: Click here, then click a paragraph to assign it
+          - text: It is a huge range for such a small cat.
+      - generic [ref=e30]:
+        - heading "Paragraphs" [level=4] [ref=e31]
+        - generic [ref=e32] [cursor=pointer]: AStealthy by nature, wildcats have been known to hunt alone for days at a stretch.
+        - generic [ref=e33] [cursor=pointer]: BGenetic testing has confirmed the rarity of pure-bred individuals.
+        - generic [ref=e34] [cursor=pointer]: CYet despite its elusiveness, the Scottish wildcat is one of Britain's most iconic animals.
+        - generic [ref=e35] [cursor=pointer]: DThis is one reason conservationists have raised concerns about hybridisation.
+        - generic [ref=e36] [cursor=pointer]: EExtra paragraph — not used.
+  - navigation [ref=e37]:
+    - generic [ref=e38]:
+      - button "Part 1 0 of 1" [ref=e39] [cursor=pointer]:
+        - generic [ref=e40]: Part 1
+        - generic [ref=e41]: 0 of 1
+      - button "Part 2 0 of 1" [ref=e42] [cursor=pointer]:
+        - generic [ref=e43]: Part 2
+        - generic [ref=e44]: 0 of 1
+      - button "Part 3 0 of 1" [ref=e45] [cursor=pointer]:
+        - generic [ref=e46]: Part 3
+        - generic [ref=e47]: 0 of 1
+      - button "Part 4 0 of 1" [ref=e48] [cursor=pointer]:
+        - generic [ref=e49]: Part 4
+        - generic [ref=e50]: 0 of 1
+      - button "Part 5 0 of 1" [ref=e51] [cursor=pointer]:
+        - generic [ref=e52]: Part 5
+        - generic [ref=e53]: 0 of 1
+      - button "Part 6 0 of 1" [ref=e54] [cursor=pointer]:
+        - generic [ref=e55]: Part 6
+        - generic [ref=e56]: 0 of 1
+      - generic [ref=e57] [cursor=pointer]:
+        - generic [ref=e58]: Part 7
+        - generic [ref=e59]:
+          - button "41" [ref=e60]
+          - button "42" [ref=e61]
+      - button "Part 8 0 of 1" [ref=e62] [cursor=pointer]:
+        - generic [ref=e63]: Part 8
+        - generic [ref=e64]: 0 of 1
+    - generic [ref=e65]:
+      - button "Previous" [ref=e66] [cursor=pointer]: ←
+      - button "Next" [ref=e67] [cursor=pointer]: →
+      - button "Finish" [ref=e68] [cursor=pointer]: ✓
