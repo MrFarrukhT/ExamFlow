@@ -383,7 +383,32 @@ body.zu-welcome .page {
 .zu-admin-table tr.zu-row-correct:hover td,
 .zu-admin-table tr.zu-row-wrong:hover td,
 .zu-admin-table tr.zu-row-blank:hover td { background: #eff6ff; cursor: default; }
-.zu-toolbar { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+.zu-toolbar { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+
+/* Admin table gets wrapped in this container so the table scrolls
+ * horizontally at narrow widths instead of pushing the entire <body>
+ * into overflow. Without this, a 6-column table + long date strings
+ * blow out the viewport to ~660px on a 375px mobile device. */
+.zu-admin-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--zu-border-strong) transparent;
+  border-radius: 8px;
+  margin-top: 1.5rem;
+}
+.zu-admin-table-wrap::-webkit-scrollbar { height: 8px; }
+.zu-admin-table-wrap::-webkit-scrollbar-track { background: transparent; }
+.zu-admin-table-wrap::-webkit-scrollbar-thumb {
+  background: var(--zu-border-strong);
+  border-radius: 4px;
+}
+/* Give the table a minimum width so columns stay readable; the wrap
+ * handles the overflow. */
+.zu-admin-table-wrap .zu-admin-table {
+  min-width: 640px;
+  margin-top: 0;
+}
 .zu-done { text-align: center; padding: 4rem 2rem; }
 
 .zu-empty-state {
@@ -1691,4 +1716,15 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   .zu-welcome-panel .zu-welcome-name { font-size: 1.25rem; }
   .zu-module-card { padding: 1.5rem 1.25rem; }
   .zu-module-card h3 { font-size: 1.25rem; }
+
+  /* Admin toolbar buttons are chunky at mobile — shrink them so
+   * Refresh / Export CSV / Export JSON all fit in one row without
+   * overflow, or gracefully wrap to two rows without taking 30% of
+   * the viewport per button. */
+  .zu-toolbar .zu-btn {
+    font-size: 0.95rem;
+    padding: 0.65rem 1rem;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
 }

@@ -159,7 +159,7 @@
       parts.push(`<h2>${escape(rec.student)} — ${escape(fmtLang(rec.lang))} / ${escape(fmtSkill(rec.skill))}</h2>`);
       parts.push(`<p><strong>Score:</strong> ${rec.score.earned} / ${rec.score.total}</p>`);
       parts.push(`<p><strong>Started:</strong> ${fmtTime(rec.startedAt)} &nbsp; <strong>Finished:</strong> ${fmtTime(rec.finishedAt)}</p>`);
-      parts.push('<table class="zu-admin-table"><thead><tr><th>Q</th><th>Type</th><th>Student</th><th>Correct</th><th>Points</th></tr></thead><tbody>');
+      parts.push('<div class="zu-admin-table-wrap"><table class="zu-admin-table"><thead><tr><th>Q</th><th>Type</th><th>Student</th><th>Correct</th><th>Points</th></tr></thead><tbody>');
       (rec.score.perQuestion || []).forEach((q) => {
         const correctText = fmtCorrect(q.correctAnswer);
         const studentText = fmtStudentValue(q.studentValue);
@@ -176,7 +176,7 @@
           </tr>`
         );
       });
-      parts.push('</tbody></table>');
+      parts.push('</tbody></table></div>');
       body.innerHTML = parts.join('');
       show(detailView);
     } catch (e) {

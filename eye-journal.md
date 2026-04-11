@@ -1,5 +1,67 @@
 # Eye Journal
 
+## Session: 2026-04-11 18:30 — Zarmed Olympiada Admin Mobile Overflow — Round 30 (/loop iteration)
+Persona: Invigilator grading submissions from a phone (or laptop held narrow) | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: admin.html login / list / detail at 375×812 and 1920×1080
+Starting state: Round 29 explicitly deferred "Admin list view mobile" as tables are inherently wide. Round 30 un-defers it. Walked admin at 375×812 — **body.scrollWidth 660 vs window.innerWidth 375**. A 285px horizontal overflow meaning the whole admin page had a horizontal scrollbar on `<body>`. The toolbar's "Export JSON" button was cut off, the 6-column table extended past the viewport, and the experience read like "this page isn't for you."
+
+### Round 30 — 1 compound issue, 3-part fix
+
+**Finding:**
+
+- [T3] **Admin list view body-level horizontal overflow at 375px.** Three root causes compounded:
+  1. `.zu-admin-table` had `width: 100%` but its 6-column content needed ~640px minimum → table pushed body wider.
+  2. `.zu-toolbar` flex container had no `flex-wrap` → 3 full-size buttons pushed "Export JSON" off-screen.
+  3. Mobile admin buttons used desktop padding (1rem 2rem) → chunky even when wrapped.
+
+**Action:** POLISH — one commit fixing all three.
+
+**Files touched:**
+
+1. **`admin.html`** — wrapped the list-view `<table>` in a new `<div class="zu-admin-table-wrap">`. Overflow scopes to the table, not the body.
+
+2. **`admin.js`** — `openDetail()` now emits `<div class="zu-admin-table-wrap">` around its generated detail table string, so both admin tables (list + detail) get the same treatment.
+
+3. **`styles.css`**:
+   - New `.zu-admin-table-wrap` block with `overflow-x: auto`, `-webkit-overflow-scrolling: touch`, `scrollbar-width: thin`, `scrollbar-color`, explicit WebKit scrollbar rules so the horizontal scrollbar is always visible (not overlay-hidden on Chrome/Edge), border-radius 8px to match the table's existing rounding.
+   - `.zu-admin-table-wrap .zu-admin-table { min-width: 640px; margin-top: 0 }` — table stays readable, wrap scrolls.
+   - `.zu-toolbar { flex-wrap: wrap }` — graceful 2-row wrap instead of overflow.
+   - Mobile `@media (max-width: 540px)` extension: `.zu-toolbar .zu-btn { font-size: 0.95rem; padding: 0.65rem 1rem; flex: 1 1 auto; min-width: 0 }` — buttons shrink to fit the row width.
+
+### Verification
+
+- **Mobile list** (`eye-r30-03-admin-list-fixed.png`): body width 375 = viewport 375. No horizontal body scroll. Toolbar wraps to 2 rows. Table visible in its own scroll wrap.
+- **Mobile list scrolled** (`eye-r30-04-admin-list-scrolled.png`): `wrap.scrollLeft = 300` reveals LANGUAGE/SKILL/SCORE columns — "English C1 / Reading / 1 of 78" readable.
+- **Mobile detail** (`eye-r30-05-admin-detail-mobile.png`): compact header (round 24's body.zu-admin-detail still intact), title wrapping cleanly, per-question table with color-coded rows (red wrong, green correct, gray blank).
+- **Desktop detail regression** (`eye-r30-06-admin-detail-desktop.png`): Full 5-column table visible without scroll, compact header intact. No regression.
+- **Table wrap measurements**: `.zu-admin-table-wrap scrollWidth=643, clientWidth=341, overflow=true` — containment confirmed.
+
+### Quality Map
+
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| Admin list mobile | 2-Clear (body overflow) → **5-Crafted** | Wrap scrolls, toolbar wraps |
+| Admin detail mobile | 3-Efficient → **5-Crafted** | Both tables wrapped in openDetail() |
+| Admin toolbar | 3-Efficient → **5-Crafted** | flex-wrap + mobile button tuning |
+
+### Deferred
+
+- **Admin list card layout at mobile.** One card per submission (stacked: finished → student → lang/skill/score) would be cleaner than a scrollable table but is a rebuild, not a polish. Flag for future rebuild session if admin is used on phones routinely.
+- **Admin date format mobile.** "4/11/2026, 11:04:56 PM" wraps to 3 lines. Could shorten to "04/11 23:04" at mobile. Content decision.
+
+### Session Stats
+
+Pages explored: 4 (admin login/list/detail mobile + desktop regression)
+Findings: 1 (compound T3 with 3 root causes)
+Polishes landed: 1 commit with 3 file changes (admin.html, admin.js, styles.css)
+Reverted: 0
+
+**Trajectory note:** Round 29 flagged admin list mobile as deferred and wrote "tables are inherently wide — might need horizontal scroll or card-per-row rebuild." Round 30 took the horizontal-scroll path. **Lesson: a deferred-from-prior-round item is the single best candidate for the next round's primary focus** — the prior round already did triage and confirmed the issue is real. Zero finding-effort, just fix it.
+
+**Key learning:** `overflow-x: auto` on a dedicated wrapper div + `min-width: Npx` on the child table is the standard pattern for responsive tables in vanilla CSS. Every admin table should use this pattern from the start. Add "table always in a wrap" to the component checklist.
+
+---
+
 ## Session: 2026-04-11 18:30 — Zarmed Olympiada Noindex Defensive Meta — Round 22f (parallel iteration)
 Persona: Security-minded admin who might accidentally expose the app via an ngrok tunnel or port-forward, plus a search crawler that somehow reaches a test URL | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: All 5 HTML pages (head meta audit + curl verification)
