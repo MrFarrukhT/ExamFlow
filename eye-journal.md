@@ -1,5 +1,92 @@
 # Eye Journal
 
+## Session: 2026-04-11 17:50 — Zarmed Olympiada Polish Pass — Round 24 (/loop iteration)
+Persona: Student finishing a test + admin opening a submission detail | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: welcome console (404 check), test.html finish flow, admin.html login + list + detail view
+Starting state: Round 22 landed the user's 4 named issues (audio gate, brand palette, typography, layout) + a bunch of elevations. Round 23 was a zero-change verification round. This round (24) walks the app FRESH looking for issues previous rounds MISSED.
+
+### Round 24 — 5 new issues found + fixed
+
+**Findings:**
+
+- [T0] **`GET /favicon.ico 404` on every page load.** Browser console on first page-open showed `Failed to load resource: 404 @ /favicon.ico`. No favicon had ever been set, so every browser logs a 404 against the server on every reload. Cosmetically harmless but reads as "half-finished" in production.
+
+- [T4] **Native `window.confirm()` on test finish.** Clicking the ✓ button triggered a generic browser confirm dialog ("Finish this test? You can't come back.") instead of the styled modal language used everywhere else (pre-play modal, error modal). Browser chrome on OK/Cancel, no Inter typography, no brand blue. Dialog literally says "the browser's not part of this app."
+
+- [T4] **Native `alert()` on submit failure.** `test.js:1283` was `alert(t.submitFailed(e.message))`. Same inconsistency, lower visibility.
+
+- [T4] **Native `alert()` on admin "Failed to open submission".** Same pattern in `admin.js:178`.
+
+- [T3] **Admin submission detail view header wasted ~300px.** The full-size welcome header (big logo + "Olympiada Results" h1 + subtitle) is shown above the list view AND the detail view. When viewing a specific submission, the admin wants to see the student's per-question table immediately — but it's buried below the header. At 1080p the student's answers don't show above the fold.
+
+**Action:** POLISH 4 fixes (all 4 issues shipped, all cheap, all independent).
+
+**Files touched:**
+
+1. **Favicon (all 5 HTML pages).** Created `zarmet-olympiada/public/assets/favicon.svg` — a 32×32 mini Zarmed shield drawn with brand colors (blue circle, white inner, gold inside, crimson bar). Added `<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">` to every HTML page. Verified `curl /assets/favicon.svg` returns 200.
+
+2. **Styled confirm modal (test.js + styles.css).**
+   - Added `submitConfirmTitle/Body/Yes/No` strings to the `t` localization table (both en and de).
+   - Added `showConfirmModal(title, body, yesLabel, noLabel, onYes)` helper right after `showErrorModal`. Takes a callback, builds an overlay + card + two buttons (ghost-Cancel, primary-Submit), focuses the primary button so keyboard users can press Enter to confirm.
+   - Refactored `submit(auto)` → `submit()` (shows confirm) + `performSubmit()` (does the work).
+   - Replaced `alert(t.submitFailed(e.message))` with `showErrorModal(t.submitFailed(e.message))` in the catch block.
+   - New CSS block `.ct-confirm-modal / .ct-confirm-card / .ct-confirm-actions / .ct-confirm-btn` — same visual language as `.ct-preplay-*`: 12px rounded card, blue top border, blur backdrop, `ctFadeIn 220ms` entrance. Primary is brand blue with shadow + press-down, ghost is transparent with slate border.
+   - ALSO upgraded `.ct-error-modal / .ct-error-card` CSS to match: rounded 12px card, crimson top border, deeper shadow, blur backdrop, bigger button with press-down. Previously it was a 2015-era 6px rounded card with a flat 1px border and an 8×20 button.
+
+3. **Admin compact detail header (admin.js + styles.css).**
+   - `show(view)` in admin.js now toggles `body.zu-admin-detail` when view === detailView.
+   - New CSS block `body.zu-admin-detail .zu-header`:
+     - `text-align: center → left`, `padding: 2rem 1rem 1.75rem → 1rem 0`, `margin-bottom: 2.5rem → 1.5rem`
+     - `display: flex; gap: 1.25rem` so the logo and h1 sit side-by-side
+     - Logo width `300px → 140px`, margin 0
+     - h1 font-size `2.6rem → 1.35rem`
+     - `.zu-subtitle { display: none }`
+   - Result: first answer row now above the fold at 1080p (verified in `eye-r23-07-admin-detail-compact.png`).
+
+4. **Admin alert → styled modal (admin.js).**
+   - Added inline `showAdminError(text)` helper at the bottom of the IIFE that creates a `.ct-error-modal .ct-error-card` overlay (reusing the test runner's CSS class for consistency).
+   - Replaced `alert('Failed to open submission: ' + e.message)` with `showAdminError(...)`.
+
+### Verification
+
+- **Favicon**: `curl http://localhost:3004/assets/favicon.svg` → HTTP 200. Browser console on page reload no longer shows a `/favicon.ico` 404 (browser uses the `<link rel=icon>` element instead).
+- **Confirm modal** (`eye-r23-06-confirm-modal.png`): Clicking ✓ now shows "Finish this test?" in a white card with blue top border, blurred backdrop. "Cancel" on left (ghost), "Yes, submit" on right (blue primary with shadow). Keyboard focus is on "Yes, submit".
+- **Error modal** (`eye-r23-08-error-modal.png`): Same modal system with crimson top border and crimson "OK" button. Used by both test.js (submit-failed) and admin.js (failed-to-open).
+- **Admin detail compact header** (`eye-r23-07-admin-detail-compact.png`): Shows the submission detail with a minimal brand strip on top (small logo + "Olympiada Results" side-by-side), then the submission title, then the per-question table — all visible at 1080p without scrolling.
+
+### Quality Map
+
+| Page | Layer (before → after) | Notes |
+|------|------------------------|-------|
+| All pages — favicon | 2-Clear (404 on reload) → **5-Crafted** | Branded mini-shield SVG favicon |
+| Test submit flow | 3-Efficient (native confirm) → **5-Crafted** | Styled modal matching pre-play/error system |
+| Test submit-failure path | 3-Efficient (native alert) → **5-Crafted** | Styled crimson error modal |
+| Admin detail-open failure | 3-Efficient (native alert) → **5-Crafted** | Same showAdminError modal |
+| Error modal styling | 3-Efficient (rough 2015-era card) → **5-Crafted** | Rounded 12px, crimson top border, blur backdrop |
+| Admin submission detail header | 3-Efficient (300px wasted) → **5-Crafted** | Compact brand strip, answers above the fold |
+
+### Deferred
+
+- **Submit button gate when 0 answers.** Currently a student can hit Finish with zero answers. Product decision, not Eye scope.
+- **Admin bulk-delete for old submissions.** New feature, not Eye scope.
+- **Timer warning state screenshots.** Couldn't reliably trigger amber/red without waiting 85 minutes. CSS looks correct (`.ct-timer--warn` amber, `.ct-timer--urgent` red + pulse).
+- **Completion banner screenshot.** Needs a full test completed + both modules done. CSS looks correct (green success card, centered check).
+
+### Session Stats
+
+Pages explored: 3 live surfaces (test.html finish, admin.html list + detail, welcome console)
+Findings: 5 (4× T4 rough, 1× T0 favicon polish)
+Polishes landed: 4 (favicon, confirm modal, error modal upgrade, compact admin detail header)
+Elevations: modal visual language unified across pre-play / confirm / error
+Reverted: 0
+Files touched: 8 (5 HTML files + favicon.svg + test.js + admin.js + styles.css)
+
+**Trajectory note:** Round 23 was a zero-change verification round that could have been spent finding NEW issues. Round 24 finds five concrete issues in a single 10-minute walk — one of them (native confirm on finish) had been live the entire project history and survived 23 /eye rounds unnoticed. **The lesson: verification rounds are cheap but finding-rounds are much higher value. After a big landmark like round 22, the next round should ALWAYS be gap analysis, not "did the last round land."**
+
+**Key learning:** Native browser dialogs (`confirm`, `alert`, `prompt`) are tier-4-rough by default in any app that has its own modal system. Future audits should grep for `confirm\(|alert\(|prompt\(` once per skill level as a zero-cost smoke check. 3 seconds of grep would have caught this in round 13 instead of round 24.
+
+---
+
 ## Session: 2026-04-11 17:46 — Zarmed Olympiada Verification Round — Round 23 (/loop iteration, ZERO CHANGES)
 Persona: Student trying to verify round 22's question-badge + finish-button changes visually | System: Zarmed Olympiada standalone (port 3004)
 Pages explored: Attempted Reading Part 1 verification — blocked by parallel iteration contention

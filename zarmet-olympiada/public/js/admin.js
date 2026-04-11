@@ -19,19 +19,24 @@
     listView.hidden = view !== listView;
     detailView.hidden = view !== detailView;
     // Narrow the page shell when showing login (centered password form);
-    // full width for list/detail which need room for the table.
-    // ALSO toggle body.zu-welcome so the login form gets the same
-    // vertically-centered composition as index.html/done.html — a
-    // narrow password input hugging the top of a 1080p canvas looked
-    // rough compared to the welcome page's centered polish. The list
-    // view needs top-down flow (toolbar + table + detail), so we
-    // remove the class there.
+    // full width for list/detail which need room for the table. Toggle
+    // body.zu-welcome so the login form gets the same vertically-centered
+    // composition as index.html/done.html.
     if (view === loginView) {
       adminPage.classList.add('page--narrow');
       document.body.classList.add('zu-welcome');
     } else {
       adminPage.classList.remove('page--narrow');
       document.body.classList.remove('zu-welcome');
+    }
+    // When viewing a submission's detail, the full-size welcome header
+    // (logo + h1 + subtitle) wastes ~300px of vertical space before the
+    // student's actual answers. Compact the header to a minimal brand
+    // strip so the per-question table shows immediately.
+    if (view === detailView) {
+      document.body.classList.add('zu-admin-detail');
+    } else {
+      document.body.classList.remove('zu-admin-detail');
     }
   }
 
@@ -175,8 +180,29 @@
       body.innerHTML = parts.join('');
       show(detailView);
     } catch (e) {
-      alert('Failed to open submission: ' + e.message);
+      showAdminError('Failed to open submission: ' + e.message);
     }
+  }
+
+  // Lightweight error modal matching the test runner's .ct-error-card style
+  // so the admin's failure path doesn't fall back to a native alert().
+  function showAdminError(text) {
+    const overlay = document.createElement('div');
+    overlay.className = 'ct-error-modal';
+    const card = document.createElement('div');
+    card.className = 'ct-error-card';
+    const h = document.createElement('h3');
+    h.textContent = 'Problem';
+    const p = document.createElement('p');
+    p.textContent = text;
+    const btn = document.createElement('button');
+    btn.textContent = 'OK';
+    btn.addEventListener('click', () => overlay.remove());
+    card.appendChild(h);
+    card.appendChild(p);
+    card.appendChild(btn);
+    overlay.appendChild(card);
+    document.body.appendChild(overlay);
   }
 
   // ---------- events ----------
