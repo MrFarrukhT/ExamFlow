@@ -1,0 +1,200 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Zarmed University" [ref=e4]
+      - generic [ref=e5]: C1 Olympiada
+    - generic [ref=e6]:
+      - generic [ref=e7]: Kandidaten-ID
+      - generic [ref=e8]:
+        - text: Klaus Fix
+        - generic [ref=e9]: 899ed454
+    - generic [ref=e11]: 39:37
+  - generic [ref=e13]:
+    - generic [ref=e14]: Fragen 7–15
+    - text: Sie hören ein Radiointerview mit einer Persönlichkeit aus der Wissenschaft. Sie hören den Text zweimal. Wählen Sie bei jeder Aufgabe die richtige Lösung. Lesen Sie jetzt die Aufgaben 7 bis 15. Dazu haben Sie 60 Sekunden Zeit.
+  - main [ref=e15]:
+    - generic [ref=e115]:
+      - generic [ref=e117]:
+        - paragraph [ref=e119]: Sie werden während dieses Tests eine Audiodatei hören. Sie können die Aufnahme nicht anhalten oder zurückspulen, während Sie die Fragen beantworten. Klicken Sie auf „Wiedergabe", um fortzufahren.
+        - button "Wiedergabe" [ref=e120] [cursor=pointer]
+      - generic [ref=e121]:
+        - generic [ref=e122]:
+          - generic [ref=e123]:
+            - generic [ref=e124]: "7"
+            - text: In den Medien zeigt sich ein zunehmendes Desinteresse der Deutschen an Politik.
+          - generic [ref=e126]:
+            - generic [ref=e127] [cursor=pointer]:
+              - radio "A stimmt" [ref=e128]
+              - generic [ref=e129]: A
+              - generic [ref=e130]: stimmt
+            - generic [ref=e131] [cursor=pointer]:
+              - radio "B stimmt nicht" [ref=e132]
+              - generic [ref=e133]: B
+              - generic [ref=e134]: stimmt nicht
+            - generic [ref=e135] [cursor=pointer]:
+              - radio "C dazu wird nichts gesagt" [ref=e136]
+              - generic [ref=e137]: C
+              - generic [ref=e138]: dazu wird nichts gesagt
+        - generic [ref=e139]:
+          - generic [ref=e140]:
+            - generic [ref=e141]: "8"
+            - text: Politikverdrossenheit ist ein von Wissenschaftlerinnen und Wissenschaftlern geprägter Ausdruck.
+          - generic [ref=e143]:
+            - generic [ref=e144] [cursor=pointer]:
+              - radio "A stimmt" [ref=e145]
+              - generic [ref=e146]: A
+              - generic [ref=e147]: stimmt
+            - generic [ref=e148] [cursor=pointer]:
+              - radio "B stimmt nicht" [ref=e149]
+              - generic [ref=e150]: B
+              - generic [ref=e151]: stimmt nicht
+            - generic [ref=e152] [cursor=pointer]:
+              - radio "C dazu wird nichts gesagt" [ref=e153]
+              - generic [ref=e154]: C
+              - generic [ref=e155]: dazu wird nichts gesagt
+        - generic [ref=e156]:
+          - generic [ref=e157]:
+            - generic [ref=e158]: "9"
+            - text: Politikerinnen und Politiker aus verschiedenen Ländern bestreiten, sie würden die Wahrheit vertuschen.
+          - generic [ref=e160]:
+            - generic [ref=e161] [cursor=pointer]:
+              - radio "A stimmt" [ref=e162]
+              - generic [ref=e163]: A
+              - generic [ref=e164]: stimmt
+            - generic [ref=e165] [cursor=pointer]:
+              - radio "B stimmt nicht" [ref=e166]
+              - generic [ref=e167]: B
+              - generic [ref=e168]: stimmt nicht
+            - generic [ref=e169] [cursor=pointer]:
+              - radio "C dazu wird nichts gesagt" [ref=e170]
+              - generic [ref=e171]: C
+              - generic [ref=e172]: dazu wird nichts gesagt
+        - generic [ref=e173]:
+          - generic [ref=e174]:
+            - generic [ref=e175]: "10"
+            - text: Das Misstrauen in die Politik äußert sich auch darin, dass große Parteien weniger Zulauf haben.
+          - generic [ref=e177]:
+            - generic [ref=e178] [cursor=pointer]:
+              - radio "A stimmt" [ref=e179]
+              - generic [ref=e180]: A
+              - generic [ref=e181]: stimmt
+            - generic [ref=e182] [cursor=pointer]:
+              - radio "B stimmt nicht" [ref=e183]
+              - generic [ref=e184]: B
+              - generic [ref=e185]: stimmt nicht
+            - generic [ref=e186] [cursor=pointer]:
+              - radio "C dazu wird nichts gesagt" [ref=e187]
+              - generic [ref=e188]: C
+              - generic [ref=e189]: dazu wird nichts gesagt
+        - generic [ref=e190]:
+          - generic [ref=e191]:
+            - generic [ref=e192]: "11"
+            - text: Herr Josek meint, dass die Wahlprogramme eher den Interessen der älteren Generation entsprechen.
+          - generic [ref=e194]:
+            - generic [ref=e195] [cursor=pointer]:
+              - radio "A stimmt" [ref=e196]
+              - generic [ref=e197]: A
+              - generic [ref=e198]: stimmt
+            - generic [ref=e199] [cursor=pointer]:
+              - radio "B stimmt nicht" [ref=e200]
+              - generic [ref=e201]: B
+              - generic [ref=e202]: stimmt nicht
+            - generic [ref=e203] [cursor=pointer]:
+              - radio "C dazu wird nichts gesagt" [ref=e204]
+              - generic [ref=e205]: C
+              - generic [ref=e206]: dazu wird nichts gesagt
+        - generic [ref=e207]:
+          - generic [ref=e208]:
+            - generic [ref=e209]: "12"
+            - text: Man kann auf der Politikverdrossenheit mit Aufklärung begegnen.
+          - generic [ref=e211]:
+            - generic [ref=e212] [cursor=pointer]:
+              - radio "A stimmt" [ref=e213]
+              - generic [ref=e214]: A
+              - generic [ref=e215]: stimmt
+            - generic [ref=e216] [cursor=pointer]:
+              - radio "B stimmt nicht" [ref=e217]
+              - generic [ref=e218]: B
+              - generic [ref=e219]: stimmt nicht
+            - generic [ref=e220] [cursor=pointer]:
+              - radio "C dazu wird nichts gesagt" [ref=e221]
+              - generic [ref=e222]: C
+              - generic [ref=e223]: dazu wird nichts gesagt
+        - generic [ref=e224]:
+          - generic [ref=e225]:
+            - generic [ref=e226]: "13"
+            - text: Die Mehrheit der Deutschen würde einen eher autoritären Führungsstil begrüßen.
+          - generic [ref=e228]:
+            - generic [ref=e229] [cursor=pointer]:
+              - radio "A stimmt" [ref=e230]
+              - generic [ref=e231]: A
+              - generic [ref=e232]: stimmt
+            - generic [ref=e233] [cursor=pointer]:
+              - radio "B stimmt nicht" [ref=e234]
+              - generic [ref=e235]: B
+              - generic [ref=e236]: stimmt nicht
+            - generic [ref=e237] [cursor=pointer]:
+              - radio "C dazu wird nichts gesagt" [ref=e238]
+              - generic [ref=e239]: C
+              - generic [ref=e240]: dazu wird nichts gesagt
+        - generic [ref=e241]:
+          - generic [ref=e242]:
+            - generic [ref=e243]: "14"
+            - text: Machtmissbrauch ist typisch für viele regierende Parteien.
+          - generic [ref=e245]:
+            - generic [ref=e246] [cursor=pointer]:
+              - radio "A stimmt" [ref=e247]
+              - generic [ref=e248]: A
+              - generic [ref=e249]: stimmt
+            - generic [ref=e250] [cursor=pointer]:
+              - radio "B stimmt nicht" [ref=e251]
+              - generic [ref=e252]: B
+              - generic [ref=e253]: stimmt nicht
+            - generic [ref=e254] [cursor=pointer]:
+              - radio "C dazu wird nichts gesagt" [ref=e255]
+              - generic [ref=e256]: C
+              - generic [ref=e257]: dazu wird nichts gesagt
+        - generic [ref=e258]:
+          - generic [ref=e259]:
+            - generic [ref=e260]: "15"
+            - text: Deutsche neigen weniger zu Populismus als andere Nationen.
+          - generic [ref=e262]:
+            - generic [ref=e263] [cursor=pointer]:
+              - radio "A stimmt" [ref=e264]
+              - generic [ref=e265]: A
+              - generic [ref=e266]: stimmt
+            - generic [ref=e267] [cursor=pointer]:
+              - radio "B stimmt nicht" [ref=e268]
+              - generic [ref=e269]: B
+              - generic [ref=e270]: stimmt nicht
+            - generic [ref=e271] [cursor=pointer]:
+              - radio "C dazu wird nichts gesagt" [ref=e272]
+              - generic [ref=e273]: C
+              - generic [ref=e274]: dazu wird nichts gesagt
+  - navigation [ref=e47]:
+    - generic [ref=e48]:
+      - button "Teil 1 0 of 6" [ref=e275] [cursor=pointer]:
+        - generic [ref=e276]: Teil 1
+        - generic [ref=e277]: 0 of 6
+      - generic [ref=e278] [cursor=pointer]:
+        - generic [ref=e279]: Teil 2
+        - generic [ref=e280]:
+          - button "7" [ref=e281]
+          - button "8" [ref=e282]
+          - button "9" [ref=e283]
+          - button "10" [ref=e284]
+          - button "11" [ref=e285]
+          - button "12" [ref=e286]
+          - button "13" [ref=e287]
+          - button "14" [ref=e288]
+          - button "15" [ref=e289]
+      - button "Teil 3 0 of 8" [ref=e290] [cursor=pointer]:
+        - generic [ref=e291]: Teil 3
+        - generic [ref=e292]: 0 of 8
+      - button "Teil 4 0 of 7" [ref=e293] [cursor=pointer]:
+        - generic [ref=e294]: Teil 4
+        - generic [ref=e295]: 0 of 7
+    - generic [ref=e67]:
+      - button "Previous" [ref=e68] [cursor=pointer]: ←
+      - button "Next" [disabled] [ref=e69]: →
+      - button "Finish" [disabled] [ref=e70]: ✓

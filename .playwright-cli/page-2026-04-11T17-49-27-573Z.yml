@@ -1,0 +1,18 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - img "Zarmed University" [ref=e4]
+    - heading "C1 Language Olympiada" [level=1] [ref=e5]
+    - paragraph [ref=e6]: English & German · Reading + Listening
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - generic [ref=e9]: Vollständiger Name
+      - textbox "Vollständiger Name" [active] [ref=e18]: Klaus Fix
+    - generic [ref=e11]:
+      - generic [ref=e12]: Gruppe (optional)
+      - textbox "Gruppe (optional)" [ref=e19]
+    - generic [ref=e14]:
+      - generic [ref=e15]: Sprache
+      - combobox "Sprache" [ref=e20]:
+        - option "English — C1 Advanced"
+        - option "German — C1 (Goethe)" [selected]
+    - button "Weiter" [ref=e21] [cursor=pointer]

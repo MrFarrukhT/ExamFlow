@@ -1,0 +1,18 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - img "Zarmed University" [ref=e4]
+    - heading "C1 Language Olympiada" [level=1] [ref=e5]
+    - paragraph [ref=e6]: English & German · Reading + Listening
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - generic [ref=e9]: Full name
+      - textbox "Full name" [ref=e10]
+    - generic [ref=e11]:
+      - generic [ref=e12]: Group (optional)
+      - textbox "Group (optional)" [ref=e13]
+    - generic [ref=e14]:
+      - generic [ref=e15]: Language
+      - combobox "Language" [active] [ref=e16]:
+        - option "English — C1 Advanced" [selected]
+        - option "German — C1 (Goethe)"
+    - button "Continue" [ref=e17] [cursor=pointer]

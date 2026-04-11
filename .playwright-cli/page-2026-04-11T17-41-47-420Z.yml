@@ -1,0 +1,6 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - img "Zarmed University" [ref=e4]
+    - heading "Vielen Dank" [level=1] [ref=e5]
+    - paragraph [ref=e6]: Ihr Test wurde abgegeben.
+  - paragraph [ref=e7]: Bitte warten Sie auf Ihre Aufsicht.

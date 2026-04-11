@@ -1,0 +1,17 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - img "Zarmed University" [ref=e4]
+    - heading "C1 Language Olympiada" [level=1] [ref=e5]
+    - paragraph [ref=e6]: Bitte wählen Sie ein Modul
+  - generic [ref=e7]:
+    - paragraph [ref=e8]: Willkommen, Klaus Fix
+    - paragraph [ref=e9]: "Sprache: Deutsch C1 (Goethe) · ID: 899ED454"
+  - generic [ref=e10]:
+    - heading "Wählen Sie ein Modul" [level=2] [ref=e11]
+    - generic [ref=e12]:
+      - 'button "Lesen Dauer: 65 Minuten" [ref=e13] [cursor=pointer]':
+        - heading "Lesen" [level=3] [ref=e14]
+        - generic [ref=e15]: "Dauer: 65 Minuten"
+      - 'button "Hören Dauer: 40 Minuten" [ref=e16] [cursor=pointer]':
+        - heading "Hören" [level=3] [ref=e17]
+        - generic [ref=e18]: "Dauer: 40 Minuten"

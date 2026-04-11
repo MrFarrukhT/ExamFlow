@@ -1,0 +1,129 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Zarmed University" [ref=e4]
+      - generic [ref=e5]: C1 Olympiada
+    - generic [ref=e6]:
+      - generic [ref=e7]: Candidate ID
+      - generic [ref=e8]:
+        - text: Confirm Test
+        - generic [ref=e9]: 490b5311
+    - generic [ref=e11]: 90:00
+  - generic [ref=e13]:
+    - generic [ref=e14]: Questions 1–8
+    - text: For questions 1–8, read the text below and decide which answer (A, B, C or D) best fits each gap.
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - heading "Bridges for wildlife" [level=3] [ref=e17]
+      - generic [ref=e18]:
+        - text: The act of annual migration is common to many species. They migrate towards more
+        - generic [ref=e19]:
+          - generic [ref=e20]: "1"
+          - combobox [ref=e21] [cursor=pointer]:
+            - option [selected]
+            - option "A supportive"
+            - option "B favourable"
+            - option "C hopeful"
+            - option "D worthwhile"
+        - text: climates, or return to breeding sites and feeding grounds. Roads and traffic, however, can
+        - generic [ref=e22]:
+          - generic [ref=e23]: "2"
+          - combobox [ref=e24] [cursor=pointer]:
+            - option [selected]
+            - option "A raise"
+            - option "B pose"
+            - option "C create"
+            - option "D establish"
+        - text: a significant threat to some species' survival. To
+        - generic [ref=e25]:
+          - generic [ref=e26]: "3"
+          - combobox [ref=e27] [cursor=pointer]:
+            - option [selected]
+            - option "A address"
+            - option "B oppose"
+            - option "C challenge"
+            - option "D approach"
+        - text: this problem, environmentalists and engineers around the world have put their heads together to devise 'wildlife bridges'. In Canada, grizzly bears, wolverines and toads are just a few of the species
+        - generic [ref=e28]:
+          - generic [ref=e29]: "4"
+          - combobox [ref=e30] [cursor=pointer]:
+            - option [selected]
+            - option "A putting"
+            - option "B gaining"
+            - option "C making"
+            - option "D getting"
+        - text: use of grass-covered, cement bridges that cross the Trans-Canada Highway.
+        - generic [ref=e31]:
+          - generic [ref=e32]: "5"
+          - combobox [ref=e33] [cursor=pointer]:
+            - option [selected]
+            - option "A Respectively"
+            - option "B Comparably"
+            - option "C Similarly"
+            - option "D Correspondingly"
+        - text: ", on Australia's Christmas Island, a five-metre-high bridge across a busy road enables red crabs to pass safely from the rainforest to the ocean. The bridge has significantly reduced their casualty"
+        - generic [ref=e34]:
+          - generic [ref=e35]: "6"
+          - combobox [ref=e36] [cursor=pointer]:
+            - option [selected]
+            - option "A quota"
+            - option "B percentage"
+            - option "C scale"
+            - option "D rate"
+        - text: and averted traffic chaos. In Sweden, plans are being
+        - generic [ref=e37]:
+          - generic [ref=e38]: "7"
+          - combobox [ref=e39] [cursor=pointer]:
+            - option [selected]
+            - option "A shown"
+            - option "B backed"
+            - option "C drawn"
+            - option "D worked"
+        - text: up for a series of bridges across a main highway, which will allow the country's 250,000 reindeer to reach the mountains. Engineers must take
+        - generic [ref=e40]:
+          - generic [ref=e41]: "8"
+          - combobox [ref=e42] [cursor=pointer]:
+            - option [selected]
+            - option "A advantage"
+            - option "B account"
+            - option "C control"
+            - option "D effect"
+        - text: of the fact that reindeer are easily frightened by traffic, and so make the bridge walls high enough to prevent the deer from jumping off.
+  - navigation [ref=e43]:
+    - generic [ref=e44]:
+      - generic [ref=e45] [cursor=pointer]:
+        - generic [ref=e46]: Part 1
+        - generic [ref=e47]:
+          - button "1" [ref=e48]
+          - button "2" [ref=e49]
+          - button "3" [ref=e50]
+          - button "4" [ref=e51]
+          - button "5" [ref=e52]
+          - button "6" [ref=e53]
+          - button "7" [ref=e54]
+          - button "8" [ref=e55]
+      - button "Part 2 0 of 8" [ref=e56] [cursor=pointer]:
+        - generic [ref=e57]: Part 2
+        - generic [ref=e58]: 0 of 8
+      - button "Part 3 0 of 8" [ref=e59] [cursor=pointer]:
+        - generic [ref=e60]: Part 3
+        - generic [ref=e61]: 0 of 8
+      - button "Part 4 0 of 6" [ref=e62] [cursor=pointer]:
+        - generic [ref=e63]: Part 4
+        - generic [ref=e64]: 0 of 6
+      - button "Part 5 0 of 6" [ref=e65] [cursor=pointer]:
+        - generic [ref=e66]: Part 5
+        - generic [ref=e67]: 0 of 6
+      - button "Part 6 0 of 4" [ref=e68] [cursor=pointer]:
+        - generic [ref=e69]: Part 6
+        - generic [ref=e70]: 0 of 4
+      - button "Part 7 0 of 6" [ref=e71] [cursor=pointer]:
+        - generic [ref=e72]: Part 7
+        - generic [ref=e73]: 0 of 6
+      - button "Part 8 0 of 10" [ref=e74] [cursor=pointer]:
+        - generic [ref=e75]: Part 8
+        - generic [ref=e76]: 0 of 10
+    - generic [ref=e77]:
+      - button "Previous" [disabled] [ref=e78]: ←
+      - button "Next" [ref=e79] [cursor=pointer]: →
+      - button "Finish" [ref=e80] [cursor=pointer]: ✓
