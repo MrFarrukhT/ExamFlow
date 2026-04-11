@@ -1,5 +1,64 @@
 # Eye Journal
 
+## Session: 2026-04-11 18:50 — Zarmed Olympiada Admin Compact Date + Keyboard Walk — Round 32 (/loop iteration)
+Persona: Invigilator reviewing submissions at mobile (picking up round 30's deferred item) + keyboard-only student navigating the whole student flow | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: welcome / dashboard / test.html at 1920×1080 via keyboard; admin.html login / list / detail at 375×812 and 1920×1080
+Starting state: Round 30 explicitly deferred "Admin date format mobile — '4/11/2026, 11:04:56 PM' wraps to 3 lines." Round 31 picked up round 29's deferred h1 gap; round 32 picks up round 30's deferred date format. Also runs a keyboard-only walk to confirm focus indicators are visible everywhere.
+
+### Round 32 — 2 findings
+
+**Findings:**
+
+- [T3] **Admin FINISHED column wraps to 3 lines at 375px.** `fmtTime()` uses `new Date(iso).toLocaleString()` → "4/11/2026, 11:04:56 PM" (22 chars). At 375px mobile the column is ~90px wide and the string wraps to 3 lines (~60px row height).
+- [T0] **Keyboard focus rings already visible everywhere.** Tabbed through welcome form + dashboard cards + test runner bottom nav — every interactive element has a visible outline. Nothing to fix, logged as "verified at layer 5."
+
+**Action:** POLISH 1 fix (admin date format).
+
+**Files touched:**
+
+**`zarmet-olympiada/public/js/admin.js`:**
+- Added `fmtTimeShort(iso)` alongside existing `fmtTime(iso)`. Uses `toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })` → "Apr 11, 11:04 PM" (~16 chars).
+- Year dropped (results list is always recent, backups are keyed by server timestamp).
+- Seconds dropped (never useful for a finish time).
+- Updated `renderList` `<td>` template to call `fmtTimeShort(r.finishedAt)`. Left `fmtTime` in place for the detail view's Started/Finished row where full precision is useful for debugging.
+
+### Verification
+
+- **Mobile list** (`eye-r32-06-admin-date-compact.png`): "Apr 11, 11:04 PM" wraps to 2 lines instead of 3 — ~20px saved per row × 11 rows = ~220px reclaimed vertical space.
+- **Desktop regression** (`eye-r32-07-admin-desktop-date.png`): Each row renders on a single line at ~120px column width vs the previous ~180px. Desktop also benefits — STUDENT and GROUP columns get more room.
+- **Admin back-button round-trip**: Clicked row 2 → detail shown → clicked "← Back to list" → list-view visible, rows-body still has 11 rows. State preserved. The round-24 compact-detail-header class correctly toggles off on back.
+- **Keyboard focus rings** (`eye-r32-02/03/04`): All visible. Welcome Continue button has 3px blue outline at 3px offset. Dashboard cards have `:focus-visible` ring via `.zu-module-card`. Test runner bottom nav has 2px teal outline via global `body.zu-test-body *:focus-visible`.
+
+### Quality Map
+
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| Admin list FINISHED (mobile) | 3-Efficient → **5-Crafted** | "Apr 11, 11:04 PM" 2-line wrap |
+| Admin list FINISHED (desktop) | 4-Polished → **5-Crafted** | Single-line, ~60px narrower |
+| Welcome keyboard focus | 5-Crafted (verified) | Auto-focus #f-name on boot |
+| Dashboard keyboard focus | 5-Crafted (verified) | Module cards focus-ring |
+| Test runner keyboard focus | 5-Crafted (verified) | 2px teal outline on all interactive |
+| Admin back-button state | 4-Polished (verified) | Navigation preserves rows |
+
+### Deferred
+
+- **Admin list card-per-row rebuild** at mobile. Round 30 flagged; round 32 reviewed and decided horizontal-scroll path is still acceptable now that rows are ~40px tall.
+- **Detail view Started/Finished format** — still uses full `fmtTime`. Detail view has horizontal room so priority is low.
+- **Test runner ←/→ keyboard shortcuts** — new behavior, not Eye scope.
+
+### Session Stats
+
+Pages explored: 5 (welcome/dashboard/test keyboard, admin mobile, admin desktop)
+Findings: 2 (1× T3 + 1× T0 verified clean)
+Polishes landed: 1 (fmtTimeShort)
+Files touched: 1 (admin.js)
+
+**Trajectory note:** Rounds 29 → 30 → 31 → 32 have followed a **backlog-driven pattern**: each round picks up a deferred item from the prior round's "Deferred" section. The finding-effort is amortized — round 30's deferred note said "could shorten to 04/11 23:04 at mobile" and round 32 just picked a better format and shipped it. **Every /eye journal entry should include a Deferred section, and every next round should check that section first before doing fresh exploration.**
+
+**Key learning:** `Intl.DateTimeFormat` with explicit options produces a locale-aware compact date that's both more readable ("Apr 11" beats "4/11") AND shorter than default `toLocaleString()`. Default `toLocaleString()` is almost always too verbose for table columns. Add "always use explicit options for table dates" to the JS conventions.
+
+---
+
 ## Session: 2026-04-11 18:50 — Zarmed Olympiada Auto-Focus Polish — Round 22h (parallel iteration)
 Persona: Student/invigilator landing on a form and expecting to type immediately | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: welcome form, admin login, listening pre-play modal
