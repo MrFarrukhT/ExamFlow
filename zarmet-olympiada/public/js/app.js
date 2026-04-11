@@ -17,6 +17,78 @@
   const form = document.getElementById('start-form');
   const err = document.getElementById('err');
   const nameInput = document.getElementById('f-name');
+  const groupInput = document.getElementById('f-group');
+  const langSelect = document.getElementById('f-lang');
+  const submitBtn = form.querySelector('button[type="submit"]');
+
+  // Bilingual welcome chrome — the labels/button/errors flip to German as soon
+  // as the student selects the German dropdown option, so a Goethe-C1 student
+  // sees a fully-German welcome form from the moment they pick their language.
+  // English stays the default for the neutral first-load state.
+  const STRINGS = {
+    'english-c1': {
+      fullName: 'Full name',
+      group: 'Group (optional)',
+      language: 'Language',
+      continueBtn: 'Continue',
+      errNameMissing: 'Please enter your full name.',
+      errNameShort: 'Please enter your full name.',
+      errNameChars: "Name can only contain letters, spaces, hyphens, dots, and apostrophes.",
+    },
+    'german-c1': {
+      fullName: 'Vollständiger Name',
+      group: 'Gruppe (optional)',
+      language: 'Sprache',
+      continueBtn: 'Weiter',
+      errNameMissing: 'Bitte geben Sie Ihren vollständigen Namen ein.',
+      errNameShort: 'Bitte geben Sie Ihren vollständigen Namen ein.',
+      errNameChars: 'Der Name darf nur Buchstaben, Leerzeichen, Bindestriche, Punkte und Apostrophe enthalten.',
+    },
+  };
+
+  function currentStrings() {
+    return STRINGS[langSelect.value] || STRINGS['english-c1'];
+  }
+
+  // Swap the static form labels + submit button based on the currently-selected
+  // language. The language dropdown option labels themselves stay as they are
+  // ("English — C1 Advanced" / "German — C1 (Goethe)") so the student can
+  // always find the language picker regardless of which one is currently set.
+  function applyStrings() {
+    const s = currentStrings();
+    const nameLabel = form.querySelector('label[for="f-name"]');
+    const groupLabel = form.querySelector('label[for="f-group"]');
+    const langLabel = form.querySelector('label[for="f-lang"]');
+    if (nameLabel) nameLabel.textContent = s.fullName;
+    if (groupLabel) groupLabel.textContent = s.group;
+    if (langLabel) langLabel.textContent = s.language;
+    if (submitBtn) submitBtn.textContent = s.continueBtn;
+  }
+
+  // Keep the browser's native "balloon" message in sync with the current
+  // language + field state. setCustomValidity() only overrides the balloon
+  // if it's called BEFORE the invalid event fires — so we update on every
+  // input + language change, not inside the invalid handler.
+  function updateCustomValidity() {
+    const s = currentStrings();
+    const val = nameInput.value;
+    if (val.length === 0) {
+      nameInput.setCustomValidity(s.errNameMissing);
+    } else if (val.length < 2) {
+      nameInput.setCustomValidity(s.errNameShort);
+    } else if (!/^[\p{L}\s\-'.]+$/u.test(val)) {
+      nameInput.setCustomValidity(s.errNameChars);
+    } else {
+      nameInput.setCustomValidity('');
+    }
+  }
+
+  langSelect.addEventListener('change', () => {
+    applyStrings();
+    updateCustomValidity();
+  });
+  applyStrings();
+  updateCustomValidity();
 
   function showError(msg, field) {
     err.textContent = msg;
@@ -27,12 +99,14 @@
     }
   }
 
-  // Clear error state as soon as the user starts editing
+  // Clear the inline error state as soon as the user starts editing, and
+  // refresh the custom-validity balloon text based on the new value.
   nameInput.addEventListener('input', () => {
     if (nameInput.getAttribute('aria-invalid') === 'true') {
       nameInput.removeAttribute('aria-invalid');
       err.hidden = true;
     }
+    updateCustomValidity();
   });
 
   function generateStudentId() {
@@ -57,12 +131,13 @@
     const group = document.getElementById('f-group').value.trim();
     const lang = document.getElementById('f-lang').value;
 
+    const s = currentStrings();
     if (student.length < 2) {
-      showError('Please enter your full name.', nameInput);
+      showError(s.errNameShort, nameInput);
       return;
     }
     if (!/^[\p{L}\s\-'.]+$/u.test(student)) {
-      showError('Name can only contain letters, spaces, hyphens, dots, and apostrophes.', nameInput);
+      showError(s.errNameChars, nameInput);
       return;
     }
 
