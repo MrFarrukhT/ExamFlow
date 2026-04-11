@@ -1,4 +1,4 @@
-/* Zarmet Olympiada — Test Runner (ADR-039)
+/* Zarmed Olympiada — Test Runner (ADR-039)
  * Cambridge-authentic single-part-at-a-time state machine.
  * Supports all 8 CAE Reading parts, all 4 Listening parts (including
  * taskGroups for Part 4). Strict listening: pre-play modal, auto-play,

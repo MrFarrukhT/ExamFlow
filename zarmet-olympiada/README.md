@@ -1,4 +1,4 @@
-# Zarmet University — C1 Olympiada
+# Zarmed University — C1 Olympiada
 
 Standalone test app for English C1 Advanced and German C1 (Goethe) —
 Reading and Listening only. Separate from Cambridge and IELTS.
@@ -19,7 +19,7 @@ node server.js       # starts on port 3004
 Open `http://localhost:3004/` for the student view, or
 `http://localhost:3004/admin.html` for the results viewer.
 
-Or just double-click `Launch Zarmet Olympiada.bat` (Windows — starts
+Or just double-click `Launch Zarmed Olympiada.bat` (Windows — starts
 the server and opens Chrome/Edge in kiosk mode).
 
 ---
@@ -29,7 +29,7 @@ the server and opens Chrome/Edge in kiosk mode).
 | Variable | Default | Purpose |
 |---|---|---|
 | `OLYMPIADA_PORT` | `3004` | Server port |
-| `OLYMPIADA_ADMIN_PASSWORD` | `zarmet-admin` | Admin viewer password — **change in production** |
+| `OLYMPIADA_ADMIN_PASSWORD` | `zarmed-admin` | Admin viewer password — **change in production** |
 | `OLYMPIADA_DATABASE_URL` | (unset) | Optional Postgres mirror connection string. If unset, mirror is disabled and all durability stays local (JSONL + JSON backups) |
 
 ---
@@ -41,7 +41,7 @@ zarmet-olympiada/
 ├── server.js            # one Express file, ~550 lines
 ├── package.json
 ├── README.md            # this file
-├── Launch Zarmet Olympiada.bat   # Windows launcher
+├── Launch Zarmed Olympiada.bat   # Windows launcher
 ├── public/              # static frontend
 │   ├── index.html       # welcome / student entry
 │   ├── test.html        # test runner

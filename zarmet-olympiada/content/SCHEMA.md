@@ -1,7 +1,7 @@
 # Question Bank Schema
 
 This document is the authoritative reference for the JSON structure of
-Zarmet Olympiada question banks. Every file under
+Zarmed Olympiada question banks. Every file under
 `content/{lang}/{skill}.json` must conform to this schema.
 
 Defined in ADR-034 (`architect-decisions.md`).

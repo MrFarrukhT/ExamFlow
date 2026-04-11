@@ -1,4 +1,4 @@
-// Zarmet Olympiada — Standalone Test Server
+// Zarmed Olympiada — Standalone Test Server
 // ADR-033 + ADR-035. Keep this file under ~500 lines. If it grows, extract modules.
 //
 // Durability model: append-only JSONL per session + atomic final JSON on submit.
@@ -14,7 +14,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const PORT = Number(process.env.OLYMPIADA_PORT || 3004);
-const ADMIN_PASSWORD = process.env.OLYMPIADA_ADMIN_PASSWORD || 'zarmet-admin';
+const ADMIN_PASSWORD = process.env.OLYMPIADA_ADMIN_PASSWORD || 'zarmed-admin';
 const CONTENT_DIR = path.join(__dirname, 'content');
 const SESSIONS_DIR = path.join(__dirname, 'sessions');
 const BACKUPS_DIR = path.join(__dirname, 'backups');
@@ -640,7 +640,7 @@ async function start() {
     app.listen(PORT, () => {
         console.log('');
         console.log('==============================================');
-        console.log('  Zarmet University — C1 Olympiada');
+        console.log('  Zarmed University — C1 Olympiada');
         console.log(`  Running on http://localhost:${PORT}`);
         console.log(`  Sessions:  ${SESSIONS_DIR}`);
         console.log(`  Backups:   ${BACKUPS_DIR}`);

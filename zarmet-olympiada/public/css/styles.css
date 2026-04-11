@@ -1,12 +1,12 @@
-/* Zarmet Olympiada — Cambridge-authentic UI
+/* Zarmed Olympiada — Cambridge-authentic UI
  * ADR-039 rewrite.
  * Two visual scopes in one file:
- *   - .zu-page — welcome / dashboard / done / admin (Zarmet warm palette)
+ *   - .zu-page — welcome / dashboard / done / admin (Zarmed warm palette)
  *   - .zu-test — test runner (Cambridge-authentic minimal white/grey/teal)
  */
 
 :root {
-  /* Zarmet warm palette (welcome/dashboard/done/admin) */
+  /* Zarmed warm palette (welcome/dashboard/done/admin) */
   --zu-primary: #7c2d12;
   --zu-primary-dark: #431407;
   --zu-accent: #c2410c;
@@ -76,20 +76,14 @@ h3 { font-size: 1.25rem; }
   border-bottom: 2px solid var(--zu-primary);
   margin-bottom: 2rem;
 }
-.zu-shield {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  background: linear-gradient(160deg, var(--zu-primary) 0%, var(--zu-primary-dark) 100%);
-  color: var(--zu-cream);
-  font-size: 1.8rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.75rem;
-  box-shadow: 0 4px 12px rgba(67, 20, 7, 0.25);
+.zu-logo {
+  display: block;
+  width: 260px;
+  max-width: 80%;
+  height: auto;
+  margin: 0 auto 1rem;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 .zu-header h1 { margin-bottom: 0.25rem; }
 .zu-header .zu-subtitle {
@@ -324,7 +318,7 @@ body.zu-test-body {
   padding-bottom: 88px; /* space for bottom nav */
 }
 
-/* Reset typography inside the test runner — the Zarmet warm-brown
+/* Reset typography inside the test runner — the Zarmed warm-brown
  * h1/h2/h3 rule at the top of this file is scoped to the welcome/dashboard
  * pages. The test runner uses Cambridge-authentic dark-grey Georgia headings. */
 body.zu-test-body h1,
@@ -378,20 +372,12 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   align-items: center;
   gap: 10px;
 }
-.ct-shield {
-  width: 44px;
-  height: 44px;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #ea580c 0%, #7c2d12 100%);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  font-size: 15px;
-  letter-spacing: 0.05em;
-  font-family: Georgia, serif;
-  box-shadow: 0 2px 6px rgba(67, 20, 7, 0.25);
+.ct-logo {
+  height: 36px;
+  width: auto;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 .ct-brand-text {
   display: flex;

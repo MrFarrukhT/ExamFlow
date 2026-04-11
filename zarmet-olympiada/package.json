@@ -1,7 +1,7 @@
 {
   "name": "zarmet-olympiada",
   "version": "0.1.0",
-  "description": "Standalone Zarmet University C1 Olympiada — English + German, Reading + Listening",
+  "description": "Standalone Zarmed University C1 Olympiada — English + German, Reading + Listening",
   "type": "module",
   "main": "server.js",
   "scripts": {

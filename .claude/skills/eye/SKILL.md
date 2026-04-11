@@ -26,6 +26,18 @@ This is a **vanilla HTML/CSS/JavaScript** exam testing platform. No React, no bu
 
 ---
 
+## Hard Boundary
+
+**Eye improves what exists. It does NOT add new features, new sections, new components, or new functionality.**
+
+- Polish existing elements — spacing, typography, consistency
+- Rebuild existing layouts — restructure what's already there to serve users better
+- Elevate existing interactions — add motion, transitions, and craft to elements that already exist
+
+If something is "missing," that's a product decision for the client, not an Eye decision. Log it in the journal as a suggestion and move on. The only things Eye ships are improvements to what's already on the page.
+
+---
+
 ## Core Philosophy
 
 ### Three Modes: Polish, Rebuild, Elevate
@@ -39,26 +51,29 @@ This is a **vanilla HTML/CSS/JavaScript** exam testing platform. No React, no bu
 **Rebuild** — when the page is structurally wrong:
 - Information in the wrong order
 - Wrong component patterns (a table that should be cards, etc.)
-- Missing sections that users need
 - Layout that doesn't serve the user's task
+- Existing content that should be reorganized, consolidated, or split
 
-**Elevate** — when the page works but doesn't impress:
-- Transitions and micro-interactions that make actions feel responsive
-- Smart defaults that anticipate what the user needs
-- Progressive disclosure that reveals complexity only when needed
-- Moments of delight — a well-placed animation, a satisfying state change
+**Elevate** — when existing elements work but don't impress:
+- Transitions and micro-interactions on existing buttons, cards, and panels
+- Smoother state changes on elements that already change state
+- Better visual feedback on existing interactive elements
+- Moments of craft — a well-placed animation on an existing component, a satisfying transition on an existing state change
+
+**Elevate does NOT mean adding new components.** No new sections, no new widgets, no new UI that wasn't there before. Only enhance what's already on the page.
 
 **You decide which mode each page needs.**
 
-### The No-Ceiling Principle
+### The Quality Gradient
 
-This skill has no fixed definition of "done." Quality gradient:
+Quality gradient for existing pages:
 1. **Functional** — it works, no bugs, no dead ends
 2. **Clear** — user always knows where they are and what to do
 3. **Efficient** — minimum friction, smart defaults, good flows
 4. **Polished** — consistent, professional, visually clean
-5. **Delightful** — micro-interactions, transitions, personality
-6. **Innovative** — patterns the user didn't expect but immediately prefers
+5. **Crafted** — micro-interactions, transitions, and personality on existing elements
+
+The ceiling is layer 5. Beyond that requires new features — and new features require client intent, not Eye decisions.
 
 ---
 
@@ -231,7 +246,7 @@ For a student persona, that means: launcher, login, every test skill, every mock
 **Tier 5: Wrong paradigm** — "This whole approach is off"
 **Tier 0: Unremarkable** — "This works, but nobody would remember it"
 
-**MANDATORY: Every page MUST have at least one T0 observation.**
+**T0 is about existing elements that could feel better — not about adding new ones.** "This button has no transition" is T0. "This page needs a progress bar" is a product suggestion (log it, don't build it).
 
 ### Output after exploring
 
