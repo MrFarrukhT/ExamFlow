@@ -64,3 +64,10 @@ admin/init-db-simple.js
 
 # Installation scripts
 admin/scripts/install-deps.bat
+
+# Zarmet Olympiada runtime data (keep dirs, ignore contents)
+zarmet-olympiada/sessions/*
+!zarmet-olympiada/sessions/.gitkeep
+zarmet-olympiada/backups/*
+!zarmet-olympiada/backups/.gitkeep
+zarmet-olympiada/node_modules/

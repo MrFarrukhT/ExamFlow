@@ -1,0 +1,18 @@
+{
+  "name": "zarmet-olympiada",
+  "version": "0.1.0",
+  "description": "Standalone Zarmet University C1 Olympiada — English + German, Reading + Listening",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "optionalDependencies": {
+    "pg": "^8.11.0"
+  },
+  "private": true
+}
