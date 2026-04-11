@@ -6,24 +6,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-<div class="zu-test-header">
-  <div class="zu-test-title" id="test-title">Loading…</div>
-  <div class="zu-timer" id="timer">--:--</div>
-</div>
+<body class="zu-test-body">
 
-<div class="page page--test">
-  <div class="zu-test-body">
-    <div id="parts"></div>
-    <aside class="zu-nav">
-      <h3>Questions</h3>
-      <div class="zu-nav-grid" id="nav-grid"></div>
-      <div class="zu-finish-bar" style="margin-top:1rem;">
-        <button class="zu-btn zu-btn--danger" id="finish-btn">Finish Test</button>
-      </div>
-    </aside>
+<!-- Top header strip (Cambridge-authentic chrome) -->
+<header class="ct-header">
+  <div class="ct-header-brand">
+    <div class="ct-shield">ZU</div>
+    <div class="ct-brand-text">
+      <span class="ct-brand-name">Zarmet University</span>
+      <span class="ct-brand-sub">C1 Olympiada</span>
+    </div>
   </div>
-</div>
+  <div class="ct-header-id">
+    <span class="ct-header-id-label">Candidate ID</span>
+    <span class="ct-header-id-value" id="ct-candidate-id">—</span>
+  </div>
+  <div class="ct-header-right">
+    <div class="ct-audio-status" id="ct-audio-status" aria-live="polite">
+      <span class="ct-speaker-icon" aria-hidden="true"></span>
+      <span>Audio is playing</span>
+    </div>
+    <div class="ct-timer" id="ct-timer">--:--</div>
+  </div>
+</header>
+
+<!-- Instruction banner -->
+<section class="ct-banner" id="ct-banner">
+  <span class="ct-banner-title" id="ct-banner-title">Loading…</span>
+  <span class="ct-banner-body" id="ct-banner-body"></span>
+</section>
+
+<!-- Main content -->
+<main class="ct-main" id="ct-main"></main>
+
+<!-- Bottom navigator -->
+<nav class="ct-bottom-nav" id="ct-nav">
+  <div class="ct-nav-parts" id="ct-nav-parts"></div>
+  <div class="ct-nav-arrows">
+    <button class="ct-nav-arrow ct-nav-arrow--prev" id="ct-prev" aria-label="Previous">←</button>
+    <button class="ct-nav-arrow ct-nav-arrow--next" id="ct-next" aria-label="Next">→</button>
+    <button class="ct-nav-finish" id="ct-finish" aria-label="Finish">✓</button>
+  </div>
+</nav>
 
 <script src="js/test.js"></script>
 </body>

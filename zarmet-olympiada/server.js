@@ -422,6 +422,22 @@ app.post('/api/session/start', (req, res) => {
     res.json({ sessionId });
 });
 
+// Record an audio-play event (ADR-039 — strict listening anti-refresh tracking)
+app.post('/api/session/:id/audio-play', (req, res) => {
+    const { id } = req.params;
+    const { partId } = req.body || {};
+    if (!partId || typeof partId !== 'string') {
+        return res.status(400).json({ error: 'partId required' });
+    }
+    try {
+        if (!fs.existsSync(sessionPath(id))) return res.status(404).json({ error: 'session not found' });
+        appendSessionEvent(id, { ev: 'audio-play', partId });
+        res.json({ ok: true });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
 // Record an answer change (live save)
 app.post('/api/session/:id/answer', (req, res) => {
     const { id } = req.params;
