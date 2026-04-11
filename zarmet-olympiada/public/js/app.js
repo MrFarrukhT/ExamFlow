@@ -54,6 +54,8 @@
   // language. The language dropdown option labels themselves stay as they are
   // ("English — C1 Advanced" / "German — C1 (Goethe)") so the student can
   // always find the language picker regardless of which one is currently set.
+  // Also keeps <html lang> in sync so screen readers pronounce the labels in
+  // the right language and native browser spell-check picks the right dict.
   function applyStrings() {
     const s = currentStrings();
     const nameLabel = form.querySelector('label[for="f-name"]');
@@ -63,6 +65,8 @@
     if (groupLabel) groupLabel.textContent = s.group;
     if (langLabel) langLabel.textContent = s.language;
     if (submitBtn) submitBtn.textContent = s.continueBtn;
+    // ISO 639-1 code from our content-slug style ("english-c1" → "en", "german-c1" → "de")
+    document.documentElement.lang = langSelect.value === 'german-c1' ? 'de' : 'en';
   }
 
   // Keep the browser's native "balloon" message in sync with the current

@@ -68,7 +68,10 @@
 
   // Swap the static HTML strings that were authored in English. Running
   // once on boot is enough — the dashboard never re-localizes mid-session.
+  // Also sets <html lang> so screen readers pronounce the labels in the
+  // right language and native browser spell-check picks the right dict.
   function localizeStaticStrings() {
+    document.documentElement.lang = isGerman ? 'de' : 'en';
     const subtitle = document.querySelector('.zu-header .zu-subtitle');
     if (subtitle) subtitle.textContent = i18n.subtitle;
     const modulesH2 = document.querySelector('#modules-section h2');
