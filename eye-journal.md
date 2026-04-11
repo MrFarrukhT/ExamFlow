@@ -1,5 +1,34 @@
 # Eye Journal
 
+## Session: 2026-04-11 17:55 — Zarmed Olympiada Source-Audit — Round 25 (/loop iteration, ZERO CHANGES)
+Persona: Source audit because browser verification is blocked by parallel /loop contention | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: None interactively — source-only audit
+Starting state: Round 24 (parallel) shipped favicon + styled modals + per-file audio gating + compact admin detail. Round 23 was ZERO CHANGES (verification blocked). Round 25 audits the source for anything rounds 17–24 might have missed.
+
+### Round 25 — ZERO CHANGES (ceiling reached)
+
+**Audit performed:**
+
+1. Brand literal safety sweep (`grep "#f0f6ff|#f0fdfa|#ecfeff|#ccfbf1|#0d9488|#0f766e"`) → no matches. All brand colors are token-driven.
+2. `grep "TODO|FIXME|HACK|XXX"` on styles.css + test.js → no matches.
+3. Round 22 changes intact: `buildQuestionPrompt` called from 3 render sites, `.ct-q-num-badge` CSS rule present (base + active variant), `.ct-nav-finish` uses `var(--ct-teal)` per the revert.
+4. Form validation styles brand-consistent: `aria-invalid="true"` uses `var(--zu-danger)` + `#fef2f2`. rgba literals match the var values exactly.
+5. test.html structure matches intent plan + cae/examples: brand stack, banner stripe, main, bottom nav (←/→/✓).
+6. Round 24 (parallel) addressed the remaining native-chrome gaps: favicon 404, `window.confirm()`, `alert()`, admin-detail header space.
+
+**Findings:** Zero. Nothing in the source indicates an actionable /eye gap against cae/examples/*.png without adding new features (out of mandate).
+
+**Decision:** ZERO CHANGES round. Cursor not advanced. Next /loop firing re-runs the same prompt.
+
+### Session Stats
+Polishes: 0 | Rebuilds: 0 | Elevations: 0 | Changes shipped: 0
+
+**Trajectory:** 3 zero-changes rounds out of 25 total (rounds 13, 23, 25). Rate of new source-visible gaps has dropped to ~0 for my perspective.
+
+**Recommendation:** The Olympiada is at its /eye ceiling for the Reading + Listening flow. Consider stopping the /loop (`CronDelete 0582740c`), or switching to /scenario (adversarial) or /heal (code quality) if further work is desired.
+
+---
+
 ## Session: 2026-04-11 17:50 — Zarmed Olympiada Polish Pass — Round 24 (/loop iteration)
 Persona: Student finishing a test + admin opening a submission detail | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: welcome console (404 check), test.html finish flow, admin.html login + list + detail view
