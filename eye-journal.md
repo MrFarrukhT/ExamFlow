@@ -1,5 +1,78 @@
 # Eye Journal
 
+## Session: 2026-04-11 14:15 — Zarmet Olympiada Cambridge-Authentic UI — Round 4
+Persona: Invigilator/admin reviewing submissions | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: admin.html (login, list, detail, empty state), welcome @ 800px viewport
+Starting state: After rounds 1-3, 12/12 student-facing pages were at Layer 5 Crafted. Admin page had only been code-level reviewed, never walked in a real browser after ADR-036.
+
+### Round 4 — Admin page polish (the only unwalked page)
+
+**Explored:** admin.html across all 4 states (login, rows, detail, empty). First real browser walk of admin since the ADR-036 rewrite.
+
+**Findings:**
+
+- [T4] admin.html login — form stretched full 960px page width. A single password input this wide feels sloppy. Welcome form uses `.page--narrow` for a ~560px shell, admin login should too.
+- [T4] admin.html list — **no empty state**. A table with 0 rows just shows an empty body after the header row. A student who hasn't finished yet, or a fresh install, shows a blank page with no explanation.
+- [T3] admin.html list — Language column showed raw slug `english-c1` and Skill column showed raw `reading`. These are user-facing labels in the invigilator's results table; they should be humanized (`English C1`, `Reading`).
+- [T3] admin.html detail — Title shows `Admin Test — english-c1 / reading` (raw slugs).
+- [T4] admin.html detail — Student and Correct columns displayed JSON-encoded values: `"B"` (with quotes), `null`, `["of","Of"]`, `{"required":[...],"alternatives":[...]}`. Ugly and confusing for an invigilator reviewing a student's answers.
+- [T0] admin.html detail — No visual differentiation between correct/incorrect/blank rows. A dense 80-row table would be hard to scan.
+- [T5 ✅] welcome @ 800px viewport — form fills available width, no layout issues. Desktop responsive check passes.
+
+**Action:** POLISH (5 changes shipped)
+
+- [T4] admin.js show(view) toggles `.page--narrow` on the page shell when showing login → narrow centered card. Removes the narrow class when showing list/detail → full width for the table.
+  Mode: polish | Quality: 4 → 5 | Files: public/js/admin.js, public/admin.html (added id="admin-page")
+- [T4] Empty state component `.zu-empty-state` — dashed-border panel with "No submissions yet." heading and a muted explanation line. Shown when rows.length === 0, hidden otherwise, table-mutex.
+  Mode: polish | Quality: 4 → 5 | Files: public/css/styles.css, public/admin.html, public/js/admin.js
+- [T3] Humanizer helpers `fmtLang(slug)` and `fmtSkill(slug)` — map known slugs to display labels (`english-c1 → English C1`, `german-c1 → German C1`, `reading → Reading`, `listening → Listening`), fall back to title-cased words for unknown inputs.
+  Mode: polish | Files: public/js/admin.js
+- [T3] `fmtLang` + `fmtSkill` used in both the rows table (Language/Skill columns) and the detail view title (`{student} — {lang} / {skill}`).
+  Mode: polish | Files: public/js/admin.js
+- [T4] `fmtStudentValue(v)` + `fmtCorrect(v)` formatters — handle strings, arrays, nulls, and the key-word-transformation object shape. Null/empty → em dash `—`. Arrays joined with ` / `. KWT objects render `required / alternatives`.
+  Mode: polish | Files: public/js/admin.js
+- [T0] Row color classes `.zu-row-correct` (light green), `.zu-row-wrong` (light red), `.zu-row-blank` (muted grey) applied in the detail table based on `q.earned >= q.possible` / `q.studentValue == null` / else. Makes an 80-row answer review scannable at a glance. Hover suppresses the row color to avoid flicker.
+  Mode: polish (touches existing table rows, no new components) | Files: public/css/styles.css, public/js/admin.js
+
+### Verification
+
+Walked all 4 admin states end-to-end via playwright-cli:
+- ✅ **Login narrow** (`r4-admin-login-narrow.png`) — form is now ~560px wide, centered
+- ✅ **Rows humanized** (`r4-admin-rows-humanized.png`) — Language shows `English C1`, Skill shows `Reading`, Group falls back to `—` when empty
+- ✅ **Detail humanized + colored** (`r4-admin-detail-humanized.png`) — Title `Admin Test — English C1 / Reading`, q1 row light green (1/1 correct), q9 and q17 rows with Student `—` and Correct `of / Of` / `outcome / Outcome` (no quotes, no arrays)
+- ✅ **Empty state** (`r4-admin-empty-state.png`) — dashed panel with "No submissions yet." after deleting backups/*.json
+- ✅ Export CSV / JSON buttons still present, untouched
+- ✅ Back-to-list button works
+- ✅ Login session token persisted via sessionStorage between reloads
+
+No regressions — all previously Layer 5 student-facing pages unchanged.
+
+### Quality Map (updated)
+| Page | Layer | Notes |
+|------|-------|-------|
+| admin.html (login) | **5-Crafted** | Narrow centered card |
+| admin.html (list + empty state) | **5-Crafted** | Humanized columns, empty state panel |
+| admin.html (detail) | **5-Crafted** | Humanized title, clean answer formatting, row colors |
+
+**13/13 pages now at Layer 5 Crafted.** Admin was the last page below ceiling.
+
+### Deferred
+- Real audio content — out of /eye scope
+- Real content transcription — out of /eye scope
+- Per-question type-specific rendering improvements in the admin detail view (e.g., show the actual passage excerpt for gap-fill questions) — would require new features, out of /eye boundary
+
+### Session Stats
+Pages explored: 1 (admin, 4 states)
+Screenshots captured: 7
+Rounds: 1 (within this session)
+Polishes landed: 5
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 5 polishes
+
+---
+
 ## Session: 2026-04-11 14:05 — Zarmet Olympiada Cambridge-Authentic UI — Round 3
 Persona: Student taking English C1 Listening Part 4 (two-task matching) | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: Listening Part 4 (rebuild target), verified via navigation round-trip

@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<div class="page">
+<div class="page" id="admin-page">
   <header class="zu-header">
     <div class="zu-shield">ZU</div>
     <h1>Olympiada Results</h1>
@@ -44,6 +44,10 @@
       </thead>
       <tbody id="rows-body"></tbody>
     </table>
+    <div id="empty-state" class="zu-empty-state" hidden>
+      <p><strong>No submissions yet.</strong></p>
+      <p>Results will appear here as students finish their modules.</p>
+    </div>
   </div>
 
   <div id="detail-view" hidden>

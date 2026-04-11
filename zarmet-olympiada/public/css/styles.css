@@ -266,8 +266,26 @@ h3 { font-size: 1.25rem; }
   font-weight: 700;
 }
 .zu-admin-table tr:hover td { background: var(--zu-cream-soft); cursor: pointer; }
+.zu-admin-table tr.zu-row-correct td { background: #f0fdf4; }
+.zu-admin-table tr.zu-row-wrong td { background: #fef2f2; }
+.zu-admin-table tr.zu-row-blank td { background: #fafaf9; color: var(--zu-text-muted); }
+.zu-admin-table tr.zu-row-correct:hover td,
+.zu-admin-table tr.zu-row-wrong:hover td,
+.zu-admin-table tr.zu-row-blank:hover td { background: var(--zu-cream-soft); cursor: default; }
 .zu-toolbar { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
 .zu-done { text-align: center; padding: 4rem 2rem; }
+
+.zu-empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--zu-text-muted);
+  background: #fff;
+  border: 1px dashed var(--zu-border);
+  border-radius: 6px;
+  margin-top: 1rem;
+}
+.zu-empty-state p { margin: 0.25rem 0; }
+.zu-empty-state p:first-child { color: var(--zu-primary-dark); font-size: 1.1rem; }
 
 /* ============================================================ */
 /* TEST PAGE — Cambridge-authentic chrome                        */
