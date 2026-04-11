@@ -1,0 +1,58 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Zarmed University" [ref=e4]
+      - generic [ref=e5]: C1 Olympiada
+    - generic [ref=e6]:
+      - generic [ref=e7]: Candidate ID
+      - generic [ref=e8]:
+        - text: Test Student
+        - generic [ref=e9]: c80c3a2a
+    - generic [ref=e11]: 89:58
+  - generic [ref=e13]:
+    - generic [ref=e14]: Questions 1–1
+    - text: For questions 1–8, read the text below and decide which answer (A, B, C or D) best fits each gap.
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - heading "Studying black bears" [level=3] [ref=e17]
+      - generic [ref=e18]:
+        - text: After years of studying North America's black bears in the conventional way, wildlife biologist Luke Robertson felt no closer to understanding the creatures. He realised that he had to
+        - generic [ref=e19]:
+          - generic [ref=e20]: "1"
+          - combobox [ref=e21] [cursor=pointer]:
+            - option [selected]
+            - option "A win"
+            - option "B earn"
+            - option "C gain"
+            - option "D achieve"
+        - text: bear trust. Abandoning scientific detachment, he took the daring step of forming relationships with the animals, bringing them food to gain their acceptance.
+  - navigation [ref=e22]:
+    - generic [ref=e23]:
+      - generic [ref=e24] [cursor=pointer]:
+        - generic [ref=e25]: Part 1
+        - button "1" [ref=e27]
+      - button "Part 2 0 of 1" [ref=e28] [cursor=pointer]:
+        - generic [ref=e29]: Part 2
+        - generic [ref=e30]: 0 of 1
+      - button "Part 3 0 of 1" [ref=e31] [cursor=pointer]:
+        - generic [ref=e32]: Part 3
+        - generic [ref=e33]: 0 of 1
+      - button "Part 4 0 of 1" [ref=e34] [cursor=pointer]:
+        - generic [ref=e35]: Part 4
+        - generic [ref=e36]: 0 of 1
+      - button "Part 5 0 of 1" [ref=e37] [cursor=pointer]:
+        - generic [ref=e38]: Part 5
+        - generic [ref=e39]: 0 of 1
+      - button "Part 6 0 of 1" [ref=e40] [cursor=pointer]:
+        - generic [ref=e41]: Part 6
+        - generic [ref=e42]: 0 of 1
+      - button "Part 7 0 of 2" [ref=e43] [cursor=pointer]:
+        - generic [ref=e44]: Part 7
+        - generic [ref=e45]: 0 of 2
+      - button "Part 8 0 of 1" [ref=e46] [cursor=pointer]:
+        - generic [ref=e47]: Part 8
+        - generic [ref=e48]: 0 of 1
+    - generic [ref=e49]:
+      - button "Previous" [disabled] [ref=e50]: ←
+      - button "Next" [ref=e51] [cursor=pointer]: →
+      - button "Finish" [ref=e52] [cursor=pointer]: ✓

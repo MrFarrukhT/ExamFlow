@@ -338,71 +338,81 @@
   // sits inside the same box (matches cae/examples/4.png exactly).
   function renderPart4(part) {
     const wrap = el('div', 'ct-part');
-    (part.questions || []).forEach((q) => {
-      const block = el('div', 'ct-kwt-block');
-      block.dataset.qid = q.id;
-      if (state.currentQid === q.id) block.classList.add('ct-question--active');
+    // ONE-AT-A-TIME rendering — matches authentic Cambridge CAE Part 4
+    // (see cae/examples/4.png): only the currently-selected KWT question
+    // is on screen at a time. The other questions are navigated via the
+    // numbered buttons in the active bottom-nav segment (25 26 27 28 29 30)
+    // or via the ←/→ arrows. This prevents q30 from being pushed below the
+    // fixed bottom nav on initial load with real 6-question content, and
+    // matches the focused single-question feel of the real exam.
+    const questions = part.questions || [];
+    if (!questions.length) return wrap;
+    const q = questions.find(x => x.id === state.currentQid) || questions[0];
 
-      // First sentence (plain)
-      if (q.prompt) {
-        block.appendChild(el('div', 'ct-kwt-first', q.prompt));
-      }
-      // Bold UPPERCASE keyword
-      if (q.keyWord) {
-        block.appendChild(el('div', 'ct-kwt-keyword', q.keyWord));
-      }
+    const block = el('div', 'ct-kwt-block');
+    block.dataset.qid = q.id;
+    // Always active — it's the only question on screen
+    block.classList.add('ct-question--active');
 
-      // Lead-in sentence with inline input replacing the blank. Accept several
-      // blank patterns seen in content (______, _______, __________, etc.).
-      const leadRow = el('div', 'ct-kwt-lead-row');
-      const leadText = q.leadIn || '';
-      const blankMatch = leadText.match(/_{3,}/);
-      const qNum = extractQuestionNumber(q) || q.id;
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.className = 'ct-kwt-input';
-      input.autocomplete = 'off';
-      input.spellcheck = false;
-      input.maxLength = 150;
-      input.value = state.answers[q.id] || '';
-      input.dataset.qnum = qNum;
-      input.addEventListener('input', () => {
-        saveAnswer(q.id, input.value);
-        state.currentQid = q.id;
-        refreshActiveHighlight();
-      });
-      input.addEventListener('focus', () => {
-        state.currentQid = q.id;
-        refreshActiveHighlight();
-      });
+    // First sentence (plain)
+    if (q.prompt) {
+      block.appendChild(el('div', 'ct-kwt-first', q.prompt));
+    }
+    // Bold UPPERCASE keyword
+    if (q.keyWord) {
+      block.appendChild(el('div', 'ct-kwt-keyword', q.keyWord));
+    }
 
-      // Build the inline input wrapper — number prefix inside the same box
-      const gap = el('span', 'ct-kwt-gap');
-      gap.appendChild(el('span', 'ct-kwt-gap-num', qNum));
-      gap.appendChild(input);
-
-      if (blankMatch) {
-        const before = leadText.slice(0, blankMatch.index);
-        const after = leadText.slice(blankMatch.index + blankMatch[0].length);
-        if (before) leadRow.appendChild(document.createTextNode(before));
-        leadRow.appendChild(gap);
-        if (after) leadRow.appendChild(document.createTextNode(after));
-      } else {
-        // No blank token in leadIn — render text then input after it
-        if (leadText) leadRow.appendChild(document.createTextNode(leadText + ' '));
-        leadRow.appendChild(gap);
-      }
-
-      // Bookmark icon on the far right of the lead row
-      const bookmarkCell = el('span', 'ct-kwt-bookmark');
-      const bookmark = el('span', 'ct-bookmark');
-      bookmark.setAttribute('aria-hidden', 'true');
-      bookmarkCell.appendChild(bookmark);
-      leadRow.appendChild(bookmarkCell);
-
-      block.appendChild(leadRow);
-      wrap.appendChild(block);
+    // Lead-in sentence with inline input replacing the blank. Accept several
+    // blank patterns seen in content (______, _______, __________, etc.).
+    const leadRow = el('div', 'ct-kwt-lead-row');
+    const leadText = q.leadIn || '';
+    const blankMatch = leadText.match(/_{3,}/);
+    const qNum = extractQuestionNumber(q) || q.id;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'ct-kwt-input';
+    input.autocomplete = 'off';
+    input.spellcheck = false;
+    input.maxLength = 150;
+    input.value = state.answers[q.id] || '';
+    input.dataset.qnum = qNum;
+    input.addEventListener('input', () => {
+      saveAnswer(q.id, input.value);
+      state.currentQid = q.id;
+      refreshActiveHighlight();
     });
+    input.addEventListener('focus', () => {
+      state.currentQid = q.id;
+      refreshActiveHighlight();
+    });
+
+    // Build the inline input wrapper — number prefix inside the same box
+    const gap = el('span', 'ct-kwt-gap');
+    gap.appendChild(el('span', 'ct-kwt-gap-num', qNum));
+    gap.appendChild(input);
+
+    if (blankMatch) {
+      const before = leadText.slice(0, blankMatch.index);
+      const after = leadText.slice(blankMatch.index + blankMatch[0].length);
+      if (before) leadRow.appendChild(document.createTextNode(before));
+      leadRow.appendChild(gap);
+      if (after) leadRow.appendChild(document.createTextNode(after));
+    } else {
+      // No blank token in leadIn — render text then input after it
+      if (leadText) leadRow.appendChild(document.createTextNode(leadText + ' '));
+      leadRow.appendChild(gap);
+    }
+
+    // Bookmark icon on the far right of the lead row
+    const bookmarkCell = el('span', 'ct-kwt-bookmark');
+    const bookmark = el('span', 'ct-bookmark');
+    bookmark.setAttribute('aria-hidden', 'true');
+    bookmarkCell.appendChild(bookmark);
+    leadRow.appendChild(bookmarkCell);
+
+    block.appendChild(leadRow);
+    wrap.appendChild(block);
     return wrap;
   }
 
@@ -475,7 +485,10 @@
       const q = (part.questions || []).find(x => x.id === qid);
       const slot = el('div', 'ct-slot');
       slot.dataset.qid = qid;
-      slot.appendChild(el('span', 'ct-slot-number', q ? q.prompt : qid));
+      // Show just the question number as the slot marker (authentic Cambridge
+      // look in cae/examples/7.png — no helper text like "click here, then
+      // click a paragraph". The click affordance is implicit via hover state.)
+      slot.appendChild(el('span', 'ct-slot-number', extractQuestionNumber(q) || qid));
       const assigned = state.answers[qid];
       if (assigned) {
         const paraText = (part.paragraphBank || []).find(p => p.key === assigned);
@@ -484,8 +497,6 @@
           slot.appendChild(el('span', 'ct-para-key', assigned));
           slot.appendChild(document.createTextNode(paraText.text));
         }
-      } else {
-        slot.appendChild(document.createTextNode('Click here, then click a paragraph to assign it'));
       }
       if (state.activeSlotQid === qid) slot.classList.add('ct-slot--active');
       slot.addEventListener('click', () => handleSlotClick(qid));
@@ -1085,6 +1096,15 @@
     }, 50);
   }
 
+  // Parts that render one question at a time — navigating between questions
+  // within these parts needs a full re-render (not just a scroll), because
+  // only the current question's block exists in the DOM. Part 4 (KWT) is
+  // the only current one-at-a-time part; the others all show all questions
+  // at once and only need a scrollTo.
+  function isOneAtATimePart(part) {
+    return part && part.id === 'part4';
+  }
+
   function nextQuestion() {
     const idx = state.qIndexById[state.currentQid];
     if (idx == null || idx >= state.flatQuestions.length - 1) return;
@@ -1093,8 +1113,14 @@
     if (next.partIndex !== state.currentPartIndex) {
       goToPart(next.partIndex);
     } else {
-      renderBottomNav();
-      scrollToQuestion(next.qid);
+      const curPart = state.parts[state.currentPartIndex].part;
+      if (isOneAtATimePart(curPart)) {
+        renderCurrentPart();
+        renderBottomNav();
+      } else {
+        renderBottomNav();
+        scrollToQuestion(next.qid);
+      }
     }
   }
   function prevQuestion() {
@@ -1105,8 +1131,14 @@
     if (prev.partIndex !== state.currentPartIndex) {
       goToPart(prev.partIndex);
     } else {
-      renderBottomNav();
-      scrollToQuestion(prev.qid);
+      const curPart = state.parts[state.currentPartIndex].part;
+      if (isOneAtATimePart(curPart)) {
+        renderCurrentPart();
+        renderBottomNav();
+      } else {
+        renderBottomNav();
+        scrollToQuestion(prev.qid);
+      }
     }
   }
 

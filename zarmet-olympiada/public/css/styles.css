@@ -707,16 +707,19 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   box-shadow: 0 0 0 1px var(--ct-teal);
 }
 
-/* Question blocks (Parts 5, 6, 8 — two-column radio questions) */
+/* Question blocks (Parts 5, 6, 8 — two-column radio questions).
+ * Active question gets a subtle pale teal background (#f0fdfa) — softer
+ * than the old #ecfeff + full teal border combination. Cambridge's
+ * authentic look leans toward understated highlighting. */
 .ct-question-list { display: flex; flex-direction: column; gap: 18px; }
 .ct-question {
-  padding: 12px;
+  padding: 12px 14px;
   border: 1px solid transparent;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 .ct-question--active {
-  background: #ecfeff;
-  border-color: var(--ct-teal);
+  background: #f0fdfa;
+  border-color: var(--ct-teal-soft);
 }
 .ct-q-prompt {
   font-size: 14px;
@@ -896,32 +899,38 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   padding-right: 28px;
 }
 
-/* Part 7 gapped text */
+/* Part 7 gapped text — authentic Cambridge look (cae/examples/7.png):
+ * a clean SOLID-border empty rectangle with just the question number inside.
+ * No helper text, no dashed borders, no pale background. The click-to-fill
+ * flow is discovered via hover + active state. */
 .ct-slot {
   display: block;
-  min-height: 56px;
-  padding: 12px;
+  min-height: 48px;
+  padding: 12px 14px;
   margin: 14px 0;
-  border: 2px dashed var(--ct-border-strong);
-  border-radius: 3px;
-  background: #fafafa;
+  border: 1px solid var(--ct-text);
+  border-radius: 2px;
+  background: #fff;
   font-size: 13px;
-  color: var(--ct-text-muted);
-  cursor: pointer;
-}
-.ct-slot:hover { border-color: var(--ct-teal); background: #f0fdfa; }
-.ct-slot--filled {
-  border-style: solid;
-  border-color: var(--ct-teal);
-  background: #f0fdfa;
   color: var(--ct-text);
+  cursor: pointer;
+  transition: background 0.12s, box-shadow 0.12s;
 }
-.ct-slot--active { border-color: var(--ct-teal); box-shadow: 0 0 0 2px var(--ct-teal-soft); }
+.ct-slot:hover { background: #f9fafb; }
+.ct-slot--filled {
+  background: #f0fdfa;
+}
+.ct-slot--active {
+  box-shadow: 0 0 0 2px var(--ct-teal);
+  background: #f0fdfa;
+}
 .ct-slot-number {
   display: inline-block;
   font-weight: 700;
-  color: var(--ct-teal);
-  margin-right: 8px;
+  color: var(--ct-text);
+  margin-right: 12px;
+  padding: 0 6px;
+  border-right: 1px solid var(--ct-border-strong);
 }
 
 .ct-paragraph-bank {

@@ -1,0 +1,52 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Zarmed University" [ref=e4]
+      - generic [ref=e5]: C1 Olympiada
+    - generic [ref=e6]:
+      - generic [ref=e7]: Candidate ID
+      - generic [ref=e8]:
+        - text: Test Student
+        - generic [ref=e9]: eb14078f
+    - generic [ref=e11]: 40:00
+  - generic [ref=e13]:
+    - generic [ref=e14]: Questions 1–1
+    - text: You will hear three different extracts. For questions 1-6, choose the answer (A, B or C) which fits best according to what you hear.
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - generic [ref=e18]:
+        - paragraph [ref=e20]: You will be listening to an audio clip during this test. You will not be permitted to pause or rewind the audio while answering the questions. To continue, click Play.
+        - button "Play" [ref=e21] [cursor=pointer]
+      - generic [ref=e23]:
+        - generic [ref=e24]: 1. What is the speaker's main point?
+        - generic [ref=e26]:
+          - generic [ref=e27] [cursor=pointer]:
+            - radio "A It is cheaper than expected." [ref=e28]
+            - generic [ref=e29]: A
+            - generic [ref=e30]: It is cheaper than expected.
+          - generic [ref=e31] [cursor=pointer]:
+            - radio "B It is more complicated than expected." [ref=e32]
+            - generic [ref=e33]: B
+            - generic [ref=e34]: It is more complicated than expected.
+          - generic [ref=e35] [cursor=pointer]:
+            - radio "C It is more popular than expected." [ref=e36]
+            - generic [ref=e37]: C
+            - generic [ref=e38]: It is more popular than expected.
+  - navigation [ref=e39]:
+    - generic [ref=e40]:
+      - generic [ref=e41] [cursor=pointer]:
+        - generic [ref=e42]: Part 1
+        - button "1" [ref=e44]
+      - button "Part 2 0 of 1" [ref=e45] [cursor=pointer]:
+        - generic [ref=e46]: Part 2
+        - generic [ref=e47]: 0 of 1
+      - button "Part 3 0 of 1" [ref=e48] [cursor=pointer]:
+        - generic [ref=e49]: Part 3
+        - generic [ref=e50]: 0 of 1
+      - button "Part 4 0 of 4" [ref=e51] [cursor=pointer]:
+        - generic [ref=e52]: Part 4
+        - generic [ref=e53]: 0 of 4
+    - generic [ref=e54]:
+      - button "Previous" [disabled] [ref=e55]: ←
+      - button "Next" [disabled] [ref=e56]: →
+      - button "Finish" [disabled] [ref=e57]: ✓
