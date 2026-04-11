@@ -1,5 +1,71 @@
 # Eye Journal
 
+## Session: 2026-04-11 14:45 — Zarmet Olympiada Cambridge-Authentic UI — Round 7
+Persona: Student at both extremes — wide 1920×1080 lab monitor AND narrow 768px tablet | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: welcome, dashboard, admin (login + rows + detail) at 1920, test Part 5 at 768 (stacked layout check)
+Starting state: Round 6 fixed the header misalignment at wide viewports. Responsive behavior at non-default widths hadn't been fully walked for student-facing pages at narrow sizes.
+
+### Round 7 — Multi-viewport pass (1920 wide + 768 narrow)
+
+**Explored:** All pages at 1920×1080 (lab monitor) + test page at 768px (tablet — below the 880px media breakpoint where the two-col layout stacks).
+
+**Findings:**
+
+- [T5 ✅] Welcome @ 1920 — narrow 560px form centered with empty space on both sides (correct intentional layout). No issues.
+- [T5 ✅] Dashboard @ 1920 — 960px content column centered, module cards side-by-side, looks balanced. No issues.
+- [T5 ✅] Admin login @ 1920 — still narrow (`.page--narrow` class from Round 4 fix). No issues.
+- [T5 ✅] Admin rows @ 1920 — table at 960px with well-distributed columns, not stretched thin. No issues.
+- [T5 ✅] Admin detail @ 1920 — all 9 question rows fit in one screen with row colors (green q1 + grey unanswered). No issues.
+- [T5 ✅] Admin rows + detail @ 768 (tablet spot-check) — table wraps gracefully, row colors intact, "Back to list" button accessible. No issues.
+- [T5 ✅] Test Part 5 @ 768 — two-col layout stacks into single column per `@media (max-width: 880px)`. Passage on top, question card below. Working.
+- 🔴 **[T1 — BROKEN] Test page bottom navigator @ 768 — arrows are OFF-SCREEN.** Measured via eval: `.ct-nav-arrows` rect was `left: 810, right: 991` inside a 768px viewport. `.ct-nav-parts` was growing to 810px because `display: flex; flex: 1` without `min-width: 0` lets the flex container grow to its children's intrinsic content width. Students on a narrow screen literally cannot reach the prev/next/finish buttons — they can't advance or submit.
+
+**Action:** POLISH (1 change — fixes a real T1 accessibility/usability bug)
+
+- [T1] `.ct-nav-parts { min-width: 0; overflow-x: auto; }` — Two CSS properties that cascade into a fundamental fix:
+  - `min-width: 0` overrides the flex default `min-width: auto`, letting the flex container actually shrink to fit its parent instead of growing to fit its children's intrinsic content. The arrows container is no longer pushed off-screen.
+  - `overflow-x: auto` gracefully handles the remaining overflow: if parts still don't fit, they become horizontally scrollable rather than breaking layout. Thin webkit scrollbar style (3px) to avoid visual clutter.
+  Mode: polish | Quality: broken (T1) → functional/crafted (5) | Files: public/css/styles.css
+
+### Verification
+
+- ✅ **Before fix @ 768** (`r7-test-part5-768.png`) — `.ct-nav-arrows` at `left: 810, right: 991`, totally off-screen
+- ✅ **After fix @ 768** (`r7-test-768-nav-fixed.png`) — `.ct-nav-arrows` at `left: 587, right: 768`, fully inside viewport
+- ✅ **Regression check @ 1280** (`r7-test-1280-regression.png`) — Parts 1-8 show full `X of Y` labels, arrows visible right, Part 1 active with teal `1`, no changes from round 6
+- ✅ 1920×1080 behavior unchanged (already verified in round 6)
+
+Eval measurements confirm the fix:
+```
+Before: { arrowsLeft: 810, arrowsRight: 991, arrowsVisible: false }
+After:  { arrowsLeft: 587, arrowsRight: 768, arrowsVisible: true }
+```
+
+### Quality Map (updated)
+| Page | Layer | Notes |
+|------|-------|-------|
+| test.html (narrow viewport ≤ 880px) | **5-Crafted** | Two-col stacks, nav arrows accessible, horizontal overflow scrolls gracefully |
+
+All 13 pages continue to hold at Layer 5 Crafted. Round 7 fixed a genuine T1 bug (arrows inaccessible at narrow widths) that was hiding in plain sight because nobody had tested below the default 1280px.
+
+### Deferred
+- Real content transcription — out of /eye scope
+- Keyboard arrow nav — borderline new feature
+- Mobile viewports < 500px — still out of intent plan scope (desktop-only)
+
+### Session Stats
+Pages explored: 6 (welcome/dashboard/admin triple at 1920, test at 768)
+Screenshots captured: 7
+Rounds: 1
+Polishes landed: 1
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 1
+
+**Trajectory update:** Round 7 found a T1 bug (arrows off-screen at narrow widths) that 6 previous rounds missed because all prior walks were done at the default 1280px viewport. This is a good reminder that quality ceiling is viewport-dependent: a page can be "Crafted" at one width and "Broken" at another. The app remains shippable on lab desktops; the fix just extends support to narrower screens as a safety net.
+
+---
+
 ## Session: 2026-04-11 14:35 — Zarmet Olympiada Cambridge-Authentic UI — Round 6
 Persona: Student at a 1920×1080 lab monitor | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: dashboard completion banner (live), test page at 1920×1080, content 404 error path
