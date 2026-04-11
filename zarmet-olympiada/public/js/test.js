@@ -33,6 +33,7 @@
   const isDe = lang === 'german-c1';
   const t = isDe ? {
     audioPlaying:      'Audio läuft',
+    audioFinished:     'Audio beendet',
     candidateId:       'Kandidaten-ID',
     loading:           'Lädt …',
     problemTitle:      'Problem',
@@ -48,6 +49,7 @@
     loadFailed:        (msg) => 'Test konnte nicht geladen werden. Bitte sagen Sie Ihrer Aufsicht Bescheid. (' + msg + ')',
   } : {
     audioPlaying:      'Audio is playing',
+    audioFinished:     'Audio finished',
     candidateId:       'Candidate ID',
     loading:           'Loading …',
     problemTitle:      'Problem',
@@ -102,6 +104,8 @@
                              // Initialized to a new Set() when content loads (below).
     listeningGate: 'closed', // legacy compat — kept as 'opened' shim for any code still reading it
     audioElement: null,     // currently live Audio instance (if any)
+    audioFinishedHideTimer: null, // setTimeout id for the "Audio finished" brief announcement;
+                                  // cleared when new audio plays, part changes, or on error
     activeSlotQid: null,    // for gapped-text: which slot is selected for assignment
     timerEndMs: null,
     timerHandle: null,
@@ -815,6 +819,13 @@
       try { state.audioElement.pause(); } catch (e) {}
       state.audioElement = null;
     }
+    // Clear any pending "Audio finished" hide timer from a previous part —
+    // we're starting fresh, so the stale timer shouldn't flicker the status
+    // label back to hidden mid-playback.
+    if (state.audioFinishedHideTimer) {
+      clearTimeout(state.audioFinishedHideTimer);
+      state.audioFinishedHideTimer = null;
+    }
     state.listeningGate = 'opened'; // legacy compat
     if (part.audio && part.audio.src) {
       if (!state.playedAudioSrcs) state.playedAudioSrcs = new Set();
@@ -863,13 +874,33 @@
     };
 
     audio.addEventListener('playing', () => {
-      document.getElementById('ct-audio-status').classList.add('ct-audio-status--visible');
+      const statusEl = document.getElementById('ct-audio-status');
+      // Reset label in case a previous part left it in the "Audio finished"
+      // state (the hide-timer may have been cancelled before it could restore).
+      const label = statusEl.querySelector('span:last-child');
+      if (label) label.textContent = t.audioPlaying;
+      statusEl.classList.add('ct-audio-status--visible');
       startStallTimer();
     });
     audio.addEventListener('ended', () => {
       if (stallTimer) clearTimeout(stallTimer);
       state.audioState[part.id] = 'finished';
-      document.getElementById('ct-audio-status').classList.remove('ct-audio-status--visible');
+      // Brief "Audio finished" confirmation instead of silent hide.
+      // The aria-live="polite" region announces the text change to screen
+      // readers, closing the loop on the earlier "Audio is playing" message
+      // (a student with a screen reader otherwise has no auditory cue that
+      // playback ended vs. stalled vs. silent mid-clip). Keep the label
+      // visible for ~2.5s so sighted students get the confirmation too,
+      // then collapse back. See round 22d.
+      const statusEl = document.getElementById('ct-audio-status');
+      const label = statusEl.querySelector('span:last-child');
+      if (label) label.textContent = t.audioFinished;
+      if (state.audioFinishedHideTimer) clearTimeout(state.audioFinishedHideTimer);
+      state.audioFinishedHideTimer = setTimeout(() => {
+        statusEl.classList.remove('ct-audio-status--visible');
+        if (label) label.textContent = t.audioPlaying; // restore for next play
+        state.audioFinishedHideTimer = null;
+      }, 2500);
       renderCurrentPart();
       renderBottomNav();
     });
