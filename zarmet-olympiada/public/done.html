@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Zarmed Olympiada — Submitted</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="zu-welcome">
@@ -16,6 +17,25 @@
   <p style="text-align:center; font-size:1.1rem; color: var(--zu-text-muted);">Please wait for your invigilator.</p>
 </div>
 <script>
+// German C1 localization — runs BEFORE the rotation clear below so we can
+// still read olympiada:lang. If the student came from a German session,
+// swap the 4 static strings + html lang + document title. English is the
+// default (no-op) so we only pay the DOM work when we actually need it.
+(function localize() {
+  try {
+    var lang = localStorage.getItem('olympiada:lang');
+    if (lang !== 'german-c1') return;
+    document.documentElement.lang = 'de';
+    document.title = 'Zarmed Olympiada — Abgegeben';
+    var h1 = document.querySelector('.zu-header h1');
+    if (h1) h1.textContent = 'Vielen Dank';
+    var subtitle = document.querySelector('.zu-header .zu-subtitle');
+    if (subtitle) subtitle.textContent = 'Ihr Test wurde abgegeben.';
+    var instruction = document.querySelector('.page > p');
+    if (instruction) instruction.textContent = 'Bitte warten Sie auf Ihre Aufsicht.';
+  } catch (e) { /* fail silently — English default is still acceptable */ }
+})();
+
 // Rotation safety + invigilator key combo (4-corner click, per ADR-037)
 // Clear any lingering session state so the next student starts clean.
 try {

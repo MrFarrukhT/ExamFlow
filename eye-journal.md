@@ -1,5 +1,94 @@
 # Eye Journal
 
+## Session: 2026-04-11 17:45 — Zarmed Olympiada done.html German Localization — Round 21b (parallel iteration)
+Persona: German C1 student who just submitted (or whose session landed on done.html via any future path) — currently gets English "Thank you" / "Please wait for your invigilator" regardless of their chosen language | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: done.html (direct URL + German forced via localStorage + English non-regression)
+Starting state: My round 20b recommended walking done.html after the standards overhaul to check whether the palette shift left it acceptable. Round 22's overhaul updated done.html to `body class="zu-welcome"` for vertical centering (same pattern as index.html) and restyled the "Please wait" paragraph with inline font-size + muted color. But NONE of the 4 static English strings were localized — not by round 22, not by any prior round. The i18n work has landed on welcome (round 20), dashboard (round 19b), test runner error paths (round 19c), but done.html was overlooked.
+
+### Round 21b — Localize done.html for German C1 immersion
+
+**Explored:** Navigated directly to `http://localhost:3004/done.html` (no code path reaches it in the current flow, but it's reachable by direct URL — and any future flow that wires it up would need localization to be ready). Rendered cleanly: logo centered, "Thank you" h1 in navy, "Your test has been submitted." subtitle, separator rule, "Please wait for your invigilator." muted paragraph. Visually polished. But every word is English-only.
+
+**Findings:**
+
+- [T4] **All 4 static strings on done.html are hardcoded English.** A German C1 student (if they reach this page via any future flow — timer auto-submit all-done, or a wire-up of the intent-plan's "done.html reached after completion banner flow") would see:
+  - `<title>Zarmed Olympiada — Submitted</title>`
+  - `<h1>Thank you</h1>`
+  - `<p class="zu-subtitle">Your test has been submitted.</p>`
+  - `<p>Please wait for your invigilator.</p>`
+  
+  The `<html lang="en">` also never swaps.
+
+- [T0] Tricky timing: done.html's existing `<script>` CLEARS all `olympiada:*` localStorage keys on load for rotation safety. If I want to read `olympiada:lang` for localization, I MUST do it BEFORE the clear — otherwise the lang key is gone by the time localize() could read it.
+
+**Action:** POLISH (1 self-contained inline script at the top of the existing `<script>` block)
+
+- [T4 → T5] **Added a `localize()` IIFE at the top of done.html's inline script, BEFORE the rotation-safety clear.** Reads `olympiada:lang`, returns early if not `'german-c1'` (English default is a no-op), otherwise swaps 5 properties:
+  ```js
+  document.documentElement.lang = 'de';
+  document.title = 'Zarmed Olympiada — Abgegeben';
+  querySelector('.zu-header h1').textContent = 'Vielen Dank';
+  querySelector('.zu-header .zu-subtitle').textContent = 'Ihr Test wurde abgegeben.';
+  querySelector('.page > p').textContent = 'Bitte warten Sie auf Ihre Aufsicht.';
+  ```
+  
+  Wrapped in `try { ... } catch (e) {}` so if localStorage access fails, the English default still renders (graceful degradation). German strings use formal `Sie` form — same convention as my round 19c test.js localization (matches Goethe exam chrome).
+  
+  The existing rotation-safety clear runs SECOND, after localize() has already updated the DOM. This means: at time T0 the page renders English, at time T1 (~1 frame later) localize() swaps to German, at time T2 rotation clear wipes localStorage (DOM is already German, no visible change). The English→German flash is ~16ms — imperceptible.
+  
+  Mode: polish | Quality: 4 → 5 | Files: public/done.html (+18/-1 inline script)
+
+### Verification
+
+**German session** (forced via `localStorage.setItem('olympiada:lang', 'german-c1')` before navigating):
+```
+docLang:       "de"                              ← was "en"
+title:         "Zarmed Olympiada — Abgegeben"    ← was "Zarmed Olympiada — Submitted"
+h1:            "Vielen Dank"                     ← was "Thank you"
+subtitle:      "Ihr Test wurde abgegeben."       ← was "Your test has been submitted."
+instruction:   "Bitte warten Sie auf Ihre Aufsicht."  ← was "Please wait for your invigilator."
+storageCleared: 0                                 ← rotation clear still ran after localize
+```
+
+Screenshot `r21-done-de.png` — German page renders with logo + "Vielen Dank" + "Ihr Test wurde abgegeben." + "Bitte warten Sie auf Ihre Aufsicht." vertically centered in the viewport. Identical composition to the English version.
+
+**English non-regression** (forced via `localStorage.setItem('olympiada:lang', 'english-c1')`):
+```
+docLang:       "en"                              ← unchanged
+title:         "Zarmed Olympiada — Submitted"    ← unchanged
+h1:            "Thank you"                       ← unchanged
+subtitle:      "Your test has been submitted."   ← unchanged
+instruction:   "Please wait for your invigilator." ← unchanged
+```
+
+Screenshot `r21-done-current.png` (English, earlier in the round) — unchanged render.
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| done.html (English) | **5-Crafted** | Vertically centered, muted instruction line, clean |
+| done.html (German) | **5-Crafted** | Full localization: html lang, title, h1, subtitle, instruction |
+
+### Deferred (thin)
+- **done.html is still dead code in the current flow.** No navigation reaches it — submit goes to dashboard, completion banner stays inline on dashboard, timer auto-submit goes to dashboard. The round 17b + 20b observation stands: done.html is a fallback for any FUTURE flow that wants to redirect there. This round future-proofs it so a German student hitting that future path won't break immersion. Wiring it into the flow is a product decision (not Eye scope).
+- The 4-corner invigilator gate script below the localize() block is unchanged. It already uses English-agnostic behavior (tap corners → navigate to index.html).
+
+### Session Stats
+Pages explored: 1 (done.html) with 2 language states
+Screenshots captured: 2 (r21-done-current.png, r21-done-de.png)
+Rounds: 1 (concurrent with parallel rounds — labeled 21b)
+Polishes landed: 1 (done.html i18n)
+Rebuilds: 0 | Elevations: 0 | Reverted: 0
+Changes shipped: 1 file (public/done.html)
+
+**Trajectory update:** Round 21b closes the last known i18n gap in the user-facing pages: welcome (round 20), dashboard (round 19b/20), test runner + error paths (round 19c), done.html (round 21b). Every page a student or invigilator touches now swaps to German when `olympiada:lang === 'german-c1'`. The "English strings slip through" risk is minimized as long as new rounds add localization for any new user-visible string.
+
+**Key learning:** When a page has a rotation-clear script that wipes localStorage, any future enhancement that needs to read `olympiada:*` keys must run BEFORE the clear. The ordering matters and is a non-obvious constraint — worth documenting inline with a comment (which I did: "runs BEFORE the rotation clear below so we can still read olympiada:lang"). The next round that touches done.html will see the comment and respect the ordering.
+
+**Recommended next angle:** Check if `dashboard.html` and `admin.html` also need a favicon polish like the one a parallel iteration just added to dashboard.html (`<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">`). Done.html appears to have gotten the favicon too, but index.html and admin.html and test.html might still be missing it.
+
+---
+
 ## Session: 2026-04-11 17:40 — Zarmed Olympiada Admin Login Composition — Round 20b (parallel iteration)
 Persona: Invigilator opening admin.html for the first time to see results — landing on the password gate | System: Zarmed Olympiada standalone (port 3004)
 Pages explored: admin.html login state + simulated list-view state
