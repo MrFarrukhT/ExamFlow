@@ -261,6 +261,93 @@ Same as `multiple-choice` but:
 - For listening sentence completion (CAE Listening Part 2, Goethe Hören gap fills)
 - `maxWords`: Soft limit shown to the student, enforced at scoring
 
+### `gapped-text`
+
+For CAE Reading Part 7 — students slot detached paragraphs (A-G) into numbered gaps in a passage.
+
+At the **part level** add a `paragraphBank`:
+
+```json
+{
+  "id": "part7",
+  "title": "Part 7 — Gapped text",
+  "instructions": "Six paragraphs have been removed from the article. Choose from the paragraphs A-G the one which fits each gap. There is one extra paragraph which you do not need to use.",
+  "passage": {
+    "type": "text",
+    "content": "Scottish Wildcat\n\n[[SLOT:q41]]\n\nHowever, the physical differences are tangible... [[SLOT:q42]] ..."
+  },
+  "paragraphBank": [
+    { "key": "A", "text": "The nuthatch of one to its nearest ferny burrow..." },
+    { "key": "B", "text": "It was during the nineteenth century that..." },
+    { "key": "C", "text": "Despite this, hunting remains a concern..." },
+    { "key": "D", "text": "..." },
+    { "key": "E", "text": "..." },
+    { "key": "F", "text": "..." },
+    { "key": "G", "text": "..." }
+  ],
+  "questions": [
+    { "id": "q41", "type": "gapped-text", "prompt": "41", "answer": "C", "points": 1 },
+    { "id": "q42", "type": "gapped-text", "prompt": "42", "answer": "A", "points": 1 }
+  ]
+}
+```
+
+- `paragraphBank`: Array of `{key, text}` objects. Keys are usually A-G. Exactly one extra paragraph is standard.
+- Passage uses `[[SLOT:qID]]` markers where each gap lives. The renderer replaces each marker with a drop-zone bound to that question.
+- `answer`: The correct paragraph key (string).
+- Scoring: Exact string match (same as `matching`).
+- Rendering: Click a slot, then click a paragraph in the bank to assign it. Click a filled slot to release its paragraph back to the bank.
+
+---
+
+## Part-level: `taskGroups` (for Listening Part 4)
+
+CAE Listening Part 4 has **two independent matching tasks** scored against the same audio. Rather than modeling them as two separate parts, use `taskGroups`:
+
+```json
+{
+  "id": "part-listening-4",
+  "title": "Part 4 — Multiple matching",
+  "instructions": "You will hear five short extracts in which people are talking about changing their jobs.",
+  "audio": {
+    "src": "audio/part4.mp3",
+    "autoPlay": true
+  },
+  "taskGroups": [
+    {
+      "id": "task1",
+      "instructions": "Task 1: For questions 21-25, choose from the list A-H what reason each speaker gives for changing their job.",
+      "options": [
+        { "key": "A", "text": "unfriendly colleagues" },
+        { "key": "B", "text": "poor holiday entitlement" },
+        { "key": "C", "text": "lacking a sense of purpose" }
+      ],
+      "questions": [
+        { "id": "q21", "type": "matching", "prompt": "Speaker 1", "answer": "C", "points": 1 }
+      ]
+    },
+    {
+      "id": "task2",
+      "instructions": "Task 2: For questions 26-30, choose from the list A-H how each speaker feels about their new job.",
+      "options": [
+        { "key": "A", "text": "encouraged by early results" },
+        { "key": "B", "text": "hopeful about future success" },
+        { "key": "C", "text": "delighted by a change in lifestyle" }
+      ],
+      "questions": [
+        { "id": "q26", "type": "matching", "prompt": "Speaker 1", "answer": "C", "points": 1 }
+      ]
+    }
+  ]
+}
+```
+
+**Rules:**
+- `taskGroups` and `questions` are **mutually exclusive** on a part — only one is used. The server will refuse to load a part that has both populated.
+- Each task group has its own `instructions`, its own `options` (shared across all matching questions in that task), and its own `questions` array.
+- Question IDs must still be unique across the whole file (the server validates this).
+- Scoring walks `taskGroups[*].questions` when present. Totals roll up to the part's score, which rolls up to the file's `scoring.totalPoints`.
+
 ---
 
 ## Scoring

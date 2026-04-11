@@ -19,7 +19,7 @@
       "audio": null,
       "questions": [
         {
-          "id": "q1",
+          "id": "g-q1",
           "type": "multiple-choice",
           "prompt": "1 (Platzhalter)",
           "options": [
@@ -31,10 +31,28 @@
           "points": 1
         }
       ]
+    },
+    {
+      "id": "part2",
+      "title": "Teil 2 — Lückentext (STUB)",
+      "instructions": "Ergänzen Sie die Lücken mit dem passenden Wort.",
+      "passage": {
+        "type": "text",
+        "content": "Platzhalter für Lückentext. [[GAP:g-q2]] markiert die Lückenposition."
+      },
+      "questions": [
+        {
+          "id": "g-q2",
+          "type": "open-cloze",
+          "prompt": "2 (Platzhalter)",
+          "answer": ["der", "Der"],
+          "points": 1
+        }
+      ]
     }
   ],
   "scoring": {
     "mode": "per-question-points",
-    "totalPoints": 1
+    "totalPoints": 2
   }
 }

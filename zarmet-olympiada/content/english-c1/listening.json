@@ -9,20 +9,20 @@
   "instructions": "This is a STUB content file. Real questions will be transcribed from cae/CAE Practice test listening.docx in Priority 1.",
   "parts": [
     {
-      "id": "part1",
+      "id": "part-listening-1",
       "title": "Part 1 — Multiple choice (STUB)",
-      "instructions": "You will hear three different extracts. For questions 1–6, choose the answer (A, B or C) which fits best according to what you hear.",
+      "instructions": "You will hear three different extracts. For questions 1-6, choose the answer (A, B or C) which fits best according to what you hear.",
       "passage": null,
       "audio": {
         "src": "audio/part1.mp3",
-        "maxPlays": 2,
-        "note": "You will hear each extract twice."
+        "autoPlay": true,
+        "note": "Audio will auto-play. You will hear each extract twice within the audio file."
       },
       "questions": [
         {
-          "id": "q1",
+          "id": "lq1",
           "type": "multiple-choice",
-          "prompt": "1 (stub) — What is the speaker's main point?",
+          "prompt": "1. What is the speaker's main point?",
           "options": [
             { "key": "A", "text": "It is cheaper than expected." },
             { "key": "B", "text": "It is more complicated than expected." },
@@ -32,10 +32,116 @@
           "points": 1
         }
       ]
+    },
+    {
+      "id": "part-listening-2",
+      "title": "Part 2 — Sentence completion (STUB)",
+      "instructions": "You will hear a student called Josh talking about his trip to South Africa. For questions 7-14, complete the sentences with a word or short phrase.",
+      "audio": {
+        "src": "audio/part2.mp3",
+        "autoPlay": true
+      },
+      "questions": [
+        {
+          "id": "lq7",
+          "type": "sentence-completion",
+          "prompt": "Josh's group planned to check out a particular region after a __________ that had occurred there.",
+          "maxWords": 3,
+          "answer": ["flood", "flash flood"],
+          "points": 1
+        }
+      ]
+    },
+    {
+      "id": "part-listening-3",
+      "title": "Part 3 — Multiple choice long interview (STUB)",
+      "instructions": "You will hear an interview with two journalists talking about their work. For questions 15-20, choose the answer (A, B, C or D).",
+      "audio": {
+        "src": "audio/part3.mp3",
+        "autoPlay": true
+      },
+      "questions": [
+        {
+          "id": "lq15",
+          "type": "multiple-choice",
+          "prompt": "15. What does Jenny say about the story which made her name?",
+          "options": [
+            { "key": "A", "text": "She'd been on the lookout for just such a lucky break." },
+            { "key": "B", "text": "She resented colleagues trying to take the credit for it." },
+            { "key": "C", "text": "She wasn't actually responsible for the libeled article." },
+            { "key": "D", "text": "She asked for a more prestigious job in the aftermath of it." }
+          ],
+          "answer": "B",
+          "points": 1
+        }
+      ]
+    },
+    {
+      "id": "part-listening-4",
+      "title": "Part 4 — Multiple matching (two tasks, STUB)",
+      "instructions": "You will hear five short extracts in which people are talking about changing their jobs.",
+      "audio": {
+        "src": "audio/part4.mp3",
+        "autoPlay": true
+      },
+      "taskGroups": [
+        {
+          "id": "task1",
+          "instructions": "Task 1 — For questions 21-25, choose from the list A-H what reason each speaker gives for changing their job.",
+          "options": [
+            { "key": "A", "text": "unfriendly colleagues" },
+            { "key": "B", "text": "poor holiday entitlement" },
+            { "key": "C", "text": "lacking a sense of purpose" },
+            { "key": "D", "text": "needing more of a challenge" }
+          ],
+          "questions": [
+            {
+              "id": "lq21",
+              "type": "matching",
+              "prompt": "Speaker 1",
+              "answer": "C",
+              "points": 1
+            },
+            {
+              "id": "lq22",
+              "type": "matching",
+              "prompt": "Speaker 2",
+              "answer": "B",
+              "points": 1
+            }
+          ]
+        },
+        {
+          "id": "task2",
+          "instructions": "Task 2 — For questions 26-30, choose from the list A-H how each speaker feels about their new job.",
+          "options": [
+            { "key": "A", "text": "encouraged by early results" },
+            { "key": "B", "text": "hopeful about future success" },
+            { "key": "C", "text": "delighted by a change in lifestyle" },
+            { "key": "D", "text": "relieved the initial uncertainty is over" }
+          ],
+          "questions": [
+            {
+              "id": "lq26",
+              "type": "matching",
+              "prompt": "Speaker 1",
+              "answer": "C",
+              "points": 1
+            },
+            {
+              "id": "lq27",
+              "type": "matching",
+              "prompt": "Speaker 2",
+              "answer": "A",
+              "points": 1
+            }
+          ]
+        }
+      ]
     }
   ],
   "scoring": {
     "mode": "per-question-points",
-    "totalPoints": 1
+    "totalPoints": 7
   }
 }

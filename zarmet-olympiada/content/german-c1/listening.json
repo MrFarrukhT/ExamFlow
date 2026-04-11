@@ -9,21 +9,44 @@
   "instructions": "Dies ist eine PLATZHALTER-Datei. Die echten Fragen werden in Priority 1 aus Nemis tili/Listening.pdf und answers.docx transkribiert.",
   "parts": [
     {
-      "id": "part1",
-      "title": "Teil 1 — Hören (STUB)",
+      "id": "part-listening-1",
+      "title": "Teil 1 — Richtig/Falsch (STUB)",
       "instructions": "Sie hören einen Text. Entscheiden Sie, ob die Aussagen richtig oder falsch sind. Sie hören den Text einmal.",
       "passage": null,
       "audio": {
         "src": "audio/part1.m4a",
-        "maxPlays": 1,
+        "autoPlay": true,
         "note": "Sie hören den Text einmal."
       },
       "questions": [
         {
-          "id": "q1",
+          "id": "g-lq1",
           "type": "true-false",
           "prompt": "1 (Platzhalter) — Die Aussage entspricht dem Text.",
           "answer": "true",
+          "points": 1
+        }
+      ]
+    },
+    {
+      "id": "part-listening-2",
+      "title": "Teil 2 — Multiple Choice (STUB)",
+      "instructions": "Sie hören einen Monolog. Wählen Sie die richtige Antwort.",
+      "audio": {
+        "src": "audio/part2.m4a",
+        "autoPlay": true
+      },
+      "questions": [
+        {
+          "id": "g-lq2",
+          "type": "multiple-choice",
+          "prompt": "2 (Platzhalter)",
+          "options": [
+            { "key": "A", "text": "Option A" },
+            { "key": "B", "text": "Option B" },
+            { "key": "C", "text": "Option C" }
+          ],
+          "answer": "B",
           "points": 1
         }
       ]
@@ -31,6 +54,6 @@
   ],
   "scoring": {
     "mode": "per-question-points",
-    "totalPoints": 1
+    "totalPoints": 2
   }
 }

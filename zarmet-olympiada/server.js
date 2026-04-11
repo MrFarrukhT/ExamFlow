@@ -28,6 +28,20 @@ for (const dir of [SESSIONS_DIR, BACKUPS_DIR, path.join(SESSIONS_DIR, '_complete
 // ------- content loading (with validation) -------
 const contentCache = new Map();
 
+// Canonical iterator: yields every question in a part, whether the part uses
+// the flat `questions` array or the `taskGroups[*].questions` shape (ADR-038).
+// This is the ONE place that knows about both shapes; all scoring/validation
+// code must use this helper.
+function* walkPartQuestions(part) {
+    if (Array.isArray(part.taskGroups) && part.taskGroups.length > 0) {
+        for (const tg of part.taskGroups) {
+            for (const q of (tg.questions || [])) yield q;
+        }
+    } else {
+        for (const q of (part.questions || [])) yield q;
+    }
+}
+
 function loadContent(lang, skill) {
     const cacheKey = `${lang}/${skill}`;
     if (contentCache.has(cacheKey)) return contentCache.get(cacheKey);
@@ -52,10 +66,25 @@ function loadContent(lang, skill) {
     const seenQids = new Set();
     let computedTotal = 0;
     for (const part of content.parts) {
-        if (!part.id || !part.title || !Array.isArray(part.questions)) {
+        if (!part.id || !part.title) {
             throw new Error(`Content ${cacheKey} part malformed: ${JSON.stringify(part.id)}`);
         }
-        for (const q of part.questions) {
+        // A part must have either flat `questions` OR `taskGroups`, not both, not neither
+        const hasFlat = Array.isArray(part.questions) && part.questions.length > 0;
+        const hasGroups = Array.isArray(part.taskGroups) && part.taskGroups.length > 0;
+        if (hasFlat && hasGroups) {
+            throw new Error(`Content ${cacheKey} part ${part.id} has BOTH questions and taskGroups (mutually exclusive)`);
+        }
+        if (!hasFlat && !hasGroups) {
+            throw new Error(`Content ${cacheKey} part ${part.id} has neither questions nor taskGroups`);
+        }
+        // gapped-text parts require a paragraphBank
+        if (hasFlat && part.questions.some(q => q.type === 'gapped-text')) {
+            if (!Array.isArray(part.paragraphBank) || part.paragraphBank.length === 0) {
+                throw new Error(`Content ${cacheKey} part ${part.id} uses gapped-text but has no paragraphBank`);
+            }
+        }
+        for (const q of walkPartQuestions(part)) {
             if (!q.id || !q.type) {
                 throw new Error(`Content ${cacheKey} question malformed in part ${part.id}`);
             }
@@ -75,14 +104,21 @@ function loadContent(lang, skill) {
     return content;
 }
 
-// Deep clone + strip answer fields before sending to client.
+// Deep clone + strip answer fields before sending to client. Walks both
+// flat `questions` and `taskGroups[*].questions` (ADR-038).
 function stripAnswerKey(content) {
     const clone = JSON.parse(JSON.stringify(content));
     if (clone.scoring) delete clone.scoring.totalPoints;
     for (const part of clone.parts || []) {
-        for (const q of part.questions || []) {
+        for (const q of (part.questions || [])) {
             delete q.answer;
             delete q.points;
+        }
+        for (const tg of (part.taskGroups || [])) {
+            for (const q of (tg.questions || [])) {
+                delete q.answer;
+                delete q.points;
+            }
         }
     }
     return clone;
@@ -94,7 +130,7 @@ function scoreAnswer(question, studentValue) {
     const points = question.points ?? 1;
     const t = question.type;
 
-    if (t === 'multiple-choice' || t === 'matching' || t === 'true-false') {
+    if (t === 'multiple-choice' || t === 'matching' || t === 'true-false' || t === 'gapped-text') {
         return String(studentValue).trim() === String(question.answer).trim() ? points : 0;
     }
 
@@ -140,7 +176,7 @@ function scoreSubmission(content, answers) {
     let total = 0;
     const perQuestion = [];
     for (const part of content.parts) {
-        for (const q of part.questions) {
+        for (const q of walkPartQuestions(part)) {
             const studentValue = answers[q.id];
             const points = q.points ?? 1;
             const earnedHere = scoreAnswer(q, studentValue);
@@ -148,6 +184,7 @@ function scoreSubmission(content, answers) {
             total += points;
             perQuestion.push({
                 qid: q.id,
+                partId: part.id,
                 type: q.type,
                 studentValue: studentValue ?? null,
                 correctAnswer: q.answer,

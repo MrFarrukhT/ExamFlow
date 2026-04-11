@@ -11,7 +11,7 @@
     {
       "id": "part1",
       "title": "Part 1 — Multiple-choice cloze (STUB)",
-      "instructions": "For questions 1–8, read the text below and decide which answer (A, B, C or D) best fits each gap.",
+      "instructions": "For questions 1-8, read the text below and decide which answer (A, B, C or D) best fits each gap.",
       "passage": {
         "type": "text",
         "content": "This is a placeholder passage for scaffold testing. The real CAE Part 1 passage will replace this text, complete with [[GAP:q1]] inline markers for the multiple-choice cloze."
@@ -32,10 +32,174 @@
           "points": 1
         }
       ]
+    },
+    {
+      "id": "part2",
+      "title": "Part 2 — Open cloze (STUB)",
+      "instructions": "For questions 9-16, read the text below and think of the word which best fits each gap. Use only one word in each gap.",
+      "passage": {
+        "type": "text",
+        "content": "This is a placeholder open cloze passage. The real Part 2 passage will have [[GAP:q9]] markers for single-word gap fills."
+      },
+      "questions": [
+        {
+          "id": "q9",
+          "type": "open-cloze",
+          "prompt": "9 (stub)",
+          "answer": ["of", "Of"],
+          "points": 1
+        }
+      ]
+    },
+    {
+      "id": "part3",
+      "title": "Part 3 — Word formation (STUB)",
+      "instructions": "For questions 17-24, read the text below. Use the word given in capitals at the end of some of the lines to form a word that fits in the gap in the same line.",
+      "passage": {
+        "type": "text",
+        "content": "Placeholder passage for word formation. Real content will have inline [[GAP:q17]] markers alongside the keyword list on the right column."
+      },
+      "questions": [
+        {
+          "id": "q17",
+          "type": "word-formation",
+          "prompt": "17 (stub)",
+          "rootWord": "COME",
+          "answer": ["outcome", "Outcome"],
+          "points": 1
+        }
+      ]
+    },
+    {
+      "id": "part4",
+      "title": "Part 4 — Key word transformation (STUB)",
+      "instructions": "For questions 25-30, complete the second sentence so that it has a similar meaning to the first, using the word given. Do not change the word given. You must use between three and six words, including the word given.",
+      "questions": [
+        {
+          "id": "q25",
+          "type": "key-word-transformation",
+          "prompt": "My brother now earns far less money than he did when he was younger.",
+          "keyWord": "NEARLY",
+          "leadIn": "My brother __________ much now as he did when he was younger.",
+          "answer": {
+            "required": ["does", "not", "earn", "nearly", "as"],
+            "maxWords": 6,
+            "alternatives": [
+              ["doesn't", "earn", "nearly", "as"]
+            ]
+          },
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "part5",
+      "title": "Part 5 — Multiple choice reading (STUB)",
+      "instructions": "You are going to read an article. For questions 31-36, choose the answer (A, B, C or D) which you think fits best according to the text.",
+      "passage": {
+        "type": "text",
+        "content": "Placeholder passage for multiple choice reading. The real Part 5 passage will be several paragraphs long in the left column with questions on the right."
+      },
+      "questions": [
+        {
+          "id": "q31",
+          "type": "multiple-choice",
+          "prompt": "31. What does the writer suggest in the first paragraph?",
+          "options": [
+            { "key": "A", "text": "Option A" },
+            { "key": "B", "text": "Option B" },
+            { "key": "C", "text": "Option C" },
+            { "key": "D", "text": "Option D" }
+          ],
+          "answer": "B",
+          "points": 1
+        }
+      ]
+    },
+    {
+      "id": "part6",
+      "title": "Part 6 — Cross-text multiple matching (STUB)",
+      "instructions": "You are going to read four reviews of a book on de Botton's ideas. For questions 37-40, choose from the reviewers A-D.",
+      "passage": {
+        "type": "text",
+        "content": "Placeholder for the four reviewer sections. The real Part 6 will have four labeled sections A, B, C, D in the left column."
+      },
+      "matchingOptions": [
+        { "key": "A", "text": "Reviewer A" },
+        { "key": "B", "text": "Reviewer B" },
+        { "key": "C", "text": "Reviewer C" },
+        { "key": "D", "text": "Reviewer D" }
+      ],
+      "questions": [
+        {
+          "id": "q37",
+          "type": "matching",
+          "prompt": "37. has a different opinion from the others on the confidence with which de Botton discusses architecture",
+          "answer": "C",
+          "points": 1
+        }
+      ]
+    },
+    {
+      "id": "part7",
+      "title": "Part 7 — Gapped text (STUB)",
+      "instructions": "You are going to read an article about Scottish wildcats. Six paragraphs have been removed from the article. Choose from the paragraphs A-G the one which fits each gap (41-46). There is one extra paragraph which you do not need to use.",
+      "passage": {
+        "type": "text",
+        "content": "Scottish Wildcat\n\nIts long bushy coat and tail are a perfect camouflage.\n\n[[SLOT:q41]]\n\nHowever, the physical differences are tangible. The wildcat is a much larger animal than a domestic tabby cat.\n\n[[SLOT:q42]]\n\nIt is a huge range for such a small cat."
+      },
+      "paragraphBank": [
+        { "key": "A", "text": "Stealthy by nature, wildcats have been known to hunt alone for days at a stretch." },
+        { "key": "B", "text": "Genetic testing has confirmed the rarity of pure-bred individuals." },
+        { "key": "C", "text": "Yet despite its elusiveness, the Scottish wildcat is one of Britain's most iconic animals." },
+        { "key": "D", "text": "This is one reason conservationists have raised concerns about hybridisation." },
+        { "key": "E", "text": "Extra paragraph — not used." }
+      ],
+      "questions": [
+        {
+          "id": "q41",
+          "type": "gapped-text",
+          "prompt": "41",
+          "answer": "C",
+          "points": 1
+        },
+        {
+          "id": "q42",
+          "type": "gapped-text",
+          "prompt": "42",
+          "answer": "D",
+          "points": 1
+        }
+      ]
+    },
+    {
+      "id": "part8",
+      "title": "Part 8 — Multiple matching (STUB)",
+      "instructions": "You are going to read a magazine article in which five career consultants give advice about starting a career. For questions 47-56, choose from the consultants A-E.",
+      "passage": {
+        "type": "text",
+        "content": "Placeholder for the five consultant sections. The real Part 8 will have five labeled sections A-E in the left column."
+      },
+      "matchingOptions": [
+        { "key": "A", "text": "Consultant A" },
+        { "key": "B", "text": "Consultant B" },
+        { "key": "C", "text": "Consultant C" },
+        { "key": "D", "text": "Consultant D" },
+        { "key": "E", "text": "Consultant E" }
+      ],
+      "questions": [
+        {
+          "id": "q47",
+          "type": "matching",
+          "prompt": "47. Keep your final objective in mind when you are planning to change jobs.",
+          "answer": "A",
+          "points": 1
+        }
+      ]
     }
   ],
   "scoring": {
     "mode": "per-question-points",
-    "totalPoints": 1
+    "totalPoints": 10
   }
 }
