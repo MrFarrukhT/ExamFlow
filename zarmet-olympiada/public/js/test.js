@@ -220,16 +220,25 @@
     addBookmark(prompt);
     wrap.appendChild(prompt);
     const opts = el('div', 'ct-q-options');
-    ['true', 'false', 'not-given'].forEach((v) => {
+    // Option set is language-dependent. Goethe C1 (German) uses 2-option
+    // Richtig/Falsch — there is no "not given". CAE / IELTS-style uses
+    // the 3-option set with human-readable labels. Internal value keys
+    // stay ASCII ('true'/'false'/'not-given') so scoring is stable across
+    // languages; only the displayed label changes.
+    const isDe = state.content && state.content.language === 'de';
+    const optionSet = isDe
+      ? [{ value: 'true', label: 'Richtig' }, { value: 'false', label: 'Falsch' }]
+      : [{ value: 'true', label: 'True' }, { value: 'false', label: 'False' }, { value: 'not-given', label: 'Not Given' }];
+    optionSet.forEach(({ value, label: labelText }) => {
       const label = el('label', 'ct-q-option');
       const radio = document.createElement('input');
       radio.type = 'radio';
       radio.name = 'q-' + q.id;
-      radio.value = v;
-      if (state.answers[q.id] === v) radio.checked = true;
-      radio.addEventListener('change', () => { saveAnswer(q.id, v); state.currentQid = q.id; refreshActiveHighlight(); });
+      radio.value = value;
+      if (state.answers[q.id] === value) radio.checked = true;
+      radio.addEventListener('change', () => { saveAnswer(q.id, value); state.currentQid = q.id; refreshActiveHighlight(); });
       label.appendChild(radio);
-      label.appendChild(el('span', null, v));
+      label.appendChild(el('span', null, labelText));
       opts.appendChild(label);
     });
     wrap.appendChild(opts);
@@ -642,11 +651,17 @@
     const icon = el('div', 'ct-preplay-icon');
     icon.setAttribute('aria-hidden', 'true');
     card.appendChild(icon);
-    card.appendChild(el('p', 'ct-preplay-text',
-      'You will be listening to an audio clip during this test. You will not be permitted to pause or rewind the audio while answering the questions. To continue, click Play.'));
+    // Localized copy — German C1 students get the full German instructions
+    // so the listening gate doesn't break language immersion. Real Goethe
+    // Hören uses German strings throughout the interface.
+    const isDe = state.content && state.content.language === 'de';
+    const preplayText = isDe
+      ? 'Sie werden während dieses Tests eine Audiodatei hören. Sie können die Aufnahme nicht anhalten oder zurückspulen, während Sie die Fragen beantworten. Klicken Sie auf „Wiedergabe", um fortzufahren.'
+      : 'You will be listening to an audio clip during this test. You will not be permitted to pause or rewind the audio while answering the questions. To continue, click Play.';
+    card.appendChild(el('p', 'ct-preplay-text', preplayText));
     const btn = document.createElement('button');
     btn.className = 'ct-preplay-btn';
-    btn.textContent = 'Play';
+    btn.textContent = isDe ? 'Wiedergabe' : 'Play';
     btn.addEventListener('click', () => startAudio(part));
     card.appendChild(btn);
     overlay.appendChild(card);
@@ -840,12 +855,16 @@
     const main = document.getElementById('ct-main');
     main.innerHTML = '';
 
-    // Banner (Questions N-M + instructions)
+    // Banner (Questions N-M + instructions). Localized header word comes
+    // from the content's `language` field — German C1 students should
+    // see "Fragen 1–30", not "Questions 1–30". Everything else in the
+    // banner body (instructions) is already localized in the content JSON.
     const firstQ = partEntry.flatQuestions[0];
     const lastQ = partEntry.flatQuestions[partEntry.flatQuestions.length - 1];
     const firstNum = extractQuestionNumber(firstQ && firstQ.question);
     const lastNum = extractQuestionNumber(lastQ && lastQ.question);
-    const title = firstNum && lastNum ? 'Questions ' + firstNum + '–' + lastNum : part.title;
+    const questionsLabel = (state.content && state.content.language === 'de') ? 'Fragen' : 'Questions';
+    const title = firstNum && lastNum ? questionsLabel + ' ' + firstNum + '–' + lastNum : part.title;
     document.getElementById('ct-banner-title').textContent = title;
     document.getElementById('ct-banner-body').textContent = part.instructions || '';
 
@@ -1073,7 +1092,11 @@
   async function submit(auto) {
     if (state.submitting) return;
     if (!auto) {
-      if (!confirm("Finish this test? You can't come back.")) return;
+      const isDe = state.content && state.content.language === 'de';
+      const confirmMsg = isDe
+        ? 'Test beenden? Sie können nicht mehr zurückkehren.'
+        : "Finish this test? You can't come back.";
+      if (!confirm(confirmMsg)) return;
     }
     state.submitting = true;
     const finishBtn = document.getElementById('ct-finish');

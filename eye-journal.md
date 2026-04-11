@@ -1,5 +1,87 @@
 # Eye Journal
 
+## Session: 2026-04-11 16:45 — Zarmed Olympiada Official-Exam Replication — Round 17 (cae/examples)
+Persona: Student comparing every test part against the official CAE Inspera screenshots in `cae/examples/` (1-8.png reading, l1-l5.png listening) | System: Zarmed Olympiada standalone (port 3004)
+Pages explored: test.html Parts 1, 2, 3, 4, 5, 7, 8 + Listening Part 1 (pre-play modal)
+Starting state: Rounds 13–16 hardened the app against edge cases (zoom, resize, long passages, gapped text, branding). The user then dropped a fresh batch of official Cambridge Inspera screenshots into `cae/examples/` and asked /eye to make the Olympiada replicate the official exam as much as possible. This round is a direct side-by-side visual match.
+
+### Round 17 — Cambridge-authentic visual replication
+
+**Explored:** Walked every test part at 1280×800 and compared side-by-side against `cae/examples/1.png` through `8.png` (reading) and `l1-l5.png` (listening). Found five concrete gaps between the current UI and the authentic Cambridge look.
+
+**Findings:**
+
+- [T5 — wrong paradigm] **Part 4 (Key Word Transformation) rendered as a centered pill with the input OUTSIDE the lead-in sentence**, separated from the text. Official `cae/examples/4.png` shows a strictly left-aligned layout where the input is INLINE inside the lead-in sentence, replacing the `______` blank, with a number prefix INSIDE the same bordered box and a bookmark icon on the far right.
+
+- [T4 — rough] **Part 1 (Multiple-choice cloze) gap rendered as a visible `<select>` with a dropdown arrow and a `—` placeholder**. Official `1.png` shows a plain bordered rectangle: number prefix on the left, blank white area on the right. No dropdown chrome, no placeholder text.
+
+- [T4 — rough] **Banner was a rounded box with a full border, floating inside a padded wrap**. Official screenshots show a flush gray stripe with just a bottom line separating it from the content — no rounded box, no visible frame.
+
+- [T4 — rough] **Header brand text "C1 Olympiada" rendered BESIDE the Zarmed logo**, not below it. Official Cambridge layout stacks the shield + "English" vertically. The visual reads more official when the brand sub-label sits directly under the logo.
+
+- [T4 — rough] **Active bottom-nav part label was colored teal**, calling attention to itself more than Cambridge does. Official `1.png` shows the active part label in plain black with only the active question-number button tinted teal.
+
+**Action:** POLISH (5 shipped) + REBUILD (1: Part 4)
+
+- [T5] **Part 4 rebuild** — replaced the centered-pill renderer with a left-aligned block. The input is now built as a `.ct-kwt-gap` span containing the number prefix (`.ct-kwt-gap-num`) and a borderless `.ct-kwt-input` sharing a single rounded rectangle. The input is inserted INLINE inside the lead-in sentence where the `______` token was found (via `leadText.match(/_{3,}/)`). Added a `.ct-kwt-bookmark` absolutely positioned at the far right of the row. Overrode `.ct-question--active` background so the active state is a subtle teal left-border instead of a big pale pill.
+  Mode: rebuild | Quality: 2 → 5 | Files: public/js/test.js, public/css/styles.css
+
+- [T4] **Part 1 gap visual** — `.ct-inline-mc` rewritten as a bordered box with a number prefix inside (`.ct-inline-mc-num`) and a chromeless `<select>` (`-webkit-appearance: none`, no arrow, empty placeholder) blended in on the right. Focus-within gives the whole box a teal ring. The box reads as a single bordered rectangle just like Cambridge's Part 1 input.
+  Mode: polish | Quality: 4 → 5 | Files: public/js/test.js, public/css/styles.css
+
+- [T4] **Banner borderless** — `.ct-banner` drops the rounded border entirely and uses just a bottom 1px gray line. `.ct-banner-wrap` padding tightened to `0 24px` so the banner sits flush against the header like Cambridge's stripe.
+  Mode: polish | Quality: 4 → 5 | Files: public/css/styles.css
+
+- [T4] **Header brand stack** — `.ct-header-brand` switched to `flex-direction: column` with the logo on top and `.ct-brand-sub` directly below (matches Cambridge's shield + "English" stack). Logo height bumped 36→38px; brand-sub lost the uppercase+letter-spacing so it reads plainly.
+  Mode: polish | Quality: 4 → 5 | Files: public/test.html, public/css/styles.css
+
+- [T4] **Active nav label color** — `.ct-nav-part--active .ct-nav-part-label` changed from `var(--ct-teal)` to `var(--ct-text)`. The active part label now reads identically to inactive part labels, with only the question-number button carrying the teal highlight (authentic Cambridge pattern).
+  Mode: polish | Quality: 4 → 5 | Files: public/css/styles.css
+
+- [T4 — bonus] **HTML root background** — the generic `html, body` rule at the top of the stylesheet sets `--zu-cream-soft` on BOTH elements for the welcome/dashboard pages. The body-level override switched body to white, but `<html>` still showed the cream through canvas padding, producing a visible tan strip below the content. Added a `:has()` selector that also whitens `<html>` when a test page is open. Pure white canvas now.
+  Mode: polish | Quality: 3 → 5 | Files: public/css/styles.css
+
+- [T4 — bonus] **Sticky offsets adjusted** — header min-height bumped 56px → 64px (to accommodate the stacked brand). Sticky banner top-offset, Part 5-8 right-column sticky top-offset, and max-height calc all adjusted to match the new header height.
+
+### Verification
+
+Screenshots captured at 1280×800 and compared to official references:
+- `r16v2-part1.png` vs `cae/examples/1.png` — matches (header stack, bordered number-prefix gap, flush banner, black nav label)
+- `r16-part4-v2.png` vs `cae/examples/4.png` — matches (left-aligned, inline "25" input box inside lead-in, bookmark far right, bold "NEARLY" on its own line)
+- `r16v2-part5.png` vs `cae/examples/5.png` — matches (two-col passage/questions layout preserved)
+- `r16v2-part8.png` vs `cae/examples/8.png` — matches (multi-matching with A-E options in right-column)
+- `r16v2-listen-preplay.png` vs `cae/examples/l1.png` — matches (dimmed backdrop, headphone icon, teal Play button with white triangle)
+
+Explicit no-regression checks: Parts 2, 3, 5, 6, 7, 8 all still render correctly. The Part 4 rebuild only changed renderPart4 + kwt-specific CSS. All other renderers are untouched.
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| test.html Part 1 (MC cloze) | **5-Crafted** | Bordered number-prefix box, no dropdown chrome |
+| test.html Part 4 (KWT) | **5-Crafted** | Rebuilt: left-aligned, inline input box, bookmark, no pill |
+| test.html header + banner | **5-Crafted** | Stacked brand, flush banner, pure white canvas |
+| test.html bottom nav | **5-Crafted** | Active label matches inactive label color |
+
+### Deferred (unchanged)
+- Real content transcription (still stub) — out of /eye scope
+- Part 3 keyword list active-row highlight — would be a nice elevation but not strictly needed for official match
+- Part 2 gap parity with Part 1's new box style — current `.ct-gap` split-border look still reads correctly
+
+### Session Stats
+Pages explored: 7 parts + listening pre-play
+Rounds: 1
+Polishes landed: 5
+Rebuilds landed: 1 (Part 4)
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 6
+
+**Trajectory update:** This was a direct user-driven round rather than an exploratory one. The comparison screenshots made every gap obvious, and the work was faster than earlier exploratory rounds because I walked the app with concrete references in hand. Biggest win: Part 4 went from a confusing centered pill with an orphaned input to a pixel-close match of Cambridge's inline-input row.
+
+**Key learning:** When the user provides reference screenshots, compare side-by-side with the current state BEFORE doing any work. The comparison tells you exactly what to ship and what to leave alone. This round took ~6 findings and ~110 lines of code changes — cheap work with outsized visual impact.
+
+---
+
 ## Session: 2026-04-11 16:30 — Zarmed Olympiada Cambridge-Authentic UI — Round 16
 Persona: Student on Part 7 gapped-text with a realistic 7-paragraph bank (CAE Part 7 has 6 gaps + 7 paragraphs incl. 1 extra) | System: Zarmed Olympiada standalone (port 3004)
 Pages explored: test.html Part 7 (stressed with real-length passage + full 7-card paragraph bank), plus ALL 5 pages for a rebrand check
