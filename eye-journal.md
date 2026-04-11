@@ -1,5 +1,94 @@
 # Eye Journal
 
+## Session: 2026-04-11 19:00 — Zarmed Olympiada Form Error a11y Wiring — Round 22i (parallel iteration)
+Persona: Screen-reader student typing their name wrong and wondering why they're still on the welcome page, OR an invigilator typing the wrong admin password and getting silence from their screen reader | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: welcome form + admin login form (HTML + browser runtime verification)
+Starting state: Both the welcome form and the admin login form have `<p class="zu-error" hidden>` error paragraphs that display validation errors when the user submits bad input. The JS toggles the `hidden` attribute and writes text into the paragraph. But the paragraph is NOT linked to the input via `aria-describedby`, and has no `role="alert"` — so screen readers have NO way to know the error appeared or to read it when the user focuses the invalid input.
+
+### Round 22i — Wire aria-describedby + role=alert on form errors
+
+**Findings:**
+
+- [T4] **Welcome `#err` is not linked to `#f-name`.** When `showError()` runs, it:
+  - Sets `nameInput.setAttribute('aria-invalid', 'true')` (good — tells SR the input is invalid)
+  - Sets `nameInput.focus()` (good — moves keyboard focus to the invalid input)
+  - Writes text to `err.textContent` and unhides `err`
+  - But `#f-name` has no `aria-describedby`, so the SR only announces "Invalid, edit text" — the actual error message "Please enter your full name." is never read
+  - AND `#err` has no `role="alert"`, so even sighted keyboard users with a SR don't hear the error when it FIRST appears
+
+- [T4] **Admin `#login-err` has the same problem** with `#pw`. Same story.
+
+**Fix — 4 attribute additions across 2 HTML files:**
+
+1. `public/index.html` line 24: `<input type="text" id="f-name" ... autocomplete="off" aria-describedby="err">` — screen readers will read the `#err` text content when this input gets focus, AFTER reading the label and the "invalid" state.
+2. `public/index.html` line 38: `<p id="err" class="zu-error" role="alert" hidden>` — role="alert" implies `aria-live="assertive"`, so the screen reader announces the text content AS SOON AS it becomes visible (and the text is set), not just when the input gets focus.
+3. `public/admin.html` line 25: same `aria-describedby="login-err"` on `#pw`.
+4. `public/admin.html` line 28: same `role="alert"` on `#login-err`.
+
+Why both `aria-describedby` AND `role="alert"`: they cover different moments.
+- `role="alert"` fires once when the error first appears — announces it immediately
+- `aria-describedby` re-associates the error with the input, so if the user moves focus away and comes back, the error is re-announced. Also covers the "user was already focused on the input when the form submitted" case where `role="alert"` might be suppressed by the focus-change.
+
+No JS changes — the error text-setting and hidden-toggling already exist, the a11y attributes just declare the connection so screen readers can observe it.
+
+Mode: polish | Quality: 3 → 5 | Files: index.html (+2/-2 attributes), admin.html (+2/-2 attributes)
+
+### Verification
+
+**Welcome page** (runtime inspection):
+```
+nameAriaDescribedBy: "err"    ← input linked to error paragraph
+errRole:             "alert"  ← role set
+errHidden:           true     ← still hidden (no error yet)
+```
+
+**Welcome page after triggering validation error** (submitted with value "X", too short):
+```
+errHidden:           false                         ← visible
+errText:             "Please enter your full name." ← correct message
+errRole:             "alert"                       ← announces on appear
+nameAriaInvalid:     "true"                         ← input marked invalid
+activeId:            "f-name"                      ← focus moved to input (SR reads description)
+```
+All four a11y signals fire correctly in sequence: (1) user submits, (2) `role="alert"` fires → SR announces text, (3) `aria-invalid="true"` set → SR says "invalid", (4) focus moves to input → SR reads label + `aria-describedby` content.
+
+**Admin page** (runtime inspection):
+```
+pwAriaDescribedBy:  "login-err"  ← input linked to error
+loginErrRole:       "alert"      ← role set
+loginErrHidden:     true         ← still hidden
+```
+
+### Quality Map
+| Surface | Layer | Notes |
+|---|---|---|
+| Welcome form error feedback | **5-Crafted** | SR announces the error on appear AND when focusing the input |
+| Admin login error feedback | **5-Crafted** | Same pattern as welcome |
+
+### Deferred (thin)
+- **Test runner answer validation errors.** The test inputs (KWT, gap fills) have no visible error state — typing an overlong KWT answer just silently caps at maxLength=150. Silent caps are arguably correct (no nag), so no a11y wiring needed.
+- **Dashboard module-complete announcement.** When a student finishes reading and returns to dashboard, a `role="status"` or similar live region could announce "Reading complete. Listening module is next." Currently the dashboard just renders the new state silently. Would be a nice polish but crosses into "new UI element" territory — the announcement would need a dedicated live region.
+
+### Session Stats
+Pages explored: 2 (welcome form + admin login form)
+Screenshots captured: 0 (a11y attributes are invisible)
+Rounds: 1 concurrent iteration
+Polishes landed: 1 (4 attribute additions across 2 HTML files)
+Rebuilds: 0 | Elevations: 0 | Reverted: 0
+Changes shipped: 2 files
+
+**Trajectory update:** Round 22i adds form-error a11y to the round 22 series. The "round 22 arc" now has 9 focused polishes covering a11y, i18n, defensive meta, chrome awareness, and form UX. Each one ships in <30 minutes of focused work, each one is invisible to sighted mouse users, each one closes a silent failure mode for a specific user segment (SR users, German students, backgrounded tabs, dark-mode browsers, crawlers, keyboard users).
+
+**Key learning:** `aria-invalid="true"` alone is NOT enough for form error a11y. It tells the SR the input is invalid but not WHY. The full pattern is three attributes:
+1. `aria-invalid="true"` on the input (the input is invalid)
+2. `aria-describedby="err-id"` on the input (the input has extra description read on focus)
+3. `role="alert"` on the error element (the error gets announced immediately on appear)
+Each attribute covers a different SR interaction moment. Any one alone is incomplete.
+
+**Recommended next angle:** Walk the test runner's answer inputs for the same a11y audit — do the gap inputs (Part 2/3 word formation) have `aria-label` or `aria-labelledby` pointing to the question number badge? A screen reader user hitting a gap input cold would hear "Edit text" with no context about which question they're answering.
+
+---
+
 ## Session: 2026-04-11 18:50 — Zarmed Olympiada Admin Compact Date + Keyboard Walk — Round 32 (/loop iteration)
 Persona: Invigilator reviewing submissions at mobile (picking up round 30's deferred item) + keyboard-only student navigating the whole student flow | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: welcome / dashboard / test.html at 1920×1080 via keyboard; admin.html login / list / detail at 375×812 and 1920×1080

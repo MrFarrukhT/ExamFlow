@@ -22,10 +22,10 @@
     <form id="login-form" class="zu-form" autocomplete="off">
       <div class="zu-field">
         <label for="pw">Admin password</label>
-        <input type="password" id="pw" required>
+        <input type="password" id="pw" required aria-describedby="login-err">
       </div>
       <button type="submit" class="zu-btn">Unlock</button>
-      <p id="login-err" class="zu-error" hidden></p>
+      <p id="login-err" class="zu-error" role="alert" hidden></p>
     </form>
   </div>
 
