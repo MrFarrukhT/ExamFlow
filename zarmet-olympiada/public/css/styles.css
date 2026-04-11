@@ -952,8 +952,18 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   padding: 8px 12px;
   border-right: 1px solid var(--ct-border);
   cursor: pointer;
-  min-width: 0;
+  /* min-width: 95 guarantees "Part N  X of Y" never gets compressed into
+   * its neighbour at narrow widths. Below this, the parent overflow-x:auto
+   * kicks in and the nav becomes horizontally scrollable instead. */
+  min-width: 95px;
   transition: background 0.12s;
+  /* Reset button defaults when rendered as <button> for keyboard nav jump */
+  font: inherit;
+  color: inherit;
+  background: var(--ct-bg);
+  border-top: none;
+  border-left: none;
+  border-bottom: none;
 }
 .ct-nav-part:hover { background: #f9fafb; }
 .ct-nav-part-label {

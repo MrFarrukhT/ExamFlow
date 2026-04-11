@@ -1,5 +1,68 @@
 # Eye Journal
 
+## Session: 2026-04-11 15:35 — Zarmet Olympiada Cambridge-Authentic UI — Round 12
+Persona: Student at 150% browser zoom (visual accessibility setting) + keyboard user wanting direct part-jump | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: test.html reading at 853px (1280@150% zoom equivalent), keyboard tab flow
+Starting state: Round 11 fixed slow-network nav lag. This round walks two remaining dimensions: browser zoom + inactive-part keyboard access (deferred from round 9).
+
+### Round 12 — Zoom 150% + inactive-part keyboard jump
+
+**Explored:** Two unwalked dimensions:
+1. Browser zoom at 150% (simulated via 853px viewport — 1280×720 at 150% zoom ≈ 853×480 effective content)
+2. Keyboard Tab flow through inactive part segments (deferred since round 9)
+
+**Findings:**
+
+- [T4] **Nav label crush at narrow/zoomed widths.** At 853px, the bottom nav parts compressed below readable width — "Part 3  0 of 1" and "Part 4  0 of 1" visually collided, with each inactive segment getting only ~64px. The round 7 fix (`overflow-x: auto`) prevented the container from pushing arrows off-screen, but didn't prevent the flex:1 children from compressing below their intrinsic content width. Visually confusing even though functionally complete.
+- [T4 — deferred from round 9] **Inactive part segments not keyboard-accessible.** `<div>` elements with click handlers — a keyboard-only student could Tab to the active part's numbered buttons and the arrows, but couldn't Tab to "Part 2" or "Part 5" to jump directly. They'd have to press → multiple times to step through parts. Not broken, but slow.
+
+**Action:** POLISH (2 changes shipped — 1 CSS, 1 JS+CSS)
+
+- [T4] `.ct-nav-part { min-width: 95px }` — forces each part segment to at least 95px (enough for "Part N  X of Y" without collision). When the flex container's total required width exceeds the parent, the round-7 `overflow-x: auto` takes over and the nav scrolls horizontally instead of crushing.
+  Mode: polish | Quality: 4 → 5 | Files: public/css/styles.css
+  
+- [T4] Inactive part segments as `<button>` elements — `renderBottomNav` now creates `<button type="button">` for inactive part segments (active part stays as `<div>` because it contains nested `<button>` question numbers — nested buttons are invalid HTML). Keyboard users Tab to each part label and press Enter/Space to jump. CSS button-defaults reset on `.ct-nav-part` (font, color, background, border) so the buttons look identical to the previous div rendering.
+  Mode: polish | Quality: 4 → 5 | Files: public/js/test.js, public/css/styles.css
+
+### Verification
+
+- ✅ **853px (zoom 150% equivalent) before fix** (`r12-zoom-150-part1.png`) — "Part 3 0 of Part 4 0 of" labels visually colliding
+- ✅ **853px after fix** (`r12-zoom-150-fixed.png`) — Parts 1-7 visible with proper spacing ("Part 1 [1]", "Part 2  0 of 1", "Part 3  0 of 1", ...), Part 8 off-screen to the right (accessible via horizontal scroll)
+- ✅ **1280 regression** (`r12-1280-regression.png`) — all 8 parts visible with `X of Y` counts, no changes from previous rounds
+- ✅ **Keyboard tab flow**: Tab → SELECT (inline MC cloze) → BUTTON `ct-nav-num--active` (Q1) → **BUTTON `ct-nav-part` "Part 2 0 of 1"** (new! inactive part now focusable)
+- ✅ **Keyboard Enter on Part 2 button**: banner changes to "Questions 9–9", active part becomes "Part 2" — full keyboard-jump works
+
+### Quality Map (no layer changes — still 13/13 Crafted, now zoom-robust and keyboard-jumpable)
+
+### Deferred (thin list remaining)
+- **Concurrent tabs** — two tabs on same session. Low-priority (single-machine-per-student by design)
+- **Bookmark icon clickability** — placeholder by design per ADR-036; would be a new feature
+- **Custom right-click menu / copy block for reading passages** — anti-cheat feature, out of /eye's mandate
+- Real content transcription — still out of /eye scope
+
+### Session Stats
+Pages explored: 2 (zoom + keyboard)
+Screenshots captured: 3
+Rounds: 1
+Polishes landed: 2
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 2
+
+**Trajectory update:** Round 12 continues the streak — 7 consecutive rounds with novel-dimension + shipped fix:
+- Round 6: wide viewport
+- Round 7: narrow viewport
+- Round 8: refresh/temporal
+- Round 9: keyboard-only
+- Round 10: 409 bounce + long input
+- Round 11: slow network
+- Round 12: zoom 150% + keyboard jump
+
+The deferred list is down to 3 items, 2 of which are out-of-scope (bookmark = feature, right-click = anti-cheat). Concurrent tabs is the last genuinely unwalked dimension. After that, the loop will likely start producing 0-change rounds — the real ceiling signal.
+
+---
+
 ## Session: 2026-04-11 15:25 — Zarmet Olympiada Cambridge-Authentic UI — Round 11
 Persona: Student answering on a slow network (lab wifi, satellite, congested connection) | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: test.html reading — answer save latency measurement

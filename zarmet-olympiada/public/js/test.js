@@ -853,9 +853,15 @@
     const host = document.getElementById('ct-nav-parts');
     host.innerHTML = '';
     state.parts.forEach((pe, i) => {
-      const seg = el('div', 'ct-nav-part');
-      seg.dataset.partIndex = String(i);
       const isActive = i === state.currentPartIndex;
+      // Inactive part segments are <button> elements so keyboard users can
+      // Tab to them and Enter/Space to jump directly to that part. The
+      // active segment is a <div> because it contains its own nested
+      // <button> elements (question numbers) — nesting buttons is invalid.
+      const seg = document.createElement(isActive ? 'div' : 'button');
+      if (!isActive) seg.type = 'button';
+      seg.className = 'ct-nav-part';
+      seg.dataset.partIndex = String(i);
       if (isActive) seg.classList.add('ct-nav-part--active');
       const label = el('span', 'ct-nav-part-label', shortPartLabel(pe.part));
       seg.appendChild(label);
