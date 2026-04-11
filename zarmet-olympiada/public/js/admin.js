@@ -20,10 +20,18 @@
     detailView.hidden = view !== detailView;
     // Narrow the page shell when showing login (centered password form);
     // full width for list/detail which need room for the table.
+    // ALSO toggle body.zu-welcome so the login form gets the same
+    // vertically-centered composition as index.html/done.html — a
+    // narrow password input hugging the top of a 1080p canvas looked
+    // rough compared to the welcome page's centered polish. The list
+    // view needs top-down flow (toolbar + table + detail), so we
+    // remove the class there.
     if (view === loginView) {
       adminPage.classList.add('page--narrow');
+      document.body.classList.add('zu-welcome');
     } else {
       adminPage.classList.remove('page--narrow');
+      document.body.classList.remove('zu-welcome');
     }
   }
 

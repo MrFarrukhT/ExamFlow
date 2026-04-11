@@ -1,5 +1,77 @@
 # Eye Journal
 
+## Session: 2026-04-11 17:40 — Zarmed Olympiada Admin Login Composition — Round 20b (parallel iteration)
+Persona: Invigilator opening admin.html for the first time to see results — landing on the password gate | System: Zarmed Olympiada standalone (port 3004)
+Pages explored: admin.html login state + simulated list-view state
+Starting state: The "standards overhaul" parallel iteration stabilized the cool gray/blue palette. The welcome page (`index.html`) uses `body class="zu-welcome"` to vertically center its narrow form via a `display: grid; place-items: center; min-height: 100vh` rule. `done.html` also got that class. But `admin.html` — which has a narrow login form nearly identical in shape — never got the class and landed hugging the top of the canvas with ~400px of empty space below.
+
+### Round 20b — Admin login composition consistency
+
+**Explored:** Audited body classes across the 5 Olympiada HTML files:
+- `index.html` → `body class="zu-welcome"` ✓ (vertically centered form)
+- `done.html` → `body class="zu-welcome"` ✓ (vertically centered thank-you)
+- `dashboard.html` → `<body>` (no class — intentional, multi-section page flows top-down)
+- `admin.html` → `<body>` (NO class)
+- `test.html` → `body class="zu-test-body"` (test runner scope, different palette)
+
+Then loaded admin.html and compared side-by-side with welcome: both are narrow forms with identical structure (logo + h1 + subtitle + form with one field + submit button), but admin.html hugged the top while welcome.html centered.
+
+**Finding:**
+
+- [T4] **Admin login form is top-aligned instead of vertically centered.** A 400px tall form sitting on a 1080px viewport with 400+px of empty whitespace below reads as rough. The welcome page uses `body.zu-welcome` for exactly this problem and it works. Admin login SHOULD use the same composition.
+  
+  But there's a subtlety: admin.html has TWO states behind the same URL — a login view (narrow form, should be centered) and a list view (wide table + toolbar, should flow top-down). A static `body class="zu-welcome"` on the HTML would make the list view weirdly centered. So the fix has to live in `admin.js`'s `show(view)` function, which already toggles `.page--narrow` on `#admin-page` when switching between login and list views.
+
+**Action:** POLISH (1 change — extend the existing show(view) class toggle to also manage body.zu-welcome)
+
+- [T4 → T5] **`admin.js` `show()` now toggles `body.zu-welcome` alongside `.page--narrow`.** When the login view is shown, `document.body.classList.add('zu-welcome')` adds the vertical-centering container, matching the welcome page. When switching to list or detail views, `classList.remove('zu-welcome')` removes it, restoring top-down flow so the results table + toolbar have room above them.
+  
+  The existing `.page--narrow` toggle handles horizontal constraint (480px max-width for the login form); the new `.zu-welcome` toggle adds vertical centering. Together, the admin login view is now visually identical to welcome/done in both axes.
+  
+  Mode: polish | Quality: 4 → 5 | Files: public/js/admin.js (+8/-2)
+
+### Verification
+
+**Admin login state** (reload admin.html at 1280×720):
+- **Before:** Form at top of viewport, ~400px of empty whitespace below the Unlock button
+- **After:** Logo + "Olympiada Results" + "Invigilator / admin view" + password form + Unlock button all centered vertically in the viewport. Equal whitespace above and below.
+
+Screenshots: `r20b-admin-before.png`, `r20b-admin-after.png` — clear side-by-side improvement.
+
+**List-view regression check** (simulated by eval-toggling loginView.hidden = true, listView.hidden = false, removing zu-welcome):
+- Verified `body.zu-welcome` is gone, `#admin-page.page--narrow` is gone, toolbar + blue table header sit at the top of the viewport, empty body below. Top-down flow restored.
+- Screenshot: `r20b-admin-list-sim.png`
+
+**Non-regression:** `node --check admin.js` passes. No changes to CSS, HTML, or other JS files.
+
+### Quality Map
+| Page / Flow | Layer | Notes |
+|---|---|---|
+| admin.html login state | **5-Crafted** | Vertically centered via body.zu-welcome toggle |
+| admin.html list state | **5-Crafted** | Top-down flow (unchanged) |
+| index.html welcome | **5-Crafted** | (unchanged, reference for the composition) |
+| done.html | **5-Crafted** | (unchanged, same composition) |
+
+### Deferred (thin)
+- admin.html static strings ("Olympiada Results", "Invigilator / admin view", "Admin password", "Unlock") are English-only. Admin is internal so invigilators may or may not need German — leaving as-is per round 19c's judgment that invigilator roles can stay English.
+- done.html is currently dead code (no navigation path reaches it in the current flow — submit goes to dashboard.html, completion banner stays inline on dashboard). A future round could either wire up done.html or delete it. Not my call this round.
+
+### Session Stats
+Pages explored: 1 (admin.html) + simulated list view
+Screenshots captured: 3 (before/after/list-sim)
+Rounds: 1 (concurrent with parallel Round 22's "standards overhaul" continuation)
+Polishes landed: 1 (admin login vertical centering)
+Rebuilds: 0 | Elevations: 0 | Reverted: 0
+Changes shipped: 1 file (public/js/admin.js)
+
+**Trajectory update:** Round 20b caught a consistency gap that only becomes visible AFTER the standards overhaul stabilized the welcome/done composition. The admin page was left behind in the palette shift — it got the new colors but not the new layout pattern. Lesson: when one page adopts a new composition (like the `body.zu-welcome` vertical-centering), audit all pages-of-similar-shape to check whether they should adopt it too. In this case, admin login was visually the twin of welcome but missed the upgrade.
+
+**Key learning:** Body classes aren't just styling hooks — they're composition containers. Treating `body.zu-welcome` as "this page is a narrow form centered on the canvas" makes it easy to spot pages that should qualify but don't. The JS class toggle inside `show(view)` is the right place to manage it when a single URL serves multiple states.
+
+**Recommended next angle:** Walk the `done.html` page as an authenticated student (via direct URL since no code navigates to it) to see if it still renders acceptably now that the palette has shifted. If it does, the dead-code note above becomes moot. If it looks broken, either wire it into the flow or delete it.
+
+---
+
 ## Session: 2026-04-11 17:35 — Zarmed Olympiada Standards Overhaul — Round 22 (user-directed)
 Persona: Student walking the whole app (welcome → dashboard → reading → listening → admin → done) | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: index.html, dashboard.html, test.html (reading Parts 1+4+5, listening Parts 1+2+4), admin.html (login + results list), done.html
