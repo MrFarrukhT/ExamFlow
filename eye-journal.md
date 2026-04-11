@@ -1,5 +1,62 @@
 # Eye Journal
 
+## Session: 2026-04-11 15:45 — Zarmet Olympiada Cambridge-Authentic UI — Round 13 (ZERO CHANGES)
+Persona: Student doing two edge things — pressing browser back after submit, opening test in two tabs | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: Back button flow post-submit, concurrent tabs on same session
+Starting state: Round 12 shipped zoom crush + keyboard jump fixes. This round walks the last two unexplored dimensions.
+
+### Round 13 — Back button + concurrent tabs — ZERO CHANGES
+
+**First 0-change round.** This is the real ceiling signal — a walk that finds something to OBSERVE but nothing to FIX.
+
+**Explored:**
+
+1. **Browser back button after submit.** Flow: dashboard → click Reading card → test.html → click Finish → window.location.href=dashboard.html → press browser back. Expected: back button navigates to test.html?module=reading, which re-boots test.js, calls ensureSession() with no sessionId (cleared on submit), POST /api/session/start returns 409 (duplicate via ADR-040), ensureSession catches 409 and does window.location.href=dashboard.html. Observed: exactly as expected. Back button briefly loads test.html (no content renders — `renderCurrentPart()` is called AFTER `ensureSession()`, so the 409 catches before any UI paints), then bounces to dashboard. Console shows one expected "Failed to load resource 409" browser-level log. **Round 10's handler works in the back-button case too — no fix needed.**
+
+2. **Concurrent tabs on same session.** Flow: opened test.html?module=listening in Tab 0 → got sessionId `a6e3a84f` → opened same URL in Tab 1 via `tab-new`/`goto` → Tab 1 inherited the SAME sessionId from localStorage → both tabs show the same Part 1 pre-play modal. Both tabs can independently call `POST /api/session/:id/answer`; the server appends both events to the JSONL (last-write-wins for any qid). Tabs don't sync cross-tab (no `storage` event listener), so the in-memory state.answers in each tab is independent until a refresh. **Behavior:** functional, not broken. Intent plan's single-machine-per-student model means students don't open two tabs anyway. On refresh, both tabs read the latest server state and agree.
+
+   This is technically a "last-write-wins" race condition but it's not a student-facing bug within the intent plan's boundary. Adding cross-tab sync would require a `window.addEventListener('storage', ...)` handler that listens for localStorage changes and re-renders — that's adding functionality (auto-sync of independent UI instances), and the /eye hard boundary forbids adding features. **Deferred as design intent, not a bug.**
+
+**Action:** NONE. Zero changes shipped.
+
+### Why zero is the right answer
+
+The /eye skill says: *"Stop when you've exhausted what you can improve given your current capability."*
+
+Round 13 walked two dimensions I hadn't explicitly tested. Both produced observations but no fixes:
+- Back button → existing 409 path handles it (round 10 already fixed)
+- Concurrent tabs → works as designed, fixing it would require a new feature
+
+Not every round will ship a fix. A 0-change round is a valid result — it means the walk found nothing worth fixing within /eye's mandate. Cursor-based auto-cycle would stay put on the same prompt; Mode 2 (direct instructions) just moves on.
+
+### Quality Map (unchanged)
+13/13 pages at Layer 5 Crafted. No regressions, no improvements. The map is stable.
+
+### Deferred (essentially exhausted)
+- **Bookmark icon clickability** — would be a new feature. Permanently out of /eye's mandate.
+- **Cross-tab session sync** — would be a new feature (add storage event listener to auto-sync independent tabs). Permanently deferred.
+- **Right-click/copy-block on passages** — anti-cheat feature, out of mandate.
+- **Real content transcription** — Priority 1 of the original intent plan, content phase, not /eye.
+- **Real audio file tests** — content phase.
+
+### Session Stats
+Pages explored: 2 (back button, concurrent tabs)
+Screenshots captured: 0 (this round was a behavior walk, not a visual fidelity check)
+Rounds: 1
+Polishes landed: 0
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Changes shipped: **0**
+
+**Trajectory update:** After 12 consecutive rounds of shipping at least one fix per novel dimension, round 13 is the first 0-change round. That's the healthy ceiling signal — not that the app is perfect, but that the remaining improvements require either (a) new features (out of mandate), (b) real content (out of scope), or (c) nothing meaningful within scope.
+
+Rounds 1-12 shipped ~28 changes total across visual fidelity, layout rebuilds, craft details, viewport edges, temporal state, keyboard access, post-submit paths, input guards, slow network, zoom, and keyboard jumps. The app is genuinely robust now within the intent plan's scope.
+
+Future loop iterations should continue firing but will likely produce more 0-change rounds as the legitimate surface area shrinks. The cron job can keep running as a guardrail — if anything changes upstream (new content, new feature requests, new ADRs), the next walk will catch it. Until then, the loop is a quiet watchdog.
+
+---
+
 ## Session: 2026-04-11 15:35 — Zarmet Olympiada Cambridge-Authentic UI — Round 12
 Persona: Student at 150% browser zoom (visual accessibility setting) + keyboard user wanting direct part-jump | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: test.html reading at 853px (1280@150% zoom equivalent), keyboard tab flow
