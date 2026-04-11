@@ -1,5 +1,544 @@
 # Architecture Decisions
 
+## Session: 2026-04-11 — Zarmet Olympiada Cambridge-Authentic UI
+
+**Context:** The scaffold from the previous session (ADR-033..037) is in place and smoke-tested. Client reviewed it and approved the isolation/durability model ("I love how it functions") but wants the frontend to match the real Cambridge CAE interface using the screenshots in `cae/examples/` as the visual reference, and to inherit the module-selection card pattern from `Cambridge/dashboard-cambridge.html`. Zarmet-neutral branding (no Cambridge logo). Full 8-part CAE Reading including gapped-text. Strict Cambridge listening (no pause/rewind). Full intent in `docs/intent-olympiada-cambridge-ui.md`.
+
+**Scope of this session:** Three ADRs that reshape the frontend without touching the backend durability model (ADR-035), the isolation (ADR-033), or the existing Cambridge/IELTS systems. The content schema (ADR-034) is extended, not replaced.
+
+---
+
+### ADR-038: Schema Extension — `gapped-text` + Listening Two-Task Part Shape
+**Status:** Decided
+**Impact:** Medium | **Effort:** 30 min | **Risk:** Low
+
+**Context:**
+The ADR-034 schema supports 9 question types which cover CAE Reading Parts 1-6 and Parts 8 plus most of Listening Parts 1-3. Two gaps remain:
+
+1. **CAE Reading Part 7 — gapped text.** A passage has N numbered gaps; a bank of N+1 detached paragraphs (labeled A-G) sits in a column on the right; the student slots each paragraph into a gap. The "correct answer" for each gap is a paragraph key. This is a distinct UI (slot-and-paragraph assignment, typically drag-drop or click-a-slot-then-click-a-paragraph) and is not well-served by shoehorning into `matching` because of the paragraph-bank semantics (an assigned paragraph disappears from the bank).
+
+2. **CAE Listening Part 4 — two tasks over one audio.** The same audio is scored against two independent matching tasks: Task 1 asks about a different dimension than Task 2 (e.g., "what made the speaker change their job" vs. "how they feel about their new job"). Each task has its own options list and 5 questions. Rendering them as two separate parts is wrong — they share audio, instructions, and flow.
+
+**Decision:**
+
+**Addition 1: `gapped-text` question type.**
+
+Part-level `paragraphBank` field (array of `{key, text}` objects) becomes part of the part object. Questions inside the part are typed `gapped-text` with `answer` = the correct paragraph key (a string like `"C"`). Passage text uses inline `[[SLOT:qID]]` markers that the renderer replaces with numbered drop-zones.
+
+```json
+{
+  "id": "part7",
+  "title": "Part 7 — Gapped text",
+  "instructions": "You are going to read an article. Six paragraphs have been removed from the article. Choose from the paragraphs A-G the one which fits each gap. There is one extra paragraph which you do not need to use.",
+  "passage": {
+    "type": "text",
+    "content": "Scottish Wildcat\n\nIts long bushy coat and tail are a perfect camouflage... [[SLOT:q41]] However, the physical differences are tangible... [[SLOT:q42]] ..."
+  },
+  "paragraphBank": [
+    { "key": "A", "text": "The nuthatch of one to its nearest ferny burrow..." },
+    { "key": "B", "text": "..." },
+    { "key": "C", "text": "..." },
+    { "key": "D", "text": "..." },
+    { "key": "E", "text": "..." },
+    { "key": "F", "text": "..." },
+    { "key": "G", "text": "..." }
+  ],
+  "questions": [
+    { "id": "q41", "type": "gapped-text", "prompt": "41", "answer": "C", "points": 1 },
+    { "id": "q42", "type": "gapped-text", "prompt": "42", "answer": "A", "points": 1 }
+  ]
+}
+```
+
+Scoring: `gapped-text` works identically to `matching` on the server — exact string match between student answer (the chosen paragraph key) and the stored answer key. Re-using the existing `matching` branch in `scoreAnswer()` is sufficient; just add `gapped-text` to the type list.
+
+**Addition 2: `taskGroups` part-level field (optional).**
+
+When present on a part, the part's `questions` field is ignored and the `taskGroups[*].questions` arrays are walked instead. Each task group carries its own `instructions` and its own `options` list (for matching-type questions where options vary per task):
+
+```json
+{
+  "id": "part-listening-4",
+  "title": "Part 4 — Multiple matching",
+  "instructions": "You will hear five short extracts in which people are talking about changing their jobs.",
+  "audio": {
+    "src": "audio/part4.mp3",
+    "autoPlay": true
+  },
+  "taskGroups": [
+    {
+      "id": "task1",
+      "instructions": "Task 1: For questions 21-25, choose from the list A-H what reason each speaker gives for changing their job.",
+      "options": [
+        { "key": "A", "text": "unfriendly colleagues" },
+        { "key": "B", "text": "poor holiday entitlement" },
+        { "key": "C", "text": "lacking a sense of purpose" },
+        { "key": "D", "text": "needing more of a challenge" },
+        { "key": "E", "text": "the workload" },
+        { "key": "F", "text": "disagreements with superiors" },
+        { "key": "G", "text": "no prospect of advancement" },
+        { "key": "H", "text": "the physical environment" }
+      ],
+      "questions": [
+        { "id": "q21", "type": "matching", "prompt": "Speaker 1", "answer": "H", "points": 1 },
+        { "id": "q22", "type": "matching", "prompt": "Speaker 2", "answer": "B", "points": 1 },
+        { "id": "q23", "type": "matching", "prompt": "Speaker 3", "answer": "F", "points": 1 },
+        { "id": "q24", "type": "matching", "prompt": "Speaker 4", "answer": "D", "points": 1 },
+        { "id": "q25", "type": "matching", "prompt": "Speaker 5", "answer": "A", "points": 1 }
+      ]
+    },
+    {
+      "id": "task2",
+      "instructions": "Task 2: For questions 26-30, choose from the list A-H how each speaker feels about their new job.",
+      "options": [
+        { "key": "A", "text": "encouraged by early results" },
+        { "key": "B", "text": "hopeful about future success" },
+        { "key": "C", "text": "delighted by a change in lifestyle" },
+        { "key": "D", "text": "relieved the initial uncertainty is over" },
+        { "key": "E", "text": "glad to be helping other people" },
+        { "key": "F", "text": "grateful for an increase in salary" },
+        { "key": "G", "text": "happy to feel in control" },
+        { "key": "H", "text": "satisfied with the training received" }
+      ],
+      "questions": [
+        { "id": "q26", "type": "matching", "prompt": "Speaker 1", "answer": "C", "points": 1 },
+        { "id": "q27", "type": "matching", "prompt": "Speaker 2", "answer": "F", "points": 1 },
+        { "id": "q28", "type": "matching", "prompt": "Speaker 3", "answer": "A", "points": 1 },
+        { "id": "q29", "type": "matching", "prompt": "Speaker 4", "answer": "G", "points": 1 },
+        { "id": "q30", "type": "matching", "prompt": "Speaker 5", "answer": "D", "points": 1 }
+      ]
+    }
+  ]
+}
+```
+
+**Server changes required** (implemented in `zarmet-olympiada/server.js`):
+
+1. `loadContent()` validation: when walking a part, if `taskGroups` is present, iterate `taskGroups[*].questions` for uniqueness + totalPoints checks, otherwise fall back to `part.questions`. A part cannot have both `taskGroups` and `questions` populated (mutual exclusivity, validation error if both).
+
+2. `scoreAnswer()`: add `gapped-text` to the list of exact-match types (alongside `multiple-choice`, `matching`, `true-false`).
+
+3. `scoreSubmission()`: add a `walkPartQuestions(part)` helper that yields from `part.questions` or from `part.taskGroups[*].questions` as appropriate. Replace the existing `for (const q of part.questions)` with `for (const q of walkPartQuestions(part))`.
+
+4. `stripAnswerKey()`: walk `taskGroups[*].questions` as well; strip `answer` and `points` fields inside them just like the flat `part.questions` case. Also handle the part-level `paragraphBank` passthrough (no stripping needed — the bank is shown to the student).
+
+**Consequences:**
+
+Positive:
+- Complete coverage of CAE Reading (all 8 parts) and CAE Listening (all 4 parts including the two-task Part 4)
+- Backward-compatible: existing stub files still load unchanged
+- Minimal new scoring code (gapped-text reuses matching logic)
+- Schema stays flat and readable — no nested complexity
+
+Negative:
+- The `walkPartQuestions(part)` helper becomes the canonical iterator — every future scoring/counting code must use it. Adding one more layer of indirection.
+- The mutual-exclusivity rule (can't have both `questions` and `taskGroups` on the same part) is a footgun if someone forgets — mitigated by the validation error at load time.
+
+**Migration Path:**
+1. Update `zarmet-olympiada/content/SCHEMA.md` with the `gapped-text` type section and the `taskGroups` part-level field section, including worked examples
+2. Update `zarmet-olympiada/server.js`:
+   - Add `walkPartQuestions()` helper
+   - Update `loadContent()` validation to handle taskGroups
+   - Add `gapped-text` to `scoreAnswer()` exact-match branch
+   - Update `scoreSubmission()` to use `walkPartQuestions()`
+   - Update `stripAnswerKey()` to walk taskGroups
+3. Update all four stub content files to exercise the new shapes:
+   - English C1 Reading stub: add a Part 7 stub with 2 gapped-text questions and a 3-paragraph bank
+   - English C1 Listening stub: add a Part 4 stub with taskGroups (2 tasks, 2 questions each)
+4. Syntax check server.js and smoke test content loading
+
+**Files Affected:**
+- MODIFIED: `zarmet-olympiada/content/SCHEMA.md` — two new sections
+- MODIFIED: `zarmet-olympiada/server.js` — ~30 line changes across scoring/stripping/validation
+- MODIFIED: `zarmet-olympiada/content/english-c1/reading.json` — add Part 7 stub
+- MODIFIED: `zarmet-olympiada/content/english-c1/listening.json` — add Part 4 stub
+- MODIFIED: `zarmet-olympiada/content/german-c1/reading.json` — add Part 7 stub (for schema parity)
+- MODIFIED: `zarmet-olympiada/content/german-c1/listening.json` — add Part 4 stub
+
+**Alternatives Considered:**
+- Use JSON Schema (draft-07) with $ref for the new types — rejected: overkill, manual review remains authoritative at 4 files
+- Split `part-listening-4` into two separate parts sharing a server-side `audioSourceRef` link — rejected: the "shared audio" semantics would leak into the renderer, the part navigator would show Part 4a / Part 4b which confuses students
+- Model gapped-text as `matching` with a `paragraphBank` shim — rejected: the paragraph-bank-assignment semantics (paragraph disappears from bank when assigned) need renderer-level state that `matching` doesn't imply, and conflating them would hurt `matching`'s simplicity
+
+---
+
+### ADR-039: Test Runner Rewrite — Single-Part-At-A-Time + Cambridge Visual Grammar + Strict Listening
+**Status:** Decided
+**Impact:** High | **Effort:** 2 hours | **Risk:** Medium
+
+**Context:**
+The current test runner (`public/js/test.js`, ~306 lines) renders all parts in one long scrollable page with a right-side question navigator. It's functional but visually unlike the real Cambridge CAE exam. The client showed screenshots in `cae/examples/*.png` and explicitly asked for "as close to the real Cambridge as possible." Every screenshot shows:
+
+- A minimal top header (logo left, candidate ID, empty right)
+- A grey rounded instruction banner ("Questions N–M — ...")
+- **One part visible at a time** (not a scrollable list of all parts)
+- A **horizontal bottom navigator bar** spanning the full page width, with 8 segments (for Reading) or 4 segments (for Listening). Each segment shows `Part N   X of Y` (inactive parts) or expands to show each question number (active part). The active question number is highlighted teal.
+- Arrow buttons `←` `→` in the bottom-right corner, plus a finish `✓` checkmark
+- Per-question bookmark icon on the right
+- Two-column layouts for Parts 5/6/7/8
+
+Plus the client's hard constraints from the clarifications round:
+- No yellow `X/Y` global counter pill
+- No "Secure Mode" badge
+- No wifi/bell/menu/pencil chrome icons
+- No Cambridge logo — Zarmet-neutral branding
+- Strict Cambridge listening: pre-play modal, auto-play-once, no visible audio controls
+
+This is a full frontend rewrite. The current `test.js`, `test.html`, and the test-related portion of `styles.css` are replaced. Content schema (ADR-034 + ADR-038) stays; server durability (ADR-035) stays; admin page (part of ADR-036) stays.
+
+**Decision:**
+
+**1. New architectural core: a state machine in `test.js`.**
+
+The runner's state becomes:
+
+```js
+state = {
+  content,                  // loaded from GET /api/content/:lang/:skill
+  flatQuestions: [],         // [{partIndex, partId, question, taskGroupIndex}] — flat ordered list
+  currentPartIndex: 0,
+  currentQuestionId: '',     // for scrolling/highlight inside the current part
+  answers: {},               // { qid: value } — mirror of server JSONL
+  audioState: {              // per-listening-part state
+    [partId]: 'not-started' | 'playing' | 'finished'
+  },
+  timerEndMs,
+  timerHandle,
+  partCache: new WeakMap(),  // rendered part DOM cached for fast navigation
+}
+```
+
+Transitions:
+- `goToPart(i)` → update `currentPartIndex`, render that part (possibly from cache), update bottom navigator, scroll to top of content area
+- `goToQuestion(qid)` → find which part it belongs to, call `goToPart`, scroll to the question inside the part
+- `nextQuestion()` → find the next qid in `flatQuestions`, may cross part boundary
+- `prevQuestion()` → symmetric
+- `setAnswer(qid, value)` → update `state.answers`, POST to `/api/session/:id/answer`, update navigator count
+- `startAudio(partId)` → only if state is `not-started`; transition through `playing` → `finished`
+- `finish()` → confirm dialog, POST submit, redirect
+
+**2. Per-part renderers.**
+
+One render function per question type, plus a part-type dispatcher. The part's first question's `type` (or a new optional `part.renderMode` field — NOT introduced in this ADR, using type inference) decides the layout:
+
+- **`renderPart1_MultipleChoiceCloze(part)`** — single passage with inline numbered boxes; each box expands below with 4 radio options (A/B/C/D)
+- **`renderPart2_OpenCloze(part)`** — single passage with inline text inputs
+- **`renderPart3_WordFormation(part)`** — passage in main column + **keyword list column on the right** showing the rootWords vertically
+- **`renderPart4_KeyWordTransformation(part)`** — vertically stacked centered blocks per question: first sentence, key word in bold caps, second sentence with inline input
+- **`renderPart5_MultipleChoice(part)`** — 2-column: passage left, radio-button questions right
+- **`renderPart6_CrossTextMatching(part)`** — 2-column: reviewer sections left, matching questions right
+- **`renderPart7_GappedText(part)`** — 2-column: passage with numbered slots left, paragraph bank cards right. Click-to-assign: click a slot, click a paragraph from the bank, paragraph fills the slot and vanishes from the bank. Click a filled slot to clear it (paragraph returns to bank).
+- **`renderPart8_MultipleMatching(part)`** — 2-column: article sections left, matching questions right
+- **`renderListeningPart(part)`** — if `taskGroups` present, render two task blocks vertically; otherwise render as a single block. Always shows the pre-play modal before audio starts (unless `audioState[partId] === 'finished'`).
+
+The dispatcher reads `part.id` first (fast-path), then falls back to inspecting the first question's `type`. Reading Part IDs follow convention `part1`, `part2`, ..., `part8`. Listening parts follow `part-listening-1`, ..., `part-listening-4`. The dispatcher uses a map, not a switch, so new types can be added with one entry.
+
+**3. Bottom navigator as a state-driven component.**
+
+A single `renderBottomNav()` function rebuilds the navigator on every state change. It produces:
+
+```html
+<nav class="zu-bottom-nav">
+  <div class="zu-nav-parts">
+    <div class="zu-nav-part" data-part="part1">
+      <span class="zu-nav-part-label">Part 1</span>
+      <span class="zu-nav-part-count">0 of 8</span>
+    </div>
+    <div class="zu-nav-part zu-nav-part--active" data-part="part2">
+      <span class="zu-nav-part-label">Part 2</span>
+      <span class="zu-nav-part-numbers">
+        <button data-qid="q9" class="zu-nav-num zu-nav-num--active">9</button>
+        <button data-qid="q10" class="zu-nav-num">10</button>
+        ...
+      </span>
+    </div>
+    ...
+  </div>
+  <div class="zu-nav-arrows">
+    <button class="zu-nav-arrow zu-nav-arrow--prev" aria-label="Previous">←</button>
+    <button class="zu-nav-arrow zu-nav-arrow--next" aria-label="Next">→</button>
+    <button class="zu-nav-finish" aria-label="Finish">✓</button>
+  </div>
+</nav>
+```
+
+The `X of Y` count is answered/total where "answered" = number of questions in that part whose `state.answers[qid]` is not null/empty. This is the authentic Cambridge behavior — a per-part answered counter. It is NOT the yellow global pill the client rejected.
+
+**4. Strict Cambridge listening.**
+
+For each listening part, behavior is:
+
+```
+State: audioState[partId] ∈ {'not-started', 'playing', 'finished'}
+
+On part enter:
+  if state === 'not-started':
+    render part content + pre-play modal overlay
+    advance button (→ next) disabled
+    advance is blocked until state === 'finished'
+  if state === 'playing':
+    should not happen if we navigate away — audio pauses on part change
+    treat as 'not-started' (restart)
+  if state === 'finished':
+    render part content, no modal
+    advance button enabled
+
+On pre-play modal click:
+  state → 'playing'
+  audio.play() (no controls visible)
+  header shows "Audio is playing" indicator
+  
+On audio 'ended' event:
+  state → 'finished'
+  header indicator hidden
+  advance button enabled
+  (student can still change answers)
+
+On audio 'error' event:
+  show modal "Audio unavailable. Please tell your invigilator."
+  DO NOT auto-advance
+  log to server via POST /api/session/:id/answer with special qid '_audio_error_partN'
+
+On stall > 30s:
+  show "Audio stalled. Click to continue without audio."
+  state → 'finished' (manual override)
+  log integrity flag server-side
+```
+
+Audio element is created via `new Audio(url)` — NOT via `<audio controls>` tag. Controls are never exposed to the DOM. If a student opens devtools they CAN find the element, but they cannot use a UI to rewind without hacking. Perfect defense is not the goal; matching real Cambridge discipline is.
+
+Replay-via-refresh sneakiness: the server tracks `playsUsed` per (sessionId, partId) via a new event type in the JSONL (`ev: 'audio-play'`). On reload, if `playsUsed >= 1`, the server responds to the resume query with `audioState: 'already-played'` and the client treats the part as if `state === 'finished'` — no new audio play, student can still answer but cannot re-listen. This is a minimal backend change (new event kind + a per-part lookup in the session meta computation).
+
+**5. Header + instruction banner + timer placement.**
+
+Top header strip (~56px tall):
+- Left: Zarmet shield + `Zarmet University` + `C1 Olympiada` subtitle
+- Center: `Candidate ID` label + student ID value
+- Right: **empty by default**. During listening audio playback: small speaker icon + `Audio is playing`.
+- Timer: bottom-right of the header strip, monospace, grey pill
+
+Grey instruction banner (~56px below header):
+- `Questions N–M` in bold on the left
+- Part-specific instructions inline
+
+Main content area: everything between instruction banner and bottom navigator. Vertical scroll as needed (for long passages in Parts 5/7/8).
+
+**6. CSS strategy.**
+
+Replace the current `public/css/styles.css` (~328 lines) with a new version (~650 lines) organized in sections:
+1. CSS variables (palette + spacing)
+2. Base (html, body, reset)
+3. Header + timer
+4. Instruction banner
+5. Main content container
+6. Passage styles (+ inline gap inputs)
+7. Per-part renderers (Part 1 styles, Part 2 styles, ..., Part 8 styles + listening)
+8. Pre-play modal
+9. Bottom navigator
+10. Utility classes
+
+Colors:
+- Zarmet palette (already in v1): `#7c2d12`, `#ea580c`, `#fed7aa`, `#f9f5f0` for welcome/dashboard/done pages
+- Cambridge-authentic test interface: `#ffffff` background, `#1f2937` text, `#f3f4f6` instruction banner, `#e5e7eb` borders, `#0d9488` teal accent (highlight/active state), `#d1d5db` inactive grey
+
+The Zarmet palette appears on the welcome/dashboard/done pages. The Cambridge-authentic minimal white/grey appears on `test.html`. Same CSS file, separate scopes.
+
+**Consequences:**
+
+Positive:
+- Visual legitimacy — app looks like real Cambridge CAE
+- Single-part-at-a-time reduces cognitive load and page weight
+- Per-part renderer map is extensible (new part types = one new entry)
+- State machine is explicit and testable
+- Strict listening matches real exam discipline
+
+Negative:
+- Whole-cloth rewrite = high churn = more regression surface area
+- State machine adds complexity over the current "render everything at once" model
+- Per-part renderers share boilerplate (answer-binding, nav sync) — some duplication
+- Audio-playsUsed tracking adds a minor server-side event type
+- If /eye later finds a polish issue in one part type, it's scoped to that renderer — acceptable
+
+**Migration Path:**
+1. Checkpoint commit.
+2. Rewrite `public/css/styles.css` — single new file, all sections, no reference to old class names.
+3. Rewrite `public/test.html` — new skeletal structure with header, instruction banner, content area, bottom nav.
+4. Rewrite `public/js/test.js` — state machine + per-part renderers + strict listening logic. Target ~650-800 lines.
+5. Update `public/index.html` and `public/done.html` to reference the shared `styles.css` (no change to their JS).
+6. Add server-side audio-play tracking (new `ev: 'audio-play'` event kind; `GET /api/session/:id` returns per-part audio state).
+7. Syntax check all JS files.
+8. Smoke test: boot server, load English C1 Reading, verify each part renders, verify answer saving still works, verify strict listening behavior.
+9. Commit as ADR-039.
+
+**Files Affected:**
+- REWRITE: `zarmet-olympiada/public/css/styles.css` (~328 → ~650 lines)
+- REWRITE: `zarmet-olympiada/public/test.html` (~30 → ~60 lines)
+- REWRITE: `zarmet-olympiada/public/js/test.js` (~306 → ~750 lines)
+- MODIFIED: `zarmet-olympiada/server.js` — add audio-play tracking (~20 lines)
+- MODIFIED: `zarmet-olympiada/public/index.html` — header chrome update
+- MODIFIED: `zarmet-olympiada/public/done.html` — header chrome update (keep 4-corner gate)
+
+**Alternatives Considered:**
+- Render all parts on one page but hide inactive parts via CSS — rejected: browser still parses all the DOM, large content slows input responsiveness, and the Cambridge UX is explicitly single-part-at-a-time
+- Use a tiny framework (lit-html or Preact) for the state machine — rejected: violates "no build step, no framework" and adds a dependency; the scaffold is vanilla for good reasons
+- Let the current scrollable UX stay and only add the bottom navigator — rejected: the client's explicit feedback was "make it close to the real Cambridge" which is single-part, and the scrollable layout blocks that
+- Full audio control (visible player with replay count) — rejected per ADR-037 clarification: client chose strict (a)
+
+---
+
+### ADR-040: Dashboard Flow — Welcome Split + Module Selection + Student Status Endpoint
+**Status:** Decided
+**Impact:** Medium | **Effort:** 40 min | **Risk:** Low
+
+**Context:**
+The current welcome page (`public/index.html`) asks for name + group + language + **skill** in one form. The client wants to inherit the Cambridge `dashboard-cambridge.html` pattern: welcome asks for name + language only, then a dashboard page shows module cards ("Reading & Use of English", "Listening") that the student picks from. After finishing one module the student returns to the dashboard, sees that module marked complete, picks the other. When both are done, a completion banner appears and the student waits.
+
+This is a flow change, not a visual one. The module-selection card grid in `Cambridge/dashboard-cambridge.html` is referenced as the pattern — but we do NOT import from it (isolation is non-negotiable). We reimplement the pattern standalone.
+
+A critical subtlety: the dashboard needs to know which modules this particular student has already completed. That state lives in the server's `backups/` folder — each completed submission is a JSON file. The dashboard queries a new endpoint that scans `backups/` for files matching the student's `studentId`.
+
+Rotation safety: the `studentId` is generated fresh on each welcome form submit and stored in localStorage. When a new student starts (via the 4-corner gate on done.html or by direct welcome load), localStorage is cleared and a new studentId is minted — so the dashboard shows no prior-student state.
+
+**Decision:**
+
+**1. Welcome form change (`public/index.html` + `public/js/app.js`):**
+
+Remove the skill dropdown. Keep name, group, language. On submit:
+- Generate `studentId = crypto.randomUUID()` (or a crypto.getRandomValues polyfill for older browsers, though we target desktop Chrome/Edge so `randomUUID` is fine)
+- Store in localStorage: `olympiada:studentId`, `olympiada:studentName`, `olympiada:studentGroup`, `olympiada:language`
+- Navigate to `dashboard.html` (NOT directly to test.html)
+
+No server call on welcome submit. The server only hears about the student when they start their first module.
+
+**2. New page: `public/dashboard.html`** (and companion `public/js/dashboard.js`)
+
+Structure:
+- Header: Zarmet shield + `Zarmet University` + `C1 Olympiada` subtitle (same chrome as welcome)
+- Welcome section: `Welcome, {name}` on one line, `Group: {group} · Language: {lang}` on the next, student ID (masked/short) on the next
+- Module grid: 2 cards
+  - Card 1: `Reading & Use of English` — shows duration (90 or 65 min) — on click navigates to `test.html?module=reading`
+  - Card 2: `Listening` — shows duration (40 min) — on click navigates to `test.html?module=listening`
+- Completed modules show a ✓ indicator + the card is visually muted but not disabled (student can view completed state but re-entering shows "already submitted" from the server)
+- When both modules are complete: replace the grid with a completion banner reading `All Sections Complete. Please remain seated and wait for your invigilator.` — plus the same 4-corner invigilator gate as done.html
+
+On load:
+1. Read studentId + name + language from localStorage. If missing, redirect to `index.html`.
+2. Call `GET /api/student-status?studentId=XXX` — returns `{ completed: { reading: bool, listening: bool, sessionIds: {reading, listening} } }`
+3. Render module cards with completion state
+
+**3. New server endpoint: `GET /api/student-status?studentId=:id`**
+
+```js
+app.get('/api/student-status', (req, res) => {
+    const studentId = (req.query.studentId || '').trim();
+    if (!/^[a-zA-Z0-9-]{8,64}$/.test(studentId)) {
+        return res.status(400).json({ error: 'invalid studentId' });
+    }
+    try {
+        const files = fs.readdirSync(BACKUPS_DIR).filter(f => f.endsWith('.json'));
+        const completed = {};
+        for (const f of files) {
+            try {
+                const rec = JSON.parse(fs.readFileSync(path.join(BACKUPS_DIR, f), 'utf8'));
+                if (rec.studentId === studentId && rec.skill) {
+                    completed[rec.skill] = { done: true, sessionId: rec.sessionId, filename: f };
+                }
+            } catch {}
+        }
+        res.json({ studentId, completed });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+```
+
+**Critical: this endpoint never returns score data.** Only `{done: true}` and opaque identifiers.
+
+**4. Session start endpoint extension.**
+
+The existing `POST /api/session/start` currently accepts `{student, group, lang, skill}`. Extend it to also accept `studentId` (optional, for backward compatibility during the migration). The server stamps the studentId into the `start` event in the JSONL and into the final backup record:
+
+```js
+// In start handler:
+const startEvent = {
+    ev: 'start',
+    studentId: req.body.studentId || null,  // NEW
+    student: student.trim(),
+    group: (group || '').trim(),
+    lang,
+    skill
+};
+```
+
+And `finalizeSession()` reads `meta.studentId` from the events and stores it on the record:
+
+```js
+const record = {
+    sessionId,
+    studentId: meta.studentId,  // NEW — null for legacy sessions
+    student: meta.student,
+    ...
+};
+```
+
+Duplicate prevention: if the start endpoint is called with a `studentId` + `skill` combo that already has a completed backup, reject with 409 "module already completed". This prevents a student from accidentally retaking a module by clicking the card twice — they'd get a clear error message and the dashboard would show the correct state on reload.
+
+**5. Route update in `public/js/test.js`:**
+
+- Read `module` from URL query param, not from localStorage
+- On submit success, redirect to `dashboard.html` (not to done.html)
+- `done.html` is only reached from the dashboard's completion banner flow or as a manual invigilator escape hatch
+
+**6. `done.html` reachability:**
+
+After both modules are submitted, the dashboard shows the completion banner. The invigilator 4-corner gate on the dashboard returns to welcome. `done.html` is no longer the post-submit landing page — it becomes a redundant fallback. Decision: **keep done.html as-is** for now (4-corner gate, no data) and redirect to dashboard from test.js. Later pass can remove done.html if it's truly unreferenced.
+
+**Consequences:**
+
+Positive:
+- Matches the Cambridge `Select a Module to Begin` pattern the client loves
+- Persistent studentId enables the dashboard to track progress across modules without re-entering the name
+- Server-side completion tracking = authoritative; dashboard cannot be fooled by localStorage manipulation
+- Duplicate-submit prevention via studentId+skill uniqueness is a nice safety
+- Clean separation: welcome = student entry, dashboard = hub, test = test, done = graceful exit
+
+Negative:
+- One more HTML page to maintain (dashboard.html)
+- studentId must be generated and persisted correctly or the whole flow breaks — mitigated by thorough testing
+- done.html becomes partially redundant (used only via 4-corner flows now) — acceptable
+- New `/api/student-status` endpoint reads the filesystem on every request — fine at 50-student scale, slow at 10,000 (not our problem)
+
+**Migration Path:**
+1. Checkpoint commit.
+2. Update `zarmet-olympiada/server.js`:
+   - Accept `studentId` in session start, stamp it into the `start` event and `record`
+   - Add `GET /api/student-status` endpoint
+   - Add duplicate-submit check (reject if studentId + skill backup already exists)
+3. Update `zarmet-olympiada/public/index.html`: remove skill dropdown
+4. Update `zarmet-olympiada/public/js/app.js`: generate studentId, write to localStorage, navigate to dashboard.html
+5. Create `zarmet-olympiada/public/dashboard.html`: Zarmet chrome, welcome section, module grid container, completion banner container
+6. Create `zarmet-olympiada/public/js/dashboard.js`: load student state, render cards, handle clicks, handle completion flow, implement 4-corner gate (reuse done.html's pattern)
+7. Update `zarmet-olympiada/public/js/test.js`: read module from URL, redirect to dashboard on submit
+8. Syntax check all JS files.
+9. Smoke test: welcome → dashboard (empty) → click Reading card → test → submit → back to dashboard → Reading shows ✓ → click Listening card → test → submit → back to dashboard → both ✓ → completion banner appears.
+10. Commit as ADR-040.
+
+**Files Affected:**
+- MODIFIED: `zarmet-olympiada/server.js` (+40 lines: student-status endpoint, studentId in start/record, duplicate check)
+- MODIFIED: `zarmet-olympiada/public/index.html` (-skill dropdown)
+- MODIFIED: `zarmet-olympiada/public/js/app.js` (+studentId generation, dashboard navigation)
+- NEW: `zarmet-olympiada/public/dashboard.html`
+- NEW: `zarmet-olympiada/public/js/dashboard.js`
+- MODIFIED: `zarmet-olympiada/public/js/test.js` (from ADR-039; this ADR adds the module-param and redirect changes)
+
+**Alternatives Considered:**
+- Skip the dashboard and go directly from welcome → test, letting the student pick language+skill on welcome (status quo) — rejected: client explicitly asked for the Cambridge module-selection pattern
+- Use student name (not studentId) as the key for status lookup — rejected: two students with the same name would share state, and rotation would leak the previous student's progress to the new student
+- Store completion state in localStorage only (no server endpoint) — rejected: localStorage is per-browser, doesn't survive a refresh if the browser's cache is cleared, and the server has authoritative data anyway
+- Require invigilator authentication to access dashboard — rejected: over-engineering; the dashboard is the student's home hub during the exam
+
+---
+
 ## Session: 2026-04-11 — Zarmet Olympiada Scaffold
 
 **Context:** Client approved a full rebuild of the Zarmet University Olympiada as a standalone app. Current state: hacked onto the Cambridge system (hidden C1-Advanced level, `html.olympiada` CSS overrides, `Launch Zarmet Olympiada.bat` pointing at port 3003, ~7 branches in `cambridge-database-server.js`, theme hooks across `launcher.html` and `index.html`, filter dropdown in `cambridge-admin-dashboard.html`). Client wants: a tiny standalone app under `zarmet-olympiada/`, English C1 + German C1, Reading + Listening only, crash-safe durability across student rotation. Full intent in `docs/intent-olympiada.md`.
