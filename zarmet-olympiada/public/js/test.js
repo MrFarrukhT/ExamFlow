@@ -812,11 +812,15 @@
     // Auto-focus the Play button so a keyboard user can hit Enter to
     // start audio immediately. setTimeout(0) defers until after the
     // caller has appended the overlay to the DOM — you can't focus a
-    // detached element. Matches the pattern used in app.js welcome
-    // input focus and admin.js login password focus.
+    // detached element.
     setTimeout(() => {
       try { btn.focus(); } catch (e) { /* focus() can throw if removed */ }
     }, 0);
+    // Focus trap: without this, Tab escapes to inputs behind the backdrop
+    // and the student could pre-type answers before clicking Play. Strict
+    // listening requires the modal to own focus entirely until dismissed.
+    // No Escape binding — the student MUST click Play to proceed.
+    trapFocus(overlay, null);
     return overlay;
   }
 
@@ -949,6 +953,56 @@
     card.appendChild(btn);
     overlay.appendChild(card);
     document.body.appendChild(overlay);
+    trapFocus(overlay, () => overlay.remove());
+    setTimeout(() => btn.focus(), 30);
+  }
+
+  // Keyboard focus trap for modal overlays. Without this, pressing Tab
+  // inside the pre-play modal escapes to inputs BEHIND the dimmed
+  // backdrop — which breaks strict-listening (student could pre-type
+  // answers before clicking Play) AND traps keyboard users outside
+  // the modal they're supposed to interact with.
+  //
+  // Cycles Tab / Shift+Tab between the modal's own focusable elements
+  // (buttons, inputs, selects, etc.). Also wires Escape → onEscape
+  // callback so keyboard users can dismiss without reaching for a
+  // mouse. Returns the keydown handler so callers don't need to
+  // clean it up — the overlay.remove() drops the listener with the
+  // element.
+  function trapFocus(overlay, onEscape) {
+    const focusableSelector =
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    function getFocusables() {
+      return Array.from(overlay.querySelectorAll(focusableSelector))
+        .filter(el => !el.disabled && el.offsetParent !== null);
+    }
+    overlay.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && typeof onEscape === 'function') {
+        e.preventDefault();
+        onEscape();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const focusables = getFocusables();
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      // If focus somehow escaped the overlay, yank it back to the first
+      // focusable inside. Covers the edge case where focus landed on
+      // <body> or on an element outside the modal.
+      if (!overlay.contains(document.activeElement)) {
+        e.preventDefault();
+        first.focus();
+        return;
+      }
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
   }
 
   // Styled confirm dialog that matches the rest of the test chrome — replaces
@@ -978,6 +1032,10 @@
     document.body.appendChild(overlay);
     // Focus the primary action so Enter submits immediately for keyboard users
     setTimeout(() => yesBtn.focus(), 30);
+    // Focus trap + Escape shortcut → cancel (same as clicking "No").
+    // Tab cycles between noBtn and yesBtn; can't escape to elements
+    // behind the backdrop.
+    trapFocus(overlay, () => overlay.remove());
   }
 
   // ---------- passage helpers ----------

@@ -1741,3 +1741,33 @@ body.zu-test-body .ct-nav-finish:focus-visible {
     min-width: 0;
   }
 }
+
+/* Reduced motion — for users with vestibular disorders or motion
+ * sensitivity. Follows WCAG 2.3.3 (Animation from Interactions) and
+ * the standard web-a11y pattern of reducing animation/transition
+ * duration to near-zero instead of removing them entirely (state
+ * changes still fire, they just don't animate).
+ *
+ * This disables:
+ *   - ctAudioPulse (1.6s infinite speaker-icon opacity loop)
+ *   - ctTimerPulse (1s infinite glow on urgent timer state)
+ *   - ctFadeIn (entrance on main content, modals, module cards)
+ *   - Every button hover translateY + shadow transition
+ *   - Table row hover background fades
+ *
+ * Users who have OS-level reduced-motion enabled still see:
+ *   - All state changes (active question, answered nav nums, etc.)
+ *   - All color changes (focus rings, hover highlights)
+ *   - Timer urgent styling (crimson bg without the pulse animation)
+ *   - Error modal appearance (instant, no fade-in)
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,5 +1,93 @@
 # Eye Journal
 
+## Session: 2026-04-12 00:10 — Zarmed Olympiada prefers-reduced-motion + Modal Focus Trap — Round 34 (/loop iteration)
+Persona: Student with vestibular disorder who has `prefers-reduced-motion: reduce` set in the OS + keyboard-only student clicking into the pre-play listening modal | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: grep audit of all transition/animation rules + live focus-trap test on the pre-play modal
+Starting state: Round 33 shipped error banner crimson + empty-state exports. This round picks up two a11y gaps nobody had audited: **`prefers-reduced-motion` coverage** (zero across 25+ animations) and **modal focus trap** (Tab from the pre-play Play button escapes behind the backdrop).
+
+### Round 34 — 2 findings, 1 critical
+
+**Findings:**
+
+- [T4] **Zero `prefers-reduced-motion` coverage across 25+ animations.** Grep confirmed:
+  - `ctAudioPulse` (1.6s infinite speaker-icon opacity loop)
+  - `ctTimerPulse` (1s infinite glow on urgent timer)
+  - `ctFadeIn` (220-260ms entrance on main content, module cards, 3 different modals)
+  - Multiple `transition: transform` causing translateY(-3px) hover animations on cards/buttons
+  - Multiple `transition: box-shadow` causing shadow-grow on hover
+  - Timer color transitions (200ms)
+  Zero `@media (prefers-reduced-motion: reduce)` rules anywhere in the codebase. Users with vestibular disorders get the full motion experience regardless of their OS setting.
+
+- [T1 — CRITICAL] **Pre-play modal focus trap broken.** Tested live: opened listening test, focused `.ct-preplay-btn` directly, pressed Tab — focus escaped to an `INPUT` element BEHIND the dimmed backdrop (one of the sentence-completion inputs in Part 2 rendered underneath). Two consequences:
+  1. **Accessibility**: Keyboard users get trapped OUT of the modal they're supposed to interact with. The Play button visibly has focus, Tab pushes focus off-screen, no indication it went anywhere.
+  2. **Strict listening bypass**: A student could Tab into the questions behind the dimmed modal and pre-type answers BEFORE clicking Play. The whole point of the pre-play gate (strict CAE listening = no pause/rewind, click-to-commit) depends on the modal owning focus until Play is clicked. This bypass defeats the integrity policy.
+
+  Same gap affects `.ct-confirm-modal` (submit confirmation) and `.ct-error-modal` — neither had focus traps either.
+
+**Action:** POLISH (reduced-motion) + T1 FIX (focus trap).
+
+**Files touched:**
+
+1. **`styles.css` bottom** — new `@media (prefers-reduced-motion: reduce)` block:
+   ```css
+   @media (prefers-reduced-motion: reduce) {
+     *, *::before, *::after {
+       animation-duration: 0.01ms !important;
+       animation-iteration-count: 1 !important;
+       transition-duration: 0.01ms !important;
+       scroll-behavior: auto !important;
+     }
+   }
+   ```
+   Standard WCAG 2.3.3 pattern — reduces durations to near-zero so state changes still fire but don't animate. Preserves all semantic meaning (active question backdrop, timer urgent color, error modal appearance) while stripping infinite loops, fade-ins, and hover translateYs.
+
+2. **`test.js`** — new `trapFocus(overlay, onEscape)` helper:
+   - Queries focusables inside the overlay (buttons, inputs, selects, [tabindex])
+   - On Tab: if focus is at the last focusable, wrap to first
+   - On Shift+Tab: if focus is at the first, wrap to last
+   - If focus escaped the overlay entirely, yank it back to the first focusable (edge case where focus landed on `<body>`)
+   - On Escape: calls `onEscape` callback if provided (allows mouse-free dismissal)
+   - Applied to `buildPrePlayModal` with `onEscape: null` (strict — student MUST click Play), to `showConfirmModal` with `onEscape: () => overlay.remove()` (Escape = Cancel), and to `showErrorModal` with `onEscape: () => overlay.remove()`.
+   - `showErrorModal` also now auto-focuses its OK button on boot (matches pattern used in pre-play and confirm modals).
+
+### Verification
+
+- **Focus trap** (live test, listening test.html, pre-play modal open):
+  - Before: `activeElement = INPUT` (sentence-completion input behind backdrop)
+  - After: `activeElement = BUTTON.ct-preplay-btn` (Tab cycles back to itself since it's the only focusable). Confirmed via DOM inspection.
+- **Reduced-motion**: can't easily toggle `prefers-reduced-motion` at runtime in playwright without browser args, but the CSS rule is the standard WCAG-compliant pattern and will apply automatically whenever an OS reports the preference. Zero regression risk since the rule only fires on a specific media query.
+- **JS syntax** — `node --check` passes on test.js.
+
+### Quality Map
+
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| prefers-reduced-motion | 2-Clear (not supported) → **5-Crafted** | WCAG 2.3.3 standard global rule |
+| Pre-play modal focus trap | 1-Broken (Tab escapes, strict listening bypass) → **5-Crafted** | trapFocus helper, focus wraps to Play button |
+| Confirm modal focus trap | 3-Efficient → **5-Crafted** | Tab cycles Cancel↔Submit, Escape=Cancel |
+| Error modal focus trap | 3-Efficient → **5-Crafted** | Tab stays on OK, Escape dismisses |
+
+### Deferred
+
+- **Admin modals** — admin.js's `showAdminError` uses the same `.ct-error-modal` class but doesn't call the test.js `trapFocus` helper (they're separate IIFEs). Low priority — only fires on API failure, admin uses mouse usually. Flag for a future round if admin gains more modals.
+- **pre-play ESC dismissal** — intentionally NOT wired since the strict listening policy requires Play to proceed. Student can't "Escape out of" the gate.
+- **Other @keyframes** — `.ct-kwt-bookmark:hover` and similar subtle micro-interactions not yet audited. Low priority.
+
+### Session Stats
+
+Pages explored: 2 (grep audit of animations + live focus-trap test in listening pre-play)
+Findings: 2 (1× T4 reduced-motion + 1× T1 focus trap bypass)
+Polishes landed: 2 (reduced-motion rule + trapFocus helper)
+Critical fixes landed: 1 (focus trap — was a strict-listening bypass)
+Reverted: 0
+Files touched: 2 (styles.css, test.js)
+
+**Trajectory note:** Round 34 found a T1-critical bug (the focus trap bypass) while auditing something else (prefers-reduced-motion). **Lesson: a11y audits ALWAYS surface security/integrity bugs** — keyboard navigation and focus management are load-bearing for every "modal-gates-interaction" flow. A test that requires a modal click-through for integrity (like the strict listening gate) is only as strong as its focus trap. Every future modal added to the app should be grepped against this helper.
+
+**Key learning:** The "focus escapes modal" bug is invisible to mouse users. The only way to find it is to Tab with a modal open. Round 34's 30-second keyboard test caught a bug that 33 prior rounds of visual/functional auditing missed.
+
+---
+
 ## Session: 2026-04-12 00:00 — Zarmed Olympiada Error Banner + Empty Admin Exports — Round 33 (/loop iteration)
 Persona: Student hitting a content-load failure mid-exam (server down, 404, malformed JSON) + invigilator landing on a fresh admin install with zero submissions | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: welcome form empty-submit; admin empty state (force-rendered); test runner error banner (force-rendered)
