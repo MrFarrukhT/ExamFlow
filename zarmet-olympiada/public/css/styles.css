@@ -82,8 +82,16 @@ h3 { font-size: 1.35rem; }
   margin: 0 auto;
   padding: 2.5rem 2rem 4rem;
 }
-.page--narrow { max-width: 560px; }
+.page--narrow { max-width: 620px; }
 .page--wide { max-width: 1280px; }
+
+/* Admin login form lives inside a full-width .page (because the list view
+ * needs width), so constrain just the login view to keep its form centered
+ * on a narrow column instead of stretching across 1120px. */
+.zu-login-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+}
 
 /* Welcome page is a narrow form floating on a huge screen. Vertically
  * center it so the form doesn't hug the top of a 1080p canvas with 700px
@@ -316,32 +324,39 @@ body.zu-welcome .page {
   margin: 0;
 }
 
-/* Admin-page specific (unchanged from v1) */
+/* Admin-page table */
 .zu-admin-table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
+  background: var(--zu-surface);
   margin-top: 1.5rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  border: 1px solid var(--zu-border);
 }
 .zu-admin-table th,
 .zu-admin-table td {
   text-align: left;
-  padding: 0.65rem 0.9rem;
+  padding: 0.85rem 1.1rem;
   border-bottom: 1px solid var(--zu-border);
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 .zu-admin-table th {
-  background: var(--zu-cream);
-  color: var(--zu-primary-dark);
-  font-weight: 700;
+  background: var(--zu-primary);
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
 }
-.zu-admin-table tr:hover td { background: var(--zu-cream-soft); cursor: pointer; }
+.zu-admin-table tr:hover td { background: #eff6ff; cursor: pointer; }
 .zu-admin-table tr.zu-row-correct td { background: #f0fdf4; }
 .zu-admin-table tr.zu-row-wrong td { background: #fef2f2; }
-.zu-admin-table tr.zu-row-blank td { background: #fafaf9; color: var(--zu-text-muted); }
+.zu-admin-table tr.zu-row-blank td { background: #f8fafc; color: var(--zu-text-muted); }
 .zu-admin-table tr.zu-row-correct:hover td,
 .zu-admin-table tr.zu-row-wrong:hover td,
-.zu-admin-table tr.zu-row-blank:hover td { background: var(--zu-cream-soft); cursor: default; }
+.zu-admin-table tr.zu-row-blank:hover td { background: #eff6ff; cursor: default; }
 .zu-toolbar { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
 .zu-done { text-align: center; padding: 4rem 2rem; }
 
@@ -496,6 +511,13 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   color: var(--ct-teal);
   font-size: 15px;
   font-weight: 600;
+}
+.ct-audio-status.ct-audio-status--visible .ct-speaker-icon {
+  animation: ctAudioPulse 1.6s ease-in-out infinite;
+}
+@keyframes ctAudioPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
 }
 .ct-audio-status.ct-audio-status--visible { display: flex; }
 .ct-audio-status .ct-speaker-icon {
@@ -853,20 +875,20 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 }
 
 /* Part 4 — key word transformation (left-aligned, inline input)
- * Matches cae/examples/4.png: each KWT block is flush-left, no background
- * pill, with the bordered input box (showing its question number inside)
- * inlined where the ______ blank sits in the lead-in sentence. */
+ * Single card per page, matching cae/examples/4.png. The surrounding
+ * .ct-main gives ample room; .ct-kwt-block sits inside a max-width column
+ * with generous vertical padding so it doesn't float abandoned in a sea
+ * of whitespace. */
 .ct-kwt-block {
-  max-width: 1100px;
-  margin: 0 0 40px;
+  max-width: 960px;
+  margin: 0 auto 40px;
   text-align: left;
-  padding: 0;
   /* Override the generic .ct-question--active background so selected KWT
    * blocks don't render as big pale pills. Subtle left-accent only. */
   background: transparent !important;
   border: none !important;
-  border-left: 3px solid transparent;
-  padding-left: 12px;
+  border-left: 4px solid transparent;
+  padding: clamp(32px, 6vh, 72px) 24px clamp(28px, 5vh, 60px) 28px;
   transition: border-color 0.15s;
 }
 .ct-kwt-block.ct-question--active {
@@ -1022,7 +1044,7 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 }
 .ct-para-card:hover {
   border-color: var(--ct-teal);
-  background: #f0f6ff;
+  background: var(--ct-teal-soft);
   transform: translateX(2px);
 }
 .ct-para-card--used { opacity: 0.4; cursor: not-allowed; }
@@ -1302,8 +1324,8 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 }
 .ct-nav-num:hover { border-color: var(--ct-teal); color: var(--ct-teal); }
 .ct-nav-num--answered {
-  background: #dbeafe;
-  border-color: #60a5fa;
+  background: var(--ct-teal-soft);
+  border-color: var(--zu-focus);
   color: var(--ct-teal-dark);
 }
 .ct-nav-num--active {

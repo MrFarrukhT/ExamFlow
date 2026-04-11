@@ -1,5 +1,36 @@
 # Eye Journal
 
+## Session: 2026-04-11 17:30 — Zarmed Olympiada Brand Consistency Finish — Round 21 (/loop iteration)
+Persona: Student walking the reading test + checking answered-state nav badges | System: Zarmed Olympiada standalone (port 3004)
+Pages explored: Reading Part 1 (Bridges for wildlife, with Q1 answered), Part 6 (National parks), Part 8 (Frank Gehry)
+Starting state: Round 20 migrated 3 hardcoded pale-teal literals to `var(--ct-teal-soft)` (the brand-blue token). Round 21 runs a wider grep sweep and catches 2 more orphans — `.ct-para-card:hover` used `#f0f6ff` and `.ct-nav-num--answered` used literal `#dbeafe` and `#60a5fa`.
+
+### Round 21 — Two more brand-literal fixes (grep safety sweep)
+
+**Findings:**
+
+- [T4] **`.ct-para-card:hover` used hardcoded `#f0f6ff`** — pale lavender-ish blue that didn't match `var(--ct-teal-soft)` (#dbeafe). Visible when hovering paragraphs in Part 7 paragraph bank.
+
+- [T4] **`.ct-nav-num--answered` used hardcoded `#dbeafe` and `#60a5fa`** — literals matched tokens visually so no visible regression, but future palette shifts would orphan these again.
+
+**Action:** POLISH (2 token migrations)
+
+- [T4] `.ct-para-card:hover` background `#f0f6ff` → `var(--ct-teal-soft)`. Files: public/css/styles.css
+- [T4] `.ct-nav-num--answered` background `#dbeafe` → `var(--ct-teal-soft)`, border-color `#60a5fa` → `var(--zu-focus)`. Files: public/css/styles.css
+
+### Verification
+
+Post-fix grep sweep: `grep -n "#f0f6ff\|#f0fdfa\|#ecfeff\|#ccfbf1\|#0d9488\|#0f766e"` → (no matches). All remaining hex literals in `styles.css` are either CSS var definitions, `#fff`/`#ffffff`, or comment annotations.
+
+`r21v-answered.png`: Q1 answered in Reading Part 1, nav badge "1" renders with brand-blue answered state.
+
+### Session Stats
+Polishes: 2 | Changes shipped: 2
+
+**Key learning:** Every round that ships color changes should end with a `grep -n "#f0f6ff\|#f0fdfa\|..."` safety sweep. Round 20 missed 2 hits; round 21 caught them with a wider pattern.
+
+---
+
 ## Session: 2026-04-11 17:25 — Zarmed Olympiada German C1 Error Immersion — Round 19c (parallel iteration)
 Persona: German C1 student whose audio fails or whose submit errors — currently gets English error messages that break language immersion | System: Zarmed Olympiada standalone (port 3004)
 Pages explored: test.js error-path audit + German session forced via localStorage + modal injection verification
