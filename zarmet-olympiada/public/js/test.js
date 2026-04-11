@@ -234,14 +234,36 @@
     return node;
   }
 
+  // Build a question prompt element with an authentic Cambridge-style
+  // number BADGE (bordered square) on the left + the question text as bold.
+  // Replaces the plain "1. Which aspect..." dot-prefix with `[1] Which aspect...`
+  // where [1] is rendered as a .ct-q-num-badge. Matches cae/examples/l1.png,
+  // l3.png, 5.png, 6.png, 8.png active-question rendering.
+  function buildQuestionPrompt(q) {
+    const prompt = el('div', 'ct-q-prompt');
+    const qNum = extractQuestionNumber(q);
+    let promptText = q.prompt || q.id;
+    // Strip a leading "N. " or "N " prefix if present so the badge carries
+    // the number cleanly without duplicating it in the text.
+    if (qNum) {
+      const re = new RegExp('^' + qNum + '\\.?\\s+');
+      promptText = promptText.replace(re, '');
+    }
+    if (qNum) {
+      const badge = el('span', 'ct-q-num-badge', qNum);
+      prompt.appendChild(badge);
+    }
+    prompt.appendChild(document.createTextNode(promptText));
+    addBookmark(prompt);
+    return prompt;
+  }
+
   // Shared: multi-choice radio group (used by many parts)
   function renderMCQuestion(q) {
     const wrap = el('div', 'ct-question');
     wrap.dataset.qid = q.id;
     if (state.currentQid === q.id) wrap.classList.add('ct-question--active');
-    const prompt = el('div', 'ct-q-prompt', q.prompt || q.id);
-    addBookmark(prompt);
-    wrap.appendChild(prompt);
+    wrap.appendChild(buildQuestionPrompt(q));
     const opts = el('div', 'ct-q-options');
     (q.options || []).forEach((opt) => {
       const label = el('label', 'ct-q-option');
@@ -270,9 +292,7 @@
     const wrap = el('div', 'ct-question');
     wrap.dataset.qid = q.id;
     if (state.currentQid === q.id) wrap.classList.add('ct-question--active');
-    const prompt = el('div', 'ct-q-prompt', q.prompt || q.id);
-    addBookmark(prompt);
-    wrap.appendChild(prompt);
+    wrap.appendChild(buildQuestionPrompt(q));
     const opts = el('div', 'ct-q-options');
     // Option set is language-dependent. Goethe C1 (German) uses 2-option
     // Richtig/Falsch — there is no "not given". CAE / IELTS-style uses
@@ -501,9 +521,7 @@
     const wrap = el('div', 'ct-question');
     wrap.dataset.qid = q.id;
     if (state.currentQid === q.id) wrap.classList.add('ct-question--active');
-    const prompt = el('div', 'ct-q-prompt', q.prompt || q.id);
-    addBookmark(prompt);
-    wrap.appendChild(prompt);
+    wrap.appendChild(buildQuestionPrompt(q));
     const opts = el('div', 'ct-q-options');
     options.forEach((opt) => {
       const label = el('label', 'ct-q-option');

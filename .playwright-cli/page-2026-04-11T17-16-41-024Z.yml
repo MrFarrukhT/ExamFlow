@@ -1,0 +1,17 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - img "Zarmed University" [ref=e4]
+    - heading "C1 Language Olympiada" [level=1] [ref=e5]
+    - paragraph [ref=e6]: Select a module to begin
+  - generic [ref=e7]:
+    - paragraph [ref=e8]: Welcome, Round Twenty Student
+    - paragraph [ref=e9]: "Language: English C1 Advanced · ID: 8D0609E0"
+  - generic [ref=e10]:
+    - heading "Select a Module to Begin" [level=2] [ref=e11]
+    - generic [ref=e12]:
+      - 'button "Reading & Use of English Duration: 90 minutes" [ref=e13] [cursor=pointer]':
+        - heading "Reading & Use of English" [level=3] [ref=e14]
+        - generic [ref=e15]: "Duration: 90 minutes"
+      - 'button "Listening Duration: 40 minutes" [ref=e16] [cursor=pointer]':
+        - heading "Listening" [level=3] [ref=e17]
+        - generic [ref=e18]: "Duration: 40 minutes"

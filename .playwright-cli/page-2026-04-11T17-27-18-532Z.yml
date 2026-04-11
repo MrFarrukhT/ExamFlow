@@ -1,0 +1,16 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Zarmed University" [ref=e4]
+      - generic [ref=e5]: C1 Olympiada
+    - generic [ref=e6]:
+      - generic [ref=e7]: Candidate ID
+      - generic [ref=e8]: —
+    - generic [ref=e10]: "--:--"
+  - generic [ref=e13]: Loading …
+  - main
+  - navigation [ref=e14]:
+    - generic [ref=e16]:
+      - button "Previous" [ref=e17] [cursor=pointer]: ←
+      - button "Next" [ref=e18] [cursor=pointer]: →
+      - button "Finish" [ref=e19] [cursor=pointer]: ✓

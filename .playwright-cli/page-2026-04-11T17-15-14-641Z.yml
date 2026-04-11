@@ -1,0 +1,134 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Zarmed University" [ref=e4]
+      - generic [ref=e5]: C1 Olympiada
+    - generic [ref=e6]:
+      - generic [ref=e7]: Candidate ID
+      - generic [ref=e8]:
+        - text: Content Verify Read
+        - generic [ref=e9]: R17RD180
+    - generic [ref=e11]: 40:00
+  - generic [ref=e13]:
+    - generic [ref=e14]: Questions 1–6
+    - text: You will hear three different extracts. For questions 1–6, choose the answer (A, B or C) which fits best according to what you hear. There are two questions for each extract.
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - generic [ref=e18]:
+        - paragraph [ref=e20]: You will be listening to an audio clip during this test. You will not be permitted to pause or rewind the audio while answering the questions. To continue, click Play.
+        - button "Play" [ref=e21] [cursor=pointer]
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e24]: 1. How does the woman feel about current research on coral reefs?
+          - generic [ref=e26]:
+            - generic [ref=e27] [cursor=pointer]:
+              - radio "A afraid that its value may be underestimated" [ref=e28]
+              - generic [ref=e29]: A
+              - generic [ref=e30]: afraid that its value may be underestimated
+            - generic [ref=e31] [cursor=pointer]:
+              - radio "B worried that not enough time is being spent on it" [ref=e32]
+              - generic [ref=e33]: B
+              - generic [ref=e34]: worried that not enough time is being spent on it
+            - generic [ref=e35] [cursor=pointer]:
+              - radio "C concerned about shortcomings in what the data is measuring" [ref=e36]
+              - generic [ref=e37]: C
+              - generic [ref=e38]: concerned about shortcomings in what the data is measuring
+        - generic [ref=e39]:
+          - generic [ref=e40]: 2. When talking about conserving coral reefs, the man
+          - generic [ref=e42]:
+            - generic [ref=e43] [cursor=pointer]:
+              - radio "A outlines decisions that have affected it." [ref=e44]
+              - generic [ref=e45]: A
+              - generic [ref=e46]: outlines decisions that have affected it.
+            - generic [ref=e47] [cursor=pointer]:
+              - radio "B suggests practical approaches to take to it." [ref=e48]
+              - generic [ref=e49]: B
+              - generic [ref=e50]: suggests practical approaches to take to it.
+            - generic [ref=e51] [cursor=pointer]:
+              - radio "C identifies specific projects that have been successful." [ref=e52]
+              - generic [ref=e53]: C
+              - generic [ref=e54]: identifies specific projects that have been successful.
+        - generic [ref=e55]:
+          - generic [ref=e56]: 3. Why has the woman's opinion of birdwatching changed?
+          - generic [ref=e58]:
+            - generic [ref=e59] [cursor=pointer]:
+              - radio "A She experienced the excitement of recognising an unusual species." [ref=e60]
+              - generic [ref=e61]: A
+              - generic [ref=e62]: She experienced the excitement of recognising an unusual species.
+            - generic [ref=e63] [cursor=pointer]:
+              - radio "B She was persuaded by the man's enthusiasm for the activity." [ref=e64]
+              - generic [ref=e65]: B
+              - generic [ref=e66]: She was persuaded by the man's enthusiasm for the activity.
+            - generic [ref=e67] [cursor=pointer]:
+              - radio "C She had the opportunity to witness natural behaviour first hand." [ref=e68]
+              - generic [ref=e69]: C
+              - generic [ref=e70]: She had the opportunity to witness natural behaviour first hand.
+        - generic [ref=e71]:
+          - generic [ref=e72]: 4. The man says that while birdwatching, he has developed
+          - generic [ref=e74]:
+            - generic [ref=e75] [cursor=pointer]:
+              - radio "A an interest in promoting the conservation of certain creatures." [ref=e76]
+              - generic [ref=e77]: A
+              - generic [ref=e78]: an interest in promoting the conservation of certain creatures.
+            - generic [ref=e79] [cursor=pointer]:
+              - radio "B an appreciation of the astonishing variety of species that exist." [ref=e80]
+              - generic [ref=e81]: B
+              - generic [ref=e82]: an appreciation of the astonishing variety of species that exist.
+            - generic [ref=e83] [cursor=pointer]:
+              - radio "C an understanding of the connection between an environment and its wildlife." [ref=e84]
+              - generic [ref=e85]: C
+              - generic [ref=e86]: an understanding of the connection between an environment and its wildlife.
+        - generic [ref=e87]:
+          - generic [ref=e88]: 5. What does the man think about his work as a choreographer?
+          - generic [ref=e90]:
+            - generic [ref=e91] [cursor=pointer]:
+              - radio "A There is constant pressure on him to produce popular ballets." [ref=e92]
+              - generic [ref=e93]: A
+              - generic [ref=e94]: There is constant pressure on him to produce popular ballets.
+            - generic [ref=e95] [cursor=pointer]:
+              - radio "B It's important for him to seek out new sources of inspiration." [ref=e96]
+              - generic [ref=e97]: B
+              - generic [ref=e98]: It's important for him to seek out new sources of inspiration.
+            - generic [ref=e99] [cursor=pointer]:
+              - radio "C He has a responsibility to widen people's experiences." [ref=e100]
+              - generic [ref=e101]: C
+              - generic [ref=e102]: He has a responsibility to widen people's experiences.
+        - generic [ref=e103]:
+          - generic [ref=e104]: 6. What do they both think about dancers and choreographers creating new ballets together?
+          - generic [ref=e106]:
+            - generic [ref=e107] [cursor=pointer]:
+              - radio "A It's a physically demanding way of working." [ref=e108]
+              - generic [ref=e109]: A
+              - generic [ref=e110]: It's a physically demanding way of working.
+            - generic [ref=e111] [cursor=pointer]:
+              - radio "B It can be difficult to achieve genuine collaboration." [ref=e112]
+              - generic [ref=e113]: B
+              - generic [ref=e114]: It can be difficult to achieve genuine collaboration.
+            - generic [ref=e115] [cursor=pointer]:
+              - radio "C It may not always produce a satisfactory outcome." [ref=e116]
+              - generic [ref=e117]: C
+              - generic [ref=e118]: It may not always produce a satisfactory outcome.
+  - navigation [ref=e119]:
+    - generic [ref=e120]:
+      - generic [ref=e121] [cursor=pointer]:
+        - generic [ref=e122]: Part 1
+        - generic [ref=e123]:
+          - button "1" [ref=e124]
+          - button "2" [ref=e125]
+          - button "3" [ref=e126]
+          - button "4" [ref=e127]
+          - button "5" [ref=e128]
+          - button "6" [ref=e129]
+      - button "Part 2 0 of 8" [ref=e130] [cursor=pointer]:
+        - generic [ref=e131]: Part 2
+        - generic [ref=e132]: 0 of 8
+      - button "Part 3 0 of 6" [ref=e133] [cursor=pointer]:
+        - generic [ref=e134]: Part 3
+        - generic [ref=e135]: 0 of 6
+      - button "Part 4 0 of 10" [ref=e136] [cursor=pointer]:
+        - generic [ref=e137]: Part 4
+        - generic [ref=e138]: 0 of 10
+    - generic [ref=e139]:
+      - button "Previous" [disabled] [ref=e140]: ←
+      - button "Next" [disabled] [ref=e141]: →
+      - button "Finish" [disabled] [ref=e142]: ✓

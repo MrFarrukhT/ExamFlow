@@ -1,0 +1,130 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Zarmed University" [ref=e4]
+      - generic [ref=e5]: C1 Olympiada
+    - generic [ref=e6]:
+      - generic [ref=e7]: Candidate ID
+      - generic [ref=e8]:
+        - text: Eye Test Student
+        - generic [ref=e9]: 05bf3673
+    - generic [ref=e11]: 89:55
+  - generic [ref=e13]:
+    - generic [ref=e14]: Questions 37–40
+    - text: You are going to read four extracts from articles in which park rangers discuss national parks. For questions 37–40, choose from the park rangers A–D. The park rangers may be chosen more than once.
+  - main [ref=e15]:
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - heading "National parks" [level=3] [ref=e19]
+        - generic [ref=e20]: A — Many types of human activity, including hiking, cycling and horse-riding, have an impact on nature. Even small trails used by ecotourists and birdwatchers scare away some sensitive wildlife species or cause them to alter their behaviour. However, visitors help fund the operation of national parks and provide vital income for local people in many parts of the world. Therefore, putting a cap on how many come or banning their sporting activities is not a viable proposition. Introducing 'no-go' zones within a park, on the other hand, would protect wildlife while allowing visitors to enjoy the rest of the park. Such zones could be in more remote locations, away from roads. The majority of national parks already had roads running through them before they were given national park status. Closing these would prove unpopular, and in any case they are necessary infrastructure for both staff and visitors. B — National parks expose people to nature and increase the likelihood that they'll support environmental protection measures. If we introduce ceilings on how many can enjoy the parks, we risk losing that support. Having said that, I do think some changes are called for. Thanks to photo-sharing websites, picturesque vistas are being completely spoiled by crowds of tourists desperate to take the perfect selfie, and ecology should always be at the forefront of what we do. There are other issues too. Rather than continuing to allow outdoor sports such as off-road cycling in national parks, we need to identify more suitable spaces. And even for less damaging visitor pastimes, human activity must be restricted to particular sectors of the parks, using signage and physical barriers, while retaining the remainder for wildlife to live without human disturbance. C — The activities people do in national parks are changing, and park authorities need to keep up with that, whether it means introducing mountain bike trails or improving wi-fi access so tourists can use the internet. And park managers need to embrace the data which technology can provide. For example, GPS tagging shows that half of all photos by visitors are taken in less than 1% of each park. In other words, most visitors use a small, highly trafficked area of each park. Therefore, there's no need to set up visitor-free areas — there are plenty of those already. Roads are another matter, however. Existing ones need to be re-routed to avoid national parks, and new ones constructed outside park boundaries. Of course, this means other transport links must be improved. We have to allow as many people to visit as want to. If people can't go to national parks, they won't want to protect them, and we'll lose the parks completely. D — Can national parks continue to embrace ever-increasing levels of tourism while retaining what makes them unique? I can't see how. At one US national park, for example, a site which used to attract a few thousand visitors annually now gets two million a year, mainly because of tourists posting pictures of it online. This isn't an isolated case, and the consequences are disastrous — something we need to communicate to visitors. The time has come to draw a line. Parks must decide on a maximum number of people who can enter on a daily basis, both to protect wildlife and habitats and to ensure these continue to be pleasant places for people to visit. We also need to look at visitor activities. For example, forests maintained for commercial harvest offer a more appropriate setting for sports such as cross country cycling than national parks. Roads through national parks should also be closed so that traffic no longer goes through them, and visitors encouraged to travel to parks by other means.
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e24]: 37. Which park ranger shares an opinion with D about mountain biking in national parks?
+          - generic [ref=e26]:
+            - generic [ref=e27] [cursor=pointer]:
+              - radio "A Ranger A" [ref=e28]
+              - generic [ref=e29]: A
+              - generic [ref=e30]: Ranger A
+            - generic [ref=e31] [cursor=pointer]:
+              - radio "B Ranger B" [ref=e32]
+              - generic [ref=e33]: B
+              - generic [ref=e34]: Ranger B
+            - generic [ref=e35] [cursor=pointer]:
+              - radio "C Ranger C" [ref=e36]
+              - generic [ref=e37]: C
+              - generic [ref=e38]: Ranger C
+            - generic [ref=e39] [cursor=pointer]:
+              - radio "D Ranger D" [ref=e40]
+              - generic [ref=e41]: D
+              - generic [ref=e42]: Ranger D
+        - generic [ref=e43]:
+          - generic [ref=e44]: 38. Which park ranger has a different view from C about roads in national parks?
+          - generic [ref=e46]:
+            - generic [ref=e47] [cursor=pointer]:
+              - radio "A Ranger A" [ref=e48]
+              - generic [ref=e49]: A
+              - generic [ref=e50]: Ranger A
+            - generic [ref=e51] [cursor=pointer]:
+              - radio "B Ranger B" [ref=e52]
+              - generic [ref=e53]: B
+              - generic [ref=e54]: Ranger B
+            - generic [ref=e55] [cursor=pointer]:
+              - radio "C Ranger C" [ref=e56]
+              - generic [ref=e57]: C
+              - generic [ref=e58]: Ranger C
+            - generic [ref=e59] [cursor=pointer]:
+              - radio "D Ranger D" [ref=e60]
+              - generic [ref=e61]: D
+              - generic [ref=e62]: Ranger D
+        - generic [ref=e63]:
+          - generic [ref=e64]: 39. Which park ranger expresses a different view from the others about limiting visitor numbers to national parks?
+          - generic [ref=e66]:
+            - generic [ref=e67] [cursor=pointer]:
+              - radio "A Ranger A" [ref=e68]
+              - generic [ref=e69]: A
+              - generic [ref=e70]: Ranger A
+            - generic [ref=e71] [cursor=pointer]:
+              - radio "B Ranger B" [ref=e72]
+              - generic [ref=e73]: B
+              - generic [ref=e74]: Ranger B
+            - generic [ref=e75] [cursor=pointer]:
+              - radio "C Ranger C" [ref=e76]
+              - generic [ref=e77]: C
+              - generic [ref=e78]: Ranger C
+            - generic [ref=e79] [cursor=pointer]:
+              - radio "D Ranger D" [ref=e80]
+              - generic [ref=e81]: D
+              - generic [ref=e82]: Ranger D
+        - generic [ref=e83]:
+          - generic [ref=e84]: 40. Which park ranger shares D's view about the impact of social media on national parks?
+          - generic [ref=e86]:
+            - generic [ref=e87] [cursor=pointer]:
+              - radio "A Ranger A" [ref=e88]
+              - generic [ref=e89]: A
+              - generic [ref=e90]: Ranger A
+            - generic [ref=e91] [cursor=pointer]:
+              - radio "B Ranger B" [ref=e92]
+              - generic [ref=e93]: B
+              - generic [ref=e94]: Ranger B
+            - generic [ref=e95] [cursor=pointer]:
+              - radio "C Ranger C" [ref=e96]
+              - generic [ref=e97]: C
+              - generic [ref=e98]: Ranger C
+            - generic [ref=e99] [cursor=pointer]:
+              - radio "D Ranger D" [ref=e100]
+              - generic [ref=e101]: D
+              - generic [ref=e102]: Ranger D
+  - navigation [ref=e103]:
+    - generic [ref=e104]:
+      - button "Part 1 0 of 8" [ref=e105] [cursor=pointer]:
+        - generic [ref=e106]: Part 1
+        - generic [ref=e107]: 0 of 8
+      - button "Part 2 0 of 8" [ref=e108] [cursor=pointer]:
+        - generic [ref=e109]: Part 2
+        - generic [ref=e110]: 0 of 8
+      - button "Part 3 0 of 8" [ref=e111] [cursor=pointer]:
+        - generic [ref=e112]: Part 3
+        - generic [ref=e113]: 0 of 8
+      - button "Part 4 0 of 6" [ref=e114] [cursor=pointer]:
+        - generic [ref=e115]: Part 4
+        - generic [ref=e116]: 0 of 6
+      - button "Part 5 0 of 6" [ref=e117] [cursor=pointer]:
+        - generic [ref=e118]: Part 5
+        - generic [ref=e119]: 0 of 6
+      - generic [ref=e120] [cursor=pointer]:
+        - generic [ref=e121]: Part 6
+        - generic [ref=e122]:
+          - button "37" [ref=e123]
+          - button "38" [ref=e124]
+          - button "39" [ref=e125]
+          - button "40" [ref=e126]
+      - button "Part 7 0 of 6" [ref=e127] [cursor=pointer]:
+        - generic [ref=e128]: Part 7
+        - generic [ref=e129]: 0 of 6
+      - button "Part 8 0 of 10" [ref=e130] [cursor=pointer]:
+        - generic [ref=e131]: Part 8
+        - generic [ref=e132]: 0 of 10
+    - generic [ref=e133]:
+      - button "Previous" [ref=e134] [cursor=pointer]: ←
+      - button "Next" [ref=e135] [cursor=pointer]: →
+      - button "Finish" [ref=e136] [cursor=pointer]: ✓

@@ -806,6 +806,34 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   font-weight: 700;
   margin-bottom: 8px;
   color: var(--ct-text);
+  display: block;
+  line-height: 1.5;
+}
+/* Cambridge-authentic question number badge (cae/examples/l1.png, 5.png,
+ * 8.png): a small bordered square holding the question number, placed
+ * inline before the bold question text. Replaces the prior "1. Text..."
+ * dot-prefix rendering. Active question gets a filled brand-blue badge. */
+.ct-q-num-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  margin-right: 8px;
+  background: var(--ct-bg);
+  border: 1px solid var(--ct-border-strong);
+  border-radius: 2px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ct-text);
+  vertical-align: middle;
+  font-family: Arial, sans-serif;
+}
+.ct-question--active .ct-q-num-badge {
+  border-color: var(--ct-teal);
+  background: var(--ct-teal);
+  color: #fff;
 }
 .ct-q-options { display: flex; flex-direction: column; gap: 6px; }
 .ct-q-option {

@@ -1,0 +1,219 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Zarmed University" [ref=e4]
+      - generic [ref=e5]: C1 Olympiada
+    - generic [ref=e6]:
+      - generic [ref=e7]: Candidate ID
+      - generic [ref=e8]:
+        - text: Content Verify Read
+        - generic [ref=e9]: R17RD180
+    - generic [ref=e11]: 39:29
+  - generic [ref=e13]:
+    - generic [ref=e14]: Questions 21–30
+    - text: You will hear five short extracts in which people are talking about their work making and restoring violins. Look at Task 1 and Task 2. For each question, choose the answer (A, B, C, D, E, F or G). Complete both tasks as you listen.
+  - main [ref=e15]:
+    - generic [ref=e161]:
+      - generic [ref=e163]:
+        - paragraph [ref=e165]: You will be listening to an audio clip during this test. You will not be permitted to pause or rewind the audio while answering the questions. To continue, click Play.
+        - button "Play" [ref=e166] [cursor=pointer]
+      - generic [ref=e167]:
+        - generic [ref=e168]: Task 1 — For questions 21–25, choose from the list (A–G) what each speaker says inspired them to learn to make and restore violins.
+        - generic [ref=e169]:
+          - generic [ref=e170]:
+            - generic [ref=e171]:
+              - generic [ref=e172]: Speaker 1
+              - combobox [ref=e173] [cursor=pointer]:
+                - option "—" [selected]
+                - option "A having the chance to run a business"
+                - option "B following the recommendation of a friend"
+                - option "C playing someone else's violin"
+                - option "D handling the natural materials used"
+                - option "E observing an expert at work"
+                - option "F discovering the challenges of the job"
+                - option "G hearing someone talk about their passion"
+              - generic [ref=e174]: "21"
+            - generic [ref=e175]:
+              - generic [ref=e176]: Speaker 2
+              - combobox [ref=e177] [cursor=pointer]:
+                - option "—" [selected]
+                - option "A having the chance to run a business"
+                - option "B following the recommendation of a friend"
+                - option "C playing someone else's violin"
+                - option "D handling the natural materials used"
+                - option "E observing an expert at work"
+                - option "F discovering the challenges of the job"
+                - option "G hearing someone talk about their passion"
+              - generic [ref=e178]: "22"
+            - generic [ref=e179]:
+              - generic [ref=e180]: Speaker 3
+              - combobox [ref=e181] [cursor=pointer]:
+                - option "—" [selected]
+                - option "A having the chance to run a business"
+                - option "B following the recommendation of a friend"
+                - option "C playing someone else's violin"
+                - option "D handling the natural materials used"
+                - option "E observing an expert at work"
+                - option "F discovering the challenges of the job"
+                - option "G hearing someone talk about their passion"
+              - generic [ref=e182]: "23"
+            - generic [ref=e183]:
+              - generic [ref=e184]: Speaker 4
+              - combobox [ref=e185] [cursor=pointer]:
+                - option "—" [selected]
+                - option "A having the chance to run a business"
+                - option "B following the recommendation of a friend"
+                - option "C playing someone else's violin"
+                - option "D handling the natural materials used"
+                - option "E observing an expert at work"
+                - option "F discovering the challenges of the job"
+                - option "G hearing someone talk about their passion"
+              - generic [ref=e186]: "24"
+            - generic [ref=e187]:
+              - generic [ref=e188]: Speaker 5
+              - combobox [ref=e189] [cursor=pointer]:
+                - option "—" [selected]
+                - option "A having the chance to run a business"
+                - option "B following the recommendation of a friend"
+                - option "C playing someone else's violin"
+                - option "D handling the natural materials used"
+                - option "E observing an expert at work"
+                - option "F discovering the challenges of the job"
+                - option "G hearing someone talk about their passion"
+              - generic [ref=e190]: "25"
+          - list [ref=e192]:
+            - listitem [ref=e193]:
+              - generic [ref=e194]: A
+              - generic [ref=e195]: having the chance to run a business
+            - listitem [ref=e196]:
+              - generic [ref=e197]: B
+              - generic [ref=e198]: following the recommendation of a friend
+            - listitem [ref=e199]:
+              - generic [ref=e200]: C
+              - generic [ref=e201]: playing someone else's violin
+            - listitem [ref=e202]:
+              - generic [ref=e203]: D
+              - generic [ref=e204]: handling the natural materials used
+            - listitem [ref=e205]:
+              - generic [ref=e206]: E
+              - generic [ref=e207]: observing an expert at work
+            - listitem [ref=e208]:
+              - generic [ref=e209]: F
+              - generic [ref=e210]: discovering the challenges of the job
+            - listitem [ref=e211]:
+              - generic [ref=e212]: G
+              - generic [ref=e213]: hearing someone talk about their passion
+      - generic [ref=e214]:
+        - generic [ref=e215]: Task 2 — For questions 26–30, choose from the list (A–G) what each speaker says about their work now.
+        - generic [ref=e216]:
+          - generic [ref=e217]:
+            - generic [ref=e218]:
+              - generic [ref=e219]: Speaker 1
+              - combobox [ref=e220] [cursor=pointer]:
+                - option "—" [selected]
+                - option "A Having to deal with paperwork is distracting."
+                - option "B It's disappointing when people underestimate what's involved."
+                - option "C It's often thrilling to identify the original maker."
+                - option "D The craft has taken a long time to master."
+                - option "E Working on antiques is a privilege."
+                - option "F Earning a living is far from straightforward."
+                - option "G There's a huge demand for their work."
+              - generic [ref=e221]: "26"
+            - generic [ref=e222]:
+              - generic [ref=e223]: Speaker 2
+              - combobox [ref=e224] [cursor=pointer]:
+                - option "—" [selected]
+                - option "A Having to deal with paperwork is distracting."
+                - option "B It's disappointing when people underestimate what's involved."
+                - option "C It's often thrilling to identify the original maker."
+                - option "D The craft has taken a long time to master."
+                - option "E Working on antiques is a privilege."
+                - option "F Earning a living is far from straightforward."
+                - option "G There's a huge demand for their work."
+              - generic [ref=e225]: "27"
+            - generic [ref=e226]:
+              - generic [ref=e227]: Speaker 3
+              - combobox [ref=e228] [cursor=pointer]:
+                - option "—" [selected]
+                - option "A Having to deal with paperwork is distracting."
+                - option "B It's disappointing when people underestimate what's involved."
+                - option "C It's often thrilling to identify the original maker."
+                - option "D The craft has taken a long time to master."
+                - option "E Working on antiques is a privilege."
+                - option "F Earning a living is far from straightforward."
+                - option "G There's a huge demand for their work."
+              - generic [ref=e229]: "28"
+            - generic [ref=e230]:
+              - generic [ref=e231]: Speaker 4
+              - combobox [ref=e232] [cursor=pointer]:
+                - option "—" [selected]
+                - option "A Having to deal with paperwork is distracting."
+                - option "B It's disappointing when people underestimate what's involved."
+                - option "C It's often thrilling to identify the original maker."
+                - option "D The craft has taken a long time to master."
+                - option "E Working on antiques is a privilege."
+                - option "F Earning a living is far from straightforward."
+                - option "G There's a huge demand for their work."
+              - generic [ref=e233]: "29"
+            - generic [ref=e234]:
+              - generic [ref=e235]: Speaker 5
+              - combobox [ref=e236] [cursor=pointer]:
+                - option "—" [selected]
+                - option "A Having to deal with paperwork is distracting."
+                - option "B It's disappointing when people underestimate what's involved."
+                - option "C It's often thrilling to identify the original maker."
+                - option "D The craft has taken a long time to master."
+                - option "E Working on antiques is a privilege."
+                - option "F Earning a living is far from straightforward."
+                - option "G There's a huge demand for their work."
+              - generic [ref=e237]: "30"
+          - list [ref=e239]:
+            - listitem [ref=e240]:
+              - generic [ref=e241]: A
+              - generic [ref=e242]: Having to deal with paperwork is distracting.
+            - listitem [ref=e243]:
+              - generic [ref=e244]: B
+              - generic [ref=e245]: It's disappointing when people underestimate what's involved.
+            - listitem [ref=e246]:
+              - generic [ref=e247]: C
+              - generic [ref=e248]: It's often thrilling to identify the original maker.
+            - listitem [ref=e249]:
+              - generic [ref=e250]: D
+              - generic [ref=e251]: The craft has taken a long time to master.
+            - listitem [ref=e252]:
+              - generic [ref=e253]: E
+              - generic [ref=e254]: Working on antiques is a privilege.
+            - listitem [ref=e255]:
+              - generic [ref=e256]: F
+              - generic [ref=e257]: Earning a living is far from straightforward.
+            - listitem [ref=e258]:
+              - generic [ref=e259]: G
+              - generic [ref=e260]: There's a huge demand for their work.
+  - navigation [ref=e119]:
+    - generic [ref=e120]:
+      - button "Part 1 1 of 6" [ref=e261] [cursor=pointer]:
+        - generic [ref=e262]: Part 1
+        - generic [ref=e263]: 1 of 6
+      - button "Part 2 0 of 8" [ref=e264] [cursor=pointer]:
+        - generic [ref=e265]: Part 2
+        - generic [ref=e266]: 0 of 8
+      - button "Part 3 0 of 6" [ref=e267] [cursor=pointer]:
+        - generic [ref=e268]: Part 3
+        - generic [ref=e269]: 0 of 6
+      - generic [ref=e270] [cursor=pointer]:
+        - generic [ref=e271]: Part 4
+        - generic [ref=e272]:
+          - button "21" [ref=e273]
+          - button "22" [ref=e274]
+          - button "23" [ref=e275]
+          - button "24" [ref=e276]
+          - button "25" [ref=e277]
+          - button "26" [ref=e278]
+          - button "27" [ref=e279]
+          - button "28" [ref=e280]
+          - button "29" [ref=e281]
+          - button "30" [ref=e282]
+    - generic [ref=e139]:
+      - button "Previous" [ref=e140] [cursor=pointer]: ←
+      - button "Next" [disabled] [ref=e141]: →
+      - button "Finish" [disabled] [ref=e142]: ✓
