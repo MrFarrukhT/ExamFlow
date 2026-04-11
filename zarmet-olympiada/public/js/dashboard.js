@@ -44,9 +44,13 @@
 
     let completedCount = 0;
     MODULES.forEach((m) => {
-      const card = document.createElement('div');
-      card.className = 'zu-module-card';
       const isDone = !!(completed && completed[m.key] && completed[m.key].done);
+      // Use <button> for keyboard accessibility: Tab focuses it, Enter/Space
+      // triggers click. Completed modules become <div> since they're not
+      // actionable (no interaction beyond visual state).
+      const card = document.createElement(isDone ? 'div' : 'button');
+      if (!isDone) card.type = 'button';
+      card.className = 'zu-module-card';
       if (isDone) {
         card.classList.add('zu-module-card--complete');
         completedCount += 1;

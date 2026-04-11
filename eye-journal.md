@@ -1,5 +1,72 @@
 # Eye Journal
 
+## Session: 2026-04-11 15:05 — Zarmet Olympiada Cambridge-Authentic UI — Round 9
+Persona: Keyboard-only student (imagine a student with a broken mouse, accessibility needs, or power-user preference) | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: welcome, dashboard, test page — Tab navigation only, no mouse
+Starting state: Round 8 fixed refresh position persistence. This round picks a new dimension: keyboard-only interaction.
+
+### Round 9 — Keyboard-only navigation
+
+**Explored:** Full student flow with only Tab / Enter / Space / Arrow keys — no mouse. This is a dimension I had NEVER walked before across 8 previous rounds.
+
+**Findings:**
+
+- [T5 ✅] Welcome form tab order — perfect: name → group → language dropdown → Continue button. All tab stops expected, arrow keys work on the dropdown, Enter submits.
+- [T4] Welcome / dashboard / admin — **buttons have NO visible focus ring.** The `:focus-visible` rule from round 5 was scoped only to `body.zu-test-body`, leaving the Zarmet-palette pages with browser-default outlines (which Chrome's "subtle" blue ring is often invisible against warm brown/teal backgrounds). A keyboard user couldn't tell where focus was.
+- 🔴 **[T1 BROKEN] Dashboard module cards are NOT keyboard-accessible at all.** Pressing Tab repeatedly from the dashboard stayed on `BODY` — the module cards are `<div>` elements with click handlers, not `<button>` or `tabindex="0"`. A keyboard-only student literally cannot select Reading or Listening. This is an accessibility block. Hard-stop.
+- [T5 ✅] Test page tab order is correct: inline MC select → active part's question number buttons → prev/next/finish arrows. The prev-arrow is correctly skipped when disabled (on Q1). Teal focus ring from round 5 is visible on all these elements.
+- [T4 — deferred] Test page inactive part segments (Part 2-8 while on Part 1) are not tab-accessible. They're `<div>` elements; keyboard users must use →/← arrows to step through parts instead of jumping directly. Not broken (arrows work), just less efficient. Would require converting all 8 part segments to buttons — larger scope, deferred.
+
+**Action:** POLISH (2 changes — one fixes the T1 block, one fixes the T4 rough edge)
+
+- [T1] Dashboard module cards → `<button>` elements. `dashboard.js` `createElement(isDone ? 'div' : 'button')` — actionable cards become buttons, completed cards stay as divs (non-interactive). `type="button"` to prevent accidental form submission. CSS reset for button defaults on `.zu-module-card` (font: inherit, color: inherit, text-align: left, width: 100%). Added `.zu-module-card:focus-visible` with yellow outline + brown border — clear, high-contrast focus state matching the Zarmet palette.
+  Mode: polish | Quality: broken (T1) → 5 Crafted | Files: public/js/dashboard.js, public/css/styles.css
+
+- [T4] `.zu-btn:focus-visible` rule — 3px yellow (`var(--zu-focus)`) outline with 3px offset. Applies to every `.zu-btn` across Zarmet-palette pages (welcome Continue, admin Unlock, dashboard buttons, form submit buttons). Uses `:focus-visible` so mouse clicks don't show a ring but keyboard tabs do.
+  Mode: polish | Quality: 4 → 5 | Files: public/css/styles.css
+
+### Verification (end-to-end keyboard-only flow)
+
+- ✅ Welcome: Tab → Full name field → type "Keyboard Fixed" → Tab → Group (skip, empty) → Tab → Language dropdown → Tab → Continue button (**yellow focus ring visible**, screenshot `r9-welcome-continue-focus-ring.png`)
+- ✅ Press Enter on focused Continue → navigates to dashboard
+- ✅ Dashboard: Tab → Reading & Use of English card (BUTTON, **yellow focus ring + brown border**, screenshot `r9-dashboard-card-focused.png`) → Tab → Listening card
+- ✅ Press Enter on Listening → navigates to `test.html?module=listening`
+- ✅ Test page: Tab order still correct (from round 5 verification; re-tested), teal focus rings work on nav elements
+
+All tab stops logical. All focus rings visible. A keyboard-only student can now complete the entire flow without touching a mouse.
+
+### Quality Map (updated)
+| Page | Layer | Notes |
+|------|-------|-------|
+| index.html (welcome) | **5-Crafted** | Form flow + button focus ring |
+| dashboard.html | **5-Crafted** | Module cards are now `<button>` elements, keyboard-accessible with focus ring |
+| admin.html | **5-Crafted** | Login button now has visible focus ring (same `.zu-btn` rule) |
+| done.html | **5-Crafted** | No interactive elements to focus (4-corner gate is mouse-only by design) |
+
+### Deferred
+- Test page inactive part segments (Part 2-8) as buttons — would enable direct jump via Tab instead of →/← stepping. Lower priority; arrows work. Might revisit in a future round.
+- Real content transcription — still out of /eye scope.
+
+### Session Stats
+Pages explored: 3 (welcome, dashboard, test — all via keyboard only)
+Screenshots captured: 3
+Rounds: 1
+Polishes landed: 2 (1 was fixing a T1 block)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 2
+
+**Trajectory update:** Round 9 continued the "new dimension finds new bugs" pattern. Rounds 6-9 each shipped exactly 1-2 fixes by picking an angle I'd never walked before:
+- Round 6: wide viewport → header alignment
+- Round 7: narrow viewport → arrows off-screen (T1)
+- Round 8: temporal state (refresh) → position persistence (T3)
+- Round 9: keyboard-only → module cards not focusable (T1) + missing focus rings (T4)
+
+Every "dimension" has so far found at least one bug. The app's quality surface is 13 × N where N is the number of orthogonal dimensions (viewport widths × temporal states × input modes × content lengths × ...). Walking all combinations is impractical, but each novel dimension is usually cheap and productive.
+
+---
+
 ## Session: 2026-04-11 14:55 — Zarmet Olympiada Cambridge-Authentic UI — Round 8
 Persona: Student refreshing mid-test (accidental F5, browser recovery, tab restore) | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: test.html reading (before + after refresh), german-c1 listening (first real-browser walk)
