@@ -9,7 +9,7 @@
 ---
 
 ### ADR-038: Schema Extension — `gapped-text` + Listening Two-Task Part Shape
-**Status:** Decided
+**Status:** Executed in commit eac00e9 (smoke-tested — stripping + scoring confirmed for both shapes)
 **Impact:** Medium | **Effort:** 30 min | **Risk:** Low
 
 **Context:**
@@ -163,7 +163,7 @@ Negative:
 ---
 
 ### ADR-039: Test Runner Rewrite — Single-Part-At-A-Time + Cambridge Visual Grammar + Strict Listening
-**Status:** Decided
+**Status:** Executed in commit dd3cfc1 (smoke-tested — session lifecycle + audio-play endpoint + no score leak)
 **Impact:** High | **Effort:** 2 hours | **Risk:** Medium
 
 **Context:**
@@ -387,7 +387,7 @@ Negative:
 ---
 
 ### ADR-040: Dashboard Flow — Welcome Split + Module Selection + Student Status Endpoint
-**Status:** Decided
+**Status:** Executed in commit a8d5487 (smoke-tested — full flow: welcome → dashboard → test → dashboard → completion; duplicate rejection + rotation isolation verified)
 **Impact:** Medium | **Effort:** 40 min | **Risk:** Low
 
 **Context:**
