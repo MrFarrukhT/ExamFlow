@@ -1,5 +1,69 @@
 # Eye Journal
 
+## Session: 2026-04-11 17:20 — Zarmed Olympiada Brand Consistency Sweep — Round 20 (/loop iteration)
+Persona: Student walking the app with real content AND noticing brand-color inconsistency | System: Zarmed Olympiada standalone (port 3004)
+Pages explored: Listening Part 1 (coral reefs), Reading Part 1 (Bridges for wildlife), Part 2 (MoMA), Part 4 (form rejection KWT)
+Starting state: A parallel iteration had executed a brand-palette overhaul, migrating the test chrome from Cambridge teal (#0d9488) to Zarmed brand blue (#1e40af) — pulled from the real logo.png (blue shield + crimson UNIVERSITY wordmark). The `--ct-teal` CSS var is kept as a legacy name but now holds brand blue, so most existing rules migrated cleanly. However, round 19's earlier work used hardcoded literal pale-teal values (`#f0fdfa`, `#ecfeff`) for active-state backgrounds, which didn't migrate when the palette shifted.
+
+**Intent-plan compliance:** Re-read `docs/intent-olympiada-cambridge-ui.md`. The plan says "Cambridge visual grammar — typography, grey instruction banner, part-navigator, bookmark icon, teal highlight, arrow controls" — but the teal→blue migration was a conscious brand-alignment decision by a parallel iteration (documented in the CSS header: "Earlier warm-brown + Cambridge-teal palette clashed with the real brand. The --ct-teal token name survives to avoid diff churn but now holds BLUE"). I am respecting the brand decision and finishing the migration across the straggler hardcoded literals.
+
+### Round 20 — Brand color consistency sweep
+
+**Explored:** Walked Listening Part 1 with real content (coral reefs / birdwatching) at 1280×800. The bottom nav's active question button rendered in BRAND BLUE (from the var-based rules), but the active question card itself rendered with a PALE TEAL background (from a hardcoded `#f0fdfa` literal in round 19). Two adjacent UI elements using different greens/blues — visible inconsistency.
+
+**Findings:**
+
+- [T4 — rough] **`.ct-question--active` used hardcoded `#f0fdfa`** (pale teal) for the background, while the bottom nav's active button uses `var(--ct-teal)` = brand blue. Visual dissonance: the active question card reads as teal-ish while the nav button is clearly blue. Same goes for `.ct-keyword-list li:hover` (#f0fdfa) and `.ct-task-speaker--active` (#ecfeff) — three literal teal values left over from pre-brand-migration rounds.
+
+- [T4 — rough] **`.ct-question--active` border used `var(--ct-teal-soft)`** which is #dbeafe (brand blue-100) — a very pale border. Combined with the pale-teal background it became almost invisible. Should use `var(--ct-teal)` for a visible border matching the brand.
+
+**Action:** POLISH (3 hardcoded literals migrated to brand tokens)
+
+- [T4] **`.ct-question--active` brand alignment** — background `#f0fdfa` → `var(--ct-teal-soft)`, border-color `var(--ct-teal-soft)` → `var(--ct-teal)`. Active question card now renders with pale brand-blue background + visible brand-blue border. Matches the bottom nav's active button exactly.
+  Mode: polish | Quality: 4 → 5 | Files: public/css/styles.css
+
+- [T4] **`.ct-task-speaker--active` brand alignment** — background `#ecfeff` → `var(--ct-teal-soft)`. Active speaker row in Listening Part 4 now matches the brand palette.
+  Mode: polish | Quality: 4 → 5 | Files: public/css/styles.css
+
+- [T4] **`.ct-keyword-list li:hover` brand alignment** — `#f0fdfa` → `var(--ct-teal-soft)`. Hover state on Part 3 keyword rows now matches.
+  Mode: polish | Quality: 4 → 5 | Files: public/css/styles.css
+
+### Verification
+
+Screenshot `r20v-listen-p1.png` at 1280×800 after reload:
+- Active question 1 (coral reefs) now has a CLEAN pale brand-blue background with a visible brand-blue border.
+- Bottom nav active button "1" is brand blue — consistent with the question card.
+- Questions 2 and 3 below render plain (no highlight) — only the active question gets the treatment.
+- Banner, typography, layout, spacing — all preserved from earlier rounds.
+
+No regressions: the 3 scoped overrides (`.ct-kwt-block.ct-question--active` for Part 4, `.ct-listen-sc-row.ct-question--active` for Listening Part 2, `.ct-kw-active` for Part 3 keyword list) continue to work against the new `.ct-question--active` base rule because they use `!important` or scoped selectors with their own color assignments.
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| All MC parts active state (Parts 5/6/8 + Listening 1/3) | **5-Crafted** | Brand-aligned pale-blue background + blue border |
+| Listening Part 4 active speaker row | **5-Crafted** | Brand-aligned |
+| Part 3 keyword list hover state | **5-Crafted** | Brand-aligned |
+
+### Deferred
+- Content transcription (still partial) — out of /eye scope
+- Font sizing audit across test chrome — might benefit from a unified scale
+
+### Session Stats
+Pages explored: 4 (Listening Part 1, Reading Parts 1, 2, 4)
+Rounds: 1 (round 20 of the eye cycle)
+Polishes landed: 3
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 3
+
+**Trajectory update:** Round 20 caught a consistency gap introduced by round 19's use of hardcoded color literals. When the brand palette shifted, the hardcoded values became orphans. This is a recurring pattern: **always use CSS var tokens for brand colors, never literal hex values**, so palette migrations cascade automatically. Also reinforced round 17b's lesson: re-read the intent plan AND the CSS header comments (which document palette migrations) before shipping changes.
+
+**Key learning:** `grep -n "#f0fdfa\|#ecfeff\|#ccfbf1"` is a fast way to catch hardcoded pale-teal literals that a brand migration missed. Similar grep sweeps for `#0d9488` (old teal) and `#ecfeff` (old pale teal) would catch any future leftovers.
+
+---
+
 ## Session: 2026-04-11 17:10 — Zarmed Olympiada Official-Exam Replication — Round 19 (/loop iteration)
 Persona: Student walking Parts 5-8 reading + Listening 1-4 with real content loaded | System: Zarmed Olympiada standalone (port 3004)
 Pages explored: Reading Part 5 (athletes under pressure), Part 6 (national parks), Part 7 (audiobook recording), Listening Part 1 (coral reefs), Listening Part 3 (chefs interview)

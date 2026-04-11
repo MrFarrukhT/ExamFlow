@@ -1,37 +1,50 @@
-/* Zarmed Olympiada — Cambridge-authentic UI
- * ADR-039 rewrite.
+/* Zarmed Olympiada — brand-aligned UI
+ * Palette pulled directly from the Zarmed University logo (logo.png):
+ *   - Blue    #1e40af  (ZARMED wordmark, shield)
+ *   - Crimson #991b1b  (UNIVERSITY wordmark, horse icon)
+ *   - Gold    #eab308  (seal ribbon, 2022)
+ * Earlier warm-brown + Cambridge-teal palette clashed with the real brand.
+ * The --ct-teal token name survives to avoid diff churn but now holds BLUE
+ * so the test runner's active states match the logo.
+ *
  * Two visual scopes in one file:
- *   - .zu-page — welcome / dashboard / done / admin (Zarmed warm palette)
- *   - .zu-test — test runner (Cambridge-authentic minimal white/grey/teal)
+ *   - .zu-page — welcome / dashboard / done / admin (brand blue + crimson)
+ *   - .zu-test-body — test runner (white canvas, blue actions)
  */
 
 :root {
-  /* Zarmed warm palette (welcome/dashboard/done/admin) */
-  --zu-primary: #7c2d12;
-  --zu-primary-dark: #431407;
-  --zu-accent: #c2410c;
-  --zu-cream: #fef3c7;
-  --zu-cream-soft: #f9f5f0;
-  --zu-text: #1f1209;
-  --zu-text-muted: #78716c;
-  --zu-border: #e7e5e4;
-  --zu-success: #166534;
-  --zu-danger: #991b1b;
-  --zu-focus: #fcd34d;
+  /* Zarmed brand palette (from logo.png) */
+  --zu-primary: #1e40af;         /* ZARMED blue */
+  --zu-primary-dark: #1e3a8a;    /* darker blue for hover/pressed */
+  --zu-primary-darker: #172554;  /* deepest navy for headings */
+  --zu-accent: #991b1b;          /* UNIVERSITY crimson */
+  --zu-accent-dark: #7f1d1d;
+  --zu-gold: #eab308;            /* seal ribbon gold */
+  --zu-cream: #fffbeb;           /* on-dark-button text */
+  --zu-cream-soft: #f8fafc;      /* app background — clean neutral, not cream */
+  --zu-surface: #ffffff;         /* cards, panels */
+  --zu-text: #0f172a;            /* slate-900 */
+  --zu-text-muted: #64748b;      /* slate-500 */
+  --zu-border: #e2e8f0;          /* slate-200 */
+  --zu-border-strong: #cbd5e1;   /* slate-300 */
+  --zu-success: #15803d;
+  --zu-danger: #b91c1c;
+  --zu-focus: #60a5fa;           /* blue-400 focus ring */
 
-  /* Cambridge-authentic test chrome */
+  /* Test runner — white canvas, blue as primary action colour.
+   * --ct-teal is a legacy var name that now holds brand blue. */
   --ct-bg: #ffffff;
-  --ct-text: #1f2937;
-  --ct-text-muted: #6b7280;
-  --ct-border: #e5e7eb;
-  --ct-border-strong: #d1d5db;
-  --ct-banner-bg: #f3f4f6;
-  --ct-teal: #0d9488;
-  --ct-teal-dark: #0f766e;
-  --ct-teal-soft: #ccfbf1;
-  --ct-inactive: #9ca3af;
+  --ct-text: #0f172a;
+  --ct-text-muted: #64748b;
+  --ct-border: #e2e8f0;
+  --ct-border-strong: #cbd5e1;
+  --ct-banner-bg: #f1f5f9;
+  --ct-teal: #1e40af;
+  --ct-teal-dark: #1e3a8a;
+  --ct-teal-soft: #dbeafe;
+  --ct-inactive: #94a3b8;
   --ct-error-bg: #fee2e2;
-  --ct-error-text: #991b1b;
+  --ct-error-text: #b91c1c;
 }
 
 * { box-sizing: border-box; }
@@ -39,81 +52,100 @@
 html, body {
   margin: 0;
   padding: 0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   font-size: 17px;
-  line-height: 1.55;
+  line-height: 1.6;
   color: var(--zu-text);
   background: var(--zu-cream-soft);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 /* ============================================================ */
-/* ZARMET PAGES — welcome, dashboard, done, admin                */
+/* ZARMED PAGES — welcome, dashboard, done, admin                */
 /* ============================================================ */
 
 h1, h2, h3 {
-  color: var(--zu-primary-dark);
+  color: var(--zu-primary-darker);
   font-weight: 700;
   line-height: 1.2;
   margin: 0 0 0.5em;
+  letter-spacing: -0.01em;
 }
 
-h1 { font-size: 2.2rem; }
-h2 { font-size: 1.6rem; }
-h3 { font-size: 1.25rem; }
+h1 { font-size: 2.6rem; }
+h2 { font-size: 1.85rem; }
+h3 { font-size: 1.35rem; }
 
 .page {
-  max-width: 960px;
+  max-width: 1120px;
   margin: 0 auto;
-  padding: 2rem 1.5rem 4rem;
+  padding: 2.5rem 2rem 4rem;
 }
 .page--narrow { max-width: 560px; }
-.page--wide { max-width: 1100px; }
+.page--wide { max-width: 1280px; }
+
+/* Welcome page is a narrow form floating on a huge screen. Vertically
+ * center it so the form doesn't hug the top of a 1080p canvas with 700px
+ * of empty space below. Applied via a body class added on welcome only. */
+body.zu-welcome {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+body.zu-welcome .page {
+  padding: 3rem 2rem;
+  width: 100%;
+}
 
 .zu-header {
   text-align: center;
-  padding: 2rem 1rem 1.5rem;
-  border-bottom: 2px solid var(--zu-primary);
-  margin-bottom: 2rem;
+  padding: 2rem 1rem 1.75rem;
+  border-bottom: 1px solid var(--zu-border);
+  margin-bottom: 2.5rem;
 }
 .zu-logo {
   display: block;
-  width: 260px;
+  width: 300px;
   max-width: 80%;
   height: auto;
-  margin: 0 auto 1rem;
+  margin: 0 auto 1.25rem;
   user-select: none;
   -webkit-user-drag: none;
 }
-.zu-header h1 { margin-bottom: 0.25rem; }
+.zu-header h1 { margin-bottom: 0.35rem; }
 .zu-header .zu-subtitle {
   margin: 0;
   color: var(--zu-text-muted);
-  font-style: italic;
+  font-size: 1.05rem;
+  font-weight: 500;
 }
 
-.zu-form { display: flex; flex-direction: column; gap: 1.25rem; }
+.zu-form { display: flex; flex-direction: column; gap: 1.5rem; }
 .zu-field { display: flex; flex-direction: column; }
 .zu-field label {
   font-weight: 600;
-  margin-bottom: 0.35rem;
-  color: var(--zu-primary-dark);
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  color: var(--zu-primary-darker);
+  letter-spacing: 0.01em;
 }
 .zu-field input,
 .zu-field select {
   font-family: inherit;
-  font-size: 1.1rem;
-  padding: 0.75rem 1rem;
-  border: 2px solid var(--zu-border);
-  border-radius: 4px;
+  font-size: 1.05rem;
+  padding: 0.85rem 1rem;
+  border: 1.5px solid var(--zu-border-strong);
+  border-radius: 6px;
   background: #fff;
   color: var(--zu-text);
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 .zu-field input:focus,
 .zu-field select:focus {
   outline: none;
-  border-color: var(--zu-accent);
-  box-shadow: 0 0 0 3px var(--zu-focus);
+  border-color: var(--zu-primary);
+  box-shadow: 0 0 0 4px rgba(30, 64, 175, 0.15);
 }
 .zu-field input[aria-invalid="true"],
 .zu-field select[aria-invalid="true"] {
@@ -123,22 +155,31 @@ h3 { font-size: 1.25rem; }
 .zu-field input[aria-invalid="true"]:focus,
 .zu-field select[aria-invalid="true"]:focus {
   border-color: var(--zu-danger);
-  box-shadow: 0 0 0 3px rgba(153, 27, 27, 0.18);
+  box-shadow: 0 0 0 4px rgba(185, 28, 28, 0.15);
 }
 
 .zu-btn {
   font-family: inherit;
-  font-size: 1.15rem;
-  font-weight: 700;
-  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0.95rem 2rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   background: var(--zu-primary);
-  color: var(--zu-cream);
+  color: #fff;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.15s, transform 0.08s, box-shadow 0.15s;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  letter-spacing: 0.01em;
 }
-.zu-btn:hover:not(:disabled) { background: var(--zu-primary-dark); }
+.zu-btn:hover:not(:disabled) {
+  background: var(--zu-primary-dark);
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.25);
+}
+.zu-btn:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
 .zu-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .zu-btn:focus-visible {
   outline: 3px solid var(--zu-focus);
@@ -147,10 +188,15 @@ h3 { font-size: 1.25rem; }
 .zu-btn--ghost {
   background: transparent;
   color: var(--zu-primary);
-  border: 2px solid var(--zu-primary);
+  border: 1.5px solid var(--zu-primary);
+  box-shadow: none;
+}
+.zu-btn--ghost:hover:not(:disabled) {
+  background: rgba(30, 64, 175, 0.06);
+  box-shadow: none;
 }
 .zu-btn--danger { background: var(--zu-danger); }
-.zu-btn--danger:hover:not(:disabled) { background: #7f1d1d; }
+.zu-btn--danger:hover:not(:disabled) { background: var(--zu-accent-dark); }
 
 .zu-error {
   color: var(--zu-danger);
@@ -162,42 +208,45 @@ h3 { font-size: 1.25rem; }
 
 /* Dashboard module cards */
 .zu-welcome-panel {
-  background: #fff;
+  background: var(--zu-surface);
   border: 1px solid var(--zu-border);
-  border-radius: 6px;
-  padding: 1.5rem 2rem;
-  margin-bottom: 2rem;
+  border-radius: 10px;
+  padding: 1.75rem 2.25rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  border-left: 4px solid var(--zu-primary);
 }
 .zu-welcome-panel .zu-welcome-name {
-  font-size: 1.4rem;
-  color: var(--zu-primary-dark);
+  font-size: 1.55rem;
+  color: var(--zu-primary-darker);
   font-weight: 700;
-  margin: 0 0 0.25rem;
+  margin: 0 0 0.35rem;
+  letter-spacing: -0.01em;
 }
 .zu-welcome-panel .zu-welcome-meta {
   color: var(--zu-text-muted);
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 
 .zu-modules-section h2 {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
 }
 .zu-modules-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
 }
 .zu-module-card {
-  background: #fff;
-  border: 2px solid var(--zu-border);
-  border-radius: 6px;
-  padding: 1.75rem 1.5rem;
+  background: var(--zu-surface);
+  border: 1.5px solid var(--zu-border);
+  border-radius: 10px;
+  padding: 2rem 1.75rem;
   cursor: pointer;
   transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.6rem;
   position: relative;
   animation: ctFadeIn 260ms ease-out;
   /* Reset button defaults when rendered as <button> for keyboard access */
@@ -205,25 +254,28 @@ h3 { font-size: 1.25rem; }
   color: inherit;
   text-align: left;
   width: 100%;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
 }
 .zu-module-card:hover {
   border-color: var(--zu-primary);
-  transform: translateY(-3px);
-  box-shadow: 0 10px 24px rgba(124, 45, 18, 0.14);
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(30, 64, 175, 0.15);
 }
 .zu-module-card:active { transform: translateY(-1px); }
 .zu-module-card:focus-visible {
   outline: 3px solid var(--zu-focus);
-  outline-offset: 2px;
+  outline-offset: 3px;
   border-color: var(--zu-primary);
 }
 .zu-module-card h3 {
   color: var(--zu-primary);
   margin: 0;
+  font-size: 1.5rem;
 }
 .zu-module-card .zu-module-duration {
   color: var(--zu-text-muted);
-  font-size: 0.95rem;
+  font-size: 1rem;
+  font-weight: 500;
 }
 .zu-module-card--complete {
   background: #f0fdf4;
@@ -232,15 +284,15 @@ h3 { font-size: 1.25rem; }
 }
 .zu-module-card--complete h3 { color: var(--zu-success); }
 .zu-module-card--complete::after {
-  content: "✓";
+  content: "\2713";
   position: absolute;
-  top: 1rem;
-  right: 1.25rem;
-  font-size: 1.6rem;
+  top: 1.25rem;
+  right: 1.5rem;
+  font-size: 1.8rem;
   color: var(--zu-success);
   font-weight: 900;
 }
-.zu-module-card--complete:hover { transform: none; box-shadow: none; }
+.zu-module-card--complete:hover { transform: none; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04); }
 
 .zu-completion-banner {
   background: #f0fdf4;
@@ -312,9 +364,9 @@ h3 { font-size: 1.25rem; }
 body.zu-test-body {
   background: var(--ct-bg);
   color: var(--ct-text);
-  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-  font-size: 15px;
-  line-height: 1.5;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
   padding-bottom: 88px; /* space for bottom nav */
   min-height: 100vh;
 }
@@ -329,23 +381,23 @@ html:has(body.zu-test-body) {
   background: var(--ct-bg);
 }
 
-/* Reset typography inside the test runner — the Zarmed warm-brown
- * h1/h2/h3 rule at the top of this file is scoped to the welcome/dashboard
- * pages. The test runner uses Cambridge-authentic dark-grey Georgia headings. */
+/* Test runner headings — use Inter (sans) matching body text for a modern
+ * consistent look, bumped up so passage titles actually read as titles. */
 body.zu-test-body h1,
 body.zu-test-body h2,
 body.zu-test-body h3,
 body.zu-test-body h4 {
   color: var(--ct-text);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: inherit;
   font-weight: 700;
-  line-height: 1.25;
-  margin: 0 0 12px;
+  line-height: 1.3;
+  margin: 0 0 14px;
+  letter-spacing: -0.01em;
 }
-body.zu-test-body h1 { font-size: 20px; }
-body.zu-test-body h2 { font-size: 18px; }
-body.zu-test-body h3 { font-size: 17px; }
-body.zu-test-body h4 { font-size: 14px; }
+body.zu-test-body h1 { font-size: 24px; }
+body.zu-test-body h2 { font-size: 21px; }
+body.zu-test-body h3 { font-size: 19px; }
+body.zu-test-body h4 { font-size: 16px; }
 
 /* Consistent teal focus rings across the test runner — replaces the
  * browser-default focus outlines (which vary by OS). Any keyboard-
@@ -363,21 +415,22 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 }
 
 /* Top header strip — full-width background with a content column
- * centered at 1200px max-width. The `max(24px, ...)` padding trick
+ * centered at 1400px max-width. The `max(28px, ...)` padding trick
  * keeps the content aligned with .ct-main and .ct-banner at wide
  * viewports without needing an inner wrapper div. */
 .ct-header {
   display: flex;
   align-items: center;
-  padding-block: 10px;
-  padding-inline: max(24px, calc((100% - 1200px) / 2 + 24px));
+  padding-block: 14px;
+  padding-inline: max(28px, calc((100% - 1400px) / 2 + 28px));
   background: var(--ct-bg);
   border-bottom: 1px solid var(--ct-border);
   position: sticky;
   top: 0;
   z-index: 40;
-  min-height: 64px;
-  gap: 20px;
+  min-height: 72px;
+  gap: 24px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
 }
 /* Brand: logo on top, sub-label directly below (matches Cambridge's shield +
  * "English" stack in cae/examples/*.png). */
@@ -389,32 +442,34 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   gap: 2px;
 }
 .ct-logo {
-  height: 38px;
+  height: 44px;
   width: auto;
   display: block;
   user-select: none;
   -webkit-user-drag: none;
 }
 .ct-brand-sub {
-  font-family: Arial, sans-serif;
-  font-size: 11px;
-  color: var(--ct-text-muted);
-  letter-spacing: 0.03em;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--zu-primary);
+  font-weight: 600;
+  letter-spacing: 0.02em;
   text-transform: none;
 }
 .ct-header-id {
   display: flex;
   flex-direction: column;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 .ct-header-id-label {
   font-size: 12px;
   color: var(--ct-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.06em;
+  font-weight: 600;
 }
 .ct-header-id-value {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--ct-text);
 }
@@ -437,9 +492,9 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 .ct-audio-status {
   display: none;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   color: var(--ct-teal);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
 }
 .ct-audio-status.ct-audio-status--visible { display: flex; }
@@ -452,16 +507,17 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zm-2.5-9v2.06c2.84.87 5 3.54 5 6.94s-2.16 6.07-5 6.94V21c4.01-.91 7-4.49 7-8.5s-2.99-7.59-7-8.5z'/></svg>") center/contain no-repeat;
 }
 .ct-timer {
-  font-family: "Courier New", monospace;
-  font-size: 14px;
+  font-family: "SF Mono", "Menlo", "Consolas", "Courier New", monospace;
+  font-size: 17px;
   font-weight: 700;
   color: var(--ct-text);
-  padding: 5px 12px;
-  border: 1px solid var(--ct-border-strong);
-  border-radius: 3px;
+  padding: 8px 16px;
+  border: 1.5px solid var(--ct-border-strong);
+  border-radius: 6px;
   background: var(--ct-bg);
-  min-width: 72px;
+  min-width: 86px;
   text-align: center;
+  letter-spacing: 0.02em;
   transition: color 0.2s, background 0.2s, border-color 0.2s;
   margin-right: 4px;
 }
@@ -650,7 +706,7 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   border-radius: 2px;
   transition: background 0.12s;
 }
-.ct-keyword-list li:hover { background: #f0fdfa; }
+.ct-keyword-list li:hover { background: var(--ct-teal-soft); }
 .ct-keyword-list .ct-kw-active {
   background: var(--ct-teal-soft);
 }
@@ -708,9 +764,11 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 }
 
 /* Question blocks (Parts 5, 6, 8 — two-column radio questions).
- * Active question gets a subtle pale teal background (#f0fdfa) — softer
- * than the old #ecfeff + full teal border combination. Cambridge's
- * authentic look leans toward understated highlighting. */
+ * Active question gets a subtle BRAND-BLUE background (pulled from the
+ * --ct-teal-soft token which now holds Zarmed brand blue-100 / #dbeafe
+ * per the round 19b palette migration). Softer than a full border outline
+ * — Cambridge's authentic look leans toward understated highlighting,
+ * and the brand-aligned token keeps the whole test chrome consistent. */
 .ct-question-list { display: flex; flex-direction: column; gap: 18px; }
 .ct-question {
   padding: 12px 14px;
@@ -718,8 +776,8 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   border-radius: 2px;
 }
 .ct-question--active {
-  background: #f0fdfa;
-  border-color: var(--ct-teal-soft);
+  background: var(--ct-teal-soft);
+  border-color: var(--ct-teal);
 }
 .ct-q-prompt {
   font-size: 14px;
@@ -815,55 +873,56 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   border-left-color: var(--ct-teal);
 }
 .ct-kwt-first {
-  font-size: 14px;
+  font-size: 17px;
   color: var(--ct-text);
-  margin: 12px 0 6px;
+  margin: 16px 0 8px;
+  line-height: 1.55;
 }
 .ct-kwt-keyword {
-  font-size: 14px;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  margin: 14px 0 10px;
-  color: var(--ct-text);
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  margin: 18px 0 14px;
+  color: var(--ct-teal);
 }
 .ct-kwt-lead-row {
-  font-size: 14px;
+  font-size: 17px;
   color: var(--ct-text);
-  line-height: 2.1;
+  line-height: 2.2;
   position: relative;
-  padding-right: 28px;
+  padding-right: 32px;
 }
 /* Inline KWT gap — bordered box with the question number inside at left */
 .ct-kwt-gap {
   display: inline-flex;
   align-items: stretch;
   vertical-align: middle;
-  margin: 0 4px;
-  border: 1px solid var(--ct-text);
-  border-radius: 2px;
+  margin: 0 5px;
+  border: 1.5px solid var(--ct-text);
+  border-radius: 5px;
   background: #fff;
-  height: 28px;
+  height: 34px;
   overflow: hidden;
 }
 .ct-kwt-gap-num {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 26px;
-  padding: 0 8px;
-  font-family: Arial, sans-serif;
-  font-size: 13px;
+  min-width: 30px;
+  padding: 0 10px;
+  font-family: inherit;
+  font-size: 14px;
   font-weight: 600;
-  color: var(--ct-text);
-  border-right: 1px solid var(--ct-border-strong);
+  color: var(--ct-text-muted);
+  border-right: 1.5px solid var(--ct-border-strong);
   background: #fff;
 }
 .ct-kwt-input {
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  padding: 0 10px;
+  font-family: inherit;
+  font-size: 16px;
+  padding: 0 12px;
   border: none;
-  min-width: 260px;
+  min-width: 300px;
   height: 100%;
   background: transparent;
   color: var(--ct-text);
@@ -871,7 +930,7 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 }
 .ct-kwt-gap:focus-within {
   border-color: var(--ct-teal);
-  box-shadow: 0 0 0 1px var(--ct-teal);
+  box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.18);
 }
 .ct-kwt-bookmark {
   position: absolute;
@@ -895,86 +954,104 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   border-left-color: var(--ct-teal);
 }
 .ct-listen-sc-row .ct-kwt-lead-row {
-  line-height: 2.1;
-  padding-right: 28px;
+  line-height: 2.2;
+  padding-right: 32px;
+  font-size: 17px;
 }
 
-/* Part 7 gapped text — authentic Cambridge look (cae/examples/7.png):
- * a clean SOLID-border empty rectangle with just the question number inside.
- * No helper text, no dashed borders, no pale background. The click-to-fill
- * flow is discovered via hover + active state. */
+/* Part 7 gapped text — clean SOLID-border rectangle with the question
+ * number inside. The click-to-fill flow is discovered via hover + active
+ * state. */
 .ct-slot {
   display: block;
-  min-height: 48px;
-  padding: 12px 14px;
-  margin: 14px 0;
-  border: 1px solid var(--ct-text);
-  border-radius: 2px;
+  min-height: 56px;
+  padding: 14px 18px;
+  margin: 16px 0;
+  border: 1.5px solid var(--ct-text);
+  border-radius: 6px;
   background: #fff;
-  font-size: 13px;
+  font-size: 16px;
   color: var(--ct-text);
   cursor: pointer;
-  transition: background 0.12s, box-shadow 0.12s;
+  transition: background 0.12s, box-shadow 0.12s, border-color 0.12s;
 }
-.ct-slot:hover { background: #f9fafb; }
+.ct-slot:hover { background: #f8fafc; border-color: var(--ct-teal); }
 .ct-slot--filled {
-  background: #f0fdfa;
+  background: var(--ct-teal-soft);
+  border-color: var(--ct-teal);
 }
 .ct-slot--active {
-  box-shadow: 0 0 0 2px var(--ct-teal);
-  background: #f0fdfa;
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.2);
+  background: var(--ct-teal-soft);
+  border-color: var(--ct-teal);
 }
 .ct-slot-number {
   display: inline-block;
   font-weight: 700;
-  color: var(--ct-text);
-  margin-right: 12px;
-  padding: 0 6px;
-  border-right: 1px solid var(--ct-border-strong);
+  color: var(--ct-teal);
+  margin-right: 14px;
+  padding: 0 10px 0 0;
+  border-right: 1.5px solid var(--ct-border-strong);
 }
 
 .ct-paragraph-bank {
   background: var(--ct-banner-bg);
   border: 1px solid var(--ct-border);
-  border-radius: 4px;
-  padding: 14px;
-  font-size: 13px;
+  border-radius: 8px;
+  padding: 18px 20px;
+  font-size: 15px;
 }
 .ct-paragraph-bank h4 {
-  margin: 0 0 10px;
-  font-size: 13px;
+  margin: 0 0 14px;
+  font-size: 14px;
   color: var(--ct-text);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 700;
 }
 .ct-para-card {
-  padding: 10px 12px;
-  margin-bottom: 8px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
   background: #fff;
-  border: 1px solid var(--ct-border-strong);
-  border-radius: 3px;
+  border: 1.5px solid var(--ct-border-strong);
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 15px;
+  line-height: 1.55;
+  transition: border-color 0.12s, background 0.12s, transform 0.12s;
 }
-.ct-para-card:hover { border-color: var(--ct-teal); background: #f0fdfa; }
+.ct-para-card:hover {
+  border-color: var(--ct-teal);
+  background: #f0f6ff;
+  transform: translateX(2px);
+}
 .ct-para-card--used { opacity: 0.4; cursor: not-allowed; }
+.ct-para-card--used:hover { transform: none; }
 .ct-para-card--active { border-color: var(--ct-teal); background: var(--ct-teal-soft); }
-.ct-para-key { font-weight: 700; color: var(--ct-teal); margin-right: 8px; }
+.ct-para-key {
+  font-weight: 700;
+  color: var(--ct-teal);
+  margin-right: 10px;
+  font-size: 16px;
+}
 
 /* Listening — task-group labels and pre-play modal */
 .ct-task-group {
-  margin-bottom: 28px;
-  padding-bottom: 28px;
+  margin-bottom: 36px;
+  padding-bottom: 36px;
   border-bottom: 1px solid var(--ct-border);
 }
 .ct-task-group:last-child { border-bottom: none; margin-bottom: 8px; padding-bottom: 0; }
 .ct-task-group-instructions {
-  font-size: 13px;
-  font-weight: 700;
-  margin-bottom: 14px;
-  padding: 10px 14px;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 18px;
+  padding: 14px 18px;
   background: var(--ct-banner-bg);
-  border-left: 3px solid var(--ct-teal);
-  border-radius: 2px;
+  border-left: 4px solid var(--ct-teal);
+  border-radius: 4px;
   color: var(--ct-text);
+  line-height: 1.55;
 }
 
 /* Two-column task layout: speakers on the left, options on the right
@@ -988,36 +1065,36 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 .ct-task-speakers {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
 }
 .ct-task-speaker {
   display: grid;
-  grid-template-columns: 88px 1fr 24px;
+  grid-template-columns: 100px 1fr 32px;
   align-items: center;
-  gap: 10px;
-  padding: 6px 10px;
-  border: 1px solid transparent;
-  border-radius: 3px;
+  gap: 14px;
+  padding: 10px 14px;
+  border: 1.5px solid transparent;
+  border-radius: 6px;
   transition: background 0.12s, border-color 0.12s;
 }
 .ct-task-speaker:hover { background: #f9fafb; }
 .ct-task-speaker--active {
-  background: #ecfeff;
+  background: var(--ct-teal-soft);
   border-color: var(--ct-teal);
 }
 .ct-task-speaker-label {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--ct-text);
 }
 .ct-task-speaker-select {
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  padding: 5px 10px;
-  border: 1px solid var(--ct-text);
+  font-family: inherit;
+  font-size: 16px;
+  padding: 8px 14px;
+  border: 1.5px solid var(--ct-text);
   background: #fff;
   color: var(--ct-text);
-  border-radius: 2px;
+  border-radius: 5px;
   width: 100%;
   min-width: 0;
   /* Chromeless: match the authentic Cambridge l5.png look where the speaker
@@ -1030,23 +1107,25 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 .ct-task-speaker-select:focus {
   outline: none;
   border-color: var(--ct-teal);
-  box-shadow: 0 0 0 1px var(--ct-teal);
+  box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.18);
 }
 .ct-task-speaker-num {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ct-text-muted);
   text-align: right;
-  font-family: Arial, sans-serif;
+  font-family: inherit;
+  font-weight: 600;
 }
 
 /* Options reference panel — right column */
 .ct-task-options-panel {
   background: var(--ct-banner-bg);
   border: 1px solid var(--ct-border);
-  border-radius: 4px;
-  padding: 12px 16px;
-  font-size: 13px;
+  border-radius: 8px;
+  padding: 18px 22px;
+  font-size: 15px;
   align-self: start;
+  line-height: 1.6;
 }
 .ct-task-options-list {
   list-style: none;
@@ -1054,65 +1133,75 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   margin: 0;
 }
 .ct-task-options-list li {
-  padding: 5px 0;
+  padding: 8px 0;
   display: grid;
-  grid-template-columns: 18px 1fr;
-  gap: 6px;
+  grid-template-columns: 24px 1fr;
+  gap: 10px;
   color: var(--ct-text);
 }
 .ct-task-options-list .ct-task-opt-key {
   font-weight: 700;
-  color: var(--ct-text);
+  color: var(--ct-teal);
+  font-size: 16px;
 }
 
 /* Pre-play modal */
 .ct-preplay-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(17, 24, 39, 0.82);
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 100;
+  animation: ctFadeIn 240ms ease-out;
 }
 .ct-preplay-card {
   background: #fff;
-  padding: 40px 36px;
-  border-radius: 6px;
-  max-width: 420px;
+  padding: 48px 44px;
+  border-radius: 12px;
+  max-width: 480px;
   text-align: center;
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.45);
+  border-top: 4px solid var(--ct-teal);
 }
 .ct-preplay-icon {
-  width: 72px;
-  height: 72px;
-  margin: 0 auto 18px;
-  color: var(--ct-text);
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 22px;
+  color: var(--ct-teal);
   background: currentColor;
   -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z'/></svg>") center/contain no-repeat;
   mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z'/></svg>") center/contain no-repeat;
 }
 .ct-preplay-text {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--ct-text);
-  line-height: 1.55;
-  margin: 0 0 24px;
+  line-height: 1.6;
+  margin: 0 0 28px;
 }
 .ct-preplay-btn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 32px;
-  font-family: Arial, sans-serif;
-  font-size: 15px;
+  gap: 12px;
+  padding: 14px 40px;
+  font-family: inherit;
+  font-size: 17px;
   font-weight: 700;
   background: var(--ct-teal);
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background 0.15s, transform 0.08s, box-shadow 0.15s;
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
 }
-.ct-preplay-btn:hover { background: var(--ct-teal-dark); }
+.ct-preplay-btn:hover {
+  background: var(--ct-teal-dark);
+  box-shadow: 0 6px 16px rgba(30, 64, 175, 0.4);
+}
+.ct-preplay-btn:active { transform: translateY(1px); }
 .ct-preplay-btn::before {
   content: "";
   display: inline-block;
@@ -1129,13 +1218,14 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 72px;
+  height: 76px;
   background: var(--ct-bg);
   border-top: 1px solid var(--ct-border);
   display: flex;
   align-items: stretch;
   z-index: 30;
-  font-size: 13px;
+  font-size: 14px;
+  box-shadow: 0 -1px 3px rgba(15, 23, 42, 0.04);
 }
 .ct-nav-parts {
   display: flex;
@@ -1155,15 +1245,11 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 12px;
+  padding: 10px 14px;
   border-right: 1px solid var(--ct-border);
   cursor: pointer;
-  /* min-width: 95 guarantees "Part N  X of Y" never gets compressed into
-   * its neighbour at narrow widths. Below this, the parent overflow-x:auto
-   * kicks in and the nav becomes horizontally scrollable instead. */
-  min-width: 95px;
+  min-width: 110px;
   transition: background 0.12s;
-  /* Reset button defaults when rendered as <button> for keyboard nav jump */
   font: inherit;
   color: inherit;
   background: var(--ct-bg);
@@ -1171,92 +1257,103 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   border-left: none;
   border-bottom: none;
 }
-.ct-nav-part:hover { background: #f9fafb; }
+.ct-nav-part:hover { background: #f8fafc; }
 .ct-nav-part-label {
   font-weight: 700;
   color: var(--ct-text);
-  margin-right: 10px;
+  margin-right: 12px;
   white-space: nowrap;
+  font-size: 15px;
 }
 .ct-nav-part-count {
   color: var(--ct-text-muted);
-  font-size: 12px;
+  font-size: 13px;
   white-space: nowrap;
 }
 .ct-nav-part--active {
   flex: 3.5;
-  background: #f9fafb;
-  padding: 6px 14px;
+  background: #f8fafc;
+  padding: 8px 16px;
 }
 .ct-nav-part--active .ct-nav-part-label {
   color: var(--ct-text);
 }
 .ct-nav-part-numbers {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: center;
   max-width: 100%;
 }
 .ct-nav-num {
-  min-width: 26px;
-  height: 26px;
-  padding: 0 6px;
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  border: 1px solid var(--ct-border-strong);
+  min-width: 32px;
+  height: 32px;
+  padding: 0 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1.5px solid var(--ct-border-strong);
   background: var(--ct-bg);
   color: var(--ct-text);
   cursor: pointer;
-  border-radius: 2px;
+  border-radius: 5px;
+  transition: border-color 0.12s, background 0.12s, color 0.12s;
 }
-.ct-nav-num:hover { border-color: var(--ct-teal); }
+.ct-nav-num:hover { border-color: var(--ct-teal); color: var(--ct-teal); }
 .ct-nav-num--answered {
   background: #dbeafe;
   border-color: #60a5fa;
+  color: var(--ct-teal-dark);
 }
 .ct-nav-num--active {
   background: var(--ct-teal);
   border-color: var(--ct-teal);
   color: #fff;
   font-weight: 700;
+  box-shadow: 0 2px 6px rgba(30, 64, 175, 0.3);
 }
+.ct-nav-num--active:hover { color: #fff; }
 
 .ct-nav-arrows {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 0 18px;
+  gap: 8px;
+  padding: 0 22px;
   border-left: 1px solid var(--ct-border);
 }
 .ct-nav-arrow,
 .ct-nav-finish {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   border: none;
-  border-radius: 3px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: opacity 0.12s, transform 0.08s, box-shadow 0.15s;
 }
 .ct-nav-arrow {
-  background: #6b7280;
+  background: #64748b;
   color: #fff;
 }
 .ct-nav-arrow--next {
   background: var(--ct-teal);
+  box-shadow: 0 2px 6px rgba(30, 64, 175, 0.25);
 }
 .ct-nav-arrow:hover:not(:disabled),
-.ct-nav-finish:hover:not(:disabled) { opacity: 0.88; }
+.ct-nav-finish:hover:not(:disabled) { opacity: 0.92; transform: translateY(-1px); }
+.ct-nav-arrow:active:not(:disabled),
+.ct-nav-finish:active:not(:disabled) { transform: translateY(0); }
 .ct-nav-arrow:disabled,
 .ct-nav-finish:disabled { opacity: 0.4; cursor: not-allowed; }
 .ct-nav-finish {
-  background: var(--ct-teal);
+  background: var(--zu-success);
   color: #fff;
+  box-shadow: 0 2px 6px rgba(21, 128, 61, 0.3);
 }
 
 /* Bookmark icon — visual only in v1 */
