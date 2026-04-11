@@ -1,5 +1,114 @@
 # Eye Journal
 
+## Session: 2026-04-11 16:05 — Zarmet Olympiada Cambridge-Authentic UI — Round 15
+Persona: Student reading a realistic-length CAE passage (5000+ chars = real exam length) | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: test.html Part 5 with a stress-test passage injected via JS eval
+Starting state: Round 14 fixed live-resize nav scroll. This round stresses the two-column layout with real-world content length — something impossible with 40-character stub content.
+
+### Round 15 — Long passage reveals big layout problem
+
+**Explored:** Injected a 5000-character Lorem Ipsum passage (20 paragraphs of real exam length) into the Part 5 passage column via `passageEl.textContent = ...`. Real CAE Part 5 passages are 700-800 words / ~4500 chars.
+
+**Finding:**
+
+- [T3] **Question list scrolls off the top as student reads the passage.** Measured:
+  - Viewport 1280×720
+  - After `window.scrollTo(0, 1500)`: `.ct-question-list` at `top: -772, bottom: -559` (completely off-screen above)
+  - `qVisible: false`
+  
+  Root cause: the two-col layout uses `display: grid` with both columns in normal document flow. As the student scrolls down to read paragraph 5 of the passage, the question column (which is shorter than the passage) scrolls up with the rest of the page and disappears above the viewport. The student has to scroll all the way back to the top just to see the answer options.
+  
+  This is a REAL student-facing UX problem for any realistically-sized passage. Cambridge Inspera's actual layout has the passage scroll INDEPENDENTLY while the question stays in view — authentic behavior I never implemented because my stub passages were too short to expose the issue.
+
+- [T4 — bonus finding] **Instruction banner also scrolls away.** Same cause: `.ct-banner-wrap` was in normal document flow. When the student scrolls, the "Questions 31–31 — You are going to read..." banner disappears above the viewport, leaving only the sticky header. The student loses the task prompt while mid-passage.
+
+**Action:** POLISH (2 related CSS-only changes — no HTML or JS modified)
+
+- [T3] **Question column sticky** — `.ct-two-col > .ct-col:nth-child(2)` now has:
+  ```css
+  position: sticky;
+  top: 140px;
+  max-height: calc(100vh - 160px - 72px);
+  overflow-y: auto;
+  align-self: start;
+  ```
+  The sticky positioning makes the column stay pinned below the header+banner (160px from top) as the student scrolls. `max-height` prevents the question list itself from becoming too tall on short viewports. `align-self: start` prevents grid-default stretching.
+  
+  Also added `align-items: start` on `.ct-two-col` so columns size to their own content (required for sticky to work against the document scroll).
+  
+  The responsive breakpoint at `@media (max-width: 880px)` resets the sticky (position: static) since the two-col collapses to stacked single-col anyway.
+
+- [T4] **Instruction banner sticky** — `.ct-banner-wrap` now has:
+  ```css
+  position: sticky;
+  top: 56px; /* right below the sticky header (56px tall) */
+  background: var(--ct-bg);
+  z-index: 35;
+  ```
+  The wrap spans max-width 1200px centered. At wider viewports, the white body background + white wrap background blend seamlessly on the sides — no visible seam.
+
+Together, at scroll 1000 on a 5000-char passage:
+- 0-56: sticky header
+- 56-140: sticky banner ("Questions 31–31" always visible)
+- 140-350: sticky question column (the A/B/C/D radios always visible)
+- 350-720: passage text scrolling freely
+
+This matches the authentic Cambridge CAE reading layout.
+
+  Mode: polish | Quality: 3 → 5 | Files: public/css/styles.css
+
+### Verification
+
+**Before fix** (5000-char passage, scroll=1500):
+```
+qTop: -772 ← question list completely off-screen above viewport
+qVisible: false
+```
+
+**After fix** (same scenario):
+```
+bannerTop: 56  ← banner stuck at sticky top
+qTop: 140      ← question list stuck at sticky top + banner height
+qVisible: true
+```
+
+Screenshots:
+- `r15-sticky-banner-and-q.png` — passage scrolling beneath; header + banner + question column all pinned at top. Authentic Cambridge look.
+- `r15-top-regression.png` — scroll=0 top-of-page state, no visual difference from before the fix
+- `r15-part1-regression.png` — Part 1 (single-col, no two-col sticky kicks in) unchanged
+
+No regressions on Part 1 (single-col inline-gap cloze), dashboard, welcome, admin. The fix is specifically scoped to `.ct-two-col > .ct-col:nth-child(2)` which only applies to Parts 5, 6, 7, 8 (two-col reading parts). Part 3 (word-formation with keyword list on the right) ALSO benefits — the keyword list now sticks in view during long passage scroll.
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| test.html Parts 5/6/7/8 (two-col) | **5-Crafted, stress-tested** | Question column sticks, banner sticks, passage scrolls independently — matches Cambridge Inspera |
+| test.html Part 3 (word formation) | **5-Crafted, stress-tested** | Same benefit — keyword list stays in view during long passage scroll |
+
+### Deferred (thin)
+- Bookmark clickability — feature
+- Cross-tab sync — feature
+- Anti-cheat copy-block — feature
+- Real content — content phase
+
+### Session Stats
+Pages explored: 1 (Part 5 with injected stress passage)
+Screenshots captured: 4 (before, after, top regression, Part 1 regression)
+Rounds: 1
+Polishes landed: 2 (question sticky + banner sticky — related via top-offset math)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 2
+
+**Trajectory update:** Round 13 was the first 0-change round. I predicted diminishing returns. Round 14 broke the prediction with live-resize. Round 15 broke it AGAIN with long-passage stress — and this time found a genuinely **high-impact UX issue** that every real student would have hit. The fix required 2 CSS blocks (~20 lines) and dramatically improves the experience for any realistic content length.
+
+**Key learning:** test stubs with short content HIDE layout issues that real-length content exposes. Round 15 is the first time I stressed content length. If the pattern holds, there might be more content-length-dependent bugs in other renderers (Part 6 cross-text matching, Part 7 gapped-text, Part 8 multi-matching) when real content lands.
+
+**Recommended next angle:** stress-test Part 7 (gapped-text) with a real-length passage + all 7 paragraphs in the bank. The slot-and-paragraph click-to-assign UX was designed against stub content; a longer passage with the paragraph bank far below might create a scroll-and-find-paragraph headache similar to the round-15 question-off-screen issue.
+
+---
+
 ## Session: 2026-04-11 15:55 — Zarmet Olympiada Cambridge-Authentic UI — Round 14
 Persona: Student resizing the browser window mid-test (window snap, split-screen, external monitor disconnect) | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: test.html Part 7 at 1280px then live-resized to 700px

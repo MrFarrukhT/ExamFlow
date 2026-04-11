@@ -479,11 +479,17 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   50% { box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.18); }
 }
 
-/* Instruction banner — nested inside a max-width container to align with main */
+/* Instruction banner — nested inside a max-width container to align with main.
+ * The wrapper is sticky so the "Questions N-M" banner stays visible while the
+ * student scrolls through a long passage. Stacks below the sticky header. */
 .ct-banner-wrap {
   max-width: 1200px;
-  margin: 18px auto 0;
-  padding: 0 24px;
+  margin: 0 auto;
+  padding: 18px 24px 0;
+  position: sticky;
+  top: 56px; /* right below the sticky header */
+  background: var(--ct-bg);
+  z-index: 35;
 }
 .ct-banner {
   padding: 16px 22px;
@@ -523,11 +529,35 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
+  /* align-items: start so each column sizes to its own content and doesn't
+   * stretch to match the taller sibling — this lets the right column's
+   * `position: sticky` work against the scrolling body. */
+  align-items: start;
 }
 .ct-two-col--wide-left {
   grid-template-columns: 1.25fr 1fr;
 }
 .ct-col { min-width: 0; }
+
+/* The right column (questions) sticks to the viewport while the left
+ * column (passage) scrolls. Real CAE reading tests have the student
+ * reading a long passage while the answer options stay visible. */
+.ct-two-col > .ct-col:nth-child(2) {
+  position: sticky;
+  top: 140px; /* clears the sticky header (~56px) + banner (~74px) + gap */
+  max-height: calc(100vh - 160px - 72px); /* 160 = header+banner reserve, 72 = bottom nav */
+  overflow-y: auto;
+  align-self: start;
+}
+/* At narrow widths the two-col collapses to one column and sticky is
+ * pointless — reset it so the question simply flows below the passage. */
+@media (max-width: 880px) {
+  .ct-two-col > .ct-col:nth-child(2) {
+    position: static;
+    max-height: none;
+    overflow-y: visible;
+  }
+}
 
 /* Passage */
 .ct-passage {
