@@ -9,7 +9,7 @@
 ---
 
 ### ADR-033: Zarmet Olympiada — Isolation & Directory Layout
-**Status:** Decided
+**Status:** Executed in commit d5bb22d
 **Impact:** High | **Effort:** 15 min (scaffold only) | **Risk:** Low
 
 **Context:**
@@ -84,7 +84,7 @@ Negative:
 ---
 
 ### ADR-034: Unified C1 Question Bank JSON Schema
-**Status:** Decided
+**Status:** Executed in commit 73738bf
 **Impact:** High | **Effort:** 30 min | **Risk:** Low
 
 **Context:**
@@ -204,7 +204,7 @@ Negative:
 ---
 
 ### ADR-035: Server Architecture — Single File, Triple-Layer Durability (No SQLite)
-**Status:** Decided
+**Status:** Executed in commit 8ce1ccd (smoke-tested end-to-end)
 **Impact:** High | **Effort:** 1.5 hours | **Risk:** Medium
 
 **Context:**
@@ -292,7 +292,7 @@ Negative:
 ---
 
 ### ADR-036: Frontend — Three Pages, Rotation-Safe, No Framework, No Cambridge Reuse
-**Status:** Decided
+**Status:** Executed in commit ba9bc43 (all pages and admin auth smoke-tested)
 **Impact:** High | **Effort:** 2 hours | **Risk:** Medium
 
 **Context:**
@@ -384,7 +384,7 @@ Negative:
 ---
 
 ### ADR-037: Defaults for Open Questions (Done-Screen + Student Roster)
-**Status:** Decided
+**Status:** Executed in commit 14a47ae
 **Impact:** Low | **Effort:** 10 min | **Risk:** Low
 
 **Context:**
