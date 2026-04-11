@@ -1,5 +1,71 @@
 # Eye Journal
 
+## Session: 2026-04-11 18:38 — Zarmed Olympiada German H1/Subtitle Localization Gap — Round 31 (/loop iteration)
+Persona: German C1 student at the welcome page / dashboard who picked German from the dropdown and expected the full page — including the large h1 brand title — to be in German | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: index.html (welcome) + dashboard.html at 1920×1080, both with language=german-c1
+Starting state: Rounds 20-22 localized the welcome form labels, language dropdown, and most dashboard chrome to German. Round 29 noticed in passing that the dashboard h1 "C1 Language Olympiada" stayed in English even on a German session and flagged it as an aside. Round 31 confirms the same gap on index.html's welcome page: **h1 + .zu-subtitle were both static English strings**, missed by every round before because the chrome was visually polished and the labels/button were obviously German so the gap blended in.
+
+### Round 31 — 1 issue, 2 files
+
+**Findings:**
+
+- [T4] **Welcome page h1 + subtitle stay English on German sessions.** Screenshotted (`eye-r31-01-welcome-de-gap.png`): German dropdown selected → labels say "Vollständiger Name", "Gruppe (optional)", "Sprache"; button says "Weiter"; but the h1 reads "C1 Language Olympiada" in English and the subtitle reads "English & German · Reading + Listening" also in English. A German student reading top-down sees 2 English strings before the German form starts. Jarring.
+
+- [T4] **Dashboard page h1 stays English on German sessions.** Same pattern: `localizeStaticStrings()` in dashboard.js translates `.zu-subtitle`, `#modules-section h2`, and completion banner — but not `.zu-header h1`. Round 29 saw this in a German dashboard screenshot and flagged it deferred.
+
+**Root-cause**: both `app.js`'s `STRINGS` object and `dashboard.js`'s `i18n` object carried field labels and button text but no `pageTitle` / `pageSubtitle` fields, so the respective `applyStrings()` / `localizeStaticStrings()` functions had nothing to write to the h1.
+
+**Action:** POLISH — extend both i18n objects + both functions.
+
+**Files touched:**
+
+1. **`zarmet-olympiada/public/js/app.js`:**
+   - Added `pageTitle` + `pageSubtitle` to both `english-c1` and `german-c1` entries in `STRINGS`.
+   - German `pageTitle: 'C1 Olympiada'` — **drops the English "Language" word**. The brand is already "C1 Olympiada" (visible in test.html's `.ct-brand-sub` header label and across every backend chrome). "Olympiada" has cross-linguistic roots (Latin / Slavic / Greek) and reads naturally in German without translation. This matches what a German-native reader would expect for a Goethe-style exam.
+   - German `pageSubtitle: 'Deutsch & Englisch · Lesen + Hören'` — order flipped (Deutsch first, then Englisch), skills translated (Lesen = Reading, Hören = Listening).
+   - English `pageTitle: 'C1 Language Olympiada'` + `pageSubtitle: 'English & German · Reading + Listening'` — kept verbatim, these become the explicit defaults instead of static HTML strings.
+   - `applyStrings()` now queries `.zu-header h1` + `.zu-header .zu-subtitle` and swaps their textContent alongside the existing form-label swaps. Runs on boot (English default) and every time the language dropdown changes (German swap), so flipping to German instantly reflects in the h1 without a page reload.
+
+2. **`zarmet-olympiada/public/js/dashboard.js`:**
+   - Added `pageTitle` field to both `isGerman ? {...}` and the English fallback in `i18n`.
+   - `localizeStaticStrings()` now queries `.zu-header h1` and swaps it alongside the existing subtitle/selectH2/completion swaps. Dashboard localizes once on boot (not reactive, per the existing comment — the dashboard never re-localizes mid-session).
+
+### Verification
+
+- **Welcome page German** (`eye-r31-02-welcome-de-fixed.png`): h1 now "C1 Olympiada", subtitle now "Deutsch & Englisch · Lesen + Hören", labels "Vollständiger Name" / "Gruppe (optional)" / "Sprache", button "Weiter". Fully German end-to-end. No English leaking through.
+- **Dashboard German** (`eye-r31-03-dashboard-de-fixed.png`): h1 now "C1 Olympiada", subtitle "Bitte wählen Sie ein Modul", welcome panel "Willkommen, Hans Müller" + "Sprache: Deutsch C1 (Goethe) · ID: BF4EBB42", modules h2 "Wählen Sie ein Modul", module cards "Lesen / Dauer: 65 Minuten" and "Hören / Dauer: 40 Minuten". Fully German.
+- **English default regression** (`eye-r31-04-welcome-en-default.png`): Fresh localStorage-cleared session at the welcome page shows "C1 Language Olympiada" h1 + "English & German · Reading + Listening" subtitle + "Full name / Group / Language / Continue" — verbatim unchanged from pre-round-31. English is still the default out of the box.
+- **JS syntax** — `node --check` passes on app.js and dashboard.js.
+
+### Quality Map
+
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| Welcome h1 (German) | 3-Efficient (English leak) → **5-Crafted** | "C1 Olympiada" brand-only |
+| Welcome subtitle (German) | 3-Efficient → **5-Crafted** | "Deutsch & Englisch · Lesen + Hören" |
+| Dashboard h1 (German) | 3-Efficient → **5-Crafted** | Matches welcome |
+| English default | 5-Crafted (unchanged) | No regression |
+
+### Deferred
+
+- **Test runner h1 "C1 Olympiada" already universal.** test.html uses `<span class="ct-brand-sub">C1 Olympiada</span>` — same brand name, no "Language" word to translate. No fix needed, confirms round 31's "drop Language" decision.
+- **done.html h1 "Thank you"** already localized via done.html's inline script (done in round 21b). Verified.
+- **admin.html stays English by design** — invigilators read English, not targeted by localization.
+- **Uzbek / Russian localization.** Zarmed University is in Uzbekistan. A Russian-speaking student might want Russian chrome. Currently only English + German C1 are supported. Flag for client direction if needed — not Eye scope (new content).
+
+### Session Stats
+
+Pages explored: 4 (welcome in German + dashboard in German + welcome in English default + dashboard in German verify)
+Findings: 1 (T4 compound across 2 pages)
+Polishes landed: 1 commit with 2 file changes (app.js, dashboard.js)
+Reverted: 0
+
+**Trajectory note:** Round 29 noted the dashboard h1 gap as an aside but didn't fix it because the round's primary focus was landmarks. Round 31 picked it up as primary focus + discovered the equivalent welcome page gap via a single eval switch to German. **Lesson: when a prior round flags something in passing ("noticed X but not fixing this round"), the next round should often pick X as its primary target** — the finding is already validated, the fix scope is already bounded, and the cost of context-switching is amortized across the whole round. Rounds 29 and 30 both modeled this (round 30 picked up round 29's deferred admin-mobile, round 31 picked up round 29's deferred dashboard-h1).
+
+**Key learning:** Localization gaps hide in plain sight when visual chrome is polished but text labels look foreign. A German student would see "Vollständiger Name" and assume the whole page is German — then see "C1 Language Olympiada" at the top and realize the localization is incomplete. This kind of mixed-language chrome is more jarring than a fully-English page. Future localization audits should walk the page **in the target language from top to bottom**, not just confirm each translatable string exists.
+
+---
+
 ## Session: 2026-04-11 18:30 — Zarmed Olympiada Admin Mobile Overflow — Round 30 (/loop iteration)
 Persona: Invigilator grading submissions from a phone (or laptop held narrow) | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: admin.html login / list / detail at 375×812 and 1920×1080

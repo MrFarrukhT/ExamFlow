@@ -27,6 +27,8 @@
   // English stays the default for the neutral first-load state.
   const STRINGS = {
     'english-c1': {
+      pageTitle: 'C1 Language Olympiada',
+      pageSubtitle: 'English & German · Reading + Listening',
       fullName: 'Full name',
       group: 'Group (optional)',
       language: 'Language',
@@ -36,6 +38,12 @@
       errNameChars: "Name can only contain letters, spaces, hyphens, dots, and apostrophes.",
     },
     'german-c1': {
+      // Drop the English "Language" word — "C1 Olympiada" is the brand, used
+      // uniformly across test.html's header, admin chrome, and backend tables.
+      // "Olympiada" is cross-linguistic (Latin / Slavic roots), so it reads
+      // naturally in both languages.
+      pageTitle: 'C1 Olympiada',
+      pageSubtitle: 'Deutsch & Englisch · Lesen + Hören',
       fullName: 'Vollständiger Name',
       group: 'Gruppe (optional)',
       language: 'Sprache',
@@ -58,6 +66,15 @@
   // the right language and native browser spell-check picks the right dict.
   function applyStrings() {
     const s = currentStrings();
+    // Header chrome — h1 and subtitle were previously static English strings.
+    // German students picking their language now get the full welcome page
+    // in German, including the page title "C1 Olympiada" (drops the English
+    // "Language" word) and the "Deutsch & Englisch · Lesen + Hören" sub-line.
+    const pageH1 = document.querySelector('.zu-header h1');
+    const pageSub = document.querySelector('.zu-header .zu-subtitle');
+    if (pageH1) pageH1.textContent = s.pageTitle;
+    if (pageSub) pageSub.textContent = s.pageSubtitle;
+
     const nameLabel = form.querySelector('label[for="f-name"]');
     const groupLabel = form.querySelector('label[for="f-group"]');
     const langLabel = form.querySelector('label[for="f-lang"]');

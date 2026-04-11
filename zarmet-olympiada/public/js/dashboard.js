@@ -47,6 +47,10 @@
     minutes: ' Minuten',
     submitted: 'Abgegeben.',
     langLabel: 'Deutsch C1 (Goethe)',
+    // Drop the English "Language" word for German students. "C1 Olympiada"
+    // is the brand name used uniformly across test.html's header and all
+    // backend chrome. Matches app.js's welcome page title.
+    pageTitle: 'C1 Olympiada',
     subtitle: 'Bitte wählen Sie ein Modul',
     selectH2: 'Wählen Sie ein Modul',
     completionH2: 'Alle Prüfungsteile abgeschlossen',
@@ -60,6 +64,7 @@
     minutes: ' minutes',
     submitted: 'Submitted.',
     langLabel: 'English C1 Advanced',
+    pageTitle: 'C1 Language Olympiada',
     subtitle: 'Select a module to begin',
     selectH2: 'Select a Module to Begin',
     completionH2: 'All Sections Complete',
@@ -72,6 +77,10 @@
   // right language and native browser spell-check picks the right dict.
   function localizeStaticStrings() {
     document.documentElement.lang = isGerman ? 'de' : 'en';
+    // Header h1 — previously a static English string. German students now
+    // see "C1 Olympiada" (brand-only, drops the English "Language" word).
+    const pageH1 = document.querySelector('.zu-header h1');
+    if (pageH1) pageH1.textContent = i18n.pageTitle;
     const subtitle = document.querySelector('.zu-header .zu-subtitle');
     if (subtitle) subtitle.textContent = i18n.subtitle;
     const modulesH2 = document.querySelector('#modules-section h2');
