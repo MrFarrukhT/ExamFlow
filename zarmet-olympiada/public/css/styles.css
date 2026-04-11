@@ -121,6 +121,16 @@ h3 { font-size: 1.25rem; }
   border-color: var(--zu-accent);
   box-shadow: 0 0 0 3px var(--zu-focus);
 }
+.zu-field input[aria-invalid="true"],
+.zu-field select[aria-invalid="true"] {
+  border-color: var(--zu-danger);
+  background: #fef2f2;
+}
+.zu-field input[aria-invalid="true"]:focus,
+.zu-field select[aria-invalid="true"]:focus {
+  border-color: var(--zu-danger);
+  box-shadow: 0 0 0 3px rgba(153, 27, 27, 0.18);
+}
 
 .zu-btn {
   font-family: inherit;
@@ -318,6 +328,21 @@ body.zu-test-body h2 { font-size: 18px; }
 body.zu-test-body h3 { font-size: 17px; }
 body.zu-test-body h4 { font-size: 14px; }
 
+/* Consistent teal focus rings across the test runner — replaces the
+ * browser-default focus outlines (which vary by OS). Any keyboard-
+ * focusable element inside zu-test-body gets the same treatment. */
+body.zu-test-body *:focus-visible {
+  outline: 2px solid var(--ct-teal);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+body.zu-test-body button:focus-visible,
+body.zu-test-body .ct-nav-num:focus-visible,
+body.zu-test-body .ct-nav-arrow:focus-visible,
+body.zu-test-body .ct-nav-finish:focus-visible {
+  outline-offset: 1px;
+}
+
 /* Top header strip */
 .ct-header {
   display: flex;
@@ -418,6 +443,22 @@ body.zu-test-body h4 { font-size: 14px; }
   background: var(--ct-bg);
   min-width: 78px;
   text-align: center;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+.ct-timer--warn {
+  color: #92400e;
+  background: #fef3c7;
+  border-color: #f59e0b;
+}
+.ct-timer--urgent {
+  color: #991b1b;
+  background: #fee2e2;
+  border-color: #dc2626;
+  animation: ctTimerPulse 1s ease-in-out infinite;
+}
+@keyframes ctTimerPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+  50% { box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.18); }
 }
 
 /* Instruction banner — nested inside a max-width container to align with main */

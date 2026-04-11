@@ -1,5 +1,63 @@
 # Eye Journal
 
+## Session: 2026-04-11 14:25 — Zarmet Olympiada Cambridge-Authentic UI — Round 5
+Persona: Student with bad inputs, approaching time limit | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: welcome (validation edge cases), dashboard (post-submit), test (timer warn + urgent states), submit flow
+Starting state: After Round 4 polished the admin page, 13/13 pages were at Layer 5 Crafted. This round looks for deeper craft: form validation visual feedback, timer warnings, focus rings, submit state feedback.
+
+### Round 5 — Craft-layer details: validation, timer, focus, submit
+
+**Explored:** Edge cases and state transitions that code-level review doesn't catch.
+
+**Findings:**
+
+- [T4] Welcome form — invalid name shows text error message below the form, but the `#f-name` input itself has no error state. The field stays with a normal grey border while the error text below it is red. Mismatch between the field's visual state and its semantic state.
+- [T0] Timer `.ct-timer` — plain mono grey pill that shows time correctly, but gives no visual cue as time runs out. Real CAE Inspera has amber/red color transitions when the clock is low. This is an existing element that can be elevated with a state change.
+- [T0] Focus rings — browser-default outlines on tab navigation vary wildly between Chrome/Edge and look inconsistent with the rest of the design. The test runner should have a consistent teal focus ring matching the Cambridge palette.
+- [T0] Submit button — when clicked, becomes disabled (opacity 0.4) but text stays as `✓`. There's no explicit "we're submitting" feedback. For a fast roundtrip this is fine, but on a slow exam-day network the student could click Finish and wonder if anything happened.
+
+**Action:** POLISH + ELEVATE (4 changes shipped)
+
+- [T4] Welcome input error state — `showError(msg, field)` now also sets `aria-invalid="true"` on the relevant field and auto-focuses it. CSS: `input[aria-invalid="true"]` gets red border + light pink background. Input listener clears the aria-invalid state as soon as the user starts editing.
+  Mode: polish | Quality: 4 → 5 | Files: public/js/app.js, public/css/styles.css
+- [T0] Timer low-time state — `ct-timer--warn` class added when `remaining < 5 * 60 * 1000` (amber text + background + border), and `ct-timer--urgent` when `remaining < 60 * 1000` (red text + background + pulse animation via `@keyframes ctTimerPulse`). Classes toggle every tick. Standard color semantics: no warning normally, amber at 5 min, red + pulse at 1 min.
+  Mode: elevate (existing element gets a state change) | Quality: 4 → 5 | Files: public/js/test.js, public/css/styles.css
+- [T0] Consistent teal focus rings — `body.zu-test-body *:focus-visible` global override using `outline: 2px solid var(--ct-teal); outline-offset: 2px`. Replaces the browser-default outlines across buttons, inputs, nav numbered buttons, arrows, and the finish button. Uses `:focus-visible` so mouse users don't see rings but keyboard users do.
+  Mode: elevate (consistent state on existing focusable elements) | Quality: 4 → 5 | Files: public/css/styles.css
+- [T0] Submit button feedback — clicking Finish now: (a) changes button text from `✓` to `…`, (b) updates aria-label to "Submitting", (c) disables both prev and next arrows so the student can't navigate during submission, (d) on failure, restores all states via `renderBottomNav()`. Explicit visual handoff before the redirect.
+  Mode: polish | Files: public/js/test.js
+
+### Verification
+
+- ✅ **Welcome error state** (`r5-welcome-error-styled.png`) — entered `123456789`, input now has red border + pink background. Error message below is also red. Input auto-focuses for correction.
+- ✅ **Timer warn** (`r5-timer-warn.png`) — forced `timerEnd = now + 3min`, timer pill `02:49` rendered amber on yellow background with amber border.
+- ✅ **Timer urgent** (`r5-timer-urgent.png`) — forced `timerEnd = now + 45s`, timer pill `00:43` rendered red on pink background with red border. CSS pulse animation defined (can't capture in static screenshot but the `@keyframes ctTimerPulse` runs).
+- ✅ Focus rings — `*:focus-visible` selector applies cleanly across the test runner. Not screenshotted (focus state is a keyboard-driven interaction that doesn't show in static captures).
+- ✅ Submit text change — code verified; the stub submit resolves too fast to screenshot the mid-flight state but the code path is correct and would show on a real network.
+- ✅ No regressions — welcome/dashboard/test still render correctly.
+
+### Quality Map (no changes — 13/13 still at Crafted, but now deeper craft)
+| Page | Layer | Notes |
+|------|-------|-------|
+| (all 13 pages) | 5-Crafted | Now with form validation visual feedback, timer state cues, consistent focus rings, submit feedback |
+
+### Deferred
+- Keyboard arrow navigation between questions — would be a genuinely nice addition but borderline new feature (keyboard shortcuts for nav buttons that already exist). Deferred as a potential future /eye target but not critical.
+- Print stylesheet for admin detail view — invigilator use case. Nice-to-have.
+- Real content transcription — out of /eye scope.
+
+### Session Stats
+Pages explored: 3 (welcome edge cases, test timer states, submit flow)
+Screenshots captured: 5
+Rounds: 1 (within this session)
+Polishes landed: 2
+Rebuilds landed: 0
+Elevations landed: 2 (timer states, focus rings)
+Reverted: 0
+Changes shipped: 4
+
+---
+
 ## Session: 2026-04-11 14:15 — Zarmet Olympiada Cambridge-Authentic UI — Round 4
 Persona: Invigilator/admin reviewing submissions | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: admin.html (login, list, detail, empty state), welcome @ 800px viewport

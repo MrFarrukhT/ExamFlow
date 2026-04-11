@@ -936,8 +936,13 @@
       const remaining = Math.max(0, state.timerEndMs - Date.now());
       const minutes = Math.floor(remaining / 60000);
       const seconds = Math.floor((remaining % 60000) / 1000);
-      document.getElementById('ct-timer').textContent =
+      const timerEl = document.getElementById('ct-timer');
+      timerEl.textContent =
         String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+      // Low-time warning: amber <5 min, red <1 min. Matches real CAE
+      // Inspera's timer color cues.
+      timerEl.classList.toggle('ct-timer--urgent', remaining > 0 && remaining < 60 * 1000);
+      timerEl.classList.toggle('ct-timer--warn', remaining >= 60 * 1000 && remaining < 5 * 60 * 1000);
       if (remaining <= 0) {
         clearInterval(state.timerHandle);
         submit(true);
@@ -954,7 +959,14 @@
       if (!confirm("Finish this test? You can't come back.")) return;
     }
     state.submitting = true;
-    document.getElementById('ct-finish').disabled = true;
+    const finishBtn = document.getElementById('ct-finish');
+    const prevLabel = finishBtn.getAttribute('aria-label') || 'Finish';
+    finishBtn.disabled = true;
+    finishBtn.setAttribute('aria-label', 'Submitting');
+    finishBtn.textContent = '…';
+    // Disable prev/next too so the student can't navigate during submit
+    document.getElementById('ct-prev').disabled = true;
+    document.getElementById('ct-next').disabled = true;
     try {
       const res = await fetch('/api/session/' + encodeURIComponent(sessionId) + '/submit', { method: 'POST' });
       const body = await res.json();
@@ -967,7 +979,10 @@
     } catch (e) {
       alert('Submit failed: ' + e.message + '\n\nPlease tell the invigilator. Your answers are still saved on the server.');
       state.submitting = false;
-      document.getElementById('ct-finish').disabled = false;
+      finishBtn.disabled = false;
+      finishBtn.setAttribute('aria-label', prevLabel);
+      finishBtn.textContent = '✓';
+      renderBottomNav(); // Restore prev/next enabled states
     }
   }
 

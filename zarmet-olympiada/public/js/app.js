@@ -16,11 +16,24 @@
 
   const form = document.getElementById('start-form');
   const err = document.getElementById('err');
+  const nameInput = document.getElementById('f-name');
 
-  function showError(msg) {
+  function showError(msg, field) {
     err.textContent = msg;
     err.hidden = false;
+    if (field) {
+      field.setAttribute('aria-invalid', 'true');
+      field.focus();
+    }
   }
+
+  // Clear error state as soon as the user starts editing
+  nameInput.addEventListener('input', () => {
+    if (nameInput.getAttribute('aria-invalid') === 'true') {
+      nameInput.removeAttribute('aria-invalid');
+      err.hidden = true;
+    }
+  });
 
   function generateStudentId() {
     // Prefer crypto.randomUUID (desktop Chrome/Edge 92+), fall back to getRandomValues
@@ -40,16 +53,16 @@
     e.preventDefault();
     err.hidden = true;
 
-    const student = document.getElementById('f-name').value.trim();
+    const student = nameInput.value.trim();
     const group = document.getElementById('f-group').value.trim();
     const lang = document.getElementById('f-lang').value;
 
     if (student.length < 2) {
-      showError('Please enter your full name.');
+      showError('Please enter your full name.', nameInput);
       return;
     }
     if (!/^[\p{L}\s\-'.]+$/u.test(student)) {
-      showError('Name can only contain letters, spaces, hyphens, dots, and apostrophes.');
+      showError('Name can only contain letters, spaces, hyphens, dots, and apostrophes.', nameInput);
       return;
     }
 
