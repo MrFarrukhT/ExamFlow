@@ -20,33 +20,78 @@
       key: 'reading',
       titleEn: 'Reading & Use of English',
       titleDe: 'Lesen',
-      durationEn: '90 minutes',
-      durationDe: '65 minutes',
+      durationMinEn: 90,
+      durationMinDe: 65,
     },
     {
       key: 'listening',
       titleEn: 'Listening',
       titleDe: 'Hören',
-      durationEn: '40 minutes',
-      durationDe: '40 minutes',
+      durationMinEn: 40,
+      durationMinDe: 40,
     },
   ];
 
+  // Language-aware UI strings. German C1 students are taking a Goethe-style
+  // exam in German, so the dashboard chrome should be German end-to-end —
+  // the language dropdown labels, module titles, and instructions are already
+  // localized in dashboard.html + MODULES above; this object covers the
+  // remaining static + interpolated strings.
+  const isGerman = lang === 'german-c1';
+  const i18n = isGerman ? {
+    welcome: 'Willkommen, ',
+    group: 'Gruppe: ',
+    language: 'Sprache: ',
+    id: 'ID: ',
+    duration: 'Dauer: ',
+    minutes: ' Minuten',
+    submitted: 'Abgegeben.',
+    langLabel: 'Deutsch C1 (Goethe)',
+    subtitle: 'Bitte wählen Sie ein Modul',
+    selectH2: 'Wählen Sie ein Modul',
+    completionH2: 'Alle Prüfungsteile abgeschlossen',
+    completionP: 'Sie haben alle Testmodule beendet. Bitte bleiben Sie sitzen und warten Sie auf die Aufsicht.',
+  } : {
+    welcome: 'Welcome, ',
+    group: 'Group: ',
+    language: 'Language: ',
+    id: 'ID: ',
+    duration: 'Duration: ',
+    minutes: ' minutes',
+    submitted: 'Submitted.',
+    langLabel: 'English C1 Advanced',
+    subtitle: 'Select a module to begin',
+    selectH2: 'Select a Module to Begin',
+    completionH2: 'All Sections Complete',
+    completionP: 'You have finished all test modules. Please remain seated and wait for your invigilator.',
+  };
+
+  // Swap the static HTML strings that were authored in English. Running
+  // once on boot is enough — the dashboard never re-localizes mid-session.
+  function localizeStaticStrings() {
+    const subtitle = document.querySelector('.zu-header .zu-subtitle');
+    if (subtitle) subtitle.textContent = i18n.subtitle;
+    const modulesH2 = document.querySelector('#modules-section h2');
+    if (modulesH2) modulesH2.textContent = i18n.selectH2;
+    const completionH2 = document.querySelector('.zu-completion-banner h2');
+    if (completionH2) completionH2.textContent = i18n.completionH2;
+    const completionP = document.querySelector('.zu-completion-banner p');
+    if (completionP) completionP.textContent = i18n.completionP;
+  }
+
   function render(completed) {
-    document.getElementById('welcome-name').textContent = 'Welcome, ' + studentName;
-    const langLabel = lang === 'german-c1' ? 'German C1 Advanced' : 'English C1 Advanced';
+    document.getElementById('welcome-name').textContent = i18n.welcome + studentName;
     // Intent plan (2026-04-11): "Welcome, {name} + ID: {studentId} + C1 Advanced — English".
     // Show a short 8-char fragment of the UUID (same pattern as the test.html candidate-id),
     // so the invigilator can verify the student is at the right station without exposing the full UUID.
     const idShort = (studentId || '').slice(0, 8).toUpperCase();
     document.getElementById('welcome-meta').textContent =
-      (studentGroup ? 'Group: ' + studentGroup + ' · ' : '') +
-      'Language: ' + langLabel +
-      (idShort ? ' · ID: ' + idShort : '');
+      (studentGroup ? i18n.group + studentGroup + ' · ' : '') +
+      i18n.language + i18n.langLabel +
+      (idShort ? ' · ' + i18n.id + idShort : '');
 
     const grid = document.getElementById('modules-grid');
     grid.innerHTML = '';
-    const isGerman = lang === 'german-c1';
 
     let completedCount = 0;
     MODULES.forEach((m) => {
@@ -66,12 +111,13 @@
       card.appendChild(title);
       const dur = document.createElement('div');
       dur.className = 'zu-module-duration';
-      dur.textContent = 'Duration: ' + (isGerman ? m.durationDe : m.durationEn);
+      const minutes = isGerman ? m.durationMinDe : m.durationMinEn;
+      dur.textContent = i18n.duration + minutes + i18n.minutes;
       card.appendChild(dur);
       if (isDone) {
         const status = document.createElement('div');
         status.className = 'zu-module-duration';
-        status.textContent = 'Submitted.';
+        status.textContent = i18n.submitted;
         card.appendChild(status);
       } else {
         card.addEventListener('click', () => {
@@ -132,5 +178,6 @@
     });
   })();
 
+  localizeStaticStrings();
   loadStatus();
 })();
