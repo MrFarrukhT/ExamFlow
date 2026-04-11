@@ -23,6 +23,54 @@
     return;
   }
 
+  // ---------- i18n ----------
+  // German C1 students should see German chrome end-to-end — the real
+  // Goethe Hören/Lesen interface is German throughout. Previously the
+  // error modals, banner fallbacks, and static header strings leaked
+  // English into German sessions. Pre-play, confirm, and listening-gate
+  // strings were already localized inline; this object centralizes the
+  // rest so future strings stay consistent.
+  const isDe = lang === 'german-c1';
+  const t = isDe ? {
+    audioPlaying:      'Audio läuft',
+    candidateId:       'Kandidaten-ID',
+    loading:           'Lädt …',
+    problemTitle:      'Problem',
+    ok:                'OK',
+    errorBanner:       'Fehler',
+    audioUnavailable:  'Audio ist für diesen Teil nicht verfügbar. Bitte sagen Sie Ihrer Aufsicht Bescheid. Sie können die Fragen weiterhin beantworten, werden aber den Ton nicht hören.',
+    audioFailed:       (msg) => 'Audio konnte nicht gestartet werden: ' + msg + '. Bitte sagen Sie Ihrer Aufsicht Bescheid.',
+    submitFailed:      (msg) => 'Abgabe fehlgeschlagen: ' + msg + '\n\nBitte sagen Sie Ihrer Aufsicht Bescheid. Ihre Antworten sind weiterhin auf dem Server gespeichert.',
+    loadFailed:        (msg) => 'Test konnte nicht geladen werden. Bitte sagen Sie Ihrer Aufsicht Bescheid. (' + msg + ')',
+  } : {
+    audioPlaying:      'Audio is playing',
+    candidateId:       'Candidate ID',
+    loading:           'Loading …',
+    problemTitle:      'Problem',
+    ok:                'OK',
+    errorBanner:       'Error',
+    audioUnavailable:  'Audio is unavailable for this part. Please tell your invigilator. You may continue to answer the questions, but you will not hear the audio.',
+    audioFailed:       (msg) => 'Unable to start audio: ' + msg + '. Please tell your invigilator.',
+    submitFailed:      (msg) => 'Submit failed: ' + msg + '\n\nPlease tell the invigilator. Your answers are still saved on the server.',
+    loadFailed:        (msg) => 'Failed to load the test. Please tell your invigilator. (' + msg + ')',
+  };
+
+  // Set the document lang attribute so assistive tech pronounces the
+  // static German strings below correctly, and swap the static English
+  // strings authored in test.html to their German equivalents in one
+  // pass on boot.
+  document.documentElement.lang = isDe ? 'de' : 'en';
+  (function localizeStaticStrings() {
+    const idLabel = document.querySelector('.ct-header-id-label');
+    if (idLabel) idLabel.textContent = t.candidateId;
+    const audioLabel = document.querySelector('.ct-audio-status span:last-child');
+    if (audioLabel) audioLabel.textContent = t.audioPlaying;
+    const bannerTitle = document.getElementById('ct-banner-title');
+    if (bannerTitle && bannerTitle.textContent === 'Loading…') {
+      bannerTitle.textContent = t.loading;
+    }
+  })();
+
   // ---------- state ----------
   const state = {
     content: null,          // loaded from /api/content
@@ -787,7 +835,7 @@
       renderBottomNav();
     });
     audio.addEventListener('error', () => {
-      handleFailure('Audio is unavailable for this part. Please tell your invigilator. You may continue to answer the questions, but you will not hear the audio.');
+      handleFailure(t.audioUnavailable);
     });
     audio.addEventListener('stalled', startStallTimer);
     audio.addEventListener('waiting', startStallTimer);
@@ -795,7 +843,7 @@
       console.error('[audio] play failed', e);
       // Trim any trailing period so we don't end up with ".."
       const msg = String(e.message || 'unknown error').replace(/\.+\s*$/, '');
-      handleFailure('Unable to start audio: ' + msg + '. Please tell your invigilator.');
+      handleFailure(t.audioFailed(msg));
     });
 
     renderCurrentPart(); // remove overlay
@@ -805,10 +853,10 @@
   function showErrorModal(text) {
     const overlay = el('div', 'ct-error-modal');
     const card = el('div', 'ct-error-card');
-    card.appendChild(el('h3', null, 'Problem'));
+    card.appendChild(el('h3', null, t.problemTitle));
     card.appendChild(el('p', null, text));
     const btn = document.createElement('button');
-    btn.textContent = 'OK';
+    btn.textContent = t.ok;
     btn.addEventListener('click', () => overlay.remove());
     card.appendChild(btn);
     overlay.appendChild(card);
@@ -1214,7 +1262,7 @@
         .forEach(k => localStorage.removeItem(k));
       window.location.href = 'dashboard.html';
     } catch (e) {
-      alert('Submit failed: ' + e.message + '\n\nPlease tell the invigilator. Your answers are still saved on the server.');
+      alert(t.submitFailed(e.message));
       state.submitting = false;
       finishBtn.disabled = false;
       finishBtn.setAttribute('aria-label', prevLabel);
@@ -1268,8 +1316,8 @@
       });
     } catch (e) {
       console.error(e);
-      document.getElementById('ct-banner-title').textContent = 'Error';
-      document.getElementById('ct-banner-body').textContent = 'Failed to load the test. Please tell your invigilator. (' + e.message + ')';
+      document.getElementById('ct-banner-title').textContent = t.errorBanner;
+      document.getElementById('ct-banner-body').textContent = t.loadFailed(e.message);
     }
   })();
 })();

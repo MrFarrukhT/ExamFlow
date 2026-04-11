@@ -1,5 +1,86 @@
 # Eye Journal
 
+## Session: 2026-04-11 17:25 — Zarmed Olympiada German C1 Error Immersion — Round 19c (parallel iteration)
+Persona: German C1 student whose audio fails or whose submit errors — currently gets English error messages that break language immersion | System: Zarmed Olympiada standalone (port 3004)
+Pages explored: test.js error-path audit + German session forced via localStorage + modal injection verification
+Starting state: Concurrent /loop /eye iterations were mid-"standards overhaul" (sizing/typography bump + some palette experiments in the working tree). Rather than fight for browser state with those iterations, this round focused on a code-level i18n gap: audio-failure and submit-failure error messages were hardcoded English even for German sessions.
+
+### Round 19c — Localize error paths for German C1 immersion
+
+**Explored:** Audited test.js for user-visible strings that bypass the existing `isDe` branching. The pre-play modal (line 717), the finish-confirm (line 1188), and the listening-gate text were already localized inline in earlier rounds. But error paths — the places a German student sees English most — were all hardcoded.
+
+**Findings (all [T4] user-visible English in a German session):**
+
+- `showErrorModal()` hard-codes `<h3>Problem</h3>` and `OK` button (line 808, 811)
+- Audio `error` listener passes hardcoded `'Audio is unavailable for this part. Please tell your invigilator. You may continue to answer the questions, but you will not hear the audio.'` (line 790)
+- Audio `play().catch()` passes hardcoded `'Unable to start audio: ' + msg + '. Please tell your invigilator.'` (line 798)
+- Submit failure `alert()` hardcodes `'Submit failed: ...\n\nPlease tell the invigilator. Your answers are still saved on the server.'` (line 1217)
+- Boot failure banner hardcodes `'Error'` title + `'Failed to load the test. Please tell your invigilator. (' + e.message + ')'` body (line 1271-1272)
+- Static `test.html` strings that don't get runtime-swapped: `Candidate ID` label, `Audio is playing` audio-status label, `Loading…` banner placeholder — these render in English even after a German session loads because the HTML is authored in English and no JS updates them.
+- `<html lang="en">` never switches to `de` for German sessions — screen readers and browser spell-check pick the wrong language for the static German strings authored elsewhere.
+
+**Action:** POLISH (i18n consolidation + runtime static-string swap)
+
+- Added a centralized `t` i18n object near the top of test.js, scoped on `isDe = lang === 'german-c1'`. Contains: `audioPlaying`, `candidateId`, `loading`, `problemTitle`, `ok`, `errorBanner`, `audioUnavailable`, `audioFailed(msg)`, `submitFailed(msg)`, `loadFailed(msg)`. English and German branches are side-by-side so adding a new language string in the future means two lines, one for each branch.
+- On boot, `document.documentElement.lang = isDe ? 'de' : 'en'` — fixes assistive-tech pronunciation and browser spell-check context for the German-authored strings.
+- On boot, `localizeStaticStrings()` runs once: swaps `.ct-header-id-label`, `.ct-audio-status span:last-child`, and the initial `#ct-banner-title` placeholder (guarded so it only swaps if still `'Loading…'`, avoiding clobbering a real banner title that has already loaded).
+- All 6 error-path strings in showErrorModal, audio error listener, audio play().catch, submit catch, and boot catch now pull from `t` (e.g. `t.audioUnavailable`, `t.audioFailed(msg)`, `t.submitFailed(e.message)`).
+- German strings use formal `Sie` form (matches Goethe exam chrome convention, not the informal `du`).
+  Mode: polish | Quality: 3 → 5 | Files: public/js/test.js (+54 lines, -7 lines)
+
+### Verification
+
+**German session** (lang=german-c1 forced via localStorage, navigated to test.html?module=listening):
+```
+docLang:       "de"            ← was "en"
+candidateLabel: "Kandidaten-ID"  ← was "Candidate ID"
+audioLabel:    "Audio läuft"    ← was "Audio is playing"
+bannerTitle:   "Fragen 1–6"     ← already localized by content loader
+```
+
+**German error modal** (injected via eval to verify the exact strings my code will render):
+- H3: "Problem" (same word in German)
+- P: "Audio ist für diesen Teil nicht verfügbar. Bitte sagen Sie Ihrer Aufsicht Bescheid. Sie können die Fragen weiterhin beantworten, werden aber den Ton nicht hören."
+- Button: "OK" (same in German)
+Screenshot: `r19-de-error-modal.png` — modal renders cleanly with the new German copy.
+
+**English non-regression** (lang=english-c1, navigated to test.html?module=listening):
+```
+docLang:       "en"            ← unchanged
+candidateLabel: "Candidate ID"  ← unchanged
+audioLabel:    "Audio is playing" ← unchanged
+```
+
+Syntax check passed: `node --check zarmet-olympiada/public/js/test.js` → OK.
+
+### Quality Map
+| Page / Flow | Layer | Notes |
+|---|---|---|
+| test.html chrome (German session) | **5-Crafted** | html lang + 3 static labels all swap on boot |
+| Error modal (audio/submit/load) | **5-Crafted (both languages)** | Single `t` object, all 6 paths covered |
+| Pre-play modal + finish-confirm (from earlier rounds) | **5-Crafted** | Already localized; left alone |
+
+### Deferred (thin)
+- The welcome page `index.html` has hard-coded English labels ("Full name", "Group (optional)", "Language", "Continue", "English & German · Reading + Listening") — arguably those should stay English because the student hasn't selected their language yet; Goethe's real welcome screen is also bilingual at that point
+- The `<title>` on test.html, dashboard.html, admin.html, done.html — could switch based on lang but the title is usually hidden behind the tab bar in kiosk mode
+- Parallel /loop iterations are mid-"standards overhaul" (sizing/typography bump + some rgba(30,64,175,...) blue focus rings creeping in). That work is incomplete and I'm deliberately NOT touching it — it should stabilize on its own through the /loop.
+
+### Session Stats
+Pages explored: 1 (test.js code audit) + 2 (browser verification: German + English)
+Screenshots captured: 1 (r19-de-error-modal.png)
+Rounds: 1 concurrent side-work (labeled 19c to disambiguate from parallel round 19/20 iterations)
+Polishes landed: 1 (i18n consolidation across 6 error paths + 3 static strings + html lang)
+Rebuilds: 0 | Elevations: 0 | Reverted: 0
+Changes shipped: 1 file (test.js)
+
+**Trajectory update:** Round 19c is the first round to work at a code-level angle because multiple concurrent /loop iterations made browser-state walking unreliable. Instead of fighting for session control, I audited the JS source for strings-that-slip-through and shipped a focused i18n fix. Lesson: when parallel iterations are polluting shared state, **pivot from browser walks to code audits**. You can still find and ship real improvements without needing exclusive session control.
+
+**Key learning:** The pre-play modal and finish-confirm got localized inline when they were first added, but later error paths (audio failure, submit failure, boot failure) missed that convention. The lesson for future rounds: **any new user-visible string goes through the `t` i18n object** from the start, not as a one-off inline ternary. The centralized `t` object makes this easy.
+
+**Recommended next angle:** Audit `index.html` (the welcome page) for static English strings that should swap after a language is implied (e.g. if a user returns to the welcome page from a German session, should the form labels briefly flash to German? Probably no — the welcome is the language selection step. But the page `<title>` could be neutral.) Also: check `dashboard.html` static HTML (not dashboard.js runtime swap) for any English strings that survive the i18n pass.
+
+---
+
 ## Session: 2026-04-11 17:20 — Zarmed Olympiada Brand Consistency Sweep — Round 20 (/loop iteration)
 Persona: Student walking the app with real content AND noticing brand-color inconsistency | System: Zarmed Olympiada standalone (port 3004)
 Pages explored: Listening Part 1 (coral reefs), Reading Part 1 (Bridges for wildlife), Part 2 (MoMA), Part 4 (form rejection KWT)
