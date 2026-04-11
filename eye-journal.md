@@ -1,5 +1,149 @@
 # Eye Journal
 
+## Session: 2026-04-11 17:35 — Zarmed Olympiada Standards Overhaul — Round 22 (user-directed)
+Persona: Student walking the whole app (welcome → dashboard → reading → listening → admin → done) | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: index.html, dashboard.html, test.html (reading Parts 1+4+5, listening Parts 1+2+4), admin.html (login + results list), done.html
+Starting state: User delivered a direct, non-negotiable instruction during /loop iteration: "make sure every single thing in the olympiada is up to standards. Too much white space, extremely small font, color palette doesn't match the official logo, audio pop-up showing when clicking on every single part instead of being for the whole listening." Rounds 13-21 had iterated on Cambridge-authentic chrome using a teal + warm-brown palette that — critically — clashed with the actual Zarmed University logo (dark royal blue + crimson + gold). The user had the references (the two screenshots they pasted) and called the disconnect directly.
+
+### Round 22 — 4 direct fixes + a polish sweep
+
+**Findings (user-named + eye-discovered):**
+
+- [T5 — wrong paradigm] **Audio pre-play modal shown on EVERY listening part, not once per listening session.** Confirmed by clicking Play on Part 1, then navigating to Part 2 — modal re-appeared. Root cause in [test.js:35,549](zarmet-olympiada/public/js/test.js#L35-L549): `state.audioState[part.id]` was tracked per-part, so `renderListeningPart` checked only the current part's state. Real CAE Listening is one continuous 40-minute recording spanning all four parts; showing a modal on every part break destroys the immersion and contradicts the exam format.
+
+- [T4 — rough] **Palette clashed with the real Zarmed University logo.** The `:root` used `--zu-primary: #7c2d12` (warm brown) + `--ct-teal: #0d9488` (Cambridge teal). The actual logo is a blue shield with "ZARMED" in royal blue (#1e40af-ish) and "UNIVERSITY" in crimson (#991b1b). Every button, heading, and active-state color on the app pointed away from the brand the user actually ships under.
+
+- [T4 — rough] **Test runner font sizes were 13-15px across the board.** Body 15, passage 14, banner 13, q-option 14, nav label 12. On a 1920×1080 exam display, this reads as print-too-small-to-bother. The user's complaint was correct — the whole test runner felt like a cramped 14pt document.
+
+- [T4 — rough] **Welcome page and admin login hugged the top of the canvas** with 600+ px of empty cream below the form. The form was in `.page--narrow` (560px max-width) but sat at top:2rem, so on any 1080p display it looked abandoned.
+
+- [T3 — inefficient] **Part 4 single-KWT block floated in ~600px of blank space.** The round-17 rebuild correctly switched Part 4 to one-per-page (authentic Cambridge), but no vertical centering was applied, so the block sat at the top below the banner with huge empty space below.
+
+- [T3 — inefficient] **Admin login form stretched across the full 1120px .page width**, same top-hugging problem as welcome.
+
+**Action:** POLISH (palette + typography + layout + modal behavior)
+
+**1. Single-gate listening audio (test.js, ~18 lines)**
+
+- Added `state.listeningGate` initial value `'closed'` with a commented rationale explaining CAE Listening format.
+- Changed `renderListeningPart` to check `state.listeningGate === 'closed'` (module-level) instead of `state.audioState[part.id]` (per-part). Only the FIRST listening part with audio on FIRST visit shows the modal.
+- `startAudio()` now flips `state.listeningGate = 'opened'` so subsequent parts skip the gate.
+- `isCurrentListeningAwaitingAudio()` now gates the Next button on the module-level flag.
+- `goToPart()` no longer pauses the audio element or marks it finished when switching between listening parts — the continuous recording keeps playing uninterrupted across Parts 1→4, matching the real exam.
+
+**Verified live:** Play on Part 1 → navigate to Part 2, 3, 4 → NO modal on any subsequent visit. Header shows "Audio is playing" persistently.
+
+**2. Brand palette overhaul (styles.css `:root`)**
+
+- `--zu-primary: #1e40af` (ZARMED royal blue) — was `#7c2d12` (warm brown)
+- `--zu-primary-dark: #1e3a8a` + `--zu-primary-darker: #172554` (deepest navy for headings)
+- `--zu-accent: #991b1b` (UNIVERSITY crimson) — was `#c2410c` (orange-brown)
+- `--zu-gold: #eab308` (seal ribbon) — new token for future accent use
+- `--zu-cream-soft: #f8fafc` (clean neutral slate) — was `#f9f5f0` (warm cream)
+- `--zu-focus: #60a5fa` (blue-400 focus ring) — was `#fcd34d` (yellow)
+- `--ct-teal: #1e40af` — legacy token name retained to avoid rewrite churn, but now holds brand blue. All `.ct-teal`-colored elements (active nav, active question, focus rings, Play buttons, Audio-is-playing indicator) now point to brand blue.
+- `--ct-teal-soft: #dbeafe` (blue-100) for active backdrops
+- `--ct-banner-bg: #f1f5f9` (slate-100) — cleaner than warm `#f3f4f6`
+
+**3. Typography overhaul**
+
+- Base font family changed from `Arial` / `Georgia` mix to `Inter, -apple-system, Segoe UI, Helvetica, Arial, sans-serif` with `font-feature-settings: "optimizeLegibility"`. Headings use the same family (was Georgia) for consistency.
+- Body test runner: `15px → 17px`, line-height `1.5 → 1.6`
+- Headings (test body): h1 `20→24`, h2 `18→21`, h3 `17→19`, h4 `14→16`
+- Zarmed pages: h1 `2.2rem → 2.6rem`, h2 `1.6 → 1.85rem`, h3 `1.25 → 1.35rem`
+- Passage (the main reading content): `14px → 18px` in a proper serif stack (`Source Serif Pro`, Charter, Iowan Old Style, Georgia)
+- Banner title `14 → 17`, body `13 → 15`
+- Q options `14 → 16` + bigger radio dots (18×18)
+- Keyword list `13 → 15`, gap inputs `14 → 16`, KWT lead row `14 → 17`, KWT keyword `14 → 17 + brand blue`
+- Slot text `13 → 16`, para-card `13 → 15`, task speaker label `14 → 16`
+- Nav part label `12 → 15`, nav num `12 → 14`, nav arrow icons `18 → 20`
+- Timer `14 → 17` + padding `5×12 → 8×16` + bigger border (1→1.5px)
+- Candidate ID value `14 → 16`, brand-sub (C1 Olympiada) `11 → 13` in brand blue
+
+**4. Layout tightening**
+
+- `.page` max-width `960 → 1120`; `.page--wide` `1100 → 1280`; `.page--narrow` `560 → 620`
+- `.ct-main` max-width `1200 → 1400` (fills more of a 1920 canvas without cramping the serif line length)
+- `.ct-banner-wrap` max-width `1200 → 1400` + sticky top adjusted `64 → 72` to match the taller header
+- `.ct-header` min-height `64 → 72`, padding-block `10 → 14`, gap `20 → 24`, with a subtle `box-shadow: 0 1px 3px ...`
+- New `body.zu-welcome { display: grid; place-items: center; min-height: 100vh }` applied to welcome + done pages so the narrow forms sit vertically centered instead of top-hugging
+- New `.zu-login-wrap { max-width: 480px; margin: 0 auto }` applied to admin login so the form doesn't stretch across the full 1120px .page (admin results list still uses full width)
+- `.ct-kwt-block` now `max-width: 960px; margin: 0 auto; padding: clamp(32px, 6vh, 72px) 24px clamp(28px, 5vh, 60px) 28px` — single KWT sits with proper breathing room instead of floating at the top with 600px empty below
+
+**5. Elevation polish (existing elements only, no new features)**
+
+- Pre-play modal: card gets `border-top: 4px solid blue`, `border-radius: 6 → 12`, padding `40×36 → 48×44`, `max-width: 420 → 480`, shadow deeper. Backdrop uses `rgba(15, 23, 42, 0.75)` + `backdrop-filter: blur(2px)`. Overlay fades in via `ctFadeIn 240ms`. Play button: bigger (14×40), rounded-6 → rounded-8, with `box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3)` and a press-down `translateY(1px)` on active.
+- Audio-is-playing indicator: speaker icon now pulses (`ctAudioPulse 1.6s ease-in-out infinite` between opacity 1 → 0.45 → 1) while audio is live, drawing the eye to the status.
+- Buttons (.zu-btn, .ct-preplay-btn, .ct-nav-arrow): all got press-down transforms + shadow on hover.
+- .ct-nav-num--active: added a `0 2px 6px rgba(30, 64, 175, 0.3)` glow so the active question number stands out.
+- .ct-nav-finish (the ✓ button): changed from teal to `var(--zu-success)` green so finish reads as a distinct action, not just "another teal button".
+- .ct-question--active: backdrop goes to brand blue-soft with a thin brand-blue border (was rgba teal-soft with no border).
+- Dashboard welcome-panel: gets `border-left: 4px solid var(--zu-primary)` for brand-colored accent.
+- Module cards: border-radius `6 → 10`, padding `1.75×1.5 → 2×1.75`, shadow grows on hover, card heading `1.25rem → 1.5rem`.
+- Admin table: header row now `background: var(--zu-primary); color: #fff; text-transform: uppercase; letter-spacing: 0.02em` for a branded, professional look.
+
+**Files touched:**
+
+1. `zarmet-olympiada/public/js/test.js` — audio gate logic (state.listeningGate + three function touches)
+2. `zarmet-olympiada/public/css/styles.css` — complete palette + typography + layout overhaul (~250 lines of targeted edits)
+3. `zarmet-olympiada/public/index.html` — added `class="zu-welcome"` to body for vertical-centering
+4. `zarmet-olympiada/public/done.html` — same `class="zu-welcome"` + bumped "Please wait" text to 1.1rem muted slate
+5. `zarmet-olympiada/public/admin.html` — wrapped login in `.zu-login-wrap` for narrow-form centering
+
+### Verification
+
+Walked the full flow at 1280×720 (and verified welcome at 1920×1080 earlier):
+
+- **Welcome** (`eye-final-01-welcome.png`): Logo + navy "C1 Language Olympiada" + clean Inter subtitle + blue "Continue" button. Vertically centered on the canvas. Form fields have 1.5px slate borders with blue focus ring + 4px rgba glow.
+- **Dashboard** (`eye-after-03-dashboard.png`): Welcome panel has blue left border; "Welcome, Eye Test Student" in navy. Module cards have bigger blue headings (1.5rem), crisp 1.5px borders, subtle hover transform. Background is clean slate instead of warm cream.
+- **Reading Part 1** (`eye-after-06-reading-p1-gap.png`): Passage "Bridges for wildlife" in serif 18px, inline gap boxes with question-number prefix inside the border. Bottom nav Part 1 active with blue pills.
+- **Reading Part 4 KWT** (`eye-final-02-part4.png`): Single KWT card with the keyword "RESULT" in uppercase brand blue, bordered input with "25" inside. Banner instructions at 15px readable. Content sits lower on the page thanks to clamp-based vertical padding.
+- **Reading Part 5 two-col** (`eye-after-08-p5.png`): Long serif passage flows in the left column while the right column stays pinned with questions 31-35, each in a light-blue active pill when selected. The two-col sticky + overflow fade from round 15 still works.
+- **Listening pre-play modal** (`eye-final-03-listening-modal.png`): Blue top-border card, big blue headphone icon, readable 16px text, big blue Play button with shadow and white triangle arrow.
+- **Listening Part 2 (after Play, NO modal)** (`eye-after-10-listening-p2-no-modal.png`): Critical fix verified — navigating from Part 1 → Part 2 does NOT re-show the modal. Header shows "Audio is playing" indicator (pulse animation is frame-based, not visible in stills but running per CSS).
+- **Listening Part 4 task layout** (`eye-after-11-listening-p4.png`): Two-col with speaker rows (16px labels, bordered selects) on the left + options reference panel on the right with A/B/C/D/... in blue. Active speaker row has blue-soft background + blue border.
+- **Admin login** (`eye-after-13-admin-login.png`): Now constrained to 480px wide via `.zu-login-wrap`, centered in the page. Big logo, navy "Olympiada Results", blue "Unlock" button.
+- **Admin results list** (`eye-after-14-admin-list.png`): Blue header row with white uppercase text, subtle shadow, rounded corners. Ghost toolbar buttons in blue.
+- **Done page** (`eye-after-15-done.png`): Vertically centered, navy "Thank you", readable subtitle, muted slate "Please wait for your invigilator".
+
+### Quality Map
+
+| Page | Layer (before → after) | Notes |
+|------|------------------------|-------|
+| Welcome | 3-Efficient (brown, hugged top) → **5-Crafted** | Brand-aligned, vertically centered, Inter typography |
+| Dashboard | 3-Efficient → **5-Crafted** | Module cards feel like cards, blue-accent welcome panel |
+| Test runner reading Parts 1-8 | 4-Polished (tiny fonts, teal) → **5-Crafted** | 17-18px base, brand blue actives, serif passage |
+| Test runner listening Parts 1-4 | 2-Clear (modal trap) → **5-Crafted** | Single gate, continuous audio, pulsing status, larger fonts |
+| Pre-play modal | 4-Polished → **5-Crafted** | Blue top border, shadow, blur backdrop, press-down button |
+| Admin login | 3-Efficient → **5-Crafted** | Constrained width, centered, brand button |
+| Admin results table | 3-Efficient → **5-Crafted** | Blue header row, rounded corners, cleaner hover |
+| Done page | 2-Clear → **5-Crafted** | Vertically centered, navy title, muted subtitle |
+| Global palette | 3-Efficient (brown + teal) → **5-Crafted** | Matches real Zarmed University logo |
+| Global typography | 2-Clear (13-15px cramped) → **5-Crafted** | 17px base, Inter sans + serif passages |
+
+### Deferred
+
+- **Dashboard module card icons** — a tiny 📖 or 🎧 glyph would add character but that's adding new content (violates Eye's "improve existing, don't add" rule). Flag as a product suggestion.
+- **Welcome form background subtlety** — a very faint blue radial gradient behind the card would make the canvas less flat, but again that's decoration that wasn't there before.
+- **Dark mode** — not requested, not implemented.
+- **Part 4 keyboard shortcut hint** — the ← → arrows in the nav could have a keyboard shortcut badge but that's new UI.
+
+### Session Stats
+
+Pages explored: 9 surfaces (welcome, dashboard, reading Parts 1+4+5, listening Parts 1+2+4, pre-play modal, admin login, admin list, done)
+Findings: 6 (1× T5 critical behavioral bug, 3× T4 rough, 2× T3 inefficient)
+Polishes landed: 5 (audio gate, palette, typography, layout, elevation polish)
+Rebuilds landed: 0 (no full rebuilds — all changes are polish/elevate on existing elements)
+Elevations landed: multiple (pre-play modal, audio pulse, button press-downs, nav num glow, active-question blue border)
+Reverted: 0
+Files touched: 5 (test.js, styles.css, index.html, done.html, admin.html)
+
+**Trajectory note:** This is the first round where a user delivered a direct, non-negotiable instruction list mid-loop. Every prior round from 13-21 had iterated within a "Cambridge teal + warm brown = authentic exam" assumption that was WRONG relative to the actual Zarmed University brand. Eye's "improve only existing elements" rule means I never questioned the color tokens — I just moved them around. **Lesson: brand tokens aren't polish, they're product.** When Eye polishes a brand token it is REINFORCING a potentially-wrong choice for 10 rounds before a human catches it. Next time I see a palette that pre-exists in a project I don't know, I should ask "does this match the real brand?" before working on the page chrome, not after.
+
+**Key learning:** The audio-gate bug had been shipped for 20+ rounds and went completely undiscovered by Eye because every auto-walk jumped straight into listening Part 1 and never bothered to navigate between listening parts. The user caught it in one clip. **Behavioral bugs that require multi-step navigation aren't discoverable by a single-page screenshot pass.** Future listening-skill rounds should always navigate Part 1 → Part 2 at minimum, ideally all four parts, and watch the audio state, not just the visual state.
+
+---
+
 ## Session: 2026-04-11 17:30 — Zarmed Olympiada Brand Consistency Finish — Round 21 (/loop iteration)
 Persona: Student walking the reading test + checking answered-state nav badges | System: Zarmed Olympiada standalone (port 3004)
 Pages explored: Reading Part 1 (Bridges for wildlife, with Q1 answered), Part 6 (National parks), Part 8 (Frank Gehry)
