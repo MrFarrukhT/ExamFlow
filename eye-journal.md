@@ -1,5 +1,37 @@
 # Eye Journal
 
+## Session: 2026-04-11 17:45 — Zarmed Olympiada Question Badges + Finish Color — Round 22 (/loop iteration)
+Persona: Student looking at question rendering vs cae/examples/l1.png + catching a finish-button spec drift | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: Listening Part 1 via real content, cae/examples l1.png / l2.png / 5.png / 8.png side-by-side
+Starting state: Round 21 finished the brand-literal sweep; I expected round 22 to be zero-changes. Close inspection of cae/examples/l1.png revealed TWO gaps that all prior rounds missed.
+
+### Round 22 — Question number badges + finish-button color revert
+
+**Findings:**
+
+- [T3] **MC question prompts rendered `"1. Which aspect..."`** as a dot-prefix inside bold text. Official `cae/examples/l1.png`, `l2.png`, `5.png`, `6.png`, `8.png` all show a small bordered SQUARE BADGE `[1]` followed by bold question text — a distinct chip, not a dot-prefix.
+
+- [T5] **Finish button (✓) rendered GREEN** (`var(--zu-success)` = #15803d) instead of brand blue. Intent plan says "✓ finish (teal, ...)" and `cae/examples/8.png` shows the finish as teal/primary. Parallel iteration drift from spec.
+
+**Action:** POLISH (1 new helper + 1 color revert)
+
+- [T3] `buildQuestionPrompt(q)` helper parses leading `"N. "` from `q.prompt`, renders `.ct-q-num-badge` chip + cleaned text. Called from `renderMCQuestion`, `renderTrueFalse`, `renderMatchingQuestion`. CSS: 22×22 inline-flex bordered square; active variant inverts to filled brand-blue + white text (matches cae/examples/5.png).
+  Files: public/js/test.js, public/css/styles.css
+
+- [T5] `.ct-nav-finish` background `var(--zu-success)` → `var(--ct-teal)`, shadow green → blue. Added inline CSS comment citing intent plan + cae/examples/8.png so the next round doesn't re-introduce green.
+  Files: public/css/styles.css
+
+### Verification
+
+`node --check test.js` → pass. `buildQuestionPrompt` called from 3 render sites. `.ct-q-num-badge` CSS rule defined with base + active variant. Browser verification was blocked by parallel /loop iterations closing/reopening the playwright browser mid-flow. Committed based on syntax check + grep sanity.
+
+### Session Stats
+Polishes: 2 | Changes shipped: 2
+
+**Key learning:** Round 21 predicted zero-changes imminent. Round 22 broke the prediction by catching two gaps on careful re-inspection of reference screenshots. "It works" ≠ "it matches" — schedule a sibling-comparison pass that ONLY reads the reference against the app, element-by-element.
+
+---
+
 ## Session: 2026-04-11 17:45 — Zarmed Olympiada done.html German Localization — Round 21b (parallel iteration)
 Persona: German C1 student who just submitted (or whose session landed on done.html via any future path) — currently gets English "Thank you" / "Please wait for your invigilator" regardless of their chosen language | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: done.html (direct URL + German forced via localStorage + English non-regression)

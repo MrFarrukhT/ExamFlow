@@ -38,9 +38,13 @@
     problemTitle:      'Problem',
     ok:                'OK',
     errorBanner:       'Fehler',
+    submitConfirmTitle:'Test beenden?',
+    submitConfirmBody: 'Sie können nach der Abgabe nicht mehr zurückkehren. Sind Sie sicher, dass Sie alle Antworten überprüft haben?',
+    submitConfirmYes:  'Ja, abgeben',
+    submitConfirmNo:   'Abbrechen',
     audioUnavailable:  'Audio ist für diesen Teil nicht verfügbar. Bitte sagen Sie Ihrer Aufsicht Bescheid. Sie können die Fragen weiterhin beantworten, werden aber den Ton nicht hören.',
     audioFailed:       (msg) => 'Audio konnte nicht gestartet werden: ' + msg + '. Bitte sagen Sie Ihrer Aufsicht Bescheid.',
-    submitFailed:      (msg) => 'Abgabe fehlgeschlagen: ' + msg + '\n\nBitte sagen Sie Ihrer Aufsicht Bescheid. Ihre Antworten sind weiterhin auf dem Server gespeichert.',
+    submitFailed:      (msg) => 'Abgabe fehlgeschlagen: ' + msg + '. Bitte sagen Sie Ihrer Aufsicht Bescheid. Ihre Antworten sind weiterhin auf dem Server gespeichert.',
     loadFailed:        (msg) => 'Test konnte nicht geladen werden. Bitte sagen Sie Ihrer Aufsicht Bescheid. (' + msg + ')',
   } : {
     audioPlaying:      'Audio is playing',
@@ -49,9 +53,13 @@
     problemTitle:      'Problem',
     ok:                'OK',
     errorBanner:       'Error',
+    submitConfirmTitle:'Finish this test?',
+    submitConfirmBody: "You can't come back after submitting. Are you sure you've reviewed all your answers?",
+    submitConfirmYes:  'Yes, submit',
+    submitConfirmNo:   'Cancel',
     audioUnavailable:  'Audio is unavailable for this part. Please tell your invigilator. You may continue to answer the questions, but you will not hear the audio.',
     audioFailed:       (msg) => 'Unable to start audio: ' + msg + '. Please tell your invigilator.',
-    submitFailed:      (msg) => 'Submit failed: ' + msg + '\n\nPlease tell the invigilator. Your answers are still saved on the server.',
+    submitFailed:      (msg) => 'Submit failed: ' + msg + '. Please tell the invigilator. Your answers are still saved on the server.',
     loadFailed:        (msg) => 'Failed to load the test. Please tell your invigilator. (' + msg + ')',
   };
 
@@ -881,6 +889,35 @@
     document.body.appendChild(overlay);
   }
 
+  // Styled confirm dialog that matches the rest of the test chrome — replaces
+  // the native window.confirm() on submit so the visual language stays
+  // consistent with the pre-play modal and error modal.
+  function showConfirmModal(title, body, yesLabel, noLabel, onYes) {
+    const overlay = el('div', 'ct-confirm-modal');
+    const card = el('div', 'ct-confirm-card');
+    card.appendChild(el('h3', null, title));
+    card.appendChild(el('p', null, body));
+    const actions = el('div', 'ct-confirm-actions');
+    const noBtn = document.createElement('button');
+    noBtn.className = 'ct-confirm-btn ct-confirm-btn--ghost';
+    noBtn.textContent = noLabel;
+    noBtn.addEventListener('click', () => overlay.remove());
+    const yesBtn = document.createElement('button');
+    yesBtn.className = 'ct-confirm-btn ct-confirm-btn--primary';
+    yesBtn.textContent = yesLabel;
+    yesBtn.addEventListener('click', () => {
+      overlay.remove();
+      onYes();
+    });
+    actions.appendChild(noBtn);
+    actions.appendChild(yesBtn);
+    card.appendChild(actions);
+    overlay.appendChild(card);
+    document.body.appendChild(overlay);
+    // Focus the primary action so Enter submits immediately for keyboard users
+    setTimeout(() => yesBtn.focus(), 30);
+  }
+
   // ---------- passage helpers ----------
   function shouldHoistHeading(content) {
     const firstLine = content.split('\n')[0];
@@ -1250,12 +1287,21 @@
   async function submit(auto) {
     if (state.submitting) return;
     if (!auto) {
-      const isDe = state.content && state.content.language === 'de';
-      const confirmMsg = isDe
-        ? 'Test beenden? Sie können nicht mehr zurückkehren.'
-        : "Finish this test? You can't come back.";
-      if (!confirm(confirmMsg)) return;
+      // Styled confirm modal instead of native browser confirm() so the
+      // visual language stays consistent with the pre-play + error modals.
+      showConfirmModal(
+        t.submitConfirmTitle,
+        t.submitConfirmBody,
+        t.submitConfirmYes,
+        t.submitConfirmNo,
+        () => performSubmit()
+      );
+      return;
     }
+    performSubmit();
+  }
+
+  async function performSubmit() {
     state.submitting = true;
     const finishBtn = document.getElementById('ct-finish');
     const prevLabel = finishBtn.getAttribute('aria-label') || 'Finish';
@@ -1280,7 +1326,7 @@
         .forEach(k => localStorage.removeItem(k));
       window.location.href = 'dashboard.html';
     } catch (e) {
-      alert(t.submitFailed(e.message));
+      showErrorModal(t.submitFailed(e.message));
       state.submitting = false;
       finishBtn.disabled = false;
       finishBtn.setAttribute('aria-label', prevLabel);

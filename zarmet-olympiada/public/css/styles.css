@@ -93,6 +93,32 @@ h3 { font-size: 1.35rem; }
   margin: 0 auto;
 }
 
+/* When the admin is viewing a single submission's per-question breakdown,
+ * the full-size welcome header (logo + h1 + subtitle) eats ~300px of
+ * vertical space before the student's actual answers. Compact it to a
+ * minimal brand strip so the table shows immediately. Toggled from
+ * admin.js on entering/leaving the detail view. */
+body.zu-admin-detail .zu-header {
+  text-align: left;
+  padding: 1rem 0 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--zu-border);
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+body.zu-admin-detail .zu-header .zu-logo {
+  width: 140px;
+  margin: 0;
+}
+body.zu-admin-detail .zu-header h1 {
+  font-size: 1.35rem;
+  margin: 0;
+}
+body.zu-admin-detail .zu-header .zu-subtitle {
+  display: none;
+}
+
 /* Welcome page is a narrow form floating on a huge screen. Vertically
  * center it so the form doesn't hug the top of a 1080p canvas with 700px
  * of empty space below. Applied via a body class added on welcome only. */
@@ -1400,10 +1426,15 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 .ct-nav-finish:active:not(:disabled) { transform: translateY(0); }
 .ct-nav-arrow:disabled,
 .ct-nav-finish:disabled { opacity: 0.4; cursor: not-allowed; }
+/* Finish (✓) button matches the brand's primary action colour (brand blue),
+ * per the intent plan and cae/examples/*.png where the check is teal/primary,
+ * not a separate green "success" accent. Keeps finish consistent with the
+ * next arrow (→) so the bottom-right corner reads as one primary-action
+ * cluster. */
 .ct-nav-finish {
-  background: var(--zu-success);
+  background: var(--ct-teal);
   color: #fff;
-  box-shadow: 0 2px 6px rgba(21, 128, 61, 0.3);
+  box-shadow: 0 2px 6px rgba(30, 64, 175, 0.25);
 }
 
 /* Bookmark icon — visual only in v1 */
@@ -1419,35 +1450,129 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   margin-left: 8px;
 }
 
-/* Error modal */
-.ct-error-modal {
+/* Confirm modal — replaces native window.confirm() on the finish action,
+ * matching the pre-play modal's visual language (blue top border, shadow,
+ * blur backdrop, rounded card). Primary action is brand blue, cancel is
+ * a ghost button so the student always knows which is destructive. */
+.ct-confirm-modal {
   position: fixed;
   inset: 0;
-  background: rgba(17, 24, 39, 0.82);
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 110;
+  animation: ctFadeIn 220ms ease-out;
+}
+.ct-confirm-card {
+  background: #fff;
+  padding: 40px 44px 32px;
+  border-radius: 12px;
+  max-width: 480px;
+  text-align: center;
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.4);
+  border-top: 4px solid var(--ct-teal);
+}
+.ct-confirm-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ct-text);
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+.ct-confirm-card p {
+  font-size: 16px;
+  color: var(--ct-text);
+  line-height: 1.55;
+  margin: 0 0 26px;
+}
+.ct-confirm-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+.ct-confirm-btn {
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 12px 26px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.08s, box-shadow 0.15s;
+  min-width: 130px;
+}
+.ct-confirm-btn--ghost {
+  background: transparent;
+  color: var(--ct-text);
+  border: 1.5px solid var(--ct-border-strong);
+}
+.ct-confirm-btn--ghost:hover { background: #f1f5f9; border-color: var(--ct-text-muted); }
+.ct-confirm-btn--primary {
+  background: var(--ct-teal);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+}
+.ct-confirm-btn--primary:hover {
+  background: var(--ct-teal-dark);
+  box-shadow: 0 6px 16px rgba(30, 64, 175, 0.4);
+}
+.ct-confirm-btn--primary:active { transform: translateY(1px); }
+.ct-confirm-btn:focus-visible {
+  outline: 3px solid var(--ct-teal);
+  outline-offset: 3px;
+}
+
+/* Error modal — same visual language as .ct-confirm-modal but with a
+ * crimson top border to signal "something went wrong". */
+.ct-error-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 110;
+  animation: ctFadeIn 220ms ease-out;
 }
 .ct-error-card {
   background: #fff;
-  border: 2px solid var(--ct-error-text);
-  padding: 28px 32px;
-  max-width: 460px;
-  border-radius: 6px;
+  padding: 40px 44px 32px;
+  max-width: 480px;
+  border-radius: 12px;
   text-align: center;
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.4);
+  border-top: 4px solid var(--ct-error-text);
 }
-.ct-error-card h3 { color: var(--ct-error-text); margin: 0 0 10px; }
-.ct-error-card p { margin: 0 0 18px; color: var(--ct-text); font-size: 14px; }
+.ct-error-card h3 {
+  color: var(--ct-error-text);
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+.ct-error-card p {
+  margin: 0 0 26px;
+  color: var(--ct-text);
+  font-size: 16px;
+  line-height: 1.55;
+}
 .ct-error-card button {
-  padding: 8px 20px;
+  padding: 12px 32px;
   background: var(--ct-error-text);
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 600;
+  font-size: 15px;
+  box-shadow: 0 4px 12px rgba(185, 28, 28, 0.25);
+  transition: background 0.15s, transform 0.08s;
 }
+.ct-error-card button:hover { background: var(--zu-accent-dark); }
+.ct-error-card button:active { transform: translateY(1px); }
 
 /* Responsive fallback for narrow screens */
 @media (max-width: 880px) {
