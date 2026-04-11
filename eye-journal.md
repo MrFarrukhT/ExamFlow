@@ -1,5 +1,113 @@
 # Eye Journal
 
+## Session: 2026-04-11 14:55 — Zarmet Olympiada Cambridge-Authentic UI — Round 8
+Persona: Student refreshing mid-test (accidental F5, browser recovery, tab restore) | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: test.html reading (before + after refresh), german-c1 listening (first real-browser walk)
+Starting state: Round 7 fixed a T1 bug at narrow viewports. The "ceiling" lesson was: change a dimension, find new bugs. This round picks a new dimension — temporal state — by refreshing mid-test.
+
+### Round 8 — Temporal state: refresh mid-test + German C1 walk
+
+**Explored:** Position persistence under refresh (a scenario never tested), plus German C1 Listening (never walked in a real browser before).
+
+**Findings:**
+
+- [T3] test.html — **refresh bounces student back to Part 1 Q1**. Tested by navigating to Part 5, answering q31=C, then hitting browser refresh:
+  - Before refresh: banner "Questions 31–31", active part Part 5, active num 31, timer 89:42
+  - After refresh: banner "Questions 1–1", active part Part 1, active num 1, timer 89:39 (timer survived!)
+  - q31=C answer DID survive (confirmed by navigating back to Part 5 — radio was checked)
+  - Only the *navigation position* was lost
+  
+  Server-side JSONL durability worked perfectly. The timer's localStorage persistence (round 0) worked. But `state.currentPartIndex` and `state.currentQid` were only held in JS memory, so a refresh always restarted the student at index 0.
+  
+  This isn't a data-loss bug — it's a usability bug. The student's work is safe, but they have to click back to Part 5 to continue from where they were. For a 90-minute exam, that's annoying and disorienting.
+
+- [T5 ✅] German C1 Listening — first real-browser walk confirmed everything works:
+  - German instructions render: "Sie hören einen Text. Entscheiden Sie, ob die Aussagen richtig oder falsch sind. Sie hören den Text einmal."
+  - True-false question with German prompt
+  - Bottom nav shows **"Teil 1"** / **"Teil 2"** (not "Part 1"/"Part 2") — the `shortPartLabel` regex `Part\s+\w+|Teil\s+\w+` matches both correctly
+  - Timer 40:00 (correct Goethe Hören duration)
+  - Pre-play modal renders correctly on first enter
+  - Candidate ID formatting works with short student names
+
+**Action:** POLISH (1 change shipped — fixes the T3 refresh bug)
+
+- [T3] Position persistence — Two helpers added to `test.js`:
+  ```js
+  function savePosition() {
+    localStorage.setItem('olympiada:pos:' + sessionId, JSON.stringify({
+      partIndex: state.currentPartIndex,
+      qid: state.currentQid,
+    }));
+  }
+  function restorePosition() {
+    const raw = localStorage.getItem('olympiada:pos:' + sessionId);
+    if (!raw) return;
+    const pos = JSON.parse(raw);
+    if (pos && typeof pos.partIndex === 'number' && typeof pos.qid === 'string'
+        && pos.partIndex >= 0 && pos.partIndex < state.parts.length
+        && state.qIndexById[pos.qid] != null) {
+      state.currentPartIndex = pos.partIndex;
+      state.currentQid = pos.qid;
+    }
+  }
+  ```
+  
+  - `savePosition()` is called from `renderBottomNav()` — the single choke point that runs after every position change (goToPart, next/prev, direct nav click, radio/select change, keyboard nav).
+  - `restorePosition()` is called in the boot sequence AFTER `loadContent()` sets the defaults and `ensureSession()` confirms the sessionId is stable.
+  - Validation guards against stale data: only restores if the saved qid still exists in the current flat list (protects against content/schema changes between sessions).
+  - Submit cleanup extended to also clear `olympiada:pos:*` keys alongside the existing `olympiada:ans:*`, `olympiada:timerEnd:*`, and `olympiada:sessionId` cleanup.
+  
+  Mode: polish (persistence of existing position state, no new UI) | Quality: 3 → 5 | Files: public/js/test.js
+
+### Verification
+
+- ✅ **Before fix** (round 6 baseline test): refresh from Part 5 Q31 → lands on Part 1 Q1
+- ✅ **After fix** (this round): refresh from Part 5 Q31 → lands on **Part 5 Q31** with q31=C radio still checked
+  - Banner: "Questions 31–31" ✓
+  - Active part: "Part 5" ✓
+  - Active num: "31" ✓
+  - q31Selected: "C" ✓
+- ✅ **localStorage state after navigation**: `{"partIndex":4,"qid":"q31"}` written correctly
+- ✅ German C1 Listening renders all German text, "Teil 1"/"Teil 2" nav labels, 40:00 timer, pre-play modal
+- ✅ Position persistence handles taskGroups correctly (restorePosition walks qIndexById which includes all questions from `taskGroups[*].questions`)
+- ✅ No regressions on other pages
+
+### Quality Map (no layer changes — all 13 pages still Crafted, but now refresh-survivable)
+| Page | Layer | Notes |
+|------|------|-------|
+| test.html (all parts, reading + listening, both languages) | **5-Crafted** | Now survives mid-test refresh — position + timer + answers all restored |
+| german-c1 content rendering | **5-Crafted** | First browser walk — all German strings, Teil labels, 40min timer verified |
+
+### Deferred (shrinking list)
+- Real content transcription — still out of /eye scope
+- Keyboard arrow nav between questions — still borderline new feature
+- German pre-play modal localization — deferred deliberately (Cambridge reference keeps chrome language-neutral; shipping German here would open a whole i18n can we don't need)
+
+### Session Stats
+Pages explored: 2 (test.html refresh cycle, German listening)
+Screenshots captured: 2
+Rounds: 1
+Polishes landed: 1 (T3 position persistence)
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 1
+
+**Trajectory update:** Round 7's lesson keeps paying off. Round 8 picked a new dimension (temporal — refresh mid-session) and found a T3 usability bug that 7 previous rounds missed. Before: 7 walks at the default "fresh session" state. After: 1 walk under the "resumed session" state. One new dimension, one real bug, one clean fix.
+
+Each /eye round that fires can still find something if it picks a novel angle:
+- Round 1-2: untested territory (any dimension)
+- Round 3: rebuild mode (component pattern)
+- Round 4: unwalked page (admin)
+- Round 5: craft details (form state, timer, focus)
+- Round 6: wide viewport (1920)
+- Round 7: narrow viewport (768)
+- Round 8: temporal state (mid-session refresh)
+
+Future angles to explore if the loop keeps firing: concurrent sessions, slow network (throttled fetch), very long answers (multi-paragraph KWT input), bookmark icon interaction, keyboard-only navigation, the "session already submitted 409" bounce-to-dashboard path.
+
+---
+
 ## Session: 2026-04-11 14:45 — Zarmet Olympiada Cambridge-Authentic UI — Round 7
 Persona: Student at both extremes — wide 1920×1080 lab monitor AND narrow 768px tablet | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: welcome, dashboard, admin (login + rows + detail) at 1920, test Part 5 at 768 (stacked layout check)

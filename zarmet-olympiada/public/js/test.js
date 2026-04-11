@@ -71,6 +71,34 @@
     }
   }
 
+  // Persist the current position (part index + qid) so a refresh lands
+  // the student back where they were instead of Part 1 Q1.
+  function savePosition() {
+    if (!sessionId) return;
+    try {
+      localStorage.setItem('olympiada:pos:' + sessionId, JSON.stringify({
+        partIndex: state.currentPartIndex,
+        qid: state.currentQid,
+      }));
+    } catch (e) {}
+  }
+  function restorePosition() {
+    if (!sessionId) return;
+    try {
+      const raw = localStorage.getItem('olympiada:pos:' + sessionId);
+      if (!raw) return;
+      const pos = JSON.parse(raw);
+      // Only restore if the saved qid still exists in the current flat list
+      // (guards against stale state from a content/schema change)
+      if (pos && typeof pos.partIndex === 'number' && typeof pos.qid === 'string'
+          && pos.partIndex >= 0 && pos.partIndex < state.parts.length
+          && state.qIndexById[pos.qid] != null) {
+        state.currentPartIndex = pos.partIndex;
+        state.currentQid = pos.qid;
+      }
+    } catch (e) {}
+  }
+
   async function ensureSession() {
     if (sessionId) {
       // verify session still exists server-side
@@ -848,6 +876,10 @@
     const advanceLocked = isCurrentListeningAwaitingAudio();
     document.getElementById('ct-next').disabled = state.currentPartIndex === state.parts.length - 1 && isCurrentLastQuestion() || advanceLocked;
     document.getElementById('ct-finish').disabled = advanceLocked || state.submitting;
+
+    // Persist position on every nav render — single choke point for every
+    // position change (goToPart, next/prev, direct nav click, answer change).
+    savePosition();
   }
 
   function shortPartLabel(part) {
@@ -973,7 +1005,12 @@
       if (!res.ok) throw new Error(body.error || 'submit failed');
       // Clear local session caches for this student (but keep studentId etc.)
       Object.keys(localStorage)
-        .filter(k => k.startsWith('olympiada:ans:') || k.startsWith('olympiada:timerEnd:') || k === 'olympiada:sessionId')
+        .filter(k =>
+          k.startsWith('olympiada:ans:') ||
+          k.startsWith('olympiada:timerEnd:') ||
+          k.startsWith('olympiada:pos:') ||
+          k === 'olympiada:sessionId'
+        )
         .forEach(k => localStorage.removeItem(k));
       window.location.href = 'dashboard.html';
     } catch (e) {
@@ -991,6 +1028,11 @@
     try {
       await loadContent();
       await ensureSession();
+      // After session is ensured (and sessionId is stable), restore the
+      // student's last known position so refreshes don't bounce them to
+      // Part 1 Q1. Timer + answers already persist via localStorage +
+      // server JSONL respectively.
+      restorePosition();
       // Show candidate ID in header — primary is the student name (their
       // canonical identifier in an Olympiada context); session fragment is
       // a tie-breaker shown as a subtitle inside the value.
