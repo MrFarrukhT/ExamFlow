@@ -530,11 +530,28 @@
     audio.preload = 'auto';
     state.audioElement = audio;
 
+    // Guard flag: audio.play() rejection AND the element's 'error' event can
+    // both fire for the same failure. Without this guard the user sees TWO
+    // error modals stacked. handleFailure() is idempotent per-audio.
+    let failureHandled = false;
+    const handleFailure = (reason) => {
+      if (failureHandled) return;
+      failureHandled = true;
+      if (stallTimer) clearTimeout(stallTimer);
+      state.audioState[part.id] = 'finished';
+      document.getElementById('ct-audio-status').classList.remove('ct-audio-status--visible');
+      showErrorModal(reason);
+      renderCurrentPart();
+      renderBottomNav();
+    };
+
     let stallTimer = null;
     const startStallTimer = () => {
       if (stallTimer) clearTimeout(stallTimer);
       stallTimer = setTimeout(() => {
         console.warn('[audio] stall timeout — forcing finished');
+        if (failureHandled) return;
+        failureHandled = true;
         state.audioState[part.id] = 'finished';
         document.getElementById('ct-audio-status').classList.remove('ct-audio-status--visible');
         renderCurrentPart();
@@ -554,21 +571,15 @@
       renderBottomNav();
     });
     audio.addEventListener('error', () => {
-      if (stallTimer) clearTimeout(stallTimer);
-      state.audioState[part.id] = 'finished';
-      document.getElementById('ct-audio-status').classList.remove('ct-audio-status--visible');
-      showErrorModal('Audio is unavailable for this part. Please tell your invigilator. You may continue to answer the questions, but you will not hear the audio.');
-      renderCurrentPart();
-      renderBottomNav();
+      handleFailure('Audio is unavailable for this part. Please tell your invigilator. You may continue to answer the questions, but you will not hear the audio.');
     });
     audio.addEventListener('stalled', startStallTimer);
     audio.addEventListener('waiting', startStallTimer);
     audio.play().catch((e) => {
       console.error('[audio] play failed', e);
-      state.audioState[part.id] = 'finished';
-      showErrorModal('Unable to start audio: ' + (e.message || 'unknown error') + '. Please tell your invigilator.');
-      renderCurrentPart();
-      renderBottomNav();
+      // Trim any trailing period so we don't end up with ".."
+      const msg = String(e.message || 'unknown error').replace(/\.+\s*$/, '');
+      handleFailure('Unable to start audio: ' + msg + '. Please tell your invigilator.');
     });
 
     renderCurrentPart(); // remove overlay

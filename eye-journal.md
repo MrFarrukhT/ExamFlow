@@ -1,5 +1,70 @@
 # Eye Journal
 
+## Session: 2026-04-11 13:55 — Zarmet Olympiada Cambridge-Authentic UI — Round 2
+Persona: Student taking English C1 Reading + Listening | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: test Parts 2, 3, 6, 8, Listening Part 1 + Part 4 two-task, done.html
+Starting state: Round 1 shipped 7 polishes — typography, duplication, dashboard text, max-width, banner, extractQuestionNumber
+
+### Round 2 — Visual verification of deferred pages + audio error modal fix
+
+**Explored:** 6 pages via playwright-cli, picking up from the Round 1 deferred list.
+
+**Findings:**
+
+- [T5 ✅] Part 2 (open cloze) — "Questions 9–9" banner correct, inline gap input works, typography clean. **No issues.**
+- [T5 ✅] Part 3 (word formation) — Two-col with passage left + Keyword List right (`17 COME`), banner "Questions 17–17", matches Cambridge reference 3.png. **No issues.**
+- [T5 ✅] Part 6 (cross-text matching) — Two-col reviewer sections + matching question with 4 reviewer options. Active cyan highlight on q37. **No issues.**
+- [T5 ✅] Part 8 (multiple matching) — Two-col layout with 5 consultant options. Next arrow correctly disabled (last question of last part). **No issues.**
+- [T3] Listening (any part after Play click) — **DOUBLE ERROR MODAL BUG.** When audio fails to load, both `audio.play().catch()` AND `audio.addEventListener('error')` fire independently, each calling showErrorModal → student sees TWO stacked error modals, has to click OK twice. Found during Part 1 click-Play test.
+- [T4] Listening error message — trailing `..` double period because the rejected error message already ends with `.` and the code appends `'. Please tell...'`. Cosmetic but unprofessional.
+- [T0] Listening Part 4 two-task — functional (Task 1 header, options list inline, speaker question cards) but less compact than the Cambridge reference l5.png which uses a tighter left-speakers/right-options matching layout. Deferred — not "wrong", just "less authentic." Future round candidate for /eye rebuild mode.
+- [T5 ✅] done.html — Clean warm Zarmet, "Thank you" + "Your test has been submitted." + "Please wait for your invigilator." + 4-corner gate active. No score, no breakdown, no counters. **No issues.**
+
+**Action:** POLISH (2 changes shipped)
+
+- [T3] startAudio() double-modal guard — Introduced `failureHandled` flag inside startAudio; both the `error` event listener and the `audio.play().catch()` handler route through a new `handleFailure(reason)` helper that is idempotent per-audio. Once the first failure source fires, subsequent ones are no-ops.
+  Mode: polish | Quality: 3→5 | Files: public/js/test.js
+- [T4] Error message trailing period — Added `.replace(/\.+\s*$/, '')` to trim trailing periods from `e.message` before appending `'. Please tell your invigilator.'`. No more `..`.
+  Mode: polish | Quality: 4→5 | Files: public/js/test.js
+
+### Verification
+
+Re-ran the failure path via playwright-cli:
+- ✅ Clicked Play button on Listening Part 1
+- ✅ `document.querySelectorAll('.ct-error-modal').length === 1` (was `2` before the fix)
+- ✅ Modal text is clean: "Audio is unavailable for this part. Please tell your invigilator. You may continue to answer the questions, but you will not hear the audio." — single period
+- ✅ Clicking OK dismisses the modal fully — `.length === 0` after
+- ✅ Content underneath is accessible, Next arrow teal (advance unlocked after audio 'finished' state)
+- ✅ Nothing else regressed: all Reading parts still render correctly
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| test.html Part 2 | 5-Crafted | Open cloze, inline gap input |
+| test.html Part 3 | 5-Crafted | Word formation with right-column Keyword List |
+| test.html Part 6 | 5-Crafted | Cross-text matching, 4 reviewer options |
+| test.html Part 8 | 5-Crafted | Multiple matching, 5 consultant options, last-question disable state correct |
+| test.html Listening (error path) | 5-Crafted | Single modal, clean message, clean dismiss |
+| test.html Listening Part 4 | 4-Polished | Two-task rendering works; layout not as compact as Cambridge l5.png (deferred) |
+| done.html | 5-Crafted | Minimal, consistent, 4-corner gate present |
+
+### Deferred
+- Listening Part 4 compact matching layout — could be rebuilt to use left-speakers/right-options layout matching cae/examples/l5.png exactly. Current rendering is functional and clear; rebuild would be an authenticity improvement, not a fix.
+- Audio playback happy path (actual .ended event firing) — cannot be verified without real audio files, which is a content-transcription phase task.
+- Real content transcription — out of /eye scope.
+
+### Session Stats
+Pages explored: 6 (Parts 2/3/6/8, Listening failure path, done.html)
+Screenshots captured: 9
+Rounds: 1 (within this session)
+Polishes landed: 2
+Rebuilds landed: 0
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 2 polishes
+
+---
+
 ## Session: 2026-04-11 13:50 — Zarmet Olympiada Cambridge-Authentic UI — Round 1
 Persona: Student taking English C1 Reading + Listening | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: welcome, dashboard, test (Parts 1, 4, 5, 7), listening pre-play modal
