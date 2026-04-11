@@ -35,8 +35,14 @@
   function render(completed) {
     document.getElementById('welcome-name').textContent = 'Welcome, ' + studentName;
     const langLabel = lang === 'german-c1' ? 'German C1 Advanced' : 'English C1 Advanced';
+    // Intent plan (2026-04-11): "Welcome, {name} + ID: {studentId} + C1 Advanced — English".
+    // Show a short 8-char fragment of the UUID (same pattern as the test.html candidate-id),
+    // so the invigilator can verify the student is at the right station without exposing the full UUID.
+    const idShort = (studentId || '').slice(0, 8).toUpperCase();
     document.getElementById('welcome-meta').textContent =
-      (studentGroup ? 'Group: ' + studentGroup + ' · ' : '') + 'Language: ' + langLabel;
+      (studentGroup ? 'Group: ' + studentGroup + ' · ' : '') +
+      'Language: ' + langLabel +
+      (idShort ? ' · ID: ' + idShort : '');
 
     const grid = document.getElementById('modules-grid');
     grid.innerHTML = '';

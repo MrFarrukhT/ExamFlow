@@ -1,5 +1,53 @@
 # Eye Journal
 
+## Session: 2026-04-11 17:05 — Zarmed Olympiada Spec-Compliance Sweep — Round 17b (intent-plan revert)
+Persona: Student walking the full flow AND an invigilator comparing chrome against the intent spec | System: Zarmed Olympiada standalone (port 3004)
+Pages explored: welcome, dashboard, all 8 Reading parts, all 4 Listening parts (including Part 4 two-task), done page — 14 pages total
+Starting state: Several concurrent /loop /eye iterations are running this session. This particular iteration (Round 17b) re-read `docs/intent-olympiada-cambridge-ui.md` as the **acceptance criteria** before walking and found that Round 16's parallel iteration had added 4 decorative Cambridge-Inspera icons (wifi/bell/menu/pencil) to `.ct-header-right` — which the intent plan explicitly rejects.
+
+### Round 17b — Catching a spec drift from round 16's parallel iteration
+
+**Critical pre-walk read of the intent plan:**
+
+> ❌ **Wifi icon, bell icon, hamburger menu, pencil icon** — decorative noise, not in the real exam (those icons exist in the screenshots but are Cambridge Inspera chrome, not content)
+
+> Right: **empty.** No wifi, no bell, no menu, no pencil. Just empty space. Per explicit client direction.
+
+The icons were shipped by round 16's parallel iteration (commit 92c843d) to match `cae/examples/1.png` visually — **without checking the intent plan**. The plan is unambiguous: those icons exist in the reference because the reference shows Cambridge **Inspera** (the CBT platform chrome), not exam content. **Shipping a change that visually matches the reference but contradicts the AGREED plan is worse than shipping nothing** — it's drift.
+
+**Findings:**
+
+- [T5 — SPEC VIOLATION] 4 decorative icons in `.ct-header-right` contradict the intent plan
+- [T4] Dashboard welcome panel is missing the student ID that the intent plan spec includes ("Welcome, {name} + ID: {studentId} + C1 Advanced — English")
+- [T0] Structural walk of all 12 test parts: all match their `cae/examples/*.png` references (concurrent Round 17 iterations had landed the bigger visual polishes)
+
+**Action:** POLISH (2 changes — 1 critical revert + 1 spec-gap fill)
+
+- [T5 → spec-compliant] **REVERTED the 4 decorative icons** from `test.html` and removed the corresponding CSS rules (`.ct-header-icon`, `.ct-header-icon--wifi/--bell/--menu/--pencil`). Replaced with a CSS comment explaining **why** the header right side is intentionally empty, quoting the client direction from the intent plan — documentation-as-guardrail so the next round that thinks about adding icons stops to re-read the plan.
+  Files: public/test.html, public/css/styles.css
+
+- [T4 → T0] **Dashboard welcome panel now shows the student ID.** Added an 8-character uppercase fragment of the studentId UUID to the meta line. Same short-fragment pattern as the test.html candidate-id header. Before: `Language: English C1 Advanced`. After: `Language: English C1 Advanced · ID: 330362A8`.
+  Files: public/js/dashboard.js
+
+### Verification
+
+- **Icon revert:** `.ct-header-right` children = 1 (only timer), `iconCount` query = 0. Visual verification on Reading Part 1 with real CAE content ("Bridges for wildlife", 56 total questions from concurrent content-transcription iteration). Clean header, matches spec.
+- **Dashboard ID:** Verified the welcome panel shows `Language: English C1 Advanced · ID: 330362A8` after reload.
+- **Non-regression sweep:** 14 pages walked end-to-end. Parts 1-8 Reading + Parts 1-4 Listening all render correctly. Part 5 multi-question stacked layout verified via eval-cloning — `renderTwoColReading` iterates all `part.questions`; stubs just had 1 each. Welcome/dashboard/done pages clean.
+
+Screenshots captured (15): `r17-part1-icons-gone.png`, `r17-part{2..8}.png`, `r17-listening-{preplay,after-play,part1,p4-real}.png`, `r17-welcome.png`, `r17-dashboard-final.png`, `r17-done.png`, `r17-part5-multi-questions.png`, `r17-test-clean-header.png`, `r17-real-part5.png`.
+
+### Session Stats
+Pages explored: 14 | Screenshots: 15 | Polishes landed: 2 | **Spec violations caught: 1** | Reverted: 1 (intentional) | Changes shipped: 2
+
+**Trajectory update:** Round 17b is the first round to catch a spec-compliance regression from a PRIOR round. Not "the app broke" but "the app drifted from the agreed direction". Root cause: the round that added the icons did not re-read the intent plan; it only looked at the reference screenshots. **Lesson for every future Eye round: re-read `docs/intent-olympiada-cambridge-ui.md` at the START, not just the journal.** The intent plan is the acceptance criteria. Reference screenshots can contain things the plan excludes.
+
+**Key learning:** Reference screenshots ≠ intent plans. When Eye sees something in a reference that's missing in the app, **check the intent plan first**. "It's in the reference" is not sufficient justification; "it's in the plan" is.
+
+**Recommended next angle:** German C1 walk — switch the welcome form to German, walk the same 12 parts, verify the chrome/copy switches correctly. The lang-switching path has been underserved across all 17 rounds.
+
+---
+
 ## Session: 2026-04-11 17:00 — Zarmed Olympiada Official-Exam Replication — Round 18 (cae/examples, /loop iteration)
 Persona: Student walking the real-content reading + listening test (Parts 1-8 + listening 1-4) | System: Zarmed Olympiada standalone (port 3004)
 Pages explored: Reading Part 3 (word formation with keyword list), Listening Part 2 (sentence completion), Listening Part 4 (multi-matching task groups)
