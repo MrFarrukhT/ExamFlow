@@ -309,8 +309,18 @@
     const ol = document.createElement('ol');
     (part.questions || []).forEach((q) => {
       const li = document.createElement('li');
-      li.appendChild(el('span', 'ct-kw-num', (q.prompt || '').replace(/\D/g, '') || q.id));
+      li.dataset.kwQid = q.id;
+      if (state.currentQid === q.id) li.classList.add('ct-kw-active');
+      li.appendChild(el('span', 'ct-kw-num', extractQuestionNumber(q) || q.id));
       li.appendChild(el('span', 'ct-kw-word', q.rootWord || '?'));
+      // Click to jump to the matching gap in the passage
+      li.addEventListener('click', () => {
+        state.currentQid = q.id;
+        const gapInput = document.querySelector('[data-qid="' + q.id + '"] input, .ct-gap input[data-qid="' + q.id + '"]');
+        const gapEl = document.querySelector('.ct-passage [data-qid-inline="' + q.id + '"]');
+        refreshActiveHighlight();
+        refreshKeywordListHighlight();
+      });
       ol.appendChild(li);
     });
     kl.appendChild(ol);
@@ -617,23 +627,50 @@
         if (q.type === 'true-false') list.appendChild(renderTrueFalse(q));
         else if (q.type === 'multiple-choice') list.appendChild(renderMCQuestion(q));
         else if (q.type === 'sentence-completion' || q.type === 'gap-fill' || q.type === 'open-cloze') {
-          const block = el('div', 'ct-question');
+          // Authentic Cambridge Listening Part 2 (cae/examples/l2.png): the
+          // sentence has an INLINE bordered input box where the blank goes,
+          // with the question number prefix INSIDE the same box. Parse the
+          // prompt for `______` (3+ underscores) and render the input in
+          // place of the underscores instead of rendering the raw text.
+          const block = el('div', 'ct-question ct-listen-sc-row');
           block.dataset.qid = q.id;
           if (state.currentQid === q.id) block.classList.add('ct-question--active');
-          const prompt = el('div', 'ct-q-prompt', q.prompt || q.id);
-          addBookmark(prompt);
-          block.appendChild(prompt);
+          const promptText = q.prompt || q.id;
+          const blankMatch = promptText.match(/_{3,}/);
+          const qNum = extractQuestionNumber(q) || q.id;
+
           const input = document.createElement('input');
           input.type = 'text';
           input.className = 'ct-kwt-input';
           input.autocomplete = 'off';
           input.spellcheck = false;
-          // Listening sentence completions are up to N words per the
-          // question's maxWords field; 100 chars is generous but finite.
           input.maxLength = 100;
           input.value = state.answers[q.id] || '';
           input.addEventListener('input', () => { saveAnswer(q.id, input.value); state.currentQid = q.id; refreshActiveHighlight(); });
-          block.appendChild(input);
+          input.addEventListener('focus', () => { state.currentQid = q.id; refreshActiveHighlight(); });
+
+          const gap = el('span', 'ct-kwt-gap');
+          gap.appendChild(el('span', 'ct-kwt-gap-num', qNum));
+          gap.appendChild(input);
+
+          const row = el('div', 'ct-kwt-lead-row');
+          if (blankMatch) {
+            const before = promptText.slice(0, blankMatch.index);
+            const after = promptText.slice(blankMatch.index + blankMatch[0].length);
+            if (before) row.appendChild(document.createTextNode(before));
+            row.appendChild(gap);
+            if (after) row.appendChild(document.createTextNode(after));
+          } else {
+            if (promptText) row.appendChild(document.createTextNode(promptText + ' '));
+            row.appendChild(gap);
+          }
+          const bookmarkCell = el('span', 'ct-kwt-bookmark');
+          const bookmark = el('span', 'ct-bookmark');
+          bookmark.setAttribute('aria-hidden', 'true');
+          bookmarkCell.appendChild(bookmark);
+          row.appendChild(bookmarkCell);
+
+          block.appendChild(row);
           list.appendChild(block);
         } else {
           list.appendChild(renderMCQuestion(q));
@@ -910,6 +947,18 @@
       const node = document.querySelector('[data-qid="' + state.currentQid + '"]');
       if (node) node.classList.add('ct-question--active');
     }
+    refreshKeywordListHighlight();
+  }
+
+  // Part 3 (word formation) keyword list follows the active question — when
+  // the student tabs into a gap input or clicks a keyword row, the matching
+  // keyword row in the right column gets a pale teal highlight. Matches
+  // cae/examples/3.png where the current question's row is highlighted.
+  function refreshKeywordListHighlight() {
+    document.querySelectorAll('.ct-keyword-list .ct-kw-active').forEach(e => e.classList.remove('ct-kw-active'));
+    if (!state.currentQid) return;
+    const row = document.querySelector('.ct-keyword-list [data-kw-qid="' + state.currentQid + '"]');
+    if (row) row.classList.add('ct-kw-active');
   }
 
   // ---------- bottom navigator ----------

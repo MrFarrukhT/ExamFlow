@@ -642,9 +642,21 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   margin: 0;
 }
 .ct-keyword-list li {
-  padding: 4px 0;
+  padding: 6px 10px;
+  margin: 0 -10px;
   display: flex;
   gap: 10px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 0.12s;
+}
+.ct-keyword-list li:hover { background: #f0fdfa; }
+.ct-keyword-list .ct-kw-active {
+  background: var(--ct-teal-soft);
+}
+.ct-keyword-list .ct-kw-active .ct-kw-num,
+.ct-keyword-list .ct-kw-active .ct-kw-word {
+  color: var(--ct-teal-dark);
 }
 .ct-keyword-list .ct-kw-num { color: var(--ct-text-muted); min-width: 22px; }
 .ct-keyword-list .ct-kw-word {
@@ -865,6 +877,25 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   transform: translateY(-50%);
 }
 
+/* Listening Part 2 sentence-completion rows reuse the Part 4 KWT inline
+ * input pattern. Override the generic `.ct-question--active` pale teal
+ * pill — the authentic Cambridge look is borderless with just a subtle
+ * teal left accent on the active row. */
+.ct-listen-sc-row {
+  background: transparent !important;
+  border: none !important;
+  border-left: 3px solid transparent;
+  padding: 8px 0 8px 12px;
+  transition: border-color 0.15s;
+}
+.ct-listen-sc-row.ct-question--active {
+  border-left-color: var(--ct-teal);
+}
+.ct-listen-sc-row .ct-kwt-lead-row {
+  line-height: 2.1;
+  padding-right: 28px;
+}
+
 /* Part 7 gapped text */
 .ct-slot {
   display: block;
@@ -973,13 +1004,19 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 .ct-task-speaker-select {
   font-family: Arial, sans-serif;
   font-size: 14px;
-  padding: 5px 8px;
-  border: 1px solid var(--ct-border-strong);
+  padding: 5px 10px;
+  border: 1px solid var(--ct-text);
   background: #fff;
   color: var(--ct-text);
   border-radius: 2px;
   width: 100%;
   min-width: 0;
+  /* Chromeless: match the authentic Cambridge l5.png look where the speaker
+   * dropdown appears as a plain bordered input, not a native select. */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
 }
 .ct-task-speaker-select:focus {
   outline: none;

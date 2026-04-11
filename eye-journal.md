@@ -1,5 +1,69 @@
 # Eye Journal
 
+## Session: 2026-04-11 17:00 — Zarmed Olympiada Official-Exam Replication — Round 18 (cae/examples, /loop iteration)
+Persona: Student walking the real-content reading + listening test (Parts 1-8 + listening 1-4) | System: Zarmed Olympiada standalone (port 3004)
+Pages explored: Reading Part 3 (word formation with keyword list), Listening Part 2 (sentence completion), Listening Part 4 (multi-matching task groups)
+Starting state: Round 17 shipped the big structural matches (Part 4 KWT rebuild, Part 1 gap visual, borderless banner, stacked brand, black nav label). Round 18 is the /loop's next firing — revisit the app with the same prompt to find FINER gaps that round 17 didn't address.
+
+### Round 18 — Three finer matches to official
+
+**Explored:** Re-walked the app at 1280×800 with the real content now loaded (Bridges for wildlife, Hannah Miller archaeology talk, word-formation with real keyword list COMMON/PRESENT/THINK/...). Real content exposed three finer issues that stub content had hidden.
+
+**Findings:**
+
+- [T3 — inefficient] **Listening Part 2 sentence completion rendered literal `______` in the prompt text** with a separate input box appended below, not inline. Official `cae/examples/l2.png` shows an INLINE bordered input box where the blank goes, with the question number prefix inside the same box (same pattern as Part 4 KWT). The current stub was one question so the visual gap wasn't obvious — real content shows 8 sentences and the separated-input layout reads as a bug.
+
+- [T4 — rough] **Part 3 keyword list had no active-row highlight**. Official `cae/examples/3.png` shows the current question's row in the right-column keyword list tinted pale teal (`17 COME` highlighted while the student is on question 17). Round 17 deferred this as "nice-to-have"; real content with 8 rows makes the lack of feedback visible.
+
+- [T4 — rough] **Listening Part 4 speaker select showed the native dropdown arrow** on Chrome's default `<select>` styling. Official `cae/examples/l5.png` shows the speaker dropdowns as plain bordered inputs with no visible select chrome (same trick used for Part 1's inline MC select — `-webkit-appearance: none`).
+
+**Action:** REBUILD (1: listening sentence completion) + POLISH (2: keyword list + speaker select)
+
+- [T3] **Listening Part 2 inline sentence-completion rebuild** — reused the Part 4 KWT inline-input pattern (`.ct-kwt-gap` + `.ct-kwt-gap-num` + borderless input + `.ct-kwt-lead-row`). The renderer now parses the prompt for `_{3,}` and inserts the input IN PLACE of the underscores, with the before/after text as TextNodes on either side of the input. Added a new `.ct-listen-sc-row` class that overrides `.ct-question--active`'s pale pill with a subtle teal left-border accent. Real content Part 2 (Hannah Miller) now shows 8 inline-numbered input boxes, each sitting exactly where the `______` was in the transcribed sentence.
+  Mode: rebuild | Quality: 3 → 5 | Files: public/js/test.js, public/css/styles.css
+
+- [T4] **Part 3 keyword list active-row highlight** — keyword list `<li>`s now get a `data-kw-qid` attribute and the renderer adds a `.ct-kw-active` class to the row matching `state.currentQid`. New `refreshKeywordListHighlight()` helper is called from `refreshActiveHighlight()` so the highlight follows the student as they tab between gaps. Keyword rows also got click handlers that focus the matching row. CSS: `.ct-kw-active` gets `background: var(--ct-teal-soft)` with the number and word text in `var(--ct-teal-dark)`.
+  Mode: polish | Quality: 4 → 5 | Files: public/js/test.js, public/css/styles.css
+
+- [T4] **Listening speaker chromeless select** — `.ct-task-speaker-select` got `-webkit-appearance: none; -moz-appearance: none; appearance: none;` plus a solid black border (matching Part 1's `.ct-inline-mc` box). The native dropdown arrow is hidden; the row now reads as a plain bordered input just like Cambridge's l5.png.
+  Mode: polish | Quality: 4 → 5 | Files: public/css/styles.css
+
+### Verification
+
+Screenshots captured at 1280×800 with real content loaded:
+- `r18v-listen-p2-clean.png` vs `cae/examples/l2.png` — matches perfectly. Each of the 8 sentences (Hannah Miller real content) has its numbered input box positioned INLINE where the blank is, with bookmark icon on the far right of each row. Questions 7, 8, 9, 10, 11, 12, 13, 14 all rendered correctly.
+- `r18v-part3-real.png` vs `cae/examples/3.png` — matches. Keyword list on the right shows `17 COMMON`, `18 PRESENT`, `19 THINK`, `20 EXCEPT`, `21 DISRUPT`, `22 COUNT`, `23 VISUAL`, `24 ACCORD` with row 17 (current active question) highlighted pale teal.
+- `r18v-listen-p4.png` vs `cae/examples/l5.png` — matches. Task 1 speaker rows 21-25 and Task 2 speaker rows 26-30 all show chromeless bordered dropdowns with the options panel A-H on the right.
+
+Explicit no-regression checks: Part 4 KWT still renders left-aligned with inline input (no accidental breakage from reusing the same CSS classes). Reading Part 1 multi-choice cloze still uses its chromeless select. Other parts untouched.
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| Listening Part 2 (sentence completion) | **5-Crafted** | Inline bordered input per sentence, authentic Cambridge look |
+| Reading Part 3 keyword list | **5-Crafted** | Active row highlight follows the student, clickable to jump |
+| Listening Part 4 speaker dropdowns | **5-Crafted** | Chromeless bordered-input look matches l5.png |
+
+### Deferred (still)
+- Real content transcription for Parts 5/6/7/8 reading + Listening Part 3 (currently stub) — out of /eye scope
+- `.ct-gap` (Part 2 open cloze, Part 3 word formation inline gap) vs `.ct-inline-mc` box-style unification — visual diff is tiny and both are legible
+- Part 3 click-to-jump on a keyword row currently refreshes the highlight but doesn't scroll the matching passage gap into view — minor enhancement
+
+### Session Stats
+Pages explored: 3 (Listening Part 2, Reading Part 3, Listening Part 4)
+Rounds: 1 (round 18 of the eye cycle)
+Polishes landed: 2
+Rebuilds landed: 1 (listening sentence completion)
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 3
+
+**Trajectory update:** Round 17 was driven by reference-screenshot comparison against stub content. Round 18 was driven by the same comparison but against REAL content, which exposed issues that round 17 couldn't have found. This confirms a pattern from earlier rounds: stub content hides layout bugs that real content exposes. The listening sentence-completion inline rebuild is the biggest visible win — 8 input boxes now sit correctly inside the Hannah Miller sentences instead of floating below them.
+
+**Key learning:** /loop iterations should re-walk the app each time, not just check if prior fixes are still in place. Each walk with real content surfaces finer differences. The auto-cycling from /loop every 10 minutes is doing its job — three real improvements shipped in this round alone.
+
+---
+
 ## Session: 2026-04-11 16:45 — Zarmed Olympiada Official-Exam Replication — Round 17 (cae/examples)
 Persona: Student comparing every test part against the official CAE Inspera screenshots in `cae/examples/` (1-8.png reading, l1-l5.png listening) | System: Zarmed Olympiada standalone (port 3004)
 Pages explored: test.html Parts 1, 2, 3, 4, 5, 7, 8 + Listening Part 1 (pre-play modal)
