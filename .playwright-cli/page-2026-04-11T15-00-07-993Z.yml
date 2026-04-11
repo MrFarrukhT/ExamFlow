@@ -1,0 +1,45 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: ZU
+      - generic [ref=e5]:
+        - generic [ref=e6]: Zarmet University
+        - generic [ref=e7]: C1 Olympiada
+    - generic [ref=e8]:
+      - generic [ref=e9]: Candidate ID
+      - generic [ref=e10]:
+        - text: DE Test
+        - generic [ref=e11]: r8-de-te
+    - generic [ref=e13]: 40:00
+  - generic [ref=e15]:
+    - generic [ref=e16]: Questions 1–1
+    - text: Sie hören einen Text. Entscheiden Sie, ob die Aussagen richtig oder falsch sind. Sie hören den Text einmal.
+  - main [ref=e17]:
+    - generic [ref=e18]:
+      - generic [ref=e20]:
+        - paragraph [ref=e22]: You will be listening to an audio clip during this test. You will not be permitted to pause or rewind the audio while answering the questions. To continue, click Play.
+        - button "Play" [ref=e23] [cursor=pointer]
+      - generic [ref=e25]:
+        - generic [ref=e26]: 1 (Platzhalter) — Die Aussage entspricht dem Text.
+        - generic [ref=e28]:
+          - generic [ref=e29] [cursor=pointer]:
+            - radio "true" [ref=e30]
+            - generic [ref=e31]: "true"
+          - generic [ref=e32] [cursor=pointer]:
+            - radio "false" [ref=e33]
+            - generic [ref=e34]: "false"
+          - generic [ref=e35] [cursor=pointer]:
+            - radio "not-given" [ref=e36]
+            - generic [ref=e37]: not-given
+  - navigation [ref=e38]:
+    - generic [ref=e39]:
+      - generic [ref=e40] [cursor=pointer]:
+        - generic [ref=e41]: Teil 1
+        - button "1" [ref=e43]
+      - generic [ref=e44] [cursor=pointer]:
+        - generic [ref=e45]: Teil 2
+        - generic [ref=e46]: 0 of 1
+    - generic [ref=e47]:
+      - button "Previous" [disabled] [ref=e48]: ←
+      - button "Next" [disabled] [ref=e49]: →
+      - button "Finish" [disabled] [ref=e50]: ✓

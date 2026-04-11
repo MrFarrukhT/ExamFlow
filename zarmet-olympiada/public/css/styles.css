@@ -534,6 +534,46 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   max-height: calc(100vh - 160px - 72px); /* 160 = header+banner reserve, 72 = bottom nav */
   overflow-y: auto;
   align-self: start;
+  /* Scroll affordance: force a visible thin scrollbar so Chrome/Edge
+   * overlay scrollbars (which hide by default) don't disguise an
+   * overflowing paragraph bank as "just 4 options". Real Part 7 has
+   * 7 paragraphs, and at 1280x720 only ~4 fit the sticky window. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--ct-border-strong) transparent;
+}
+.ct-two-col > .ct-col:nth-child(2)::-webkit-scrollbar {
+  width: 10px;
+}
+.ct-two-col > .ct-col:nth-child(2)::-webkit-scrollbar-track {
+  background: transparent;
+}
+.ct-two-col > .ct-col:nth-child(2)::-webkit-scrollbar-thumb {
+  background-color: var(--ct-border-strong);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.ct-two-col > .ct-col:nth-child(2)::-webkit-scrollbar-thumb:hover {
+  background-color: var(--ct-inactive);
+  background-clip: content-box;
+}
+/* Bottom fade — sits sticky at the bottom of the scrollable column so
+ * it indicates "more below" whenever content overflows. The fade
+ * blends into the bank's grey background. When scrolled to the bottom
+ * the fade is still there but blends with the final card's bottom
+ * margin, so it reads as just a subtle edge. */
+.ct-two-col > .ct-col:nth-child(2)::after {
+  content: '';
+  display: block;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  margin-top: -28px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(243, 244, 246, 0) 0%, var(--ct-banner-bg) 85%);
+  z-index: 5;
 }
 /* At narrow widths the two-col collapses to one column and sticky is
  * pointless — reset it so the question simply flows below the passage. */
@@ -542,6 +582,9 @@ body.zu-test-body .ct-nav-finish:focus-visible {
     position: static;
     max-height: none;
     overflow-y: visible;
+  }
+  .ct-two-col > .ct-col:nth-child(2)::after {
+    display: none;
   }
 }
 

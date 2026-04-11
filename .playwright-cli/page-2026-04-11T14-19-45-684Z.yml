@@ -1,0 +1,10 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]: ZU
+    - heading "Olympiada Results" [level=1] [ref=e5]
+    - paragraph [ref=e6]: Invigilator / admin view
+  - generic [ref=e8]:
+    - generic [ref=e9]:
+      - generic [ref=e10]: Admin password
+      - textbox "Admin password" [ref=e11]
+    - button "Unlock" [ref=e12] [cursor=pointer]

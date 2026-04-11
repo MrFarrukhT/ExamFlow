@@ -1,0 +1,53 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: ZU
+      - generic [ref=e5]:
+        - generic [ref=e6]: Zarmet University
+        - generic [ref=e7]: C1 Olympiada
+    - generic [ref=e8]:
+      - generic [ref=e9]: Candidate ID
+      - generic [ref=e10]:
+        - text: R12
+        - generic [ref=e22]: r12-veri
+    - generic [ref=e12]: 88:06
+  - generic [ref=e14]:
+    - generic [ref=e15]: Questions 9–9
+    - text: For questions 9-16, read the text below and think of the word which best fits each gap. Use only one word in each gap.
+  - main [ref=e23]:
+    - generic [ref=e56]:
+      - text: This is a placeholder open cloze passage. The real Part 2 passage will have
+      - generic [ref=e57]:
+        - generic [ref=e58]: 9 (stub)
+        - textbox [ref=e59]
+      - text: markers for single-word gap fills.
+  - navigation [ref=e16]:
+    - generic [ref=e17]:
+      - button "Part 1 0 of 1" [ref=e60] [cursor=pointer]:
+        - generic [ref=e61]: Part 1
+        - generic [ref=e62]: 0 of 1
+      - generic [ref=e63] [cursor=pointer]:
+        - generic [ref=e64]: Part 2
+        - button "9" [ref=e66]
+      - button "Part 3 0 of 1" [ref=e67] [cursor=pointer]:
+        - generic [ref=e68]: Part 3
+        - generic [ref=e69]: 0 of 1
+      - button "Part 4 0 of 1" [ref=e70] [cursor=pointer]:
+        - generic [ref=e71]: Part 4
+        - generic [ref=e72]: 0 of 1
+      - button "Part 5 0 of 1" [ref=e73] [cursor=pointer]:
+        - generic [ref=e74]: Part 5
+        - generic [ref=e75]: 0 of 1
+      - button "Part 6 0 of 1" [ref=e76] [cursor=pointer]:
+        - generic [ref=e77]: Part 6
+        - generic [ref=e78]: 0 of 1
+      - button "Part 7 0 of 2" [ref=e79] [cursor=pointer]:
+        - generic [ref=e80]: Part 7
+        - generic [ref=e81]: 0 of 2
+      - button "Part 8 0 of 1" [ref=e82] [cursor=pointer]:
+        - generic [ref=e83]: Part 8
+        - generic [ref=e84]: 0 of 1
+    - generic [ref=e18]:
+      - button "Previous" [ref=e19] [cursor=pointer]: ←
+      - button "Next" [ref=e20] [cursor=pointer]: →
+      - button "Finish" [ref=e21] [cursor=pointer]: ✓

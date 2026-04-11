@@ -1,0 +1,60 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: ZU
+      - generic [ref=e5]:
+        - generic [ref=e6]: Zarmet University
+        - generic [ref=e7]: C1 Olympiada
+    - generic [ref=e8]:
+      - generic [ref=e9]: Candidate ID
+      - generic [ref=e10]:
+        - text: Valid Student
+        - generic [ref=e11]: 67fd5e9a
+    - generic [ref=e13]: 00:43
+  - generic [ref=e15]:
+    - generic [ref=e16]: Questions 1–1
+    - text: For questions 1–8, read the text below and decide which answer (A, B, C or D) best fits each gap.
+  - main [ref=e17]:
+    - generic [ref=e18]:
+      - heading "Studying black bears" [level=3] [ref=e19]
+      - generic [ref=e20]:
+        - text: After years of studying North America's black bears in the conventional way, wildlife biologist Luke Robertson felt no closer to understanding the creatures. He realised that he had to
+        - generic [ref=e21]:
+          - generic [ref=e22]: "1."
+          - combobox [ref=e23] [cursor=pointer]:
+            - option "—" [selected]
+            - option "A win"
+            - option "B earn"
+            - option "C gain"
+            - option "D achieve"
+        - text: bear trust. Abandoning scientific detachment, he took the daring step of forming relationships with the animals, bringing them food to gain their acceptance.
+  - navigation [ref=e24]:
+    - generic [ref=e25]:
+      - generic [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: Part 1
+        - button "1" [ref=e29]
+      - generic [ref=e30] [cursor=pointer]:
+        - generic [ref=e31]: Part 2
+        - generic [ref=e32]: 0 of 1
+      - generic [ref=e33] [cursor=pointer]:
+        - generic [ref=e34]: Part 3
+        - generic [ref=e35]: 0 of 1
+      - generic [ref=e36] [cursor=pointer]:
+        - generic [ref=e37]: Part 4
+        - generic [ref=e38]: 0 of 1
+      - generic [ref=e39] [cursor=pointer]:
+        - generic [ref=e40]: Part 5
+        - generic [ref=e41]: 0 of 1
+      - generic [ref=e42] [cursor=pointer]:
+        - generic [ref=e43]: Part 6
+        - generic [ref=e44]: 0 of 1
+      - generic [ref=e45] [cursor=pointer]:
+        - generic [ref=e46]: Part 7
+        - generic [ref=e47]: 0 of 2
+      - generic [ref=e48] [cursor=pointer]:
+        - generic [ref=e49]: Part 8
+        - generic [ref=e50]: 0 of 1
+    - generic [ref=e51]:
+      - button "Previous" [disabled] [ref=e52]: ←
+      - button "Next" [ref=e53] [cursor=pointer]: →
+      - button "Finish" [ref=e54] [cursor=pointer]: ✓

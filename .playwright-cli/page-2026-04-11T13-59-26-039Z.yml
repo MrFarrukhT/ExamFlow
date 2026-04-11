@@ -1,0 +1,6 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]: ZU
+    - heading "Thank you" [level=1] [ref=e5]
+    - paragraph [ref=e6]: Your test has been submitted.
+  - paragraph [ref=e7]: Please wait for your invigilator.
