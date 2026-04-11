@@ -1,5 +1,55 @@
 # Eye Journal
 
+## Session: 2026-04-11 18:15 — Zarmed Olympiada Audio-Ended Announcement — Round 22d (parallel iteration)
+Persona: Screen-reader student listening to CAE audio — currently gets "Audio is playing" when playback starts, then SILENCE when it ends | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: test.js audio event handlers + listening verification
+Starting state: Round 22c's recommended next angle: "the ct-audio-status live region announces 'Audio is playing' but there's no equivalent announcement when audio ENDS. For a screen reader user, silence is ambiguous."
+
+### Round 22d — Close the audio-ended a11y loop
+
+**Problem:** `.ct-audio-status` has `aria-live="polite"` and shows "Audio is playing" via a class toggle. But the `ended` handler immediately removes the visible class (`display: none`) WITHOUT changing text. A `display: none` element is removed from the accessibility tree, so screen readers get no closure signal.
+
+**Fix:** Update label text to `t.audioFinished` (EN: "Audio finished" / DE: "Audio beendet") BEFORE hiding, leave visible for ~2.5s so the live region announces AND sighted students see a brief confirmation pill, then collapse.
+
+**Action:** POLISH (6 code sites in public/js/test.js, +48/-5)
+
+1. Added `audioFinished` to both i18n branches
+2. Added `audioFinishedHideTimer: null` to `state`
+3. Updated `ended` handler — sets label to `t.audioFinished`, schedules `setTimeout(..., 2500)` to hide + reset. Still calls `renderCurrentPart`/`renderBottomNav` synchronously so advance unlocks immediately.
+4. Updated `playing` handler — defensively resets label to `t.audioPlaying` so a stale "Audio finished" from a previous play doesn't show briefly.
+5. Updated `startAudio()` top — clears any pending `audioFinishedHideTimer` before starting new audio.
+6. Updated `handleFailure()` — clears timer AND restores default label for next successful play.
+7. Updated `goToPart()` — cancels timer, hides status, resets label when switching away from a listening part.
+
+### Verification
+
+Source-level (via `curl http://localhost:3004/js/test.js | grep`): both branches have `audioFinished`, state has `audioFinishedHideTimer`, startAudio has the cancel, all changes present.
+
+Runtime (playwright eval): manually set label to "Audio finished" while visible — visual render matches expected. Screenshot `r22d-audio-finished.png` captures the header showing the audio-status slot with speaker icon + "Audio finished" text.
+
+`node --check test.js` → passes.
+
+**Real-audio flow now:**
+1. Audio fires `ended` → handler sets label to "Audio finished" → aria-live polite fires, SR announces
+2. `renderCurrentPart` + `renderBottomNav` unlock advance button synchronously
+3. After 2.5s, status label hides, label resets to 'Audio is playing' for next play
+4. Student navigates via unlocked arrow — no stale state
+
+### Deferred (thin)
+- Mid-listening stall announcement (30s threshold) — already wrapped in showErrorModal on full failure
+- Per-task Listening Part 4 announcement — new UX, out of Eye scope
+
+### Session Stats
+Polishes landed: 1 (6 code sites) | Rebuilds: 0 | Elevations: 0 | Reverted: 0 | Changes shipped: 1 file
+
+**Trajectory update:** Round 22 series is now a full a11y arc (22 = Q# badges + finish color, 22b = timer aria, 22c = timer verification, 22d = audio-ended announcement). Each round thin and focused.
+
+**Key learning:** Live regions ONLY announce when the element is in the accessibility tree. `display: none` removes the element, so updating textContent while hidden is a no-op. Update text BEFORE hiding, give the region a window to fire.
+
+**Recommended next angle:** Walk the `handleFailure` path with a simulated audio failure and verify the error modal shows German localized text, the audio-status label resets correctly, and the student can still advance through the test after dismissing the error modal.
+
+---
+
 ## Session: 2026-04-11 18:10 — Zarmed Olympiada Long-Name Overflow + Inline cssText — Round 28 (/loop iteration)
 Persona: Student with a 63-character name ("Alexander Maximilian Constantinopolitanoff-Rothschild von Habsburg III") + developer auditing inline styles that slipped past round 26's HTML-only grep | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: welcome, dashboard (long-name welcome panel), test runner header desktop+mobile, timer warn state, completion banner, welcome button focus-visible state
