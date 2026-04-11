@@ -10,23 +10,23 @@
   "parts": [
     {
       "id": "part1",
-      "title": "Part 1 — Multiple-choice cloze (STUB)",
-      "instructions": "For questions 1-8, read the text below and decide which answer (A, B, C or D) best fits each gap.",
+      "title": "Part 1 — Multiple-choice cloze",
+      "instructions": "For questions 1–8, read the text below and decide which answer (A, B, C or D) best fits each gap.",
       "passage": {
         "type": "text",
-        "content": "This is a placeholder passage for scaffold testing. The real CAE Part 1 passage will replace this text, complete with [[GAP:q1]] inline markers for the multiple-choice cloze."
+        "content": "Studying black bears\n\nAfter years of studying North America's black bears in the conventional way, wildlife biologist Luke Robertson felt no closer to understanding the creatures. He realised that he had to [[GAP:q1]] bear trust. Abandoning scientific detachment, he took the daring step of forming relationships with the animals, bringing them food to gain their acceptance."
       },
       "audio": null,
       "questions": [
         {
           "id": "q1",
           "type": "multiple-choice",
-          "prompt": "1 (stub)",
+          "prompt": "1",
           "options": [
-            { "key": "A", "text": "considerable" },
-            { "key": "B", "text": "substantial" },
-            { "key": "C", "text": "extensive" },
-            { "key": "D", "text": "generous" }
+            { "key": "A", "text": "win" },
+            { "key": "B", "text": "earn" },
+            { "key": "C", "text": "gain" },
+            { "key": "D", "text": "achieve" }
           ],
           "answer": "B",
           "points": 1

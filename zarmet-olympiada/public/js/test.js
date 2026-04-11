@@ -301,7 +301,7 @@
     const left = el('div', 'ct-col');
     left.appendChild(renderPassageHeading(part));
     const passageEl = el('div', 'ct-passage');
-    passageEl.textContent = part.passage ? part.passage.content || '' : '';
+    passageEl.textContent = passageBody(part);
     left.appendChild(passageEl);
     grid.appendChild(left);
 
@@ -354,7 +354,7 @@
     left.appendChild(renderPassageHeading(part));
 
     const passage = el('div', 'ct-passage');
-    const text = part.passage ? part.passage.content || '' : '';
+    const text = passageBody(part);
     const pattern = /\[\[SLOT:([^\]]+)\]\]/g;
     let lastIndex = 0, match;
     while ((match = pattern.exec(text)) !== null) {
@@ -589,24 +589,39 @@
   }
 
   // ---------- passage helpers ----------
+  function shouldHoistHeading(content) {
+    const firstLine = content.split('\n')[0];
+    return !!(
+      firstLine &&
+      content.split('\n').length > 1 &&
+      firstLine.length < 80 &&
+      !firstLine.includes('[[GAP') &&
+      !firstLine.includes('[[SLOT')
+    );
+  }
   function renderPassageHeading(part) {
     // If the passage starts with a title line, hoist it as <h3>
     const content = (part.passage && part.passage.content) || '';
-    const firstLine = content.split('\n')[0];
-    if (firstLine && content.split('\n').length > 1 && firstLine.length < 80 && !firstLine.includes('[[GAP') && !firstLine.includes('[[SLOT')) {
-      return el('h3', null, firstLine);
+    if (shouldHoistHeading(content)) {
+      return el('h3', null, content.split('\n')[0]);
     }
     return document.createDocumentFragment();
   }
-  function renderPassageWithInlineGaps(part, buildInlineEl) {
+  // Returns the passage content with the hoisted heading removed, so callers
+  // can render the body without duplicating the first line.
+  function passageBody(part) {
     const content = (part.passage && part.passage.content) || '';
+    if (!shouldHoistHeading(content)) return content;
+    const firstLine = content.split('\n')[0];
+    // +1 for the newline; also trim leading blank lines so the body starts clean.
+    return content.slice(firstLine.length + 1).replace(/^\n+/, '');
+  }
+  function renderPassageWithInlineGaps(part, buildInlineEl) {
     const passage = el('div', 'ct-passage');
     const pattern = /\[\[GAP:([^\]]+)\]\]/g;
     let lastIndex = 0, match;
     let started = false;
-    const firstLine = content.split('\n')[0];
-    const hoistHeading = firstLine && content.split('\n').length > 1 && firstLine.length < 80 && !firstLine.includes('[[GAP') && !firstLine.includes('[[SLOT');
-    const body = hoistHeading ? content.slice(firstLine.length + 1) : content;
+    const body = passageBody(part);
     while ((match = pattern.exec(body)) !== null) {
       const before = body.slice(lastIndex, match.index);
       if (before) passage.appendChild(document.createTextNode(before));
@@ -706,8 +721,12 @@
 
   function extractQuestionNumber(q) {
     if (!q) return null;
-    const m = String(q.prompt || q.id || '').match(/\d+/);
-    return m ? m[0] : null;
+    // Prefer the id (which is canonical like "q25") over the prompt text
+    // (which can be a full sentence with no digits, e.g., Part 4 KWT).
+    const fromId = String(q.id || '').match(/\d+/);
+    if (fromId) return fromId[0];
+    const fromPrompt = String(q.prompt || '').match(/\d+/);
+    return fromPrompt ? fromPrompt[0] : null;
   }
 
   function refreshActiveHighlight() {
@@ -899,9 +918,17 @@
     try {
       await loadContent();
       await ensureSession();
-      // Show candidate ID in header
-      document.getElementById('ct-candidate-id').textContent =
-        (studentName || 'Student') + (studentId ? ' · ' + studentId.slice(0, 8) : '');
+      // Show candidate ID in header — primary is the student name (their
+      // canonical identifier in an Olympiada context); session fragment is
+      // a tie-breaker shown as a subtitle inside the value.
+      const candEl = document.getElementById('ct-candidate-id');
+      candEl.textContent = studentName || 'Student';
+      if (studentId) {
+        const code = document.createElement('small');
+        code.style.cssText = 'display:block;font-weight:400;font-size:10px;color:var(--ct-text-muted);letter-spacing:0.05em;text-transform:uppercase;';
+        code.textContent = studentId.slice(0, 8);
+        candEl.appendChild(code);
+      }
       renderCurrentPart();
       renderBottomNav();
       startTimer();

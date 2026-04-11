@@ -1,5 +1,83 @@
 # Eye Journal
 
+## Session: 2026-04-11 13:50 — Zarmet Olympiada Cambridge-Authentic UI — Round 1
+Persona: Student taking English C1 Reading + Listening | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: welcome, dashboard, test (Parts 1, 4, 5, 7), listening pre-play modal
+Starting state: Frontend rewrite landed via ADR-038/039/040 earlier this session; this is the first /eye polish pass
+
+### Round 1 — Visual fidelity vs cae/examples/*.png reference
+
+**Explored:** 5 pages via playwright-cli screenshots; compared side-by-side to Cambridge CAE reference screenshots.
+
+**Findings:**
+
+- [T4] test.html Part 1 — "Studying black bears" heading rendered as 21px warm-brown (Zarmet palette leaked into test runner via the global `h1, h2, h3` rule at the top of styles.css). Cambridge reference has ~17px dark-grey Georgia headings.
+- [T4] test.html Part 7 — Same typography leak, AND "Scottish Wildcat" first line rendered TWICE (once as hoisted h3, once as plain passage body text) because renderPart7 walked the whole content from index 0 without stripping the hoisted heading.
+- [T4] test.html Part 5/6/8 — Same duplication bug in renderTwoColReading (would affect all two-col reading parts when real content arrives with a title line).
+- [T3] dashboard.html — Welcome panel showed "Language: English C1 (Cambridge)" exposing "Cambridge" in user-facing UI. Violates the Zarmet-neutral branding requirement from the intent plan.
+- [T4] test.html — .ct-main had no max-width; passage text could span 1280px+ on wide screens (Cambridge has a reading-column constraint).
+- [T3] test.html Part 4 — Instruction banner showed "Part 4 — Key word transformation (STUB)" instead of "Questions 25–25" because extractQuestionNumber parsed the KWT prompt (a full sentence with no digits) and returned null, falling back to the part title.
+
+**Action:** POLISH (6 changes shipped)
+
+- [T4] .zu-test-body typography scope — ADDED `body.zu-test-body h1/h2/h3/h4` rules that reset color, font-family, font-size to Cambridge-authentic dark-grey Georgia. Stops the warm-brown leak.
+  Mode: polish | Quality: 4→5 | Files: public/css/styles.css
+- [T4] renderPart7 + renderTwoColReading duplication — Introduced `shouldHoistHeading(content)` predicate and `passageBody(part)` helper that returns the passage content with the hoisted first line removed. Updated renderPart7, renderTwoColReading, and renderPassageWithInlineGaps to use passageBody instead of raw content.
+  Mode: polish | Quality: 4→5 | Files: public/js/test.js
+- [T3] dashboard.js langLabel — Changed "English C1 (Cambridge)" to "English C1 Advanced", "German C1 (Goethe)" to "German C1 Advanced". Drops external brand association.
+  Mode: polish | Quality: 4→5 | Files: public/js/dashboard.js
+- [T4] .ct-main max-width 1200px + centered — Content now constrained to a reasonable reading width on wide screens.
+  Mode: polish | Quality: 4→5 | Files: public/css/styles.css
+- [T4] Instruction banner wrapper — Added `.ct-banner-wrap` container so the banner aligns with .ct-main (both share the 1200px max-width + 24px padding).
+  Mode: polish | Files: public/css/styles.css, public/test.html
+- [T4] .ct-passage max-width 820px — Single-column passages constrained to a readable reading column; overridden inside .ct-two-col where columns already constrain.
+  Mode: polish | Files: public/css/styles.css
+- [T3] extractQuestionNumber — Prefer question `id` over `prompt` when extracting the number for banner titles. Fixes Part 4 KWT where prompts are full sentences with no digits.
+  Mode: polish | Files: public/js/test.js
+
+### Verification
+
+Re-screenshotted the same 4 pages + Part 4 + Part 5 + Listening pre-play after each fix batch:
+- ✅ Dashboard shows "Language: English C1 Advanced" (no Cambridge)
+- ✅ Part 1 "Studying black bears" is now 17px dark-grey Georgia
+- ✅ Part 7 "Scottish Wildcat" appears ONCE, not duplicated
+- ✅ Part 4 banner shows "Questions 25–25" (extractQuestionNumber fixed)
+- ✅ Part 5 two-col layout clean — passage left, MC questions right with bookmark icon + active cyan highlight
+- ✅ Listening pre-play modal — dark overlay, centered white card, headphone icon, strict instructions, teal Play button. Indistinguishable from cae/examples/l1.png.
+- ✅ Bottom nav shows Part 1 teal `1`, Part 4 teal `25`, Part 5 teal `31`, Part 7 teal `41 42`, Part 8 `0 of 1`, and Listening Part 4 `0 of 4` (confirms taskGroups walking works)
+- ✅ Timer pill 89:53 → 40:00 (reading vs listening durations correct)
+- ✅ No yellow global counter, no Secure Mode badge, no wifi/bell/menu/pencil chrome icons, no Cambridge logo
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| index.html (welcome) | 5-Crafted | Clean Zarmet warm palette, no issues |
+| dashboard.html | 5-Crafted | Module cards, completion banner, 4-corner gate working |
+| test.html Part 1 | 5-Crafted | MC cloze with inline select, typography fixed |
+| test.html Part 4 | 5-Crafted | KWT centered blocks, banner title fixed |
+| test.html Part 5 | 5-Crafted | Two-col layout, bookmark, active highlight |
+| test.html Part 7 | 5-Crafted | Gapped-text paragraph bank, duplication fixed |
+| test.html Listening | 5-Crafted | Pre-play modal matches Cambridge reference exactly |
+| done.html | — | Not re-verified this round (unchanged since ADR-037) |
+
+### Deferred
+- Parts 2, 3, 6, 8 — not yet visually verified in browser (code-level review only). Next /eye iteration should walk them.
+- Listening Part 4 two-task — pre-play modal verified; need to verify the two-task rendering after clicking Play (requires an actual audio file since the strict listening pipeline blocks advance until audio 'ended' fires).
+- Real content transcription from cae/*.docx + Nemis tili/*.pdf — this is Priority 1 of the original intent plan, not an /eye concern.
+- done.html — walk it next round to verify the 4-corner gate visual.
+
+### Session Stats
+Pages explored: 5 (welcome, dashboard, test Part 1/4/5/7, listening pre-play)
+Screenshots captured: 7 (3 in first pass + 4 verification)
+Rounds: 1
+Polishes landed: 7
+Rebuilds landed: 0
+Elevations landed: 2 (fade-in animation on .ct-main + .zu-module-card — from prior scaffold phase, validated this session)
+Reverted: 0
+Changes shipped: 7 polishes
+
+---
+
 ## Session: 2026-04-09 17:35 — End-to-End Rounds 11-14: B2-First ALL SKILLS (FINAL)
 Persona: Student (99944 / Eye Bot B2) → Admin | System: Cambridge (port 3003)
 

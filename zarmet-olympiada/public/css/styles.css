@@ -184,19 +184,21 @@ h3 { font-size: 1.25rem; }
   background: #fff;
   border: 2px solid var(--zu-border);
   border-radius: 6px;
-  padding: 1.5rem;
+  padding: 1.75rem 1.5rem;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   position: relative;
+  animation: ctFadeIn 260ms ease-out;
 }
 .zu-module-card:hover {
   border-color: var(--zu-primary);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(124, 45, 18, 0.12);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(124, 45, 18, 0.14);
 }
+.zu-module-card:active { transform: translateY(-1px); }
 .zu-module-card h3 {
   color: var(--zu-primary);
   margin: 0;
@@ -279,6 +281,24 @@ body.zu-test-body {
   line-height: 1.5;
   padding-bottom: 88px; /* space for bottom nav */
 }
+
+/* Reset typography inside the test runner — the Zarmet warm-brown
+ * h1/h2/h3 rule at the top of this file is scoped to the welcome/dashboard
+ * pages. The test runner uses Cambridge-authentic dark-grey Georgia headings. */
+body.zu-test-body h1,
+body.zu-test-body h2,
+body.zu-test-body h3,
+body.zu-test-body h4 {
+  color: var(--ct-text);
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0 0 12px;
+}
+body.zu-test-body h1 { font-size: 20px; }
+body.zu-test-body h2 { font-size: 18px; }
+body.zu-test-body h3 { font-size: 17px; }
+body.zu-test-body h4 { font-size: 14px; }
 
 /* Top header strip */
 .ct-header {
@@ -382,10 +402,14 @@ body.zu-test-body {
   text-align: center;
 }
 
-/* Instruction banner */
+/* Instruction banner — nested inside a max-width container to align with main */
+.ct-banner-wrap {
+  max-width: 1200px;
+  margin: 18px auto 0;
+  padding: 0 24px;
+}
 .ct-banner {
-  margin: 16px 24px 0;
-  padding: 14px 20px;
+  padding: 16px 22px;
   background: var(--ct-banner-bg);
   border: 1px solid var(--ct-border);
   border-radius: 4px;
@@ -395,18 +419,27 @@ body.zu-test-body {
   font-weight: 700;
   color: var(--ct-text);
   display: block;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 .ct-banner-body {
   font-size: 13px;
   color: var(--ct-text);
+  line-height: 1.5;
 }
 
 /* Main content area */
 .ct-main {
-  margin: 16px 24px 0;
+  max-width: 1200px;
+  margin: 20px auto 0;
+  padding: 0 24px;
+  animation: ctFadeIn 200ms ease-out;
 }
 .ct-part { position: relative; }
+
+@keyframes ctFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 /* Two-column layout (Parts 5, 6, 7, 8) */
 .ct-two-col {
@@ -425,7 +458,10 @@ body.zu-test-body {
   line-height: 1.7;
   color: var(--ct-text);
   white-space: pre-wrap;
+  max-width: 820px; /* readable reading-column width for single-col parts */
 }
+/* Inside a two-col layout the column width already constrains things */
+.ct-two-col .ct-passage { max-width: none; }
 .ct-passage h3 {
   font-family: Georgia, serif;
   color: var(--ct-text);
@@ -776,8 +812,9 @@ body.zu-test-body {
   white-space: nowrap;
 }
 .ct-nav-part--active {
-  flex: 2;
+  flex: 3.5;
   background: #f9fafb;
+  padding: 6px 14px;
 }
 .ct-nav-part--active .ct-nav-part-label {
   color: var(--ct-teal);
@@ -786,7 +823,9 @@ body.zu-test-body {
   display: flex;
   gap: 4px;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: center;
+  max-width: 100%;
 }
 .ct-nav-num {
   min-width: 26px;

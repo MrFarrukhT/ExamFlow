@@ -34,7 +34,7 @@
 
   function render(completed) {
     document.getElementById('welcome-name').textContent = 'Welcome, ' + studentName;
-    const langLabel = lang === 'german-c1' ? 'German C1 (Goethe)' : 'English C1 (Cambridge)';
+    const langLabel = lang === 'german-c1' ? 'German C1 Advanced' : 'English C1 Advanced';
     document.getElementById('welcome-meta').textContent =
       (studentGroup ? 'Group: ' + studentGroup + ' · ' : '') + 'Language: ' + langLabel;
 
