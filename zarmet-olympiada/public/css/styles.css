@@ -234,7 +234,7 @@ body.zu-welcome .page {
 
 .zu-error {
   color: var(--zu-danger);
-  background: #fee2e2;
+  background: var(--ct-error-bg);
   padding: 0.5rem 0.75rem;
   border-radius: 3px;
   margin-top: 0.5rem;
@@ -397,6 +397,20 @@ body.zu-welcome .page {
 }
 .zu-empty-state p { margin: 0.25rem 0; }
 .zu-empty-state p:first-child { color: var(--zu-primary-dark); font-size: 1.1rem; }
+
+/* done.html — the "Please wait for your invigilator" instruction. Was an
+ * inline style; now a class so all visual rules live in one place. */
+.zu-done-instruction {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--zu-text-muted);
+  margin: 0;
+}
+
+/* admin.html — submission detail body wrapper. Was an inline style. */
+.zu-detail-body {
+  margin-top: 1rem;
+}
 
 /* ============================================================ */
 /* TEST PAGE — Cambridge-authentic chrome                        */
@@ -575,8 +589,8 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   border-color: #f59e0b;
 }
 .ct-timer--urgent {
-  color: #991b1b;
-  background: #fee2e2;
+  color: var(--ct-error-text);
+  background: var(--ct-error-bg);
   border-color: #dc2626;
   animation: ctTimerPulse 1s ease-in-out infinite;
 }
@@ -929,20 +943,25 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 }
 
 /* Part 4 — key word transformation (left-aligned, inline input)
- * Single card per page, matching cae/examples/4.png. The surrounding
- * .ct-main gives ample room; .ct-kwt-block sits inside a max-width column
- * with generous vertical padding so it doesn't float abandoned in a sea
- * of whitespace. */
+ * Single card per page, matching cae/examples/4.png. In the real CAE
+ * the KWT block shares the same LEFT EDGE with the "Questions 25–30"
+ * banner above it — content flows flush-left, empty canvas fills the
+ * right. Earlier `margin: 0 auto` centered the 960px block inside the
+ * 1152px .ct-part which produced a ~100px indent relative to the banner;
+ * that read as "the question is floating off to the right" and broke
+ * the visual lock between the instructions banner and the question it
+ * describes. Left-align with margin-left 0 + minimal padding-left so
+ * the teal active accent sits flush next to the text. */
 .ct-kwt-block {
   max-width: 960px;
-  margin: 0 auto 40px;
+  margin: 0 0 40px 0;
   text-align: left;
   /* Override the generic .ct-question--active background so selected KWT
    * blocks don't render as big pale pills. Subtle left-accent only. */
   background: transparent !important;
   border: none !important;
   border-left: 4px solid transparent;
-  padding: clamp(32px, 6vh, 72px) 24px clamp(28px, 5vh, 60px) 28px;
+  padding: clamp(32px, 6vh, 72px) 24px clamp(28px, 5vh, 60px) 4px;
   transition: border-color 0.15s;
 }
 .ct-kwt-block.ct-question--active {
@@ -1578,4 +1597,34 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 @media (max-width: 880px) {
   .ct-two-col { grid-template-columns: 1fr; }
   .ct-nav-part--active { flex: 3; }
+}
+
+/* Mobile (iPhone-class and below): tighten header padding + gap so
+ * logo, candidate ID, and timer don't fight for the same 375px. The
+ * candidate ID label goes smaller and the header itself collapses
+ * its side padding. Also tighten the main content and bottom nav. */
+@media (max-width: 540px) {
+  .ct-header {
+    padding-inline: 12px;
+    gap: 10px;
+    min-height: 60px;
+  }
+  .ct-logo { height: 36px; }
+  .ct-brand-sub { font-size: 11px; }
+  .ct-header-id-label { font-size: 10px; letter-spacing: 0.04em; }
+  .ct-header-id-value { font-size: 13px; }
+  .ct-timer {
+    font-size: 14px;
+    padding: 6px 10px;
+    min-width: 70px;
+  }
+  .ct-banner-wrap { padding: 0 14px; top: 60px; }
+  .ct-banner { padding: 12px 16px; }
+  .ct-banner-title { font-size: 15px; }
+  .ct-banner-body { font-size: 14px; }
+  .ct-main { padding: 0 14px; margin-top: 18px; }
+  .ct-passage { font-size: 16px; line-height: 1.7; }
+  .ct-bottom-nav { height: 68px; }
+  .ct-nav-arrows { padding: 0 12px; gap: 6px; }
+  .ct-nav-arrow, .ct-nav-finish { width: 42px; height: 42px; font-size: 17px; }
 }

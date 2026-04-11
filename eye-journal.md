@@ -1,5 +1,86 @@
 # Eye Journal
 
+## Session: 2026-04-11 18:00 — Zarmed Olympiada Mobile + Hex Tokens + Inline Styles — Round 26 (/loop iteration)
+Persona: Student on an iPhone-class device (375×812) + developer auditing CSS tokens + inline styles | System: Zarmet Olympiada standalone (port 3004)
+Pages explored: welcome/test at 375×812 and 768×1024, plus grep audit for hex orphans and inline styles
+Starting state: Round 24 landed favicon + 2 styled modals + compact admin detail. Rounds 23 and 25 were zero-change verification rounds. Round 26 walks FRESH territory: **mobile/tablet breakpoints, semantic hex values that should be tokens, and trailing inline styles**. Rounds 22-25 had touched the test runner chrome OR the admin view but nobody had looked at responsive breakpoints.
+
+### Round 26 — 5 issues found + fixed
+
+**Findings:**
+
+- [T4] **Mobile header too cramped at 375×812.** Measured: header 375px, brand 137px, candidate-ID block 72px (label wrapping to 2 lines), timer 90px, plus 2× 24px gap + 2× 28px padding = 403px content. The brand-sub "C1 Olympiada" beside the logo was fighting the ID block for horizontal space.
+- [T4] **3 semantic hex orphans in styles.css:** `.zu-error bg #fee2e2`, `.ct-timer--urgent color #991b1b` + `bg #fee2e2`. All three should use existing `--ct-error-bg` / `--ct-error-text` tokens.
+- [T0] **2 trailing inline styles in HTML:** done.html:18 `<p style="text-align:center; font-size:1.1rem; color: var(--zu-text-muted);">` and admin.html:57 `<div id="detail-body" style="margin-top:1rem;">`. Round 22 introduced the first one — needs migrating.
+- [T3] **Mobile breakpoint gap:** existing `@media (max-width: 880px)` only handles two-col layout collapse. Nothing below that handles iPhone-class widths (375px) — so mobile used desktop header 72px, banner 18×26 padding, passage 18px serif — readable but cramped.
+
+**Action:** POLISH 4 fixes grouped into one commit.
+
+**Files touched:**
+
+1. **styles.css hex → token migrations:**
+   - `.zu-error { background: #fee2e2 → var(--ct-error-bg) }`
+   - `.ct-timer--urgent { color: #991b1b → var(--ct-error-text); background: #fee2e2 → var(--ct-error-bg) }`
+   - Left `border-color: #dc2626` and the rgba keyframe literal — pure semantic red-600 with no brand token to serve them.
+
+2. **styles.css new utility classes:**
+   ```css
+   .zu-done-instruction { text-align: center; font-size: 1.1rem; color: var(--zu-text-muted); margin: 0; }
+   .zu-detail-body { margin-top: 1rem; }
+   ```
+
+3. **done.html:** `<p style="...">Please wait...</p>` → `<p class="zu-done-instruction">`
+4. **admin.html:** `<div id="detail-body" style="margin-top:1rem;">` → `<div class="zu-detail-body">`
+
+5. **styles.css new `@media (max-width: 540px)` block** — iPhone-class tightening:
+   - `.ct-header` padding-inline `max(28px, calc(...)) → 12px`, gap `24 → 10`, min-height `72 → 60`
+   - `.ct-logo` height `44 → 36`, `.ct-brand-sub` font `13 → 11`
+   - `.ct-header-id-label` `12 → 10`, `.ct-header-id-value` `16 → 13`
+   - `.ct-timer` font `17 → 14`, padding `8×16 → 6×10`, min-width `86 → 70`
+   - `.ct-banner-wrap` padding `0 28 → 0 14`, sticky top `72 → 60`
+   - `.ct-banner` padding `18×26 → 12×16`, title `17 → 15`, body `15 → 14`
+   - `.ct-main` padding `0 28 → 0 14`, margin-top `28 → 18`
+   - `.ct-passage` font-size `18 → 16`, line-height `1.75 → 1.7`
+   - `.ct-bottom-nav` height `76 → 68`
+   - `.ct-nav-arrows` tightened; `.ct-nav-arrow/.ct-nav-finish` `48×48 → 42×42`
+
+### Verification
+
+**Mobile 375×812** (`eye-r25-06-mobile-after.png`): Header fits cleanly — compact logo + brand sub on left, CANDIDATE ID + value stack in the middle, timer pill on right. Banner + instructions readable on 3 lines at 14px. Passage at 16px serif fully readable. Gap boxes inline properly. Bottom nav shows Part 1 active with question pills, arrow buttons + green finish. Every element usable on iPhone-class.
+
+**Desktop 1920×1080** (`eye-r25-07-desktop-regression.png`): Unchanged. The 540px breakpoint doesn't affect desktop. Zero regression.
+
+**Syntax** — `node --check` passes on test.js and admin.js.
+
+### Quality Map
+
+| Surface | Layer (before → after) | Notes |
+|---------|------------------------|-------|
+| Mobile 375px test runner | 3-Efficient → **5-Crafted** | Full iPhone-class tuning |
+| .zu-error background | 4-Polished → **5-Crafted** | --ct-error-bg token |
+| .ct-timer--urgent colors | 4-Polished → **5-Crafted** | --ct-error-* tokens |
+| done.html instruction | 4-Polished → **5-Crafted** | .zu-done-instruction class |
+| admin.html detail body | 4-Polished → **5-Crafted** | .zu-detail-body class |
+
+### Deferred
+
+- `#fef2f2 / #eff6ff` admin table row backgrounds — table-specific chrome, low ROI for token creation.
+- Landscape mobile 812×375 not verified — 812 is above the 540 breakpoint so the desktop header kicks in; bottom nav might be vertically cramped.
+- Timer amber warning state still literal `#fef3c7 / #f59e0b / #92400e` — pure semantic amber, no brand token.
+
+### Session Stats
+
+Pages explored: 4 (mobile welcome + mobile test + tablet test + desktop regression) + source grep
+Findings: 5 (1× T3 mobile breakpoint, 1× T4 mobile header, 3× T4 hex orphans, 2× T0 inline styles)
+Polishes landed: 4 (grouped)
+Files touched: 3 (styles.css, done.html, admin.html)
+
+**Trajectory note:** Round 26's value was **area selection**. Rounds 22-25 all touched the test runner chrome or admin view at 1920×1080. Nobody had looked at the mobile breakpoint — the mobile experience had silently degraded as the desktop experience was polished. **Lesson: every /eye loop should rotate through at least one non-default-viewport round. An "always at 1920×1080" skill misses half the product.**
+
+**Key learning:** Source-grep sweeps for `#[0-9a-f]{3,6}` and `style="` in non-CSS files take seconds and always catch orphans. Every polished round that uses `#fee2e2` literal is a future palette change that breaks.
+
+---
+
 ## Session: 2026-04-11 18:00 — Zarmed Olympiada Meta + Timer A11y — Round 22b (parallel iteration)
 Persona: Student on an exam desktop with Windows dark-mode + Chrome Auto Dark Mode enabled; also screen-reader user who'd get spammed by a 90-minute countdown | System: Zarmed Olympiada standalone (port 3004)
 Pages explored: Source audit of 5 HTML pages (meta tags) + test.html timer aria
