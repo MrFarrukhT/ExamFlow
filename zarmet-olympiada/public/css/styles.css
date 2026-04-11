@@ -1643,7 +1643,9 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   .ct-nav-part { min-width: 90px; padding: 10px 10px; }
   .ct-nav-part--active {
     flex: 4;
-    min-width: 440px;
+    /* 480 = label "Part 8" (~50) + margin-right (12) + 10 nums (320)
+     * + 9 gaps (54) + inner padding (32) + breathing (12) */
+    min-width: 480px;
   }
   .ct-nav-part-numbers { flex-wrap: nowrap; }
 }
