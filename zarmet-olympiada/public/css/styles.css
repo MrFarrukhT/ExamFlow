@@ -1624,6 +1624,26 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   .ct-nav-part--active { flex: 3; }
 }
 
+/* Medium viewports (881px–1199px): common lab-PC range covering 1024x768
+ * and 1280x720. At 1024x768 the active .ct-nav-part cell was too narrow
+ * (~113px) to fit 6–10 question-number buttons on one row, so they wrapped
+ * to 2–3 rows and were clipped below the 76px fixed nav bar — students
+ * on Part 1 (8 questions) or Part 8 (10 questions) saw only "Part 1" with
+ * NO visible question numbers, and Part 4 (6 questions) showed only 2/6.
+ * Fix: give the active cell an explicit min-width wide enough for 10
+ * numbered buttons on a single row (10 × 32 + 9 × 6 gap + label ≈ 440px).
+ * Inactive cells shrink their min-width to 90px so the horizontal scroll
+ * bar only kicks in at ~1100px — below that, round 14's scrollIntoView
+ * keeps the active cell visible while inactive cells scroll off-screen. */
+@media (min-width: 881px) and (max-width: 1199px) {
+  .ct-nav-part { min-width: 90px; padding: 10px 10px; }
+  .ct-nav-part--active {
+    flex: 4;
+    min-width: 440px;
+  }
+  .ct-nav-part-numbers { flex-wrap: nowrap; }
+}
+
 /* Mobile (iPhone-class and below): tighten header padding + gap so
  * logo, candidate ID, and timer don't fight for the same 375px. The
  * candidate ID label goes smaller and the header itself collapses
