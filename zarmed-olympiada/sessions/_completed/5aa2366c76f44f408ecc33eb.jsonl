@@ -1,0 +1,9 @@
+{"t":"2026-04-12T08:18:40.421Z","ev":"start","studentId":"b8eb4a50-d34b-408b-9a62-98fca2c19434","student":"Farrukh","group":"","lang":"german-c1","skill":"listening","tokenHash":"32254e7f63fd8b03"}
+{"t":"2026-04-12T08:18:41.399Z","ev":"audio-play","partId":"part-listening-1"}
+{"t":"2026-04-12T08:18:43.736Z","ev":"audio-play","partId":"part-listening-2"}
+{"t":"2026-04-12T08:18:51.836Z","ev":"audio-play","partId":"part-listening-3"}
+{"t":"2026-04-12T08:21:45.722Z","ev":"audio-play","partId":"part-listening-4"}
+{"t":"2026-04-12T08:21:46.738Z","ev":"audio-play","partId":"part-listening-2"}
+{"t":"2026-04-12T08:21:47.689Z","ev":"audio-play","partId":"part-listening-1"}
+{"t":"2026-04-12T08:21:48.653Z","ev":"audio-play","partId":"part-listening-3"}
+{"t":"2026-04-12T08:23:02.199Z","ev":"submit","overtime":false}

@@ -1,5 +1,33 @@
 # Eye Journal
 
+## Session: 2026-04-12 12:53 — Zarmed Olympiada Admin + Tablet + Done — Round 38 (/loop iteration)
+Persona: English C1 student + admin invigilator | System: Zarmed Olympiada standalone (port 3004)
+Pages explored: done.html (desktop + 768px), test.html at 768px (Part 1 + Part 5 two-col collapse), admin.html (login + list + detail view)
+Starting state: Round 37 confirmed zero issues in the English C1 full student flow. This round targets untested areas: done page, admin panel, and tablet viewport.
+
+### Round 38 — ZERO CHANGES (admin + tablet + done verification)
+
+**done.html:** Logo, "Thank you", "Your test has been submitted.", "Please wait for your invigilator." Clean and minimal. ✅
+**done.html at 768px:** Logo 300px wide, h1 44.2px — proportions correct. ✅
+**test.html at 768px:** Header 89px, banner top 90px (no overlap). Two-col collapses to single column (grid-template-columns: 720px). Sticky disabled (position: static). Bottom nav scrolls horizontally. ✅
+**admin login:** Auto-focus on password input, Unlock button. ✅
+**admin list view:** 45+ submissions displayed. Compact dates, humanized lang/skill columns. XSS test data (`<img onerror>`, `<script>`) safely escaped as text. Refresh/Export buttons. ✅
+**admin detail view:** Header "Sophie Brown — English C1 / Reading". Stats bar: Score 2/78 (3%), Answered 5/56, Correct 2, Duration 2m 27s. Per-question table with part headers and sub-scores. Color-coded rows (correct/wrong/blank). Back button. ✅
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| done.html | 4-Polished | Clean, responsive |
+| admin.html (login) | 4-Polished | Auto-focus, error feedback |
+| admin.html (list) | 4-Polished | XSS-safe, export, empty state |
+| admin.html (detail) | 4-Polished | Stats, color-coded, part grouping |
+
+### Session Stats
+Pages explored: 4 (done + test@tablet + admin login/list/detail)
+Rounds: 1
+Changes shipped: 0
+Verdict: App is thoroughly polished — two consecutive zero-change rounds
+
 ## Session: 2026-04-12 12:42 — Zarmed Olympiada English C1 Full Flow — Round 37 (/loop iteration)
 Persona: English C1 student (Sophie Brown) taking CAE-style Reading + Listening | System: Zarmed Olympiada standalone (port 3004)
 Pages explored: index.html, dashboard.html, test.html (all 8 Reading parts + Listening pre-play + audio), dashboard.html (post-submit)

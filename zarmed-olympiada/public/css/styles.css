@@ -685,11 +685,205 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   align-items: center;
   gap: 14px;
 }
-/* Per intent-olympiada-cambridge-ui.md: the test header right side is
- * deliberately EMPTY (no wifi/bell/menu/pencil) — those icons exist in
- * cae/examples/*.png but are Cambridge Inspera chrome, not exam content.
- * Client direction (2026-04-11): "Right: empty. Just empty space."
- * Only the timer lives in .ct-header-right. */
+/* Options hamburger button */
+.ct-options-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: 1.5px solid var(--ct-border-strong);
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 7px;
+  transition: background 0.15s;
+}
+.ct-options-btn:hover { background: var(--ct-teal-soft); }
+.ct-hamburger-line {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--ct-text);
+  border-radius: 1px;
+}
+
+/* Options panel — slides in from the right */
+.ct-options-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  z-index: 200;
+  animation: ctFadeIn 150ms ease-out;
+}
+.ct-options-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 360px;
+  max-width: 90vw;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -4px 0 24px rgba(15, 23, 42, 0.12);
+  z-index: 201;
+  display: flex;
+  flex-direction: column;
+  animation: ctSlideIn 200ms ease-out;
+}
+@keyframes ctSlideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+.ct-options-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.ct-options-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ct-text);
+}
+.ct-options-close {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--ct-border-strong);
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--ct-text);
+}
+.ct-options-close:hover { background: #f3f4f6; }
+.ct-options-body { padding: 16px 24px; flex: 1; overflow-y: auto; }
+.ct-options-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.12s;
+  font-size: 16px;
+  color: var(--ct-text);
+}
+.ct-options-item:hover { background: #f3f4f6; }
+.ct-options-item-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.ct-options-item-label { flex: 1; font-weight: 500; }
+.ct-options-item-arrow { color: var(--ct-text-muted); font-size: 18px; }
+
+/* Text size sub-panel */
+.ct-options-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.ct-options-back-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--zu-primary);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.ct-options-back-btn:hover { text-decoration: underline; }
+.ct-options-subheading {
+  flex: 1;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ct-text);
+  margin: 0;
+}
+.ct-text-size-choices {
+  display: flex;
+  gap: 12px;
+  padding: 24px;
+}
+.ct-text-size-btn {
+  flex: 1;
+  padding: 14px 8px;
+  border: 1.5px solid var(--ct-border-strong);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ct-text);
+  transition: border-color 0.15s, background 0.15s;
+}
+.ct-text-size-btn:hover { background: #f9fafb; }
+.ct-text-size-btn--active {
+  border-color: var(--zu-primary);
+  background: #e8f0fe;
+  color: var(--zu-primary);
+}
+
+/* Text size classes on body */
+body.ct-text-small .ct-passage { font-size: 14px; }
+body.ct-text-small .ct-q-prompt { font-size: 13px; }
+body.ct-text-small .ct-q-option { font-size: 13px; }
+body.ct-text-large .ct-passage { font-size: 19px; }
+body.ct-text-large .ct-q-prompt { font-size: 18px; }
+body.ct-text-large .ct-q-option { font-size: 18px; }
+
+/* Highlight & notes */
+.ct-hl {
+  background: #fff59d;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+.ct-hl--note {
+  background: #fff59d;
+  border-bottom: 2px dotted #f57c00;
+  cursor: help;
+}
+
+/* Context menu for text selection */
+.ct-context-menu {
+  position: fixed;
+  z-index: 300;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.14);
+  min-width: 160px;
+  padding: 4px;
+  animation: ctFadeIn 120ms ease-out;
+}
+.ct-ctx-item {
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ct-text);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.ct-ctx-item:hover { background: #f3f4f6; }
+.ct-ctx-item--danger { color: #dc2626; }
+.ct-ctx-item--danger:hover { background: #fef2f2; }
+
 .ct-audio-status {
   display: none;
   align-items: center;
@@ -751,7 +945,7 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 .ct-banner-wrap {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 16px 24px 0;
   position: sticky;
   top: 90px; /* right below the sticky header (~89px rendered height) */
   background: var(--ct-bg);
@@ -793,7 +987,7 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 /* Main content area */
 .ct-main {
   max-width: 1200px;
-  margin: 20px auto 0;
+  margin: 36px auto 0;
   padding: 0 24px;
   animation: ctFadeIn 200ms ease-out;
 }
@@ -884,7 +1078,7 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 
 /* Passage */
 .ct-passage {
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.7;
   color: var(--ct-text);
   white-space: pre-wrap;
@@ -895,7 +1089,7 @@ body.zu-test-body .ct-nav-finish:focus-visible {
 .ct-passage h3 {
   font-family: Georgia, serif;
   color: var(--ct-text);
-  font-size: 17px;
+  font-size: 19px;
   margin: 0 0 12px;
 }
 
@@ -1001,7 +1195,7 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   border-color: var(--ct-teal);
 }
 .ct-q-prompt {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   margin-bottom: 8px;
   color: var(--ct-text);
@@ -1043,7 +1237,7 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   border: 1px solid transparent;
   border-radius: 3px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 15px;
 }
 .ct-q-option:hover { background: #f9fafb; }
 .ct-q-option input[type="radio"],
@@ -1615,17 +1809,37 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   box-shadow: 0 2px 6px rgba(30, 64, 175, 0.25);
 }
 
-/* Bookmark icon — visual only in v1 */
+/* Bookmark icon — clickable toggle for flagging questions */
 .ct-bookmark {
   display: inline-block;
-  width: 14px;
-  height: 18px;
+  width: 16px;
+  height: 20px;
   background: var(--ct-text-muted);
   -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z'/></svg>") center/contain no-repeat;
   mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z'/></svg>") center/contain no-repeat;
-  opacity: 0.45;
+  opacity: 0.35;
   float: right;
   margin-left: 8px;
+  cursor: pointer;
+  transition: opacity 0.15s, background 0.15s;
+}
+.ct-bookmark:hover { opacity: 0.7; }
+.ct-bookmark--active {
+  background: #c8a000;
+  opacity: 1;
+}
+.ct-nav-num--bookmarked {
+  position: relative;
+}
+.ct-nav-num--bookmarked::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #c8a000;
 }
 
 /* Confirm modal — replaces native window.confirm() on the finish action,
@@ -1806,7 +2020,7 @@ body.zu-test-body .ct-nav-finish:focus-visible {
     padding: 6px 10px;
     min-width: 70px;
   }
-  .ct-banner-wrap { padding: 0 14px; top: 66px; }
+  .ct-banner-wrap { padding: 14px 14px 0; top: 66px; }
   .ct-banner { padding: 12px 16px; }
   .ct-banner-title { font-size: 15px; }
   .ct-banner-body { font-size: 14px; }

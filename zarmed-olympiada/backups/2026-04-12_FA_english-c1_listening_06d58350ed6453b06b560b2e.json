@@ -1,0 +1,309 @@
+{
+  "sessionId": "06d58350ed6453b06b560b2e",
+  "studentId": "7e525194-3994-42b3-aa50-a91ab294f7d5",
+  "student": "FA",
+  "group": "",
+  "lang": "english-c1",
+  "skill": "listening",
+  "startedAt": "2026-04-12T08:23:51.915Z",
+  "finishedAt": "2026-04-12T08:24:10.281Z",
+  "answers": {},
+  "score": {
+    "earned": 0,
+    "total": 30,
+    "perQuestion": [
+      {
+        "qid": "lq1",
+        "partId": "part-listening-1",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq2",
+        "partId": "part-listening-1",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "B",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq3",
+        "partId": "part-listening-1",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq4",
+        "partId": "part-listening-1",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq5",
+        "partId": "part-listening-1",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq6",
+        "partId": "part-listening-1",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq7",
+        "partId": "part-listening-2",
+        "type": "sentence-completion",
+        "studentValue": null,
+        "correctAnswer": [
+          "manual labour",
+          "manual labor",
+          "labour",
+          "labor"
+        ],
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq8",
+        "partId": "part-listening-2",
+        "type": "sentence-completion",
+        "studentValue": null,
+        "correctAnswer": [
+          "soil layers",
+          "layers of soil"
+        ],
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq9",
+        "partId": "part-listening-2",
+        "type": "sentence-completion",
+        "studentValue": null,
+        "correctAnswer": [
+          "farming",
+          "farming practices"
+        ],
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq10",
+        "partId": "part-listening-2",
+        "type": "sentence-completion",
+        "studentValue": null,
+        "correctAnswer": [
+          "animal teeth"
+        ],
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq11",
+        "partId": "part-listening-2",
+        "type": "sentence-completion",
+        "studentValue": null,
+        "correctAnswer": [
+          "social media"
+        ],
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq12",
+        "partId": "part-listening-2",
+        "type": "sentence-completion",
+        "studentValue": null,
+        "correctAnswer": [
+          "education"
+        ],
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq13",
+        "partId": "part-listening-2",
+        "type": "sentence-completion",
+        "studentValue": null,
+        "correctAnswer": [
+          "team leader"
+        ],
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq14",
+        "partId": "part-listening-2",
+        "type": "sentence-completion",
+        "studentValue": null,
+        "correctAnswer": [
+          "cultural heritage"
+        ],
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq15",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq16",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq17",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "B",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq18",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "D",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq19",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq20",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "D",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq21",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": null,
+        "correctAnswer": "E",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq22",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq23",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": null,
+        "correctAnswer": "F",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq24",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": null,
+        "correctAnswer": "D",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq25",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": null,
+        "correctAnswer": "G",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq26",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": null,
+        "correctAnswer": "D",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq27",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": null,
+        "correctAnswer": "B",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq28",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": null,
+        "correctAnswer": "E",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq29",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": null,
+        "correctAnswer": "G",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "lq30",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      }
+    ]
+  },
+  "eventCount": 3
+}

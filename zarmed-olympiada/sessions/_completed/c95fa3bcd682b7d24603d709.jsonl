@@ -1,0 +1,4 @@
+{"t":"2026-04-12T07:59:48.400Z","ev":"start","studentId":"6a63cc60-40b9-436e-8f89-e146ab09ce5b","student":"Farrukh Tajibaev","group":"","lang":"english-c1","skill":"listening","tokenHash":"6c991fdfc4ff7f97"}
+{"t":"2026-04-12T07:59:49.626Z","ev":"audio-play","partId":"part-listening-1"}
+{"t":"2026-04-12T08:01:30.968Z","ev":"answer","qid":"lq25","value":"B"}
+{"t":"2026-04-12T08:03:47.620Z","ev":"submit","overtime":false}

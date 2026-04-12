@@ -1,0 +1,7 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - img "Zarmed University" [ref=e4]
+    - heading "Thank you" [level=1] [ref=e5]
+    - paragraph [ref=e6]: Your test has been submitted.
+  - main [ref=e7]:
+    - paragraph [ref=e8]: Please wait for your invigilator.

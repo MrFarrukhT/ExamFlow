@@ -131,6 +131,7 @@
     audioFinishedHideTimer: null, // setTimeout id for the "Audio finished" brief announcement;
                                   // cleared when new audio plays, part changes, or on error
     activeSlotQid: null,    // for gapped-text: which slot is selected for assignment
+    bookmarks: {},          // qid -> true (toggled by student; visually flags questions for review)
     timerEndMs: null,
     timerHandle: null,
     submitting: false,
@@ -273,9 +274,21 @@
     return e;
   }
 
-  function addBookmark(node) {
+  function addBookmark(node, qid) {
     const b = el('span', 'ct-bookmark');
-    b.setAttribute('aria-hidden', 'true');
+    if (state.bookmarks[qid]) b.classList.add('ct-bookmark--active');
+    b.setAttribute('role', 'button');
+    b.setAttribute('aria-label', 'Bookmark');
+    b.setAttribute('aria-pressed', state.bookmarks[qid] ? 'true' : 'false');
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      state.bookmarks[qid] = !state.bookmarks[qid];
+      b.classList.toggle('ct-bookmark--active', state.bookmarks[qid]);
+      b.setAttribute('aria-pressed', state.bookmarks[qid] ? 'true' : 'false');
+      // Update nav bar bookmark dot
+      const navBtn = document.querySelector('.ct-nav-num[data-qid="' + qid + '"]');
+      if (navBtn) navBtn.classList.toggle('ct-nav-num--bookmarked', state.bookmarks[qid]);
+    });
     node.appendChild(b);
     return node;
   }
@@ -300,7 +313,7 @@
       prompt.appendChild(badge);
     }
     prompt.appendChild(document.createTextNode(promptText));
-    addBookmark(prompt);
+    addBookmark(prompt, q.id);
     return prompt;
   }
 
@@ -526,9 +539,7 @@
 
     // Bookmark icon on the far right of the lead row
     const bookmarkCell = el('span', 'ct-kwt-bookmark');
-    const bookmark = el('span', 'ct-bookmark');
-    bookmark.setAttribute('aria-hidden', 'true');
-    bookmarkCell.appendChild(bookmark);
+    addBookmark(bookmarkCell, q.id);
     leadRow.appendChild(bookmarkCell);
 
     block.appendChild(leadRow);
@@ -629,9 +640,13 @@
     const right = el('div', 'ct-col');
     const bank = el('div', 'ct-paragraph-bank');
     bank.appendChild(el('h4', null, isDe ? 'Absätze' : 'Paragraphs'));
+    const part7Qids = new Set((part.questions || []).map(q => q.id));
     (part.paragraphBank || []).forEach((p) => {
       const card = el('div', 'ct-para-card');
-      const usedBy = Object.entries(state.answers).find(([qid, v]) => v === p.key);
+      // Only check answers belonging to THIS part's questions — avoids
+      // cross-part contamination where Part 8's "A"/"B" answers block
+      // Part 7's paragraph cards with matching keys.
+      const usedBy = Object.entries(state.answers).find(([qid, v]) => part7Qids.has(qid) && v === p.key);
       if (usedBy) card.classList.add('ct-para-card--used');
       card.appendChild(el('span', 'ct-para-key', p.key));
       card.appendChild(document.createTextNode(p.text));
@@ -659,8 +674,12 @@
   }
   function handleParagraphClick(paraKey) {
     if (!state.activeSlotQid) return;
-    // If this paragraph is already used, don't let it be reused (unless clicking to free)
-    const usedBy = Object.entries(state.answers).find(([, v]) => v === paraKey);
+    // If this paragraph is already used by another slot in the SAME part,
+    // don't let it be reused. Scoped to current part's questions to avoid
+    // false positives from other parts (e.g. Part 8 answers sharing keys).
+    const currentPart = state.parts[state.currentPartIndex].part;
+    const partQids = new Set((currentPart.questions || []).map(q => q.id));
+    const usedBy = Object.entries(state.answers).find(([qid, v]) => partQids.has(qid) && v === paraKey);
     if (usedBy && usedBy[0] !== state.activeSlotQid) return;
     const target = state.activeSlotQid;
     state.activeSlotQid = null;
@@ -673,16 +692,23 @@
     const wrap = el('div', 'ct-part');
     wrap.dataset.partId = part.id;
 
-    // Pre-play gate — shown ONCE PER DISTINCT AUDIO FILE. Real CAE Listening
-    // is a single continuous 40-minute recording covering all four parts, so
-    // after the student plays part 1 the modal must stay silent for parts 2–4
-    // (they all reference the same src). Real Goethe Hören, however, has FOUR
-    // separate Teil recordings — the modal has to fire once per Teil so the
-    // student can hear Teile 2/3/4 at all. Tracking by src covers both cases.
+    // Pre-play gate — shown ONLY ONCE for the entire listening module.
+    // After the student clicks "Play" on the first part, all subsequent
+    // parts auto-play their audio without modal interruption. This covers
+    // both CAE (single file, 4 parts) and Goethe (4 separate files, 4 Teile).
     const audioSrc = part.audio && part.audio.src;
-    if (audioSrc && !state.playedAudioSrcs.has(audioSrc)) {
+    const anyAudioPlayed = state.playedAudioSrcs && state.playedAudioSrcs.size > 0;
+    if (audioSrc && !anyAudioPlayed) {
       const modal = buildPrePlayModal(part);
       wrap.appendChild(modal);
+    } else if (audioSrc && !state.playedAudioSrcs.has(audioSrc)) {
+      // Auto-start this part's audio (no modal) — student already accepted
+      // the listening gate on the first part. Only auto-start if no other
+      // audio is currently playing (avoid overlapping playback).
+      const isPlaying = state.audioElement && !state.audioElement.paused && !state.audioElement.ended;
+      if (!isPlaying) {
+        setTimeout(() => startAudio(part), 100);
+      }
     }
 
     if (Array.isArray(part.taskGroups) && part.taskGroups.length) {
@@ -799,9 +825,7 @@
             row.appendChild(gap);
           }
           const bookmarkCell = el('span', 'ct-kwt-bookmark');
-          const bookmark = el('span', 'ct-bookmark');
-          bookmark.setAttribute('aria-hidden', 'true');
-          bookmarkCell.appendChild(bookmark);
+          addBookmark(bookmarkCell, q.id);
           row.appendChild(bookmarkCell);
 
           block.appendChild(row);
@@ -933,6 +957,15 @@
     });
     audio.addEventListener('ended', () => {
       if (stallTimer) clearTimeout(stallTimer);
+      // Mark ALL parts that share this audio src as finished, not just the
+      // one that started playback. Covers both single-file CAE listening
+      // (4 parts, 1 file) and multi-file Goethe Hören (4 parts, 4 files).
+      const endedSrc = part.audio && part.audio.src;
+      state.parts.forEach((pe) => {
+        if (pe.part.audio && pe.part.audio.src === endedSrc) {
+          state.audioState[pe.part.id] = 'finished';
+        }
+      });
       state.audioState[part.id] = 'finished';
       // Brief "Audio finished" confirmation instead of silent hide.
       // The aria-live="polite" region announces the text change to screen
@@ -952,6 +985,15 @@
       }, 2500);
       renderCurrentPart();
       renderBottomNav();
+
+      // Auto-chain: if the student's current part has its own unplayed audio
+      // (German Goethe with separate files per Teil), start it automatically
+      // so the listening flows without interruption.
+      const currentPart = state.parts[state.currentPartIndex] && state.parts[state.currentPartIndex].part;
+      if (currentPart && currentPart.audio && currentPart.audio.src &&
+          !state.playedAudioSrcs.has(currentPart.audio.src)) {
+        setTimeout(() => startAudio(currentPart), 500);
+      }
     });
     audio.addEventListener('error', () => {
       handleFailure(t.audioUnavailable);
@@ -1281,6 +1323,7 @@
           btn.dataset.qid = fq.qid;
           const answered = state.answers[fq.qid];
           if (answered != null && answered !== '') btn.classList.add('ct-nav-num--answered');
+          if (state.bookmarks[fq.qid]) btn.classList.add('ct-nav-num--bookmarked');
           if (fq.qid === state.currentQid) btn.classList.add('ct-nav-num--active');
           btn.addEventListener('click', () => {
             state.currentQid = fq.qid;
@@ -1339,36 +1382,22 @@
     const partEntry = state.parts[state.currentPartIndex];
     if (!partEntry) return false;
     if (!partEntry.part.audio) return false;
-    const s = state.audioState[partEntry.part.id] || 'not-started';
-    return s !== 'finished';
+    // Check if this audio FILE has ever been played (not per-part state).
+    // A single CAE listening file covers all 4 parts — once Part 1 starts
+    // the audio, Parts 2-4 share the same src and are unlocked.
+    const src = partEntry.part.audio.src;
+    if (src && state.playedAudioSrcs && state.playedAudioSrcs.has(src)) return false;
+    return true;
   }
 
   function goToPart(i) {
     if (i < 0 || i >= state.parts.length) return;
     if (i !== state.currentPartIndex) {
-      // Stop any playing audio on part change
-      if (state.audioElement) {
-        try { state.audioElement.pause(); } catch (e) {}
-        state.audioElement = null;
-        // If we leave during 'playing', treat as abandoned — mark finished to avoid re-modal
-        const oldPart = state.parts[state.currentPartIndex].part;
-        if (oldPart.audio && state.audioState[oldPart.id] === 'playing') {
-          state.audioState[oldPart.id] = 'finished';
-        }
-      }
-      // Cancel the "Audio finished" hide timer if it's pending — we're
-      // leaving the listening part, so the brief confirmation message
-      // shouldn't linger on the next (possibly non-listening) part.
-      if (state.audioFinishedHideTimer) {
-        clearTimeout(state.audioFinishedHideTimer);
-        state.audioFinishedHideTimer = null;
-        const statusEl = document.getElementById('ct-audio-status');
-        if (statusEl) {
-          statusEl.classList.remove('ct-audio-status--visible');
-          const label = statusEl.querySelector('span:last-child');
-          if (label) label.textContent = t.audioPlaying;
-        }
-      }
+      // Audio keeps playing across parts — a real CAE/Goethe listening exam
+      // is a single continuous recording covering all parts. Students can
+      // freely navigate between parts while the audio plays. We only destroy
+      // the audio element when the audio itself ends (via the 'ended' event).
+      // No pause, no destroy, no state mutation on part switch.
       state.currentPartIndex = i;
       const firstQid = state.parts[i].flatQuestions[0] && state.parts[i].flatQuestions[0].qid;
       state.currentQid = firstQid || null;
@@ -1531,6 +1560,219 @@
     }
   }
 
+  // ---------- highlight & notes ----------
+  // Context menu appears when student selects text in a passage. Supports
+  // highlighting selected text and attaching notes — stored per-session in
+  // localStorage so highlights survive part navigation and page refresh.
+
+  function initHighlightSystem() {
+    // State
+    const hlKey = 'olympiada:hl:' + (sessionId || 'tmp');
+    let highlights = [];
+    try { highlights = JSON.parse(localStorage.getItem(hlKey)) || []; } catch (e) { highlights = []; }
+
+    function saveHighlights() {
+      try { localStorage.setItem(hlKey, JSON.stringify(highlights)); } catch (e) {}
+    }
+
+    // Context menu element (created once, reused)
+    const menu = el('div', 'ct-context-menu');
+    menu.style.display = 'none';
+    document.body.appendChild(menu);
+
+    function hideMenu() { menu.style.display = 'none'; }
+
+    // Close menu on click outside
+    document.addEventListener('click', (e) => {
+      if (!menu.contains(e.target)) hideMenu();
+    });
+
+    // Show context menu on text selection inside passages
+    document.addEventListener('mouseup', (e) => {
+      // Small delay to let selection finalize
+      setTimeout(() => {
+        const sel = window.getSelection();
+        if (!sel || sel.isCollapsed) return;
+        const range = sel.getRangeAt(0);
+        // Only allow highlighting inside passage elements
+        const passage = range.commonAncestorContainer.nodeType === 1
+          ? range.commonAncestorContainer.closest('.ct-passage, .ct-task-group-instructions, .ct-q-prompt')
+          : range.commonAncestorContainer.parentElement &&
+            range.commonAncestorContainer.parentElement.closest('.ct-passage, .ct-task-group-instructions, .ct-q-prompt');
+        if (!passage) return;
+
+        menu.innerHTML = '';
+        // Highlight option
+        const hlItem = el('div', 'ct-ctx-item');
+        hlItem.textContent = isDe ? 'Markieren' : 'Highlight';
+        hlItem.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          applyHighlight(range, null);
+          hideMenu();
+        });
+        menu.appendChild(hlItem);
+
+        // Note option
+        const noteItem = el('div', 'ct-ctx-item');
+        noteItem.textContent = isDe ? 'Notiz hinzufügen' : 'Add a note';
+        noteItem.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          hideMenu();
+          const noteText = prompt(isDe ? 'Notiz eingeben:' : 'Enter your note:');
+          if (noteText && noteText.trim()) {
+            applyHighlight(range, noteText.trim());
+          }
+        });
+        menu.appendChild(noteItem);
+
+        // Check if selection is inside an existing highlight
+        const existingHl = range.commonAncestorContainer.nodeType === 1
+          ? range.commonAncestorContainer.closest('.ct-hl')
+          : range.commonAncestorContainer.parentElement &&
+            range.commonAncestorContainer.parentElement.closest('.ct-hl');
+        if (existingHl) {
+          const clearItem = el('div', 'ct-ctx-item ct-ctx-item--danger');
+          clearItem.textContent = isDe ? 'Markierung entfernen' : 'Clear highlight';
+          clearItem.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            removeHighlightEl(existingHl);
+            hideMenu();
+          });
+          menu.appendChild(clearItem);
+        }
+
+        // Position near cursor
+        const x = Math.min(e.clientX, window.innerWidth - 180);
+        const y = Math.min(e.clientY + 5, window.innerHeight - 120);
+        menu.style.left = x + 'px';
+        menu.style.top = y + 'px';
+        menu.style.display = 'block';
+      }, 10);
+    });
+
+    function applyHighlight(range, note) {
+      try {
+        const span = document.createElement('span');
+        span.className = note ? 'ct-hl ct-hl--note' : 'ct-hl';
+        if (note) {
+          span.setAttribute('data-note', note);
+          span.setAttribute('title', note);
+        }
+        range.surroundContents(span);
+        window.getSelection().removeAllRanges();
+        // Store highlight data for persistence
+        highlights.push({
+          text: span.textContent,
+          note: note || null,
+          partIndex: state.currentPartIndex,
+          timestamp: Date.now(),
+        });
+        saveHighlights();
+      } catch (e) {
+        // surroundContents can fail if selection spans element boundaries;
+        // in that case, silently skip rather than crash.
+        console.warn('highlight failed:', e);
+      }
+    }
+
+    function removeHighlightEl(hlEl) {
+      const parent = hlEl.parentNode;
+      while (hlEl.firstChild) parent.insertBefore(hlEl.firstChild, hlEl);
+      parent.removeChild(hlEl);
+      parent.normalize(); // merge adjacent text nodes
+    }
+  }
+
+  // ---------- options menu ----------
+  function buildOptionsPanel() {
+    // Overlay backdrop
+    const overlay = el('div', 'ct-options-overlay');
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) overlay.remove();
+    });
+
+    const panel = el('div', 'ct-options-panel');
+
+    function showMainMenu() {
+      panel.innerHTML = '';
+      // Header
+      const header = el('div', 'ct-options-header');
+      header.appendChild(el('h2', null, isDe ? 'Optionen' : 'Options'));
+      const close = document.createElement('button');
+      close.className = 'ct-options-close';
+      close.textContent = '\u00d7';
+      close.addEventListener('click', () => overlay.remove());
+      header.appendChild(close);
+      panel.appendChild(header);
+
+      const body = el('div', 'ct-options-body');
+
+      // Text size option
+      const textItem = el('div', 'ct-options-item');
+      textItem.appendChild(el('span', 'ct-options-item-icon', 'A'));
+      textItem.appendChild(el('span', 'ct-options-item-label', isDe ? 'Textgröße' : 'Text size'));
+      textItem.appendChild(el('span', 'ct-options-item-arrow', '\u203a'));
+      textItem.addEventListener('click', showTextSizeMenu);
+      body.appendChild(textItem);
+
+      panel.appendChild(body);
+    }
+
+    function showTextSizeMenu() {
+      panel.innerHTML = '';
+      // Back header
+      const header = el('div', 'ct-options-back');
+      const back = document.createElement('button');
+      back.className = 'ct-options-back-btn';
+      back.textContent = '\u2039 ' + (isDe ? 'Optionen' : 'Options');
+      back.addEventListener('click', showMainMenu);
+      header.appendChild(back);
+      header.appendChild(el('h2', 'ct-options-subheading', isDe ? 'Textgröße' : 'Text Size'));
+      panel.appendChild(header);
+
+      const body = el('div', 'ct-options-body');
+      const choices = el('div', 'ct-text-size-choices');
+      const sizes = [
+        { key: 'small', label: isDe ? 'Klein' : 'Small' },
+        { key: 'medium', label: isDe ? 'Mittel' : 'Medium' },
+        { key: 'large', label: isDe ? 'Groß' : 'Large' },
+      ];
+      const current = localStorage.getItem('olympiada:textSize') || 'medium';
+      sizes.forEach((s) => {
+        const btn = document.createElement('button');
+        btn.className = 'ct-text-size-btn';
+        if (s.key === current) btn.classList.add('ct-text-size-btn--active');
+        btn.textContent = s.label;
+        btn.addEventListener('click', () => {
+          applyTextSize(s.key);
+          // Update active state
+          choices.querySelectorAll('.ct-text-size-btn').forEach(b => b.classList.remove('ct-text-size-btn--active'));
+          btn.classList.add('ct-text-size-btn--active');
+        });
+        choices.appendChild(btn);
+      });
+      body.appendChild(choices);
+      panel.appendChild(body);
+    }
+
+    showMainMenu();
+    overlay.appendChild(panel);
+    document.body.appendChild(overlay);
+  }
+
+  function applyTextSize(size) {
+    document.body.classList.remove('ct-text-small', 'ct-text-large');
+    if (size === 'small') document.body.classList.add('ct-text-small');
+    else if (size === 'large') document.body.classList.add('ct-text-large');
+    localStorage.setItem('olympiada:textSize', size);
+  }
+
+  // Restore saved text size on load
+  function restoreTextSize() {
+    const saved = localStorage.getItem('olympiada:textSize');
+    if (saved && saved !== 'medium') applyTextSize(saved);
+  }
+
   // ---------- boot ----------
   (async () => {
     try {
@@ -1563,6 +1805,9 @@
       document.getElementById('ct-prev').addEventListener('click', prevQuestion);
       document.getElementById('ct-next').addEventListener('click', nextQuestion);
       document.getElementById('ct-finish').addEventListener('click', () => submit(false));
+      document.getElementById('ct-options-btn').addEventListener('click', buildOptionsPanel);
+      restoreTextSize();
+      initHighlightSystem();
 
       // Keep the active nav part visible when the student resizes the
       // window. Without this, resizing to a narrower viewport can push
