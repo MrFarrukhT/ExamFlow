@@ -23,30 +23,11 @@ REM Give the server a moment to boot
 timeout /t 3 /nobreak >nul
 echo  Server started on http://localhost:3004
 echo.
-echo  Opening student test interface...
+echo  Opening test interface in default browser...
+echo  (Anti-cheat and fullscreen are enforced by the app itself)
 echo.
 
-REM Dedicated user-data-dir so kiosk works even if Chrome is already open
-set KIOSK_DIR=%TEMP%\zarmed-olympiada-kiosk
-
-REM Try different browsers in order of preference
-if exist "C:\Program Files\Google\Chrome\Application\chrome.exe" (
-    echo  Launching with Google Chrome (kiosk mode)...
-    "C:\Program Files\Google\Chrome\Application\chrome.exe" --kiosk --user-data-dir="%KIOSK_DIR%" --disable-pinch --overscroll-history-navigation=disabled --disable-translate --disable-extensions --disable-infobars --no-first-run --app="http://localhost:3004/"
-) else if exist "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" (
-    echo  Launching with Google Chrome (kiosk mode)...
-    "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --kiosk --user-data-dir="%KIOSK_DIR%" --disable-pinch --overscroll-history-navigation=disabled --disable-translate --disable-extensions --disable-infobars --no-first-run --app="http://localhost:3004/"
-) else if exist "C:\Program Files\Microsoft\Edge\Application\msedge.exe" (
-    echo  Launching with Microsoft Edge (kiosk mode)...
-    "C:\Program Files\Microsoft\Edge\Application\msedge.exe" --kiosk --user-data-dir="%KIOSK_DIR%" --disable-pinch --overscroll-history-navigation=disabled --disable-translate --disable-extensions --disable-infobars --no-first-run --app="http://localhost:3004/"
-) else if exist "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" (
-    echo  Launching with Microsoft Edge (kiosk mode)...
-    "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --kiosk --user-data-dir="%KIOSK_DIR%" --disable-pinch --overscroll-history-navigation=disabled --disable-translate --disable-extensions --disable-infobars --no-first-run --app="http://localhost:3004/"
-) else (
-    echo  ERROR: No supported browser found!
-    echo  Please install Google Chrome or Microsoft Edge.
-    echo.
-    pause
-)
+REM Open in default browser — the JS anti-cheat handles fullscreen enforcement
+start "" "http://localhost:3004/"
 
 timeout /t 2 /nobreak >nul

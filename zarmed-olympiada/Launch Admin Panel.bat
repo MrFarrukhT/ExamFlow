@@ -27,24 +27,7 @@ echo.
 echo  Opening admin panel...
 echo.
 
-REM Try different browsers in order of preference
-if exist "C:\Program Files\Google\Chrome\Application\chrome.exe" (
-    echo  Launching with Google Chrome...
-    "C:\Program Files\Google\Chrome\Application\chrome.exe" --new-window --app="http://localhost:3004/admin.html"
-) else if exist "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" (
-    echo  Launching with Google Chrome...
-    "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --new-window --app="http://localhost:3004/admin.html"
-) else if exist "C:\Program Files\Microsoft\Edge\Application\msedge.exe" (
-    echo  Launching with Microsoft Edge...
-    "C:\Program Files\Microsoft\Edge\Application\msedge.exe" --new-window --app="http://localhost:3004/admin.html"
-) else if exist "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" (
-    echo  Launching with Microsoft Edge...
-    "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --new-window --app="http://localhost:3004/admin.html"
-) else (
-    echo  ERROR: No supported browser found!
-    echo  Please install Google Chrome or Microsoft Edge.
-    echo.
-    pause
-)
+REM Open in default browser
+start "" "http://localhost:3004/admin.html"
 
 timeout /t 2 /nobreak >nul
