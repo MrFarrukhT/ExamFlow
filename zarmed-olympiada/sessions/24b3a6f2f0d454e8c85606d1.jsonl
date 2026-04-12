@@ -1,0 +1,6 @@
+{"t":"2026-04-12T17:33:35.801Z","ev":"start","studentId":"b725a789-fc57-46f2-be4d-95a76197aeab","student":"Alice Testing","group":"","lang":"english-c1","skill":"reading","tokenHash":"436146f80ee577c8"}
+{"t":"2026-04-12T17:33:57.300Z","ev":"answer","qid":"q9","value":"however"}
+{"t":"2026-04-12T17:34:02.913Z","ev":"answer","qid":"q10","value":"because"}
+{"t":"2026-04-12T17:34:07.972Z","ev":"answer","qid":"q11","value":"although"}
+{"t":"2026-04-12T17:35:01.548Z","ev":"answer","qid":"q17","value":"freezing"}
+{"t":"2026-04-12T17:35:35.638Z","ev":"answer","qid":"q25","value":"result in its"}

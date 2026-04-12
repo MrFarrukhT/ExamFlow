@@ -1,0 +1,91 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Zarmed University" [ref=e4]
+      - generic [ref=e5]: C1 Olympiada
+    - generic [ref=e6]:
+      - generic [ref=e7]: Candidate ID
+      - generic "Alice Testing" [ref=e8]:
+        - text: Alice Testing
+        - generic [ref=e9]: b725a789
+    - generic [ref=e10]:
+      - timer "Time remaining" [ref=e11]: 89:46
+      - button "Options" [ref=e12] [cursor=pointer]
+  - generic [ref=e17]:
+    - generic [ref=e18]: Questions 9–16
+    - text: For questions 9–16, read the text below and think of the word which best fits each gap. Use only one word in each gap.
+  - main [ref=e19]:
+    - generic [ref=e85]:
+      - heading "The Museum of Modern Art — MoMA" [level=3] [ref=e86]
+      - generic [ref=e87]:
+        - text: When it opened in New York in 1929, MoMA prioritised contemporary rather than traditional art, and was quite
+        - generic [ref=e88]:
+          - generic [ref=e89]: "9"
+          - textbox [ref=e90]
+        - text: other art museums. The public's response was overwhelmingly enthusiastic, as was that of the art world generally. Over the next ten years, MoMA required more space and relocated several times. It ended
+        - generic [ref=e91]:
+          - generic [ref=e92]: "10"
+          - textbox [ref=e93]
+        - text: moving into the Manhattan building it still occupies to
+        - generic [ref=e94]:
+          - generic [ref=e95]: "11"
+          - textbox [ref=e96]
+        - text: day. Despite MoMA having more space, it struggles to house all of its collection, which has grown from just eight prints and one drawing to an impressive 200,000 works. These
+        - generic [ref=e97]:
+          - generic [ref=e98]: "12"
+          - textbox [ref=e99]
+        - text: include only paintings, sculptures, prints and photographs, but also media and performance art works and architectural models.
+        - generic [ref=e100]:
+          - generic [ref=e101]: "13"
+          - textbox [ref=e102]
+        - text: is more, MoMA also owns approximately two million film stills. To ensure that fresh material is always
+        - generic [ref=e103]:
+          - generic [ref=e104]: "14"
+          - textbox [ref=e105]
+        - text: display, the exhibitions are regularly changed. MoMA is dedicated
+        - generic [ref=e106]:
+          - generic [ref=e107]: "15"
+          - textbox [ref=e108]
+        - text: its role as an educational institution. For this reason, every department maintains a study centre available to students. Furthermore, its archives are,
+        - generic [ref=e109]:
+          - generic [ref=e110]: "16"
+          - textbox [ref=e111]
+        - text: a doubt, more comprehensive than those of any other modern art museum.
+  - navigation [ref=e47]:
+    - generic [ref=e48]:
+      - button "Part 1 0 of 8" [ref=e112] [cursor=pointer]:
+        - generic [ref=e113]: Part 1
+        - generic [ref=e114]: 0 of 8
+      - generic [ref=e115] [cursor=pointer]:
+        - generic [ref=e116]: Part 2
+        - generic [ref=e117]:
+          - button "9" [ref=e118]
+          - button "10" [ref=e119]
+          - button "11" [ref=e120]
+          - button "12" [ref=e121]
+          - button "13" [ref=e122]
+          - button "14" [ref=e123]
+          - button "15" [ref=e124]
+          - button "16" [ref=e125]
+      - button "Part 3 0 of 8" [ref=e126] [cursor=pointer]:
+        - generic [ref=e127]: Part 3
+        - generic [ref=e128]: 0 of 8
+      - button "Part 4 0 of 6" [ref=e129] [cursor=pointer]:
+        - generic [ref=e130]: Part 4
+        - generic [ref=e131]: 0 of 6
+      - button "Part 5 0 of 6" [ref=e132] [cursor=pointer]:
+        - generic [ref=e133]: Part 5
+        - generic [ref=e134]: 0 of 6
+      - button "Part 6 0 of 4" [ref=e135] [cursor=pointer]:
+        - generic [ref=e136]: Part 6
+        - generic [ref=e137]: 0 of 4
+      - button "Part 7 0 of 6" [ref=e138] [cursor=pointer]:
+        - generic [ref=e139]: Part 7
+        - generic [ref=e140]: 0 of 6
+      - button "Part 8 0 of 10" [ref=e141] [cursor=pointer]:
+        - generic [ref=e142]: Part 8
+        - generic [ref=e143]: 0 of 10
+    - generic [ref=e81]:
+      - button "Previous" [ref=e82] [cursor=pointer]: ←
+      - button "Next" [ref=e83] [cursor=pointer]: →
+      - button "Finish" [ref=e84] [cursor=pointer]: ✓

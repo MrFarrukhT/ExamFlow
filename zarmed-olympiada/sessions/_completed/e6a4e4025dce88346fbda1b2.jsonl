@@ -1,0 +1,12 @@
+{"t":"2026-04-12T19:05:35.972Z","ev":"start","studentId":"9d2be975-968a-45ba-9851-796c3088f8d8","student":"sdf","group":"123","lang":"german-c1","skill":"listening","tokenHash":"cfafa3e8e3d9f765"}
+{"t":"2026-04-12T19:05:36.809Z","ev":"audio-play","partId":"part-listening-1"}
+{"t":"2026-04-12T19:05:37.843Z","ev":"answer","qid":"g-lq1","value":"A"}
+{"t":"2026-04-12T19:05:38.573Z","ev":"answer","qid":"g-lq2","value":"B"}
+{"t":"2026-04-12T19:05:39.485Z","ev":"answer","qid":"g-lq3","value":"C"}
+{"t":"2026-04-12T19:05:40.515Z","ev":"answer","qid":"g-lq4","value":"B"}
+{"t":"2026-04-12T19:05:41.071Z","ev":"answer","qid":"g-lq5","value":"A"}
+{"t":"2026-04-12T19:05:41.926Z","ev":"answer","qid":"g-lq6","value":"A"}
+{"t":"2026-04-12T19:05:42.750Z","ev":"audio-play","partId":"part-listening-2"}
+{"t":"2026-04-12T19:12:29.021Z","ev":"audio-play","partId":"part-listening-2"}
+{"t":"2026-04-12T19:12:31.219Z","ev":"audio-play","partId":"part-listening-1"}
+{"t":"2026-04-12T19:14:44.576Z","ev":"submit","overtime":false}

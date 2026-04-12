@@ -1,0 +1,291 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Zarmed University" [ref=e4]
+      - generic [ref=e5]: C1 Olympiada
+    - generic [ref=e6]:
+      - generic [ref=e7]: Candidate ID
+      - generic "Eye Verifier" [ref=e8]:
+        - text: Eye Verifier
+        - generic [ref=e9]: 6a4662f2
+    - generic [ref=e10]:
+      - timer "Time remaining" [ref=e11]: 89:30
+      - button "Options" [ref=e12] [cursor=pointer]
+  - generic [ref=e17]:
+    - generic [ref=e18]: Questions 47–56
+    - text: You are going to read an interview with the architect Frank Gehry, divided into four sections (A–D). For questions 47–56, choose from the sections A–D. The sections may be chosen more than once.
+  - main [ref=e19]:
+    - generic [ref=e86]:
+      - generic [ref=e87]:
+        - heading "An interview with Frank Gehry, world-famous architect" [level=3] [ref=e88]
+        - generic [ref=e89]:
+          - text: Rowan Moore spoke to the award-winning genius behind iconic buildings such as the Guggenheim Museum in Spain and the Walt Disney Concert Hall in Los Angeles on his 90th birthday.
+          - strong [ref=e90]: A —
+          - text: "'I've taken up flying,' says the American-Canadian architect Frank Gehry, as he sits opposite me in his Los Angeles office. 'A little bit.' Then he tells the story of how, in his youth, his cousin had a plane and would take him up in it. How he'd wanted to do this again, and ended up flying with Harrison Ford, the Hollywood superstar. This story is typical Gehry. It shows his sociable nature. He has a fascination with celebrity and high achievers, as many photographs around his office attest. Fame is definitely a thing with Gehry, but an ambiguous one. 'I find it very comforting to be here in Los Angeles because there are no spotlights except on the Hollywood film industry here. It gives people like me a kind of cloud cover,' he says. It's not untypical that a boast ('I've taken up flying') is followed by deprecation ('A little bit'). Most of all, the plane story captures his addiction to adventure — physical, emotional and imaginative. Many people credit this trait as driving the spirit of experimentation and playfulness that is evident in Gehry's architecture, which, while sometimes criticised for its crudeness and unfinished look, can never be ignored. The sense of fun is ever-present in his buildings that often seem to blur or transcend categories."
+          - strong [ref=e91]: B —
+          - text: His love of adventure and leaps into the unknown can also be seen in work Gehry did early on in his career with schoolchildren, in collaboration with his teacher sister, which was captured in a documentary directed by Jon Boorstin. The children built an imaginary city out of painted blocks and cardboard — coincidentally a sort of haphazard anticipation of the architecture Gehry would later do. They debated planning issues and elected a mayor. The ensuing heated discussions were all too chaotic for the children's regular teacher (Gehry now regrets his lack of tact when dealing with her), who cancelled the project. 'The point she missed,' Gehry says in the film, 'is that the conflict, when they start arguing with each other, is the real involvement in the city planning process that they were robbed of.' This work with the schoolchildren is one of a number of 'cliff jumps' in Gehry's life.
+          - strong [ref=e92]: C —
+          - text: The most pivotal jump concerns the house in Santa Monica where Gehry lived until recently with his wife, Berta, which he remodelled in the 1970s with all the disrespect for convention for which he was not yet world-famous — jagged angles, rough edges, and unglamorous materials such as plywood and corrugated metal. At that time, Gehry had built up a sizeable portfolio designing not-bad but not-exceptional commercial projects — apartment blocks, offices, shopping centres — with a sideline doing houses and studios for his artist friends. In 1980, he hosted a dinner at his house to celebrate the opening of one of his distinctly bland and uninspiring shopping centres. His developer client looked around the house. 'Is this what you like?' he asked. Gehry said he did. 'Well, if you like this you can't possibly like the shopping centre. Why are you doing it?' So Gehry, aged a little past 50, stopped working on all his commercial projects. He chose, almost, to start over again.
+          - strong [ref=e93]: D —
+          - text: "As midlife crises go, it was one of the more creative and productive ones. If Gehry struggled for a while, he would eventually build up a reputation based on small- to medium-sized projects: more houses, a law school, a library, an ice rink. With the opening of the Bilbao Guggenheim in 1997, his success became both popular and global. This celebrated constellation of titanium and stone gave its name to a phenomenon — the 'Bilbao effect' — whereby beaten-up old cities would try to reverse their fortunes with spectacular architecture that would attract new visitors. It became the icon of what would be called iconic architecture. Other landmarks followed, such as the Walt Disney Concert Hall in downtown Los Angeles. (In fact, it was commissioned before Bilbao, but drawn out by, among other things, Gehry's efforts to convince clients and funders that he really should be allowed to build it.) By the time the Hollywood director Sydney Pollack made a feature-length documentary about him in 2005, it was common to call Gehry a 'genius', a 'modern master' or 'the greatest architect in the world'."
+      - generic [ref=e95]:
+        - generic [ref=e96]:
+          - generic [ref=e97]:
+            - generic [ref=e98]: "47"
+            - text: Which section mentions the mixed feelings Gehry has about being the focus of attention?
+            - button "Bookmark" [ref=e99] [cursor=pointer]
+          - generic [ref=e100]:
+            - generic [ref=e101] [cursor=pointer]:
+              - radio "A Section A" [ref=e102]
+              - generic [ref=e103]: A
+              - generic [ref=e104]: Section A
+            - generic [ref=e105] [cursor=pointer]:
+              - radio "B Section B" [ref=e106]
+              - generic [ref=e107]: B
+              - generic [ref=e108]: Section B
+            - generic [ref=e109] [cursor=pointer]:
+              - radio "C Section C" [ref=e110]
+              - generic [ref=e111]: C
+              - generic [ref=e112]: Section C
+            - generic [ref=e113] [cursor=pointer]:
+              - radio "D Section D" [ref=e114]
+              - generic [ref=e115]: D
+              - generic [ref=e116]: Section D
+        - generic [ref=e117]:
+          - generic [ref=e118]:
+            - generic [ref=e119]: "48"
+            - text: Which section mentions the economic impact of Gehry's work?
+            - button "Bookmark" [ref=e120] [cursor=pointer]
+          - generic [ref=e121]:
+            - generic [ref=e122] [cursor=pointer]:
+              - radio "A Section A" [ref=e123]
+              - generic [ref=e124]: A
+              - generic [ref=e125]: Section A
+            - generic [ref=e126] [cursor=pointer]:
+              - radio "B Section B" [ref=e127]
+              - generic [ref=e128]: B
+              - generic [ref=e129]: Section B
+            - generic [ref=e130] [cursor=pointer]:
+              - radio "C Section C" [ref=e131]
+              - generic [ref=e132]: C
+              - generic [ref=e133]: Section C
+            - generic [ref=e134] [cursor=pointer]:
+              - radio "D Section D" [ref=e135]
+              - generic [ref=e136]: D
+              - generic [ref=e137]: Section D
+        - generic [ref=e138]:
+          - generic [ref=e139]:
+            - generic [ref=e140]: "49"
+            - text: Which section mentions how Gehry decided to abandon his previous approach to architecture?
+            - button "Bookmark" [ref=e141] [cursor=pointer]
+          - generic [ref=e142]:
+            - generic [ref=e143] [cursor=pointer]:
+              - radio "A Section A" [ref=e144]
+              - generic [ref=e145]: A
+              - generic [ref=e146]: Section A
+            - generic [ref=e147] [cursor=pointer]:
+              - radio "B Section B" [ref=e148]
+              - generic [ref=e149]: B
+              - generic [ref=e150]: Section B
+            - generic [ref=e151] [cursor=pointer]:
+              - radio "C Section C" [ref=e152]
+              - generic [ref=e153]: C
+              - generic [ref=e154]: Section C
+            - generic [ref=e155] [cursor=pointer]:
+              - radio "D Section D" [ref=e156]
+              - generic [ref=e157]: D
+              - generic [ref=e158]: Section D
+        - generic [ref=e159]:
+          - generic [ref=e160]:
+            - generic [ref=e161]: "50"
+            - text: Which section mentions an instance where Gehry showed a lack of interpersonal skills?
+            - button "Bookmark" [ref=e162] [cursor=pointer]
+          - generic [ref=e163]:
+            - generic [ref=e164] [cursor=pointer]:
+              - radio "A Section A" [ref=e165]
+              - generic [ref=e166]: A
+              - generic [ref=e167]: Section A
+            - generic [ref=e168] [cursor=pointer]:
+              - radio "B Section B" [ref=e169]
+              - generic [ref=e170]: B
+              - generic [ref=e171]: Section B
+            - generic [ref=e172] [cursor=pointer]:
+              - radio "C Section C" [ref=e173]
+              - generic [ref=e174]: C
+              - generic [ref=e175]: Section C
+            - generic [ref=e176] [cursor=pointer]:
+              - radio "D Section D" [ref=e177]
+              - generic [ref=e178]: D
+              - generic [ref=e179]: Section D
+        - generic [ref=e180]:
+          - generic [ref=e181]:
+            - generic [ref=e182]: "51"
+            - text: Which section mentions Gehry's concern to avoid appearing immodest?
+            - button "Bookmark" [ref=e183] [cursor=pointer]
+          - generic [ref=e184]:
+            - generic [ref=e185] [cursor=pointer]:
+              - radio "A Section A" [ref=e186]
+              - generic [ref=e187]: A
+              - generic [ref=e188]: Section A
+            - generic [ref=e189] [cursor=pointer]:
+              - radio "B Section B" [ref=e190]
+              - generic [ref=e191]: B
+              - generic [ref=e192]: Section B
+            - generic [ref=e193] [cursor=pointer]:
+              - radio "C Section C" [ref=e194]
+              - generic [ref=e195]: C
+              - generic [ref=e196]: Section C
+            - generic [ref=e197] [cursor=pointer]:
+              - radio "D Section D" [ref=e198]
+              - generic [ref=e199]: D
+              - generic [ref=e200]: Section D
+        - generic [ref=e201]:
+          - generic [ref=e202]:
+            - generic [ref=e203]: "52"
+            - text: Which section mentions Gehry's indifference to established architectural rules?
+            - button "Bookmark" [ref=e204] [cursor=pointer]
+          - generic [ref=e205]:
+            - generic [ref=e206] [cursor=pointer]:
+              - radio "A Section A" [ref=e207]
+              - generic [ref=e208]: A
+              - generic [ref=e209]: Section A
+            - generic [ref=e210] [cursor=pointer]:
+              - radio "B Section B" [ref=e211]
+              - generic [ref=e212]: B
+              - generic [ref=e213]: Section B
+            - generic [ref=e214] [cursor=pointer]:
+              - radio "C Section C" [ref=e215]
+              - generic [ref=e216]: C
+              - generic [ref=e217]: Section C
+            - generic [ref=e218] [cursor=pointer]:
+              - radio "D Section D" [ref=e219]
+              - generic [ref=e220]: D
+              - generic [ref=e221]: Section D
+        - generic [ref=e222]:
+          - generic [ref=e223]:
+            - generic [ref=e224]: "53"
+            - text: Which section mentions a time when Gehry successfully used his powers of persuasion?
+            - button "Bookmark" [ref=e225] [cursor=pointer]
+          - generic [ref=e226]:
+            - generic [ref=e227] [cursor=pointer]:
+              - radio "A Section A" [ref=e228]
+              - generic [ref=e229]: A
+              - generic [ref=e230]: Section A
+            - generic [ref=e231] [cursor=pointer]:
+              - radio "B Section B" [ref=e232]
+              - generic [ref=e233]: B
+              - generic [ref=e234]: Section B
+            - generic [ref=e235] [cursor=pointer]:
+              - radio "C Section C" [ref=e236]
+              - generic [ref=e237]: C
+              - generic [ref=e238]: Section C
+            - generic [ref=e239] [cursor=pointer]:
+              - radio "D Section D" [ref=e240]
+              - generic [ref=e241]: D
+              - generic [ref=e242]: Section D
+        - generic [ref=e243]:
+          - generic [ref=e244]:
+            - generic [ref=e245]: "54"
+            - text: Which section mentions a period in Gehry's career when he produced less than inspiring work?
+            - button "Bookmark" [ref=e246] [cursor=pointer]
+          - generic [ref=e247]:
+            - generic [ref=e248] [cursor=pointer]:
+              - radio "A Section A" [ref=e249]
+              - generic [ref=e250]: A
+              - generic [ref=e251]: Section A
+            - generic [ref=e252] [cursor=pointer]:
+              - radio "B Section B" [ref=e253]
+              - generic [ref=e254]: B
+              - generic [ref=e255]: Section B
+            - generic [ref=e256] [cursor=pointer]:
+              - radio "C Section C" [ref=e257]
+              - generic [ref=e258]: C
+              - generic [ref=e259]: Section C
+            - generic [ref=e260] [cursor=pointer]:
+              - radio "D Section D" [ref=e261]
+              - generic [ref=e262]: D
+              - generic [ref=e263]: Section D
+        - generic [ref=e264]:
+          - generic [ref=e265]:
+            - generic [ref=e266]: "55"
+            - text: Which section mentions an experiment that Gehry felt was misunderstood?
+            - button "Bookmark" [ref=e267] [cursor=pointer]
+          - generic [ref=e268]:
+            - generic [ref=e269] [cursor=pointer]:
+              - radio "A Section A" [ref=e270]
+              - generic [ref=e271]: A
+              - generic [ref=e272]: Section A
+            - generic [ref=e273] [cursor=pointer]:
+              - radio "B Section B" [ref=e274]
+              - generic [ref=e275]: B
+              - generic [ref=e276]: Section B
+            - generic [ref=e277] [cursor=pointer]:
+              - radio "C Section C" [ref=e278]
+              - generic [ref=e279]: C
+              - generic [ref=e280]: Section C
+            - generic [ref=e281] [cursor=pointer]:
+              - radio "D Section D" [ref=e282]
+              - generic [ref=e283]: D
+              - generic [ref=e284]: Section D
+        - generic [ref=e285]:
+          - generic [ref=e286]:
+            - generic [ref=e287]: "56"
+            - text: Which section mentions how Gehry's comments reveal fundamental aspects of his character?
+            - button "Bookmark" [ref=e288] [cursor=pointer]
+          - generic [ref=e289]:
+            - generic [ref=e290] [cursor=pointer]:
+              - radio "A Section A" [ref=e291]
+              - generic [ref=e292]: A
+              - generic [ref=e293]: Section A
+            - generic [ref=e294] [cursor=pointer]:
+              - radio "B Section B" [ref=e295]
+              - generic [ref=e296]: B
+              - generic [ref=e297]: Section B
+            - generic [ref=e298] [cursor=pointer]:
+              - radio "C Section C" [ref=e299]
+              - generic [ref=e300]: C
+              - generic [ref=e301]: Section C
+            - generic [ref=e302] [cursor=pointer]:
+              - radio "D Section D" [ref=e303]
+              - generic [ref=e304]: D
+              - generic [ref=e305]: Section D
+  - navigation [ref=e47]:
+    - generic [ref=e48]:
+      - button "Part 1 0 of 8" [ref=e306] [cursor=pointer]:
+        - generic [ref=e307]: Part 1
+        - generic [ref=e308]: 0 of 8
+      - button "Part 2 0 of 8" [ref=e309] [cursor=pointer]:
+        - generic [ref=e310]: Part 2
+        - generic [ref=e311]: 0 of 8
+      - button "Part 3 0 of 8" [ref=e312] [cursor=pointer]:
+        - generic [ref=e313]: Part 3
+        - generic [ref=e314]: 0 of 8
+      - button "Part 4 0 of 6" [ref=e315] [cursor=pointer]:
+        - generic [ref=e316]: Part 4
+        - generic [ref=e317]: 0 of 6
+      - button "Part 5 0 of 6" [ref=e318] [cursor=pointer]:
+        - generic [ref=e319]: Part 5
+        - generic [ref=e320]: 0 of 6
+      - button "Part 6 0 of 4" [ref=e321] [cursor=pointer]:
+        - generic [ref=e322]: Part 6
+        - generic [ref=e323]: 0 of 4
+      - button "Part 7 0 of 6" [ref=e324] [cursor=pointer]:
+        - generic [ref=e325]: Part 7
+        - generic [ref=e326]: 0 of 6
+      - generic [ref=e327] [cursor=pointer]:
+        - generic [ref=e328]: Part 8
+        - generic [ref=e329]:
+          - button "47" [ref=e330]
+          - button "48" [ref=e331]
+          - button "49" [ref=e332]
+          - button "50" [ref=e333]
+          - button "51" [ref=e334]
+          - button "52" [ref=e335]
+          - button "53" [ref=e336]
+          - button "54" [ref=e337]
+          - button "55" [ref=e338]
+          - button "56" [ref=e339]
+    - generic [ref=e81]:
+      - button "Previous" [ref=e82] [cursor=pointer]: ←
+      - button "Next" [ref=e83] [cursor=pointer]: →
+      - button "Finish" [ref=e84] [cursor=pointer]: ✓

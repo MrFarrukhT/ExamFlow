@@ -1,0 +1,119 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Zarmed University" [ref=e4]
+      - generic [ref=e5]: C1 Olympiada
+    - generic [ref=e6]:
+      - generic [ref=e7]: Candidate ID
+      - generic "Alice Testing" [ref=e8]:
+        - text: Alice Testing
+        - generic [ref=e9]: b725a789
+    - generic [ref=e10]:
+      - timer "Time remaining" [ref=e11]: 88:41
+      - button "Options" [ref=e12] [cursor=pointer]
+  - generic [ref=e17]:
+    - generic [ref=e18]: Questions 17–24
+    - text: For questions 17–24, read the text below. Use the word given in capitals at the end of some of the lines to form a word that fits in the gap in the same line.
+  - main [ref=e19]:
+    - generic [ref=e241]:
+      - generic [ref=e242]:
+        - heading "Hundreds of people rush to view a special bird" [level=3] [ref=e243]
+        - generic [ref=e244]:
+          - text: Hundreds of birdwatchers recently rushed to a park in Washington DC, in the US, to catch a glimpse of a new arrival. Despite the
+          - generic [ref=e245]:
+            - generic [ref=e246]: "17"
+            - textbox [ref=e247]
+          - text: low winter temperatures, people came out to see a Painted Bunting, a small, brightly coloured bird that usually spends the winter in the warmer climate of Florida. The bird was a male — highly distinctive with its brilliant blue head, red breast and flashes of green and red on its back. The bird's
+          - generic [ref=e248]:
+            - generic [ref=e249]: "18"
+            - textbox [ref=e250]
+          - text: was announced on a birdwatchers' website and would have been
+          - generic [ref=e251]:
+            - generic [ref=e252]: "19"
+            - textbox [ref=e253]
+          - text: just a few years ago. The
+          - generic [ref=e254]:
+            - generic [ref=e255]: "20"
+            - textbox [ref=e256]
+          - text: sighting can probably be attributed to the
+          - generic [ref=e257]:
+            - generic [ref=e258]: "21"
+            - textbox [ref=e259]
+          - text: that climate change is causing for hundreds of bird species.
+          - generic [ref=e260]:
+            - generic [ref=e261]: "22"
+            - textbox [ref=e262]
+          - text: species all over the world are being pushed towards cooler areas as conditions heat up, or are losing suitable habitats altogether. Researchers warn that two thirds of North American bird species are now at risk of extinction. However, thanks to reports from community scientists all across the country, data about bird populations and their locations can be
+          - generic [ref=e263]:
+            - generic [ref=e264]: "23"
+            - textbox [ref=e265]
+          - text: on maps in real time, and conservation efforts planned
+          - generic [ref=e266]:
+            - generic [ref=e267]: "24"
+            - textbox [ref=e268]
+          - text: .
+      - generic [ref=e270]:
+        - heading "Keyword List" [level=4] [ref=e271]
+        - list [ref=e272]:
+          - listitem [ref=e273] [cursor=pointer]:
+            - generic [ref=e274]: "17"
+            - generic [ref=e275]: COMMON
+          - listitem [ref=e276] [cursor=pointer]:
+            - generic [ref=e277]: "18"
+            - generic [ref=e278]: PRESENT
+          - listitem [ref=e279] [cursor=pointer]:
+            - generic [ref=e280]: "19"
+            - generic [ref=e281]: THINK
+          - listitem [ref=e282] [cursor=pointer]:
+            - generic [ref=e283]: "20"
+            - generic [ref=e284]: EXCEPT
+          - listitem [ref=e285] [cursor=pointer]:
+            - generic [ref=e286]: "21"
+            - generic [ref=e287]: DISRUPT
+          - listitem [ref=e288] [cursor=pointer]:
+            - generic [ref=e289]: "22"
+            - generic [ref=e290]: COUNT
+          - listitem [ref=e291] [cursor=pointer]:
+            - generic [ref=e292]: "23"
+            - generic [ref=e293]: VISUAL
+          - listitem [ref=e294] [cursor=pointer]:
+            - generic [ref=e295]: "24"
+            - generic [ref=e296]: ACCORD
+  - navigation [ref=e47]:
+    - generic [ref=e48]:
+      - button "Part 1 0 of 8" [ref=e297] [cursor=pointer]:
+        - generic [ref=e298]: Part 1
+        - generic [ref=e299]: 0 of 8
+      - button "Part 2 3 of 8" [ref=e300] [cursor=pointer]:
+        - generic [ref=e301]: Part 2
+        - generic [ref=e302]: 3 of 8
+      - generic [ref=e303] [cursor=pointer]:
+        - generic [ref=e304]: Part 3
+        - generic [ref=e305]:
+          - button "17" [ref=e306]
+          - button "18" [ref=e307]
+          - button "19" [ref=e308]
+          - button "20" [ref=e309]
+          - button "21" [ref=e310]
+          - button "22" [ref=e311]
+          - button "23" [ref=e312]
+          - button "24" [ref=e313]
+      - button "Part 4 0 of 6" [ref=e314] [cursor=pointer]:
+        - generic [ref=e315]: Part 4
+        - generic [ref=e316]: 0 of 6
+      - button "Part 5 0 of 6" [ref=e317] [cursor=pointer]:
+        - generic [ref=e318]: Part 5
+        - generic [ref=e319]: 0 of 6
+      - button "Part 6 0 of 4" [ref=e320] [cursor=pointer]:
+        - generic [ref=e321]: Part 6
+        - generic [ref=e322]: 0 of 4
+      - button "Part 7 0 of 6" [ref=e323] [cursor=pointer]:
+        - generic [ref=e324]: Part 7
+        - generic [ref=e325]: 0 of 6
+      - button "Part 8 0 of 10" [ref=e326] [cursor=pointer]:
+        - generic [ref=e327]: Part 8
+        - generic [ref=e328]: 0 of 10
+    - generic [ref=e81]:
+      - button "Previous" [ref=e82] [cursor=pointer]: ←
+      - button "Next" [ref=e83] [cursor=pointer]: →
+      - button "Finish" [ref=e84] [cursor=pointer]: ✓

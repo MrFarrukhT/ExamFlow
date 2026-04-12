@@ -1,0 +1,63 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Zarmed University" [ref=e4]
+      - generic [ref=e5]: C1 Olympiada
+    - generic [ref=e6]:
+      - generic [ref=e7]: Candidate ID
+      - generic "Student Beta" [ref=e8]:
+        - text: Student Beta
+        - generic [ref=e9]: 9df6616d
+    - generic [ref=e10]:
+      - timer "Time remaining" [ref=e11]: 89:13
+      - button "Options" [ref=e12] [cursor=pointer]
+  - generic [ref=e17]:
+    - generic [ref=e18]: Questions 25–30
+    - text: For questions 25–30, complete the second sentence so that it has a similar meaning to the first, using the word given. Do not change the word given. You must use between three and six words, including the word given.
+  - main [ref=e19]:
+    - generic [ref=e145]:
+      - generic [ref=e146]: If you don't complete the form correctly, it will be rejected.
+      - generic [ref=e147]: RESULT
+      - generic [ref=e148]:
+        - text: Failure to complete the form correctly will
+        - generic [ref=e149]:
+          - generic [ref=e150]: "25"
+          - textbox [ref=e151]
+        - text: rejection.
+        - button "Bookmark" [ref=e153] [cursor=pointer]
+  - navigation [ref=e47]:
+    - generic [ref=e48]:
+      - button "Part 1 0 of 8" [ref=e154] [cursor=pointer]:
+        - generic [ref=e155]: Part 1
+        - generic [ref=e156]: 0 of 8
+      - button "Part 2 0 of 8" [ref=e157] [cursor=pointer]:
+        - generic [ref=e158]: Part 2
+        - generic [ref=e159]: 0 of 8
+      - button "Part 3 0 of 8" [ref=e160] [cursor=pointer]:
+        - generic [ref=e161]: Part 3
+        - generic [ref=e162]: 0 of 8
+      - generic [ref=e163] [cursor=pointer]:
+        - generic [ref=e164]: Part 4
+        - generic [ref=e165]:
+          - button "25" [ref=e166]
+          - button "26" [ref=e167]
+          - button "27" [ref=e168]
+          - button "28" [ref=e169]
+          - button "29" [ref=e170]
+          - button "30" [ref=e171]
+      - button "Part 5 0 of 6" [ref=e172] [cursor=pointer]:
+        - generic [ref=e173]: Part 5
+        - generic [ref=e174]: 0 of 6
+      - button "Part 6 0 of 4" [ref=e175] [cursor=pointer]:
+        - generic [ref=e176]: Part 6
+        - generic [ref=e177]: 0 of 4
+      - button "Part 7 0 of 6" [ref=e178] [cursor=pointer]:
+        - generic [ref=e179]: Part 7
+        - generic [ref=e180]: 0 of 6
+      - button "Part 8 0 of 10" [ref=e181] [cursor=pointer]:
+        - generic [ref=e182]: Part 8
+        - generic [ref=e183]: 0 of 10
+    - generic [ref=e81]:
+      - button "Previous" [ref=e82] [cursor=pointer]: ←
+      - button "Next" [ref=e83] [cursor=pointer]: →
+      - button "Finish" [ref=e84] [cursor=pointer]: ✓

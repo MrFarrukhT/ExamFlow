@@ -1,0 +1,18 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - img "Zarmed University" [ref=e4]
+    - heading "C1 Language Olympiada" [level=1] [ref=e5]
+    - paragraph [ref=e6]: Select a module to begin
+  - main [ref=e7]:
+    - generic [ref=e8]:
+      - paragraph [ref=e9]: Welcome, Alice Testing
+      - paragraph [ref=e10]: "Test Taker ID: TEST-A01 · Language: English C1 Advanced · ID: B725A789"
+    - generic [ref=e11]:
+      - heading "Select a Module to Begin" [level=2] [ref=e12]
+      - generic [ref=e13]:
+        - 'button "Reading & Use of English Duration: 90 minutes" [ref=e14] [cursor=pointer]':
+          - heading "Reading & Use of English" [level=3] [ref=e15]
+          - generic [ref=e16]: "Duration: 90 minutes"
+        - 'button "Listening Duration: 40 minutes" [ref=e17] [cursor=pointer]':
+          - heading "Listening" [level=3] [ref=e18]
+          - generic [ref=e19]: "Duration: 40 minutes"

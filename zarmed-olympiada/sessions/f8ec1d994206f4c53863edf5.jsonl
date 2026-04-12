@@ -1,0 +1,15 @@
+{"t":"2026-04-12T18:42:39.799Z","ev":"start","studentId":"ffd67d38-9105-4c44-b366-8e15da7348e2","student":"f sad","group":"","lang":"german-c1","skill":"listening","tokenHash":"2c1c88aa4bde67c1"}
+{"t":"2026-04-12T18:42:40.590Z","ev":"audio-play","partId":"part-listening-1"}
+{"t":"2026-04-12T18:42:45.225Z","ev":"audio-play","partId":"part-listening-2"}
+{"t":"2026-04-12T18:42:46.475Z","ev":"audio-play","partId":"part-listening-3"}
+{"t":"2026-04-12T18:42:48.032Z","ev":"answer","qid":"g-lq16","value":"A"}
+{"t":"2026-04-12T18:42:50.574Z","ev":"answer","qid":"g-lq17","value":"B"}
+{"t":"2026-04-12T18:42:51.462Z","ev":"audio-play","partId":"part-listening-4"}
+{"t":"2026-04-12T18:42:54.164Z","ev":"answer","qid":"g-lq30","value":"A"}
+{"t":"2026-04-12T18:42:54.935Z","ev":"answer","qid":"g-lq29","value":"C"}
+{"t":"2026-04-12T18:42:55.593Z","ev":"answer","qid":"g-lq28","value":"B"}
+{"t":"2026-04-12T18:42:56.604Z","ev":"answer","qid":"g-lq27","value":"B"}
+{"t":"2026-04-12T18:42:57.912Z","ev":"answer","qid":"g-lq26","value":"A"}
+{"t":"2026-04-12T18:42:58.337Z","ev":"answer","qid":"g-lq25","value":"A"}
+{"t":"2026-04-12T18:42:58.947Z","ev":"answer","qid":"g-lq24","value":"A"}
+{"t":"2026-04-12T18:43:01.924Z","ev":"answer","qid":"g-lq7","value":"C"}

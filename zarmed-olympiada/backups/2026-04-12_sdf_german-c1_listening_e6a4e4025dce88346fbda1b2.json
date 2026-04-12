@@ -1,0 +1,295 @@
+{
+  "sessionId": "e6a4e4025dce88346fbda1b2",
+  "studentId": "9d2be975-968a-45ba-9851-796c3088f8d8",
+  "student": "sdf",
+  "group": "123",
+  "lang": "german-c1",
+  "skill": "listening",
+  "startedAt": "2026-04-12T19:05:35.972Z",
+  "finishedAt": "2026-04-12T19:14:44.576Z",
+  "answers": {
+    "g-lq1": "A",
+    "g-lq2": "B",
+    "g-lq3": "C",
+    "g-lq4": "B",
+    "g-lq5": "A",
+    "g-lq6": "A"
+  },
+  "score": {
+    "earned": 1,
+    "total": 30,
+    "perQuestion": [
+      {
+        "qid": "g-lq1",
+        "partId": "part-listening-1",
+        "type": "matching",
+        "studentValue": "A",
+        "correctAnswer": "B",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq2",
+        "partId": "part-listening-1",
+        "type": "matching",
+        "studentValue": "B",
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq3",
+        "partId": "part-listening-1",
+        "type": "matching",
+        "studentValue": "C",
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq4",
+        "partId": "part-listening-1",
+        "type": "matching",
+        "studentValue": "B",
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq5",
+        "partId": "part-listening-1",
+        "type": "matching",
+        "studentValue": "A",
+        "correctAnswer": "A",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq6",
+        "partId": "part-listening-1",
+        "type": "matching",
+        "studentValue": "A",
+        "correctAnswer": "B",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq7",
+        "partId": "part-listening-2",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "B",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq8",
+        "partId": "part-listening-2",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "B",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq9",
+        "partId": "part-listening-2",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq10",
+        "partId": "part-listening-2",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq11",
+        "partId": "part-listening-2",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq12",
+        "partId": "part-listening-2",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq13",
+        "partId": "part-listening-2",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "B",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq14",
+        "partId": "part-listening-2",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq15",
+        "partId": "part-listening-2",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq16",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq17",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq18",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq19",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq20",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq21",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "B",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq22",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq23",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "B",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq24",
+        "partId": "part-listening-4",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq25",
+        "partId": "part-listening-4",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "B",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq26",
+        "partId": "part-listening-4",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq27",
+        "partId": "part-listening-4",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq28",
+        "partId": "part-listening-4",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "B",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq29",
+        "partId": "part-listening-4",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-lq30",
+        "partId": "part-listening-4",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      }
+    ]
+  },
+  "eventCount": 12
+}

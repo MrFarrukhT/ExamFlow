@@ -11,6 +11,9 @@ echo.
 echo  Starting Olympiada server...
 echo.
 
+REM Enable Neon database mirror (syncs results to cloud for admin access from anywhere)
+set OLYMPIADA_DATABASE_URL=postgresql://neondb_owner:npg_iVFqG04oTxbO@ep-blue-moon-alyk1vvi-pooler.c-3.eu-central-1.aws.neon.tech/neondb?sslmode=require
+
 REM Start the standalone Olympiada server in a background window
 pushd "%~dp0"
 start "Zarmed Olympiada Server" /MIN cmd /c "node server.js"

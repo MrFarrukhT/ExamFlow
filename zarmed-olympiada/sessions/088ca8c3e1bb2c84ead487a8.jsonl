@@ -1,0 +1,6 @@
+{"t":"2026-04-12T17:29:18.193Z","ev":"start","studentId":"ba7fd2b0-e7e3-4af8-b938-ad350397aa51","student":"Alice Testing","group":"","lang":"english-c1","skill":"reading","tokenHash":"7d1458c35ca86d1d"}
+{"t":"2026-04-12T17:29:30.430Z","ev":"answer","qid":"q1","value":"B"}
+{"t":"2026-04-12T17:29:35.782Z","ev":"answer","qid":"q2","value":"B"}
+{"t":"2026-04-12T17:30:00.913Z","ev":"answer","qid":"q9","value":"however"}
+{"t":"2026-04-12T17:30:03.133Z","ev":"answer","qid":"q10","value":"therefore"}
+{"t":"2026-04-12T17:31:14.077Z","ev":"answer","qid":"q25","value":"result in its"}
