@@ -1,5 +1,44 @@
 # Eye Journal
 
+## Session: 2026-04-12 12:42 — Zarmed Olympiada English C1 Full Flow — Round 37 (/loop iteration)
+Persona: English C1 student (Sophie Brown) taking CAE-style Reading + Listening | System: Zarmed Olympiada standalone (port 3004)
+Pages explored: index.html, dashboard.html, test.html (all 8 Reading parts + Listening pre-play + audio), dashboard.html (post-submit)
+Starting state: Rounds 34-36 shipped a11y, bilingual, renderer dispatch, mobile layout, browser titles.
+
+### Round 37 — ZERO CHANGES (English C1 full flow verification)
+
+**Full flow tested end-to-end:**
+- Welcome page: name entry, English selected, Continue → dashboard ✅
+- Dashboard: two module cards, welcome panel with student info ✅
+- Reading Part 1 (MC cloze): 8 inline selects, answered Q1=B Q4=C Q8=A ✅
+- Reading Part 2 (open cloze): 8 gap text inputs ✅
+- Reading Part 3 (word formation): 8 gap inputs + keyword list ✅
+- Reading Part 4 (KWT): 1 input, one-at-a-time rendering ✅
+- Reading Part 5 (MC reading): 24 radios, two-column layout ✅
+- Reading Part 6 (matching): 16 radios ✅
+- Reading Part 7 (gapped text): 6 slots + paragraph bank ✅
+- Reading Part 8 (multiple matching): 40 radios ✅
+- Answer persistence: navigated through all 8 parts and back to Part 1 — answers intact ✅
+- Nav counters: update immediately on answer change ✅
+- Confirm modal: appears on ✓, Cancel dismisses, Yes submits ✅
+- Post-submit dashboard: Reading card shows "Submitted." with ✓, non-clickable ✅
+- Listening: pre-play modal shown, Play starts audio, status indicator visible ✅
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| index.html | 5-Crafted | Auto-focus, bilingual flip |
+| dashboard.html | 5-Crafted | Completed state, keyboard accessible |
+| test.html (Reading) | 4-Polished | All 8 parts correct, nav solid |
+| test.html (Listening) | 4-Polished | Pre-play modal, audio gating |
+| done.html | 4-Polished | Localized, rotation safety |
+
+### Session Stats
+Pages explored: 5 (full student flow)
+Rounds: 1
+Changes shipped: 0
+Verdict: English C1 flow is solid at layer 4-Polished
+
 ## Session: 2026-04-12 12:36 — Zarmed Olympiada Browser Tab Titles — Round 36 (/loop iteration)
 Persona: German C1 student | System: Zarmed Olympiada standalone (port 3004)
 Pages explored: index.html, dashboard.html, test.html, done.html — browser tab titles

@@ -1,0 +1,7 @@
+{"t":"2026-04-12T07:43:15.971Z","ev":"start","studentId":"fd24dbcf-d99f-42a5-b177-255c4e6c4f64","student":"Sophie Brown","group":"","lang":"english-c1","skill":"reading","tokenHash":"05ec200d318e6d2b"}
+{"t":"2026-04-12T07:43:40.860Z","ev":"answer","qid":"q1","value":"B"}
+{"t":"2026-04-12T07:43:40.862Z","ev":"answer","qid":"q4","value":"C"}
+{"t":"2026-04-12T07:43:40.862Z","ev":"answer","qid":"q8","value":"A"}
+{"t":"2026-04-12T07:44:07.527Z","ev":"answer","qid":"q9","value":"the"}
+{"t":"2026-04-12T07:44:07.528Z","ev":"answer","qid":"q11","value":"which"}
+{"t":"2026-04-12T07:45:43.741Z","ev":"submit","overtime":false}
