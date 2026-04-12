@@ -99,6 +99,10 @@
     if (nextBtn) nextBtn.setAttribute('aria-label', isDe ? 'Weiter' : 'Next');
     const finishBtn = document.getElementById('ct-finish');
     if (finishBtn) finishBtn.setAttribute('aria-label', isDe ? 'Beenden' : 'Finish');
+    // Browser tab title — must be set BEFORE startTimer() captures
+    // originalTitle, so the timer's "(MM:SS) Prüfung" countdown prefix
+    // uses the localized base title instead of the English default.
+    document.title = isDe ? 'Zarmed Olympiada — Prüfung' : 'Zarmed Olympiada — Test';
   })();
 
   // ---------- state ----------
