@@ -201,15 +201,16 @@
   // Humanize a partId ("part1" → "Part 1", "part-listening-2" → "Listening 2")
   function fmtPart(partId) {
     if (!partId) return '';
-    // "part-listening-2" style
-    const match = partId.match(/^part-?(.+?)[-_]?(\d+)$/);
+    // "part1", "part10" style — check first to avoid false match by the
+    // general regex (which would split "part10" into group "1" + digit "0")
+    const simple = partId.match(/^part(\d+)$/);
+    if (simple) return 'Part ' + simple[1];
+    // "part-listening-2" style — requires a dash separator
+    const match = partId.match(/^part-(.+?)[-_](\d+)$/);
     if (match) {
       const label = match[1].replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
       return label + ' ' + match[2];
     }
-    // "part1" style
-    const simple = partId.match(/^part(\d+)$/);
-    if (simple) return 'Part ' + simple[1];
     return partId;
   }
 
