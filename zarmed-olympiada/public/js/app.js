@@ -18,6 +18,12 @@
   const err = document.getElementById('err');
   const nameInput = document.getElementById('f-name');
   const takerIdInput = document.getElementById('f-taker-id');
+
+  // Anti-autocomplete: randomized name attributes so browsers can't match
+  // saved values across students on the same machine.
+  const _salt = Math.random().toString(36).slice(2, 8);
+  nameInput.name = 'fn-' + _salt;
+  takerIdInput.name = 'tid-' + _salt;
   const langSelect = document.getElementById('f-lang');
   const submitBtn = form.querySelector('button[type="submit"]');
 
