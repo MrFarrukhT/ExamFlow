@@ -1,0 +1,192 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Zarmed University" [ref=e4]
+      - generic [ref=e5]: C1 Olympiada
+    - generic [ref=e6]:
+      - generic [ref=e7]: Kandidaten-ID
+      - generic "Verify Student" [ref=e8]:
+        - text: Verify Student
+        - generic [ref=e9]: test-ver
+    - timer "Verbleibende Zeit" [ref=e11]: 64:13
+  - generic [ref=e13]:
+    - generic [ref=e14]: Fragen 24–30
+    - text: "Vorgeschlagene Arbeitszeit: 15 Minuten. Sie lesen in einer Fachzeitschrift Beiträge von Kunstexpertinnen und Kunstexperten. Wählen Sie bei jeder Aussage: Wer äußert das? Zwei Aussagen passen nicht. Markieren Sie in diesem Fall 0."
+  - main [ref=e15]:
+    - generic [ref=e70]:
+      - generic [ref=e71]:
+        - heading "Zukunftsfragen unserer Gesellschaft" [level=3] [ref=e72]
+        - generic [ref=e73]: "Moderne Kunst und ihr Markt A — Zoran Jovanovic, Galerist Es ist doch ganz einfach: Wie jede andere Ware unterliegen auch Kunstobjekte dem Prinzip von Angebot und Nachfrage. Will der Kunstschaffende seine Ware verkaufen, ergibt sich automatisch die Frage, welchen Preis er oder sie für den Kunstgegenstand verlangen kann. Der Geldwert wird nicht nur durch Größe, Aufwand und Materialien bestimmt, sondern auch durch den Bekanntheitsgrad des Objekts oder des Kunstschaffenden. Alle Kosten, die bei der Erstellung des Kunstobjekts anfallen, also zum Beispiel Arbeitszeit, Material, Werbung, Transport, Galerie- und Ausstellungskosten, Mieten, Lebenshaltungskosten und Versicherungen, müssen aufgeschlagen werden, da es selten Massenproduktionen von Kunstobjekten gibt. Wird ein Werk verkauft, so bekommen Galerist*innen und Kunsthändler*innen Provisionen. Verständlicherweise können demnach nur wenige Kunstschaffende vom Verkauf ihrer Kunst leben. Nur wer hochdotierte Kunstpreise bekommt, vielleicht sogar eine Auszeichnung auf einer der zunehmenden Auktionen und zu bekannten Museen ausstellt, darf auf dem Kunstolymp Platz nehmen. Kunden der teuren Kunst gibt es jedoch immer mehr, da die Kluft zwischen Arm und Reich stets größer wird, was auch zu mehr Millionären führt, die gern ein kleines Vermögen für ein Kunstwerk als lohnenswerte Kapitalanlage ausgeben. B — Andrea Huebner, Bildhauerin und Malerin Häufig werde ich gefragt, weshalb meine Bilder so preiswert seien. Das gelingt mir, da ich mir einfach ein zweites Standbein geschaffen habe, indem ich in meinem Atelier junge, talentierte Künstlerinnen und Künstler ausbilde, dadurch Freude an der Kunst vermittle und so genügend Geld verdiene, um davon leben zu können. Ich bin nicht auf Galerien und Ausstellungen angewiesen, was meine Kosten enorm senkt, denn so spare ich Werbung, Provisionen, Mieten usw. Auf diese Weise kann ich meinen künstlerischen Weg konsequent verfolgen, ohne auf die Wünsche zahlungskräftiger Kunden eingehen zu müssen. Ich wollte nie von meiner Kunst leben, denn unter diesem Existenzdruck könnte ich nicht kreativ arbeiten. Künstler verdienen in Deutschland im Durchschnitt ca. 11.000 Euro im Jahr. So gibt es Künstler, die am Existenzminimum leben müssen. Wenn da der Partner oder die Partnerin nicht durch ein geregeltes Einkommen helfen kann, ist ein Überleben fast unmöglich. C — Sithembile Meinhards, Kunsthistorikerin Moderne Kunst ist leider teuer. Ob total weiße Leinwand oder abstrakte Gemälde mit scheinbar wahllos zusammengesetzten Farben: So etwas kann Millionen kosten. Modern Art umfasst den Zeitraum von 1870 bis 1970 und ist sehr breit gefächert. Erwähnt man aber die Kunstepoche gegenüber Straßenpassanten, so stellen sich viele nur eine wilde Kleckserei vor und schütteln mitleidvoll den Kopf. Geschuldet ist diese Auffassung von Moderner Kunst der Tatsache, dass die Künstlerinnen und Künstler nicht mehr naturgetreu darstellen mussten. Dafür gab es ja bereits die Fotografie. So erfuhren die Kunstschaffenden eine Art Befreiung, denn sie konnten nun wählen, warum und wie sie etwas darstellen wollten. Kunst wurde konzeptioneller und anspruchsvoller. Aber diese Veränderung kam nicht bei allen gut an. Umfragen ergaben, dass die Mehrzahl der Bevölkerung moderne Kunstwerke ablehnt; dennoch erreichen viele dieser Werke einen hohen Geldwert. Das liegt natürlich auch daran, dass echte Meisterwerke, egal aus welcher Epoche, selten sind."
+      - generic [ref=e75]:
+        - generic [ref=e76]:
+          - generic [ref=e77]:
+            - generic [ref=e78]: "24"
+            - text: Die Vorlieben auf dem Kunstmarkt werden sich auch in Zukunft immer wieder ändern.
+          - generic [ref=e80]:
+            - generic [ref=e81] [cursor=pointer]:
+              - radio "A Zoran Jovanovic, Galerist" [ref=e82]
+              - generic [ref=e83]: A
+              - generic [ref=e84]: Zoran Jovanovic, Galerist
+            - generic [ref=e85] [cursor=pointer]:
+              - radio "B Andrea Huebner, Bildhauerin und Malerin" [ref=e86]
+              - generic [ref=e87]: B
+              - generic [ref=e88]: Andrea Huebner, Bildhauerin und Malerin
+            - generic [ref=e89] [cursor=pointer]:
+              - radio "C Sithembile Meinhards, Kunsthistorikerin" [ref=e90]
+              - generic [ref=e91]: C
+              - generic [ref=e92]: Sithembile Meinhards, Kunsthistorikerin
+            - generic [ref=e93] [cursor=pointer]:
+              - radio "0 Niemand" [ref=e94]
+              - generic [ref=e95]: "0"
+              - generic [ref=e96]: Niemand
+        - generic [ref=e97]:
+          - generic [ref=e98]:
+            - generic [ref=e99]: "25"
+            - text: Moderne Kunst erzielt trotz allgemeiner Geringschätzung enorme Preise.
+          - generic [ref=e101]:
+            - generic [ref=e102] [cursor=pointer]:
+              - radio "A Zoran Jovanovic, Galerist" [ref=e103]
+              - generic [ref=e104]: A
+              - generic [ref=e105]: Zoran Jovanovic, Galerist
+            - generic [ref=e106] [cursor=pointer]:
+              - radio "B Andrea Huebner, Bildhauerin und Malerin" [ref=e107]
+              - generic [ref=e108]: B
+              - generic [ref=e109]: Andrea Huebner, Bildhauerin und Malerin
+            - generic [ref=e110] [cursor=pointer]:
+              - radio "C Sithembile Meinhards, Kunsthistorikerin" [ref=e111]
+              - generic [ref=e112]: C
+              - generic [ref=e113]: Sithembile Meinhards, Kunsthistorikerin
+            - generic [ref=e114] [cursor=pointer]:
+              - radio "0 Niemand" [ref=e115]
+              - generic [ref=e116]: "0"
+              - generic [ref=e117]: Niemand
+        - generic [ref=e118]:
+          - generic [ref=e119]:
+            - generic [ref=e120]: "26"
+            - text: Den Kunstschaffenden der Moderne geht es nicht mehr um die Abbildung der realen Welt.
+          - generic [ref=e122]:
+            - generic [ref=e123] [cursor=pointer]:
+              - radio "A Zoran Jovanovic, Galerist" [ref=e124]
+              - generic [ref=e125]: A
+              - generic [ref=e126]: Zoran Jovanovic, Galerist
+            - generic [ref=e127] [cursor=pointer]:
+              - radio "B Andrea Huebner, Bildhauerin und Malerin" [ref=e128]
+              - generic [ref=e129]: B
+              - generic [ref=e130]: Andrea Huebner, Bildhauerin und Malerin
+            - generic [ref=e131] [cursor=pointer]:
+              - radio "C Sithembile Meinhards, Kunsthistorikerin" [ref=e132]
+              - generic [ref=e133]: C
+              - generic [ref=e134]: Sithembile Meinhards, Kunsthistorikerin
+            - generic [ref=e135] [cursor=pointer]:
+              - radio "0 Niemand" [ref=e136]
+              - generic [ref=e137]: "0"
+              - generic [ref=e138]: Niemand
+        - generic [ref=e139]:
+          - generic [ref=e140]:
+            - generic [ref=e141]: "27"
+            - text: Viele gutbetuchte Käuferinnen und Käufer betrachten Kunst als Investition.
+          - generic [ref=e143]:
+            - generic [ref=e144] [cursor=pointer]:
+              - radio "A Zoran Jovanovic, Galerist" [ref=e145]
+              - generic [ref=e146]: A
+              - generic [ref=e147]: Zoran Jovanovic, Galerist
+            - generic [ref=e148] [cursor=pointer]:
+              - radio "B Andrea Huebner, Bildhauerin und Malerin" [ref=e149]
+              - generic [ref=e150]: B
+              - generic [ref=e151]: Andrea Huebner, Bildhauerin und Malerin
+            - generic [ref=e152] [cursor=pointer]:
+              - radio "C Sithembile Meinhards, Kunsthistorikerin" [ref=e153]
+              - generic [ref=e154]: C
+              - generic [ref=e155]: Sithembile Meinhards, Kunsthistorikerin
+            - generic [ref=e156] [cursor=pointer]:
+              - radio "0 Niemand" [ref=e157]
+              - generic [ref=e158]: "0"
+              - generic [ref=e159]: Niemand
+        - generic [ref=e160]:
+          - generic [ref=e161]:
+            - generic [ref=e162]: "28"
+            - text: Die finanziellen Ausgaben schlagen sich im Preis des Objekts nieder.
+          - generic [ref=e164]:
+            - generic [ref=e165] [cursor=pointer]:
+              - radio "A Zoran Jovanovic, Galerist" [ref=e166]
+              - generic [ref=e167]: A
+              - generic [ref=e168]: Zoran Jovanovic, Galerist
+            - generic [ref=e169] [cursor=pointer]:
+              - radio "B Andrea Huebner, Bildhauerin und Malerin" [ref=e170]
+              - generic [ref=e171]: B
+              - generic [ref=e172]: Andrea Huebner, Bildhauerin und Malerin
+            - generic [ref=e173] [cursor=pointer]:
+              - radio "C Sithembile Meinhards, Kunsthistorikerin" [ref=e174]
+              - generic [ref=e175]: C
+              - generic [ref=e176]: Sithembile Meinhards, Kunsthistorikerin
+            - generic [ref=e177] [cursor=pointer]:
+              - radio "0 Niemand" [ref=e178]
+              - generic [ref=e179]: "0"
+              - generic [ref=e180]: Niemand
+        - generic [ref=e181]:
+          - generic [ref=e182]:
+            - generic [ref=e183]: "29"
+            - text: Durch finanzielle Unabhängigkeit ist man frei von den Erwartungen anderer.
+          - generic [ref=e185]:
+            - generic [ref=e186] [cursor=pointer]:
+              - radio "A Zoran Jovanovic, Galerist" [ref=e187]
+              - generic [ref=e188]: A
+              - generic [ref=e189]: Zoran Jovanovic, Galerist
+            - generic [ref=e190] [cursor=pointer]:
+              - radio "B Andrea Huebner, Bildhauerin und Malerin" [ref=e191]
+              - generic [ref=e192]: B
+              - generic [ref=e193]: Andrea Huebner, Bildhauerin und Malerin
+            - generic [ref=e194] [cursor=pointer]:
+              - radio "C Sithembile Meinhards, Kunsthistorikerin" [ref=e195]
+              - generic [ref=e196]: C
+              - generic [ref=e197]: Sithembile Meinhards, Kunsthistorikerin
+            - generic [ref=e198] [cursor=pointer]:
+              - radio "0 Niemand" [ref=e199]
+              - generic [ref=e200]: "0"
+              - generic [ref=e201]: Niemand
+        - generic [ref=e202]:
+          - generic [ref=e203]:
+            - generic [ref=e204]: "30"
+            - text: Der Wandel in der Kunstszene führte zu einem eklatanten Preisanstieg.
+          - generic [ref=e206]:
+            - generic [ref=e207] [cursor=pointer]:
+              - radio "A Zoran Jovanovic, Galerist" [ref=e208]
+              - generic [ref=e209]: A
+              - generic [ref=e210]: Zoran Jovanovic, Galerist
+            - generic [ref=e211] [cursor=pointer]:
+              - radio "B Andrea Huebner, Bildhauerin und Malerin" [ref=e212]
+              - generic [ref=e213]: B
+              - generic [ref=e214]: Andrea Huebner, Bildhauerin und Malerin
+            - generic [ref=e215] [cursor=pointer]:
+              - radio "C Sithembile Meinhards, Kunsthistorikerin" [ref=e216]
+              - generic [ref=e217]: C
+              - generic [ref=e218]: Sithembile Meinhards, Kunsthistorikerin
+            - generic [ref=e219] [cursor=pointer]:
+              - radio "0 Niemand" [ref=e220]
+              - generic [ref=e221]: "0"
+              - generic [ref=e222]: Niemand
+  - navigation [ref=e43]:
+    - generic [ref=e44]:
+      - button "Teil 1 0 von 8" [ref=e242] [cursor=pointer]:
+        - generic [ref=e243]: Teil 1
+        - generic [ref=e244]: 0 von 8
+      - button "Teil 2 0 von 7" [ref=e245] [cursor=pointer]:
+        - generic [ref=e246]: Teil 2
+        - generic [ref=e247]: 0 von 7
+      - button "Teil 3 0 von 8" [ref=e248] [cursor=pointer]:
+        - generic [ref=e249]: Teil 3
+        - generic [ref=e250]: 0 von 8
+      - generic [ref=e251] [cursor=pointer]:
+        - generic [ref=e252]: Teil 4
+        - generic [ref=e253]:
+          - button "24" [ref=e254]
+          - button "25" [ref=e255]
+          - button "26" [ref=e256]
+          - button "27" [ref=e257]
+          - button "28" [ref=e258]
+          - button "29" [ref=e259]
+          - button "30" [ref=e260]
+    - generic [ref=e65]:
+      - button "Zurück" [ref=e66] [cursor=pointer]: ←
+      - button "Weiter" [active] [ref=e67] [cursor=pointer]: →
+      - button "Beenden" [ref=e68] [cursor=pointer]: ✓
