@@ -1,5 +1,76 @@
 # Eye Journal
 
+## Session: 2026-04-12 12:19 — Zarmed Olympiada German Bilingual Correctness + Renderer Dispatch — Round 35 (/loop iteration)
+Persona: German C1 student (Max Mustermann) taking Goethe-style Lesen + Hören exam | System: Zarmed Olympiada standalone (port 3004)
+Pages explored: index.html (welcome), dashboard.html, test.html (all 4 Lesen Teile + Hören Teil 1 pre-play modal), done.html
+Starting state: Round 34 shipped prefers-reduced-motion + focus trap. This round focuses on bilingual correctness — are ALL labels, modals, errors, timer text, and buttons in German for German C1 students?
+
+### Round 35 — 9 findings, 3 critical renderer bugs + 6 English string leaks
+
+**Critical — Wrong Renderers for German Reading Parts:**
+
+- [T1] **German Teil 2 (MC zum Artikel)** rendered with open-cloze text inputs instead of MC radio buttons. The ID-based dispatcher routed `part2` to `renderPart2()` (open-cloze), but German Teil 2 has standard MC questions with no `[[GAP:]]` markers.
+  Mode: rebuild (dispatcher)
+  Quality layer: 1-Broken → 4-Polished
+  Files: zarmed-olympiada/public/js/test.js
+
+- [T1] **German Teil 3 (Sätze zuordnen)** rendered with word-formation keyword list instead of paragraph bank gapped text. `part3` routed to `renderPart3()` (word-formation), but German Teil 3 has `[[SLOT:]]` markers + `paragraphBank`.
+  Mode: rebuild (dispatcher)
+  Quality layer: 1-Broken → 4-Polished
+  Files: zarmed-olympiada/public/js/test.js
+
+- [T1] **German Teil 4 (Wer sagt was?)** rendered with KWT single text input instead of matching radio buttons. `part4` routed to `renderPart4()` (KWT), but German Teil 4 has matching questions with `matchingOptions`.
+  Mode: rebuild (dispatcher)
+  Quality layer: 1-Broken → 4-Polished
+  Files: zarmed-olympiada/public/js/test.js
+
+**Fix:** Replaced ID-based dispatch (`id === 'part1'` etc.) with content-driven dispatch that checks passage markers (`[[GAP:]]`, `[[SLOT:]]`), question types, `paragraphBank`, `rootWord`, and `keyWord`/`leadIn` to select the correct renderer. Both English CAE and German Goethe content now route correctly. Also made `isOneAtATimePart()` content-driven to match.
+
+**English String Leaks in German Sessions:**
+
+- [T4] **"X of Y" nav counter** — "3 of 10" leaked English. Fixed to "3 von 10" for German.
+- [T4] **"Paragraphs" heading** in Part 7 renderer — leaked into German Teil 3. Fixed to "Absätze".
+- [T4] **"Keyword List" heading** in Part 3 renderer — would leak if German content used word-formation. Fixed to "Schlüsselwörter".
+- [T4] **aria-label="Time remaining"** on timer — screen readers read English. Fixed to "Verbleibende Zeit".
+- [T4] **aria-label="Previous/Next/Finish"** on nav buttons — fixed to "Zurück/Weiter/Beenden".
+- [T4] **aria-label="Submitting"** during submit — fixed to "Wird abgegeben".
+
+**Already Correct (no changes needed):**
+- Welcome page (index.html): all labels flip to German on language select ✅
+- Dashboard: "Willkommen", "Wählen Sie ein Modul", "Lesen"/"Hören", "Dauer: X Minuten" ✅
+- Pre-play modal: German instructions + "Wiedergabe" button ✅
+- Submit confirm modal: "Test beenden?" / "Ja, abgeben" / "Abbrechen" ✅
+- Error modals: all use `t` i18n object ✅
+- Banner: "Fragen N–M" ✅
+- Done page: "Vielen Dank" / "Ihr Test wurde abgegeben" ✅
+- Audio gating: 4 separate .m4a files gate correctly (one pre-play per Teil) ✅
+
+### Verified in Browser
+- Teil 1 (MC cloze): inline `<select>` dropdowns ✅
+- Teil 2 (MC zum Artikel): 2-col passage + radio MC questions ✅ (was broken text inputs)
+- Teil 3 (Sätze zuordnen): gapped text + paragraph bank ✅ (was broken keyword list)
+- Teil 4 (Wer sagt was?): 2-col passage + matching radio buttons ✅ (was broken KWT input)
+- Hören Teil 1: pre-play modal with "Wiedergabe", nav disabled until audio finishes ✅
+- Nav counters: "0 von 7" ✅
+
+### Quality Map
+| Page | Layer | Notes |
+|------|-------|-------|
+| index.html | 5-Crafted | Bilingual flip on language select, auto-focus |
+| dashboard.html | 5-Crafted | Full German chrome, keyboard-accessible cards |
+| test.html (Lesen) | 4-Polished | All 4 Teile render correctly now |
+| test.html (Hören) | 4-Polished | Per-file audio gating, German modals |
+| done.html | 4-Polished | German localization + rotation safety |
+
+### Session Stats
+Pages explored: 6
+Rounds: 1
+Polishes landed: 6 (string localizations)
+Rebuilds landed: 1 (content-driven dispatcher + isOneAtATimePart)
+Elevations landed: 0
+Reverted: 0
+Changes shipped: 7
+
 ## Session: 2026-04-12 00:10 — Zarmed Olympiada prefers-reduced-motion + Modal Focus Trap — Round 34 (/loop iteration)
 Persona: Student with vestibular disorder who has `prefers-reduced-motion: reduce` set in the OS + keyboard-only student clicking into the pre-play listening modal | System: Zarmet Olympiada standalone (port 3004)
 Pages explored: grep audit of all transition/animation rules + live focus-trap test on the pre-play modal
