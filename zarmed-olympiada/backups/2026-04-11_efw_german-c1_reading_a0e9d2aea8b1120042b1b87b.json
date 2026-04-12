@@ -1,0 +1,42 @@
+{
+  "sessionId": "a0e9d2aea8b1120042b1b87b",
+  "studentId": "23958b24-e4c6-4351-a23a-27bdae891664",
+  "student": "efw",
+  "group": "",
+  "lang": "german-c1",
+  "skill": "reading",
+  "startedAt": "2026-04-11T16:44:47.410Z",
+  "finishedAt": "2026-04-11T16:44:55.785Z",
+  "answers": {
+    "g-q1": "A",
+    "g-q2": "sdfa "
+  },
+  "score": {
+    "earned": 1,
+    "total": 2,
+    "perQuestion": [
+      {
+        "qid": "g-q1",
+        "partId": "part1",
+        "type": "multiple-choice",
+        "studentValue": "A",
+        "correctAnswer": "A",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "g-q2",
+        "partId": "part2",
+        "type": "open-cloze",
+        "studentValue": "sdfa ",
+        "correctAnswer": [
+          "der",
+          "Der"
+        ],
+        "earned": 0,
+        "possible": 1
+      }
+    ]
+  },
+  "eventCount": 8
+}

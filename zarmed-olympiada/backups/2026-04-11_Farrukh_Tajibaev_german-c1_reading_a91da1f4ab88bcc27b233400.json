@@ -1,0 +1,300 @@
+{
+  "sessionId": "a91da1f4ab88bcc27b233400",
+  "studentId": "c916f550-313a-4fa1-b497-2418c628059a",
+  "student": "Farrukh Tajibaev",
+  "group": "",
+  "lang": "german-c1",
+  "skill": "reading",
+  "startedAt": "2026-04-11T19:06:48.769Z",
+  "finishedAt": "2026-04-11T19:07:23.286Z",
+  "answers": {
+    "g-q1": "A",
+    "g-q2": "A",
+    "g-q3": "B",
+    "g-q4": "C",
+    "g-q5": "C",
+    "g-q6": "C",
+    "g-q7": "B",
+    "g-q8": "C",
+    "g-q16": "hi",
+    "g-q17": "What",
+    "g-q18": "????"
+  },
+  "score": {
+    "earned": 2,
+    "total": 30,
+    "perQuestion": [
+      {
+        "qid": "g-q1",
+        "partId": "part1",
+        "type": "multiple-choice",
+        "studentValue": "A",
+        "correctAnswer": "D",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q2",
+        "partId": "part1",
+        "type": "multiple-choice",
+        "studentValue": "A",
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q3",
+        "partId": "part1",
+        "type": "multiple-choice",
+        "studentValue": "B",
+        "correctAnswer": "B",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "g-q4",
+        "partId": "part1",
+        "type": "multiple-choice",
+        "studentValue": "C",
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q5",
+        "partId": "part1",
+        "type": "multiple-choice",
+        "studentValue": "C",
+        "correctAnswer": "B",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q6",
+        "partId": "part1",
+        "type": "multiple-choice",
+        "studentValue": "C",
+        "correctAnswer": "D",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q7",
+        "partId": "part1",
+        "type": "multiple-choice",
+        "studentValue": "B",
+        "correctAnswer": "B",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "g-q8",
+        "partId": "part1",
+        "type": "multiple-choice",
+        "studentValue": "C",
+        "correctAnswer": "D",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q9",
+        "partId": "part2",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "B",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q10",
+        "partId": "part2",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q11",
+        "partId": "part2",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q12",
+        "partId": "part2",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "B",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q13",
+        "partId": "part2",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q14",
+        "partId": "part2",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "B",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q15",
+        "partId": "part2",
+        "type": "multiple-choice",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q16",
+        "partId": "part3",
+        "type": "gapped-text",
+        "studentValue": "hi",
+        "correctAnswer": "E",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q17",
+        "partId": "part3",
+        "type": "gapped-text",
+        "studentValue": "What",
+        "correctAnswer": "G",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q18",
+        "partId": "part3",
+        "type": "gapped-text",
+        "studentValue": "????",
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q19",
+        "partId": "part3",
+        "type": "gapped-text",
+        "studentValue": null,
+        "correctAnswer": "I",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q20",
+        "partId": "part3",
+        "type": "gapped-text",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q21",
+        "partId": "part3",
+        "type": "gapped-text",
+        "studentValue": null,
+        "correctAnswer": "F",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q22",
+        "partId": "part3",
+        "type": "gapped-text",
+        "studentValue": null,
+        "correctAnswer": "J",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q23",
+        "partId": "part3",
+        "type": "gapped-text",
+        "studentValue": null,
+        "correctAnswer": "D",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q24",
+        "partId": "part4",
+        "type": "matching",
+        "studentValue": null,
+        "correctAnswer": "0",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q25",
+        "partId": "part4",
+        "type": "matching",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q26",
+        "partId": "part4",
+        "type": "matching",
+        "studentValue": null,
+        "correctAnswer": "C",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q27",
+        "partId": "part4",
+        "type": "matching",
+        "studentValue": null,
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q28",
+        "partId": "part4",
+        "type": "matching",
+        "studentValue": null,
+        "correctAnswer": "A",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q29",
+        "partId": "part4",
+        "type": "matching",
+        "studentValue": null,
+        "correctAnswer": "B",
+        "earned": 0,
+        "possible": 1
+      },
+      {
+        "qid": "g-q30",
+        "partId": "part4",
+        "type": "matching",
+        "studentValue": null,
+        "correctAnswer": "0",
+        "earned": 0,
+        "possible": 1
+      }
+    ]
+  },
+  "eventCount": 20
+}

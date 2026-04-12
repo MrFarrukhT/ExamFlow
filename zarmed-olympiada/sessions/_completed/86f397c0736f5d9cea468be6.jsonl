@@ -1,0 +1,11 @@
+{"t":"2026-04-11T16:38:03.818Z","ev":"start","studentId":"dfc3c853-ce02-47fa-818b-9c54ed283704","student":"Farrukh Tajibaev","group":"","lang":"english-c1","skill":"listening"}
+{"t":"2026-04-11T16:38:04.773Z","ev":"audio-play","partId":"part-listening-1"}
+{"t":"2026-04-11T16:38:07.393Z","ev":"answer","qid":"lq1","value":"A"}
+{"t":"2026-04-11T16:38:09.117Z","ev":"audio-play","partId":"part-listening-2"}
+{"t":"2026-04-11T16:38:14.306Z","ev":"audio-play","partId":"part-listening-3"}
+{"t":"2026-04-11T16:38:16.473Z","ev":"audio-play","partId":"part-listening-4"}
+{"t":"2026-04-11T16:38:18.022Z","ev":"answer","qid":"lq26","value":"A"}
+{"t":"2026-04-11T16:38:19.011Z","ev":"answer","qid":"lq22","value":"D"}
+{"t":"2026-04-11T16:38:19.963Z","ev":"answer","qid":"lq21","value":"B"}
+{"t":"2026-04-11T16:38:21.686Z","ev":"answer","qid":"lq27","value":"C"}
+{"t":"2026-04-11T16:38:23.427Z","ev":"submit"}

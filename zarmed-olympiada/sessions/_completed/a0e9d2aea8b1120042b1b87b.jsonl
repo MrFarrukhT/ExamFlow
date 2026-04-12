@@ -1,0 +1,8 @@
+{"t":"2026-04-11T16:44:47.410Z","ev":"start","studentId":"23958b24-e4c6-4351-a23a-27bdae891664","student":"efw","group":"","lang":"german-c1","skill":"reading"}
+{"t":"2026-04-11T16:44:49.173Z","ev":"answer","qid":"g-q1","value":"A"}
+{"t":"2026-04-11T16:44:53.413Z","ev":"answer","qid":"g-q2","value":"s"}
+{"t":"2026-04-11T16:44:53.421Z","ev":"answer","qid":"g-q2","value":"sd"}
+{"t":"2026-04-11T16:44:53.444Z","ev":"answer","qid":"g-q2","value":"sdf"}
+{"t":"2026-04-11T16:44:53.451Z","ev":"answer","qid":"g-q2","value":"sdfa"}
+{"t":"2026-04-11T16:44:53.806Z","ev":"answer","qid":"g-q2","value":"sdfa "}
+{"t":"2026-04-11T16:44:55.785Z","ev":"submit"}

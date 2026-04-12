@@ -1,0 +1,10 @@
+{"t":"2026-04-11T19:05:38.410Z","ev":"start","studentId":"47784007-8264-4354-afea-a60ffd7db515","student":"Farrukh Tajibaev","group":"","lang":"english-c1","skill":"listening"}
+{"t":"2026-04-11T19:05:39.277Z","ev":"audio-play","partId":"part-listening-1"}
+{"t":"2026-04-11T19:05:50.864Z","ev":"answer","qid":"lq21","value":"A"}
+{"t":"2026-04-11T19:05:51.738Z","ev":"answer","qid":"lq22","value":"C"}
+{"t":"2026-04-11T19:05:53.417Z","ev":"answer","qid":"lq26","value":"C"}
+{"t":"2026-04-11T19:05:54.159Z","ev":"answer","qid":"lq27","value":"D"}
+{"t":"2026-04-11T19:05:55.330Z","ev":"answer","qid":"lq23","value":"D"}
+{"t":"2026-04-11T19:05:56.209Z","ev":"answer","qid":"lq24","value":"D"}
+{"t":"2026-04-11T19:05:56.974Z","ev":"answer","qid":"lq25","value":"D"}
+{"t":"2026-04-11T19:06:14.760Z","ev":"submit"}
