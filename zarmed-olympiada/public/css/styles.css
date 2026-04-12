@@ -469,7 +469,43 @@ body.zu-welcome .page {
 .zu-admin-table tr.zu-row-correct:hover td,
 .zu-admin-table tr.zu-row-wrong:hover td,
 .zu-admin-table tr.zu-row-blank:hover td { background: #eff6ff; cursor: default; }
-.zu-toolbar { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.zu-toolbar { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap; align-items: center; }
+.zu-search-input {
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 0.6rem 1rem;
+  border: 1.5px solid var(--zu-border-strong);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--zu-text);
+  flex: 1;
+  min-width: 180px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.zu-search-input:focus {
+  outline: none;
+  border-color: var(--zu-primary);
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.12);
+}
+.zu-filter-select {
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 0.55rem 0.75rem;
+  border: 1.5px solid var(--zu-border-strong);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--zu-text);
+  cursor: pointer;
+}
+.zu-filter-select:focus {
+  outline: none;
+  border-color: var(--zu-primary);
+}
+.zu-results-count {
+  font-size: 0.85rem;
+  color: var(--zu-text-muted);
+  margin-bottom: 0.5rem;
+}
 
 /* Admin table gets wrapped in this container so the table scrolls
  * horizontally at narrow widths instead of pushing the entire <body>

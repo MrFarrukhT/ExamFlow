@@ -214,17 +214,31 @@
     return partId;
   }
 
+  // ------- search & filter -------
+  function getFilteredRows() {
+    const searchTerm = (document.getElementById('search')?.value || '').toLowerCase().trim();
+    const langFilter = document.getElementById('filter-lang')?.value || '';
+    const skillFilter = document.getElementById('filter-skill')?.value || '';
+    return rows.filter(r => {
+      if (searchTerm && !(r.student || '').toLowerCase().includes(searchTerm)
+          && !(r.group || '').toLowerCase().includes(searchTerm)) return false;
+      if (langFilter && r.lang !== langFilter) return false;
+      if (skillFilter && r.skill !== skillFilter) return false;
+      return true;
+    });
+  }
+
   function renderRows() {
     const tbody = document.getElementById('rows-body');
     tbody.innerHTML = '';
-    // Export CSV/JSON only make sense when there are rows to export.
-    // Disable them on the empty state so a new invigilator doesn't get
-    // an empty file when they click Export by habit.
+    const filtered = getFilteredRows();
     const exportCsv = document.getElementById('export-csv');
     const exportJson = document.getElementById('export-json');
-    const isEmpty = rows.length === 0;
+    const exportPdf = document.getElementById('export-pdf');
+    const isEmpty = filtered.length === 0;
     if (exportCsv) exportCsv.disabled = isEmpty;
     if (exportJson) exportJson.disabled = isEmpty;
+    if (exportPdf) exportPdf.disabled = isEmpty;
     if (isEmpty) {
       rowsTable.style.display = 'none';
       emptyState.hidden = false;
@@ -232,7 +246,7 @@
     }
     rowsTable.style.display = '';
     emptyState.hidden = true;
-    rows.forEach((r) => {
+    filtered.forEach((r) => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${fmtTimeShort(r.finishedAt)}</td>
@@ -317,10 +331,72 @@
         );
       });
       h.push('</tbody></table></div>');
+      // Export buttons for this individual submission
+      h.push('<div class="zu-toolbar" style="margin-top:1.25rem;">');
+      h.push('<button class="zu-btn zu-btn--ghost" id="detail-export-csv">Export CSV</button>');
+      h.push('<button class="zu-btn zu-btn--ghost" id="detail-export-json">Export JSON</button>');
+      h.push('<button class="zu-btn zu-btn--ghost" id="detail-export-pdf">Export PDF</button>');
       h.push('<button class="zu-btn zu-btn--ghost zu-detail-bottom-back" id="back-btn-bottom">\u2190 Back to list</button>');
+      h.push('</div>');
       detailBody.innerHTML = h.join('');
       const bottomBack = document.getElementById('back-btn-bottom');
       if (bottomBack) bottomBack.addEventListener('click', () => show(listView));
+
+      // Per-submission exports
+      const detExportCsv = document.getElementById('detail-export-csv');
+      if (detExportCsv) detExportCsv.addEventListener('click', () => {
+        const header = ['#', 'Part', 'Type', 'Student Answer', 'Correct Answer', 'Earned', 'Possible'];
+        const lines = [header.join(',')];
+        pq.forEach((q, i) => {
+          lines.push([i+1, csv(fmtPart(q.partId)), csv(fmtType(q.type)), csv(fmtStudentValue(q.studentValue)), csv(fmtCorrect(q.correctAnswer)), q.earned, q.possible].join(','));
+        });
+        triggerDownload(new Blob([lines.join('\n')], { type: 'text/csv' }), escape(rec.student).replace(/\s+/g, '_') + '_' + rec.skill + '.csv');
+      });
+      const detExportJson = document.getElementById('detail-export-json');
+      if (detExportJson) detExportJson.addEventListener('click', () => {
+        triggerDownload(new Blob([JSON.stringify(rec, null, 2)], { type: 'application/json' }), escape(rec.student).replace(/\s+/g, '_') + '_' + rec.skill + '.json');
+      });
+      const detExportPdf = document.getElementById('detail-export-pdf');
+      if (detExportPdf) detExportPdf.addEventListener('click', () => {
+        const pdfHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${escape(rec.student)} — ${escape(fmtSkill(rec.skill))}</title>
+<style>
+body { font-family: Arial, sans-serif; font-size: 10pt; margin: 20px; color: #1a1a1a; }
+h1 { font-size: 14pt; color: #1e40af; margin: 0 0 2px; }
+h2 { font-size: 11pt; color: #333; margin: 0 0 12px; }
+.stats { display: flex; gap: 24px; margin: 8px 0 12px; font-size: 10pt; }
+.stat-val { font-weight: 700; font-size: 13pt; color: #1e40af; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #ccc; padding: 5px 8px; text-align: left; font-size: 9pt; }
+th { background: #1e40af; color: #fff; }
+.correct td { background: #f0fdf4; }
+.wrong td { background: #fef2f2; }
+.blank td { background: #f8f8f8; color: #999; }
+.part-hdr td { background: #dbeafe; font-weight: 700; font-size: 9pt; border-top: 2px solid #1e40af; }
+@media print { body { margin: 0; } }
+</style></head><body>
+<h1>${escape(rec.student)}</h1>
+<h2>${escape(fmtLang(rec.lang))} — ${escape(fmtSkill(rec.skill))} &middot; Score: ${rec.score.earned}/${rec.score.total} (${pct})</h2>
+<div class="stats"><div>Duration: ${duration || '—'}</div><div>Started: ${fmtTime(rec.startedAt)}</div><div>Finished: ${fmtTime(rec.finishedAt)}</div></div>
+<table><thead><tr><th>#</th><th>Type</th><th>Student Answer</th><th>Correct</th><th>Pts</th></tr></thead><tbody>`;
+        let partHtml = '';
+        let curPart = null;
+        pq.forEach((q, i) => {
+          if (q.partId !== curPart) {
+            curPart = q.partId;
+            const partQs = pq.filter(p2 => p2.partId === curPart);
+            const pe = partQs.reduce((s, p2) => s + p2.earned, 0);
+            const pt = partQs.reduce((s, p2) => s + p2.possible, 0);
+            partHtml += '<tr class="part-hdr"><td colspan="4">' + escape(fmtPart(curPart)) + '</td><td>' + pe + '/' + pt + '</td></tr>';
+          }
+          const cls = q.earned >= q.possible ? 'correct' : (q.studentValue == null || q.studentValue === '') ? 'blank' : 'wrong';
+          partHtml += '<tr class="' + cls + '"><td>' + (i+1) + '</td><td>' + escape(fmtType(q.type)) + '</td><td>' + escape(fmtStudentValue(q.studentValue)) + '</td><td>' + escape(fmtCorrect(q.correctAnswer)) + '</td><td>' + q.earned + '/' + q.possible + '</td></tr>';
+        });
+        const fullPdf = pdfHtml + partHtml + '</tbody></table><p style="margin-top:12px;font-size:8pt;color:#999;">Zarmed University — C1 Language Olympiada</p></body></html>';
+        const win = window.open('', '_blank', 'width=900,height=700');
+        win.document.write(fullPdf);
+        win.document.close();
+        setTimeout(() => win.print(), 300);
+      });
     } catch (e) {
       // Show the error inline in the detail body so the admin can see it
       // and use the top "← Back to list" button to return. For 401 errors
@@ -382,16 +458,22 @@
 
   document.getElementById('refresh').addEventListener('click', loadRows);
   document.getElementById('back-btn').addEventListener('click', () => show(listView));
+  // Search & filter — re-render the table on every input change
+  document.getElementById('search').addEventListener('input', renderRows);
+  document.getElementById('filter-lang').addEventListener('change', renderRows);
+  document.getElementById('filter-skill').addEventListener('change', renderRows);
 
   document.getElementById('export-json').addEventListener('click', () => {
-    const blob = new Blob([JSON.stringify(rows, null, 2)], { type: 'application/json' });
+    const filtered = getFilteredRows();
+    const blob = new Blob([JSON.stringify(filtered, null, 2)], { type: 'application/json' });
     triggerDownload(blob, 'olympiada-results.json');
   });
 
   document.getElementById('export-csv').addEventListener('click', () => {
+    const filtered = getFilteredRows();
     const header = ['finishedAt', 'student', 'group', 'lang', 'skill', 'earned', 'total', 'percent'];
     const lines = [header.join(',')];
-    rows.forEach((r) => {
+    filtered.forEach((r) => {
       const vals = ['finishedAt', 'student', 'group', 'lang', 'skill', 'earned', 'total']
         .map(k => csv(r[k]));
       vals.push(csv(fmtPct(r.earned, r.total)));
@@ -399,6 +481,44 @@
     });
     const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
     triggerDownload(blob, 'olympiada-results.csv');
+  });
+
+  // PDF export — generates a printable HTML table and triggers print dialog
+  document.getElementById('export-pdf').addEventListener('click', () => {
+    const filtered = getFilteredRows();
+    if (!filtered.length) return;
+    const html = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Zarmed Olympiada — Results</title>
+<style>
+body { font-family: Arial, sans-serif; font-size: 11pt; margin: 20px; color: #1a1a1a; }
+h1 { font-size: 16pt; color: #1e40af; margin: 0 0 4px; }
+.subtitle { color: #666; font-size: 10pt; margin: 0 0 16px; }
+table { border-collapse: collapse; width: 100%; margin-top: 8px; }
+th, td { border: 1px solid #ccc; padding: 6px 10px; text-align: left; font-size: 10pt; }
+th { background: #1e40af; color: #fff; font-weight: 600; }
+tr:nth-child(even) td { background: #f8f9fa; }
+.score-high { color: #15803d; font-weight: 700; }
+.score-mid { color: #b45309; font-weight: 700; }
+.score-low { color: #b91c1c; font-weight: 700; }
+.footer { margin-top: 16px; font-size: 9pt; color: #999; }
+@media print { body { margin: 0; } }
+</style></head><body>
+<h1>Zarmed University — C1 Olympiada Results</h1>
+<p class="subtitle">Generated: ${new Date().toLocaleString()} &middot; ${filtered.length} result(s)</p>
+<table>
+<thead><tr><th>#</th><th>Student</th><th>Test Taker ID</th><th>Language</th><th>Skill</th><th>Score</th><th>Percent</th><th>Finished</th></tr></thead>
+<tbody>${filtered.map((r, i) => {
+      const pct = Math.round(((r.earned || 0) / (r.total || 1)) * 100);
+      const cls = pct >= 70 ? 'score-high' : pct >= 30 ? 'score-mid' : 'score-low';
+      return '<tr><td>' + (i+1) + '</td><td>' + escape(r.student) + '</td><td>' + escape(r.group || '—') + '</td><td>' + escape(fmtLang(r.lang)) + '</td><td>' + escape(fmtSkill(r.skill)) + '</td><td>' + (r.earned??0) + ' / ' + (r.total??0) + '</td><td class="' + cls + '">' + pct + '%</td><td>' + fmtTimeShort(r.finishedAt) + '</td></tr>';
+    }).join('')}</tbody>
+</table>
+<p class="footer">Zarmed University — C1 Language Olympiada</p>
+</body></html>`;
+    const win = window.open('', '_blank', 'width=900,height=700');
+    win.document.write(html);
+    win.document.close();
+    setTimeout(() => win.print(), 300);
   });
 
   function csv(v) {

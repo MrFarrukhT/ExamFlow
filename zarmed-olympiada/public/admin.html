@@ -31,9 +31,23 @@
 
   <div id="list-view" hidden>
     <div class="zu-toolbar">
+      <input type="search" id="search" placeholder="Search by name..." class="zu-search-input" autocomplete="off">
+      <select id="filter-lang" class="zu-filter-select">
+        <option value="">All Languages</option>
+        <option value="english-c1">English C1</option>
+        <option value="german-c1">German C1</option>
+      </select>
+      <select id="filter-skill" class="zu-filter-select">
+        <option value="">All Skills</option>
+        <option value="reading">Reading</option>
+        <option value="listening">Listening</option>
+      </select>
+    </div>
+    <div class="zu-toolbar">
       <button class="zu-btn zu-btn--ghost" id="refresh">Refresh</button>
       <button class="zu-btn zu-btn--ghost" id="export-csv">Export CSV</button>
       <button class="zu-btn zu-btn--ghost" id="export-json">Export JSON</button>
+      <button class="zu-btn zu-btn--ghost" id="export-pdf">Export PDF</button>
     </div>
     <div class="zu-admin-table-wrap">
       <table class="zu-admin-table" id="rows-table">
