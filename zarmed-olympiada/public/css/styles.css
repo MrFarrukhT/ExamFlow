@@ -519,6 +519,9 @@ body.zu-welcome .page {
   color: var(--zu-text-muted);
   font-size: 1.05rem;
 }
+.zu-loading--error {
+  color: var(--zu-danger);
+}
 
 /* List view — percentage badge next to score */
 .zu-pct {

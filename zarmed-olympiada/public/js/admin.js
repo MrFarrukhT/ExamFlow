@@ -322,7 +322,11 @@
       const bottomBack = document.getElementById('back-btn-bottom');
       if (bottomBack) bottomBack.addEventListener('click', () => show(listView));
     } catch (e) {
-      showAdminError('Failed to open submission: ' + e.message);
+      // Show the error inline in the detail body so the admin can see it
+      // and use the top "← Back to list" button to return. For 401 errors
+      // the api() helper already switched to the login view, so this just
+      // sets innerHTML on a hidden element (harmless).
+      detailBody.innerHTML = '<p class="zu-loading zu-loading--error">Failed to load submission. Use the back button above to return.</p>';
     }
   }
 
