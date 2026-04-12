@@ -84,6 +84,11 @@
     if (submitBtn) submitBtn.textContent = s.continueBtn;
     // ISO 639-1 code from our content-slug style ("english-c1" → "en", "german-c1" → "de")
     document.documentElement.lang = langSelect.value === 'german-c1' ? 'de' : 'en';
+    // Browser tab title — German students should see a German title from
+    // the moment they pick their language, not "Zarmed University — C1 Olympiada".
+    document.title = langSelect.value === 'german-c1'
+      ? 'Zarmed Universität — C1 Olympiada'
+      : 'Zarmed University — C1 Olympiada';
   }
 
   // Keep the browser's native "balloon" message in sync with the current

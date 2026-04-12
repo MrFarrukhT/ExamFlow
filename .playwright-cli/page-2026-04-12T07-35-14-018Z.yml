@@ -1,0 +1,20 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - img "Zarmed University" [ref=e4]
+    - heading "C1 Language Olympiada" [level=1] [ref=e5]
+    - paragraph [ref=e6]: Select a module to begin
+  - main [ref=e7]:
+    - generic [ref=e8]:
+      - paragraph [ref=e9]: Welcome, Scenario Test Student
+      - paragraph [ref=e10]: "Language: English C1 Advanced · ID: FAB8613D"
+    - generic [ref=e11]:
+      - heading "Select a Module to Begin" [level=2] [ref=e12]
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - heading "Reading & Use of English" [level=3] [ref=e15]
+          - generic [ref=e16]: "Duration: 90 minutes"
+          - generic [ref=e17]: Submitted.
+          - text: ✓
+        - 'button "Listening Duration: 40 minutes" [ref=e18] [cursor=pointer]':
+          - heading "Listening" [level=3] [ref=e19]
+          - generic [ref=e20]: "Duration: 40 minutes"

@@ -77,6 +77,8 @@
   // right language and native browser spell-check picks the right dict.
   function localizeStaticStrings() {
     document.documentElement.lang = isGerman ? 'de' : 'en';
+    // Browser tab title — "Modules" → "Module"
+    document.title = isGerman ? 'Zarmed Olympiada — Module' : 'Zarmed Olympiada — Modules';
     // Header h1 — previously a static English string. German students now
     // see "C1 Olympiada" (brand-only, drops the English "Language" word).
     const pageH1 = document.querySelector('.zu-header h1');
