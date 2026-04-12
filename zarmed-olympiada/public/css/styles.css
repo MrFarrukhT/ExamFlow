@@ -380,6 +380,10 @@ body.zu-welcome .page {
 .zu-admin-table tr.zu-row-correct td { background: #f0fdf4; }
 .zu-admin-table tr.zu-row-wrong td { background: #fef2f2; }
 .zu-admin-table tr.zu-row-blank td { background: #f8fafc; color: var(--zu-text-muted); }
+/* Left-border colour strip — fast visual scan for correct/wrong/blank */
+.zu-admin-table tr.zu-row-correct td:first-child { border-left: 3px solid var(--zu-success); }
+.zu-admin-table tr.zu-row-wrong td:first-child { border-left: 3px solid var(--zu-danger); }
+.zu-admin-table tr.zu-row-blank td:first-child { border-left: 3px solid var(--zu-border-strong); }
 .zu-admin-table tr.zu-row-correct:hover td,
 .zu-admin-table tr.zu-row-wrong:hover td,
 .zu-admin-table tr.zu-row-blank:hover td { background: #eff6ff; cursor: default; }
@@ -472,19 +476,22 @@ body.zu-welcome .page {
   margin: 0.5rem 0 0;
 }
 
-/* Part-level section headers in the per-question table */
+/* Part-level section headers in the per-question table.
+ * Lighter tint than the column header so they read as section dividers,
+ * not duplicate headers. */
 .zu-part-header td {
-  background: var(--zu-primary);
-  color: #fff;
+  background: #dbeafe;
+  color: var(--zu-primary-darker);
   font-weight: 700;
   font-size: 0.9rem;
   letter-spacing: 0.02em;
   padding: 0.55rem 1.1rem;
-  border-bottom: none;
+  border-bottom: 1px solid #bfdbfe;
+  border-top: 2px solid var(--zu-primary);
 }
 /* Remove hover on part headers — they're not clickable */
 .zu-admin-table tr.zu-part-header:hover td {
-  background: var(--zu-primary);
+  background: #dbeafe;
   cursor: default;
 }
 
@@ -500,12 +507,20 @@ body.zu-welcome .page {
   word-break: break-word;
 }
 
+/* Bottom "Back to list" — mirrors the top button at bottom of long tables */
+.zu-detail-bottom-back {
+  margin-top: 1.25rem;
+}
+
 /* List view — percentage badge next to score */
 .zu-pct {
-  color: var(--zu-text-muted);
   font-size: 0.85rem;
-  font-weight: 400;
+  font-weight: 500;
 }
+/* Score ranges: red <30%, amber 30-69%, green ≥70% */
+.zu-pct--low { color: var(--zu-danger); }
+.zu-pct--mid { color: #b45309; }
+.zu-pct--high { color: var(--zu-success); }
 
 /* ============================================================ */
 /* TEST PAGE — Cambridge-authentic chrome                        */
@@ -727,7 +742,7 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   margin: 0 auto;
   padding: 0 24px;
   position: sticky;
-  top: 64px; /* right below the sticky header (64px min-height) */
+  top: 72px; /* right below the sticky header (72px min-height) */
   background: var(--ct-bg);
   z-index: 35;
 }
@@ -798,8 +813,8 @@ body.zu-test-body .ct-nav-finish:focus-visible {
  * reading a long passage while the answer options stay visible. */
 .ct-two-col > .ct-col:nth-child(2) {
   position: sticky;
-  top: 130px; /* clears the sticky header (~64px) + banner (~50px) + gap */
-  max-height: calc(100vh - 150px - 72px); /* 150 = header+banner reserve, 72 = bottom nav */
+  top: 138px; /* clears the sticky header (~72px) + banner (~50px) + gap */
+  max-height: calc(100vh - 158px - 72px); /* 158 = header+banner reserve, 72 = bottom nav */
   overflow-y: auto;
   align-self: start;
   /* Scroll affordance: force a visible thin scrollbar so Chrome/Edge

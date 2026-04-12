@@ -170,6 +170,15 @@
     return Math.round((earned / total) * 100) + '%';
   }
 
+  // CSS class for score-range coloring (red <30%, amber 30-69%, green ≥70%)
+  function pctClass(earned, total) {
+    if (!total) return 'zu-pct--low';
+    const p = (earned / total) * 100;
+    if (p >= 70) return 'zu-pct--high';
+    if (p >= 30) return 'zu-pct--mid';
+    return 'zu-pct--low';
+  }
+
   // Format duration between two ISO timestamps ("2m 31s", "1h 5m", etc.)
   function fmtDuration(startIso, endIso) {
     if (!startIso || !endIso) return '';
@@ -227,7 +236,7 @@
         <td>${escape(r.group || '—')}</td>
         <td>${escape(fmtLang(r.lang))}</td>
         <td>${escape(fmtSkill(r.skill))}</td>
-        <td>${r.earned ?? '-'} / ${r.total ?? '-'} <span class="zu-pct">(${fmtPct(r.earned, r.total)})</span></td>
+        <td>${r.earned ?? '-'} / ${r.total ?? '-'} <span class="zu-pct ${pctClass(r.earned, r.total)}">(${fmtPct(r.earned, r.total)})</span></td>
       `;
       tr.addEventListener('click', () => openDetail(r));
       tbody.appendChild(tr);
@@ -301,7 +310,10 @@
         );
       });
       h.push('</tbody></table></div>');
+      h.push('<button class="zu-btn zu-btn--ghost zu-detail-bottom-back" id="back-btn-bottom">\u2190 Back to list</button>');
       body.innerHTML = h.join('');
+      const bottomBack = document.getElementById('back-btn-bottom');
+      if (bottomBack) bottomBack.addEventListener('click', () => show(listView));
       show(detailView);
     } catch (e) {
       showAdminError('Failed to open submission: ' + e.message);
