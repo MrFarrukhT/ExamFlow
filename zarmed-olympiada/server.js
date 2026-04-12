@@ -326,6 +326,50 @@ async function mirrorToPg(record) {
     }
 }
 
+// ------- auto-resync: push un-mirrored backups to Neon -------
+// Runs on startup and periodically. Scans backups/ for files not yet in
+// Postgres, inserts them. Handles the case where exams were taken offline
+// and the machine later gets internet.
+async function resyncPendingBackups() {
+    if (!pgMirror) return;
+    try {
+        const files = fs.readdirSync(BACKUPS_DIR).filter(f => f.endsWith('.json'));
+        if (!files.length) return;
+        // Get session IDs already in Postgres
+        const { rows } = await pgMirror.query('SELECT session_id FROM zarmet_olympiada_submissions');
+        const existing = new Set(rows.map(r => r.session_id));
+        let synced = 0;
+        for (const f of files) {
+            try {
+                const rec = JSON.parse(fs.readFileSync(path.join(BACKUPS_DIR, f), 'utf8'));
+                if (rec.sessionId && !existing.has(rec.sessionId)) {
+                    const result = await mirrorToPg(rec);
+                    if (result.ok) synced++;
+                }
+            } catch {}
+        }
+        if (synced > 0) console.log(`[mirror] resync: pushed ${synced} offline backup(s) to Postgres`);
+    } catch (err) {
+        console.warn('[mirror] resync failed (non-fatal):', err.message);
+    }
+}
+
+// Periodic resync — every 2 minutes, push any un-mirrored backups.
+// Also retries Postgres connection if it was down at startup.
+let _resyncInterval = null;
+function startResyncLoop() {
+    if (_resyncInterval) return;
+    _resyncInterval = setInterval(async () => {
+        // If mirror is not connected, try to reconnect
+        if (!pgMirror && process.env.OLYMPIADA_DATABASE_URL) {
+            try {
+                await initPgMirror();
+            } catch {}
+        }
+        await resyncPendingBackups();
+    }, 120_000); // 2 minutes
+}
+
 // ------- crash recovery -------
 function recoverIncompleteSessions() {
     const files = fs.readdirSync(SESSIONS_DIR).filter(f => f.endsWith('.jsonl'));
@@ -415,6 +459,101 @@ app.get('/api/audio/:lang/:filename', (req, res) => {
     const filePath = path.join(CONTENT_DIR, lang, 'audio', filename);
     if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'not found' });
     res.sendFile(filePath);
+});
+
+// ------- session resume: list active (unfinished) sessions -------
+// Used by the welcome page to show "Continue where you left off" when a
+// student's PC crashes or the browser is closed mid-exam.
+app.get('/api/sessions/active', (req, res) => {
+    try {
+        const files = fs.readdirSync(SESSIONS_DIR).filter(f => f.endsWith('.jsonl'));
+        const active = [];
+        for (const f of files) {
+            const sessionId = f.replace(/\.jsonl$/, '');
+            const events = readSessionEvents(sessionId);
+            if (!events.length) continue;
+            const hasSubmit = events.some(e => e.ev === 'submit');
+            if (hasSubmit) continue; // already submitted
+            const meta = getSessionMeta(events);
+            if (!meta) continue;
+            // Calculate time info
+            const content = (() => { try { return loadContent(meta.lang, meta.skill); } catch { return null; } })();
+            const durationMin = content ? content.durationMinutes : 90;
+            const startedAt = new Date(meta.startedAt).getTime();
+            const elapsedSec = Math.floor((Date.now() - startedAt) / 1000);
+            const totalSec = durationMin * 60;
+            const remainingSec = Math.max(0, totalSec - elapsedSec);
+            const answers = computeAnswersFromEvents(events);
+            const answeredCount = Object.values(answers).filter(v => v != null && v !== '').length;
+            active.push({
+                sessionId,
+                student: meta.student,
+                group: meta.group,
+                lang: meta.lang,
+                skill: meta.skill,
+                startedAt: meta.startedAt,
+                durationMinutes: durationMin,
+                remainingSeconds: remainingSec,
+                answeredCount,
+                expired: remainingSec <= 0
+            });
+        }
+        res.json({ sessions: active });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Resume a session — regenerate a valid token for an existing active session.
+// The invigilator or student provides the sessionId from the active list;
+// the server re-derives the token (same HMAC, same SESSION_SECRET) and
+// returns it along with full answer state and timer info.
+app.post('/api/session/:id/resume', (req, res) => {
+    const { id } = req.params;
+    try {
+        const events = readSessionEvents(id);
+        if (!events.length) return res.status(404).json({ error: 'session not found' });
+        if (events.some(e => e.ev === 'submit')) return res.status(409).json({ error: 'session already submitted' });
+        const meta = getSessionMeta(events);
+        if (!meta) return res.status(400).json({ error: 'no start event' });
+        const answers = computeAnswersFromEvents(events);
+        const content = (() => { try { return loadContent(meta.lang, meta.skill); } catch { return null; } })();
+        const durationMin = content ? content.durationMinutes : 90;
+        const startedAt = new Date(meta.startedAt).getTime();
+        const elapsedSec = Math.floor((Date.now() - startedAt) / 1000);
+        const remainingSec = Math.max(0, durationMin * 60 - elapsedSec);
+        // Re-derive the session token (same HMAC as session start)
+        const sessionToken = crypto.createHmac('sha256', SESSION_SECRET)
+            .update(id).digest('hex').slice(0, 32);
+        // Log resume event
+        appendSessionEvent(id, { ev: 'resume' });
+        res.json({
+            sessionId: id,
+            token: sessionToken,
+            meta,
+            answers,
+            durationMinutes: durationMin,
+            remainingSeconds: remainingSec
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Record an anti-cheat violation (tab switch, fullscreen exit, etc.)
+app.post('/api/session/:id/violation', verifySessionToken, (req, res) => {
+    const { id } = req.params;
+    const { type, detail } = req.body || {};
+    if (!type || typeof type !== 'string') {
+        return res.status(400).json({ error: 'violation type required' });
+    }
+    try {
+        if (!fs.existsSync(sessionPath(id))) return res.status(404).json({ error: 'session not found' });
+        appendSessionEvent(id, { ev: 'violation', type: type.slice(0, 50), detail: String(detail || '').slice(0, 200) });
+        res.json({ ok: true });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
 });
 
 // Student-status endpoint (ADR-040) — returns which modules this student has completed.
@@ -725,6 +864,9 @@ async function start() {
 
     await initPgMirror();
     recoverIncompleteSessions();
+    // Push any backups taken offline to Neon, then start periodic resync
+    resyncPendingBackups().catch(() => {});
+    startResyncLoop();
 
     app.listen(PORT, () => {
         console.log('');
@@ -734,6 +876,7 @@ async function start() {
         console.log(`  Sessions:  ${SESSIONS_DIR}`);
         console.log(`  Backups:   ${BACKUPS_DIR}`);
         console.log(`  Mirror:    ${pgMirror ? 'ENABLED' : 'disabled'}`);
+        console.log(`  Resync:    every 2 minutes (auto-reconnect)`);
         console.log('==============================================');
         console.log('');
     });

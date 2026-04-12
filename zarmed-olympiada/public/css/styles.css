@@ -132,6 +132,88 @@ body.zu-welcome .page {
   width: 100%;
 }
 
+/* Resume section — continue where you left off */
+.zu-resume-section {
+  margin-bottom: 2rem;
+  animation: ctFadeIn 260ms ease-out;
+}
+.zu-resume-section h2 {
+  text-align: center;
+  color: var(--zu-primary);
+  margin-bottom: 0.5rem;
+}
+.zu-resume-hint {
+  text-align: center;
+  color: var(--zu-text-muted);
+  font-size: 0.95rem;
+  margin: 0 0 1.25rem;
+}
+.zu-resume-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.zu-resume-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: var(--zu-surface);
+  border: 1.5px solid var(--zu-border);
+  border-left: 4px solid var(--zu-primary);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+}
+.zu-resume-card:hover {
+  border-color: var(--zu-primary);
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.15);
+  transform: translateY(-2px);
+}
+.zu-resume-card--expired {
+  border-left-color: var(--zu-danger);
+  opacity: 0.7;
+}
+.zu-resume-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.zu-resume-card-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--zu-primary-darker);
+}
+.zu-resume-card-meta {
+  font-size: 0.85rem;
+  color: var(--zu-text-muted);
+}
+.zu-resume-card-time {
+  font-family: "SF Mono", "Consolas", monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--zu-primary);
+  white-space: nowrap;
+}
+.zu-resume-card--expired .zu-resume-card-time {
+  color: var(--zu-danger);
+}
+.zu-divider {
+  border: none;
+  border-top: 1px solid var(--zu-border);
+  margin: 1.5rem 0;
+}
+.zu-resume-or {
+  text-align: center;
+  color: var(--zu-text-muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
 .zu-header {
   text-align: center;
   padding: 2rem 1rem 1.75rem;

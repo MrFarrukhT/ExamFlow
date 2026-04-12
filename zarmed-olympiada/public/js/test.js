@@ -1501,8 +1501,25 @@
     const durationMs = (state.content.durationMinutes || 60) * 60 * 1000;
     const storeKey = 'olympiada:timerEnd:' + sessionId;
     const stored = localStorage.getItem(storeKey);
-    state.timerEndMs = stored ? Number(stored) : Date.now() + durationMs;
-    if (!stored) localStorage.setItem(storeKey, String(state.timerEndMs));
+    // Resume support: if we have server-provided remaining seconds (from
+    // a session resume), use that to set the end time accurately. This
+    // handles the case where a PC crashed and restarted — the server
+    // knows exactly how much time has elapsed since the session started.
+    const resumeRaw = localStorage.getItem('olympiada:resume');
+    if (resumeRaw) {
+      try {
+        const resume = JSON.parse(resumeRaw);
+        if (typeof resume.remainingSeconds === 'number') {
+          state.timerEndMs = Date.now() + resume.remainingSeconds * 1000;
+          localStorage.setItem(storeKey, String(state.timerEndMs));
+        }
+      } catch {}
+      // Clear resume data after applying it (one-shot)
+      localStorage.removeItem('olympiada:resume');
+    } else {
+      state.timerEndMs = stored ? Number(stored) : Date.now() + durationMs;
+      if (!stored) localStorage.setItem(storeKey, String(state.timerEndMs));
+    }
     // Capture the original <title> so we can restore it when the timer
     // leaves the warn/urgent threshold (unlikely in practice — time only
     // moves forward — but defensively correct). When the timer enters
@@ -1867,4 +1884,194 @@
       document.getElementById('ct-banner').classList.add('ct-banner--error');
     }
   })();
+
+  // ============================================================
+  // ANTI-CHEAT LOCKDOWN
+  // ============================================================
+
+  // Track violations and report to server
+  let violationCount = 0;
+  function reportViolation(type, detail) {
+    violationCount++;
+    if (sessionId && sessionToken) {
+      sessionFetch('/api/session/' + encodeURIComponent(sessionId) + '/violation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, detail })
+      }).catch(() => {});
+    }
+  }
+
+  // 1. Fullscreen enforcement — request fullscreen on first user interaction
+  let fullscreenEntered = false;
+  function requestFullscreen() {
+    if (fullscreenEntered) return;
+    const el = document.documentElement;
+    const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+    if (req) {
+      req.call(el).then(() => { fullscreenEntered = true; }).catch(() => {});
+    }
+  }
+  // Enter fullscreen on first click/key
+  document.addEventListener('click', requestFullscreen, { once: true });
+  document.addEventListener('keydown', requestFullscreen, { once: true });
+
+  // Re-enter fullscreen if exited (unless via secret exit)
+  let secretExitActive = false;
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement && !secretExitActive) {
+      reportViolation('fullscreen-exit', '');
+      // Try to re-enter after a short delay
+      setTimeout(() => {
+        if (!secretExitActive && !document.fullscreenElement) {
+          requestFullscreen();
+          fullscreenEntered = false; // allow re-request
+        }
+      }, 500);
+    }
+  });
+
+  // 2. Block copy, paste, cut, right-click
+  function blockEvent(e) { e.preventDefault(); }
+  document.addEventListener('copy', blockEvent);
+  document.addEventListener('paste', blockEvent);
+  document.addEventListener('cut', blockEvent);
+  document.addEventListener('contextmenu', blockEvent);
+
+  // 3. Disable text selection on passages (but keep inputs selectable)
+  const style = document.createElement('style');
+  style.textContent = `
+    .ct-passage, .ct-banner, .ct-question-list, .ct-paragraph-bank, .ct-task-group {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+    .ct-gap-input, .ct-kwt-input, .ct-inline-mc-select, .ct-task-speaker-select,
+    input[type="text"], input[type="radio"], select {
+      -webkit-user-select: auto;
+      -moz-user-select: auto;
+      user-select: auto;
+    }
+  `;
+  document.head.appendChild(style);
+
+  // 4. Tab switch / visibility detection
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      reportViolation('tab-switch', 'Page became hidden');
+    }
+  });
+  window.addEventListener('blur', () => {
+    reportViolation('window-blur', 'Window lost focus');
+  });
+
+  // 5. Block keyboard shortcuts (Ctrl+C, Ctrl+V, F12, etc.)
+  document.addEventListener('keydown', (e) => {
+    // Block Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+A (select all)
+    if (e.ctrlKey && ['c', 'v', 'x', 'a'].includes(e.key.toLowerCase())) {
+      // Allow in text inputs for typing convenience (paste into answer fields)
+      if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        reportViolation('keyboard-shortcut', 'Ctrl+' + e.key);
+      }
+    }
+    // Block F12 (DevTools), Ctrl+Shift+I (DevTools), Ctrl+Shift+J (Console)
+    if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase()))) {
+      e.preventDefault();
+      reportViolation('devtools-attempt', e.key);
+    }
+    // Block Ctrl+U (view source)
+    if (e.ctrlKey && e.key.toLowerCase() === 'u') {
+      e.preventDefault();
+      reportViolation('view-source', '');
+    }
+    // Block Ctrl+S (save page)
+    if (e.ctrlKey && e.key.toLowerCase() === 's') {
+      e.preventDefault();
+    }
+    // Block Ctrl+P (print)
+    if (e.ctrlKey && e.key.toLowerCase() === 'p') {
+      e.preventDefault();
+    }
+  });
+
+  // 6. Detect DevTools open (resize heuristic)
+  let devtoolsWarned = false;
+  setInterval(() => {
+    const widthDiff = window.outerWidth - window.innerWidth;
+    const heightDiff = window.outerHeight - window.innerHeight;
+    if ((widthDiff > 200 || heightDiff > 200) && !devtoolsWarned) {
+      devtoolsWarned = true;
+      reportViolation('devtools-resize', 'width:' + widthDiff + ' height:' + heightDiff);
+    }
+  }, 3000);
+
+  // ============================================================
+  // SECRET EXIT — semi-transparent icon + code entry
+  // ============================================================
+  (function initSecretExit() {
+    // Create a small, semi-transparent emblem icon in the bottom-left corner
+    const exitBtn = document.createElement('button');
+    exitBtn.className = 'ct-secret-exit';
+    exitBtn.title = '';
+    exitBtn.setAttribute('aria-label', 'Exit');
+    exitBtn.innerHTML = '<img src="assets/icon.png" alt="" style="width:24px;height:24px;opacity:0.15;">';
+    exitBtn.style.cssText = 'position:fixed;bottom:12px;left:12px;z-index:999;background:none;border:none;cursor:default;padding:4px;opacity:0.3;transition:opacity 0.3s;';
+    exitBtn.addEventListener('mouseenter', () => { exitBtn.style.opacity = '0.6'; });
+    exitBtn.addEventListener('mouseleave', () => { exitBtn.style.opacity = '0.3'; });
+
+    exitBtn.addEventListener('click', () => {
+      // Show exit code modal
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;';
+      const card = document.createElement('div');
+      card.style.cssText = 'background:#fff;padding:28px 32px;border-radius:10px;text-align:center;max-width:340px;box-shadow:0 12px 40px rgba(0,0,0,0.3);';
+      card.innerHTML = '<h3 style="margin:0 0 12px;color:#1e40af;">Exit Code</h3><p style="margin:0 0 16px;color:#64748b;font-size:14px;">Enter the invigilator code to exit the exam.</p>';
+      const input = document.createElement('input');
+      input.type = 'password';
+      input.style.cssText = 'width:100%;padding:10px 14px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:16px;text-align:center;margin-bottom:12px;';
+      input.placeholder = 'Exit code';
+      const btnRow = document.createElement('div');
+      btnRow.style.cssText = 'display:flex;gap:10px;justify-content:center;';
+      const cancelBtn = document.createElement('button');
+      cancelBtn.textContent = 'Cancel';
+      cancelBtn.style.cssText = 'padding:8px 20px;border:1.5px solid #cbd5e1;background:#fff;border-radius:6px;cursor:pointer;font-size:14px;';
+      const confirmBtn = document.createElement('button');
+      confirmBtn.textContent = 'Exit';
+      confirmBtn.style.cssText = 'padding:8px 20px;border:none;background:#1e40af;color:#fff;border-radius:6px;cursor:pointer;font-size:14px;font-weight:600;';
+
+      function tryExit() {
+        if (input.value === 'zarmed/out') {
+          secretExitActive = true;
+          if (document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+          }
+          overlay.remove();
+          // Navigate to a blank page to close the kiosk
+          window.location.href = 'about:blank';
+        } else {
+          input.style.borderColor = '#dc2626';
+          input.value = '';
+          input.placeholder = 'Wrong code';
+          setTimeout(() => { input.style.borderColor = '#cbd5e1'; input.placeholder = 'Exit code'; }, 1500);
+        }
+      }
+
+      cancelBtn.addEventListener('click', () => overlay.remove());
+      confirmBtn.addEventListener('click', tryExit);
+      input.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryExit(); if (e.key === 'Escape') overlay.remove(); });
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+
+      btnRow.appendChild(cancelBtn);
+      btnRow.appendChild(confirmBtn);
+      card.appendChild(input);
+      card.appendChild(btnRow);
+      overlay.appendChild(card);
+      document.body.appendChild(overlay);
+      setTimeout(() => input.focus(), 100);
+    });
+
+    document.body.appendChild(exitBtn);
+  })();
+
 })();
