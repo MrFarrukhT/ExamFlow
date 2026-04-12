@@ -7,7 +7,7 @@
 
   const studentId = localStorage.getItem('olympiada:studentId');
   const studentName = localStorage.getItem('olympiada:student') || localStorage.getItem('olympiada:studentName');
-  const studentGroup = localStorage.getItem('olympiada:studentGroup') || '';
+  const testTakerId = localStorage.getItem('olympiada:testTakerId') || '';
   const lang = localStorage.getItem('olympiada:lang');
 
   if (!studentId || !studentName || !lang) {
@@ -40,7 +40,7 @@
   const isGerman = lang === 'german-c1';
   const i18n = isGerman ? {
     welcome: 'Willkommen, ',
-    group: 'Gruppe: ',
+    takerId: 'Prüfungsteilnehmer-ID: ',
     language: 'Sprache: ',
     id: 'ID: ',
     duration: 'Dauer: ',
@@ -57,7 +57,7 @@
     completionP: 'Sie haben alle Testmodule beendet. Bitte bleiben Sie sitzen und warten Sie auf die Aufsicht.',
   } : {
     welcome: 'Welcome, ',
-    group: 'Group: ',
+    takerId: 'Test Taker ID: ',
     language: 'Language: ',
     id: 'ID: ',
     duration: 'Duration: ',
@@ -100,7 +100,7 @@
     // so the invigilator can verify the student is at the right station without exposing the full UUID.
     const idShort = (studentId || '').slice(0, 8).toUpperCase();
     document.getElementById('welcome-meta').textContent =
-      (studentGroup ? i18n.group + studentGroup + ' · ' : '') +
+      (testTakerId ? i18n.takerId + testTakerId + ' · ' : '') +
       i18n.language + i18n.langLabel +
       (idShort ? ' · ' + i18n.id + idShort : '');
 

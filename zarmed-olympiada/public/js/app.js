@@ -17,7 +17,7 @@
   const form = document.getElementById('start-form');
   const err = document.getElementById('err');
   const nameInput = document.getElementById('f-name');
-  const groupInput = document.getElementById('f-group');
+  const takerIdInput = document.getElementById('f-taker-id');
   const langSelect = document.getElementById('f-lang');
   const submitBtn = form.querySelector('button[type="submit"]');
 
@@ -30,7 +30,7 @@
       pageTitle: 'C1 Language Olympiada',
       pageSubtitle: 'English & German · Reading + Listening',
       fullName: 'Full name',
-      group: 'Group (optional)',
+      takerId: 'Test Taker ID',
       language: 'Language',
       continueBtn: 'Continue',
       errNameMissing: 'Please enter your full name.',
@@ -45,7 +45,7 @@
       pageTitle: 'C1 Olympiada',
       pageSubtitle: 'Deutsch & Englisch · Lesen + Hören',
       fullName: 'Vollständiger Name',
-      group: 'Gruppe (optional)',
+      takerId: 'Prüfungsteilnehmer-ID',
       language: 'Sprache',
       continueBtn: 'Weiter',
       errNameMissing: 'Bitte geben Sie Ihren vollständigen Namen ein.',
@@ -76,10 +76,10 @@
     if (pageSub) pageSub.textContent = s.pageSubtitle;
 
     const nameLabel = form.querySelector('label[for="f-name"]');
-    const groupLabel = form.querySelector('label[for="f-group"]');
+    const takerIdLabel = form.querySelector('label[for="f-taker-id"]');
     const langLabel = form.querySelector('label[for="f-lang"]');
     if (nameLabel) nameLabel.textContent = s.fullName;
-    if (groupLabel) groupLabel.textContent = s.group;
+    if (takerIdLabel) takerIdLabel.textContent = s.takerId;
     if (langLabel) langLabel.textContent = s.language;
     if (submitBtn) submitBtn.textContent = s.continueBtn;
     // ISO 639-1 code from our content-slug style ("english-c1" → "en", "german-c1" → "de")
@@ -154,7 +154,7 @@
     err.hidden = true;
 
     const student = nameInput.value.trim();
-    const group = document.getElementById('f-group').value.trim();
+    const takerId = document.getElementById('f-taker-id').value.trim();
     const lang = document.getElementById('f-lang').value;
 
     const s = currentStrings();
@@ -171,7 +171,7 @@
     localStorage.setItem('olympiada:studentId', studentId);
     localStorage.setItem('olympiada:student', student);
     localStorage.setItem('olympiada:studentName', student);
-    localStorage.setItem('olympiada:studentGroup', group);
+    localStorage.setItem('olympiada:testTakerId', takerId);
     localStorage.setItem('olympiada:lang', lang);
 
     window.location.href = 'dashboard.html';

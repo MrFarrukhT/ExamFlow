@@ -451,7 +451,7 @@ app.get('/api/student-status', (req, res) => {
 
 // Start a session — returns a new session ID + secret token (ADR-040: accepts studentId)
 app.post('/api/session/start', (req, res) => {
-    const { studentId, student, group, lang, skill } = req.body || {};
+    const { studentId, student, group, testTakerId, lang, skill } = req.body || {};
     if (!student || typeof student !== 'string' || student.trim().length < 2) {
         return res.status(400).json({ error: 'student name required (min 2 chars)' });
     }
@@ -466,7 +466,7 @@ app.post('/api/session/start', (req, res) => {
     if (cleanName.length < 2) {
         return res.status(400).json({ error: 'student name required (min 2 chars after sanitization)' });
     }
-    const cleanGroup = (group || '').trim().replace(/<[^>]*>/g, '');
+    const cleanGroup = (testTakerId || group || '').trim().replace(/<[^>]*>/g, '');
     try {
         loadContent(lang, skill); // validate content exists
     } catch (err) {

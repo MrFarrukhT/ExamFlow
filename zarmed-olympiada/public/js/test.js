@@ -219,7 +219,7 @@
       body: JSON.stringify({
         studentId,
         student: studentName,
-        group: localStorage.getItem('olympiada:studentGroup') || '',
+        testTakerId: localStorage.getItem('olympiada:testTakerId') || '',
         lang,
         skill,
       }),
@@ -553,7 +553,26 @@
     const left = el('div', 'ct-col');
     left.appendChild(renderPassageHeading(part));
     const passageEl = el('div', 'ct-passage');
-    passageEl.textContent = passageBody(part);
+    // Render passage with bold paragraph letters (A, B, C, D etc.)
+    const passageText = passageBody(part);
+    const paraPattern = /^([A-H])\s*(—|–|-)/gm;
+    let cursor = 0, paraMatch;
+    let hasParagraphLetters = false;
+    while ((paraMatch = paraPattern.exec(passageText)) !== null) {
+      hasParagraphLetters = true;
+      const before = passageText.slice(cursor, paraMatch.index);
+      if (before) passageEl.appendChild(document.createTextNode(before));
+      const bold = document.createElement('strong');
+      bold.textContent = paraMatch[0];
+      passageEl.appendChild(bold);
+      cursor = paraPattern.lastIndex;
+    }
+    if (hasParagraphLetters) {
+      const rest = passageText.slice(cursor);
+      if (rest) passageEl.appendChild(document.createTextNode(rest));
+    } else {
+      passageEl.textContent = passageText;
+    }
     left.appendChild(passageEl);
     grid.appendChild(left);
 
@@ -666,11 +685,11 @@
     if (state.answers[qid]) {
       saveAnswer(qid, '');
       state.activeSlotQid = null;
-      renderCurrentPart();
+      renderCurrentPart(true);
       return;
     }
     state.activeSlotQid = qid;
-    renderCurrentPart();
+    renderCurrentPart(true);
   }
   function handleParagraphClick(paraKey) {
     if (!state.activeSlotQid) return;
@@ -684,7 +703,7 @@
     const target = state.activeSlotQid;
     state.activeSlotQid = null;
     saveAnswer(target, paraKey);
-    renderCurrentPart();
+    renderCurrentPart(true);
   }
 
   // Listening part renderer (handles taskGroups + pre-play modal)
@@ -1199,7 +1218,7 @@
   }
 
   // ---------- part dispatcher ----------
-  function renderCurrentPart() {
+  function renderCurrentPart(skipScroll) {
     const partEntry = state.parts[state.currentPartIndex];
     if (!partEntry) return;
     const part = partEntry.part;
@@ -1256,7 +1275,7 @@
     }
     main.appendChild(rendered);
     refreshActiveHighlight();
-    window.scrollTo({ top: 0 });
+    if (!skipScroll) window.scrollTo({ top: 0 });
   }
 
   function extractQuestionNumber(q) {
