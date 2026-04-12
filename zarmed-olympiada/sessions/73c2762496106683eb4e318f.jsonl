@@ -1,0 +1,4 @@
+{"t":"2026-04-12T07:25:45.027Z","ev":"start","studentId":"vfy-1775978745025-gutiew","student":"QID Test","group":"t","lang":"english-c1","skill":"reading","tokenHash":"3f8c86bdefb3391b"}
+{"t":"2026-04-12T07:25:45.029Z","ev":"answer","qid":"q1","value":"A"}
+{"t":"2026-04-12T07:25:45.030Z","ev":"answer","qid":"__proto__","value":"x"}
+{"t":"2026-04-12T07:25:45.032Z","ev":"answer","qid":"constructor","value":"x"}

@@ -1382,11 +1382,16 @@
 
   // Parts that render one question at a time — navigating between questions
   // within these parts needs a full re-render (not just a scroll), because
-  // only the current question's block exists in the DOM. Part 4 (KWT) is
-  // the only current one-at-a-time part; the others all show all questions
-  // at once and only need a scrollTo.
+  // only the current question's block exists in the DOM. KWT (key-word
+  // transformation) parts are the only current one-at-a-time parts; the
+  // others all show all questions at once and only need a scrollTo.
+  // Detection is content-driven (presence of keyWord + leadIn) rather than
+  // ID-driven, because German Teil 4 uses a different question type
+  // (matching) despite sharing the "part4" ID.
   function isOneAtATimePart(part) {
-    return part && part.id === 'part4';
+    if (!part) return false;
+    const qs = part.questions || [];
+    return qs.length > 0 && qs.some(q => q.keyWord && q.leadIn);
   }
 
   function nextQuestion() {

@@ -1,0 +1,55 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - img "Zarmed University" [ref=e4]
+    - heading "Olympiada Results" [level=1] [ref=e5]
+  - main [ref=e7]:
+    - generic [ref=e192]:
+      - button "← Back to list" [ref=e193] [cursor=pointer]
+      - generic [ref=e194]:
+        - heading "efw — German C1 / Listening" [level=2] [ref=e195]
+        - generic [ref=e196]:
+          - generic [ref=e197]:
+            - generic [ref=e198]: 2 / 2
+            - generic [ref=e199]: Score (100%)
+          - generic [ref=e200]:
+            - generic [ref=e201]: 2 / 2
+            - generic [ref=e202]: Answered
+          - generic [ref=e203]:
+            - generic [ref=e204]: "2"
+            - generic [ref=e205]: Correct
+          - generic [ref=e206]:
+            - generic [ref=e207]: 6s
+            - generic [ref=e208]: Duration
+        - paragraph [ref=e209]:
+          - strong [ref=e210]: "Started:"
+          - text: 4/11/2026, 9:44:56 PM
+          - strong [ref=e211]: "Finished:"
+          - text: 4/11/2026, 9:45:03 PM
+        - table [ref=e213]:
+          - rowgroup [ref=e214]:
+            - row "# Type Student Answer Correct Answer Points" [ref=e215]:
+              - columnheader "#" [ref=e216]
+              - columnheader "Type" [ref=e217]
+              - columnheader "Student Answer" [ref=e218]
+              - columnheader "Correct Answer" [ref=e219]
+              - columnheader "Points" [ref=e220]
+          - rowgroup [ref=e221]:
+            - row "Listening 1 1 / 1" [ref=e222]:
+              - cell "Listening 1" [ref=e223]
+              - cell "1 / 1" [ref=e224]
+            - row "1 True / False true true 1 / 1" [ref=e225]:
+              - cell "1" [ref=e226]
+              - cell "True / False" [ref=e227]
+              - cell "true" [ref=e228]
+              - cell "true" [ref=e229]
+              - cell "1 / 1" [ref=e230]
+            - row "Listening 2 1 / 1" [ref=e231]:
+              - cell "Listening 2" [ref=e232]
+              - cell "1 / 1" [ref=e233]
+            - row "2 Multiple Choice B B 1 / 1" [ref=e234]:
+              - cell "2" [ref=e235]
+              - cell "Multiple Choice" [ref=e236]
+              - cell "B" [ref=e237]
+              - cell "B" [ref=e238]
+              - cell "1 / 1" [ref=e239]
+        - button "← Back to list" [ref=e240] [cursor=pointer]

@@ -1,0 +1,117 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Zarmed University" [ref=e4]
+      - generic [ref=e5]: C1 Olympiada
+    - generic [ref=e6]:
+      - generic [ref=e7]: Kandidaten-ID
+      - generic "Verify Student" [ref=e8]:
+        - text: Verify Student
+        - generic [ref=e9]: test-ver
+    - timer "Verbleibende Zeit" [ref=e11]: 64:51
+  - generic [ref=e13]:
+    - generic [ref=e14]: Fragen 1–8
+    - text: "Vorgeschlagene Arbeitszeit: 10 Minuten. Sie lesen in einer Zeitschrift einen Artikel über Archäologie. Wählen Sie für jede Lücke die richtige Lösung."
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - heading "Das verraten die Gene des Pompejaners" [level=3] [ref=e17]
+      - generic [ref=e18]:
+        - text: Forschungsteam entschlüsselt 2000 Jahre altes Erbgut Wissenschaftlerinnen und Wissenschaftler aus Italien haben erstmals große Teile des Erbguts eines Menschen sequenziert, der vor fast 2000 Jahren in Pompeji beim (Beispiel 0) Ausbruch des Vesuvs umgekommen ist. Dabei fanden sie heraus, dass der Mann womöglich von Sardinien stammte und seine Vorfahren aus dem Gebiet des heutigen Iran und über Anatolien nach Europa gelangt
+        - generic [ref=e19]:
+          - generic [ref=e20]: "1"
+          - combobox [ref=e21] [cursor=pointer]:
+            - option [selected]
+            - option "A haben"
+            - option "B hatten"
+            - option "C müssten"
+            - option "D waren"
+        - text: . Im Jahr 79 kam es zu mehreren gewaltigen Ausbrüchen des südöstlich von Neapel gelegenen Vulkans Vesuv.
+        - generic [ref=e22]:
+          - generic [ref=e23]: "2"
+          - combobox [ref=e24] [cursor=pointer]:
+            - option [selected]
+            - option "A Für die Dauer"
+            - option "B im Laufe der Zeit"
+            - option "C In deren Verlauf"
+            - option "D Solange"
+        - text: wurden die römischen Städte Herculaneum, Stabiae, Oplontis und Pompeji von Asche und anderen vulkanischen Materialien bedeckt. In Pompeji starben etwa 2000 Menschen,
+        - generic [ref=e25]:
+          - generic [ref=e26]: "3"
+          - combobox [ref=e27] [cursor=pointer]:
+            - option [selected]
+            - option "A deren"
+            - option "B die"
+            - option "C was"
+            - option "D wo"
+        - text: noch nicht aus der Stadt geflohen waren, durch einen mehrere 100 Grad Celsius heißen pyroklastischen Strom — ein
+        - generic [ref=e28]:
+          - generic [ref=e29]: "4"
+          - combobox [ref=e30] [cursor=pointer]:
+            - option [selected]
+            - option "A Gemisch"
+            - option "B Mischung"
+            - option "C Vermengen"
+            - option "D Vielfalt"
+        - text: aus heißer Asche, Gasen und Gesteinsstücken. Normalerweise zerstört große Hitze Knochenstrukturen und
+        - generic [ref=e31]:
+          - generic [ref=e32]: "5"
+          - combobox [ref=e33] [cursor=pointer]:
+            - option [selected]
+            - option "A dafür"
+            - option "B damit"
+            - option "C daraus"
+            - option "D davon"
+        - text: "auch den Erbgutträger DNA. Es wurde jedoch festgestellt, dass auch genau das Gegenteil vorkommen kann: Die pyroklastischen Materialien bedecken die Überreste und somit"
+        - generic [ref=e34]:
+          - generic [ref=e35]: "6"
+          - combobox [ref=e36] [cursor=pointer]:
+            - option [selected]
+            - option "A hat"
+            - option "B kann"
+            - option "C war"
+            - option "D wird"
+        - text: die DNA vor Umwelteinflüssen abgeschirmt. In den Knochen eines Toten — genannt Individuum A — fanden Scorrano und seine Kolleginnen und Kollegen gut erhaltene DNA. Vergleiche des rekonstruierten Erbguts mit Genomen in verschiedenen Gen-Datenbanken ergaben, dass der Mann zu 30,5 Prozent Gene aus der iranischen Jungsteinzeit und zu 51,6 Prozent Gene aus der anatolischen Jungsteinzeit in sich trug. Außerdem stammten 4,4 Prozent seiner DNA von Jägern und Sammlern und 13,5 Prozent von der Jamnaja-Kultur, die sich in der Bronzezeit aus der Region nördlich des Schwarzen Meeres bis weit nach Europa
+        - generic [ref=e37]:
+          - generic [ref=e38]: "7"
+          - combobox [ref=e39] [cursor=pointer]:
+            - option [selected]
+            - option "A erweiterte"
+            - option "B verbreitete"
+            - option "C vergrößerte"
+            - option "D verteilte"
+        - text: . Das Forscherteam beschränkte sich nicht auf genetische Analysen, sondern untersuchte auch anatomische Eigenschaften des Pompejaners. An zwei Lendenwirbeln entdeckten die Wissenschaftlerinnen und Wissenschaftler Veränderungen, die auf eine Tuberkulose der Wirbelsäule hindeuteten. Sie untersuchten auch ein Individuum B, eine etwa 50 Jahre alte Frau, die neben dem Mann gefunden worden war. Bei ihr war der
+        - generic [ref=e40]:
+          - generic [ref=e41]: "8"
+          - combobox [ref=e42] [cursor=pointer]:
+            - option [selected]
+            - option "A Ergebnis"
+            - option "B Erlös"
+            - option "C Ernte"
+            - option "D Ertrag"
+        - text: an genetischem Material jedoch zu gering.
+  - navigation [ref=e43]:
+    - generic [ref=e44]:
+      - generic [ref=e45] [cursor=pointer]:
+        - generic [ref=e46]: Teil 1
+        - generic [ref=e47]:
+          - button "1" [ref=e48]
+          - button "2" [ref=e49]
+          - button "3" [ref=e50]
+          - button "4" [ref=e51]
+          - button "5" [ref=e52]
+          - button "6" [ref=e53]
+          - button "7" [ref=e54]
+          - button "8" [ref=e55]
+      - button "Teil 2 0 von 7" [ref=e56] [cursor=pointer]:
+        - generic [ref=e57]: Teil 2
+        - generic [ref=e58]: 0 von 7
+      - button "Teil 3 0 von 8" [ref=e59] [cursor=pointer]:
+        - generic [ref=e60]: Teil 3
+        - generic [ref=e61]: 0 von 8
+      - button "Teil 4 0 von 7" [ref=e62] [cursor=pointer]:
+        - generic [ref=e63]: Teil 4
+        - generic [ref=e64]: 0 von 7
+    - generic [ref=e65]:
+      - button "Zurück" [disabled] [ref=e66]: ←
+      - button "Weiter" [ref=e67] [cursor=pointer]: →
+      - button "Beenden" [ref=e68] [cursor=pointer]: ✓

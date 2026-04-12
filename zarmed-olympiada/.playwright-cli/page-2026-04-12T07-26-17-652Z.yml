@@ -1,0 +1,62 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Zarmed University" [ref=e4]
+      - generic [ref=e5]: C1 Olympiada
+    - generic [ref=e6]:
+      - generic [ref=e7]: Kandidaten-ID
+      - generic "Max Mustermann" [ref=e8]:
+        - text: Max Mustermann
+        - generic [ref=e9]: test-lis
+    - timer "Verbleibende Zeit" [ref=e11]: 39:50
+  - generic [ref=e13]:
+    - generic [ref=e14]: Fragen 1–6
+    - text: Sie hören einen Podcast über neue Sport-Dokumentationen. Sie hören den Text einmal. Wählen Sie bei jeder Aufgabe, zu welcher Dokumentation die Aussage passt. Lesen Sie jetzt die Aufgaben 1 bis 6. Dazu haben Sie 60 Sekunden Zeit.
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - generic [ref=e18]:
+        - paragraph [ref=e20]: Sie werden während dieses Tests eine Audiodatei hören. Sie können die Aufnahme nicht anhalten oder zurückspulen, während Sie die Fragen beantworten. Klicken Sie auf „Wiedergabe", um fortzufahren.
+        - button "Wiedergabe" [active] [ref=e21] [cursor=pointer]
+      - generic [ref=e22]:
+        - generic [ref=e24]:
+          - generic [ref=e25]: "1"
+          - text: Die Doku macht darauf aufmerksam, dass viele Leistungssportlerinnen oft ohne Unterstützung dastehen.
+        - generic [ref=e28]:
+          - generic [ref=e29]: "2"
+          - text: Die Ungleichheit bei den Siegerprämien wird wirtschaftlich begründet.
+        - generic [ref=e32]:
+          - generic [ref=e33]: "3"
+          - text: Die Doku beschreibt die Niederlage eines arroganten Mannes.
+        - generic [ref=e36]:
+          - generic [ref=e37]: "4"
+          - text: In der Dokumentation werden Lösungsansätze präsentiert.
+        - generic [ref=e40]:
+          - generic [ref=e41]: "5"
+          - text: Man erfährt etwas über die Geschichte der Siegerprämien.
+        - generic [ref=e44]:
+          - generic [ref=e45]: "6"
+          - text: Der Umgang mit dem Thema wird an Einzelschicksalen demonstriert.
+  - navigation [ref=e47]:
+    - generic [ref=e48]:
+      - generic [ref=e49] [cursor=pointer]:
+        - generic [ref=e50]: Teil 1
+        - generic [ref=e51]:
+          - button "1" [ref=e52]
+          - button "2" [ref=e53]
+          - button "3" [ref=e54]
+          - button "4" [ref=e55]
+          - button "5" [ref=e56]
+          - button "6" [ref=e57]
+      - button "Teil 2 0 von 9" [ref=e58] [cursor=pointer]:
+        - generic [ref=e59]: Teil 2
+        - generic [ref=e60]: 0 von 9
+      - button "Teil 3 0 von 8" [ref=e61] [cursor=pointer]:
+        - generic [ref=e62]: Teil 3
+        - generic [ref=e63]: 0 von 8
+      - button "Teil 4 0 von 7" [ref=e64] [cursor=pointer]:
+        - generic [ref=e65]: Teil 4
+        - generic [ref=e66]: 0 von 7
+    - generic [ref=e67]:
+      - button "Zurück" [disabled] [ref=e68]: ←
+      - button "Weiter" [disabled] [ref=e69]: →
+      - button "Beenden" [disabled] [ref=e70]: ✓
