@@ -542,6 +542,11 @@ app.post('/api/session/:id/answer', verifySessionToken, (req, res) => {
     if (!qid || typeof qid !== 'string') {
         return res.status(400).json({ error: 'qid required' });
     }
+    // QID format validation: alphanumeric + dash/underscore, max 64 chars,
+    // must NOT start with underscore (blocks __proto__, __defineGetter__, etc).
+    if (!/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/.test(qid)) {
+        return res.status(400).json({ error: 'invalid qid format' });
+    }
     try {
         if (!fs.existsSync(sessionPath(id))) return res.status(404).json({ error: 'session not found' });
         appendSessionEvent(id, { ev: 'answer', qid, value });
@@ -609,21 +614,52 @@ app.post('/api/session/:id/submit', verifySessionToken, async (req, res) => {
 });
 
 // ------- Admin routes (password-gated) -------
+// Admin tokens are HMAC-derived from the password + server secret, so the
+// plaintext password is never sent back to the client. Tokens are stable
+// for the server's lifetime (same SESSION_SECRET) but rotate on restart.
+const ADMIN_TOKEN = crypto.createHmac('sha256', SESSION_SECRET)
+    .update('admin:' + ADMIN_PASSWORD).digest('hex');
+
 function requireAdmin(req, res, next) {
     const auth = req.headers.authorization || '';
     const token = auth.replace(/^Bearer\s+/i, '');
-    if (token !== ADMIN_PASSWORD) {
+    if (token !== ADMIN_TOKEN) {
         return res.status(401).json({ error: 'unauthorized' });
     }
     next();
 }
 
+// Simple in-memory rate limiter for admin login (max 5 attempts per 60s per IP)
+const loginAttempts = new Map();
+const LOGIN_WINDOW_MS = 60 * 1000;
+const LOGIN_MAX_ATTEMPTS = 5;
+
 app.post('/api/admin/login', (req, res) => {
+    const ip = req.ip || req.socket.remoteAddress || 'unknown';
+    const now = Date.now();
+    // Clean old entries
+    const entry = loginAttempts.get(ip) || { attempts: [], lockedUntil: 0 };
+    entry.attempts = entry.attempts.filter(t => now - t < LOGIN_WINDOW_MS);
+
+    if (now < entry.lockedUntil) {
+        const waitSec = Math.ceil((entry.lockedUntil - now) / 1000);
+        return res.status(429).json({ error: 'too many attempts, try again in ' + waitSec + 's' });
+    }
+    if (entry.attempts.length >= LOGIN_MAX_ATTEMPTS) {
+        entry.lockedUntil = now + LOGIN_WINDOW_MS;
+        loginAttempts.set(ip, entry);
+        return res.status(429).json({ error: 'too many attempts, try again in 60s' });
+    }
+
     const { password } = req.body || {};
     if (password !== ADMIN_PASSWORD) {
+        entry.attempts.push(now);
+        loginAttempts.set(ip, entry);
         return res.status(401).json({ error: 'wrong password' });
     }
-    res.json({ ok: true, token: ADMIN_PASSWORD });
+    // Successful login — clear attempts
+    loginAttempts.delete(ip);
+    res.json({ ok: true, token: ADMIN_TOKEN });
 });
 
 app.get('/api/admin/submissions', requireAdmin, (req, res) => {
