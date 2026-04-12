@@ -1,5 +1,86 @@
 # Scenario Journal — Test System v2
 
+## Session: 2026-04-12 12:19 — Zarmed Olympiada Stress Test (Round 1)
+Focus: Pre-Olympiada hardening — 3 days before event. Full adversarial sweep of zarmed-olympiada standalone app.
+Trigger: Olympiada in 3 days, no prior scenario testing on this standalone app.
+
+### Scenarios
+- S1: Content Answer Leakage [Chain Attacker] → PASS [CRITICAL]
+  - All 4 content modules (english-c1/reading, english-c1/listening, german-c1/reading, german-c1/listening) verified
+  - stripAnswerKey() properly removes answer, points, and scoring.totalPoints
+  - No residual answer-revealing fields in API response
+
+- S2: Timer — No Server-Side Enforcement [Rusher] → **FAIL** [CRITICAL]
+  - Timer was CLIENT-SIDE ONLY (localStorage). Student could set unlimited time via DevTools.
+  - Server had NO deadline check on /submit — no startedAt + durationMinutes validation.
+  - **Fix applied**: Server now computes deadline from startedAt + content.durationMinutes + 60s grace.
+    Submissions after deadline are flagged with `overtime: true` in the submit event + response.
+
+- S3: Double Submit Race [Multitasker] → PASS [HIGH]
+  - Node.js single-threaded event loop serializes synchronous I/O — check-then-append is atomic.
+  - First submit succeeds (200), second gets 404 (session moved to _completed/).
+
+- S4: Answer After Submit [State Corruptor] → PASS [HIGH]
+  - Session file moves to `_completed/` synchronously in finalizeSession().
+  - Post-submit /answer returns 404 "session not found" — correct behavior.
+
+- S5: Session Hijacking [Chain Attacker] → **FAIL** [HIGH]
+  - No auth on session endpoints — anyone with sessionId could read/write/submit.
+  - Attacker could: read student name + answers, overwrite answers, submit test.
+  - **Fix applied**: HMAC-derived session tokens. /api/session/start returns a `token` field.
+    All session endpoints now require `X-Session-Token` header. Without valid token → 403.
+
+- S6: Admin Token = Literal Password [Insider] → **FAIL** [HIGH]
+  - /api/admin/login returned the plaintext password as the auth token.
+  - Anyone intercepting the login response gets permanent admin access.
+  - **Fix applied**: Token is now HMAC(SESSION_SECRET, 'admin:' + password) — a hex string
+    that rotates with server restarts. Plaintext password never leaves the server.
+
+- S7: XSS via Student Name [Insider] → PARTIAL [MEDIUM]
+  - HTML tags accepted in student name/group and stored in backup JSON files.
+  - admin.js escape() function prevents execution on render (client-side defense).
+  - **Fix applied**: Server-side HTML tag stripping on student name and group at /session/start.
+    Defense-in-depth — now both server and client sanitize.
+
+- S8: Admin Brute Force [Insider] → **FAIL** [MEDIUM]
+  - 10 rapid wrong-password attempts all processed with no lockout/delay.
+  - **Fix applied**: In-memory rate limiter — 5 attempts per 60s per IP, then 429 lockout.
+
+- Bonus: Invalid QID Injection [Explorer] → **FAIL** [MEDIUM]
+  - Arbitrary qid strings (FAKE_Q_999, __proto__, constructor) accepted and stored.
+  - JSON.parse neutralizes prototype pollution, but junk keys waste storage.
+  - **Fix applied**: QID format validation — must match `^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$`.
+
+### Fixes
+- `server.js`: Session tokens (HMAC), timer enforcement, admin token rotation, rate limiting,
+  name sanitization, QID validation — all in one commit (2fc67d7).
+- `test.js`: sessionFetch() helper sends X-Session-Token on all session API calls,
+  token persisted in localStorage alongside sessionId.
+
+### Verification
+- 23/23 automated tests pass (E:/tmp/scenario-verify.mjs)
+- All 4 FAILs fixed, 1 PARTIAL upgraded to PASS
+
+### Pattern Analysis
+- **Client-side-only enforcement is never enough for competitive exams.** Timer, session auth, and
+  input validation all had client-only implementations. Server is the trust boundary.
+- **Session IDs are high-entropy (96 bits) but not secret.** They appear in URLs, localStorage, and
+  network logs. The session token is the secret — knowledge of the ID alone is not enough.
+- **Admin auth was a single point of failure.** Password = token meant one network sniff = permanent
+  admin access. HMAC rotation + rate limiting addresses both replay and brute force.
+
+### Intelligence Update
+- Proven solid: content stripping, double-submit prevention, post-submit lockout, SQL injection (parameterized), CORS
+- Fixed: timer enforcement, session auth, admin token, name sanitization, rate limiting, QID validation
+- For next run: Browser behavioral tests (multi-tab exam, back-button, refresh mid-listening),
+  full flow walkthrough as a student (registration → dashboard → reading → listening → done),
+  admin dashboard under load (many submissions), audio playback edge cases
+
+### Stats
+Tested: 9 | Passed: 4 | Failed: 5 | Fixed: 5 | Deferred: 0
+
+---
+
 ## Session: 2026-04-08 03:33
 Focus: First adaptive sweep — baseline all attack surfaces
 Trigger: Initial run, no prior intelligence
