@@ -512,6 +512,14 @@ body.zu-welcome .page {
   margin-top: 1.25rem;
 }
 
+/* Loading placeholder while fetching a submission detail */
+.zu-loading {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--zu-text-muted);
+  font-size: 1.05rem;
+}
+
 /* List view — percentage badge next to score */
 .zu-pct {
   font-size: 0.85rem;
@@ -742,7 +750,7 @@ body.zu-test-body .ct-nav-finish:focus-visible {
   margin: 0 auto;
   padding: 0 24px;
   position: sticky;
-  top: 72px; /* right below the sticky header (72px min-height) */
+  top: 90px; /* right below the sticky header (~89px rendered height) */
   background: var(--ct-bg);
   z-index: 35;
 }
@@ -813,8 +821,8 @@ body.zu-test-body .ct-nav-finish:focus-visible {
  * reading a long passage while the answer options stay visible. */
 .ct-two-col > .ct-col:nth-child(2) {
   position: sticky;
-  top: 138px; /* clears the sticky header (~72px) + banner (~50px) + gap */
-  max-height: calc(100vh - 158px - 72px); /* 158 = header+banner reserve, 72 = bottom nav */
+  top: 156px; /* clears the sticky header (~90px) + banner (~50px) + gap */
+  max-height: calc(100vh - 176px - 72px); /* 176 = header+banner reserve, 72 = bottom nav */
   overflow-y: auto;
   align-self: start;
   /* Scroll affordance: force a visible thin scrollbar so Chrome/Edge

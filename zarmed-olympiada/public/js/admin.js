@@ -18,6 +18,9 @@
     loginView.hidden = view !== loginView;
     listView.hidden = view !== listView;
     detailView.hidden = view !== detailView;
+    // Always scroll to top when switching views — after scrolling a long
+    // question table the detail/list would otherwise open mid-page.
+    window.scrollTo(0, 0);
     // Narrow the page shell when showing login (centered password form);
     // full width for list/detail which need room for the table. Toggle
     // body.zu-welcome so the login form gets the same vertically-centered
@@ -250,9 +253,12 @@
   }
 
   async function openDetail(row) {
+    // Show immediate feedback while the API call is in flight
+    const detailBody = document.getElementById('detail-body');
+    detailBody.innerHTML = '<p class="zu-loading">Loading submission\u2026</p>';
+    show(detailView);
     try {
       const rec = await api('/api/admin/submission/' + encodeURIComponent(row.filename));
-      const body = document.getElementById('detail-body');
       const pq = rec.score.perQuestion || [];
       const totalQ = pq.length;
       const answered = pq.filter(q => q.studentValue != null && q.studentValue !== '').length;
@@ -311,10 +317,9 @@
       });
       h.push('</tbody></table></div>');
       h.push('<button class="zu-btn zu-btn--ghost zu-detail-bottom-back" id="back-btn-bottom">\u2190 Back to list</button>');
-      body.innerHTML = h.join('');
+      detailBody.innerHTML = h.join('');
       const bottomBack = document.getElementById('back-btn-bottom');
       if (bottomBack) bottomBack.addEventListener('click', () => show(listView));
-      show(detailView);
     } catch (e) {
       showAdminError('Failed to open submission: ' + e.message);
     }
@@ -364,6 +369,12 @@
     }
   });
 
+  // Clear the "wrong password" error as soon as the admin starts retyping
+  document.getElementById('pw').addEventListener('input', () => {
+    const err = document.getElementById('login-err');
+    if (err && !err.hidden) err.hidden = true;
+  });
+
   document.getElementById('refresh').addEventListener('click', loadRows);
   document.getElementById('back-btn').addEventListener('click', () => show(listView));
 
@@ -373,10 +384,13 @@
   });
 
   document.getElementById('export-csv').addEventListener('click', () => {
-    const header = ['finishedAt', 'student', 'group', 'lang', 'skill', 'earned', 'total'];
+    const header = ['finishedAt', 'student', 'group', 'lang', 'skill', 'earned', 'total', 'percent'];
     const lines = [header.join(',')];
     rows.forEach((r) => {
-      lines.push(header.map((k) => csv(r[k])).join(','));
+      const vals = ['finishedAt', 'student', 'group', 'lang', 'skill', 'earned', 'total']
+        .map(k => csv(r[k]));
+      vals.push(csv(fmtPct(r.earned, r.total)));
+      lines.push(vals.join(','));
     });
     const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
     triggerDownload(blob, 'olympiada-results.csv');

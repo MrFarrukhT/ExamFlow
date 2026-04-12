@@ -479,7 +479,7 @@ app.post('/api/session/start', (req, res) => {
             for (const f of files) {
                 try {
                     const rec = JSON.parse(fs.readFileSync(path.join(BACKUPS_DIR, f), 'utf8'));
-                    if (rec.studentId === studentId && rec.skill === skill) {
+                    if (rec.studentId === studentId && rec.lang === lang && rec.skill === skill) {
                         return res.status(409).json({ error: 'module already completed', filename: f });
                     }
                 } catch {}
