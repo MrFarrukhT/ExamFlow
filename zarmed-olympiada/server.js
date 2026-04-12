@@ -464,6 +464,8 @@ app.get('/api/audio/:lang/:filename', (req, res) => {
 // ------- session resume: list active (unfinished) sessions -------
 // Used by the welcome page to show "Continue where you left off" when a
 // student's PC crashes or the browser is closed mid-exam.
+// Expired sessions are auto-finalized server-side so they never appear
+// in the resume list — the student can't continue a timed-out exam.
 app.get('/api/sessions/active', (req, res) => {
     try {
         const files = fs.readdirSync(SESSIONS_DIR).filter(f => f.endsWith('.jsonl'));
@@ -483,6 +485,23 @@ app.get('/api/sessions/active', (req, res) => {
             const elapsedSec = Math.floor((Date.now() - startedAt) / 1000);
             const totalSec = durationMin * 60;
             const remainingSec = Math.max(0, totalSec - elapsedSec);
+
+            // Auto-finalize expired sessions: append submit event, create
+            // backup, and move to _completed. This covers the case where a
+            // student's browser crashed after time ran out and auto-submit
+            // never fired client-side.
+            if (remainingSec <= 0) {
+                try {
+                    appendSessionEvent(sessionId, { ev: 'submit', overtime: true, auto: true });
+                    const freshEvents = readSessionEvents(sessionId);
+                    finalizeSession(sessionId, freshEvents, meta);
+                    console.log(`[auto-finalize] expired session ${sessionId} (${meta.student}) finalized`);
+                } catch (e) {
+                    console.warn(`[auto-finalize] failed for ${sessionId}:`, e.message);
+                }
+                continue; // don't include in active list
+            }
+
             const answers = computeAnswersFromEvents(events);
             const answeredCount = Object.values(answers).filter(v => v != null && v !== '').length;
             active.push({
@@ -494,8 +513,7 @@ app.get('/api/sessions/active', (req, res) => {
                 startedAt: meta.startedAt,
                 durationMinutes: durationMin,
                 remainingSeconds: remainingSec,
-                answeredCount,
-                expired: remainingSec <= 0
+                answeredCount
             });
         }
         res.json({ sessions: active });
@@ -522,6 +540,15 @@ app.post('/api/session/:id/resume', (req, res) => {
         const startedAt = new Date(meta.startedAt).getTime();
         const elapsedSec = Math.floor((Date.now() - startedAt) / 1000);
         const remainingSec = Math.max(0, durationMin * 60 - elapsedSec);
+        // Reject resume if time has expired — auto-finalize instead
+        if (remainingSec <= 0) {
+            try {
+                appendSessionEvent(id, { ev: 'submit', overtime: true, auto: true });
+                const freshEvents = readSessionEvents(id);
+                finalizeSession(id, freshEvents, meta);
+            } catch {}
+            return res.status(410).json({ error: 'session expired — time is up' });
+        }
         // Re-derive the session token (same HMAC as session start)
         const sessionToken = crypto.createHmac('sha256', SESSION_SECRET)
             .update(id).digest('hex').slice(0, 32);

@@ -1965,10 +1965,10 @@
     reportViolation('window-blur', 'Window lost focus');
   });
 
-  // 5. Block keyboard shortcuts (Ctrl+C, Ctrl+V, F12, etc.)
+  // 5. Block keyboard shortcuts (Ctrl+C, Ctrl+V, F12, close-tab, etc.)
   document.addEventListener('keydown', (e) => {
     // Block Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+A (select all)
-    if (e.ctrlKey && ['c', 'v', 'x', 'a'].includes(e.key.toLowerCase())) {
+    if (e.ctrlKey && !e.shiftKey && ['c', 'v', 'x', 'a'].includes(e.key.toLowerCase())) {
       // Allow in text inputs for typing convenience (paste into answer fields)
       if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
         e.preventDefault();
@@ -1992,6 +1992,43 @@
     // Block Ctrl+P (print)
     if (e.ctrlKey && e.key.toLowerCase() === 'p') {
       e.preventDefault();
+    }
+    // Block Ctrl+W (close tab) and Ctrl+F4 (close tab)
+    if (e.ctrlKey && (e.key.toLowerCase() === 'w' || e.key === 'F4')) {
+      e.preventDefault();
+      reportViolation('close-attempt', 'Ctrl+' + e.key);
+    }
+    // Block Alt+F4 (close window)
+    if (e.altKey && e.key === 'F4') {
+      e.preventDefault();
+      reportViolation('close-attempt', 'Alt+F4');
+    }
+    // Block Alt+Tab (cannot fully prevent OS-level, but intercept the keydown)
+    if (e.altKey && e.key === 'Tab') {
+      e.preventDefault();
+      reportViolation('tab-switch-attempt', 'Alt+Tab');
+    }
+    // Block Ctrl+Tab / Ctrl+Shift+Tab (switch browser tabs)
+    if (e.ctrlKey && e.key === 'Tab') {
+      e.preventDefault();
+      reportViolation('tab-switch-attempt', 'Ctrl+Tab');
+    }
+    // Block Ctrl+N (new window), Ctrl+T (new tab)
+    if (e.ctrlKey && !e.shiftKey && ['n', 't'].includes(e.key.toLowerCase())) {
+      e.preventDefault();
+      reportViolation('new-window-attempt', 'Ctrl+' + e.key);
+    }
+    // Block Escape key (prevent fullscreen exit via Esc)
+    if (e.key === 'Escape') {
+      e.preventDefault();
+    }
+  });
+
+  // 5b. beforeunload guard — warn if student tries to close/navigate away
+  window.addEventListener('beforeunload', (e) => {
+    if (!state.submitting && !secretExitActive) {
+      e.preventDefault();
+      e.returnValue = '';
     }
   });
 

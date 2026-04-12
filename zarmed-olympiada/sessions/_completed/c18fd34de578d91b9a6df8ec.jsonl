@@ -1,6 +1,0 @@
-{"t":"2026-04-11T17:05:02.716Z","ev":"start","studentId":"a3d7a009-08fb-4c46-b3f8-ac308dc14fa6","student":"Farrukh","group":"","lang":"english-c1","skill":"listening"}
-{"t":"2026-04-11T17:05:03.966Z","ev":"audio-play","partId":"part-listening-1"}
-{"t":"2026-04-11T17:05:07.179Z","ev":"answer","qid":"lq1","value":"A"}
-{"t":"2026-04-11T17:05:07.766Z","ev":"answer","qid":"lq2","value":"A"}
-{"t":"2026-04-11T17:05:08.232Z","ev":"answer","qid":"lq2","value":"B"}
-{"t":"2026-04-11T17:45:22.786Z","ev":"submit"}

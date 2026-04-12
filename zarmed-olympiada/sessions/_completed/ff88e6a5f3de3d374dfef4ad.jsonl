@@ -1,6 +1,0 @@
-{"t":"2026-04-11T16:44:56.682Z","ev":"start","studentId":"23958b24-e4c6-4351-a23a-27bdae891664","student":"efw","group":"","lang":"german-c1","skill":"listening"}
-{"t":"2026-04-11T16:44:57.865Z","ev":"audio-play","partId":"part-listening-1"}
-{"t":"2026-04-11T16:44:58.613Z","ev":"answer","qid":"g-lq1","value":"true"}
-{"t":"2026-04-11T16:45:00.943Z","ev":"audio-play","partId":"part-listening-2"}
-{"t":"2026-04-11T16:45:01.406Z","ev":"answer","qid":"g-lq2","value":"B"}
-{"t":"2026-04-11T16:45:03.291Z","ev":"submit"}

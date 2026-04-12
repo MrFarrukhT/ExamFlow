@@ -1,7 +1,0 @@
-{"t":"2026-04-11T19:07:24.122Z","ev":"start","studentId":"c916f550-313a-4fa1-b497-2418c628059a","student":"Farrukh Tajibaev","group":"","lang":"german-c1","skill":"listening"}
-{"t":"2026-04-11T19:07:25.067Z","ev":"audio-play","partId":"part-listening-1"}
-{"t":"2026-04-11T19:07:31.682Z","ev":"audio-play","partId":"part-listening-2"}
-{"t":"2026-04-11T19:07:32.605Z","ev":"answer","qid":"g-lq8","value":"B"}
-{"t":"2026-04-11T19:07:33.203Z","ev":"answer","qid":"g-lq9","value":"B"}
-{"t":"2026-04-11T19:07:35.750Z","ev":"audio-play","partId":"part-listening-3"}
-{"t":"2026-04-11T19:07:40.217Z","ev":"submit"}

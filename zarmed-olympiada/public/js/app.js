@@ -48,13 +48,15 @@
       if (!res.ok) return;
       const data = await res.json();
       const sessions = data.sessions || [];
+      // Server only returns sessions with time remaining (expired ones
+      // are auto-finalized server-side). If none left, hide the section.
       if (!sessions.length) return;
 
       resumeList.innerHTML = '';
       sessions.forEach((s) => {
         const card = document.createElement('button');
         card.type = 'button';
-        card.className = 'zu-resume-card' + (s.expired ? ' zu-resume-card--expired' : '');
+        card.className = 'zu-resume-card';
 
         const info = document.createElement('div');
         info.className = 'zu-resume-card-info';
@@ -69,7 +71,7 @@
 
         const time = document.createElement('div');
         time.className = 'zu-resume-card-time';
-        time.textContent = s.expired ? 'Time up' : fmtTime(s.remainingSeconds);
+        time.textContent = fmtTime(s.remainingSeconds);
 
         card.appendChild(info);
         card.appendChild(time);

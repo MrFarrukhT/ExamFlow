@@ -152,6 +152,22 @@ body.zu-welcome .page {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  max-height: 340px;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--zu-primary) transparent;
+}
+.zu-resume-list::-webkit-scrollbar {
+  width: 6px;
+}
+.zu-resume-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.zu-resume-list::-webkit-scrollbar-thumb {
+  background: var(--zu-primary);
+  border-radius: 3px;
+  opacity: 0.4;
 }
 .zu-resume-card {
   display: flex;
@@ -174,10 +190,7 @@ body.zu-welcome .page {
   box-shadow: 0 4px 12px rgba(30, 64, 175, 0.15);
   transform: translateY(-2px);
 }
-.zu-resume-card--expired {
-  border-left-color: var(--zu-danger);
-  opacity: 0.7;
-}
+/* (expired cards no longer rendered — server auto-finalizes them) */
 .zu-resume-card-info {
   display: flex;
   flex-direction: column;
@@ -199,9 +212,7 @@ body.zu-welcome .page {
   color: var(--zu-primary);
   white-space: nowrap;
 }
-.zu-resume-card--expired .zu-resume-card-time {
-  color: var(--zu-danger);
-}
+/* (expired card time style removed — no longer needed) */
 .zu-divider {
   border: none;
   border-top: 1px solid var(--zu-border);
