@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Zarmed University emblem — circular seal -->
+  <!-- Outer blue ring -->
+  <circle cx="100" cy="100" r="98" fill="#1e40af" stroke="#172554" stroke-width="2"/>
+  <!-- White inner circle -->
+  <circle cx="100" cy="100" r="78" fill="#ffffff"/>
+  <!-- Inner blue accent ring -->
+  <circle cx="100" cy="100" r="76" fill="none" stroke="#1e40af" stroke-width="1.5"/>
+
+  <!-- "ZARMED UNIVERSITY" text around the ring -->
+  <defs>
+    <path id="topArc" d="M 30,100 a 70,70 0 0,1 140,0" fill="none"/>
+    <path id="bottomArc" d="M 170,100 a 70,70 0 0,1 -140,0" fill="none"/>
+  </defs>
+  <text fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" letter-spacing="3">
+    <textPath href="#topArc" startOffset="50%" text-anchor="middle">ZARMED UNIVERSITY</textPath>
+  </text>
+
+  <!-- Decorative dots on sides -->
+  <circle cx="28" cy="100" r="3" fill="#eab308"/>
+  <circle cx="172" cy="100" r="3" fill="#eab308"/>
+
+  <!-- Open book in center -->
+  <g transform="translate(100,85)">
+    <!-- Left page -->
+    <path d="M -3,-12 L -3,12 Q -18,10 -28,6 L -28,-18 Q -18,-14 -3,-12 Z" fill="#1e40af" opacity="0.15" stroke="#1e40af" stroke-width="1"/>
+    <!-- Right page -->
+    <path d="M 3,-12 L 3,12 Q 18,10 28,6 L 28,-18 Q 18,-14 3,-12 Z" fill="#1e40af" opacity="0.15" stroke="#1e40af" stroke-width="1"/>
+    <!-- Spine -->
+    <line x1="0" y1="-14" x2="0" y2="14" stroke="#1e40af" stroke-width="1.5"/>
+    <!-- Page lines left -->
+    <line x1="-7" y1="-6" x2="-22" y2="-10" stroke="#1e40af" stroke-width="0.6" opacity="0.5"/>
+    <line x1="-7" y1="-2" x2="-22" y2="-6" stroke="#1e40af" stroke-width="0.6" opacity="0.5"/>
+    <line x1="-7" y1="2" x2="-22" y2="-2" stroke="#1e40af" stroke-width="0.6" opacity="0.5"/>
+    <!-- Page lines right -->
+    <line x1="7" y1="-6" x2="22" y2="-10" stroke="#1e40af" stroke-width="0.6" opacity="0.5"/>
+    <line x1="7" y1="-2" x2="22" y2="-6" stroke="#1e40af" stroke-width="0.6" opacity="0.5"/>
+    <line x1="7" y1="2" x2="22" y2="-2" stroke="#1e40af" stroke-width="0.6" opacity="0.5"/>
+  </g>
+
+  <!-- Shield/crest above book -->
+  <g transform="translate(100,55)">
+    <path d="M 0,-18 L 14,-10 L 14,6 Q 14,16 0,22 Q -14,16 -14,6 L -14,-10 Z" fill="none" stroke="#1e40af" stroke-width="1.5"/>
+    <path d="M 0,-16 L 12,-9 L 12,5 Q 12,14 0,20 Q -12,14 -12,5 L -12,-9 Z" fill="#1e40af" opacity="0.1"/>
+    <!-- Star in shield -->
+    <polygon points="0,-8 2,-2 8,-2 3,2 5,8 0,4 -5,8 -3,2 -8,-2 -2,-2" fill="#eab308" stroke="#b45309" stroke-width="0.5"/>
+  </g>
+
+  <!-- Year at bottom -->
+  <text x="100" y="155" text-anchor="middle" fill="#1e40af" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" letter-spacing="2">2022</text>
+
+  <!-- Gold ribbon accent -->
+  <path d="M 70,160 Q 100,168 130,160" fill="none" stroke="#eab308" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

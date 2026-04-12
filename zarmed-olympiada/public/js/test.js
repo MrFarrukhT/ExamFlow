@@ -815,7 +815,8 @@
     } else {
       const list = el('div', 'ct-question-list');
       (part.questions || []).forEach((q) => {
-        if (q.type === 'true-false') list.appendChild(renderTrueFalse(q));
+        if (q.type === 'matching') list.appendChild(renderMatchingQuestion(q, part.matchingOptions || []));
+        else if (q.type === 'true-false') list.appendChild(renderTrueFalse(q));
         else if (q.type === 'multiple-choice') list.appendChild(renderMCQuestion(q));
         else if (q.type === 'sentence-completion' || q.type === 'gap-fill' || q.type === 'open-cloze') {
           // Authentic Cambridge Listening Part 2 (cae/examples/l2.png): the
