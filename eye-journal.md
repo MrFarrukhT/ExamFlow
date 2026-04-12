@@ -1,5 +1,32 @@
 # Eye Journal
 
+## Session: 2026-04-12 12:36 — Zarmed Olympiada Browser Tab Titles — Round 36 (/loop iteration)
+Persona: German C1 student | System: Zarmed Olympiada standalone (port 3004)
+Pages explored: index.html, dashboard.html, test.html, done.html — browser tab titles
+Starting state: Round 35 fixed renderer dispatch + 6 string leaks. Deep second-pass grep revealed 3 browser tab `<title>` tags still in English.
+
+### Round 36 — 3 findings, all polish
+
+- [T4] **Welcome page title** — "Zarmed University — C1 Olympiada" → "Zarmed Universität — C1 Olympiada" on German select.
+  Mode: polish
+  Files: zarmed-olympiada/public/js/app.js
+
+- [T4] **Dashboard title** — "Zarmed Olympiada — Modules" → "Zarmed Olympiada — Module" for German.
+  Mode: polish
+  Files: zarmed-olympiada/public/js/dashboard.js
+
+- [T4] **Test page title** — "Zarmed Olympiada — Test" → "Zarmed Olympiada — Prüfung" for German. Set before `startTimer()` captures `originalTitle` so countdown prefix "(MM:SS) Prüfung" also uses German.
+  Mode: polish
+  Files: zarmed-olympiada/public/js/test.js
+
+**Already correct:** done.html localizes title to "Abgegeben" via inline script (round 34).
+
+### Session Stats
+Pages explored: 4
+Rounds: 1
+Polishes landed: 3
+Changes shipped: 3
+
 ## Session: 2026-04-12 12:19 — Zarmed Olympiada German Bilingual Correctness + Renderer Dispatch — Round 35 (/loop iteration)
 Persona: German C1 student (Max Mustermann) taking Goethe-style Lesen + Hören exam | System: Zarmed Olympiada standalone (port 3004)
 Pages explored: index.html (welcome), dashboard.html, test.html (all 4 Lesen Teile + Hören Teil 1 pre-play modal), done.html
