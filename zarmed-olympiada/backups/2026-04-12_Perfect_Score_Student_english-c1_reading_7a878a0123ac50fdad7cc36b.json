@@ -1,0 +1,726 @@
+{
+  "sessionId": "7a878a0123ac50fdad7cc36b",
+  "studentId": "r3-1775979716870-lv2n90",
+  "student": "Perfect Score Student",
+  "group": "score-test",
+  "lang": "english-c1",
+  "skill": "reading",
+  "startedAt": "2026-04-12T07:41:56.889Z",
+  "finishedAt": "2026-04-12T07:41:56.937Z",
+  "answers": {
+    "q1": "B",
+    "q2": "B",
+    "q3": "A",
+    "q4": "C",
+    "q5": "C",
+    "q6": "D",
+    "q7": "C",
+    "q8": "B",
+    "q9": "unlike",
+    "q10": "up",
+    "q11": "this",
+    "q12": "not",
+    "q13": "what",
+    "q14": "on",
+    "q15": "to",
+    "q16": "without",
+    "q17": "uncommonly",
+    "q18": "presence",
+    "q19": "unthinkable",
+    "q20": "exceptional",
+    "q21": "disruption",
+    "q22": "countless",
+    "q23": "visualised",
+    "q24": "accordingly",
+    "q25": "result in",
+    "q26": "to a conclusion without",
+    "q27": "what prevented john from setting",
+    "q28": "no circumstances should your bag be",
+    "q29": "hadn't put up with",
+    "q30": "to be seen how",
+    "q31": "D",
+    "q32": "B",
+    "q33": "B",
+    "q34": "C",
+    "q35": "B",
+    "q36": "D",
+    "q37": "B",
+    "q38": "A",
+    "q39": "D",
+    "q40": "B",
+    "q41": "C",
+    "q42": "A",
+    "q43": "E",
+    "q44": "G",
+    "q45": "B",
+    "q46": "D",
+    "q47": "A",
+    "q48": "D",
+    "q49": "C",
+    "q50": "B",
+    "q51": "A",
+    "q52": "C",
+    "q53": "D",
+    "q54": "C",
+    "q55": "B",
+    "q56": "A"
+  },
+  "score": {
+    "earned": 78,
+    "total": 78,
+    "perQuestion": [
+      {
+        "qid": "q1",
+        "partId": "part1",
+        "type": "multiple-choice",
+        "studentValue": "B",
+        "correctAnswer": "B",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q2",
+        "partId": "part1",
+        "type": "multiple-choice",
+        "studentValue": "B",
+        "correctAnswer": "B",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q3",
+        "partId": "part1",
+        "type": "multiple-choice",
+        "studentValue": "A",
+        "correctAnswer": "A",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q4",
+        "partId": "part1",
+        "type": "multiple-choice",
+        "studentValue": "C",
+        "correctAnswer": "C",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q5",
+        "partId": "part1",
+        "type": "multiple-choice",
+        "studentValue": "C",
+        "correctAnswer": "C",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q6",
+        "partId": "part1",
+        "type": "multiple-choice",
+        "studentValue": "D",
+        "correctAnswer": "D",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q7",
+        "partId": "part1",
+        "type": "multiple-choice",
+        "studentValue": "C",
+        "correctAnswer": "C",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q8",
+        "partId": "part1",
+        "type": "multiple-choice",
+        "studentValue": "B",
+        "correctAnswer": "B",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q9",
+        "partId": "part2",
+        "type": "open-cloze",
+        "studentValue": "unlike",
+        "correctAnswer": [
+          "unlike"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q10",
+        "partId": "part2",
+        "type": "open-cloze",
+        "studentValue": "up",
+        "correctAnswer": [
+          "up"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q11",
+        "partId": "part2",
+        "type": "open-cloze",
+        "studentValue": "this",
+        "correctAnswer": [
+          "this"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q12",
+        "partId": "part2",
+        "type": "open-cloze",
+        "studentValue": "not",
+        "correctAnswer": [
+          "not"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q13",
+        "partId": "part2",
+        "type": "open-cloze",
+        "studentValue": "what",
+        "correctAnswer": [
+          "what"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q14",
+        "partId": "part2",
+        "type": "open-cloze",
+        "studentValue": "on",
+        "correctAnswer": [
+          "on"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q15",
+        "partId": "part2",
+        "type": "open-cloze",
+        "studentValue": "to",
+        "correctAnswer": [
+          "to"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q16",
+        "partId": "part2",
+        "type": "open-cloze",
+        "studentValue": "without",
+        "correctAnswer": [
+          "without",
+          "beyond"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q17",
+        "partId": "part3",
+        "type": "word-formation",
+        "studentValue": "uncommonly",
+        "correctAnswer": [
+          "uncommonly"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q18",
+        "partId": "part3",
+        "type": "word-formation",
+        "studentValue": "presence",
+        "correctAnswer": [
+          "presence"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q19",
+        "partId": "part3",
+        "type": "word-formation",
+        "studentValue": "unthinkable",
+        "correctAnswer": [
+          "unthinkable"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q20",
+        "partId": "part3",
+        "type": "word-formation",
+        "studentValue": "exceptional",
+        "correctAnswer": [
+          "exceptional"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q21",
+        "partId": "part3",
+        "type": "word-formation",
+        "studentValue": "disruption",
+        "correctAnswer": [
+          "disruption"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q22",
+        "partId": "part3",
+        "type": "word-formation",
+        "studentValue": "countless",
+        "correctAnswer": [
+          "countless"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q23",
+        "partId": "part3",
+        "type": "word-formation",
+        "studentValue": "visualised",
+        "correctAnswer": [
+          "visualised",
+          "visualized"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q24",
+        "partId": "part3",
+        "type": "word-formation",
+        "studentValue": "accordingly",
+        "correctAnswer": [
+          "accordingly"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q25",
+        "partId": "part4",
+        "type": "key-word-transformation",
+        "studentValue": "result in",
+        "correctAnswer": {
+          "required": [
+            "result",
+            "in"
+          ],
+          "maxWords": 6,
+          "alternatives": [
+            [
+              "result",
+              "in",
+              "its"
+            ],
+            [
+              "result",
+              "in",
+              "the",
+              "form's"
+            ]
+          ]
+        },
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q26",
+        "partId": "part4",
+        "type": "key-word-transformation",
+        "studentValue": "to a conclusion without",
+        "correctAnswer": {
+          "required": [
+            "to",
+            "a",
+            "conclusion",
+            "without"
+          ],
+          "maxWords": 6,
+          "alternatives": [
+            [
+              "to",
+              "its",
+              "conclusion",
+              "without"
+            ]
+          ]
+        },
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q27",
+        "partId": "part4",
+        "type": "key-word-transformation",
+        "studentValue": "what prevented john from setting",
+        "correctAnswer": {
+          "required": [
+            "what",
+            "prevented",
+            "john",
+            "from",
+            "setting"
+          ],
+          "maxWords": 6,
+          "alternatives": [
+            [
+              "what",
+              "prevented",
+              "john",
+              "from",
+              "starting"
+            ],
+            [
+              "what",
+              "prevented",
+              "john",
+              "from",
+              "heading"
+            ],
+            [
+              "what",
+              "prevented",
+              "john",
+              "from",
+              "going"
+            ]
+          ]
+        },
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q28",
+        "partId": "part4",
+        "type": "key-word-transformation",
+        "studentValue": "no circumstances should your bag be",
+        "correctAnswer": {
+          "required": [
+            "no",
+            "circumstances",
+            "should",
+            "your",
+            "bag",
+            "be"
+          ],
+          "maxWords": 6,
+          "alternatives": [
+            [
+              "no",
+              "circumstances",
+              "must",
+              "your",
+              "bag",
+              "be"
+            ]
+          ]
+        },
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q29",
+        "partId": "part4",
+        "type": "key-word-transformation",
+        "studentValue": "hadn't put up with",
+        "correctAnswer": {
+          "required": [
+            "hadn't",
+            "put",
+            "up",
+            "with"
+          ],
+          "maxWords": 6,
+          "alternatives": [
+            [
+              "had",
+              "not",
+              "put",
+              "up",
+              "with"
+            ]
+          ]
+        },
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q30",
+        "partId": "part4",
+        "type": "key-word-transformation",
+        "studentValue": "to be seen how",
+        "correctAnswer": {
+          "required": [
+            "to",
+            "be",
+            "seen",
+            "how"
+          ],
+          "maxWords": 6,
+          "alternatives": []
+        },
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q31",
+        "partId": "part5",
+        "type": "multiple-choice",
+        "studentValue": "D",
+        "correctAnswer": "D",
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q32",
+        "partId": "part5",
+        "type": "multiple-choice",
+        "studentValue": "B",
+        "correctAnswer": "B",
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q33",
+        "partId": "part5",
+        "type": "multiple-choice",
+        "studentValue": "B",
+        "correctAnswer": "B",
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q34",
+        "partId": "part5",
+        "type": "multiple-choice",
+        "studentValue": "C",
+        "correctAnswer": "C",
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q35",
+        "partId": "part5",
+        "type": "multiple-choice",
+        "studentValue": "B",
+        "correctAnswer": "B",
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q36",
+        "partId": "part5",
+        "type": "multiple-choice",
+        "studentValue": "D",
+        "correctAnswer": "D",
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q37",
+        "partId": "part6",
+        "type": "matching",
+        "studentValue": "B",
+        "correctAnswer": "B",
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q38",
+        "partId": "part6",
+        "type": "matching",
+        "studentValue": "A",
+        "correctAnswer": "A",
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q39",
+        "partId": "part6",
+        "type": "matching",
+        "studentValue": "D",
+        "correctAnswer": "D",
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q40",
+        "partId": "part6",
+        "type": "matching",
+        "studentValue": "B",
+        "correctAnswer": "B",
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q41",
+        "partId": "part7",
+        "type": "gapped-text",
+        "studentValue": "C",
+        "correctAnswer": "C",
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q42",
+        "partId": "part7",
+        "type": "gapped-text",
+        "studentValue": "A",
+        "correctAnswer": "A",
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q43",
+        "partId": "part7",
+        "type": "gapped-text",
+        "studentValue": "E",
+        "correctAnswer": "E",
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q44",
+        "partId": "part7",
+        "type": "gapped-text",
+        "studentValue": "G",
+        "correctAnswer": "G",
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q45",
+        "partId": "part7",
+        "type": "gapped-text",
+        "studentValue": "B",
+        "correctAnswer": "B",
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q46",
+        "partId": "part7",
+        "type": "gapped-text",
+        "studentValue": "D",
+        "correctAnswer": "D",
+        "earned": 2,
+        "possible": 2
+      },
+      {
+        "qid": "q47",
+        "partId": "part8",
+        "type": "matching",
+        "studentValue": "A",
+        "correctAnswer": "A",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q48",
+        "partId": "part8",
+        "type": "matching",
+        "studentValue": "D",
+        "correctAnswer": "D",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q49",
+        "partId": "part8",
+        "type": "matching",
+        "studentValue": "C",
+        "correctAnswer": "C",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q50",
+        "partId": "part8",
+        "type": "matching",
+        "studentValue": "B",
+        "correctAnswer": "B",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q51",
+        "partId": "part8",
+        "type": "matching",
+        "studentValue": "A",
+        "correctAnswer": "A",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q52",
+        "partId": "part8",
+        "type": "matching",
+        "studentValue": "C",
+        "correctAnswer": "C",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q53",
+        "partId": "part8",
+        "type": "matching",
+        "studentValue": "D",
+        "correctAnswer": "D",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q54",
+        "partId": "part8",
+        "type": "matching",
+        "studentValue": "C",
+        "correctAnswer": "C",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q55",
+        "partId": "part8",
+        "type": "matching",
+        "studentValue": "B",
+        "correctAnswer": "B",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "q56",
+        "partId": "part8",
+        "type": "matching",
+        "studentValue": "A",
+        "correctAnswer": "A",
+        "earned": 1,
+        "possible": 1
+      }
+    ]
+  },
+  "eventCount": 58
+}
