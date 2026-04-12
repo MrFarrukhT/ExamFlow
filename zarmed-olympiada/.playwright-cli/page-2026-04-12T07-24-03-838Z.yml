@@ -1,0 +1,73 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Zarmed University" [ref=e4]
+      - generic [ref=e5]: C1 Olympiada
+    - generic [ref=e6]:
+      - generic [ref=e7]: Kandidaten-ID
+      - generic "Max Mustermann" [ref=e8]:
+        - text: Max Mustermann
+        - generic [ref=e9]: test-177
+    - timer "Verbleibende Zeit" [ref=e11]: 63:57
+  - generic [ref=e13]:
+    - generic [ref=e14]: Fragen 16–23
+    - text: "Vorgeschlagene Arbeitszeit: 20 Minuten. Sie lesen in einer populärwissenschaftlichen Zeitschrift einen Kommentar. Welche Sätze passen in die Lücken? Zwei Sätze passen nicht."
+  - main [ref=e15]:
+    - generic [ref=e215]:
+      - generic [ref=e216]:
+        - heading "Kitas sollten Innovationslabore sein!" [level=3] [ref=e217]
+        - generic [ref=e218]:
+          - text: "Die Arbeit von Kitas verändert sich: In einer Einwanderungsgesellschaft nehmen kulturelle und sprachliche Vielfalt immer zu. Mehr als jedes fünfte Kita-Kind hat laut Familienministerium heute eine Migrationsgeschichte. (Beispiel 0 = B) Gleichzeitig wird immer deutlicher, wie relevant die ersten Lebensjahre für die gesamte Bildungslaufbahn sind. Laut Studien zeigen sich bereits im ersten Jahr nach der Geburt deutliche herkunftsbedingte Kompetenzunterschiede. Bei der Einschulung werden die Diskrepanzen in dem, was Kinder können, immer größer. Höchste Zeit also, in der frühen Bildung neue Wege zu gehen."
+          - generic [ref=e220] [cursor=pointer]: "16"
+          - text: Für viele Akteure in Politik und Wissenschaft, aber auch bei den Trägern und den Einrichtungen, sind die Begriffe »Kindergarten« und »Innovation« noch immer ein Gegensatzpaar. Dabei können Kitas durchaus Innovationslabore sein. Aktuell zeigt sich das Problem besonders bei der Digitalisierung. In anderen Ländern ist die digitale pädagogische Arbeit wie auch die digitale Dokumentation von Bildungsprozessen deutlich weiter, etwa in Neuseeland und Finnland.
+          - generic [ref=e222] [cursor=pointer]: "17"
+          - text: Mit deren Hilfe wird eine großartige Möglichkeit geschaffen, mit den Eltern Bildungsinhalte auszutauschen, Veränderungen bekannt zu machen und ihre Fragen zu beantworten.
+          - generic [ref=e224] [cursor=pointer]: "18"
+          - text: In allen Bundesländern werden die deutschen Sprachkenntnisse der Kinder ein bis eineinhalb Jahre vor der Einschulung geprüft. Das Ziel ist, die Kinder in der Kita sprachlich so zu fördern, dass sie später in der Grundschule gut mitkommen und ihre Bildungschancen wahrnehmen können.
+          - generic [ref=e226] [cursor=pointer]: "19"
+          - text: Zudem ist der Fachkräftemangel in Deutschland groß; er überfordert viele Menschen, die in dem Bereich arbeiten. In anderen Ländern, etwa in Österreich, wurden standardisierte Verfahren verbindlich eingeführt.
+          - generic [ref=e228] [cursor=pointer]: "20"
+          - text: "Kaum zu glauben, aber Verfahren, die auf die wichtigen Herkunftssprachen wie Arabisch, Türkisch, Rumänisch oder Russisch zugeschnitten sind, sind in Deutschland so gut wie nicht verfügbar. Nicht zu unterschätzen ist auch die Elternarbeit bei Migrantinnen und Migranten. Klassische Elternabende oder Themenmittage werden aufgrund der mangelnden Sprachkenntnisse immer weniger nachgefragt. Die Corona-Pandemie hat einen erheblichen Veränderungsdruck ausgelöst, den Kitas mit beeindruckendem Engagement bewältigt haben: Plötzlich gab es digitale Plattformen für den Kontakt mit den Eltern, digitale Elternabende und Entwicklungsgespräche."
+          - generic [ref=e230] [cursor=pointer]: "21"
+          - text: "Doch die deutschen Strukturen in der frühkindlichen Bildung sind träge und konservativ. Längst nicht überall werden Neuerungen und gute Ideen weitergeführt. Insbesondere bei Politik und Verbänden wünschen wir uns eine innovationsfreudigere Haltung. Das gilt auch für den Transfer aus der Wissenschaft in die Praxis: In vielen Lebensbereichen ist das selbstverständlich."
+          - generic [ref=e232] [cursor=pointer]: "22"
+          - text: Eine stärkere Verzahnung der Lehrstühle für Kindheitspädagogik mit der Kita-Praxis würde hier helfen. Innovationsfördernde Kreativlabore und hochschulnahe Denkfabriken sind in der frühen Bildung bislang nicht vorhanden; es gibt so gut wie keine Hochschul-Kitas, in denen auch geforscht wird. Für die Schulen gibt es mit dem Digitalpakt eine gemeinsame Anstrengung von Bund und Ländern, um der Digitalisierung im Klassenzimmer einen großen Schub zu geben.
+          - generic [ref=e234] [cursor=pointer]: "23"
+          - text: Wie lange noch?
+      - generic [ref=e236]:
+        - heading "Absätze" [level=4] [ref=e237]
+        - generic [ref=e238] [cursor=pointer]: ABei der sprachlichen Bildung ist die Digitalisierung ebenfalls von Vorteil.
+        - generic [ref=e239] [cursor=pointer]: CAuch die Bereitstellung von Vorlesematerialien in Apps in verschiedenen Sprachen wäre eine bedeutende Innovation mit Blick auf frühe Mehrsprachigkeit.
+        - generic [ref=e240] [cursor=pointer]: DFür die frühe Bildung fehlt ein solcher Digitalpakt bislang.
+        - generic [ref=e241] [cursor=pointer]: EDoch woher sollen die Ideen für die frühe Bildung kommen?
+        - generic [ref=e242] [cursor=pointer]: FHier ist Know-how entstanden, das jetzt weiterentwickelt werden sollte.
+        - generic [ref=e243] [cursor=pointer]: GDort hält das Personal die kindliche Entwicklung zum Beispiel mithilfe von Apps wie »Storypark« fest.
+        - generic [ref=e244] [cursor=pointer]: HDafür müssten die Pädagogen digital besser aufgestellt sein.
+        - generic [ref=e245] [cursor=pointer]: IDoch von den 22 hierzulande gängigen Verfahren zur Feststellung des Sprachstands sind bislang nur fünf digital verfügbar.
+        - generic [ref=e246] [cursor=pointer]: JIn der frühen Bildung leider noch nicht.
+  - navigation [ref=e43]:
+    - generic [ref=e44]:
+      - button "Teil 1 0 von 8" [ref=e247] [cursor=pointer]:
+        - generic [ref=e248]: Teil 1
+        - generic [ref=e249]: 0 von 8
+      - button "Teil 2 0 von 7" [ref=e250] [cursor=pointer]:
+        - generic [ref=e251]: Teil 2
+        - generic [ref=e252]: 0 von 7
+      - generic [ref=e253] [cursor=pointer]:
+        - generic [ref=e254]: Teil 3
+        - generic [ref=e255]:
+          - button "16" [ref=e256]
+          - button "17" [ref=e257]
+          - button "18" [ref=e258]
+          - button "19" [ref=e259]
+          - button "20" [ref=e260]
+          - button "21" [ref=e261]
+          - button "22" [ref=e262]
+          - button "23" [ref=e263]
+      - button "Teil 4 0 von 7" [ref=e264] [cursor=pointer]:
+        - generic [ref=e265]: Teil 4
+        - generic [ref=e266]: 0 von 7
+    - generic [ref=e65]:
+      - button "Zurück" [ref=e66] [cursor=pointer]: ←
+      - button "Weiter" [ref=e67] [cursor=pointer]: →
+      - button "Beenden" [ref=e68] [cursor=pointer]: ✓

@@ -1,0 +1,164 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Zarmed University" [ref=e4]
+      - generic [ref=e5]: C1 Olympiada
+    - generic [ref=e6]:
+      - generic [ref=e7]: Kandidaten-ID
+      - generic "Max Mustermann" [ref=e8]:
+        - text: Max Mustermann
+        - generic [ref=e9]: test-177
+    - timer "Verbleibende Zeit" [ref=e11]: 64:12
+  - generic [ref=e13]:
+    - generic [ref=e14]: Fragen 9–15
+    - text: "Vorgeschlagene Arbeitszeit: 20 Minuten. Sie lesen im Internet einen Artikel über eine Studie über Sport und Abnehmen. Wählen Sie bei jeder Aufgabe die richtige Lösung."
+  - main [ref=e15]:
+    - generic [ref=e70]:
+      - generic [ref=e71]:
+        - heading "Ratgeber Gesundheit" [level=3] [ref=e72]
+        - generic [ref=e73]: "Abnehmen geht effizienter Bisher war der Königsweg für Menschen mit Übergewicht, die abnehmen wollten, ausdauernd zu trainieren. Vergleicht man die schnellen 100-Meter-Läufer mit den besten Marathonläufern der Welt, so fällt einem sofort ins Auge: Ausdauersport scheint zum Erfolg zu führen. Denn während die muskelbepackten Sprinter wie Sumoringer aus einem Gladiatorenfilm wirken, möchte man den ausgedörrten Ausdauersportlern eher mal ein Drei-Gänge-Menü spendieren. Und es klingt ja auch logisch: Wer ausdauernd läuft, verbraucht mehr Kalorien als jemand, dessen sportlicher Aufwand schon nach zehn Sekunden zu Ende ist. Doch neue Studien zeigen, dass dies nicht der einzige Weg ist. Mehr noch — es geht effizienter, und zwar mit einem intensiven Intervalltraining. Tatsächlich werden bei kurzen Anstrengungen nicht besonders viele Kalorien verbrannt. Aber sie lösen einen Stoffwechselmechanismus aus, der auf eine andere Art und Weise das Trainingsziel in größere Nähe rücken kann. Vorweg: Sport sollte immer so intensiv sein, dass er das Muskelwachstum anregt. »Denn Muskelmasse hat nicht nur während der Arbeit, sondern auch in Ruhe einen erhöhten Kalorienverbrauch«, sagt Winfried Banzer, emeritierter Sportmediziner von der Goethe-Universität in Frankfurt. Durch regelmäßiges Joggen und Radfahren kann es durchaus zum Muskelaufbau kommen, auch wenn der nicht so sichtbar ist. Die Muskelmasse nimmt zu, und damit auch der Grundumsatz an Kalorien. Vor allem im Alter ist dieser Effekt wichtig: Der Rückgang von Muskeln im fortgeschrittenen Alter führt zu einem geringeren Energieverbrauch. Wer nichts dagegen tut, verliert ab dem 25. Lebensjahr natürlicherweise Muskelmasse — mit dem Resultat, dass man mit 80 Jahren nur noch die Hälfte der Muskelmasse hat, die man mit 20 hatte. Der Verlust von drei Kilo Muskeln bedeutet eine Verringerung des Energiegrundumsatzes um etwa 100 Kalorien pro Tag. Wie aber soll das Abnehmen ohne Langstreckenlauf und hohen Kalorienverbrauch funktionieren? Amerikanische Forscher haben gerade im renommierten Fachjournal »Nature« eine Reihe von Untersuchungen publiziert. Ein Stoff namens Lac-Phe ist dabei in den Fokus der Wissenschaftler geraten. Lac-Phe entsteht immer dann, wenn die Anstrengung sehr hoch ist. Als die Forscher den Stoff ihren Testmäusen injizierten, verloren diese deutlich ihre Lust am Fressen. Und als man ihn ihnen über mehrere Tage spritzte, verloren sie — weil sie weniger fraßen — auch an Körpergewicht. Umgekehrt wogen Mäuse, bei denen man genetisch die Bildung von Lac-Phe ausgeschaltet hatte, deutlich mehr als ihre Artgenossen, weil sie einen größeren Appetit hatten. Zudem wollten die Forscher wissen, ob man den Lac-Phe-Pegel nicht nur per Spritze, sondern auch natürlicherweise — mit Sport — nach oben bringen kann. Also wurden acht junge Männer gebeten, drei unterschiedliche Formen des Körpertrainings zu absolvieren: ein 90-minütiges moderates Ausdauertraining auf dem Heimtrainer, ein Krafttraining an Hanteln und ein hochintensives Intervalltraining mit mehreren sehr kurzen Belastungsphasen. Im Anschluss an die jeweiligen Einheiten wurde der Lac-Phe-Wert im Blut gemessen. Das Ergebnis: Bei allen Trainingsformen ging der Lac-Phe-Pegel nach oben, doch am deutlichsten war der Anstieg im Anschluss an das hochintensive Intervalltraining, gefolgt vom Krafttraining. Bei intensiven Kurzbelastungen wird also im Körper besonders viel Lac-Phe freigesetzt. In einer anderen kürzlich publizierten Studie wurde der Effekt von Intensivtraining bei 42 mäßig übergewichtigen Menschen genauer untersucht. Binnen vier Wochen reduzierte sich der Taillenumfang bei allen Probanden um rund zwei Zentimeter und der Körperfettanteil um etwa einen Prozentpunkt. Wissenschaftler fanden heraus, dass Intensivtraining zeitsparend und dennoch effizient ist: Die Intensiv-Sportler waren nur knapp 24 Minuten täglich aktiv, während die Ausdauer-Walker 60 Minuten pro Tag unterwegs waren — und dennoch erzielten beide Gruppen vergleichbare Effekte."
+      - generic [ref=e75]:
+        - generic [ref=e76]:
+          - generic [ref=e77]:
+            - generic [ref=e78]: "9"
+            - text: Was besagen neueste Studien in Bezug aufs Abnehmen?
+          - generic [ref=e80]:
+            - generic [ref=e81] [cursor=pointer]:
+              - radio "A Ausdauertraining ist weniger effizient als bisher angenommen." [ref=e82]
+              - generic [ref=e83]: A
+              - generic [ref=e84]: Ausdauertraining ist weniger effizient als bisher angenommen.
+            - generic [ref=e85] [cursor=pointer]:
+              - radio "B Intensive Trainingseinheiten sind auch effizient." [ref=e86]
+              - generic [ref=e87]: B
+              - generic [ref=e88]: Intensive Trainingseinheiten sind auch effizient.
+            - generic [ref=e89] [cursor=pointer]:
+              - radio "C Sprinter nehmen langsamer ab." [ref=e90]
+              - generic [ref=e91]: C
+              - generic [ref=e92]: Sprinter nehmen langsamer ab.
+        - generic [ref=e93]:
+          - generic [ref=e94]:
+            - generic [ref=e95]: "10"
+            - text: Beim kurzen Intensivtraining …
+          - generic [ref=e97]:
+            - generic [ref=e98] [cursor=pointer]:
+              - radio "A benötigen die Muskeln Ruhephasen." [ref=e99]
+              - generic [ref=e100]: A
+              - generic [ref=e101]: benötigen die Muskeln Ruhephasen.
+            - generic [ref=e102] [cursor=pointer]:
+              - radio "B verbraucht man mehr Kalorien." [ref=e103]
+              - generic [ref=e104]: B
+              - generic [ref=e105]: verbraucht man mehr Kalorien.
+            - generic [ref=e106] [cursor=pointer]:
+              - radio "C wird der Stoffwechsel angeregt." [ref=e107]
+              - generic [ref=e108]: C
+              - generic [ref=e109]: wird der Stoffwechsel angeregt.
+        - generic [ref=e110]:
+          - generic [ref=e111]:
+            - generic [ref=e112]: "11"
+            - text: Durch moderates Laufen oder Radfahren …
+          - generic [ref=e114]:
+            - generic [ref=e115] [cursor=pointer]:
+              - radio "A kann man Gewicht in Form von Muskelmasse abbauen." [ref=e116]
+              - generic [ref=e117]: A
+              - generic [ref=e118]: kann man Gewicht in Form von Muskelmasse abbauen.
+            - generic [ref=e119] [cursor=pointer]:
+              - radio "B sinkt die Pulsfrequenz." [ref=e120]
+              - generic [ref=e121]: B
+              - generic [ref=e122]: sinkt die Pulsfrequenz.
+            - generic [ref=e123] [cursor=pointer]:
+              - radio "C vermehrt sich die Muskelmasse." [ref=e124]
+              - generic [ref=e125]: C
+              - generic [ref=e126]: vermehrt sich die Muskelmasse.
+        - generic [ref=e127]:
+          - generic [ref=e128]:
+            - generic [ref=e129]: "12"
+            - text: Vor allem im Alter …
+          - generic [ref=e131]:
+            - generic [ref=e132] [cursor=pointer]:
+              - radio "A beginnt der natürliche Muskelabbau." [ref=e133]
+              - generic [ref=e134]: A
+              - generic [ref=e135]: beginnt der natürliche Muskelabbau.
+            - generic [ref=e136] [cursor=pointer]:
+              - radio "B führt der Rückgang von Muskeln zu weniger Energieverbrauch." [ref=e137]
+              - generic [ref=e138]: B
+              - generic [ref=e139]: führt der Rückgang von Muskeln zu weniger Energieverbrauch.
+            - generic [ref=e140] [cursor=pointer]:
+              - radio "C sollte man eher langsam joggen oder radeln." [ref=e141]
+              - generic [ref=e142]: C
+              - generic [ref=e143]: sollte man eher langsam joggen oder radeln.
+        - generic [ref=e144]:
+          - generic [ref=e145]:
+            - generic [ref=e146]: "13"
+            - text: Das Verabreichen von Lac-Phe führte bei Mäusen zu …
+          - generic [ref=e148]:
+            - generic [ref=e149] [cursor=pointer]:
+              - radio "A Appetitlosigkeit." [ref=e150]
+              - generic [ref=e151]: A
+              - generic [ref=e152]: Appetitlosigkeit.
+            - generic [ref=e153] [cursor=pointer]:
+              - radio "B Bequemlichkeit." [ref=e154]
+              - generic [ref=e155]: B
+              - generic [ref=e156]: Bequemlichkeit.
+            - generic [ref=e157] [cursor=pointer]:
+              - radio "C Fettleibigkeit." [ref=e158]
+              - generic [ref=e159]: C
+              - generic [ref=e160]: Fettleibigkeit.
+        - generic [ref=e161]:
+          - generic [ref=e162]:
+            - generic [ref=e163]: "14"
+            - text: Was zeigten Untersuchungen an Sportlern?
+          - generic [ref=e165]:
+            - generic [ref=e166] [cursor=pointer]:
+              - radio "A Beim Krafttraining erhöhte sich der Lac-Phe-Wert am meisten." [ref=e167]
+              - generic [ref=e168]: A
+              - generic [ref=e169]: Beim Krafttraining erhöhte sich der Lac-Phe-Wert am meisten.
+            - generic [ref=e170] [cursor=pointer]:
+              - radio "B Der Lac-Phe-Wert stieg ausnahmslos bei allen Probanden." [ref=e171]
+              - generic [ref=e172]: B
+              - generic [ref=e173]: Der Lac-Phe-Wert stieg ausnahmslos bei allen Probanden.
+            - generic [ref=e174] [cursor=pointer]:
+              - radio "C Intensives Training bremste den Hunger." [ref=e175]
+              - generic [ref=e176]: C
+              - generic [ref=e177]: Intensives Training bremste den Hunger.
+        - generic [ref=e178]:
+          - generic [ref=e179]:
+            - generic [ref=e180]: "15"
+            - text: Wissenschaftler fanden heraus, dass Intensivtraining …
+          - generic [ref=e182]:
+            - generic [ref=e183] [cursor=pointer]:
+              - radio "A für übergewichtige Menschen besonders geeignet ist." [ref=e184]
+              - generic [ref=e185]: A
+              - generic [ref=e186]: für übergewichtige Menschen besonders geeignet ist.
+            - generic [ref=e187] [cursor=pointer]:
+              - radio "B mit moderatem Training kombiniert werden sollte." [ref=e188]
+              - generic [ref=e189]: B
+              - generic [ref=e190]: mit moderatem Training kombiniert werden sollte.
+            - generic [ref=e191] [cursor=pointer]:
+              - radio "C zeitsparend und dennoch effizient ist." [ref=e192]
+              - generic [ref=e193]: C
+              - generic [ref=e194]: zeitsparend und dennoch effizient ist.
+  - navigation [ref=e43]:
+    - generic [ref=e44]:
+      - button "Teil 1 0 von 8" [ref=e195] [cursor=pointer]:
+        - generic [ref=e196]: Teil 1
+        - generic [ref=e197]: 0 von 8
+      - generic [ref=e198] [cursor=pointer]:
+        - generic [ref=e199]: Teil 2
+        - generic [ref=e200]:
+          - button "9" [ref=e201]
+          - button "10" [ref=e202]
+          - button "11" [ref=e203]
+          - button "12" [ref=e204]
+          - button "13" [ref=e205]
+          - button "14" [ref=e206]
+          - button "15" [ref=e207]
+      - button "Teil 3 0 von 8" [ref=e208] [cursor=pointer]:
+        - generic [ref=e209]: Teil 3
+        - generic [ref=e210]: 0 von 8
+      - button "Teil 4 0 von 7" [ref=e211] [cursor=pointer]:
+        - generic [ref=e212]: Teil 4
+        - generic [ref=e213]: 0 von 7
+    - generic [ref=e65]:
+      - button "Zurück" [ref=e66] [cursor=pointer]: ←
+      - button "Weiter" [ref=e67] [cursor=pointer]: →
+      - button "Beenden" [ref=e68] [cursor=pointer]: ✓

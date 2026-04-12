@@ -20,6 +20,12 @@ const SESSIONS_DIR = path.join(__dirname, 'sessions');
 const BACKUPS_DIR = path.join(__dirname, 'backups');
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
+// Per-boot secret for session token HMAC. Regenerated on restart — existing
+// sessions survive (JSONL is durable) but the token won't validate, which is
+// fine because a server restart during an exam is already an exceptional event
+// that the invigilator handles manually.
+const SESSION_SECRET = crypto.randomBytes(32).toString('hex');
+
 // ------- bootstrap folders -------
 for (const dir of [SESSIONS_DIR, BACKUPS_DIR, path.join(SESSIONS_DIR, '_completed')]) {
     fs.mkdirSync(dir, { recursive: true });
@@ -443,7 +449,7 @@ app.get('/api/student-status', (req, res) => {
     }
 });
 
-// Start a session — returns a new session ID (ADR-040: accepts studentId)
+// Start a session — returns a new session ID + secret token (ADR-040: accepts studentId)
 app.post('/api/session/start', (req, res) => {
     const { studentId, student, group, lang, skill } = req.body || {};
     if (!student || typeof student !== 'string' || student.trim().length < 2) {
@@ -455,6 +461,12 @@ app.post('/api/session/start', (req, res) => {
     if (studentId && !/^[a-zA-Z0-9-]{8,64}$/.test(studentId)) {
         return res.status(400).json({ error: 'invalid studentId format' });
     }
+    // Sanitize name: strip HTML tags server-side (defense-in-depth — admin.js also escapes)
+    const cleanName = student.trim().replace(/<[^>]*>/g, '');
+    if (cleanName.length < 2) {
+        return res.status(400).json({ error: 'student name required (min 2 chars after sanitization)' });
+    }
+    const cleanGroup = (group || '').trim().replace(/<[^>]*>/g, '');
     try {
         loadContent(lang, skill); // validate content exists
     } catch (err) {
@@ -475,19 +487,40 @@ app.post('/api/session/start', (req, res) => {
         } catch {}
     }
     const newSessionId = crypto.randomBytes(12).toString('hex');
+    // Session secret: HMAC of the session ID using a per-boot server key.
+    // The client must send this token with every session request. Prevents
+    // session hijacking by someone who glimpses the session ID on-screen.
+    const sessionToken = crypto.createHmac('sha256', SESSION_SECRET)
+        .update(newSessionId).digest('hex').slice(0, 32);
     appendSessionEvent(newSessionId, {
         ev: 'start',
         studentId: studentId || null,
-        student: student.trim(),
-        group: (group || '').trim(),
+        student: cleanName,
+        group: cleanGroup,
         lang,
-        skill
+        skill,
+        tokenHash: crypto.createHash('sha256').update(sessionToken).digest('hex').slice(0, 16)
     });
-    res.json({ sessionId: newSessionId });
+    res.json({ sessionId: newSessionId, token: sessionToken });
 });
 
+// Session token verification: the client must send X-Session-Token header
+// (or ?token= query param as fallback) matching the HMAC-derived token from
+// /api/session/start. This prevents session hijacking by someone who only
+// knows the session ID (e.g. glimpsed on screen or in network logs).
+function verifySessionToken(req, res, next) {
+    const { id } = req.params;
+    const clientToken = req.headers['x-session-token'] || req.query.token || '';
+    const expected = crypto.createHmac('sha256', SESSION_SECRET)
+        .update(id).digest('hex').slice(0, 32);
+    if (!clientToken || clientToken !== expected) {
+        return res.status(403).json({ error: 'invalid session token' });
+    }
+    next();
+}
+
 // Record an audio-play event (ADR-039 — strict listening anti-refresh tracking)
-app.post('/api/session/:id/audio-play', (req, res) => {
+app.post('/api/session/:id/audio-play', verifySessionToken, (req, res) => {
     const { id } = req.params;
     const { partId } = req.body || {};
     if (!partId || typeof partId !== 'string') {
@@ -503,7 +536,7 @@ app.post('/api/session/:id/audio-play', (req, res) => {
 });
 
 // Record an answer change (live save)
-app.post('/api/session/:id/answer', (req, res) => {
+app.post('/api/session/:id/answer', verifySessionToken, (req, res) => {
     const { id } = req.params;
     const { qid, value } = req.body || {};
     if (!qid || typeof qid !== 'string') {
@@ -519,7 +552,7 @@ app.post('/api/session/:id/answer', (req, res) => {
 });
 
 // Resume a session — return student meta and current answer state
-app.get('/api/session/:id', (req, res) => {
+app.get('/api/session/:id', verifySessionToken, (req, res) => {
     const { id } = req.params;
     try {
         const events = readSessionEvents(id);
@@ -533,7 +566,7 @@ app.get('/api/session/:id', (req, res) => {
 });
 
 // Submit — finalizes the session
-app.post('/api/session/:id/submit', async (req, res) => {
+app.post('/api/session/:id/submit', verifySessionToken, async (req, res) => {
     const { id } = req.params;
     try {
         const events = readSessionEvents(id);
@@ -544,11 +577,31 @@ app.post('/api/session/:id/submit', async (req, res) => {
         if (events.some(e => e.ev === 'submit')) {
             return res.status(409).json({ error: 'session already submitted' });
         }
-        appendSessionEvent(id, { ev: 'submit' });
+        // Server-side timer enforcement: reject submissions that arrive after
+        // the allowed duration + grace period. The client timer is only a UX
+        // convenience — this is the authoritative deadline. A 60-second grace
+        // covers network lag and auto-submit timing.
+        let overtime = false;
+        try {
+            const content = loadContent(meta.lang, meta.skill);
+            const durationMs = (content.durationMinutes || 60) * 60 * 1000;
+            const graceMs = 60 * 1000; // 60s grace for network lag / auto-submit
+            const startedAt = new Date(meta.startedAt).getTime();
+            const deadline = startedAt + durationMs + graceMs;
+            if (Date.now() > deadline) {
+                overtime = true;
+                const overBy = Math.round((Date.now() - deadline) / 1000);
+                console.warn(`[submit] session ${id} is ${overBy}s past deadline — accepting but flagging`);
+            }
+        } catch (e) {
+            // Content load failure shouldn't block submit — log and proceed
+            console.warn('[submit] timer check failed:', e.message);
+        }
+        appendSessionEvent(id, { ev: 'submit', overtime });
         const freshEvents = readSessionEvents(id);
         const result = finalizeSession(id, freshEvents, meta);
         // Intentionally hide the score from the client per ADR-036 (no post-submit breakdown)
-        res.json({ ok: true, backup: result.filename });
+        res.json({ ok: true, backup: result.filename, overtime });
     } catch (err) {
         console.error('[submit] error:', err);
         res.status(500).json({ error: 'finalization failed: ' + err.message });

@@ -17,6 +17,15 @@
   const studentId = localStorage.getItem('olympiada:studentId') || '';
   const studentName = localStorage.getItem('olympiada:student') || localStorage.getItem('olympiada:studentName') || '';
   let sessionId = localStorage.getItem('olympiada:sessionId') || '';
+  let sessionToken = localStorage.getItem('olympiada:sessionToken') || '';
+
+  // Helper: add session token to fetch requests. All session-scoped API calls
+  // must use this instead of raw fetch() to include the X-Session-Token header.
+  function sessionFetch(url, opts = {}) {
+    const headers = { ...(opts.headers || {}) };
+    if (sessionToken) headers['X-Session-Token'] = sessionToken;
+    return fetch(url, { ...opts, headers });
+  }
 
   if (!studentName || !lang) {
     window.location.href = 'index.html';
@@ -79,6 +88,17 @@
     if (bannerTitle && bannerTitle.textContent === 'Loading…') {
       bannerTitle.textContent = t.loading;
     }
+    // Aria-labels on static nav elements — German screen readers should
+    // announce "Verbleibende Zeit" / "Zurück" / "Weiter" / "Beenden"
+    // instead of the English defaults authored in test.html.
+    const timerEl = document.getElementById('ct-timer');
+    if (timerEl) timerEl.setAttribute('aria-label', isDe ? 'Verbleibende Zeit' : 'Time remaining');
+    const prevBtn = document.getElementById('ct-prev');
+    if (prevBtn) prevBtn.setAttribute('aria-label', isDe ? 'Zurück' : 'Previous');
+    const nextBtn = document.getElementById('ct-next');
+    if (nextBtn) nextBtn.setAttribute('aria-label', isDe ? 'Weiter' : 'Next');
+    const finishBtn = document.getElementById('ct-finish');
+    if (finishBtn) finishBtn.setAttribute('aria-label', isDe ? 'Beenden' : 'Finish');
   })();
 
   // ---------- state ----------
@@ -173,10 +193,10 @@
   }
 
   async function ensureSession() {
-    if (sessionId) {
+    if (sessionId && sessionToken) {
       // verify session still exists server-side
       try {
-        const res = await fetch('/api/session/' + encodeURIComponent(sessionId));
+        const res = await sessionFetch('/api/session/' + encodeURIComponent(sessionId));
         if (res.ok) {
           const body = await res.json();
           if (body.meta && body.meta.skill === skill) {
@@ -186,6 +206,7 @@
         }
       } catch (e) {}
       sessionId = '';
+      sessionToken = '';
     }
     const res = await fetch('/api/session/start', {
       method: 'POST',
@@ -208,7 +229,9 @@
       throw new Error(body.error || 'session start failed');
     }
     sessionId = body.sessionId;
+    sessionToken = body.token || '';
     localStorage.setItem('olympiada:sessionId', sessionId);
+    localStorage.setItem('olympiada:sessionToken', sessionToken);
   }
 
   // ---------- answer persistence ----------
@@ -227,7 +250,7 @@
     // persistence layer; the server JSONL is the durable one (ADR-035).
     // Failures are logged but don't affect the UI.
     try {
-      await fetch('/api/session/' + encodeURIComponent(sessionId) + '/answer', {
+      await sessionFetch('/api/session/' + encodeURIComponent(sessionId) + '/answer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ qid, value }),
@@ -398,7 +421,7 @@
 
     const right = el('div', 'ct-col');
     const kl = el('div', 'ct-keyword-list');
-    kl.appendChild(el('h4', null, 'Keyword List'));
+    kl.appendChild(el('h4', null, isDe ? 'Schlüsselwörter' : 'Keyword List'));
     const ol = document.createElement('ol');
     (part.questions || []).forEach((q) => {
       const li = document.createElement('li');
@@ -601,7 +624,7 @@
 
     const right = el('div', 'ct-col');
     const bank = el('div', 'ct-paragraph-bank');
-    bank.appendChild(el('h4', null, 'Paragraphs'));
+    bank.appendChild(el('h4', null, isDe ? 'Absätze' : 'Paragraphs'));
     (part.paragraphBank || []).forEach((p) => {
       const card = el('div', 'ct-para-card');
       const usedBy = Object.entries(state.answers).find(([qid, v]) => v === p.key);
@@ -845,7 +868,7 @@
     }
     state.audioState[part.id] = 'playing';
     // Log to server — used for refresh-sneakiness integrity flag
-    fetch('/api/session/' + encodeURIComponent(sessionId) + '/audio-play', {
+    sessionFetch('/api/session/' + encodeURIComponent(sessionId) + '/audio-play', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ partId: part.id }),
@@ -1150,25 +1173,39 @@
     document.getElementById('ct-banner-title').textContent = title;
     document.getElementById('ct-banner-body').textContent = part.instructions || '';
 
-    // Dispatch by part.id
-    const id = part.id || '';
+    // Content-driven dispatch — routes based on actual question types and
+    // passage markers rather than part.id, so German Goethe parts (which
+    // reuse the same part1–part4 IDs as English CAE but have different
+    // question formats) render with the correct UI.
+    const passageContent = (part.passage && part.passage.content) || '';
+    const hasGaps = /\[\[GAP:/.test(passageContent);
+    const hasSlots = /\[\[SLOT:/.test(passageContent);
+    const partQuestions = part.questions || [];
+    const firstQType = partQuestions[0] && partQuestions[0].type;
+    const hasRootWords = partQuestions.some(q => q.rootWord);
+    const hasParagraphBank = Array.isArray(part.paragraphBank) && part.paragraphBank.length > 0;
+
     let rendered;
     if (part.audio) {
       rendered = renderListeningPart(part);
-    } else if (id === 'part1') {
-      rendered = renderPart1(part);
-    } else if (id === 'part2') {
-      rendered = renderPart2(part);
-    } else if (id === 'part3') {
-      rendered = renderPart3(part);
-    } else if (id === 'part4') {
-      rendered = renderPart4(part);
-    } else if (id === 'part7') {
+    } else if (hasSlots && hasParagraphBank) {
+      // Gapped text with paragraph bank (CAE Part 7, Goethe Teil 3)
       rendered = renderPart7(part);
-    } else if (id === 'part5' || id === 'part6' || id === 'part8') {
-      rendered = renderTwoColReading(part);
+    } else if (hasGaps && firstQType === 'multiple-choice') {
+      // MC cloze with inline selects (CAE Part 1, Goethe Teil 1)
+      rendered = renderPart1(part);
+    } else if (hasGaps && hasRootWords) {
+      // Word-formation with keyword list (CAE Part 3)
+      rendered = renderPart3(part);
+    } else if (hasGaps) {
+      // Open-cloze with inline text inputs (CAE Part 2)
+      rendered = renderPart2(part);
+    } else if (partQuestions.some(q => q.keyWord && q.leadIn)) {
+      // Key-word transformation, one-at-a-time (CAE Part 4)
+      rendered = renderPart4(part);
     } else {
-      // Fallback: 2-col reading
+      // MC, matching, true-false, etc. — 2-col reading (CAE Parts 5/6/8,
+      // Goethe Teil 2 MC, Goethe Teil 4 matching)
       rendered = renderTwoColReading(part);
     }
     main.appendChild(rendered);
@@ -1252,7 +1289,7 @@
       } else {
         const answered = countAnsweredInPart(pe);
         const total = pe.flatQuestions.length;
-        seg.appendChild(el('span', 'ct-nav-part-count', answered + ' of ' + total));
+        seg.appendChild(el('span', 'ct-nav-part-count', answered + (isDe ? ' von ' : ' of ') + total));
         seg.addEventListener('click', () => {
           goToPart(i);
         });
@@ -1453,15 +1490,15 @@
   async function performSubmit() {
     state.submitting = true;
     const finishBtn = document.getElementById('ct-finish');
-    const prevLabel = finishBtn.getAttribute('aria-label') || 'Finish';
+    const prevLabel = finishBtn.getAttribute('aria-label') || (isDe ? 'Beenden' : 'Finish');
     finishBtn.disabled = true;
-    finishBtn.setAttribute('aria-label', 'Submitting');
+    finishBtn.setAttribute('aria-label', isDe ? 'Wird abgegeben' : 'Submitting');
     finishBtn.textContent = '…';
     // Disable prev/next too so the student can't navigate during submit
     document.getElementById('ct-prev').disabled = true;
     document.getElementById('ct-next').disabled = true;
     try {
-      const res = await fetch('/api/session/' + encodeURIComponent(sessionId) + '/submit', { method: 'POST' });
+      const res = await sessionFetch('/api/session/' + encodeURIComponent(sessionId) + '/submit', { method: 'POST' });
       const body = await res.json();
       if (!res.ok) throw new Error(body.error || 'submit failed');
       // Clear local session caches for this student (but keep studentId etc.)
@@ -1470,7 +1507,8 @@
           k.startsWith('olympiada:ans:') ||
           k.startsWith('olympiada:timerEnd:') ||
           k.startsWith('olympiada:pos:') ||
-          k === 'olympiada:sessionId'
+          k === 'olympiada:sessionId' ||
+          k === 'olympiada:sessionToken'
         )
         .forEach(k => localStorage.removeItem(k));
       window.location.href = 'dashboard.html';

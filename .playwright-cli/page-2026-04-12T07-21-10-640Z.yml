@@ -1,0 +1,18 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - img "Zarmed University" [ref=e4]
+    - heading "C1 Olympiada" [level=1] [ref=e5]
+    - paragraph [ref=e6]: Bitte wählen Sie ein Modul
+  - main [ref=e7]:
+    - generic [ref=e8]:
+      - paragraph [ref=e9]: Willkommen, Max Mustermann
+      - paragraph [ref=e10]: "Sprache: Deutsch C1 (Goethe) · ID: 962E309D"
+    - generic [ref=e11]:
+      - heading "Wählen Sie ein Modul" [level=2] [ref=e12]
+      - generic [ref=e13]:
+        - 'button "Lesen Dauer: 65 Minuten" [ref=e14] [cursor=pointer]':
+          - heading "Lesen" [level=3] [ref=e15]
+          - generic [ref=e16]: "Dauer: 65 Minuten"
+        - 'button "Hören Dauer: 40 Minuten" [ref=e17] [cursor=pointer]':
+          - heading "Hören" [level=3] [ref=e18]
+          - generic [ref=e19]: "Dauer: 40 Minuten"
