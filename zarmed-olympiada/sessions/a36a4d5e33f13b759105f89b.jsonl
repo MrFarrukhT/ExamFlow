@@ -1,0 +1,4 @@
+{"t":"2026-04-12T07:50:00.829Z","ev":"start","studentId":"r4-1775980200823-c7p9qr","student":"Crash Test","group":"crash","lang":"english-c1","skill":"reading","tokenHash":"f759b221d3a4abd0"}
+{"t":"2026-04-12T07:50:00.830Z","ev":"answer","qid":"q1","value":"B"}
+{"t":"2026-04-12T07:50:00.831Z","ev":"answer","qid":"q2","value":"A"}
+{"t":"2026-04-12T07:50:00.832Z","ev":"answer","qid":"q3","value":"C"}

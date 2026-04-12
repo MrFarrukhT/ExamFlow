@@ -1,0 +1,340 @@
+{
+  "sessionId": "d27869b407c9444fa75a69d4",
+  "studentId": "r4-1775980200648-t29b01",
+  "student": "EN Listen Perfect",
+  "group": "r4",
+  "lang": "english-c1",
+  "skill": "listening",
+  "startedAt": "2026-04-12T07:50:00.659Z",
+  "finishedAt": "2026-04-12T07:50:00.688Z",
+  "answers": {
+    "lq1": "C",
+    "lq2": "B",
+    "lq3": "C",
+    "lq4": "C",
+    "lq5": "C",
+    "lq6": "A",
+    "lq7": "manual labour",
+    "lq8": "soil layers",
+    "lq9": "farming",
+    "lq10": "animal teeth",
+    "lq11": "social media",
+    "lq12": "education",
+    "lq13": "team leader",
+    "lq14": "cultural heritage",
+    "lq15": "A",
+    "lq16": "A",
+    "lq17": "B",
+    "lq18": "D",
+    "lq19": "A",
+    "lq20": "D",
+    "lq21": "E",
+    "lq22": "C",
+    "lq23": "F",
+    "lq24": "D",
+    "lq25": "G",
+    "lq26": "D",
+    "lq27": "B",
+    "lq28": "E",
+    "lq29": "G",
+    "lq30": "C"
+  },
+  "score": {
+    "earned": 30,
+    "total": 30,
+    "perQuestion": [
+      {
+        "qid": "lq1",
+        "partId": "part-listening-1",
+        "type": "multiple-choice",
+        "studentValue": "C",
+        "correctAnswer": "C",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq2",
+        "partId": "part-listening-1",
+        "type": "multiple-choice",
+        "studentValue": "B",
+        "correctAnswer": "B",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq3",
+        "partId": "part-listening-1",
+        "type": "multiple-choice",
+        "studentValue": "C",
+        "correctAnswer": "C",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq4",
+        "partId": "part-listening-1",
+        "type": "multiple-choice",
+        "studentValue": "C",
+        "correctAnswer": "C",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq5",
+        "partId": "part-listening-1",
+        "type": "multiple-choice",
+        "studentValue": "C",
+        "correctAnswer": "C",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq6",
+        "partId": "part-listening-1",
+        "type": "multiple-choice",
+        "studentValue": "A",
+        "correctAnswer": "A",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq7",
+        "partId": "part-listening-2",
+        "type": "sentence-completion",
+        "studentValue": "manual labour",
+        "correctAnswer": [
+          "manual labour",
+          "manual labor",
+          "labour",
+          "labor"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq8",
+        "partId": "part-listening-2",
+        "type": "sentence-completion",
+        "studentValue": "soil layers",
+        "correctAnswer": [
+          "soil layers",
+          "layers of soil"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq9",
+        "partId": "part-listening-2",
+        "type": "sentence-completion",
+        "studentValue": "farming",
+        "correctAnswer": [
+          "farming",
+          "farming practices"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq10",
+        "partId": "part-listening-2",
+        "type": "sentence-completion",
+        "studentValue": "animal teeth",
+        "correctAnswer": [
+          "animal teeth"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq11",
+        "partId": "part-listening-2",
+        "type": "sentence-completion",
+        "studentValue": "social media",
+        "correctAnswer": [
+          "social media"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq12",
+        "partId": "part-listening-2",
+        "type": "sentence-completion",
+        "studentValue": "education",
+        "correctAnswer": [
+          "education"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq13",
+        "partId": "part-listening-2",
+        "type": "sentence-completion",
+        "studentValue": "team leader",
+        "correctAnswer": [
+          "team leader"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq14",
+        "partId": "part-listening-2",
+        "type": "sentence-completion",
+        "studentValue": "cultural heritage",
+        "correctAnswer": [
+          "cultural heritage"
+        ],
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq15",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": "A",
+        "correctAnswer": "A",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq16",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": "A",
+        "correctAnswer": "A",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq17",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": "B",
+        "correctAnswer": "B",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq18",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": "D",
+        "correctAnswer": "D",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq19",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": "A",
+        "correctAnswer": "A",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq20",
+        "partId": "part-listening-3",
+        "type": "multiple-choice",
+        "studentValue": "D",
+        "correctAnswer": "D",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq21",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": "E",
+        "correctAnswer": "E",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq22",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": "C",
+        "correctAnswer": "C",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq23",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": "F",
+        "correctAnswer": "F",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq24",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": "D",
+        "correctAnswer": "D",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq25",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": "G",
+        "correctAnswer": "G",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq26",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": "D",
+        "correctAnswer": "D",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq27",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": "B",
+        "correctAnswer": "B",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq28",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": "E",
+        "correctAnswer": "E",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq29",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": "G",
+        "correctAnswer": "G",
+        "earned": 1,
+        "possible": 1
+      },
+      {
+        "qid": "lq30",
+        "partId": "part-listening-4",
+        "type": "matching",
+        "studentValue": "C",
+        "correctAnswer": "C",
+        "earned": 1,
+        "possible": 1
+      }
+    ]
+  },
+  "eventCount": 32
+}
