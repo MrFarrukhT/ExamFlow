@@ -437,6 +437,76 @@ body.zu-welcome .page {
   margin-top: 1rem;
 }
 
+/* Detail view — summary stats bar */
+.zu-detail-stats {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin: 1rem 0 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--zu-surface);
+  border: 1px solid var(--zu-border);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+.zu-stat {
+  display: flex;
+  flex-direction: column;
+  min-width: 80px;
+}
+.zu-stat-value {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--zu-primary-darker);
+  line-height: 1.2;
+}
+.zu-stat-label {
+  font-size: 0.82rem;
+  color: var(--zu-text-muted);
+  font-weight: 500;
+  margin-top: 0.15rem;
+}
+.zu-detail-time {
+  font-size: 0.9rem;
+  color: var(--zu-text-muted);
+  margin: 0.5rem 0 0;
+}
+
+/* Part-level section headers in the per-question table */
+.zu-part-header td {
+  background: var(--zu-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  padding: 0.55rem 1.1rem;
+  border-bottom: none;
+}
+/* Remove hover on part headers — they're not clickable */
+.zu-admin-table tr.zu-part-header:hover td {
+  background: var(--zu-primary);
+  cursor: default;
+}
+
+/* Detail table — slightly smaller type column for long labels */
+.zu-admin-table--detail td:nth-child(2) {
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+/* Correct answer cell — allow wrapping but limit max-width for KWT overflow */
+.zu-correct-cell {
+  max-width: 320px;
+  word-break: break-word;
+}
+
+/* List view — percentage badge next to score */
+.zu-pct {
+  color: var(--zu-text-muted);
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
 /* ============================================================ */
 /* TEST PAGE — Cambridge-authentic chrome                        */
 /* ============================================================ */

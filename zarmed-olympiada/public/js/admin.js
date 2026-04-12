@@ -147,6 +147,60 @@
     return String(v);
   }
 
+  // Humanize question type slugs for admin readability
+  function fmtType(slug) {
+    const map = {
+      'multiple-choice': 'Multiple Choice',
+      'multiple-choice-multi': 'Multi-Select',
+      'open-cloze': 'Open Cloze',
+      'word-formation': 'Word Formation',
+      'key-word-transformation': 'Key Word Transform',
+      'gap-fill': 'Gap Fill',
+      'gapped-text': 'Gapped Text',
+      'matching': 'Matching',
+      'true-false': 'True / False',
+      'sentence-completion': 'Sentence Completion',
+    };
+    return map[slug] || String(slug).replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  // Format a percentage (earned/total → "18%")
+  function fmtPct(earned, total) {
+    if (!total) return '0%';
+    return Math.round((earned / total) * 100) + '%';
+  }
+
+  // Format duration between two ISO timestamps ("2m 31s", "1h 5m", etc.)
+  function fmtDuration(startIso, endIso) {
+    if (!startIso || !endIso) return '';
+    try {
+      const ms = new Date(endIso) - new Date(startIso);
+      if (ms < 0) return '';
+      const totalSec = Math.floor(ms / 1000);
+      const h = Math.floor(totalSec / 3600);
+      const m = Math.floor((totalSec % 3600) / 60);
+      const s = totalSec % 60;
+      if (h > 0) return h + 'h ' + m + 'm';
+      if (m > 0) return m + 'm ' + s + 's';
+      return s + 's';
+    } catch { return ''; }
+  }
+
+  // Humanize a partId ("part1" → "Part 1", "part-listening-2" → "Listening 2")
+  function fmtPart(partId) {
+    if (!partId) return '';
+    // "part-listening-2" style
+    const match = partId.match(/^part-?(.+?)[-_]?(\d+)$/);
+    if (match) {
+      const label = match[1].replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+      return label + ' ' + match[2];
+    }
+    // "part1" style
+    const simple = partId.match(/^part(\d+)$/);
+    if (simple) return 'Part ' + simple[1];
+    return partId;
+  }
+
   function renderRows() {
     const tbody = document.getElementById('rows-body');
     tbody.innerHTML = '';
@@ -173,7 +227,7 @@
         <td>${escape(r.group || '—')}</td>
         <td>${escape(fmtLang(r.lang))}</td>
         <td>${escape(fmtSkill(r.skill))}</td>
-        <td>${r.earned ?? '-'} / ${r.total ?? '-'}</td>
+        <td>${r.earned ?? '-'} / ${r.total ?? '-'} <span class="zu-pct">(${fmtPct(r.earned, r.total)})</span></td>
       `;
       tr.addEventListener('click', () => openDetail(r));
       tbody.appendChild(tr);
@@ -190,29 +244,64 @@
     try {
       const rec = await api('/api/admin/submission/' + encodeURIComponent(row.filename));
       const body = document.getElementById('detail-body');
-      const parts = [];
-      parts.push(`<h2>${escape(rec.student)} — ${escape(fmtLang(rec.lang))} / ${escape(fmtSkill(rec.skill))}</h2>`);
-      parts.push(`<p><strong>Score:</strong> ${rec.score.earned} / ${rec.score.total}</p>`);
-      parts.push(`<p><strong>Started:</strong> ${fmtTime(rec.startedAt)} &nbsp; <strong>Finished:</strong> ${fmtTime(rec.finishedAt)}</p>`);
-      parts.push('<div class="zu-admin-table-wrap"><table class="zu-admin-table"><thead><tr><th>Q</th><th>Type</th><th>Student</th><th>Correct</th><th>Points</th></tr></thead><tbody>');
-      (rec.score.perQuestion || []).forEach((q) => {
+      const pq = rec.score.perQuestion || [];
+      const totalQ = pq.length;
+      const answered = pq.filter(q => q.studentValue != null && q.studentValue !== '').length;
+      const correct = pq.filter(q => q.earned >= q.possible).length;
+      const pct = fmtPct(rec.score.earned, rec.score.total);
+      const duration = fmtDuration(rec.startedAt, rec.finishedAt);
+
+      const h = [];
+
+      // Header
+      h.push(`<h2>${escape(rec.student)} — ${escape(fmtLang(rec.lang))} / ${escape(fmtSkill(rec.skill))}</h2>`);
+
+      // Summary stats bar
+      h.push('<div class="zu-detail-stats">');
+      h.push(`<div class="zu-stat"><span class="zu-stat-value">${rec.score.earned} / ${rec.score.total}</span><span class="zu-stat-label">Score (${pct})</span></div>`);
+      h.push(`<div class="zu-stat"><span class="zu-stat-value">${answered} / ${totalQ}</span><span class="zu-stat-label">Answered</span></div>`);
+      h.push(`<div class="zu-stat"><span class="zu-stat-value">${correct}</span><span class="zu-stat-label">Correct</span></div>`);
+      if (duration) h.push(`<div class="zu-stat"><span class="zu-stat-value">${duration}</span><span class="zu-stat-label">Duration</span></div>`);
+      h.push('</div>');
+
+      // Timestamps (compact)
+      h.push(`<p class="zu-detail-time"><strong>Started:</strong> ${fmtTime(rec.startedAt)} &nbsp; <strong>Finished:</strong> ${fmtTime(rec.finishedAt)}</p>`);
+
+      // Group questions by partId for section headers
+      let currentPart = null;
+      h.push('<div class="zu-admin-table-wrap"><table class="zu-admin-table zu-admin-table--detail"><thead><tr><th>#</th><th>Type</th><th>Student Answer</th><th>Correct Answer</th><th>Points</th></tr></thead><tbody>');
+      pq.forEach((q, i) => {
+        // Insert part header row when the part changes
+        if (q.partId !== currentPart) {
+          currentPart = q.partId;
+          // Compute part sub-score
+          const partQs = pq.filter(pq2 => pq2.partId === currentPart);
+          const partEarned = partQs.reduce((s, pq2) => s + pq2.earned, 0);
+          const partTotal = partQs.reduce((s, pq2) => s + pq2.possible, 0);
+          h.push(
+            `<tr class="zu-part-header">
+              <td colspan="4">${escape(fmtPart(currentPart))}</td>
+              <td>${partEarned} / ${partTotal}</td>
+            </tr>`
+          );
+        }
         const correctText = fmtCorrect(q.correctAnswer);
         const studentText = fmtStudentValue(q.studentValue);
         const rowClass = q.earned >= q.possible ? 'zu-row-correct'
                        : q.studentValue == null || q.studentValue === '' ? 'zu-row-blank'
                        : 'zu-row-wrong';
-        parts.push(
+        h.push(
           `<tr class="${rowClass}">
-            <td>${escape(q.qid)}</td>
-            <td>${escape(q.type)}</td>
+            <td>${i + 1}</td>
+            <td>${escape(fmtType(q.type))}</td>
             <td>${escape(studentText)}</td>
-            <td>${escape(correctText)}</td>
+            <td class="zu-correct-cell">${escape(correctText)}</td>
             <td>${q.earned} / ${q.possible}</td>
           </tr>`
         );
       });
-      parts.push('</tbody></table></div>');
-      body.innerHTML = parts.join('');
+      h.push('</tbody></table></div>');
+      body.innerHTML = h.join('');
       show(detailView);
     } catch (e) {
       showAdminError('Failed to open submission: ' + e.message);
