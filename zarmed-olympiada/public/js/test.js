@@ -105,6 +105,18 @@
     document.title = isDe ? 'Zarmed Olympiada — Prüfung' : 'Zarmed Olympiada — Test';
   })();
 
+  // ---------- anti-autocomplete ----------
+  // Browsers (Chrome, Edge) aggressively remember text input values and
+  // offer dropdown suggestions even when autocomplete="off". In an exam
+  // this leaks previous students' answers on shared machines. Defence:
+  //   1. autocomplete="one-time-code" — browsers respect this more than "off"
+  //   2. randomized name — browsers key saved values by input name
+  const _acSalt = Math.random().toString(36).slice(2, 8);
+  function examInput(input, qid) {
+    input.autocomplete = 'one-time-code';
+    input.name = 'x-' + (qid || '') + '-' + _acSalt;
+  }
+
   // ---------- state ----------
   const state = {
     content: null,          // loaded from /api/content
@@ -505,7 +517,7 @@
     const input = document.createElement('input');
     input.type = 'text';
     input.className = 'ct-kwt-input';
-    input.autocomplete = 'off';
+    examInput(input, q.id);
     input.spellcheck = false;
     input.maxLength = 150;
     input.value = state.answers[q.id] || '';
@@ -821,7 +833,7 @@
           const input = document.createElement('input');
           input.type = 'text';
           input.className = 'ct-kwt-input';
-          input.autocomplete = 'off';
+          examInput(input, q.id);
           input.spellcheck = false;
           input.maxLength = 100;
           input.value = state.answers[q.id] || '';
@@ -1202,7 +1214,7 @@
     const input = document.createElement('input');
     input.type = 'text';
     input.className = 'ct-gap-input';
-    input.autocomplete = 'off';
+    examInput(input, q.id);
     input.spellcheck = false;
     // Single-word gaps (open-cloze, word-formation) — 50 chars is a
     // generous single-word allowance and prevents accidental paste-bombs.
