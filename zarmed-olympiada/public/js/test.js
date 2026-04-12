@@ -1938,19 +1938,16 @@
   document.addEventListener('cut', blockEvent);
   document.addEventListener('contextmenu', blockEvent);
 
-  // 3. Disable text selection on passages (but keep inputs selectable)
+  // 3. Disable text selection on UI chrome (banner, nav) but KEEP selection
+  //    enabled on passages and questions — the highlight & notes feature
+  //    (initHighlightSystem) relies on window.getSelection() working inside
+  //    .ct-passage and .ct-task-group elements.
   const style = document.createElement('style');
   style.textContent = `
-    .ct-passage, .ct-banner, .ct-question-list, .ct-paragraph-bank, .ct-task-group {
+    .ct-banner, .ct-bottom-nav, .ct-sidebar, .ct-q-nav {
       -webkit-user-select: none;
       -moz-user-select: none;
       user-select: none;
-    }
-    .ct-gap-input, .ct-kwt-input, .ct-inline-mc-select, .ct-task-speaker-select,
-    input[type="text"], input[type="radio"], select {
-      -webkit-user-select: auto;
-      -moz-user-select: auto;
-      user-select: auto;
     }
   `;
   document.head.appendChild(style);

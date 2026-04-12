@@ -27,7 +27,13 @@ echo  Opening test interface in default browser...
 echo  (Anti-cheat and fullscreen are enforced by the app itself)
 echo.
 
-REM Open in default browser — the JS anti-cheat handles fullscreen enforcement
-start "" "http://localhost:3004/"
+REM Launch Chrome in kiosk mode — true OS-level lockdown.
+REM Kiosk mode disables Alt+Tab, Alt+F4, Ctrl+W, Ctrl+F4, Escape, and the
+REM address bar. The JS anti-cheat (fullscreen, beforeunload, violation
+REM reporting) acts as a second layer for non-kiosk environments.
+REM Use a separate user-data-dir so the kiosk instance doesn't interfere
+REM with the admin's normal Chrome session.
+set KIOSK_PROFILE=%TEMP%\zarmed-olympiada-kiosk
+start "" "C:\Program Files\Google\Chrome\Application\chrome.exe" --kiosk --disable-pinch --overscroll-history-navigation=0 --user-data-dir="%KIOSK_PROFILE%" "http://localhost:3004/"
 
 timeout /t 2 /nobreak >nul
