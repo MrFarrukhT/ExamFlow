@@ -26,19 +26,22 @@ echo.
 echo  Opening student test interface...
 echo.
 
+REM Dedicated user-data-dir so kiosk works even if Chrome is already open
+set KIOSK_DIR=%TEMP%\zarmed-olympiada-kiosk
+
 REM Try different browsers in order of preference
 if exist "C:\Program Files\Google\Chrome\Application\chrome.exe" (
     echo  Launching with Google Chrome (kiosk mode)...
-    "C:\Program Files\Google\Chrome\Application\chrome.exe" --kiosk --disable-pinch --overscroll-history-navigation=disabled --disable-translate --disable-extensions --disable-infobars --no-first-run --app="http://localhost:3004/"
+    "C:\Program Files\Google\Chrome\Application\chrome.exe" --kiosk --user-data-dir="%KIOSK_DIR%" --disable-pinch --overscroll-history-navigation=disabled --disable-translate --disable-extensions --disable-infobars --no-first-run --app="http://localhost:3004/"
 ) else if exist "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" (
     echo  Launching with Google Chrome (kiosk mode)...
-    "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --kiosk --disable-pinch --overscroll-history-navigation=disabled --disable-translate --disable-extensions --disable-infobars --no-first-run --app="http://localhost:3004/"
+    "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --kiosk --user-data-dir="%KIOSK_DIR%" --disable-pinch --overscroll-history-navigation=disabled --disable-translate --disable-extensions --disable-infobars --no-first-run --app="http://localhost:3004/"
 ) else if exist "C:\Program Files\Microsoft\Edge\Application\msedge.exe" (
     echo  Launching with Microsoft Edge (kiosk mode)...
-    "C:\Program Files\Microsoft\Edge\Application\msedge.exe" --kiosk --disable-pinch --overscroll-history-navigation=disabled --disable-translate --disable-extensions --disable-infobars --no-first-run --app="http://localhost:3004/"
+    "C:\Program Files\Microsoft\Edge\Application\msedge.exe" --kiosk --user-data-dir="%KIOSK_DIR%" --disable-pinch --overscroll-history-navigation=disabled --disable-translate --disable-extensions --disable-infobars --no-first-run --app="http://localhost:3004/"
 ) else if exist "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" (
     echo  Launching with Microsoft Edge (kiosk mode)...
-    "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --kiosk --disable-pinch --overscroll-history-navigation=disabled --disable-translate --disable-extensions --disable-infobars --no-first-run --app="http://localhost:3004/"
+    "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --kiosk --user-data-dir="%KIOSK_DIR%" --disable-pinch --overscroll-history-navigation=disabled --disable-translate --disable-extensions --disable-infobars --no-first-run --app="http://localhost:3004/"
 ) else (
     echo  ERROR: No supported browser found!
     echo  Please install Google Chrome or Microsoft Edge.
