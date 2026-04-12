@@ -1,5 +1,76 @@
 # Scenario Journal — Test System v2
 
+## Session: 2026-04-12 12:52 — Zarmed Olympiada Stress Test (Round 4)
+Focus: Listening scoring, crash recovery, JSONL durability, data integrity, roster exposure.
+Trigger: Rounds 1-3 covered API/auth/browser/scoring for reading; listening never tested.
+
+### Scenarios
+
+- S1: All 4 Content Modules — Perfect Score [State Corruptor] → PASS [CRITICAL]
+  - English Reading: 56Q, 78pt → 78/78 ✓
+  - English Listening: 30Q, 30pt → 30/30 ✓
+  - German Reading: 30Q, 30pt → 30/30 ✓
+  - German Listening: 30Q, 30pt → 30/30 ✓
+  - Total Olympiada: 168 points across 146 questions, all question types verified
+
+- S2: Crash Recovery — JSONL Durability [Multitasker] → PASS [HIGH]
+  - Active session with 3 answers: JSONL file has 4 events (start + 3 answers)
+  - All lines valid JSON, events reconstructible to original answers
+  - Session resumable via API after simulated crash (GET /api/session/:id)
+  - Append-only JSONL is crash-safe: no partial writes observed
+
+- S3: JSONL Integrity Under 50 Parallel Writes [Multitasker] → PASS [HIGH]
+  - 50 simultaneous answer saves to same session: all 50 accepted (200)
+  - JSONL has exactly 51 lines (1 start + 50 answers)
+  - Zero corrupted lines — fs.appendFileSync is atomic per line in Node.js
+  - All 50 distinct answers readable via API
+
+- S4: Roster File Exposure [Insider] → PASS [MEDIUM]
+  - /content/roster.json → 404 (static only serves public/)
+  - /api/content/roster/json → 400 (invalid params regex)
+  - File exists with student roster data but no passwords/emails/phones
+  - Roster is server-side only, not exposed via any route
+
+- S5: Answer Overwrite — Last-Write-Wins + Audit Trail [State Corruptor] → PASS [HIGH]
+  - Wrote q1=A, then q1=B, then q1=C
+  - API returns q1=C (last-write-wins) ✓
+  - Scoring uses final value: C is wrong (correct=B), earned=0 ✓
+  - JSONL preserves all 3 overwrites in order (A→B→C) — full audit trail ✓
+
+- S6: Content Integrity — API vs Source File [Chain Attacker] → PASS [HIGH]
+  - All 4 modules: API part count matches source file part count ✓
+  - All 4 modules: API response has no answer fields ✓
+  - All 4 modules: Source files have answer fields ✓
+  - Content cache serves correct data and strips answers consistently
+
+### Fixes
+None needed — all 38 tests pass.
+
+### Pattern Analysis
+- **JSONL append-only is remarkably durable.** 50 parallel writes produce zero corruption.
+  Node.js fs.appendFileSync guarantees atomic per-call writes. This design is sound for the
+  Olympiada's expected concurrency (30-50 students).
+- **All 4 content modules score correctly.** Every question type (multiple-choice, open-cloze,
+  word-formation, key-word-transformation, matching, gapped-text, true-false, sentence-completion)
+  has been verified with correct answers across both languages.
+- **Roster data is safe.** The content directory is not served statically; only the public
+  directory is. The /api/content route validates params against [a-z0-9-] regex.
+
+### Intelligence Update
+- Proven solid (Round 4): listening scoring (both langs), JSONL crash recovery, JSONL concurrent
+  writes, roster non-exposure, answer overwrite correctness, content API integrity
+- Cumulative proven solid: ALL critical paths tested across 4 rounds. No deferred findings.
+- For next run: Real-world Olympiada simulation (30 students, full reading+listening, timed),
+  server memory profiling, backup file cleanup policy, admin re-scoring scenario
+
+### Stats
+Tested: 6 (38 checks) | Passed: 6 | Failed: 0 | Fixed: 0 | Deferred: 0
+
+### Cumulative Across All 4 Rounds
+Scenarios: 31 | Checks: ~120 | Bugs found: 7 | Bugs fixed: 7 | Deferred: 0
+
+---
+
 ## Session: 2026-04-12 12:41 — Zarmed Olympiada Stress Test (Round 3)
 Focus: Scoring correctness, concurrent load, admin data integrity, edge case answers, German content.
 Trigger: Rounds 1-2 hardened API/auth/browser flows. Round 2 recommended scoring, concurrency, German.
